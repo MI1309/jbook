@@ -1,0 +1,19 @@
+# System Files
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Temporary
+tmp/
+temp/
+*.log
+
+# Python Root
+venv/
+__pycache__/
+
+# Node Root
+node_modules/
