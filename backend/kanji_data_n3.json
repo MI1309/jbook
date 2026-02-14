@@ -1,0 +1,268 @@
+[
+    {
+        "char": "政",
+        "meaning": "Politik, Pemerintah",
+        "on": [
+            "SEI",
+            "SHOU"
+        ],
+        "kun": [
+            "matsurigoto"
+        ],
+        "strokes": 9,
+        "level": 3,
+        "radical": "攴"
+    },
+    {
+        "char": "議",
+        "meaning": "Musyawarah",
+        "on": [
+            "GI"
+        ],
+        "kun": [],
+        "strokes": 20,
+        "level": 3,
+        "radical": "言"
+    },
+    {
+        "char": "民",
+        "meaning": "Rakyat",
+        "on": [
+            "MIN"
+        ],
+        "kun": [
+            "tami"
+        ],
+        "strokes": 5,
+        "level": 3,
+        "radical": "氏"
+    },
+    {
+        "char": "連",
+        "meaning": "Menghubungkan",
+        "on": [
+            "REN"
+        ],
+        "kun": [
+            "tsura-naru",
+            "tsu-reru"
+        ],
+        "strokes": 10,
+        "level": 3,
+        "radical": "辵"
+    },
+    {
+        "char": "対",
+        "meaning": "Lawan, Terhadap",
+        "on": [
+            "TAI",
+            "TSUI"
+        ],
+        "kun": [],
+        "strokes": 7,
+        "level": 3,
+        "radical": "寸"
+    },
+    {
+        "char": "部",
+        "meaning": "Bagian",
+        "on": [
+            "BU"
+        ],
+        "kun": [],
+        "strokes": 11,
+        "level": 3,
+        "radical": "邑"
+    },
+    {
+        "char": "合",
+        "meaning": "Cocok, Bertemu",
+        "on": [
+            "GOU",
+            "GATSU"
+        ],
+        "kun": [
+            "a-u"
+        ],
+        "strokes": 6,
+        "level": 3,
+        "radical": "口"
+    },
+    {
+        "char": "市",
+        "meaning": "Kota, Pasar",
+        "on": [
+            "SHI"
+        ],
+        "kun": [
+            "ichi"
+        ],
+        "strokes": 5,
+        "level": 3,
+        "radical": "巾"
+    },
+    {
+        "char": "内",
+        "meaning": "Dalam",
+        "on": [
+            "NAI",
+            "DAI"
+        ],
+        "kun": [
+            "uchi"
+        ],
+        "strokes": 4,
+        "level": 3,
+        "radical": "入"
+    },
+    {
+        "char": "相",
+        "meaning": "Bersama, Menteri",
+        "on": [
+            "SOU",
+            "SHOU"
+        ],
+        "kun": [
+            "ai"
+        ],
+        "strokes": 9,
+        "level": 3,
+        "radical": "目"
+    },
+    {
+        "char": "定",
+        "meaning": "Menentukan",
+        "on": [
+            "TEI",
+            "JOU"
+        ],
+        "kun": [
+            "sada-meru"
+        ],
+        "strokes": 8,
+        "level": 3,
+        "radical": "宀"
+    },
+    {
+        "char": "回",
+        "meaning": "Berputar, Kali",
+        "on": [
+            "KAI",
+            "E"
+        ],
+        "kun": [
+            "mawa-ru"
+        ],
+        "strokes": 6,
+        "level": 3,
+        "radical": "囗"
+    },
+    {
+        "char": "選",
+        "meaning": "Memilih",
+        "on": [
+            "SEN"
+        ],
+        "kun": [
+            "era-bu"
+        ],
+        "strokes": 15,
+        "level": 3,
+        "radical": "辵"
+    },
+    {
+        "char": "米",
+        "meaning": "Beras, Amerika",
+        "on": [
+            "BEI",
+            "MAI"
+        ],
+        "kun": [
+            "kome"
+        ],
+        "strokes": 6,
+        "level": 3,
+        "radical": "米"
+    },
+    {
+        "char": "実",
+        "meaning": "Kenyataan, Buah",
+        "on": [
+            "JITSU"
+        ],
+        "kun": [
+            "mi",
+            "mino-ru"
+        ],
+        "strokes": 8,
+        "level": 3,
+        "radical": "宀"
+    },
+    {
+        "char": "関",
+        "meaning": "Hubungan, Gerbang",
+        "on": [
+            "KAN"
+        ],
+        "kun": [
+            "seki"
+        ],
+        "strokes": 14,
+        "level": 3,
+        "radical": "門"
+    },
+    {
+        "char": "決",
+        "meaning": "Memutuskan",
+        "on": [
+            "KETSU"
+        ],
+        "kun": [
+            "ki-meru"
+        ],
+        "strokes": 7,
+        "level": 3,
+        "radical": "水"
+    },
+    {
+        "char": "全",
+        "meaning": "Semua",
+        "on": [
+            "ZEN"
+        ],
+        "kun": [
+            "sube-te"
+        ],
+        "strokes": 6,
+        "level": 3,
+        "radical": "入"
+    },
+    {
+        "char": "表",
+        "meaning": "Permukaan, Tabel",
+        "on": [
+            "HYOU"
+        ],
+        "kun": [
+            "omote",
+            "arawa-su"
+        ],
+        "strokes": 8,
+        "level": 3,
+        "radical": "衣"
+    },
+    {
+        "char": "戦",
+        "meaning": "Perang",
+        "on": [
+            "SEN"
+        ],
+        "kun": [
+            "ikusa",
+            "tataka-u"
+        ],
+        "strokes": 13,
+        "level": 3,
+        "radical": "戈"
+    }
+]

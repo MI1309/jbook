@@ -2,6 +2,8 @@
 import { getKanjiDetail } from '@/lib/api';
 import Link from 'next/link';
 
+import { toHiragana, toKatakana } from 'wanakana';
+
 export default async function KanjiDetailPage({ params }) {
     const { id } = await params;
     const kanji = await getKanjiDetail(id);
@@ -24,7 +26,9 @@ export default async function KanjiDetailPage({ params }) {
                         <h2 className="text-xl font-bold mb-2 border-b pb-1">Onyomi (Cara Baca China)</h2>
                         <ul className="list-disc list-inside text-lg text-gray-600">
                             {kanji.onyomi.length > 0 ? (
-                                kanji.onyomi.map((reading, index) => <li key={index}>{reading}</li>)
+                                kanji.onyomi.map((reading, index) => (
+                                    <li key={index}>{toKatakana(reading.toUpperCase())}</li>
+                                ))
                             ) : (
                                 <li>-</li>
                             )}
@@ -34,7 +38,9 @@ export default async function KanjiDetailPage({ params }) {
                         <h2 className="text-xl font-bold mb-2 border-b pb-1">Kunyomi (Cara Baca Jepang)</h2>
                         <ul className="list-disc list-inside text-lg text-gray-600">
                             {kanji.kunyomi.length > 0 ? (
-                                kanji.kunyomi.map((reading, index) => <li key={index}>{reading}</li>)
+                                kanji.kunyomi.map((reading, index) => (
+                                    <li key={index}>{toHiragana(reading.toLowerCase())}</li>
+                                ))
                             ) : (
                                 <li>-</li>
                             )}

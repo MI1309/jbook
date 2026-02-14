@@ -32,8 +32,8 @@ export default async function BunpoDetailPage({ params }) {
                         {grammar.sentences.length > 0 ? (
                             grammar.sentences.map((sent, i) => (
                                 <div key={i} className="p-4 bg-gray-50 rounded-lg border-l-4 border-blue-400">
-                                    <p className="text-lg font-medium mb-1">{sent.japanese}</p>
-                                    <p className="text-gray-600 italic">{sent.indonesian}</p>
+                                    <p className="text-lg font-medium mb-1">{sent.jp}</p>
+                                    <p className="text-gray-600 italic">{sent.id}</p>
                                 </div>
                             ))
                         ) : (

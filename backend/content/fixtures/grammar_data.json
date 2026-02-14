@@ -1,0 +1,690 @@
+[
+    {
+        "title": "～は～です",
+        "structure": "N1 は N2 です",
+        "explanation": "Pola kalimat dasar untuk menyatakan 'N1 adalah N2'.",
+        "chapter": 1,
+        "jlpt_level": 5,
+        "sentences": [
+            {
+                "jp": "私は学生です。",
+                "id": "Saya adalah mahasiswa."
+            }
+        ]
+    },
+    {
+        "title": "～か",
+        "structure": "Kalimat + か",
+        "explanation": "Partikel untuk membuat kalimat tanya.",
+        "chapter": 1,
+        "jlpt_level": 5,
+        "sentences": [
+            {
+                "jp": "あなたは学生ですか。",
+                "id": "Apakah Anda mahasiswa?"
+            }
+        ]
+    },
+    {
+        "title": "～の～",
+        "structure": "N1 の N2",
+        "explanation": "Menyatakan kepemilikan atau hubungan (N2 milik N1).",
+        "chapter": 2,
+        "jlpt_level": 5,
+        "sentences": [
+            {
+                "jp": "これは私の本です。",
+                "id": "Ini adalah buku saya."
+            }
+        ]
+    },
+    {
+        "title": "ここ、そこ、あそこ",
+        "structure": "Demonstrative + wa + Place + desu",
+        "explanation": "Menunjuk tempat (Sini, Situ, Sana).",
+        "chapter": 3,
+        "jlpt_level": 5,
+        "sentences": [
+            {
+                "jp": "ここは教室です。",
+                "id": "Di sini adalah kelas."
+            }
+        ]
+    },
+    {
+        "title": "今～時～分です",
+        "structure": "Ima + ... ji + ... fun + desu",
+        "explanation": "Menyatakan waktu sekarang.",
+        "chapter": 4,
+        "jlpt_level": 5,
+        "sentences": [
+            {
+                "jp": "今４時５分です。",
+                "id": "Sekarang jam 4 lewat 5 menit."
+            }
+        ]
+    },
+    {
+        "title": "～へ行きます",
+        "structure": "Tempat + へ (e) + 行きます",
+        "explanation": "Pergi ke suatu tempat.",
+        "chapter": 5,
+        "jlpt_level": 5,
+        "sentences": [
+            {
+                "jp": "京都へ行きます。",
+                "id": "Saya pergi ke Kyoto."
+            }
+        ]
+    },
+    {
+        "title": "~masen ka (~ませんか)",
+        "structure": "Bentuk-Masu + ませんか",
+        "explanation": "Mengajak seseorang melakukan sesuatu.",
+        "chapter": 6,
+        "jlpt_level": 5,
+        "sentences": [
+            {
+                "jp": "一緒に食べませんか。",
+                "id": "Maukah makan bersama?"
+            }
+        ]
+    },
+    {
+        "title": "～で～",
+        "structure": "Alat + で + Verb",
+        "explanation": "Melakukan sesuatu menggunakan alat/cara.",
+        "chapter": 7,
+        "jlpt_level": 5,
+        "sentences": [
+            {
+                "jp": "箸で食べます。",
+                "id": "Makan menggunakan sumpit."
+            }
+        ]
+    },
+    {
+        "title": "Adjektiva-na / Adjektiva-i",
+        "structure": "Kata Sifat + Desu",
+        "explanation": "Penggunaan kata sifat untuk menjelaskan subjek.",
+        "chapter": 8,
+        "jlpt_level": 5,
+        "sentences": [
+            {
+                "jp": "桜はきれいです。",
+                "id": "Sakura itu indah."
+            },
+            {
+                "jp": "富士山は高いです。",
+                "id": "Gunung Fuji tinggi."
+            }
+        ]
+    },
+    {
+        "title": "～があります / います",
+        "structure": "N ga Arimasu / Imasu",
+        "explanation": "Menyatakan keberadaan (Arimasu untuk benda mati, Imasu untuk makhluk hidup).",
+        "chapter": 9,
+        "jlpt_level": 5,
+        "sentences": [
+            {
+                "jp": "車があります。",
+                "id": "Ada mobil."
+            },
+            {
+                "jp": "犬がいます。",
+                "id": "Ada anjing."
+            }
+        ]
+    },
+    {
+        "title": "～に～があります",
+        "structure": "Tempat + ni + N + ga Arimasu",
+        "explanation": "Menyatakan lokasi keberadaan benda.",
+        "chapter": 10,
+        "jlpt_level": 5,
+        "sentences": [
+            {
+                "jp": "机の上に本があります。",
+                "id": "Di atas meja ada buku."
+            }
+        ]
+    },
+    {
+        "title": "～個 / ～枚 / ～台",
+        "structure": "Bilangan + Kata Bantu Bilangan",
+        "explanation": "Menghitung benda dengan kata bantu bilangan (counter).",
+        "chapter": 11,
+        "jlpt_level": 5,
+        "sentences": [
+            {
+                "jp": "りんごを３つ買いました。",
+                "id": "Saya membeli 3 apel."
+            }
+        ]
+    },
+    {
+        "title": "Adjektiva (Bentuk Lampau)",
+        "structure": "Adj-katta / Adj-deshita",
+        "explanation": "Menyatakan keadaan di masa lampau.",
+        "chapter": 12,
+        "jlpt_level": 5,
+        "sentences": [
+            {
+                "jp": "昨日は寒かったです。",
+                "id": "Kemarin dingin."
+            }
+        ]
+    },
+    {
+        "title": "～たいです",
+        "structure": "Verb-Masu + たいです",
+        "explanation": "Menyatakan keinginan (ingin melakukan ...).",
+        "chapter": 13,
+        "jlpt_level": 5,
+        "sentences": [
+            {
+                "jp": "日本へ行きたいです。",
+                "id": "Saya ingin pergi ke Jepang."
+            }
+        ]
+    },
+    {
+        "title": "~te imasu (~ています)",
+        "structure": "Bentuk-Te + います",
+        "explanation": "Menyatakan aksi yang sedang berlangsung.",
+        "chapter": 14,
+        "jlpt_level": 5,
+        "sentences": [
+            {
+                "jp": "今勉強しています。",
+                "id": "Sekarang sedang belajar."
+            }
+        ]
+    },
+    {
+        "title": "～てもいいですか",
+        "structure": "Bentuk-Te + もいいですか",
+        "explanation": "Meminta izin (Bolehkah saya...?).",
+        "chapter": 15,
+        "jlpt_level": 5,
+        "sentences": [
+            {
+                "jp": "写真を撮ってもいいですか。",
+                "id": "Bolehkah saya mengambil foto?"
+            }
+        ]
+    },
+    {
+        "title": "～てから",
+        "structure": "Bentuk-Te + から",
+        "explanation": "Menyatakan urutan kegiatan (Setelah melakukan A, melakukan B).",
+        "chapter": 16,
+        "jlpt_level": 5,
+        "sentences": [
+            {
+                "jp": "手を洗ってから、食べます。",
+                "id": "Setelah mencuci tangan, saya makan."
+            }
+        ]
+    },
+    {
+        "title": "～ないでください",
+        "structure": "Bentuk-Nai + でください",
+        "explanation": "Larangan sopan / Meminta untuk tidak melakukan sesuatu.",
+        "chapter": 17,
+        "jlpt_level": 5,
+        "sentences": [
+            {
+                "jp": "ここで写真を撮らないでください。",
+                "id": "Tolong jangan ambil foto di sini."
+            }
+        ]
+    },
+    {
+        "title": "～ことができます",
+        "structure": "Kamus-kei + ことができます",
+        "explanation": "Menyatakan kemampuan (Bisa melakukan ...).",
+        "chapter": 18,
+        "jlpt_level": 5,
+        "sentences": [
+            {
+                "jp": "漢字を読むことができます。",
+                "id": "Saya bisa membaca Kanji."
+            }
+        ]
+    },
+    {
+        "title": "～たことがあります",
+        "structure": "Bentuk-Ta + ことがあります",
+        "explanation": "Menyatakan pengalaman (Pernah melakukan ...).",
+        "chapter": 19,
+        "jlpt_level": 5,
+        "sentences": [
+            {
+                "jp": "馬に乗ったことがあります。",
+                "id": "Saya pernah naik kuda."
+            }
+        ]
+    },
+    {
+        "title": "Bentuk Biasa (Futsuu-kei)",
+        "structure": "Plain Form",
+        "explanation": "Bentuk kasual / biasa dari kata kerja, sifat, dan benda.",
+        "chapter": 20,
+        "jlpt_level": 5,
+        "sentences": [
+            {
+                "jp": "明日パーティーに行く？",
+                "id": "Besok pergi ke pesta?"
+            }
+        ]
+    },
+    {
+        "title": "~to omoimasu (~と思います)",
+        "structure": "Bentuk Biasa + と思います",
+        "explanation": "Menyatakan pendapat atau perkiraan.",
+        "chapter": 21,
+        "jlpt_level": 4,
+        "sentences": [
+            {
+                "jp": "明日は雨だと思います。",
+                "id": "Saya pikir besok hujan."
+            }
+        ]
+    },
+    {
+        "title": "Modifikasi Nomina",
+        "structure": "Anak Kalimat + Noun",
+        "explanation": "Menerangkan kata benda dengan anak kalimat.",
+        "chapter": 22,
+        "jlpt_level": 4,
+        "sentences": [
+            {
+                "jp": "これは私が撮った写真です。",
+                "id": "Ini adalah foto yang saya ambil."
+            }
+        ]
+    },
+    {
+        "title": "～とき",
+        "structure": "Verb/Adj + とき",
+        "explanation": "Menyatakan waktu (Ketika/Saat ...).",
+        "chapter": 23,
+        "jlpt_level": 4,
+        "sentences": [
+            {
+                "jp": "道を渡るとき、車に気をつけてください。",
+                "id": "Saat menyeberang jalan, hati-hati dengan mobil."
+            }
+        ]
+    },
+    {
+        "title": "くれます",
+        "structure": "Seseorang + wa + Watashi ni + N o + Kuremasu",
+        "explanation": "Orang lain memberi kepada saya.",
+        "chapter": 24,
+        "jlpt_level": 4,
+        "sentences": [
+            {
+                "jp": "山田さんは私に花をくれました。",
+                "id": "Tuan Yamada memberi saya bunga."
+            }
+        ]
+    },
+    {
+        "title": "～たら",
+        "structure": "Bentuk-Ta + ら",
+        "explanation": "Pengandaian (Kalau/Jika ...).",
+        "chapter": 25,
+        "jlpt_level": 4,
+        "sentences": [
+            {
+                "jp": "雨が降ったら、行きません。",
+                "id": "Kalau hujan turun, saya tidak pergi."
+            }
+        ]
+    },
+    {
+        "title": "～んです",
+        "structure": "Bentuk Biasa + んです",
+        "explanation": "Menjelaskan alasan atau situasi.",
+        "chapter": 26,
+        "jlpt_level": 4,
+        "sentences": [
+            {
+                "jp": "どうしたんですか。",
+                "id": "Kenapa? (Ada apa?)"
+            }
+        ]
+    },
+    {
+        "title": "～ていただけませんか",
+        "structure": "Bentuk-Te + いただけませんか",
+        "explanation": "Permintaan yang sangat sopan.",
+        "chapter": 26,
+        "jlpt_level": 4,
+        "sentences": [
+            {
+                "jp": "ちょっと手伝っていただけませんか。",
+                "id": "Bisakah Anda membantu saya sebentar?"
+            }
+        ]
+    },
+    {
+        "title": "Bentuk Potensial (Kanou-kei)",
+        "structure": "Verb Potential Form",
+        "explanation": "Kata kerja bentuk bisa (e.g., Ikeru, Taberareru).",
+        "chapter": 27,
+        "jlpt_level": 4,
+        "sentences": [
+            {
+                "jp": "日本語が話せます。",
+                "id": "Saya bisa bicara bahasa Jepang."
+            }
+        ]
+    },
+    {
+        "title": "～ながら",
+        "structure": "Verb-Masu + ながら",
+        "explanation": "Melakukan dua aksi bersamaan (Sambil ...).",
+        "chapter": 28,
+        "jlpt_level": 4,
+        "sentences": [
+            {
+                "jp": "音楽を聞きながら、勉強します。",
+                "id": "Belajar sambil mendengarkan musik."
+            }
+        ]
+    },
+    {
+        "title": "～ています (Keadaan)",
+        "structure": "Verb-Te + います",
+        "explanation": "Menyatakan keadaan akibat aksi (e.g., Pintu terbuka).",
+        "chapter": 29,
+        "jlpt_level": 4,
+        "sentences": [
+            {
+                "jp": "窓が開いています。",
+                "id": "Jendelanya terbuka."
+            }
+        ]
+    },
+    {
+        "title": "～てあります",
+        "structure": "Verb-Te + あります",
+        "explanation": "Keadaan hasil perbuatan seseorang (e.g., Poster tertempel).",
+        "chapter": 30,
+        "jlpt_level": 4,
+        "sentences": [
+            {
+                "jp": "壁に地図がはってあります。",
+                "id": "Peta tertempel di dinding."
+            }
+        ]
+    },
+    {
+        "title": "Bentuk Maksud (Ikou-kei)",
+        "structure": "Volitional Form",
+        "explanation": "Bentuk ajakan kasual atau niat.",
+        "chapter": 31,
+        "jlpt_level": 4,
+        "sentences": [
+            {
+                "jp": "一緒に帰ろう。",
+                "id": "Ayo pulang bersama."
+            }
+        ]
+    },
+    {
+        "title": "～ほうがいいです",
+        "structure": "Bentuk-Ta/Nai + ほうがいいです",
+        "explanation": "Saran (Sebaiknya ...).",
+        "chapter": 32,
+        "jlpt_level": 4,
+        "sentences": [
+            {
+                "jp": "薬を飲んだほうがいいです。",
+                "id": "Sebaiknya minum obat."
+            }
+        ]
+    },
+    {
+        "title": "Bentuk Perintah / Larangan",
+        "structure": "Imperative / Prohibitive Form",
+        "explanation": "Perintah kasar (Shiro!) dan Larangan kasar (Suru-na!).",
+        "chapter": 33,
+        "jlpt_level": 4,
+        "sentences": [
+            {
+                "jp": "急げ！",
+                "id": "Cepat!"
+            },
+            {
+                "jp": "触るな！",
+                "id": "Jangan sentuh!"
+            }
+        ]
+    },
+    {
+        "title": "～とおりに",
+        "structure": "Verb/Noun + とおりに",
+        "explanation": "Sesuai dengan / Seperti ...",
+        "chapter": 34,
+        "jlpt_level": 4,
+        "sentences": [
+            {
+                "jp": "私が言うとおりに、書いてください。",
+                "id": "Tulis seperti yang saya katakan."
+            }
+        ]
+    },
+    {
+        "title": "Bentuk Syarat (Ba-kei)",
+        "structure": "Conditional Form (~ba)",
+        "explanation": "Pengandaian (Sekiranya ...).",
+        "chapter": 35,
+        "jlpt_level": 4,
+        "sentences": [
+            {
+                "jp": "春になれば、桜が咲きます。",
+                "id": "Kalau musim semi tiba, sakura akan mekar."
+            }
+        ]
+    },
+    {
+        "title": "～ようになります",
+        "structure": "Verb-Potential + ようになります",
+        "explanation": "Perubahan kemampuan (Menjadi bisa ...).",
+        "chapter": 36,
+        "jlpt_level": 4,
+        "sentences": [
+            {
+                "jp": "泳げるようになりました。",
+                "id": "Saya sudah menjadi bisa berenang."
+            }
+        ]
+    },
+    {
+        "title": "Bentuk Pasif (Ukemi)",
+        "structure": "Passive Form",
+        "explanation": "Kalimat pasif (Dimakan, Diinjak, dll).",
+        "chapter": 37,
+        "jlpt_level": 4,
+        "sentences": [
+            {
+                "jp": "私は犬に手をかまれました。",
+                "id": "Tangan saya digigit anjing."
+            }
+        ]
+    },
+    {
+        "title": "～のは～です",
+        "structure": "Verb-Plain + のは + Adjective",
+        "explanation": "Menjadikan kata kerja sebagai subjek (Nominalisasi).",
+        "chapter": 38,
+        "jlpt_level": 4,
+        "sentences": [
+            {
+                "jp": "テニスをするのは楽しいです。",
+                "id": "Bermain tenis itu menyenangkan."
+            }
+        ]
+    },
+    {
+        "title": "～て / ～で (Sebab)",
+        "structure": "Bentuk-Te + ...",
+        "explanation": "Menyatakan sebab/alasan.",
+        "chapter": 39,
+        "jlpt_level": 4,
+        "sentences": [
+            {
+                "jp": "ニュースを聞いて、びっくりしました。",
+                "id": "Saya terkejut karena mendengar berita itu."
+            }
+        ]
+    },
+    {
+        "title": "～かどうかわかりません",
+        "structure": "Kalimat + かどうか",
+        "explanation": "Clause tanya tidak langsung (Apakah ... atau tidak).",
+        "chapter": 40,
+        "jlpt_level": 4,
+        "sentences": [
+            {
+                "jp": "明日晴れるかどうかわかりません。",
+                "id": "Saya tidak tahu apakah besok cerah atau tidak."
+            }
+        ]
+    },
+    {
+        "title": "Yarimasu / Itadakimasu / Kudasaimasu",
+        "structure": "Giving/Receiving (Respectful/Humble)",
+        "explanation": "Bentuk sopan dari Agemasu/Moraimasu/Kuremasu.",
+        "chapter": 41,
+        "jlpt_level": 4,
+        "sentences": [
+            {
+                "jp": "先生に本をいただきました。",
+                "id": "Saya menerima buku dari guru."
+            }
+        ]
+    },
+    {
+        "title": "～ために",
+        "structure": "Verb/Noun + ために",
+        "explanation": "Tujuan (Demi/Untuk ...).",
+        "chapter": 42,
+        "jlpt_level": 4,
+        "sentences": [
+            {
+                "jp": "家を買うために、貯金しています。",
+                "id": "Saya menabung demi membeli rumah."
+            }
+        ]
+    },
+    {
+        "title": "～そうです (Kelihatannya)",
+        "structure": "Verb-Masu/Adj + そうです",
+        "explanation": "Dugaan berdasarkan penglihatan (Sepertinya akan/sedang...).",
+        "chapter": 43,
+        "jlpt_level": 4,
+        "sentences": [
+            {
+                "jp": "今にも雨が降りそうです。",
+                "id": "Sepertinya akan segera hujan."
+            }
+        ]
+    },
+    {
+        "title": "～すぎます",
+        "structure": "Verb-Masu/Adj + すぎます",
+        "explanation": "Terlalu ... (Berlebihan).",
+        "chapter": 44,
+        "jlpt_level": 4,
+        "sentences": [
+            {
+                "jp": "この服は大きすぎます。",
+                "id": "Baju ini terlalu besar."
+            }
+        ]
+    },
+    {
+        "title": "～場合は",
+        "structure": "Plain Form + 場合は",
+        "explanation": "Dalam kasus ... / Jika ...",
+        "chapter": 45,
+        "jlpt_level": 4,
+        "sentences": [
+            {
+                "jp": "会議に間に合わない場合は、連絡してください。",
+                "id": "Jika tidak keburu rapat, tolong hubungi."
+            }
+        ]
+    },
+    {
+        "title": "～ところです",
+        "structure": "Verb dict/te-iru/ta + ところです",
+        "explanation": "Waktu yang tepat (Baru saja akan/sedang/telah ...).",
+        "chapter": 46,
+        "jlpt_level": 4,
+        "sentences": [
+            {
+                "jp": "これから食べるところです。",
+                "id": "Baru saja mau makan."
+            }
+        ]
+    },
+    {
+        "title": "～そうです (Konon/Katanya)",
+        "structure": "Plain Form + そうです",
+        "explanation": "Kabar burung / Info dari orang lain (Katanya ...).",
+        "chapter": 47,
+        "jlpt_level": 4,
+        "sentences": [
+            {
+                "jp": "天気予報によると、明日は寒くなるそうです。",
+                "id": "Menurut ramalan cuaca, besok katanya akan dingin."
+            }
+        ]
+    },
+    {
+        "title": "Bentuk Kausatif (Shieki)",
+        "structure": "Causative Form",
+        "explanation": "Membuat/Membiarkan orang melakukan sesuatu.",
+        "chapter": 48,
+        "jlpt_level": 4,
+        "sentences": [
+            {
+                "jp": "母は子供に野菜を食べさせました。",
+                "id": "Ibu menyuruh anak makan sayur."
+            }
+        ]
+    },
+    {
+        "title": "Sonkeigo (Bahasa Hormat)",
+        "structure": "Honorific Language",
+        "explanation": "Meninggikan lawan bicara.",
+        "chapter": 49,
+        "jlpt_level": 4,
+        "sentences": [
+            {
+                "jp": "社長はもう帰られました。",
+                "id": "Presiden direktur sudah pulang."
+            }
+        ]
+    },
+    {
+        "title": "Kenjougo (Bahasa Merendah)",
+        "structure": "Humble Language",
+        "explanation": "Merendahkan diri sendiri untuk menghormati lawan bicara.",
+        "chapter": 50,
+        "jlpt_level": 4,
+        "sentences": [
+            {
+                "jp": "お荷物をお持ちします。",
+                "id": "Saya akan membawakan barang Anda."
+            }
+        ]
+    }
+]

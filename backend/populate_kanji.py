@@ -1,55 +1,75 @@
-from content.models import Kanji, JLPTLevel
 
-def run():
-    kanji_data = [
-        {
-            "character": "日",
-            "meaning": "Matahari, Hari",
-            "onyomi": ["NICHI", "JITSU"],
-            "kunyomi": ["hi", "bi", "ka"],
-            "strokes": 4,
-            "jlpt_level": JLPTLevel.N5,
-            "examples": [
-                {"word": "日本", "reading": "Nihon", "meaning": "Jepang"},
-                {"word": "日曜日", "reading": "Nichiyoubi", "meaning": "Hari Minggu"},
-                {"word": "毎日", "reading": "Mainichi", "meaning": "Setiap hari"}
-            ]
-        },
-        {
-            "character": "本",
-            "meaning": "Buku, Asal",
-            "onyomi": ["HON"],
-            "kunyomi": ["moto"],
-            "strokes": 5,
-            "jlpt_level": JLPTLevel.N5,
-            "examples": [
-                {"word": "本", "reading": "Hon", "meaning": "Buku"},
-                {"word": "山本", "reading": "Yamamoto", "meaning": "Yamamoto (Nama orang)"}
-            ]
-        },
-        {
-            "character": "学",
-            "meaning": "Belajar",
-            "onyomi": ["GAKU"],
-            "kunyomi": ["mana-bu"],
-            "strokes": 8,
-            "jlpt_level": JLPTLevel.N5,
-            "examples": [
-                {"word": "学生", "reading": "Gakusei", "meaning": "Siswa"},
-                {"word": "学校", "reading": "Gakkou", "meaning": "Sekolah"}
-            ]
-        }
-    ]
+import os
+import django
+import sys
+import json
 
-    for data in kanji_data:
-        k, created = Kanji.objects.get_or_create(
-            character=data["character"],
-            defaults=data
-        )
-        if created:
-            print(f"Created Kanji: {k.character}")
-        else:
-            print(f"Kanji already exists: {k.character}")
+# Setup sys.path to include backend directory
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+sys.path.append(BASE_DIR)
+
+# Set settings module
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'core.settings')
+
+try:
+    django.setup()
+except Exception as e:
+    print(f"Error setting up Django: {e}")
+    sys.exit(1)
+
+from content.models import Kanji
+
+def load_data(filename):
+    filepath = os.path.join(BASE_DIR, filename)
+    if not os.path.exists(filepath):
+        print(f"File not found: {filepath}")
+        return []
+        
+    with open(filepath, 'r') as f:
+        return json.load(f)
+
+def populate_kanji():
+    files = ['kanji_data_n5.json', 'kanji_data_n4.json', 'kanji_data_n3.json', 'kanji_data_n2.json', 'kanji_data_n1.json']
+    total_added = 0
+    total_updated = 0
+    
+    for filename in files:
+        print(f"Processing {filename}...")
+        data_list = load_data(filename)
+        
+        for data in data_list:
+            try:
+                kanji, created = Kanji.objects.get_or_create(
+                    character=data["char"],
+                    defaults={
+                        "meaning": data["meaning"],
+                        "onyomi": data["on"],
+                        "kunyomi": data["kun"],
+                        "strokes": data["strokes"],
+                        "jlpt_level": data["level"],
+                        "radical": data["radical"]
+                    }
+                )
+                
+                if created:
+                    print(f"Added: {data['char']}")
+                    total_added += 1
+                else:
+                    # Update if radical is missing or meaningful change
+                    updated = False
+                    if not kanji.radical and data["radical"]:
+                        kanji.radical = data["radical"]
+                        updated = True
+                    
+                    if updated:
+                        kanji.save()
+                        print(f"Updated: {data['char']}")
+                        total_updated += 1
+                        
+            except Exception as e:
+                print(f"Error processing {data['char']}: {e}")
+
+    print(f"Done. Added: {total_added}, Updated: {total_updated}")
 
 if __name__ == "__main__":
-    run()
+    populate_kanji()

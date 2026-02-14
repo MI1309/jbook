@@ -16,6 +16,7 @@ class Kanji(models.Model):
     kunyomi = models.JSONField(default=list)
     strokes = models.IntegerField()
     jlpt_level = models.IntegerField(choices=JLPTLevel.choices)
+    radical = models.CharField(max_length=5, blank=True, null=True, help_text="Radikal utama")
     examples = models.JSONField(default=list, help_text="List of words using this Kanji with Indonesian meanings")
 
     def __str__(self):
@@ -26,6 +27,7 @@ class Grammar(models.Model):
     title = models.CharField(max_length=255)
     structure = models.CharField(max_length=255)
     explanation = models.TextField(help_text="Penjelasan detail dalam Bahasa Indonesia")
+    chapter = models.IntegerField(default=0, help_text="Bab / Chapter number")
     jlpt_level = models.IntegerField(choices=JLPTLevel.choices)
     sentences = models.JSONField(default=list, help_text="Contoh kalimat dengan terjemahan Bahasa Indonesia")
 
@@ -42,3 +44,16 @@ class Vocab(models.Model):
 
     def __str__(self):
         return self.word
+
+class Blog(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    title = models.CharField(max_length=255)
+    slug = models.SlugField(unique=True, max_length=255)
+    content = models.TextField(help_text="Konten blog (Markdown/HTML)")
+    tags = models.JSONField(default=list, help_text="Tags/Kategori")
+    is_published = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.title

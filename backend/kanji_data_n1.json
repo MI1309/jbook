@@ -1,0 +1,791 @@
+[
+    {
+        "char": "遺",
+        "meaning": "Meninggalkan",
+        "on": [
+            "I",
+            "YUI"
+        ],
+        "kun": [
+            "noko-su"
+        ],
+        "strokes": 15,
+        "level": 1,
+        "radical": "辵"
+    },
+    {
+        "char": "劇",
+        "meaning": "Drama, Hebat",
+        "on": [
+            "GEKI"
+        ],
+        "kun": [],
+        "strokes": 15,
+        "level": 1,
+        "radical": "刀"
+    },
+    {
+        "char": "推",
+        "meaning": "Menyimpulkan, Mendorong",
+        "on": [
+            "SUI"
+        ],
+        "kun": [
+            "o-su"
+        ],
+        "strokes": 11,
+        "level": 1,
+        "radical": "手"
+    },
+    {
+        "char": "整",
+        "meaning": "Mengatur",
+        "on": [
+            "SEI"
+        ],
+        "kun": [
+            "todono-ru"
+        ],
+        "strokes": 16,
+        "level": 1,
+        "radical": "攴"
+    },
+    {
+        "char": "策",
+        "meaning": "Rencana",
+        "on": [
+            "SAKU"
+        ],
+        "kun": [],
+        "strokes": 12,
+        "level": 1,
+        "radical": "竹"
+    },
+    {
+        "char": "衆",
+        "meaning": "Massa, Publik",
+        "on": [
+            "SHUU",
+            "SHU"
+        ],
+        "kun": [],
+        "strokes": 12,
+        "level": 1,
+        "radical": "血"
+    },
+    {
+        "char": "閣",
+        "meaning": "Kabinet, Gedung Tinggi",
+        "on": [
+            "KAKU"
+        ],
+        "kun": [],
+        "strokes": 14,
+        "level": 1,
+        "radical": "門"
+    },
+    {
+        "char": "激",
+        "meaning": "Keras, Hebat",
+        "on": [
+            "GEKI"
+        ],
+        "kun": [
+            "hage-shii"
+        ],
+        "strokes": 16,
+        "level": 1,
+        "radical": "水"
+    },
+    {
+        "char": "承",
+        "meaning": "Menerima",
+        "on": [
+            "SHOU"
+        ],
+        "kun": [
+            "uketamawa-ru"
+        ],
+        "strokes": 8,
+        "level": 1,
+        "radical": "手"
+    },
+    {
+        "char": "臨",
+        "meaning": "Menghadapi",
+        "on": [
+            "RIN"
+        ],
+        "kun": [
+            "nozo-mu"
+        ],
+        "strokes": 18,
+        "level": 1,
+        "radical": "臣"
+    },
+    {
+        "char": "裁",
+        "meaning": "Mengadili, Memotong (Kain)",
+        "on": [
+            "SAI"
+        ],
+        "kun": [
+            "saba-ku"
+        ],
+        "strokes": 12,
+        "level": 1,
+        "radical": "衣"
+    },
+    {
+        "char": "弁",
+        "meaning": "Pidato, Katup",
+        "on": [
+            "BEN"
+        ],
+        "kun": [],
+        "strokes": 5,
+        "level": 1,
+        "radical": "廾"
+    },
+    {
+        "char": "処",
+        "meaning": "Tempat, Mengurus",
+        "on": [
+            "SHO"
+        ],
+        "kun": [],
+        "strokes": 5,
+        "level": 1,
+        "radical": "几"
+    },
+    {
+        "char": "券",
+        "meaning": "Tiket",
+        "on": [
+            "KEN"
+        ],
+        "kun": [],
+        "strokes": 8,
+        "level": 1,
+        "radical": "刀"
+    },
+    {
+        "char": "看",
+        "meaning": "Melihat, Menjaga",
+        "on": [
+            "KAN"
+        ],
+        "kun": [
+            "mi-ru"
+        ],
+        "strokes": 9,
+        "level": 1,
+        "radical": "目"
+    },
+    {
+        "char": "著",
+        "meaning": "Menulis, Terkenal",
+        "on": [
+            "CHO"
+        ],
+        "kun": [
+            "arawa-su",
+            "ichijiru-shii"
+        ],
+        "strokes": 11,
+        "level": 1,
+        "radical": "艸"
+    },
+    {
+        "char": "誌",
+        "meaning": "Majalah, Dokumen",
+        "on": [
+            "SHI"
+        ],
+        "kun": [],
+        "strokes": 14,
+        "level": 1,
+        "radical": "言"
+    },
+    {
+        "char": "憲",
+        "meaning": "Konstitusi",
+        "on": [
+            "KEN"
+        ],
+        "kun": [],
+        "strokes": 16,
+        "level": 1,
+        "radical": "心"
+    },
+    {
+        "char": "簡",
+        "meaning": "Sederhana",
+        "on": [
+            "KAN"
+        ],
+        "kun": [],
+        "strokes": 18,
+        "level": 1,
+        "radical": "竹"
+    },
+    {
+        "char": "蔵",
+        "meaning": "Gudang, Memiliki",
+        "on": [
+            "ZOU"
+        ],
+        "kun": [
+            "kura"
+        ],
+        "strokes": 15,
+        "level": 1,
+        "radical": "艸"
+    },
+    {
+        "char": "臓",
+        "meaning": "Organ Dalam",
+        "on": [
+            "ZOU"
+        ],
+        "kun": [],
+        "strokes": 19,
+        "level": 1,
+        "radical": "肉"
+    },
+    {
+        "char": "宇",
+        "meaning": "Alam Semesta",
+        "on": [
+            "U"
+        ],
+        "kun": [],
+        "strokes": 6,
+        "level": 1,
+        "radical": "宀"
+    },
+    {
+        "char": "宙",
+        "meaning": "Angkasa",
+        "on": [
+            "CHUU"
+        ],
+        "kun": [],
+        "strokes": 8,
+        "level": 1,
+        "radical": "宀"
+    },
+    {
+        "char": "垂",
+        "meaning": "Menggantung",
+        "on": [
+            "SUI"
+        ],
+        "kun": [
+            "ta-reru"
+        ],
+        "strokes": 8,
+        "level": 1,
+        "radical": "土"
+    },
+    {
+        "char": "晩",
+        "meaning": "Malam",
+        "on": [
+            "BAN"
+        ],
+        "kun": [],
+        "strokes": 12,
+        "level": 1,
+        "radical": "日"
+    },
+    {
+        "char": "忠",
+        "meaning": "Setia",
+        "on": [
+            "CHUU"
+        ],
+        "kun": [],
+        "strokes": 8,
+        "level": 1,
+        "radical": "心"
+    },
+    {
+        "char": "映",
+        "meaning": "Memantulkan",
+        "on": [
+            "EI"
+        ],
+        "kun": [
+            "utsu-ru",
+            "ha-eru"
+        ],
+        "strokes": 9,
+        "level": 1,
+        "radical": "日"
+    },
+    {
+        "char": "画",
+        "meaning": "Gambar, Goresan",
+        "on": [
+            "GA",
+            "KAKU"
+        ],
+        "kun": [],
+        "strokes": 8,
+        "level": 1,
+        "radical": "田"
+    },
+    {
+        "char": "郵",
+        "meaning": "Pos",
+        "on": [
+            "YUU"
+        ],
+        "kun": [],
+        "strokes": 11,
+        "level": 1,
+        "radical": "邑"
+    },
+    {
+        "char": "届",
+        "meaning": "Sampai",
+        "on": [
+            "KAI"
+        ],
+        "kun": [
+            "todo-ku"
+        ],
+        "strokes": 8,
+        "level": 1,
+        "radical": "尸"
+    },
+    {
+        "char": "装",
+        "meaning": "Pakaian, Menghias",
+        "on": [
+            "SOU",
+            "SHOU"
+        ],
+        "kun": [
+            "yosoo-u"
+        ],
+        "strokes": 12,
+        "level": 1,
+        "radical": "衣"
+    },
+    {
+        "char": "諸",
+        "meaning": "Berbagai",
+        "on": [
+            "SHO"
+        ],
+        "kun": [
+            "moro"
+        ],
+        "strokes": 15,
+        "level": 1,
+        "radical": "言"
+    },
+    {
+        "char": "尊",
+        "meaning": "Hormat",
+        "on": [
+            "SON"
+        ],
+        "kun": [
+            "touto-i"
+        ],
+        "strokes": 12,
+        "level": 1,
+        "radical": "寸"
+    },
+    {
+        "char": "敬",
+        "meaning": "Menghormati",
+        "on": [
+            "KEI"
+        ],
+        "kun": [
+            "uyama-u"
+        ],
+        "strokes": 12,
+        "level": 1,
+        "radical": "攴"
+    },
+    {
+        "char": "署",
+        "meaning": "Kantor Polisi, Tanda Tangan",
+        "on": [
+            "SHO"
+        ],
+        "kun": [],
+        "strokes": 13,
+        "level": 1,
+        "radical": "网"
+    },
+    {
+        "char": "朗",
+        "meaning": "Cerah, Ceria",
+        "on": [
+            "ROU"
+        ],
+        "kun": [
+            "hoga-raka"
+        ],
+        "strokes": 10,
+        "level": 1,
+        "radical": "月"
+    },
+    {
+        "char": "脳",
+        "meaning": "Otak",
+        "on": [
+            "NOU"
+        ],
+        "kun": [],
+        "strokes": 11,
+        "level": 1,
+        "radical": "肉"
+    },
+    {
+        "char": "筋",
+        "meaning": "Otot",
+        "on": [
+            "KIN"
+        ],
+        "kun": [
+            "suji"
+        ],
+        "strokes": 12,
+        "level": 1,
+        "radical": "竹"
+    },
+    {
+        "char": "聖",
+        "meaning": "Suci",
+        "on": [
+            "SEI"
+        ],
+        "kun": [
+            "hijiri"
+        ],
+        "strokes": 13,
+        "level": 1,
+        "radical": "耳"
+    },
+    {
+        "char": "俳",
+        "meaning": "Aktor, Haiku",
+        "on": [
+            "HAI"
+        ],
+        "kun": [],
+        "strokes": 10,
+        "level": 1,
+        "radical": "人"
+    },
+    {
+        "char": "誠",
+        "meaning": "Tulus",
+        "on": [
+            "SEI"
+        ],
+        "kun": [
+            "makoto"
+        ],
+        "strokes": 13,
+        "level": 1,
+        "radical": "言"
+    },
+    {
+        "char": "潮",
+        "meaning": "Pasang Surut",
+        "on": [
+            "CHOU"
+        ],
+        "kun": [
+            "shio"
+        ],
+        "strokes": 15,
+        "level": 1,
+        "radical": "水"
+    },
+    {
+        "char": "賃",
+        "meaning": "Sewa, Upah",
+        "on": [
+            "CHIN"
+        ],
+        "kun": [],
+        "strokes": 13,
+        "level": 1,
+        "radical": "貝"
+    },
+    {
+        "char": "捨",
+        "meaning": "Membuang",
+        "on": [
+            "SHA"
+        ],
+        "kun": [
+            "su-teru"
+        ],
+        "strokes": 11,
+        "level": 1,
+        "radical": "手"
+    },
+    {
+        "char": "召",
+        "meaning": "Memanggil, Makan/Minum (Hormat)",
+        "on": [
+            "SHOU"
+        ],
+        "kun": [
+            "me-su"
+        ],
+        "strokes": 5,
+        "level": 1,
+        "radical": "口"
+    },
+    {
+        "char": "拝",
+        "meaning": "Menyembah",
+        "on": [
+            "HAI"
+        ],
+        "kun": [
+            "oga-mu"
+        ],
+        "strokes": 8,
+        "level": 1,
+        "radical": "手"
+    },
+    {
+        "char": "拡",
+        "meaning": "Memperluas",
+        "on": [
+            "KAKU"
+        ],
+        "kun": [
+            "hiro-geru"
+        ],
+        "strokes": 8,
+        "level": 1,
+        "radical": "手"
+    },
+    {
+        "char": "紅",
+        "meaning": "Merah Tua",
+        "on": [
+            "KOU"
+        ],
+        "kun": [
+            "beni",
+            "kurenai"
+        ],
+        "strokes": 9,
+        "level": 1,
+        "radical": "糸"
+    },
+    {
+        "char": "純",
+        "meaning": "Murni",
+        "on": [
+            "JUN"
+        ],
+        "kun": [],
+        "strokes": 10,
+        "level": 1,
+        "radical": "糸"
+    },
+    {
+        "char": "縦",
+        "meaning": "Vertikal",
+        "on": [
+            "JUU"
+        ],
+        "kun": [
+            "tate"
+        ],
+        "strokes": 16,
+        "level": 1,
+        "radical": "糸"
+    },
+    {
+        "char": "縮",
+        "meaning": "Menyusut",
+        "on": [
+            "SHUKU"
+        ],
+        "kun": [
+            "chiji-mu"
+        ],
+        "strokes": 17,
+        "level": 1,
+        "radical": "糸"
+    },
+    {
+        "char": "穴",
+        "meaning": "Lubang",
+        "on": [
+            "KETSU"
+        ],
+        "kun": [
+            "ana"
+        ],
+        "strokes": 5,
+        "level": 1,
+        "radical": "穴"
+    },
+    {
+        "char": "善",
+        "meaning": "Baik",
+        "on": [
+            "ZEN"
+        ],
+        "kun": [
+            "yo-i"
+        ],
+        "strokes": 12,
+        "level": 1,
+        "radical": "口"
+    },
+    {
+        "char": "処",
+        "meaning": "Tempat, Mengurus",
+        "on": [
+            "SHO"
+        ],
+        "kun": [],
+        "strokes": 5,
+        "level": 1,
+        "radical": "几"
+    },
+    {
+        "char": "奏",
+        "meaning": "Bermain Musik",
+        "on": [
+            "SOU"
+        ],
+        "kun": [
+            "kana-deru"
+        ],
+        "strokes": 9,
+        "level": 1,
+        "radical": "大"
+    },
+    {
+        "char": "陛",
+        "meaning": "Yang Mulia",
+        "on": [
+            "HEI"
+        ],
+        "kun": [],
+        "strokes": 10,
+        "level": 1,
+        "radical": "阜"
+    },
+    {
+        "char": "後",
+        "meaning": "Permaisuri, Belakang",
+        "on": [
+            "GO",
+            "KOU"
+        ],
+        "kun": [
+            "nochi"
+        ],
+        "strokes": 9,
+        "level": 1,
+        "radical": "彳"
+    },
+    {
+        "char": "勤",
+        "meaning": "Bekerja",
+        "on": [
+            "KIN",
+            "GON"
+        ],
+        "kun": [
+            "tsuto-meru"
+        ],
+        "strokes": 12,
+        "level": 1,
+        "radical": "力"
+    },
+    {
+        "char": "奮",
+        "meaning": "Bersemangat",
+        "on": [
+            "FUN"
+        ],
+        "kun": [
+            "furu-u"
+        ],
+        "strokes": 16,
+        "level": 1,
+        "radical": "大"
+    },
+    {
+        "char": "訳",
+        "meaning": "Terjemahan, Alasan",
+        "on": [
+            "YAKU"
+        ],
+        "kun": [
+            "wake"
+        ],
+        "strokes": 11,
+        "level": 1,
+        "radical": "言"
+    },
+    {
+        "char": "討",
+        "meaning": "Menyerang, Membahas",
+        "on": [
+            "TOU"
+        ],
+        "kun": [
+            "u-tsu"
+        ],
+        "strokes": 10,
+        "level": 1,
+        "radical": "言"
+    },
+    {
+        "char": "訓",
+        "meaning": "Instruksi",
+        "on": [
+            "KUN"
+        ],
+        "kun": [],
+        "strokes": 10,
+        "level": 1,
+        "radical": "言"
+    },
+    {
+        "char": "詐",
+        "meaning": "Penipuan",
+        "on": [
+            "SA"
+        ],
+        "kun": [],
+        "strokes": 12,
+        "level": 1,
+        "radical": "言"
+    },
+    {
+        "char": "詔",
+        "meaning": "Titah Kaisar",
+        "on": [
+            "SHOU"
+        ],
+        "kun": [
+            "mikotonori"
+        ],
+        "strokes": 12,
+        "level": 1,
+        "radical": "言"
+    }
+]
