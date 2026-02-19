@@ -1,0 +1,339 @@
+[
+    {
+        "title": "～にかけて",
+        "structure": "Noun (Place/Time) + にかけて",
+        "explanation": "Mulai dari ... sampai ... (cakupan waktu/tempat).",
+        "chapter": 76,
+        "jlpt_level": 2,
+        "sentences": [
+            {
+                "jp": "明日は昼から夕方にかけて雨が降るでしょう。",
+                "id": "Besok kemungkinan hujan mulai siang sampai sore."
+            }
+        ]
+    },
+    {
+        "title": "～だらけ",
+        "structure": "Noun + だらけ",
+        "explanation": "Penuh dengan ... (sesuatu yang tidak menyenangkan/kotor).",
+        "chapter": 77,
+        "jlpt_level": 2,
+        "sentences": [
+            {
+                "jp": "泥だらけの靴で家に入らないでください。",
+                "id": "Jangan masuk rumah dengan sepatu penuh lumpur."
+            }
+        ]
+    },
+    {
+        "title": "～おかげで / ～せいで",
+        "structure": "Plain Form + おかげで / せいで",
+        "explanation": "Berkat ... (positif) / Gara-gara ... (negatif).",
+        "chapter": 78,
+        "jlpt_level": 2,
+        "sentences": [
+            {
+                "jp": "先生のおかげで合格できました。",
+                "id": "Berkat guru, saya bisa lulus."
+            },
+            {
+                "jp": "バスが遅れたせいで遅刻しました。",
+                "id": "Gara-gara bus terlambat, saya jadi telat."
+            }
+        ]
+    },
+    {
+        "title": "～とおりに",
+        "structure": "Verb-Dict/Ta / Noun-no + とおりに",
+        "explanation": "Sesuai dengan ... / Seperti ...",
+        "chapter": 79,
+        "jlpt_level": 2,
+        "sentences": [
+            {
+                "jp": "私が言ったとおりにやってください。",
+                "id": "Lakukanlah seperti yang saya katakan."
+            }
+        ]
+    },
+    {
+        "title": "～について / ～につき",
+        "structure": "Noun + について / につき",
+        "explanation": "Tentang ... / Mengenai ... / Per ...",
+        "chapter": 80,
+        "jlpt_level": 2,
+        "sentences": [
+            {
+                "jp": "日本の経済について調べています。",
+                "id": "Saya sedang meneliti tentang ekonomi Jepang."
+            }
+        ]
+    },
+    {
+        "title": "～に加えて",
+        "structure": "Noun + に加えて",
+        "explanation": "Di samping ... / Ditambah lagi ...",
+        "chapter": 81,
+        "jlpt_level": 2,
+        "sentences": [
+            {
+                "jp": "風邪に加えて、歯も痛くなりました。",
+                "id": "Di samping masuk angin, gigi juga jadi sakit."
+            }
+        ]
+    },
+    {
+        "title": "～こそ",
+        "structure": "Noun + こそ",
+        "explanation": "Justru ... (penekanan).",
+        "chapter": 82,
+        "jlpt_level": 2,
+        "sentences": [
+            {
+                "jp": "今年こそ、N1に合格したいです。",
+                "id": "Tahun ini (justru) saya ingin lulus N1."
+            }
+        ]
+    },
+    {
+        "title": "～さい(に)",
+        "structure": "Verb-Dict/Ta / Noun-no + さい(に)",
+        "explanation": "Pada saat ... / Ketika ... (Formal dari とき).",
+        "chapter": 83,
+        "jlpt_level": 2,
+        "sentences": [
+            {
+                "jp": "お越しの際は、ご連絡ください。",
+                "id": "Pada saat datang, tolong hubungi."
+            }
+        ]
+    },
+    {
+        "title": "～最中に",
+        "structure": "Noun-no / Verb-Teiru + 最中に",
+        "explanation": "Tepat di tengah-tengah ...",
+        "chapter": 84,
+        "jlpt_level": 2,
+        "sentences": [
+            {
+                "jp": "食事の最中に客が来ました。",
+                "id": "Tamu datang tepat di tengah-tengah makan."
+            }
+        ]
+    },
+    {
+        "title": "～しかない",
+        "structure": "Verb-Dict + しかない",
+        "explanation": "Tidak ada pilihan lain selain ...",
+        "chapter": 85,
+        "jlpt_level": 2,
+        "sentences": [
+            {
+                "jp": "バスがないので、歩くしかありません。",
+                "id": "Karena tidak ada bus, tidak ada pilihan selain jalan kaki."
+            }
+        ]
+    },
+    {
+        "title": "～わけがない",
+        "structure": "Plain Form + わけがない",
+        "explanation": "Tidak mungkin ... (Mustahil).",
+        "chapter": 86,
+        "jlpt_level": 2,
+        "sentences": [
+            {
+                "jp": "彼が犯人のわけがありません。",
+                "id": "Tidak mungkin dia pelakunya."
+            }
+        ]
+    },
+    {
+        "title": "～ことにする",
+        "structure": "Verb-Dict/Nai + ことにする",
+        "explanation": "Memutuskan untuk ...",
+        "chapter": 87,
+        "jlpt_level": 2,
+        "sentences": [
+            {
+                "jp": "明日からジョギングをすることにしました。",
+                "id": "Saya memutuskan untuk jogging mulai besok."
+            }
+        ]
+    },
+    {
+        "title": "～ようとする",
+        "structure": "Verb-Volitional + とする",
+        "explanation": "Mencoba untuk ... / Hendak ...",
+        "chapter": 88,
+        "jlpt_level": 2,
+        "sentences": [
+            {
+                "jp": "出かけようとしたとき、電話がかかってきました。",
+                "id": "Saat hendak keluar, telepon berdering."
+            }
+        ]
+    },
+    {
+        "title": "～がち",
+        "structure": "Verb-Stem / Noun + がち",
+        "explanation": "Cenderung ... / Sering ... (negatif).",
+        "chapter": 89,
+        "jlpt_level": 2,
+        "sentences": [
+            {
+                "jp": "最近、彼は休みがちです。",
+                "id": "Akhir-akhir ini dia sering libur (tidak masuk)."
+            }
+        ]
+    },
+    {
+        "title": "～に反して",
+        "structure": "Noun + に反して",
+        "explanation": "Berlawanan dengan ... / Bertentangan dengan ...",
+        "chapter": 90,
+        "jlpt_level": 2,
+        "sentences": [
+            {
+                "jp": "予想に反して、試験は簡単でした。",
+                "id": "Berlawanan dengan dugaan, ujiannya mudah."
+            }
+        ]
+    },
+    {
+        "title": "～上(に)",
+        "structure": "Plain Form + 上(に)",
+        "explanation": "Di samping ... / Terlebih lagi ... (Menambahkan hal sejenis).",
+        "chapter": 91,
+        "jlpt_level": 2,
+        "sentences": [
+            {
+                "jp": "彼は頭がいい上に、性格もいいです。",
+                "id": "Dia di samping pintar, sifatnya juga baik."
+            }
+        ]
+    },
+    {
+        "title": "～向け / ～向き",
+        "structure": "Noun + 向け / 向き",
+        "explanation": "Ditujukan untuk ... / Cocok untuk ...",
+        "chapter": 92,
+        "jlpt_level": 2,
+        "sentences": [
+            {
+                "jp": "これは子供向けの本です。",
+                "id": "Ini adalah buku yang ditujukan untuk anak-anak."
+            },
+            {
+                "jp": "この部屋は南向きです。",
+                "id": "Kamar ini menghadap ke selatan (cocok arah selatan)."
+            }
+        ]
+    },
+    {
+        "title": "～っぽい",
+        "structure": "Noun / Verb-Stem / Adj-Stem + っぽい",
+        "explanation": "Kelihatan seperti ... / Bernuansa ...",
+        "chapter": 93,
+        "jlpt_level": 2,
+        "sentences": [
+            {
+                "jp": "あの人は子供っぽいです。",
+                "id": "Orang itu kekanak-kanakan."
+            },
+            {
+                "jp": "この服は安っぽく見えます。",
+                "id": "Baju ini kelihatan murahan."
+            }
+        ]
+    },
+    {
+        "title": "～気味",
+        "structure": "Verb-Stem / Noun + 気味",
+        "explanation": "Agak ... / Sedikit merasak ...",
+        "chapter": 94,
+        "jlpt_level": 2,
+        "sentences": [
+            {
+                "jp": "風邪気味で、頭が痛いです。",
+                "id": "Agak masuk angin, kepala sakit."
+            }
+        ]
+    },
+    {
+        "title": "～やら～やら",
+        "structure": "Noun/Verb + やら + Noun/Verb + やら",
+        "explanation": "... dan ... dan lain-lain (menunjukkan banyak hal/kekacauan).",
+        "chapter": 95,
+        "jlpt_level": 2,
+        "sentences": [
+            {
+                "jp": "泣くやら叫ぶやらで、大変でした。",
+                "id": "Menangis lah, berteriak lah, pokoknya repot."
+            }
+        ]
+    },
+    {
+        "title": "～か～ないかのうちに",
+        "structure": "Verb-Dict + か + Verb-Nai + かのうちに",
+        "explanation": "Begitu ... (selesai/terjadi), langsung ... (hampir bersamaan).",
+        "chapter": 96,
+        "jlpt_level": 2,
+        "sentences": [
+            {
+                "jp": "授業が終わるか終わらないかのうちに、彼は教室を出て行きました。",
+                "id": "Begitu pelajaran selesai (hampir bersamaan), dia langsung keluar kelas."
+            }
+        ]
+    },
+    {
+        "title": "～てからでないと",
+        "structure": "Verb-Te + からでないと",
+        "explanation": "Kalau belum ... (tidak bisa ...).",
+        "chapter": 97,
+        "jlpt_level": 2,
+        "sentences": [
+            {
+                "jp": "親に相談してからでないと、決められません。",
+                "id": "Kalau belum berunding dengan orang tua, saya tidak bisa memutuskan."
+            }
+        ]
+    },
+    {
+        "title": "～ことなく",
+        "structure": "Verb-Dict + ことなく",
+        "explanation": "Tanpa (melakukan) ... (Formal dari ないで).",
+        "chapter": 98,
+        "jlpt_level": 2,
+        "sentences": [
+            {
+                "jp": "彼は休むことなく働き続けました。",
+                "id": "Dia terus bekerja tanpa istirahat."
+            }
+        ]
+    },
+    {
+        "title": "～どころか",
+        "structure": "Plain Form + どころか",
+        "explanation": "Jangankan ... (malah sebaliknya / jauh dari itu).",
+        "chapter": 99,
+        "jlpt_level": 2,
+        "sentences": [
+            {
+                "jp": "彼は貯金するどころか、借金だらけです。",
+                "id": "Jangankan menabung, dia malah penuh hutang."
+            }
+        ]
+    },
+    {
+        "title": "～末(に)",
+        "structure": "Noun-no / Verb-Ta + 末(に)",
+        "explanation": "Pada akhirnya ... (setelah proses panjang).",
+        "chapter": 100,
+        "jlpt_level": 2,
+        "sentences": [
+            {
+                "jp": "いろいろ悩んだ末、会社を辞めることにしました。",
+                "id": "Setelah bimbang, pada akhirnya saya memutuskan berhenti kerja."
+            }
+        ]
+    }
+]

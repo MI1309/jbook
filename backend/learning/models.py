@@ -30,10 +30,14 @@ class UserProgress(models.Model):
 class QuizAttempt(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    kanji = models.ForeignKey('content.Kanji', on_delete=models.CASCADE)
+    kanji = models.ForeignKey('content.Kanji', on_delete=models.CASCADE, null=True, blank=True)
+    vocab = models.ForeignKey('content.Vocab', on_delete=models.CASCADE, null=True, blank=True)
+    grammar = models.ForeignKey('content.Grammar', on_delete=models.CASCADE, null=True, blank=True)
+    
     is_correct = models.BooleanField()
     answer_given = models.CharField(max_length=255, blank=True, null=True)
     timestamp = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"{self.user.username} - {self.kanji.character} - {'Correct' if self.is_correct else 'Wrong'}"
+        target = self.kanji or self.vocab or self.grammar or "Unknown"
+        return f"{self.user.username} - {target} - {'Correct' if self.is_correct else 'Wrong'}"

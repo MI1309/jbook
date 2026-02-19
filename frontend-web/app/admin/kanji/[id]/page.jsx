@@ -3,6 +3,7 @@
 import { useState, useEffect, use } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import Cookies from 'js-cookie';
 
 export default function KanjiForm({ params }) {
     const router = useRouter();
@@ -28,7 +29,7 @@ export default function KanjiForm({ params }) {
 
     const fetchKanji = async () => {
         try {
-            const token = localStorage.getItem('access_token');
+            const token = Cookies.get('access_token');
             const res = await fetch(`http://localhost:8000/api/admin/kanji/${id}`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
@@ -61,7 +62,7 @@ export default function KanjiForm({ params }) {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const token = localStorage.getItem('access_token');
+            const token = Cookies.get('access_token');
             const onyomiArray = typeof formData.onyomi === 'string' ? formData.onyomi.split(',').map(s => s.trim()).filter(Boolean) : [];
             const kunyomiArray = typeof formData.kunyomi === 'string' ? formData.kunyomi.split(',').map(s => s.trim()).filter(Boolean) : [];
 

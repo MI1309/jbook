@@ -1,0 +1,395 @@
+[
+    {
+        "title": "～まま",
+        "structure": "Verb-Ta / Verb-Nai / Noun-no / Adj-na + まま",
+        "explanation": "Membiarkan keadaan tetap seperti itu (tanpa perubahan).",
+        "chapter": 51,
+        "jlpt_level": 3,
+        "sentences": [
+            {
+                "jp": "靴を履いたまま、部屋に入ってはいけません。",
+                "id": "Tidak boleh masuk kamar dengan tetap memakai sepatu."
+            },
+            {
+                "jp": "テレビをつけたまま、寝てしまいました。",
+                "id": "Saya tertidur dengan TV tetap menyala."
+            }
+        ]
+    },
+    {
+        "title": "～きり",
+        "structure": "Verb-Ta / Noun + きり",
+        "explanation": "Hanya; Sejak kejadian itu (dan belum terjadi lagi).",
+        "chapter": 52,
+        "jlpt_level": 3,
+        "sentences": [
+            {
+                "jp": "彼とは去年のパーティーに会ったきりです。",
+                "id": "Saya terakhir bertemu dia saat pesta tahun lalu (dan belum bertemu lagi)."
+            },
+            {
+                "jp": "二人きりで話したいです。",
+                "id": "Saya ingin bicara hanya berdua."
+            }
+        ]
+    },
+    {
+        "title": "～ふりをする",
+        "structure": "Verb/Adj/Noun + ふりをする",
+        "explanation": "Pura-pura ...",
+        "chapter": 53,
+        "jlpt_level": 3,
+        "sentences": [
+            {
+                "jp": "彼は聞こえないふりをしました。",
+                "id": "Dia pura-pura tidak mendengar."
+            },
+            {
+                "jp": "寝たふりをしています。",
+                "id": "Dia sedang pura-pura tidur."
+            }
+        ]
+    },
+    {
+        "title": "～がち",
+        "structure": "Verb-Masu (stem) / Noun + がち",
+        "explanation": "Cenderung ...; Sering ... (biasanya bermakna negatif).",
+        "chapter": 54,
+        "jlpt_level": 3,
+        "sentences": [
+            {
+                "jp": "最近、彼は病気がちです。",
+                "id": "Akhir-akhir ini dia sering sakit-sakitan."
+            },
+            {
+                "jp": "このバスは遅れがちです。",
+                "id": "Bus ini cenderung terlambat."
+            }
+        ]
+    },
+    {
+        "title": "～だらけ",
+        "structure": "Noun + だらけ",
+        "explanation": "Penuh dengan ... (berkonotasi negatif/kotor).",
+        "chapter": 55,
+        "jlpt_level": 3,
+        "sentences": [
+            {
+                "jp": "泥だらけの靴。",
+                "id": "Sepatu yang penuh lumpur."
+            },
+            {
+                "jp": "この部屋はゴミだらけです。",
+                "id": "Kamar ini penuh dengan sampah."
+            }
+        ]
+    },
+    {
+        "title": "～おかげで",
+        "structure": "Verb/Adj/Noun + おかげで",
+        "explanation": "Berkat ... (menyatakan sebab dengan hasil positif).",
+        "chapter": 56,
+        "jlpt_level": 3,
+        "sentences": [
+            {
+                "jp": "先生のおかげで、合格しました。",
+                "id": "Berkat guru, saya lulus."
+            },
+            {
+                "jp": "天気がいいおかげで、旅行が楽しかったです。",
+                "id": "Berkat cuaca yang bagus, perjalanannya menyenangkan."
+            }
+        ]
+    },
+    {
+        "title": "～せいで",
+        "structure": "Verb/Adj/Noun + せいで",
+        "explanation": "Gara-gara ... (menyatakan sebab dengan hasil negatif).",
+        "chapter": 57,
+        "jlpt_level": 3,
+        "sentences": [
+            {
+                "jp": "雨のせいで、試合が中止になりました。",
+                "id": "Gara-gara hujan, pertandingan dibatalkan."
+            },
+            {
+                "jp": "寝不足のせいで、頭が痛いです。",
+                "id": "Gara-gara kurang tidur, kepala saya sakit."
+            }
+        ]
+    },
+    {
+        "title": "～とおりに / ～どおりに",
+        "structure": "Verb-Dict/Ta / Noun-no + とおりに / Noun + どおりに",
+        "explanation": "Sesuai dengan ...",
+        "chapter": 58,
+        "jlpt_level": 3,
+        "sentences": [
+            {
+                "jp": "説明書のとおりに、組み立てました。",
+                "id": "Saya merakitnya sesuai dengan buku petunjuk."
+            },
+            {
+                "jp": "予定どおりに終わりました。",
+                "id": "Selesai sesuai jadwal."
+            }
+        ]
+    },
+    {
+        "title": "～について",
+        "structure": "Noun + について",
+        "explanation": "Tentang ...; Mengenai ...",
+        "chapter": 59,
+        "jlpt_level": 3,
+        "sentences": [
+            {
+                "jp": "日本の歴史について勉強しています。",
+                "id": "Saya sedang belajar tentang sejarah Jepang."
+            },
+            {
+                "jp": "その件について話し合いましょう。",
+                "id": "Mari kita diskusikan mengenai hal itu."
+            }
+        ]
+    },
+    {
+        "title": "～に対して",
+        "structure": "Noun + に対して",
+        "explanation": "Terhadap ...; Berlawanan dengan ...",
+        "chapter": 60,
+        "jlpt_level": 3,
+        "sentences": [
+            {
+                "jp": "お客様に対して失礼なことを言ってはいけません。",
+                "id": "Tidak boleh berkata kasar terhadap tamu."
+            },
+            {
+                "jp": "兄は活発なのに対して、弟はおとなしいです。",
+                "id": "Berlawanan dengan kakaknya yang aktif, adiknya pendiam."
+            }
+        ]
+    },
+    {
+        "title": "～ために (Sebab)",
+        "structure": "Verb/Adj/Noun + ために",
+        "explanation": "Karena ... (Sebab/Akibat yang lebih formal).",
+        "chapter": 61,
+        "jlpt_level": 3,
+        "sentences": [
+            {
+                "jp": "事故があったために、電車が遅れています。",
+                "id": "Kereta terlambat karena ada kecelakaan."
+            }
+        ]
+    },
+    {
+        "title": "～によって",
+        "structure": "Noun + によって",
+        "explanation": "Oleh ... / Tergantung pada ... / Disebabkan oleh ...",
+        "chapter": 62,
+        "jlpt_level": 3,
+        "sentences": [
+            {
+                "jp": "この絵はピカソによって描かれました。",
+                "id": "Lukisan ini dilukis oleh Picasso."
+            },
+            {
+                "jp": "人によって考え方が違います。",
+                "id": "Cara berpikir berbeda-beda tergantung orangnya."
+            }
+        ]
+    },
+    {
+        "title": "～といえば",
+        "structure": "Noun + といえば",
+        "explanation": "Berbicara tentang ...; Mengingat soal ...",
+        "chapter": 63,
+        "jlpt_level": 3,
+        "sentences": [
+            {
+                "jp": "日本料理といえば、寿司が有名ですね。",
+                "id": "Berbicara tentang masakan Jepang, Sushi terkenal ya."
+            }
+        ]
+    },
+    {
+        "title": "～たばかり",
+        "structure": "Verb-Ta + ばかり",
+        "explanation": "Baru saja (selesai melakukan ...).",
+        "chapter": 64,
+        "jlpt_level": 3,
+        "sentences": [
+            {
+                "jp": "食べたばかりなので、お腹がいっぱいです。",
+                "id": "Karena baru saja makan, saya kenyang."
+            },
+            {
+                "jp": "日本に来たばかりです。",
+                "id": "Saya baru saja datang ke Jepang."
+            }
+        ]
+    },
+    {
+        "title": "～ようとする",
+        "structure": "Verb-Volitional + とする",
+        "explanation": "Mencoba untuk ...; Hendak ...",
+        "chapter": 65,
+        "jlpt_level": 3,
+        "sentences": [
+            {
+                "jp": "電車に乗ろうとしたとき、ドアが閉まりました。",
+                "id": "Saat hendak naik kereta, pintunya tertutup."
+            },
+            {
+                "jp": "彼は何も言おうとしません。",
+                "id": "Dia tidak mencoba mengatakan apa-apa."
+            }
+        ]
+    },
+    {
+        "title": "～こそ",
+        "structure": "Noun + こそ",
+        "explanation": "Justru ... (Penekanan).",
+        "chapter": 66,
+        "jlpt_level": 3,
+        "sentences": [
+            {
+                "jp": "今年こそ日本語能力試験に合格したいです。",
+                "id": "Tahun ini (justru) saya ingin lulus JLPT."
+            },
+            {
+                "jp": "こちらこそよろしくお願いします。",
+                "id": "Sayalah yang seharusnya mohon bantuannya."
+            }
+        ]
+    },
+    {
+        "title": "～さえ",
+        "structure": "Noun + さえ",
+        "explanation": "Bahkan ... / Asalkan ...",
+        "chapter": 67,
+        "jlpt_level": 3,
+        "sentences": [
+            {
+                "jp": "喉が痛くて、水さえ飲めません。",
+                "id": "Tenggorokan sakit, bahkan minum air pun tidak bisa."
+            },
+            {
+                "jp": "時間さえあれば、行けるのに。",
+                "id": "Asalkan ada waktu, padahal saya bisa pergi."
+            }
+        ]
+    },
+    {
+        "title": "～として",
+        "structure": "Noun + として",
+        "explanation": "Sebagai ...",
+        "chapter": 68,
+        "jlpt_level": 3,
+        "sentences": [
+            {
+                "jp": "彼は医者として働いています。",
+                "id": "Dia bekerja sebagai dokter."
+            },
+            {
+                "jp": "京都は観光地として有名です。",
+                "id": "Kyoto terkenal sebagai tempat wisata."
+            }
+        ]
+    },
+    {
+        "title": "～うちに",
+        "structure": "Verb/Adj/Noun + うちに",
+        "explanation": "Selagi ... / Mumpung ...",
+        "chapter": 69,
+        "jlpt_level": 3,
+        "sentences": [
+            {
+                "jp": "若いうちに、いろいろな経験をしたほうがいいです。",
+                "id": "Selagi muda, sebaiknya mencari banyak pengalaman."
+            },
+            {
+                "jp": "雨が降らないうちに、帰りましょう。",
+                "id": "Ayo pulang selagi hujan belum turun."
+            }
+        ]
+    },
+    {
+        "title": "～最中に",
+        "structure": "Noun-no / Verb-Teiru + 最中に",
+        "explanation": "Di tengah-tengah ... (sedang asyik/sibuk).",
+        "chapter": 70,
+        "jlpt_level": 3,
+        "sentences": [
+            {
+                "jp": "会議の最中に、ケータイが鳴りました。",
+                "id": "HP berbunyi di tengah-tengah rapat."
+            }
+        ]
+    },
+    {
+        "title": "～に違いない",
+        "structure": "Plain Form + に違いない",
+        "explanation": "Pasti ... (Keyakinan kuat).",
+        "chapter": 71,
+        "jlpt_level": 3,
+        "sentences": [
+            {
+                "jp": "あの人は日本人に違いありません。",
+                "id": "Orang itu pasti orang Jepang."
+            }
+        ]
+    },
+    {
+        "title": "～はずだ",
+        "structure": "Plain Form + はずだ",
+        "explanation": "Seharusnya ... (Ekspektasi logis).",
+        "chapter": 72,
+        "jlpt_level": 3,
+        "sentences": [
+            {
+                "jp": "彼はもうすぐ来るはずです。",
+                "id": "Dia seharusnya segera datang."
+            }
+        ]
+    },
+    {
+        "title": "～わけにはいかない",
+        "structure": "Verb-Dict + わけにはいかない",
+        "explanation": "Tidak mungkin ... (karena alasan moral/sosial).",
+        "chapter": 73,
+        "jlpt_level": 3,
+        "sentences": [
+            {
+                "jp": "明日は大事なテストがあるから、休むわけにはいきません。",
+                "id": "Karena besok ada tes penting, saya tidak mungkin libur."
+            }
+        ]
+    },
+    {
+        "title": "～ないことはない",
+        "structure": "Verb-Nai + ことはない",
+        "explanation": "Bukan berarti tidak ... (Mungkin saja ...).",
+        "chapter": 74,
+        "jlpt_level": 3,
+        "sentences": [
+            {
+                "jp": "走れば間に合わないことはない。",
+                "id": "Kalau lari, bukan tidak mungkin keburu (mungkin keburu)."
+            }
+        ]
+    },
+    {
+        "title": "～ている",
+        "structure": "Verb-Te + いる (keadaan)",
+        "explanation": "Menjelaskan keadaan hasil dari suatu aksi (transitif/intransitif contrast).",
+        "chapter": 75,
+        "jlpt_level": 3,
+        "sentences": [
+            {
+                "jp": "電気がついています。",
+                "id": "Lampunya menyala (keadaan)."
+            }
+        ]
+    }
+]

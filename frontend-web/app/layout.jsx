@@ -31,6 +31,8 @@ export const viewport = {
     maximumScale: 1,
 };
 
+import { PracticeProvider } from "@/context/PracticeContext";
+
 export default function RootLayout({ children }) {
     return (
         <html lang="en">
@@ -38,15 +40,17 @@ export default function RootLayout({ children }) {
                 className={`${geistSans.variable} ${geistMono.variable} antialiased bg-gray-50 min-h-screen flex flex-col`}
             >
                 <AuthProvider>
-                    <Navbar />
-                    <main className="flex-grow">
-                        {children}
-                    </main>
-                    <footer className="bg-white border-t border-gray-200 mt-auto">
-                        <div className="container mx-auto px-4 py-6 text-center text-sm text-gray-500">
-                            &copy; {new Date().getFullYear()} JBook. Belajar Bahasa Jepang.
-                        </div>
-                    </footer>
+                    <PracticeProvider>
+                        <Navbar />
+                        <main className="flex-grow">
+                            {children}
+                        </main>
+                        <footer className="bg-white border-t border-gray-200 mt-auto">
+                            <div className="container mx-auto px-4 py-6 text-center text-sm text-gray-500">
+                                &copy; {new Date().getFullYear()} JBook. Belajar Bahasa Jepang.
+                            </div>
+                        </footer>
+                    </PracticeProvider>
                 </AuthProvider>
             </body>
         </html>

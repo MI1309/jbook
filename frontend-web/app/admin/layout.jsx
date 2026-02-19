@@ -51,6 +51,9 @@ export default function AdminLayout({ children }) {
                     <Link href="/admin/bunpo" className="block px-4 py-2 rounded-md hover:bg-red-50 text-gray-700 hover:text-red-700 font-medium">
                         Bunpo (Grammar)
                     </Link>
+                    <Link href="/admin/kotoba" className="block px-4 py-2 rounded-md hover:bg-red-50 text-gray-700 hover:text-red-700 font-medium">
+                        Kotoba (Vocabulary)
+                    </Link>
                     <div className="border-t border-gray-200 my-4"></div>
                     <Link href="/" className="block px-4 py-2 rounded-md hover:bg-gray-100 text-gray-600 font-medium">
                         &larr; Back to Site

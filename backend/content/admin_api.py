@@ -195,13 +195,24 @@ class GrammarSchema(GrammarCreateSchema):
 
 # Bunpo CRUD
 @router.get("/bunpo", auth=AdminAuth(), response=List[GrammarSchema])
-def list_bunpos(request, level: int = None, chapter: int = None):
+def list_bunpos(request, level: int = None, chapter: int = None, search: str = None, page: int = 1, limit: int = 20):
     query = Grammar.objects.all().order_by('chapter', 'jlpt_level', 'id')
+    
     if level:
         query = query.filter(jlpt_level=level)
     if chapter:
         query = query.filter(chapter=chapter)
-    return query
+        
+    if search:
+        query = query.filter(
+            Q(title__icontains=search) | 
+            Q(structure__icontains=search) | 
+            Q(explanation__icontains=search)
+        )
+        
+    # Pagination
+    offset = (page - 1) * limit
+    return query[offset : offset + limit]
 
 @router.post("/bunpo", auth=AdminAuth(), response=GrammarSchema)
 def create_bunpo(request, payload: GrammarCreateSchema):
@@ -224,4 +235,63 @@ def update_bunpo(request, id: str, payload: GrammarCreateSchema):
 def delete_bunpo(request, id: str):
     grammar = get_object_or_404(Grammar, id=id)
     grammar.delete()
+    return {"success": True}
+
+# Vocab Schemas
+from .models import Vocab
+
+class VocabCreateSchema(BaseModel):
+    word: str
+    reading: str
+    meaning: str
+    jlpt_level: int
+    examples: List[dict] = []
+    # kanji_rel is ManyToMany, handle separately or via list of IDs?
+    # For simplicity, let's ignore relations for now or add if needed.
+    # The current requirement is simple CRUD.
+
+class VocabSchema(VocabCreateSchema):
+    id: UUID
+    model_config = {"from_attributes": True}
+
+# Vocab CRUD
+@router.get("/vocab", auth=AdminAuth(), response=List[VocabSchema])
+def list_vocabs(request, search: str = None, page: int = 1, limit: int = 50):
+    from utils.kana import to_kana
+    
+    query = Vocab.objects.all().order_by('word')
+    
+    if search:
+        search_kana = to_kana(search)
+        query = query.filter(
+            Q(word__icontains=search) | 
+            Q(reading__icontains=search) | 
+            Q(meaning__icontains=search) |
+            Q(reading__icontains=search_kana)
+        )
+        
+    offset = (page - 1) * limit
+    return query[offset : offset + limit]
+
+@router.post("/vocab", auth=AdminAuth(), response=VocabSchema)
+def create_vocab(request, payload: VocabCreateSchema):
+    vocab = Vocab.objects.create(**payload.dict())
+    return vocab
+
+@router.get("/vocab/{id}", auth=AdminAuth(), response=VocabSchema)
+def get_vocab(request, id: str):
+    return get_object_or_404(Vocab, id=id)
+
+@router.put("/vocab/{id}", auth=AdminAuth(), response=VocabSchema)
+def update_vocab(request, id: str, payload: VocabCreateSchema):
+    vocab = get_object_or_404(Vocab, id=id)
+    for attr, value in payload.dict().items():
+        setattr(vocab, attr, value)
+    vocab.save()
+    return vocab
+
+@router.delete("/vocab/{id}", auth=AdminAuth())
+def delete_vocab(request, id: str):
+    vocab = get_object_or_404(Vocab, id=id)
+    vocab.delete()
     return {"success": True}

@@ -8,25 +8,48 @@ export default function PracticeConfig() {
     const [limit, setLimit] = useState(10);
     const [level, setLevel] = useState(''); // Empty string means "All Levels"
     const [timer, setTimer] = useState(''); // Empty string means "No Timer"
+    const [type, setType] = useState('kanji'); // Default to Kanji
 
     const handleStart = () => {
+        // Clear any existing guest session to ensure a fresh start
+        sessionStorage.removeItem('guest_practice_session');
+
         const params = new URLSearchParams();
         params.append('limit', limit);
+        params.append('type', type);
         if (level) params.append('level', level);
         if (timer) params.append('timer', timer);
         router.push(`/practice/start?${params.toString()}`);
     };
 
     return (
-        <div className="bg-white p-8 rounded-2xl shadow-xl max-w-2xl mx-auto border-t-4 border-red-600 relative overflow-hidden">
+        <div className="bg-white p-4 md:p-8 rounded-2xl shadow-xl max-w-2xl mx-auto border-t-4 border-red-600 relative overflow-hidden">
             <div className="absolute top-0 right-0 p-4 opacity-5 text-9xl font-serif select-none pointer-events-none text-red-900">
                 学
             </div>
 
-            <h2 className="text-3xl font-bold mb-2 text-gray-800 text-center">Mulai Latihan Baru</h2>
-            <p className="text-center text-gray-500 mb-8">Atur preferensi latihan sesuai target belajarmu hari ini.</p>
+            <div className="flex justify-between items-center mb-2">
+                <h2 className="text-3xl font-bold text-gray-800">Mulai Latihan Baru</h2>
+            </div>
+            <p className="text-gray-500 mb-8">Atur preferensi latihan sesuai target belajarmu hari ini.</p>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8 relative z-10">
+                {/* Type Selector */}
+                <div className="bg-red-50 p-4 rounded-xl border border-red-100 transition-transform hover:-translate-y-1">
+                    <label className="block text-sm font-bold text-red-800 mb-2 flex items-center gap-2">
+                        <span>📚</span> Materi
+                    </label>
+                    <select
+                        value={type}
+                        onChange={(e) => setType(e.target.value)}
+                        className="w-full p-2 border-0 bg-white rounded-lg ring-1 ring-red-200 focus:ring-2 focus:ring-red-500 text-gray-700 font-medium"
+                    >
+                        <option value="kanji">Kanji</option>
+                        <option value="bunpo">Tata Bahasa (Bunpo)</option>
+                        <option value="kotoba">Kosakata (Kotoba)</option>
+                    </select>
+                </div>
+
                 {/* Number of Questions */}
                 <div className="bg-red-50 p-4 rounded-xl border border-red-100 transition-transform hover:-translate-y-1">
                     <label className="block text-sm font-bold text-red-800 mb-2 flex items-center gap-2">

@@ -63,15 +63,80 @@ def get_kanji(request, kanji_id: UUID):
     return get_object_or_404(Kanji, id=kanji_id)
 
 @router.get("/grammar", response=List[GrammarSchema])
-def list_grammar(request, level: Optional[int] = None):
+def list_grammar(request, 
+                 level: Optional[int] = None,
+                 search: Optional[str] = None,
+                 chapter: Optional[int] = None,
+                 limit: int = 100,
+                 offset: int = 0):
     qs = Grammar.objects.all()
     if level:
         qs = qs.filter(jlpt_level=level)
+
+    if chapter:
+        qs = qs.filter(chapter=chapter)
+
+    if search:
+        from django.db.models import Q
+        qs = qs.filter(
+            Q(title__icontains=search) | 
+            Q(structure__icontains=search) | 
+            Q(explanation__icontains=search)
+        )
     
     # Order by chapter then title
     qs = qs.order_by('chapter', 'title')
-    return qs
+    
+    # Pagination
+    return qs[offset : offset + limit]
 
 @router.get("/grammar/{grammar_id}", response=GrammarSchema)
 def get_grammar(request, grammar_id: UUID):
     return get_object_or_404(Grammar, id=grammar_id)
+
+
+class VocabSchema(Schema):
+    id: UUID
+    word: str
+    reading: str
+    meaning: str
+    jlpt_level: int
+    examples: List[dict] = []
+
+@router.get("/random-kotoba", response=VocabSchema)
+def get_random_kotoba(request):
+    from .models import Vocab
+    # Efficient enough for small datasets
+    vocab = Vocab.objects.order_by('?').first()
+    if not vocab:
+        return 404, {"message": "No vocabulary found"}
+    return vocab
+
+@router.get("/vocab", response=List[VocabSchema])
+def list_vocab(request, 
+               search: Optional[str] = None,
+               limit: int = 100,
+               offset: int = 0):
+    from .models import Vocab
+    from django.db.models import Q
+    from utils.kana import to_kana
+    
+    qs = Vocab.objects.all().order_by('word')
+    
+    if search:
+        search_kana = to_kana(search)
+        qs = qs.filter(
+            Q(word__icontains=search) | 
+            Q(reading__icontains=search) | 
+            Q(meaning__icontains=search) |
+            Q(word__icontains=search_kana) | # If word is simple kana
+            Q(reading__icontains=search_kana) # Determine if input was romaji, searching in kana reading
+        )
+        
+        
+    return qs[offset : offset + limit]
+
+@router.get("/vocab/{vocab_id}", response=VocabSchema)
+def get_vocab(request, vocab_id: UUID):
+    from .models import Vocab
+    return get_object_or_404(Vocab, id=vocab_id)

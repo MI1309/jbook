@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import Link from 'next/link';
+import Cookies from 'js-cookie';
 
 export default function KanjiAdmin() {
     const { user } = useAuth();
@@ -17,7 +18,7 @@ export default function KanjiAdmin() {
     const fetchKanjis = async () => {
         setLoading(true);
         try {
-            const token = localStorage.getItem('access_token');
+            const token = Cookies.get('access_token');
             let url = 'http://localhost:8000/api/admin/kanji';
             if (filterLevel) {
                 url += `?level=${filterLevel}`;
@@ -47,7 +48,7 @@ export default function KanjiAdmin() {
         if (!confirm('Are you sure you want to delete this Kanji?')) return;
 
         try {
-            const token = localStorage.getItem('access_token');
+            const token = Cookies.get('access_token');
             const res = await fetch(`http://localhost:8000/api/admin/kanji/${id}`, {
                 method: 'DELETE',
                 headers: { 'Authorization': `Bearer ${token}` }

@@ -41,6 +41,7 @@ class Vocab(models.Model):
     meaning = models.CharField(max_length=255, help_text="Arti kata dalam Bahasa Indonesia")
     kanji_rel = models.ManyToManyField(Kanji, related_name='vocab', blank=True)
     jlpt_level = models.IntegerField(choices=JLPTLevel.choices, default=JLPTLevel.N5)
+    examples = models.JSONField(default=list, help_text="Contoh kalimat")
 
     def __str__(self):
         return self.word

@@ -3,8 +3,11 @@
 import { createContext, useContext, useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { GoogleOAuthProvider } from '@react-oauth/google';
+import Cookies from 'js-cookie';
 
 const AuthContext = createContext();
+
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api';
 
 export function AuthProvider({ children }) {
     const [user, setUser] = useState(null);
@@ -16,14 +19,18 @@ export function AuthProvider({ children }) {
     console.log("Google Client ID Loaded:", GOOGLE_CLIENT_ID ? GOOGLE_CLIENT_ID.substring(0, 10) + "..." : "Not Found");
 
     useEffect(() => {
+        // Cleanup old localStorage data
+        localStorage.removeItem('access_token');
+        localStorage.removeItem('refresh_token');
+        localStorage.removeItem('guest_practice_session');
         checkUser();
     }, []);
 
     const checkUser = async () => {
-        const token = localStorage.getItem('access_token');
+        const token = Cookies.get('access_token');
         if (token) {
             try {
-                const res = await fetch('http://localhost:8000/api/auth/me', {
+                const res = await fetch(`${API_URL}/auth/me`, {
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }
@@ -46,7 +53,7 @@ export function AuthProvider({ children }) {
 
     const login = async (email, password) => {
         try {
-            const res = await fetch('http://localhost:8000/api/auth/login', {
+            const res = await fetch(`${API_URL}/auth/login`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email, password })
@@ -58,8 +65,11 @@ export function AuthProvider({ children }) {
                 throw new Error(data.message || 'Login failed');
             }
 
-            localStorage.setItem('access_token', data.access);
-            localStorage.setItem('refresh_token', data.refresh);
+            // Set cookies with 1 hour expiration (1/24 of a day)
+            const oneHour = 1 / 24;
+            Cookies.set('access_token', data.access, { expires: oneHour });
+            Cookies.set('refresh_token', data.refresh, { expires: oneHour });
+
             setUser(data.user);
             router.push('/');
             return { success: true };
@@ -70,7 +80,7 @@ export function AuthProvider({ children }) {
 
     const register = async (username, email, password) => {
         try {
-            const res = await fetch('http://localhost:8000/api/auth/register', {
+            const res = await fetch(`${API_URL}/auth/register`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ username, email, password })
@@ -82,8 +92,11 @@ export function AuthProvider({ children }) {
                 throw new Error(data.message || 'Registration failed');
             }
 
-            localStorage.setItem('access_token', data.access);
-            localStorage.setItem('refresh_token', data.refresh);
+            // Set cookies with 1 hour expiration
+            const oneHour = 1 / 24;
+            Cookies.set('access_token', data.access, { expires: oneHour });
+            Cookies.set('refresh_token', data.refresh, { expires: oneHour });
+
             setUser(data.user);
             router.push('/');
             return { success: true };
@@ -95,7 +108,7 @@ export function AuthProvider({ children }) {
     const googleLogin = async (credentialResponse) => {
         console.log("Google Login Initiated", credentialResponse);
         try {
-            const res = await fetch('http://localhost:8000/api/auth/google', {
+            const res = await fetch(`${API_URL}/auth/google`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ token: credentialResponse.credential })
@@ -111,8 +124,11 @@ export function AuthProvider({ children }) {
                 throw new Error(errorMessage);
             }
 
-            localStorage.setItem('access_token', data.access);
-            localStorage.setItem('refresh_token', data.refresh);
+            // Set cookies with 1 hour expiration
+            const oneHour = 1 / 24;
+            Cookies.set('access_token', data.access, { expires: oneHour });
+            Cookies.set('refresh_token', data.refresh, { expires: oneHour });
+
             setUser(data.user);
             router.push('/');
             return { success: true };
@@ -123,8 +139,8 @@ export function AuthProvider({ children }) {
     };
 
     const logout = () => {
-        localStorage.removeItem('access_token');
-        localStorage.removeItem('refresh_token');
+        Cookies.remove('access_token');
+        Cookies.remove('refresh_token');
         localStorage.removeItem('guest_practice_session');
         window.dispatchEvent(new Event('auth:logout'));
         setUser(null);

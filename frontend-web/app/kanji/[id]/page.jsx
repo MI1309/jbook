@@ -54,7 +54,12 @@ export default async function KanjiDetailPage({ params }) {
                         {kanji.examples.length > 0 ? (
                             kanji.examples.map((ex, i) => (
                                 <div key={i} className="p-2 bg-gray-50 rounded">
-                                    <p className="font-bold">{ex.word} ({ex.reading})</p>
+                                    <p className="font-bold mb-1">
+                                        <ruby className="text-lg" style={{ rubyPosition: 'under' }}>
+                                            {ex.word}
+                                            <rt className="text-sm text-red-500 font-normal">{ex.reading}</rt>
+                                        </ruby>
+                                    </p>
                                     <p className="text-gray-600">{ex.meaning}</p>
                                 </div>
                             ))

@@ -1,5 +1,5 @@
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api';
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:8000/api';
 
 /**
  * @typedef {Object} Kanji
@@ -69,12 +69,26 @@ export async function getKanjiDetail(id) {
  */
 
 /**
- * @param {number} [level]
+ * @param {Object} params
+ * @param {number} [params.level]
+ * @param {string} [params.search]
+ * @param {number} [params.chapter]
+ * @param {number} [params.limit]
+ * @param {number} [params.offset]
  * @returns {Promise<Grammar[]>}
  */
-export async function getGrammarList(level) {
-    const params = level ? `?level=${level}` : '';
-    const res = await fetch(`${API_URL}/content/grammar${params}`, {
+export async function getGrammarList({ level, search, chapter, limit = 100, page = 1 } = {}) {
+    const queryParams = new URLSearchParams();
+    if (level) queryParams.append('level', level);
+    if (search) queryParams.append('search', search);
+    if (chapter) queryParams.append('chapter', chapter);
+    if (limit) queryParams.append('limit', limit);
+
+    // Calculate offset from page
+    const offset = (page - 1) * limit;
+    queryParams.append('offset', offset);
+
+    const res = await fetch(`${API_URL}/content/grammar?${queryParams.toString()}`, {
         cache: 'no-store',
     });
 
@@ -113,10 +127,11 @@ export async function getGrammarDetail(id) {
  * @param {number} [params.level]
  * @returns {Promise<QuizQuestion[]>}
  */
-export async function getPracticeQuestions({ limit = 10, level = null } = {}) {
+export async function getPracticeQuestions({ limit = 10, level = null, type = 'kanji' } = {}) {
     const params = new URLSearchParams();
     if (limit) params.append('limit', limit);
     if (level) params.append('level', level);
+    if (type) params.append('type', type);
 
     const res = await fetch(`${API_URL}/learning/practice/generate?${params.toString()}`, {
         cache: 'no-store',
@@ -164,6 +179,75 @@ export async function getUserAnalytics() {
             accuracy: 0,
             wrong_stats: []
         };
+    }
+
+    return res.json();
+}
+
+/**
+ * @returns {Promise<Object>}
+ */
+export async function resetPracticeProgress() {
+    const res = await fetch(`${API_URL}/learning/practice/reset`, {
+        method: 'POST',
+    });
+
+    if (!res.ok) {
+        throw new Error('Failed to reset practice progress');
+    }
+
+    return res.json();
+}
+
+/**
+ * @typedef {Object} Vocab
+ * @property {string} id
+ * @property {string} word
+ * @property {string} reading
+ * @property {string} meaning
+ * @property {number} jlpt_level
+ */
+
+/**
+ * @param {Object} params
+ * @param {string} [params.search]
+ * @param {number} [params.limit]
+ * @param {number} [params.page]
+ * @returns {Promise<Vocab[]>}
+ */
+export async function getVocabList({ search, limit = 100, page = 1 } = {}) {
+    const queryParams = new URLSearchParams();
+    if (search) queryParams.append('search', search);
+    if (limit) queryParams.append('limit', limit);
+
+    // Calculate offset from page
+    const offset = (page - 1) * limit;
+    queryParams.append('offset', offset);
+
+    const res = await fetch(`${API_URL}/content/vocab?${queryParams.toString()}`, {
+        cache: 'no-store',
+    });
+
+    if (!res.ok) {
+        throw new Error('Failed to fetch Vocab');
+    }
+
+    return res.json();
+}
+
+/**
+ * @param {string} id
+ * @returns {Promise<Vocab>}
+ */
+export async function getVocabDetail(id) {
+    const res = await fetch(`${API_URL}/content/vocab/${id}`, {
+        cache: 'no-store',
+    });
+
+    if (!res.ok) {
+        const errorText = await res.text();
+        console.error(`[getVocabDetail] Fetch error: ${res.status}`, errorText);
+        throw new Error(`Failed to fetch Vocab detail: ${res.status} ${res.statusText}`);
     }
 
     return res.json();

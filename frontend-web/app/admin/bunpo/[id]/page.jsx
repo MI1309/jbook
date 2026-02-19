@@ -3,6 +3,7 @@
 import { useState, useEffect, use } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import Cookies from 'js-cookie';
 
 export default function BunpoForm({ params }) {
     const router = useRouter();
@@ -29,7 +30,7 @@ export default function BunpoForm({ params }) {
 
     const fetchBunpo = async () => {
         try {
-            const token = localStorage.getItem('access_token');
+            const token = Cookies.get('access_token');
             const res = await fetch(`http://localhost:8000/api/admin/bunpo/${id}`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
@@ -77,7 +78,7 @@ export default function BunpoForm({ params }) {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const token = localStorage.getItem('access_token');
+            const token = Cookies.get('access_token');
             const payload = {
                 ...formData,
                 chapter: parseInt(formData.chapter),
