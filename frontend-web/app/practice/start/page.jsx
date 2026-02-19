@@ -1,28 +1,23 @@
 'use client';
 
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useCallback, useRef, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { getPracticeQuestions, submitPracticeResults } from '@/lib/api';
+import { useAuth } from '@/context/AuthContext';
+import { usePractice } from '@/context/PracticeContext';
+import { saveGuestResults } from '@/lib/local-analytics';
+import { submitPracticeResults, getPracticeQuestions } from '@/lib/api';
 
-export default function PracticeStartPage() {
+function PracticeContent() {
     const router = useRouter();
     const searchParams = useSearchParams();
+    const { setIsPracticing } = usePractice();
+    const { user } = useAuth(); // Get user auth state
     const isLoggingOut = useRef(false);
-
-    // Listen for logout event to prevent re-saving session
-    useEffect(() => {
-        const handleLogout = () => {
-            isLoggingOut.current = true;
-        };
-        window.addEventListener('auth:logout', handleLogout);
-        return () => window.removeEventListener('auth:logout', handleLogout);
-    }, []);
-
-    // ... (rest of config logic)
 
     // Get config from URL
     const limit = searchParams.get('limit') ? parseInt(searchParams.get('limit')) : 10;
     const level = searchParams.get('level') ? parseInt(searchParams.get('level')) : null;
+    const type = searchParams.get('type') || 'kanji';
     const initialTimer = searchParams.get('timer') ? parseInt(searchParams.get('timer')) * 60 : null;
 
     const [questions, setQuestions] = useState([]);
@@ -41,17 +36,26 @@ export default function PracticeStartPage() {
         if (submitting || finished) return;
 
         setSubmitting(true);
+        const resultsToSubmit = finalResultsOverride || results;
+
         try {
-            await submitPracticeResults(finalResultsOverride || results);
+            if (user) {
+                // Logged in: Submit to API
+                await submitPracticeResults(resultsToSubmit);
+            } else {
+                // Guest: Save to Local Storage
+                saveGuestResults(resultsToSubmit);
+            }
+
             setFinished(true);
-            localStorage.removeItem('guest_practice_session'); // Clear cache on finish
+            sessionStorage.removeItem('guest_practice_session'); // Clear cache on finish
         } catch (error) {
             console.error('Failed to submit results:', error);
             alert('Gagal menyimpan hasil latihan.');
         } finally {
             setSubmitting(false);
         }
-    }, [results, submitting, finished]);
+    }, [results, submitting, finished, user]);
 
     useEffect(() => {
         if (initialTimer === null || finished || loading) return;
@@ -76,10 +80,9 @@ export default function PracticeStartPage() {
 
     // Load questions or restore session
     useEffect(() => {
-        // defined inside effect to avoid dependency issues
         async function loadQuestions() {
             try {
-                const data = await getPracticeQuestions({ limit, level });
+                const data = await getPracticeQuestions({ limit, level, type });
                 setQuestions(data);
             } catch (error) {
                 console.error('Failed to load questions:', error);
@@ -89,7 +92,10 @@ export default function PracticeStartPage() {
             }
         }
 
-        const savedSession = localStorage.getItem('guest_practice_session');
+        // DOUBLE CHECK: Ensure localStorage is wiped, in case context cleanup missed it
+        localStorage.removeItem('guest_practice_session');
+
+        const savedSession = sessionStorage.getItem('guest_practice_session');
         if (savedSession) {
             try {
                 const session = JSON.parse(savedSession);
@@ -104,16 +110,16 @@ export default function PracticeStartPage() {
                     setLoading(false);
                     return; // Return early, don't load new questions
                 } else {
-                    localStorage.removeItem('guest_practice_session');
+                    sessionStorage.removeItem('guest_practice_session');
                 }
             } catch (e) {
                 console.error("Failed to parse saved session", e);
-                localStorage.removeItem('guest_practice_session');
+                sessionStorage.removeItem('guest_practice_session');
             }
         }
 
         loadQuestions();
-    }, [limit, level]);
+    }, [limit, level, type]);
 
     // Save session state
     useEffect(() => {
@@ -128,9 +134,54 @@ export default function PracticeStartPage() {
                 timestamp: Date.now(),
                 finished: false
             };
-            localStorage.setItem('guest_practice_session', JSON.stringify(session));
+            sessionStorage.setItem('guest_practice_session', JSON.stringify(session));
         }
     }, [questions, currentIndex, score, results, timeLeft, loading, finished]);
+
+    // Set practice state on mount
+    useEffect(() => {
+        setIsPracticing(true);
+        return () => setIsPracticing(false);
+    }, [setIsPracticing]);
+
+    // Listen for logout event to prevent re-saving session
+    useEffect(() => {
+        const handleLogout = () => {
+            isLoggingOut.current = true;
+        };
+        window.addEventListener('auth:logout', handleLogout);
+        return () => window.removeEventListener('auth:logout', handleLogout);
+    }, []);
+
+    // Prevent accidental close/refresh
+    useEffect(() => {
+        const handleBeforeUnload = (e) => {
+            if (!finished) {
+                e.preventDefault();
+                e.returnValue = '';
+            }
+        };
+
+        window.addEventListener('beforeunload', handleBeforeUnload);
+        return () => window.removeEventListener('beforeunload', handleBeforeUnload);
+    }, [finished]);
+
+    const nextTimeoutRef = useRef(null);
+
+    const handleNext = () => {
+        if (nextTimeoutRef.current) {
+            clearTimeout(nextTimeoutRef.current);
+            nextTimeoutRef.current = null;
+        }
+
+        if (currentIndex < questions.length - 1) {
+            setCurrentIndex(prev => prev + 1);
+            setSelectedOption(null);
+            setIsAnswered(false);
+        } else {
+            handleFinish();
+        }
+    };
 
     const handleOptionSelect = (option) => {
         if (isAnswered) return;
@@ -144,8 +195,11 @@ export default function PracticeStartPage() {
         }
 
         // Record attempt
+        const currentQ = questions[currentIndex];
         const attempt = {
-            kanji_id: questions[currentIndex].kanji_id,
+            question_id: currentQ.id || currentQ.kanji_id, // Fallback for old cached data
+            type: currentQ.type || 'kanji',
+            character: currentQ.character, // Critical for guest analytics
             is_correct: isCorrect,
             answer_given: option.text
         };
@@ -153,20 +207,20 @@ export default function PracticeStartPage() {
         const newResults = [...results, attempt];
         setResults(newResults);
 
-        // Auto-advance after 1 second
-        setTimeout(() => {
+        // Auto-advance logic
+        const delay = isCorrect ? 1500 : 5000; // 1.5s if correct, 5s if wrong
+
+        nextTimeoutRef.current = setTimeout(() => {
             if (currentIndex < questions.length - 1) {
                 setCurrentIndex(prev => prev + 1);
                 setSelectedOption(null);
                 setIsAnswered(false);
             } else {
-                handleFinish(newResults);
+                handleFinish(newResults); // Pass fresh results to finish
             }
-        }, 1000);
+            nextTimeoutRef.current = null;
+        }, delay);
     };
-
-    /* Modified handleNext to be internal or removed if not used, 
-       but we inline the logic above to avoid closure staleness issues with simple setTimeout */
 
     if (loading) {
         return (
@@ -259,11 +313,24 @@ export default function PracticeStartPage() {
             {/* Question Card */}
             <div className="bg-white rounded-3xl shadow-xl p-8 mb-8 text-center border border-gray-100 relative flex-grow flex flex-col justify-center">
                 <div className="mb-8">
-                    <span className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-2 block">Kanji</span>
-                    <div className="text-[10rem] leading-none font-medium text-gray-800 select-none">
+                    <span className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-2 block">
+                        {currentQuestion.type === 'kanji' ? 'Kanji' : currentQuestion.type === 'vocab' ? 'Kosakata' : 'Tata Bahasa'}
+                    </span>
+                    <div className={`${currentQuestion.type === 'grammar' ? 'text-4xl md:text-5xl' : 'text-8xl md:text-[8rem]'} leading-none font-medium text-gray-800 select-none`}>
                         {currentQuestion.character}
                     </div>
                 </div>
+
+                {isAnswered && (currentQuestion.reading || currentQuestion.meaning) && (
+                    <div className="mb-6 animate-fade-in-up">
+                        {currentQuestion.reading && (
+                            <div className="text-2xl text-red-500 font-serif mb-1">{currentQuestion.reading}</div>
+                        )}
+                        {currentQuestion.meaning && (
+                            <div className="text-lg text-gray-600 font-medium">{currentQuestion.meaning}</div>
+                        )}
+                    </div>
+                )}
 
                 <div className="grid gap-3 grid-cols-1 md:grid-cols-2">
                     {currentQuestion.options.map((option, idx) => {
@@ -298,10 +365,38 @@ export default function PracticeStartPage() {
                 </div>
             </div>
 
-            {/* Next Button Removed for Auto-Advance */}
-            <div className="h-20 flex items-center justify-center">
-                {/* Placeholder to keep spacing */}
+            {/* Next Button / Feedback */}
+            <div className="h-24 flex items-center justify-center">
+                {isAnswered && (
+                    <div className="animate-fade-in-up w-full max-w-sm px-4">
+                        <button
+                            onClick={handleNext}
+                            className={`w-full py-4 rounded-xl font-bold text-white shadow-lg transition-all transform hover:scale-105 ${selectedOption?.is_correct
+                                ? "bg-green-500 hover:bg-green-600 shadow-green-200"
+                                : "bg-red-500 hover:bg-red-600 shadow-red-200"
+                                }`}
+                        >
+                            {currentIndex < questions.length - 1 ? "Lanjut (Klik untuk skip)" : "Lihat Hasil"}
+                        </button>
+                        {!selectedOption?.is_correct && (
+                            <p className="text-center text-xs text-gray-400 mt-2">Otomatis lanjut dalam 5 detik...</p>
+                        )}
+                    </div>
+                )}
             </div>
         </div>
+    );
+}
+
+export default function PracticeStartPage() {
+    return (
+        <Suspense fallback={
+            <div className="flex flex-col items-center justify-center min-h-[50vh]">
+                <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-red-600 mb-4"></div>
+                <div className="text-xl text-gray-600 font-medium animate-pulse">Memuat latihan...</div>
+            </div>
+        }>
+            <PracticeContent />
+        </Suspense>
     );
 }
