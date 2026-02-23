@@ -9,6 +9,11 @@ from google.auth.transport import requests
 from django.conf import settings
 from ninja.errors import HttpError
 from ninja_jwt.authentication import JWTAuth
+from django.core.mail import send_mail
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.utils.encoding import force_bytes, force_str
+from django.contrib.auth.tokens import default_token_generator
+from django.template.loader import render_to_string
 
 router = Router()
 User = get_user_model()
@@ -37,6 +42,14 @@ class LoginSchema(BaseModel):
 
 class GoogleAuthSchema(BaseModel):
     token: str
+
+class PasswordResetRequestSchema(BaseModel):
+    email: EmailStr
+
+class PasswordResetConfirmSchema(BaseModel):
+    uid: str
+    token: str
+    new_password: str
 
 class AuthResponse(BaseModel):
     access: str
@@ -126,3 +139,43 @@ def google_auth(request, data: GoogleAuthSchema):
 @router.get("/me", response=UserSchema, auth=JWTAuth())
 def me(request):
     return request.auth
+
+@router.post("/password-reset")
+def password_reset_request(request, data: PasswordResetRequestSchema):
+    user = User.objects.filter(email=data.email).first()
+    if user:
+        uid = urlsafe_base64_encode(force_bytes(user.pk))
+        token = default_token_generator.make_token(user)
+        # Using the frontend URL from settings or default to localhost:3000
+        frontend_url = getattr(settings, 'FRONTEND_URL', 'http://localhost:3000')
+        reset_url = f"{frontend_url}/reset-password?uid={uid}&token={token}"
+        
+        # Simple email text
+        subject = "Password Reset Requested"
+        message = f"You requested a password reset. Click the link below to reset your password:\n\n{reset_url}\n\nIf you did not request this, please ignore this email."
+        
+        send_mail(
+            subject,
+            message,
+            getattr(settings, 'DEFAULT_FROM_EMAIL', 'noreply@localhost'),
+            [user.email],
+            fail_silently=False,
+        )
+    # Always return success to prevent email enumeration
+    return {"message": "If an account with that email exists, an email has been sent with instructions to reset your password."}
+
+@router.post("/password-reset-confirm")
+def password_reset_confirm(request, data: PasswordResetConfirmSchema):
+    try:
+        uid = force_str(urlsafe_base64_decode(data.uid))
+        user = User.objects.get(pk=uid)
+    except (TypeError, ValueError, OverflowError, User.DoesNotExist):
+        user = None
+
+    if user is not None and default_token_generator.check_token(user, data.token):
+        user.set_password(data.new_password)
+        user.save()
+        return {"message": "Password has been reset with the new password."}
+    else:
+        raise HttpError(400, "Reset link is invalid or has expired.")
+

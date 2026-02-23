@@ -78,6 +78,14 @@ export default function LoginPage() {
                     </div>
                 </form>
 
+                <div className="flex items-center justify-between mt-4">
+                    <div className="text-sm">
+                        <Link href="/forgot-password" className="font-medium text-red-600 hover:text-red-500">
+                            Forgot your password?
+                        </Link>
+                    </div>
+                </div>
+
                 <div className="mt-6">
                     <div className="relative">
                         <div className="absolute inset-0 flex items-center">

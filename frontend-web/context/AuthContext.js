@@ -138,6 +138,47 @@ export function AuthProvider({ children }) {
         }
     };
 
+    const forgotPassword = async (email) => {
+        try {
+            const res = await fetch(`${API_URL}/auth/password-reset`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email })
+            });
+
+            const data = await res.json();
+
+            if (!res.ok) {
+                throw new Error(data.message || 'Failed to request password reset');
+            }
+
+            return { success: true, message: data.message };
+        } catch (error) {
+            return { success: false, error: error.message };
+        }
+    };
+
+    const resetPassword = async (uid, token, newPassword) => {
+        try {
+            const res = await fetch(`${API_URL}/auth/password-reset-confirm`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ uid, token, new_password: newPassword })
+            });
+
+            const data = await res.json();
+
+            if (!res.ok) {
+                // Return a specific error if message provided, otherwise generic
+                throw new Error(data.message || data.detail || 'Password reset failed');
+            }
+
+            return { success: true, message: data.message };
+        } catch (error) {
+            return { success: false, error: error.message };
+        }
+    };
+
     const logout = () => {
         Cookies.remove('access_token');
         Cookies.remove('refresh_token');
@@ -149,7 +190,7 @@ export function AuthProvider({ children }) {
 
     return (
         <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
-            <AuthContext.Provider value={{ user, loading, login, register, googleLogin, logout }}>
+            <AuthContext.Provider value={{ user, loading, login, register, googleLogin, logout, forgotPassword, resetPassword }}>
                 {children}
             </AuthContext.Provider>
         </GoogleOAuthProvider>
