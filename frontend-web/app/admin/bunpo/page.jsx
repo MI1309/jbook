@@ -168,6 +168,7 @@ export default function BunpoAdmin() {
                                             Ch {b.chapter}
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                            <Link href={`/bunpo/${b.id}`} target="_blank" className="text-emerald-600 hover:text-emerald-900 mr-4">Lihat</Link>
                                             <Link href={`/admin/bunpo/${b.id}`} className="text-indigo-600 hover:text-indigo-900 mr-4">Edit</Link>
                                             <button onClick={() => handleDelete(b.id)} className="text-red-600 hover:text-red-900">Delete</button>
                                         </td>

@@ -256,10 +256,10 @@ function PracticeContent() {
                     </div>
 
                     <button
-                        onClick={() => router.push('/practice')}
+                        onClick={() => router.push(user ? '/dashboard' : '/practice')}
                         className="w-full bg-gray-900 hover:bg-black text-white px-6 py-4 rounded-xl font-bold transition-all transform hover:scale-[1.02] shadow-xl"
                     >
-                        Kembali ke Dashboard
+                        Kembali ke {user ? 'Dashboard' : 'Halaman Latihan'}
                     </button>
                 </div>
             </div>
@@ -312,13 +312,18 @@ function PracticeContent() {
 
             {/* Question Card */}
             <div className="bg-white rounded-3xl shadow-xl p-8 mb-8 text-center border border-gray-100 relative flex-grow flex flex-col justify-center">
-                <div className="mb-8">
+                <div className="mb-8 relative p-4 flex flex-col items-center">
                     <span className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-2 block">
                         {currentQuestion.type === 'kanji' ? 'Kanji' : currentQuestion.type === 'vocab' ? 'Kosakata' : 'Tata Bahasa'}
                     </span>
-                    <div className={`${currentQuestion.type === 'grammar' ? 'text-4xl md:text-5xl' : 'text-8xl md:text-[8rem]'} leading-none font-medium text-gray-800 select-none`}>
+                    <div className={`${currentQuestion.type === 'grammar' ? 'text-4xl md:text-5xl' : 'text-8xl md:text-[8rem]'} leading-none font-medium text-gray-800 select-none pb-2`}>
                         {currentQuestion.character}
                     </div>
+                    {currentQuestion.type === 'kanji' && currentQuestion.reading && (
+                        <div className="text-2xl text-gray-500 font-serif mt-2">
+                            {currentQuestion.reading}
+                        </div>
+                    )}
                 </div>
 
                 {isAnswered && (currentQuestion.reading || currentQuestion.meaning) && (

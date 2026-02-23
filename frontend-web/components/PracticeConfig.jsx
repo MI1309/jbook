@@ -44,9 +44,9 @@ export default function PracticeConfig() {
                         onChange={(e) => setType(e.target.value)}
                         className="w-full p-2 border-0 bg-white rounded-lg ring-1 ring-red-200 focus:ring-2 focus:ring-red-500 text-gray-700 font-medium"
                     >
-                        <option value="kanji">Kanji</option>
+                        <option value="kanji">Kanji Satuan (Onyomi & Kunyomi)</option>
+                        <option value="vocab">Kosakata / Kanji Gabungan (Furigana)</option>
                         <option value="bunpo">Tata Bahasa (Bunpo)</option>
-                        <option value="kotoba">Kosakata (Kotoba)</option>
                     </select>
                 </div>
 

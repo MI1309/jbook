@@ -38,6 +38,7 @@ class Vocab(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     word = models.CharField(max_length=255)
     reading = models.CharField(max_length=255)
+    furigana = models.CharField(max_length=255, blank=True, null=True, help_text="Cara baca spesifik dalam Kana (Furigana)")
     meaning = models.CharField(max_length=255, help_text="Arti kata dalam Bahasa Indonesia")
     kanji_rel = models.ManyToManyField(Kanji, related_name='vocab', blank=True)
     jlpt_level = models.IntegerField(choices=JLPTLevel.choices, default=JLPTLevel.N5)

@@ -99,6 +99,7 @@ class VocabSchema(Schema):
     id: UUID
     word: str
     reading: str
+    furigana: Optional[str] = None
     meaning: str
     jlpt_level: int
     examples: List[dict] = []
@@ -114,6 +115,7 @@ def get_random_kotoba(request):
 
 @router.get("/vocab", response=List[VocabSchema])
 def list_vocab(request, 
+               level: Optional[int] = None,
                search: Optional[str] = None,
                limit: int = 100,
                offset: int = 0):
@@ -123,6 +125,9 @@ def list_vocab(request,
     
     qs = Vocab.objects.all().order_by('word')
     
+    if level:
+        qs = qs.filter(jlpt_level=level)
+
     if search:
         search_kana = to_kana(search)
         qs = qs.filter(

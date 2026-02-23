@@ -3,6 +3,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import { usePractice } from '@/context/PracticeContext';
 
@@ -10,6 +11,23 @@ export default function Navbar() {
     const { user, logout, loading } = useAuth();
     const { isPracticing } = usePractice();
     const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const pathname = usePathname();
+
+    const isActive = (path) => {
+        if (path === '/') return pathname === '/';
+        return pathname.startsWith(path);
+    };
+
+    const getLinkClass = (path, mobile = false) => {
+        const baseClass = mobile
+            ? "block px-3 py-2 rounded-md text-base font-medium"
+            : "px-3 py-2 rounded-md text-sm font-medium";
+
+        const activeClass = "text-red-600 font-bold bg-red-50";
+        const inactiveClass = "text-gray-900 hover:text-red-600 hover:bg-gray-50";
+
+        return `${baseClass} ${isActive(path) ? activeClass : inactiveClass}`;
+    };
 
     const handleNavClick = (e) => {
         if (isPracticing) {
@@ -34,19 +52,24 @@ export default function Navbar() {
                         <Link href="/" className="text-xl font-bold text-red-600" onClick={handleNavClick}>
                             JBook
                         </Link>
-                        <div className="hidden md:ml-10 md:flex md:space-x-8">
-                            <Link href="/kanji" className="text-gray-900 hover:text-red-600 px-3 py-2 rounded-md text-sm font-medium" onClick={handleNavClick}>
+                        <div className="hidden md:ml-10 md:flex md:space-x-4">
+                            <Link href="/kanji" className={getLinkClass('/kanji')} onClick={handleNavClick}>
                                 Kanji
                             </Link>
-                            <Link href="/bunpo" className="text-gray-900 hover:text-red-600 px-3 py-2 rounded-md text-sm font-medium" onClick={handleNavClick}>
+                            <Link href="/bunpo" className={getLinkClass('/bunpo')} onClick={handleNavClick}>
                                 Tata Bahasa
                             </Link>
-                            <Link href="/kotoba" className="text-gray-900 hover:text-red-600 px-3 py-2 rounded-md text-sm font-medium" onClick={handleNavClick}>
+                            <Link href="/kana" className={getLinkClass('/kana')} onClick={handleNavClick}>
+                                Kana
+                            </Link>
+                            <Link href="/kotoba" className={getLinkClass('/kotoba')} onClick={handleNavClick}>
                                 Kotoba
                             </Link>
-                            <Link href="/practice" className="text-gray-900 hover:text-red-600 px-3 py-2 rounded-md text-sm font-medium" onClick={handleNavClick}>
-                                Latihan
-                            </Link>
+                            {!user && (
+                                <Link href="/practice" className={getLinkClass('/practice')} onClick={handleNavClick}>
+                                    Latihan
+                                </Link>
+                            )}
                         </div>
                     </div>
 
@@ -60,13 +83,16 @@ export default function Navbar() {
                                             Admin
                                         </Link>
                                     )}
+                                    <Link href="/dashboard" className="text-gray-900 hover:text-red-600 font-medium px-3 py-2 rounded-md text-sm transition-colors" onClick={handleNavClick}>
+                                        Dashboard
+                                    </Link>
                                     <span className="text-sm font-medium text-gray-700">Hi, {user.username}</span>
                                     <button
                                         onClick={() => {
                                             if (isPracticing && !confirm('Lagi latihan, yakin mau keluar?')) return;
                                             logout();
                                         }}
-                                        className="text-gray-900 hover:text-red-600 px-3 py-2 rounded-md text-sm font-medium"
+                                        className="text-gray-900 hover:text-red-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
                                     >
                                         Keluar
                                     </button>
@@ -76,7 +102,7 @@ export default function Navbar() {
                                     <Link href="/login" className="text-gray-900 hover:text-red-600 px-3 py-2 rounded-md text-sm font-medium" onClick={handleNavClick}>
                                         Masuk
                                     </Link>
-                                    <Link href="/register" className="bg-red-600 text-white hover:bg-red-700 px-4 py-2 rounded-md text-sm font-medium" onClick={handleNavClick}>
+                                    <Link href="/register" className="bg-red-600 text-white hover:bg-red-700 px-4 py-2 rounded-md text-sm font-medium shadow-sm transition-colors" onClick={handleNavClick}>
                                         Daftar
                                     </Link>
                                 </>
@@ -106,18 +132,23 @@ export default function Navbar() {
             {/* Mobile Menu */}
             <div className={`${isMenuOpen ? 'block' : 'hidden'} md:hidden`}>
                 <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-                    <Link href="/kanji" className="text-gray-900 hover:text-red-600 block px-3 py-2 rounded-md text-base font-medium" onClick={handleNavClick}>
+                    <Link href="/kanji" className={getLinkClass('/kanji', true)} onClick={handleNavClick}>
                         Kanji
                     </Link>
-                    <Link href="/bunpo" className="text-gray-900 hover:text-red-600 block px-3 py-2 rounded-md text-base font-medium" onClick={handleNavClick}>
+                    <Link href="/bunpo" className={getLinkClass('/bunpo', true)} onClick={handleNavClick}>
                         Tata Bahasa
                     </Link>
-                    <Link href="/kotoba" className="text-gray-900 hover:text-red-600 block px-3 py-2 rounded-md text-base font-medium" onClick={handleNavClick}>
+                    <Link href="/kana" className={getLinkClass('/kana', true)} onClick={handleNavClick}>
+                        Kana
+                    </Link>
+                    <Link href="/kotoba" className={getLinkClass('/kotoba', true)} onClick={handleNavClick}>
                         Kotoba
                     </Link>
-                    <Link href="/practice" className="text-gray-900 hover:text-red-600 block px-3 py-2 rounded-md text-base font-medium" onClick={handleNavClick}>
-                        Latihan
-                    </Link>
+                    {!user && (
+                        <Link href="/practice" className={getLinkClass('/practice', true)} onClick={handleNavClick}>
+                            Latihan
+                        </Link>
+                    )}
                 </div>
                 <div className="pt-4 pb-4 border-t border-gray-200">
                     {!loading && (
@@ -134,6 +165,9 @@ export default function Navbar() {
                                         Admin Dashboard
                                     </Link>
                                 )}
+                                <Link href="/dashboard" className="block px-3 py-2 rounded-md text-base font-medium text-gray-900 hover:text-red-600 hover:bg-gray-50 bg-gray-50 mt-2" onClick={handleNavClick}>
+                                    Dashboard Latihan
+                                </Link>
                                 <button
                                     onClick={() => {
                                         if (isPracticing && !confirm('Lagi latihan, yakin mau keluar?')) return;

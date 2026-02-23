@@ -210,13 +210,15 @@ export async function resetPracticeProgress() {
 
 /**
  * @param {Object} params
+ * @param {number} [params.level]
  * @param {string} [params.search]
  * @param {number} [params.limit]
  * @param {number} [params.page]
  * @returns {Promise<Vocab[]>}
  */
-export async function getVocabList({ search, limit = 100, page = 1 } = {}) {
+export async function getVocabList({ level, search, limit = 100, page = 1 } = {}) {
     const queryParams = new URLSearchParams();
+    if (level) queryParams.append('level', level);
     if (search) queryParams.append('search', search);
     if (limit) queryParams.append('limit', limit);
 

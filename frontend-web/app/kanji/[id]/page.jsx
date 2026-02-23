@@ -1,8 +1,7 @@
-
 import { getKanjiDetail } from '@/lib/api';
 import Link from 'next/link';
-
 import { toHiragana, toKatakana } from 'wanakana';
+import { hasKanji } from '@/lib/utils';
 
 export default async function KanjiDetailPage({ params }) {
     const { id } = await params;
@@ -57,7 +56,9 @@ export default async function KanjiDetailPage({ params }) {
                                     <p className="font-bold mb-1">
                                         <ruby className="text-lg" style={{ rubyPosition: 'under' }}>
                                             {ex.word}
-                                            <rt className="text-sm text-red-500 font-normal">{ex.reading}</rt>
+                                            {hasKanji(ex.word) && (
+                                                <rt className="text-sm text-red-500 font-normal">{ex.reading}</rt>
+                                            )}
                                         </ruby>
                                     </p>
                                     <p className="text-gray-600">{ex.meaning}</p>

@@ -87,13 +87,19 @@ def generate_quiz(request, limit: int = 10, level: Optional[int] = None, type: s
             display_text = item.character
             correct_answer = item.meaning
             distractor_answers = [d.meaning for d in distractors]
-            reading = None
+            
+            # Format Onyomi and Kunyomi as the reading hint
+            onyomi_str = ", ".join(item.onyomi) if item.onyomi else "-"
+            kunyomi_str = ", ".join(item.kunyomi) if item.kunyomi else "-"
+            reading_hint = f"On: {onyomi_str} | Kun: {kunyomi_str}"
+            reading = reading_hint
+            
             meaning = item.meaning
         elif type == 'vocab':
             display_text = item.word
             correct_answer = item.meaning
             distractor_answers = [d.meaning for d in distractors]
-            reading = item.reading
+            reading = item.furigana if item.furigana else item.reading
             meaning = item.meaning
         elif type == 'grammar':
             display_text = item.title # e.g. "〜ても"
@@ -141,6 +147,9 @@ def submit_quiz(request, payload: SubmissionSchema):
             return {"status": "error", "message": "No user available for tracking"}
 
     attempts = []
+    
+    # Pre-fetch all past attempts for this user to calculate accuracy efficiently
+    # Or just query per item if there are not many items in a payload (usually 10)
     for res in payload.results:
         attempt_data = {
             "user": user,
@@ -148,12 +157,33 @@ def submit_quiz(request, payload: SubmissionSchema):
             "answer_given": res.answer_given
         }
         
+        filter_kwargs = {"user": user}
         if res.type == 'kanji':
             attempt_data["kanji_id"] = res.question_id
+            filter_kwargs["kanji_id"] = res.question_id
         elif res.type == 'vocab':
             attempt_data["vocab_id"] = res.question_id
+            filter_kwargs["vocab_id"] = res.question_id
         elif res.type == 'grammar':
             attempt_data["grammar_id"] = res.question_id
+            filter_kwargs["grammar_id"] = res.question_id
+            
+        if res.is_correct:
+            # Get past attempts for this specific question
+            past_attempts = QuizAttempt.objects.filter(**filter_kwargs)
+            total_past = past_attempts.count()
+            correct_past = past_attempts.filter(is_correct=True).count()
+            
+            # Add current attempt to calculation
+            total_attempts = total_past + 1
+            correct_attempts = correct_past + 1
+            
+            # Calculate accuracy
+            accuracy = (correct_attempts / total_attempts) * 100
+            
+            # If accuracy is 80% or more, delete the wrong attempts
+            if accuracy >= 80.0:
+                past_attempts.filter(is_correct=False).delete()
             
         attempts.append(QuizAttempt(**attempt_data))
         
