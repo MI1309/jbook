@@ -31,7 +31,7 @@ export default function BunpoForm({ params }) {
     const fetchBunpo = async () => {
         try {
             const token = Cookies.get('access_token');
-            const res = await fetch(`http://localhost:8000/api/admin/bunpo/${id}`, {
+            const res = await fetch(`https://imronm.pythonanywhere.com/api/admin/bunpo/${id}`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
 
@@ -86,8 +86,8 @@ export default function BunpoForm({ params }) {
             };
 
             const url = isNew
-                ? 'http://localhost:8000/api/admin/bunpo'
-                : `http://localhost:8000/api/admin/bunpo/${id}`;
+                ? 'https://imronm.pythonanywhere.com/api/admin/bunpo'
+                : `https://imronm.pythonanywhere.com/api/admin/bunpo/${id}`;
 
             const method = isNew ? 'POST' : 'PUT';
 

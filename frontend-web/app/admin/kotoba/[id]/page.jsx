@@ -27,7 +27,7 @@ export default function KotobaForm({ params }) {
     const fetchVocab = async () => {
         try {
             const token = Cookies.get('access_token');
-            const res = await fetch(`http://localhost:8000/api/admin/vocab/${id}`, {
+            const res = await fetch(`https://imronm.pythonanywhere.com/api/admin/vocab/${id}`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             if (res.ok) {
@@ -50,8 +50,8 @@ export default function KotobaForm({ params }) {
         try {
             const token = Cookies.get('access_token');
             const url = isNew
-                ? 'http://localhost:8000/api/admin/vocab'
-                : `http://localhost:8000/api/admin/vocab/${id}`;
+                ? 'https://imronm.pythonanywhere.com/api/admin/vocab'
+                : `https://imronm.pythonanywhere.com/api/admin/vocab/${id}`;
             const method = isNew ? 'POST' : 'PUT';
 
             const res = await fetch(url, {

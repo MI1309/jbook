@@ -14,6 +14,9 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_str
 from django.contrib.auth.tokens import default_token_generator
 from django.template.loader import render_to_string
+from django.core.cache import cache
+import random
+import string
 
 router = Router()
 User = get_user_model()
@@ -27,6 +30,8 @@ class UserSchema(BaseModel):
     username: str
     email: str
     level_target: int
+    is_staff: bool = False
+
     
     model_config = {"from_attributes": True}
 
@@ -37,8 +42,9 @@ class RegisterSchema(BaseModel):
     level_target: int = 5
 
 class LoginSchema(BaseModel):
-    email: EmailStr
+    identifier: str
     password: str
+
 
 class GoogleAuthSchema(BaseModel):
     token: str
@@ -49,6 +55,11 @@ class PasswordResetRequestSchema(BaseModel):
 class PasswordResetConfirmSchema(BaseModel):
     uid: str
     token: str
+    new_password: str
+
+class PasswordResetOtpConfirmSchema(BaseModel):
+    email: EmailStr
+    otp: str
     new_password: str
 
 class AuthResponse(BaseModel):
@@ -85,9 +96,11 @@ def register(request, data: RegisterSchema):
 
 @router.post("/login", response=AuthResponse)
 def login(request, data: LoginSchema):
-    # Authenticate using email
-    user = User.objects.filter(email=data.email).first()
+    # Authenticate using email or username
+    from django.db.models import Q
+    user = User.objects.filter(Q(email=data.identifier) | Q(username=data.identifier)).first()
     if user is None:
+
         raise HttpError(400, "Invalid credentials")
     
     # Check password
@@ -140,20 +153,17 @@ def google_auth(request, data: GoogleAuthSchema):
 def me(request):
     return request.auth
 
+def _generate_otp(length: int = 6) -> str:
+    return ''.join(random.choices(string.digits, k=length))
+
 @router.post("/password-reset")
 def password_reset_request(request, data: PasswordResetRequestSchema):
     user = User.objects.filter(email=data.email).first()
     if user:
-        uid = urlsafe_base64_encode(force_bytes(user.pk))
-        token = default_token_generator.make_token(user)
-        # Using the frontend URL from settings or default to localhost:3000
-        frontend_url = getattr(settings, 'FRONTEND_URL', 'http://localhost:3000')
-        reset_url = f"{frontend_url}/reset-password?uid={uid}&token={token}"
-        
-        # Simple email text
-        subject = "Password Reset Requested"
-        message = f"You requested a password reset. Click the link below to reset your password:\n\n{reset_url}\n\nIf you did not request this, please ignore this email."
-        
+        otp = _generate_otp(6)
+        cache.set(f"otp_reset_{data.email}", otp, timeout=600)  # 10 menit
+        subject = "JBook - Kode OTP Reset Password"
+        message = f"Kode OTP Anda: {otp}\n\nKode ini berlaku selama 10 menit. Jangan bagikan kode ini kepada siapapun.\n\nJika Anda tidak meminta reset password, abaikan email ini."
         send_mail(
             subject,
             message,
@@ -161,8 +171,20 @@ def password_reset_request(request, data: PasswordResetRequestSchema):
             [user.email],
             fail_silently=False,
         )
-    # Always return success to prevent email enumeration
-    return {"message": "If an account with that email exists, an email has been sent with instructions to reset your password."}
+    return {"message": "If an account with that email exists, an OTP has been sent to your email."}
+
+@router.post("/password-reset-otp")
+def password_reset_otp_confirm(request, data: PasswordResetOtpConfirmSchema):
+    stored_otp = cache.get(f"otp_reset_{data.email}")
+    if stored_otp is None or stored_otp != data.otp.strip():
+        raise HttpError(400, "OTP invalid or expired.")
+    user = User.objects.filter(email=data.email).first()
+    if not user:
+        raise HttpError(400, "Invalid request.")
+    user.set_password(data.new_password)
+    user.save()
+    cache.delete(f"otp_reset_{data.email}")
+    return {"message": "Password has been reset successfully."}
 
 @router.post("/password-reset-confirm")
 def password_reset_confirm(request, data: PasswordResetConfirmSchema):

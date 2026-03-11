@@ -19,7 +19,7 @@ export default function KotobaAdmin() {
         setLoading(true);
         try {
             const token = Cookies.get('access_token');
-            let url = 'http://localhost:8000/api/admin/vocab';
+            let url = 'https://imronm.pythonanywhere.com/api/admin/vocab';
             if (search) {
                 url += `?search=${search}`;
             }
@@ -46,7 +46,7 @@ export default function KotobaAdmin() {
 
         try {
             const token = Cookies.get('access_token');
-            const res = await fetch(`http://localhost:8000/api/admin/vocab/${id}`, {
+            const res = await fetch(`https://imronm.pythonanywhere.com/api/admin/vocab/${id}`, {
                 method: 'DELETE',
                 headers: { 'Authorization': `Bearer ${token}` }
             });

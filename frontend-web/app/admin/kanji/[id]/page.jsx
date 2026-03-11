@@ -30,7 +30,7 @@ export default function KanjiForm({ params }) {
     const fetchKanji = async () => {
         try {
             const token = Cookies.get('access_token');
-            const res = await fetch(`http://localhost:8000/api/admin/kanji/${id}`, {
+            const res = await fetch(`https://imronm.pythonanywhere.com/api/admin/kanji/${id}`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
 
@@ -75,8 +75,8 @@ export default function KanjiForm({ params }) {
             };
 
             const url = isNew
-                ? 'http://localhost:8000/api/admin/kanji'
-                : `http://localhost:8000/api/admin/kanji/${id}`;
+                ? 'https://imronm.pythonanywhere.com/api/admin/kanji'
+                : `https://imronm.pythonanywhere.com/api/admin/kanji/${id}`;
 
             const method = isNew ? 'POST' : 'PUT';
 

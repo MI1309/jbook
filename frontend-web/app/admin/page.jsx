@@ -30,7 +30,7 @@ export default function AdminDashboard() {
     const fetchStats = async () => {
         try {
             const token = localStorage.getItem('access_token');
-            const res = await fetch('http://localhost:8000/api/admin/stats', {
+            const res = await fetch('https://imronm.pythonanywhere.com/api/admin/stats', {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             if (res.ok) {
@@ -46,7 +46,7 @@ export default function AdminDashboard() {
         setIsSearching(true);
         try {
             const token = localStorage.getItem('access_token');
-            const res = await fetch(`http://localhost:8000/api/admin/search?q=${encodeURIComponent(searchQuery)}`, {
+            const res = await fetch(`https://imronm.pythonanywhere.com/api/admin/search?q=${encodeURIComponent(searchQuery)}`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             if (res.ok) {

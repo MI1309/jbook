@@ -19,7 +19,7 @@ export default function KanjiAdmin() {
         setLoading(true);
         try {
             const token = Cookies.get('access_token');
-            let url = 'http://localhost:8000/api/admin/kanji';
+            let url = 'https://imronm.pythonanywhere.com/api/admin/kanji';
             if (filterLevel) {
                 url += `?level=${filterLevel}`;
             }
@@ -49,7 +49,7 @@ export default function KanjiAdmin() {
 
         try {
             const token = Cookies.get('access_token');
-            const res = await fetch(`http://localhost:8000/api/admin/kanji/${id}`, {
+            const res = await fetch(`https://imronm.pythonanywhere.com/api/admin/kanji/${id}`, {
                 method: 'DELETE',
                 headers: { 'Authorization': `Bearer ${token}` }
             });

@@ -7,7 +7,7 @@ import Cookies from 'js-cookie';
 
 const AuthContext = createContext();
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api';
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://imronm.pythonanywhere.com/api';
 
 export function AuthProvider({ children }) {
     const [user, setUser] = useState(null);
@@ -56,7 +56,7 @@ export function AuthProvider({ children }) {
             const res = await fetch(`${API_URL}/auth/login`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email, password })
+                body: JSON.stringify({ identifier: email, password })
             });
 
             const data = await res.json();

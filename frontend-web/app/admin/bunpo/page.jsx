@@ -32,7 +32,7 @@ export default function BunpoAdmin() {
         setLoading(true);
         try {
             const token = Cookies.get('access_token');
-            let url = `http://localhost:8000/api/admin/bunpo?page=${page}&limit=${LIMIT}&`;
+            let url = `https://imronm.pythonanywhere.com/api/admin/bunpo?page=${page}&limit=${LIMIT}&`;
 
             if (filterLevel) {
                 url += `level=${filterLevel}&`;
@@ -72,7 +72,7 @@ export default function BunpoAdmin() {
 
         try {
             const token = Cookies.get('access_token');
-            const res = await fetch(`http://localhost:8000/api/admin/bunpo/${id}`, {
+            const res = await fetch(`https://imronm.pythonanywhere.com/api/admin/bunpo/${id}`, {
                 method: 'DELETE',
                 headers: { 'Authorization': `Bearer ${token}` }
             });
