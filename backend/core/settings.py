@@ -240,9 +240,9 @@ NINJA_JWT = {
     'AUTH_HEADER_TYPES': ('Bearer',),
     'USER_ID_FIELD': 'id',
     'USER_ID_CLAIM': 'user_id',
-    'AUDIENCE': None,
-    'ISSUER': None,
-    'JWK_URL': None,
+    'AUDIENCE': "",
+    'ISSUER': "",
+    'JWK_URL': "",
 }
 
 # Session settings

@@ -155,6 +155,10 @@ def submit_quiz(request, payload: SubmissionSchema):
     # Pre-fetch all past attempts for this user to calculate accuracy efficiently
     # Or just query per item if there are not many items in a payload (usually 10)
     for res in payload.results:
+        # Logging for debugging (can be reviewed via sqlite or log file if needed)
+        # For now, we use a simple print that would show in server logs
+        print(f"DEBUG: Processing attempt for {res.type} - ID: {res.question_id}")
+        
         attempt_data = {
             "user": user,
             "is_correct": res.is_correct,
@@ -178,24 +182,31 @@ def submit_quiz(request, payload: SubmissionSchema):
         if res.is_correct:
             # Get past attempts for this specific question
             past_attempts = QuizAttempt.objects.filter(**filter_kwargs)
-            total_past = past_attempts.count()
-            correct_past = past_attempts.filter(is_correct=True).count()
+            try:
+                total_past = past_attempts.count()
+                correct_past = past_attempts.filter(is_correct=True).count()
+                
+                # Add current attempt to calculation
+                total_attempts = total_past + 1
+                correct_attempts = correct_past + 1
+                
+                # Calculate accuracy
+                accuracy = (correct_attempts / total_attempts) * 100
+                
+                # If accuracy is 80% or more, delete the wrong attempts
+                if accuracy >= 80.0:
+                    past_attempts.filter(is_correct=False).delete()
+            except Exception as e:
+                print(f"DEBUG: Accuracy cleanup failed: {e}")
             
-            # Add current attempt to calculation
-            total_attempts = total_past + 1
-            correct_attempts = correct_past + 1
-            
-            # Calculate accuracy
-            accuracy = (correct_attempts / total_attempts) * 100
-            
-            # If accuracy is 80% or more, delete the wrong attempts
-            if accuracy >= 80.0:
-                past_attempts.filter(is_correct=False).delete()
-            
-        attempts.append(QuizAttempt(**attempt_data))
+        try:
+            attempts.append(QuizAttempt(**attempt_data))
+        except Exception as e:
+            print(f"DEBUG: Failed to create QuizAttempt object: {e}")
         
-    QuizAttempt.objects.bulk_create(attempts)
-    return {"status": "success", "count": len(attempts)}
+    if attempts:
+        QuizAttempt.objects.bulk_create(attempts)
+    return {"status": "success", "count": len(attempts), "results": "saved"}
 
 @router.get("/practice/analytics", response=AnalyticsSchema, auth=JWTAuth())
 def get_analytics(request):
@@ -242,6 +253,17 @@ def get_analytics(request):
             "character": item['grammar__title'],
             "count": item['count'],
             "type": "grammar"
+        })
+        
+    # Add Particle errors
+    wrong_particle_qs = qs.filter(is_correct=False, particle__isnull=False).values('particle__character')\
+        .annotate(count=Count('id')).order_by('-count')[:5]
+
+    for item in wrong_particle_qs:
+        wrong_stats.append({
+            "character": item['particle__character'],
+            "count": item['count'],
+            "type": "particle"
         })
         
     # Sort combined stats
