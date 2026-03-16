@@ -47,7 +47,7 @@ class SearchResultSchema(BaseModel):
 
 # Admin Dashboard Stats
 @router.get("/stats", auth=AdminAuth(), response=dict)
-def get_stats(request):
+def admin_get_stats(request):
     return {
         "kanji_count": Kanji.objects.count(),
         "bunpo_count": Grammar.objects.count(),
@@ -108,20 +108,20 @@ def admin_search(request, q: str):
 
 # Blog CRUD
 @router.post("/blog", auth=AdminAuth(), response=BlogSchema)
-def create_blog(request, payload: BlogCreateSchema):
+def admin_create_blog(request, payload: BlogCreateSchema):
     blog = Blog.objects.create(**payload.dict())
     return blog
 
 @router.get("/blog", auth=AdminAuth(), response=List[BlogSchema])
-def list_blogs(request):
+def admin_list_blogs(request):
     return Blog.objects.all().order_by('-created_at')
 
 @router.get("/blog/{id}", auth=AdminAuth(), response=BlogSchema)
-def get_blog(request, id: str):
+def admin_get_blog(request, id: str):
     return get_object_or_404(Blog, id=id)
 
 @router.put("/blog/{id}", auth=AdminAuth(), response=BlogSchema)
-def update_blog(request, id: str, payload: BlogCreateSchema):
+def admin_update_blog(request, id: str, payload: BlogCreateSchema):
     blog = get_object_or_404(Blog, id=id)
     for attr, value in payload.dict().items():
         setattr(blog, attr, value)
@@ -129,7 +129,7 @@ def update_blog(request, id: str, payload: BlogCreateSchema):
     return blog
 
 @router.delete("/blog/{id}", auth=AdminAuth())
-def delete_blog(request, id: str):
+def admin_delete_blog(request, id: str):
     blog = get_object_or_404(Blog, id=id)
     blog.delete()
     return {"success": True}
@@ -151,23 +151,23 @@ class KanjiSchema(KanjiCreateSchema):
 
 # Kanji CRUD
 @router.get("/kanji", auth=AdminAuth(), response=List[KanjiSchema])
-def list_kanjis(request, level: int = None):
+def admin_list_kanjis(request, level: int = None):
     query = Kanji.objects.all().order_by('jlpt_level', 'id')
     if level:
         query = query.filter(jlpt_level=level)
     return query
 
 @router.post("/kanji", auth=AdminAuth(), response=KanjiSchema)
-def create_kanji(request, payload: KanjiCreateSchema):
+def admin_create_kanji(request, payload: KanjiCreateSchema):
     kanji = Kanji.objects.create(**payload.dict())
     return kanji
 
 @router.get("/kanji/{id}", auth=AdminAuth(), response=KanjiSchema)
-def get_kanji(request, id: str):
+def admin_get_kanji(request, id: str):
     return get_object_or_404(Kanji, id=id)
 
 @router.put("/kanji/{id}", auth=AdminAuth(), response=KanjiSchema)
-def update_kanji(request, id: str, payload: KanjiCreateSchema):
+def admin_update_kanji(request, id: str, payload: KanjiCreateSchema):
     kanji = get_object_or_404(Kanji, id=id)
     for attr, value in payload.dict().items():
         setattr(kanji, attr, value)
@@ -175,7 +175,7 @@ def update_kanji(request, id: str, payload: KanjiCreateSchema):
     return kanji
 
 @router.delete("/kanji/{id}", auth=AdminAuth())
-def delete_kanji(request, id: str):
+def admin_delete_kanji(request, id: str):
     kanji = get_object_or_404(Kanji, id=id)
     kanji.delete()
     return {"success": True}
@@ -195,7 +195,7 @@ class GrammarSchema(GrammarCreateSchema):
 
 # Bunpo CRUD
 @router.get("/bunpo", auth=AdminAuth(), response=List[GrammarSchema])
-def list_bunpos(request, level: int = None, chapter: int = None, search: str = None, page: int = 1, limit: int = 20):
+def admin_list_bunpos(request, level: int = None, chapter: int = None, search: str = None, page: int = 1, limit: int = 20):
     query = Grammar.objects.all().order_by('chapter', 'jlpt_level', 'id')
     
     if level:
@@ -215,16 +215,16 @@ def list_bunpos(request, level: int = None, chapter: int = None, search: str = N
     return query[offset : offset + limit]
 
 @router.post("/bunpo", auth=AdminAuth(), response=GrammarSchema)
-def create_bunpo(request, payload: GrammarCreateSchema):
+def admin_create_bunpo(request, payload: GrammarCreateSchema):
     grammar = Grammar.objects.create(**payload.dict())
     return grammar
 
 @router.get("/bunpo/{id}", auth=AdminAuth(), response=GrammarSchema)
-def get_bunpo(request, id: str):
+def admin_get_bunpo(request, id: str):
     return get_object_or_404(Grammar, id=id)
 
 @router.put("/bunpo/{id}", auth=AdminAuth(), response=GrammarSchema)
-def update_bunpo(request, id: str, payload: GrammarCreateSchema):
+def admin_update_bunpo(request, id: str, payload: GrammarCreateSchema):
     grammar = get_object_or_404(Grammar, id=id)
     for attr, value in payload.dict().items():
         setattr(grammar, attr, value)
@@ -232,7 +232,7 @@ def update_bunpo(request, id: str, payload: GrammarCreateSchema):
     return grammar
 
 @router.delete("/bunpo/{id}", auth=AdminAuth())
-def delete_bunpo(request, id: str):
+def admin_delete_bunpo(request, id: str):
     grammar = get_object_or_404(Grammar, id=id)
     grammar.delete()
     return {"success": True}
@@ -256,7 +256,7 @@ class VocabSchema(VocabCreateSchema):
 
 # Vocab CRUD
 @router.get("/vocab", auth=AdminAuth(), response=List[VocabSchema])
-def list_vocabs(request, search: str = None, page: int = 1, limit: int = 50):
+def admin_list_vocabs(request, search: str = None, page: int = 1, limit: int = 50):
     from utils.kana import to_kana
     
     query = Vocab.objects.all().order_by('word')
@@ -274,16 +274,16 @@ def list_vocabs(request, search: str = None, page: int = 1, limit: int = 50):
     return query[offset : offset + limit]
 
 @router.post("/vocab", auth=AdminAuth(), response=VocabSchema)
-def create_vocab(request, payload: VocabCreateSchema):
+def admin_create_vocab(request, payload: VocabCreateSchema):
     vocab = Vocab.objects.create(**payload.dict())
     return vocab
 
 @router.get("/vocab/{id}", auth=AdminAuth(), response=VocabSchema)
-def get_vocab(request, id: str):
+def admin_get_vocab(request, id: str):
     return get_object_or_404(Vocab, id=id)
 
 @router.put("/vocab/{id}", auth=AdminAuth(), response=VocabSchema)
-def update_vocab(request, id: str, payload: VocabCreateSchema):
+def admin_update_vocab(request, id: str, payload: VocabCreateSchema):
     vocab = get_object_or_404(Vocab, id=id)
     for attr, value in payload.dict().items():
         setattr(vocab, attr, value)
@@ -291,7 +291,7 @@ def update_vocab(request, id: str, payload: VocabCreateSchema):
     return vocab
 
 @router.delete("/vocab/{id}", auth=AdminAuth())
-def delete_vocab(request, id: str):
+def admin_delete_vocab(request, id: str):
     vocab = get_object_or_404(Vocab, id=id)
     vocab.delete()
     return {"success": True}
