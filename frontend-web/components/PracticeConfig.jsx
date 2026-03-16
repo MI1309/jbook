@@ -47,6 +47,7 @@ export default function PracticeConfig() {
                         <option value="kanji">Kanji Satuan (Onyomi & Kunyomi)</option>
                         <option value="vocab">Kosakata / Kanji Gabungan (Furigana)</option>
                         <option value="bunpo">Tata Bahasa (Bunpo)</option>
+                        <option value="particle">Partikel (は, が, を, dll)</option>
                     </select>
                 </div>
 

@@ -47,6 +47,16 @@ class Vocab(models.Model):
     def __str__(self):
         return self.word
 
+class Particle(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    character = models.CharField(max_length=10, help_text="Karakter partikel (e.g. は, が, を)")
+    meaning = models.CharField(max_length=255, help_text="Arti/Fungsi singkat")
+    explanation = models.TextField(help_text="Penjelasan penggunaan")
+    jlpt_level = models.IntegerField(choices=JLPTLevel.choices, default=JLPTLevel.N5)
+
+    def __str__(self):
+        return self.character
+
 class Blog(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     title = models.CharField(max_length=255)

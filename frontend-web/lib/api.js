@@ -1,5 +1,6 @@
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:8000/api';
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://imronm.pythonanywhere.com/api';
+import Cookies from 'js-cookie';
 
 /**
  * @typedef {Object} Kanji
@@ -149,11 +150,15 @@ export async function getPracticeQuestions({ limit = 10, level = null, type = 'k
  * @returns {Promise<Object>}
  */
 export async function submitPracticeResults(results) {
+    const token = Cookies.get('access_token');
+    const headers = {
+        'Content-Type': 'application/json',
+    };
+    if (token) headers['Authorization'] = `Bearer ${token}`;
+
     const res = await fetch(`${API_URL}/learning/practice/submit`, {
         method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
+        headers,
         body: JSON.stringify({ results }),
     });
 
@@ -168,7 +173,12 @@ export async function submitPracticeResults(results) {
  * @returns {Promise<Object>}
  */
 export async function getUserAnalytics() {
+    const token = Cookies.get('access_token');
+    const headers = {};
+    if (token) headers['Authorization'] = `Bearer ${token}`;
+
     const res = await fetch(`${API_URL}/learning/practice/analytics`, {
+        headers,
         cache: 'no-store',
     });
 
@@ -188,8 +198,13 @@ export async function getUserAnalytics() {
  * @returns {Promise<Object>}
  */
 export async function resetPracticeProgress() {
+    const token = Cookies.get('access_token');
+    const headers = {};
+    if (token) headers['Authorization'] = `Bearer ${token}`;
+
     const res = await fetch(`${API_URL}/learning/practice/reset`, {
         method: 'POST',
+        headers,
     });
 
     if (!res.ok) {

@@ -1,8 +1,8 @@
 import { Geist, Geist_Mono } from "next/font/google";
-import Link from "next/link";
 import "./globals.css";
 import { AuthProvider } from "@/context/AuthContext";
-import Navbar from "@/components/Navbar";
+import { PracticeProvider } from "@/context/PracticeContext";
+import ClientShell from "@/components/ClientShell";
 
 const geistSans = Geist({
     variable: "--font-geist-sans",
@@ -31,7 +31,13 @@ export const viewport = {
     maximumScale: 1,
 };
 
-import { PracticeProvider } from "@/context/PracticeContext";
+const footer = (
+    <footer className="bg-white border-t border-gray-200 mt-auto">
+        <div className="container mx-auto px-4 py-6 text-center text-sm text-gray-500">
+            &copy; {new Date().getFullYear()} JBook. Belajar Bahasa Jepang.
+        </div>
+    </footer>
+);
 
 export default function RootLayout({ children }) {
     return (
@@ -41,15 +47,9 @@ export default function RootLayout({ children }) {
             >
                 <AuthProvider>
                     <PracticeProvider>
-                        <Navbar />
-                        <main className="flex-grow">
+                        <ClientShell footer={footer}>
                             {children}
-                        </main>
-                        <footer className="bg-white border-t border-gray-200 mt-auto">
-                            <div className="container mx-auto px-4 py-6 text-center text-sm text-gray-500">
-                                &copy; {new Date().getFullYear()} JBook. Belajar Bahasa Jepang.
-                            </div>
-                        </footer>
+                        </ClientShell>
                     </PracticeProvider>
                 </AuthProvider>
             </body>

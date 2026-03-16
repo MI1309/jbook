@@ -57,7 +57,7 @@ export default function PracticePage() {
                 <PracticeConfig />
             </div>
 
-            {!user && (
+            {user && (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
                     {/* Stats Card */}
                     <div className="bg-white shadow-lg rounded-2xl p-6 border border-gray-100 relative overflow-hidden group">

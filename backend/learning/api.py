@@ -4,9 +4,10 @@ from django.db.models import Count
 from django.shortcuts import get_object_or_404
 from django.contrib.auth import get_user_model
 from .models import QuizAttempt
-from content.models import Kanji, Vocab, Grammar
+from content.models import Kanji, Vocab, Grammar, Particle
 import random
 
+from ninja_jwt.authentication import JWTAuth
 User = get_user_model()
 
 router = Router()
@@ -53,6 +54,8 @@ def generate_quiz(request, limit: int = 10, level: Optional[int] = None, type: s
     elif type == 'grammar' or type == 'bunpo':
         Model = Grammar
         type = 'grammar' # Normalize
+    elif type == 'particle':
+        Model = Particle
     else:
         return [] # Invalid type
 
@@ -119,6 +122,13 @@ def generate_quiz(request, limit: int = 10, level: Optional[int] = None, type: s
             distractor_answers = [(d.explanation[:50] + "..." if len(d.explanation) > 50 else d.explanation) for d in distractors]
             reading = item.structure 
             meaning = item.explanation
+        elif type == 'particle':
+            display_text = item.character
+            correct_answer = item.meaning
+            # For particles, use other particles as distractors
+            distractor_answers = [d.meaning for d in distractors]
+            reading = item.explanation
+            meaning = item.meaning
 
         options = [
             {"text": correct_answer, "is_correct": True},
@@ -137,15 +147,9 @@ def generate_quiz(request, limit: int = 10, level: Optional[int] = None, type: s
         
     return questions
 
-@router.post("/practice/submit")
+@router.post("/practice/submit", auth=JWTAuth())
 def submit_quiz(request, payload: SubmissionSchema):
-    user = request.user
-    if not user.is_authenticated:
-        # Fallback to first user for testing purposes
-        user = User.objects.first()
-        if not user:
-            return {"status": "error", "message": "No user available for tracking"}
-
+    user = request.auth
     attempts = []
     
     # Pre-fetch all past attempts for this user to calculate accuracy efficiently
@@ -167,6 +171,9 @@ def submit_quiz(request, payload: SubmissionSchema):
         elif res.type == 'grammar':
             attempt_data["grammar_id"] = res.question_id
             filter_kwargs["grammar_id"] = res.question_id
+        elif res.type == 'particle':
+            attempt_data["particle_id"] = res.question_id
+            filter_kwargs["particle_id"] = res.question_id
             
         if res.is_correct:
             # Get past attempts for this specific question
@@ -190,17 +197,9 @@ def submit_quiz(request, payload: SubmissionSchema):
     QuizAttempt.objects.bulk_create(attempts)
     return {"status": "success", "count": len(attempts)}
 
-@router.get("/practice/analytics", response=AnalyticsSchema)
+@router.get("/practice/analytics", response=AnalyticsSchema, auth=JWTAuth())
 def get_analytics(request):
-    user = request.user
-    if not user.is_authenticated:
-        user = User.objects.first()
-        if not user:
-            return {
-                "total_attempts": 0,
-                "accuracy": 0.0,
-                "wrong_stats": []
-            }
+    user = request.auth
 
     qs = QuizAttempt.objects.filter(user=user)
     
@@ -254,13 +253,9 @@ def get_analytics(request):
         "wrong_stats": wrong_stats[:5]
     }
 
-@router.post("/practice/reset")
+@router.post("/practice/reset", auth=JWTAuth())
 def reset_progress(request):
-    user = request.user
-    if not user.is_authenticated:
-        user = User.objects.first()
-        if not user:
-             return {"status": "error", "message": "No user available"}
+    user = request.auth
 
     # Delete all attempts for this user
     deleted_count, _ = QuizAttempt.objects.filter(user=user).delete()

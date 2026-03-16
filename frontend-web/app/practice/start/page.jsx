@@ -201,14 +201,16 @@ function PracticeContent() {
             type: currentQ.type || 'kanji',
             character: currentQ.character, // Critical for guest analytics
             is_correct: isCorrect,
-            answer_given: option.text
+            answer_given: option.text,
+            correct_meaning: currentQ.meaning,
+            correct_answer: currentQ.options.find(o => o.is_correct)?.text
         };
 
         const newResults = [...results, attempt];
         setResults(newResults);
 
         // Auto-advance logic
-        const delay = isCorrect ? 1500 : 5000; // 1.5s if correct, 5s if wrong
+        const delay = 2500; // Always 2.5 seconds as requested
 
         nextTimeoutRef.current = setTimeout(() => {
             if (currentIndex < questions.length - 1) {
@@ -243,16 +245,45 @@ function PracticeContent() {
                         <p className="text-gray-500 text-sm">Kerja bagus hari ini!</p>
                     </div>
 
-                    <div className="bg-red-50 rounded-2xl p-6 mb-8 border border-red-100">
+                    <div className="bg-red-50 rounded-2xl p-6 mb-6 border border-red-100">
                         <div className="text-sm text-red-600 font-bold uppercase tracking-wider mb-2">Skor Akhir</div>
                         <div className="text-7xl font-black text-red-600 leading-none mb-2">
                             {score}<span className="text-3xl text-red-300">/{questions.length}</span>
                         </div>
-                        {initialTimer && timeLeft <= 0 && (
-                            <div className="inline-flex items-center gap-1 px-3 py-1 bg-red-100 text-red-700 rounded-full text-xs font-bold mt-2">
-                                <span>⏰</span> Waktu Habis
-                            </div>
-                        )}
+                    </div>
+
+                    <div className="mb-8 text-left">
+                        <h3 className="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
+                            <span>📋</span> Ringkasan Jawaban
+                        </h3>
+                        <div className="space-y-3 max-h-[300px] overflow-y-auto pr-2 custom-scrollbar">
+                            {results.map((res, idx) => (
+                                <div key={idx} className={`p-4 rounded-xl border ${res.is_correct ? 'bg-green-50 border-green-100' : 'bg-red-50 border-red-100'} transition-all`}>
+                                    <div className="flex justify-between items-start mb-2">
+                                        <div className="flex items-center gap-3">
+                                            <span className="text-2xl font-bold">{res.character}</span>
+                                            <span className={`text-xs px-2 py-0.5 rounded-full font-bold uppercase ${res.is_correct ? 'bg-green-200 text-green-700' : 'bg-red-200 text-red-700'}`}>
+                                                {res.is_correct ? 'Benar' : 'Salah'}
+                                            </span>
+                                        </div>
+                                        <span className="text-[10px] text-gray-400 font-bold uppercase">{res.type}</span>
+                                    </div>
+                                    <div className="text-sm space-y-1">
+                                        <div className="text-gray-600">
+                                            Jawaban kamu: <span className={`font-bold ${res.is_correct ? 'text-green-600' : 'text-red-600'}`}>{res.answer_given}</span>
+                                        </div>
+                                        {!res.is_correct && (
+                                            <div className="text-gray-600">
+                                                Jawaban benar: <span className="font-bold text-green-600">{res.correct_answer}</span>
+                                            </div>
+                                        )}
+                                        <div className="text-gray-500 italic text-xs pt-1 border-t border-dashed border-gray-200">
+                                            Arti: {res.correct_meaning}
+                                        </div>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
                     </div>
 
                     <button
@@ -384,7 +415,7 @@ function PracticeContent() {
                             {currentIndex < questions.length - 1 ? "Lanjut (Klik untuk skip)" : "Lihat Hasil"}
                         </button>
                         {!selectedOption?.is_correct && (
-                            <p className="text-center text-xs text-gray-400 mt-2">Otomatis lanjut dalam 5 detik...</p>
+                            <p className="text-center text-xs text-gray-400 mt-2">Otomatis lanjut dalam 2,5 detik...</p>
                         )}
                     </div>
                 )}

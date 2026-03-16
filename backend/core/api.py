@@ -14,3 +14,7 @@ api.add_router("/content", content_router)
 api.add_router("/learning", learning_router)
 api.add_router("/auth", users_router)
 api.add_router("/admin", admin_router)
+
+# Add token refresh endpoint
+from ninja_jwt.routers import refresh_router
+api.add_router("/auth/token", refresh_router)

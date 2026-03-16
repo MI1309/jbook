@@ -9,46 +9,124 @@ const AuthContext = createContext();
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://imronm.pythonanywhere.com/api';
 
+// Cookie expires in 90 days
+const COOKIE_EXPIRES_DAYS = 90;
+
+const cookieOptions = {
+    expires: COOKIE_EXPIRES_DAYS,
+    sameSite: 'Lax',
+    secure: process.env.NODE_ENV === 'production',
+};
+
+function setAuthCookies(access, refresh) {
+    Cookies.set('access_token', access, cookieOptions);
+    Cookies.set('refresh_token', refresh, cookieOptions);
+}
+
+function clearAuthCookies() {
+    Cookies.remove('access_token');
+    Cookies.remove('refresh_token');
+}
+
 export function AuthProvider({ children }) {
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
     const router = useRouter();
 
-    // Google Client ID from environment variable
     const GOOGLE_CLIENT_ID = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
-    console.log("Google Client ID Loaded:", GOOGLE_CLIENT_ID ? GOOGLE_CLIENT_ID.substring(0, 10) + "..." : "Not Found");
 
     useEffect(() => {
-        // Cleanup old localStorage data
+        // Cleanup old localStorage tokens (migration from old system)
         localStorage.removeItem('access_token');
         localStorage.removeItem('refresh_token');
         localStorage.removeItem('guest_practice_session');
         checkUser();
     }, []);
 
+    /**
+     * Try to refresh the access token using the refresh token.
+     * Returns new access token string or null if failed.
+     */
+    const refreshAccessToken = async () => {
+        const refreshToken = Cookies.get('refresh_token');
+        if (!refreshToken) return null;
+
+        try {
+            const res = await fetch(`${API_URL}/auth/token/refresh`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ refresh: refreshToken }),
+            });
+
+            if (res.ok) {
+                const data = await res.json();
+                // Re-set both tokens with fresh 90-day expiry
+                setAuthCookies(data.access, refreshToken);
+                return data.access;
+            }
+        } catch (error) {
+            console.error("Token refresh failed", error);
+        }
+        return null;
+    };
+
+    /**
+     * Check current session. If access token expired but refresh token valid,
+     * silently refresh and keep user logged in.
+     */
     const checkUser = async () => {
         const token = Cookies.get('access_token');
-        if (token) {
-            try {
-                const res = await fetch(`${API_URL}/auth/me`, {
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
-                });
 
-                if (res.ok) {
-                    const userData = await res.json();
-                    setUser(userData);
-                } else {
-                    // Token invalid or expired
-                    logout();
+        if (!token) {
+            // No access token — try refresh token to restore session
+            const refreshToken = Cookies.get('refresh_token');
+            if (refreshToken) {
+                const newToken = await refreshAccessToken();
+                if (newToken) {
+                    await fetchUserWithToken(newToken);
+                    return;
                 }
-            } catch (error) {
-                console.error("Auth check failed", error);
-                logout();
             }
+            setLoading(false);
+            return;
         }
-        setLoading(false);
+
+        await fetchUserWithToken(token);
+    };
+
+    const fetchUserWithToken = async (token) => {
+        try {
+            const res = await fetch(`${API_URL}/auth/me`, {
+                headers: { 'Authorization': `Bearer ${token}` },
+            });
+
+            if (res.ok) {
+                const userData = await res.json();
+                setUser(userData);
+            } else if (res.status === 401) {
+                // Access token expired — try to refresh silently
+                const newToken = await refreshAccessToken();
+                if (newToken) {
+                    const retryRes = await fetch(`${API_URL}/auth/me`, {
+                        headers: { 'Authorization': `Bearer ${newToken}` },
+                    });
+                    if (retryRes.ok) {
+                        setUser(await retryRes.json());
+                    } else {
+                        doLogout(false); // silent logout, no redirect
+                    }
+                } else {
+                    doLogout(false);
+                }
+            } else {
+                doLogout(false);
+            }
+        } catch (error) {
+            console.error("Auth check failed", error);
+            doLogout(false);
+        } finally {
+            setLoading(false);
+        }
     };
 
     const login = async (email, password) => {
@@ -56,20 +134,13 @@ export function AuthProvider({ children }) {
             const res = await fetch(`${API_URL}/auth/login`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ identifier: email, password })
+                body: JSON.stringify({ identifier: email, password }),
             });
 
             const data = await res.json();
+            if (!res.ok) throw new Error(data.message || 'Login failed');
 
-            if (!res.ok) {
-                throw new Error(data.message || 'Login failed');
-            }
-
-            // Set cookies with 1 hour expiration (1/24 of a day)
-            const oneHour = 1 / 24;
-            Cookies.set('access_token', data.access, { expires: oneHour });
-            Cookies.set('refresh_token', data.refresh, { expires: oneHour });
-
+            setAuthCookies(data.access, data.refresh);
             setUser(data.user);
             router.push('/');
             return { success: true };
@@ -83,20 +154,13 @@ export function AuthProvider({ children }) {
             const res = await fetch(`${API_URL}/auth/register`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ username, email, password })
+                body: JSON.stringify({ username, email, password }),
             });
 
             const data = await res.json();
+            if (!res.ok) throw new Error(data.message || 'Registration failed');
 
-            if (!res.ok) {
-                throw new Error(data.message || 'Registration failed');
-            }
-
-            // Set cookies with 1 hour expiration
-            const oneHour = 1 / 24;
-            Cookies.set('access_token', data.access, { expires: oneHour });
-            Cookies.set('refresh_token', data.refresh, { expires: oneHour });
-
+            setAuthCookies(data.access, data.refresh);
             setUser(data.user);
             router.push('/');
             return { success: true };
@@ -106,29 +170,17 @@ export function AuthProvider({ children }) {
     };
 
     const googleLogin = async (credentialResponse) => {
-        console.log("Google Login Initiated", credentialResponse);
         try {
             const res = await fetch(`${API_URL}/auth/google`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ token: credentialResponse.credential })
+                body: JSON.stringify({ token: credentialResponse.credential }),
             });
 
-            console.log("Google Auth API Response Status:", res.status);
             const data = await res.json();
-            console.log("Google Auth API Response Data:", data);
+            if (!res.ok) throw new Error(data.detail || data.message || 'Google login failed');
 
-            if (!res.ok) {
-                const errorMessage = data.detail || data.message || 'Google login failed';
-                console.error("Backend Error Detail:", errorMessage);
-                throw new Error(errorMessage);
-            }
-
-            // Set cookies with 1 hour expiration
-            const oneHour = 1 / 24;
-            Cookies.set('access_token', data.access, { expires: oneHour });
-            Cookies.set('refresh_token', data.refresh, { expires: oneHour });
-
+            setAuthCookies(data.access, data.refresh);
             setUser(data.user);
             router.push('/');
             return { success: true };
@@ -143,15 +195,10 @@ export function AuthProvider({ children }) {
             const res = await fetch(`${API_URL}/auth/password-reset`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email })
+                body: JSON.stringify({ email }),
             });
-
             const data = await res.json();
-
-            if (!res.ok) {
-                throw new Error(data.message || 'Failed to request password reset');
-            }
-
+            if (!res.ok) throw new Error(data.message || 'Failed to request password reset');
             return { success: true, message: data.message };
         } catch (error) {
             return { success: false, error: error.message };
@@ -163,34 +210,35 @@ export function AuthProvider({ children }) {
             const res = await fetch(`${API_URL}/auth/password-reset-confirm`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ uid, token, new_password: newPassword })
+                body: JSON.stringify({ uid, token, new_password: newPassword }),
             });
-
             const data = await res.json();
-
-            if (!res.ok) {
-                // Return a specific error if message provided, otherwise generic
-                throw new Error(data.message || data.detail || 'Password reset failed');
-            }
-
+            if (!res.ok) throw new Error(data.message || data.detail || 'Password reset failed');
             return { success: true, message: data.message };
         } catch (error) {
             return { success: false, error: error.message };
         }
     };
 
-    const logout = () => {
-        Cookies.remove('access_token');
-        Cookies.remove('refresh_token');
+    // Internal logout — redirect is optional
+    const doLogout = (redirect = true) => {
+        clearAuthCookies();
         localStorage.removeItem('guest_practice_session');
         window.dispatchEvent(new Event('auth:logout'));
         setUser(null);
-        router.push('/login');
+        if (redirect) router.push('/login');
     };
+
+    // Public logout (called by UI)
+    const logout = () => doLogout(true);
 
     return (
         <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
-            <AuthContext.Provider value={{ user, loading, login, register, googleLogin, logout, forgotPassword, resetPassword }}>
+            <AuthContext.Provider value={{
+                user, loading,
+                login, register, googleLogin,
+                logout, forgotPassword, resetPassword,
+            }}>
                 {children}
             </AuthContext.Provider>
         </GoogleOAuthProvider>

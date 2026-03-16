@@ -1,7 +1,6 @@
 'use client';
 
-
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
@@ -11,7 +10,20 @@ export default function Navbar() {
     const { user, logout, loading } = useAuth();
     const { isPracticing } = usePractice();
     const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const [scrolled, setScrolled] = useState(false);
     const pathname = usePathname();
+
+    // Detect scroll for opacity effect
+    useEffect(() => {
+        const handleScroll = () => setScrolled(window.scrollY > 10);
+        window.addEventListener('scroll', handleScroll, { passive: true });
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, []);
+
+    // Close menu on route change
+    useEffect(() => {
+        setIsMenuOpen(false);
+    }, [pathname]);
 
     const isActive = (path) => {
         if (path === '/') return pathname === '/';
@@ -20,8 +32,8 @@ export default function Navbar() {
 
     const getLinkClass = (path, mobile = false) => {
         const baseClass = mobile
-            ? "block px-3 py-2 rounded-md text-base font-medium"
-            : "px-3 py-2 rounded-md text-sm font-medium";
+            ? "block px-3 py-2 rounded-md text-base font-medium transition-all duration-200"
+            : "px-3 py-2 rounded-md text-sm font-medium transition-all duration-200";
 
         const activeClass = "text-red-600 font-bold bg-red-50";
         const inactiveClass = "text-gray-900 hover:text-red-600 hover:bg-gray-50";
@@ -33,165 +45,189 @@ export default function Navbar() {
         if (isPracticing) {
             if (!confirm('Anda sedang dalam sesi latihan. Yakin ingin keluar? Progress mungkin tidak tersimpan (tergantung browser).')) {
                 e.preventDefault();
-                // Close menu if open to avoid confusion? No, keep it open or just do nothing.
-                if (isMenuOpen) setIsMenuOpen(false);
-            } else {
-                // User confirmed exit
-                if (isMenuOpen) setIsMenuOpen(false);
             }
-        } else {
-            if (isMenuOpen) setIsMenuOpen(false);
         }
+        setIsMenuOpen(false);
     };
 
     return (
-        <nav className="bg-white shadow-sm border-b border-gray-200 relative z-50">
-            <div className="container mx-auto px-4">
-                <div className="flex justify-between items-center h-16">
-                    <div className="flex items-center">
-                        <Link href="/" className="text-xl font-bold text-red-600" onClick={handleNavClick}>
-                            JBook
-                        </Link>
-                        <div className="hidden md:ml-10 md:flex md:space-x-4">
-                            <Link href="/kanji" className={getLinkClass('/kanji')} onClick={handleNavClick}>
-                                Kanji
+        <>
+            <nav
+                className={`
+                    fixed top-0 left-0 right-0 z-50
+                    transition-all duration-300 ease-in-out
+                    ${scrolled
+                        ? 'bg-white/95 backdrop-blur-md shadow-md border-b border-gray-200'
+                        : 'bg-white/80 backdrop-blur-sm shadow-sm border-b border-gray-100'
+                    }
+                `}
+            >
+                <div className="container mx-auto px-4">
+                    <div className="flex justify-between items-center h-16">
+                        {/* Logo */}
+                        <div className="flex items-center">
+                            <Link
+                                href="/"
+                                className="text-xl font-bold text-red-600 hover:text-red-700 transition-colors duration-200"
+                                onClick={handleNavClick}
+                            >
+                                JBook
                             </Link>
-                            <Link href="/bunpo" className={getLinkClass('/bunpo')} onClick={handleNavClick}>
-                                Tata Bahasa
-                            </Link>
-                            <Link href="/kana" className={getLinkClass('/kana')} onClick={handleNavClick}>
-                                Kana
-                            </Link>
-                            <Link href="/kotoba" className={getLinkClass('/kotoba')} onClick={handleNavClick}>
-                                Kotoba
-                            </Link>
-                            {!user && (
-                                <Link href="/practice" className={getLinkClass('/practice')} onClick={handleNavClick}>
-                                    Latihan
-                                </Link>
+
+                            {/* Desktop Nav Links */}
+                            <div className="hidden md:ml-10 md:flex md:space-x-1">
+                                {[
+                                    { href: '/kanji', label: 'Kanji' },
+                                    { href: '/bunpo', label: 'Tata Bahasa' },
+                                    { href: '/kana', label: 'Kana' },
+                                    { href: '/kotoba', label: 'Kotoba' },
+                                    ...(!user ? [{ href: '/practice', label: 'Latihan' }] : []),
+                                ].map(({ href, label }) => (
+                                    <Link
+                                        key={href}
+                                        href={href}
+                                        className={getLinkClass(href)}
+                                        onClick={handleNavClick}
+                                    >
+                                        {label}
+                                        {isActive(href) && (
+                                            <span className="block h-0.5 bg-red-500 rounded-full mt-0.5 animate-[expandWidth_0.2s_ease-out]" />
+                                        )}
+                                    </Link>
+                                ))}
+                            </div>
+                        </div>
+
+                        {/* Desktop Auth */}
+                        <div className="hidden md:flex items-center space-x-2">
+                            {!loading && (
+                                user ? (
+                                    <div className="flex items-center space-x-2">
+                                        {(user.email === 'imronm1309@gmail.com' || user.is_staff) && (
+                                            <Link href="/admin" className="text-red-600 hover:text-red-800 font-bold px-3 py-2 rounded-md text-sm transition-all duration-200 hover:bg-red-50" onClick={handleNavClick}>
+                                                Admin
+                                            </Link>
+                                        )}
+                                        <Link href="/dashboard" className="text-gray-700 hover:text-red-600 font-medium px-3 py-2 rounded-md text-sm transition-all duration-200 hover:bg-gray-50" onClick={handleNavClick}>
+                                            Dashboard
+                                        </Link>
+                                        <span className="text-sm font-medium text-gray-500 px-2">Hi, {user.username}</span>
+                                        <button
+                                            onClick={() => {
+                                                if (isPracticing && !confirm('Lagi latihan, yakin mau keluar?')) return;
+                                                logout();
+                                            }}
+                                            className="text-gray-700 hover:text-red-600 px-3 py-2 rounded-md text-sm font-medium transition-all duration-200 hover:bg-gray-50"
+                                        >
+                                            Keluar
+                                        </button>
+                                    </div>
+                                ) : (
+                                    <div className="flex items-center space-x-2">
+                                        <Link href="/login" className="text-gray-700 hover:text-red-600 px-3 py-2 rounded-md text-sm font-medium transition-all duration-200 hover:bg-gray-50" onClick={handleNavClick}>
+                                            Masuk
+                                        </Link>
+                                        <Link href="/register" className="bg-red-600 text-white hover:bg-red-700 px-4 py-2 rounded-md text-sm font-medium shadow-sm transition-all duration-200 hover:shadow-md hover:-translate-y-px" onClick={handleNavClick}>
+                                            Daftar
+                                        </Link>
+                                    </div>
+                                )
                             )}
                         </div>
+
+                        {/* Mobile Hamburger */}
+                        <button
+                            onClick={() => setIsMenuOpen(!isMenuOpen)}
+                            className="md:hidden p-2 rounded-md text-gray-500 hover:text-gray-700 hover:bg-gray-100 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-red-500"
+                            aria-label="Toggle menu"
+                        >
+                            {/* Animated hamburger → X */}
+                            <div className="w-5 h-4 flex flex-col justify-between">
+                                <span className={`block h-0.5 bg-current rounded-full transition-all duration-300 origin-center ${isMenuOpen ? 'rotate-45 translate-y-[7px]' : ''}`} />
+                                <span className={`block h-0.5 bg-current rounded-full transition-all duration-300 ${isMenuOpen ? 'opacity-0 scale-x-0' : ''}`} />
+                                <span className={`block h-0.5 bg-current rounded-full transition-all duration-300 origin-center ${isMenuOpen ? '-rotate-45 -translate-y-[9px]' : ''}`} />
+                            </div>
+                        </button>
+                    </div>
+                </div>
+
+                {/* Mobile Menu — slides down with opacity */}
+                <div
+                    className={`
+                        md:hidden overflow-hidden
+                        transition-all duration-300 ease-in-out
+                        ${isMenuOpen ? 'max-h-[500px] opacity-100' : 'max-h-0 opacity-0'}
+                    `}
+                >
+                    <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 border-t border-gray-100">
+                        {[
+                            { href: '/kanji', label: 'Kanji' },
+                            { href: '/bunpo', label: 'Tata Bahasa' },
+                            { href: '/kana', label: 'Kana' },
+                            { href: '/kotoba', label: 'Kotoba' },
+                            ...(!user ? [{ href: '/practice', label: 'Latihan' }] : []),
+                        ].map(({ href, label }, i) => (
+                            <Link
+                                key={href}
+                                href={href}
+                                className={getLinkClass(href, true)}
+                                onClick={handleNavClick}
+                                style={{ transitionDelay: isMenuOpen ? `${i * 40}ms` : '0ms' }}
+                            >
+                                {label}
+                            </Link>
+                        ))}
                     </div>
 
-                    {/* Desktop Menu */}
-                    <div className="hidden md:flex items-center space-x-4">
+                    <div className="pt-3 pb-4 border-t border-gray-100">
                         {!loading && (
                             user ? (
-                                <div className="flex items-center space-x-4">
+                                <div className="px-5 space-y-2">
+                                    <div className="flex items-center py-2">
+                                        <div className="w-8 h-8 rounded-full bg-red-100 flex items-center justify-center mr-3">
+                                            <span className="text-sm font-bold text-red-600">{user.username?.[0]?.toUpperCase()}</span>
+                                        </div>
+                                        <div>
+                                            <div className="text-sm font-semibold text-gray-800">{user.username}</div>
+                                            <div className="text-xs text-gray-500">{user.email}</div>
+                                        </div>
+                                    </div>
                                     {(user.email === 'imronm1309@gmail.com' || user.is_staff) && (
-                                        <Link href="/admin" className="text-red-600 hover:text-red-800 font-bold px-3 py-2 rounded-md text-sm" onClick={handleNavClick}>
-                                            Admin
+                                        <Link href="/admin" className="block px-3 py-2 rounded-md text-sm font-medium text-red-600 hover:text-red-800 hover:bg-red-50 transition-all duration-200" onClick={handleNavClick}>
+                                            Admin Dashboard
                                         </Link>
                                     )}
-                                    <Link href="/dashboard" className="text-gray-900 hover:text-red-600 font-medium px-3 py-2 rounded-md text-sm transition-colors" onClick={handleNavClick}>
-                                        Dashboard
+                                    <Link href="/dashboard" className="block px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-red-600 hover:bg-gray-50 transition-all duration-200" onClick={handleNavClick}>
+                                        Dashboard Latihan
                                     </Link>
-                                    <span className="text-sm font-medium text-gray-700">Hi, {user.username}</span>
                                     <button
                                         onClick={() => {
                                             if (isPracticing && !confirm('Lagi latihan, yakin mau keluar?')) return;
                                             logout();
+                                            setIsMenuOpen(false);
                                         }}
-                                        className="text-gray-900 hover:text-red-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
+                                        className="block w-full text-left px-3 py-2 rounded-md text-sm font-medium text-gray-500 hover:text-gray-800 hover:bg-gray-100 transition-all duration-200"
                                     >
                                         Keluar
                                     </button>
                                 </div>
                             ) : (
-                                <>
-                                    <Link href="/login" className="text-gray-900 hover:text-red-600 px-3 py-2 rounded-md text-sm font-medium" onClick={handleNavClick}>
+                                <div className="px-5 space-y-2">
+                                    <Link href="/login" className="block px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 transition-all duration-200" onClick={handleNavClick}>
                                         Masuk
                                     </Link>
-                                    <Link href="/register" className="bg-red-600 text-white hover:bg-red-700 px-4 py-2 rounded-md text-sm font-medium shadow-sm transition-colors" onClick={handleNavClick}>
+                                    <Link href="/register" className="block px-3 py-2 rounded-md text-sm font-medium text-white bg-red-600 hover:bg-red-700 transition-all duration-200 text-center" onClick={handleNavClick}>
                                         Daftar
                                     </Link>
-                                </>
+                                </div>
                             )
                         )}
                     </div>
+                </div>
+            </nav>
 
-                    {/* Mobile menu button */}
-                    <div className="flex items-center md:hidden">
-                        <button
-                            onClick={() => setIsMenuOpen(!isMenuOpen)}
-                            className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-red-500"
-                            aria-expanded="false"
-                        >
-                            <span className="sr-only">Open main menu</span>
-                            <svg className={`${isMenuOpen ? 'hidden' : 'block'} h-6 w-6`} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
-                            </svg>
-                            <svg className={`${isMenuOpen ? 'block' : 'hidden'} h-6 w-6`} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
-                            </svg>
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            {/* Mobile Menu */}
-            <div className={`${isMenuOpen ? 'block' : 'hidden'} md:hidden`}>
-                <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-                    <Link href="/kanji" className={getLinkClass('/kanji', true)} onClick={handleNavClick}>
-                        Kanji
-                    </Link>
-                    <Link href="/bunpo" className={getLinkClass('/bunpo', true)} onClick={handleNavClick}>
-                        Tata Bahasa
-                    </Link>
-                    <Link href="/kana" className={getLinkClass('/kana', true)} onClick={handleNavClick}>
-                        Kana
-                    </Link>
-                    <Link href="/kotoba" className={getLinkClass('/kotoba', true)} onClick={handleNavClick}>
-                        Kotoba
-                    </Link>
-                    {!user && (
-                        <Link href="/practice" className={getLinkClass('/practice', true)} onClick={handleNavClick}>
-                            Latihan
-                        </Link>
-                    )}
-                </div>
-                <div className="pt-4 pb-4 border-t border-gray-200">
-                    {!loading && (
-                        user ? (
-                            <div className="px-5 space-y-3">
-                                <div className="flex items-center">
-                                    <div className="ml-3">
-                                        <div className="text-base font-medium leading-none text-gray-800">{user.username}</div>
-                                        <div className="text-sm font-medium leading-none text-gray-500">{user.email}</div>
-                                    </div>
-                                </div>
-                                {(user.email === 'imronm1309@gmail.com' || user.is_staff) && (
-                                    <Link href="/admin" className="block px-3 py-2 rounded-md text-base font-medium text-red-600 hover:text-red-800 hover:bg-gray-50" onClick={handleNavClick}>
-                                        Admin Dashboard
-                                    </Link>
-                                )}
-                                <Link href="/dashboard" className="block px-3 py-2 rounded-md text-base font-medium text-gray-900 hover:text-red-600 hover:bg-gray-50 bg-gray-50 mt-2" onClick={handleNavClick}>
-                                    Dashboard Latihan
-                                </Link>
-                                <button
-                                    onClick={() => {
-                                        if (isPracticing && !confirm('Lagi latihan, yakin mau keluar?')) return;
-                                        logout();
-                                        setIsMenuOpen(false);
-                                    }}
-                                    className="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-500 hover:text-gray-800 hover:bg-gray-100"
-                                >
-                                    Keluar
-                                </button>
-                            </div>
-                        ) : (
-                            <div className="px-5 space-y-3">
-                                <Link href="/login" className="block px-3 py-2 rounded-md text-base font-medium text-gray-500 hover:text-gray-900 hover:bg-gray-50" onClick={handleNavClick}>
-                                    Masuk
-                                </Link>
-                                <Link href="/register" className="block px-3 py-2 rounded-md text-base font-medium text-red-600 hover:text-red-500 hover:bg-gray-50" onClick={handleNavClick}>
-                                    Daftar
-                                </Link>
-                            </div>
-                        )
-                    )}
-                </div>
-            </div>
-        </nav>
+            {/* Spacer so content doesn't go under fixed navbar */}
+            <div className="h-16" />
+        </>
     );
 }
