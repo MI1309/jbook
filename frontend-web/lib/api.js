@@ -269,3 +269,44 @@ export async function getVocabDetail(id) {
 
     return res.json();
 }
+
+/**
+ * @typedef {Object} Blog
+ * @property {string} id
+ * @property {string} title
+ * @property {string} slug
+ * @property {string} content
+ * @property {string[]} tags
+ * @property {string} created_at
+ */
+
+/**
+ * @returns {Promise<Blog[]>}
+ */
+export async function getBlogList() {
+    const res = await fetch(`${API_URL}/content/blog`, {
+        cache: 'no-store',
+    });
+
+    if (!res.ok) {
+        throw new Error('Failed to fetch blog list');
+    }
+
+    return res.json();
+}
+
+/**
+ * @param {string} slug
+ * @returns {Promise<Blog>}
+ */
+export async function getBlogDetailBySlug(slug) {
+    const res = await fetch(`${API_URL}/content/blog/${slug}`, {
+        cache: 'no-store',
+    });
+
+    if (!res.ok) {
+        throw new Error('Failed to fetch blog detail');
+    }
+
+    return res.json();
+}

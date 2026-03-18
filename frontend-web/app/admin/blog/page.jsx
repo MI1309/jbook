@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import Link from 'next/link';
+import Cookies from 'js-cookie';
 
 export default function BlogAdmin() {
     const { user } = useAuth();
@@ -16,7 +17,7 @@ export default function BlogAdmin() {
 
     const fetchBlogs = async () => {
         try {
-            const token = localStorage.getItem('access_token');
+            const token = Cookies.get('access_token');
             const res = await fetch('https://imronm.pythonanywhere.com/api/admin/blog', {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
@@ -32,7 +33,7 @@ export default function BlogAdmin() {
     const handleCreate = async (e) => {
         e.preventDefault();
         try {
-            const token = localStorage.getItem('access_token');
+            const token = Cookies.get('access_token');
             const tagsArray = formData.tags.split(',').map(tag => tag.trim());
             const payload = { ...formData, tags: tagsArray };
 

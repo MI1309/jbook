@@ -173,23 +173,37 @@ export default function AdminLayout({ children }) {
             <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
 
                 {/* Mobile Top Bar */}
-                <header className="md:hidden flex items-center justify-between px-4 py-3 bg-white border-b border-gray-100 shadow-sm flex-shrink-0">
-                    <button
-                        onClick={() => setIsSidebarOpen(true)}
-                        className="p-2 rounded-lg text-gray-500 hover:text-gray-700 hover:bg-gray-100 transition-colors"
-                        aria-label="Buka menu"
-                    >
-                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-                        </svg>
-                    </button>
+                <header className="md:hidden flex items-center justify-between px-6 py-4 bg-white border-b border-gray-100 shadow-sm flex-shrink-0">
+                    <div className="flex items-center gap-4">
+                        <button
+                            onClick={() => setIsSidebarOpen(true)}
+                            className="p-2.5 rounded-xl bg-gray-50 text-gray-600 hover:text-red-600 hover:bg-red-50 transition-all active:scale-95 border border-gray-100"
+                            aria-label="Buka menu"
+                        >
+                            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                            </svg>
+                        </button>
+                        <div>
+                            <span className="text-xl font-black tracking-tight text-gray-900">
+                                <span className="text-red-600">J</span>Book
+                            </span>
+                            <span className="ml-1 text-[10px] font-bold px-1.5 py-0.5 bg-red-100 text-red-600 rounded uppercase tracking-wider">Admin</span>
+                        </div>
+                    </div>
 
-                    <span className="text-lg font-bold text-red-600">JBook Admin</span>
-
-                    <div className="w-9 h-9 rounded-full bg-red-100 flex items-center justify-center">
-                        <span className="text-sm font-bold text-red-600">
-                            {user?.username?.[0]?.toUpperCase() ?? 'A'}
-                        </span>
+                    <div className="flex items-center gap-3">
+                        <div className="text-right hidden sm:block">
+                            <p className="text-xs font-bold text-gray-900 leading-none">{user?.username}</p>
+                            <p className="text-[10px] text-gray-400 mt-1">Administrator</p>
+                        </div>
+                        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-red-500 to-red-700 p-[2px] shadow-lg shadow-red-200">
+                            <div className="w-full h-full rounded-[10px] bg-white flex items-center justify-center">
+                                <span className="text-sm font-black text-red-600">
+                                    {user?.username?.[0]?.toUpperCase() ?? 'A'}
+                                </span>
+                            </div>
+                        </div>
                     </div>
                 </header>
 

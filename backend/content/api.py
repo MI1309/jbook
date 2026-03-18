@@ -1,10 +1,21 @@
 from ninja import Router, Schema
 from typing import List, Optional
-from .models import Kanji, Grammar
+from .models import Kanji, Grammar, Blog
 from django.shortcuts import get_object_or_404
 from uuid import UUID
+from datetime import datetime
 
 router = Router()
+
+class BlogSchema(Schema):
+    id: UUID
+    title: str
+    slug: str
+    content: str
+    tags: List[str]
+    is_published: bool
+    created_at: datetime
+    updated_at: datetime
 
 class KanjiSchema(Schema):
     id: UUID
@@ -145,3 +156,11 @@ def list_vocab(request,
 def get_vocab(request, vocab_id: UUID):
     from .models import Vocab
     return get_object_or_404(Vocab, id=vocab_id)
+
+@router.get("/blog", response=List[BlogSchema])
+def list_blog(request):
+    return Blog.objects.filter(is_published=True).order_by('-created_at')
+
+@router.get("/blog/{slug}", response=BlogSchema)
+def get_blog(request, slug: str):
+    return get_object_or_404(Blog, slug=slug, is_published=True)

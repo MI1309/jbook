@@ -24,6 +24,12 @@ export default function Home() {
           >
             Belajar Tata Bahasa
           </Link>
+          <Link
+            href="/blog"
+            className="rounded-full border-2 border-red-600 text-red-600 transition-all flex items-center justify-center hover:bg-red-50 text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 font-bold"
+          >
+            Baca Blog 📖
+          </Link>
         </div>
       </main>
     </div>
