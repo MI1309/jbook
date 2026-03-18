@@ -1,6 +1,6 @@
 from ninja import Router, Schema
 from typing import List, Optional
-from .models import Kanji, Grammar, Blog
+from .models import Kanji, Grammar, Blog, ContentSuggestion
 from django.shortcuts import get_object_or_404
 from uuid import UUID
 from datetime import datetime
