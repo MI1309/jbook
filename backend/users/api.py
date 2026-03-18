@@ -100,12 +100,11 @@ def login(request, data: LoginSchema):
     from django.db.models import Q
     user = User.objects.filter(Q(email=data.identifier) | Q(username=data.identifier)).first()
     if user is None:
-
-        raise HttpError(400, "Invalid credentials")
+        raise HttpError(400, "User not found")
     
     # Check password
     if not user.check_password(data.password):
-        raise HttpError(400, "Invalid credentials")
+        raise HttpError(400, "Incorrect password")
         
     tokens = get_tokens_for_user(user)
     return {**tokens, "user": user}
@@ -160,10 +159,21 @@ def _generate_otp(length: int = 6) -> str:
 def password_reset_request(request, data: PasswordResetRequestSchema):
     user = User.objects.filter(email=data.email).first()
     if user:
+        # Generate token and uid for direct link
+        uid = urlsafe_base64_encode(force_bytes(user.pk))
+        token = default_token_generator.make_token(user)
+        
+        # Determine base URL for reset link
+        base_url = getattr(settings, 'FRONTEND_URL', 'http://localhost:3000')
+        reset_link = f"{base_url}/reset-password?uid={uid}&token={token}"
+        
+        # Also generate OTP for backward compatibility
         otp = _generate_otp(6)
         cache.set(f"otp_reset_{data.email}", otp, timeout=600)  # 10 menit
-        subject = "JBook - Kode OTP Reset Password"
-        message = f"Kode OTP Anda: {otp}\n\nKode ini berlaku selama 10 menit. Jangan bagikan kode ini kepada siapapun.\n\nJika Anda tidak meminta reset password, abaikan email ini."
+        
+        subject = "JBook - Reset Password"
+        message = f"Klik link berikut untuk reset password Anda:\n{reset_link}\n\nAtau gunakan kode OTP ini: {otp}\n\nLink dan kode ini berlaku selama 10 menit. Jika Anda tidak meminta reset password, abaikan email ini."
+        
         send_mail(
             subject,
             message,
@@ -171,7 +181,7 @@ def password_reset_request(request, data: PasswordResetRequestSchema):
             [user.email],
             fail_silently=False,
         )
-    return {"message": "If an account with that email exists, an OTP has been sent to your email."}
+    return {"message": "If an account with that email exists, a reset link has been sent to your email."}
 
 @router.post("/password-reset-otp")
 def password_reset_otp_confirm(request, data: PasswordResetOtpConfirmSchema):

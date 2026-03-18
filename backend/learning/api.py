@@ -155,10 +155,6 @@ def submit_quiz(request, payload: SubmissionSchema):
     # Pre-fetch all past attempts for this user to calculate accuracy efficiently
     # Or just query per item if there are not many items in a payload (usually 10)
     for res in payload.results:
-        # Logging for debugging (can be reviewed via sqlite or log file if needed)
-        # For now, we use a simple print that would show in server logs
-        print(f"DEBUG: Processing attempt for {res.type} - ID: {res.question_id}")
-        
         attempt_data = {
             "user": user,
             "is_correct": res.is_correct,
@@ -196,13 +192,13 @@ def submit_quiz(request, payload: SubmissionSchema):
                 # If accuracy is 80% or more, delete the wrong attempts
                 if accuracy >= 80.0:
                     past_attempts.filter(is_correct=False).delete()
-            except Exception as e:
-                print(f"DEBUG: Accuracy cleanup failed: {e}")
+            except Exception:
+                pass
             
         try:
             attempts.append(QuizAttempt(**attempt_data))
-        except Exception as e:
-            print(f"DEBUG: Failed to create QuizAttempt object: {e}")
+        except Exception:
+            pass
         
     if attempts:
         QuizAttempt.objects.bulk_create(attempts)

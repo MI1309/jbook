@@ -75,15 +75,15 @@ class _LoginScreenState extends State<LoginScreen> {
                 ElevatedButton(
                   onPressed: auth.isLoading ? null : () async {
                     if (_formKey.currentState!.validate()) {
-                      final success = await auth.login(_emailController.text.trim(), _passwordController.text);
-                      if (success && mounted) {
+                      final error = await auth.login(_emailController.text.trim(), _passwordController.text);
+                      if (error == null && mounted) {
                         Navigator.of(context).pushAndRemoveUntil(
                           MaterialPageRoute(builder: (_) => const MainNavigationScreen()),
                           (route) => false,
                         );
                       } else if (mounted) {
                         ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Login gagal. Silakan periksa kredensial Anda.')),
+                          SnackBar(content: Text(error ?? 'Login gagal.')),
                         );
                       }
                     }

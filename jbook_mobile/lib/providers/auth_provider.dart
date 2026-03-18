@@ -69,7 +69,7 @@ class AuthProvider extends ChangeNotifier {
     return File('${dir.path}/session.json');
   }
 
-  Future<bool> login(String identifier, String password) async {
+  Future<String?> login(String identifier, String password) async {
     _isLoading = true;
     notifyListeners();
     try {
@@ -83,14 +83,18 @@ class AuthProvider extends ChangeNotifier {
         await _saveSession(_token!, response['user']);
         _isLoading = false;
         notifyListeners();
-        return true;
+        return null;
+      } else {
+        _isLoading = false;
+        notifyListeners();
+        return response['detail'] ?? 'Login gagal. Silakan periksa kredensial Anda.';
       }
     } catch (e) {
       print('Login error: $e');
+      _isLoading = false;
+      notifyListeners();
+      return 'Terjadi kesalahan koneksi.';
     }
-    _isLoading = false;
-    notifyListeners();
-    return false;
   }
 
   Future<bool> register(String username, String email, String password, int levelTarget) async {

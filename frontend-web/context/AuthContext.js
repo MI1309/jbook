@@ -138,7 +138,7 @@ export function AuthProvider({ children }) {
             });
 
             const data = await res.json();
-            if (!res.ok) throw new Error(data.message || 'Login failed');
+            if (!res.ok) throw new Error(data.detail || data.message || 'Login failed');
 
             setAuthCookies(data.access, data.refresh);
             setUser(data.user);
@@ -158,7 +158,7 @@ export function AuthProvider({ children }) {
             });
 
             const data = await res.json();
-            if (!res.ok) throw new Error(data.message || 'Registration failed');
+            if (!res.ok) throw new Error(data.detail || data.message || 'Registration failed');
 
             setAuthCookies(data.access, data.refresh);
             setUser(data.user);
@@ -198,7 +198,7 @@ export function AuthProvider({ children }) {
                 body: JSON.stringify({ email }),
             });
             const data = await res.json();
-            if (!res.ok) throw new Error(data.message || 'Failed to request password reset');
+            if (!res.ok) throw new Error(data.detail || data.message || 'Failed to request password reset');
             return { success: true, message: data.message };
         } catch (error) {
             return { success: false, error: error.message };

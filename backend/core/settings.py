@@ -214,6 +214,8 @@ DEFAULT_FROM_EMAIL = os.environ.get(
     EMAIL_HOST_USER
 )
 
+FRONTEND_URL = os.environ.get("FRONTEND_URL", "http://localhost:3000")
+
 
 # ===============================
 # CACHE (OTP RESET)
@@ -240,9 +242,9 @@ NINJA_JWT = {
     'AUTH_HEADER_TYPES': ('Bearer',),
     'USER_ID_FIELD': 'id',
     'USER_ID_CLAIM': 'user_id',
-    'AUDIENCE': "",
-    'ISSUER': "",
-    'JWK_URL': "",
+    'AUDIENCE': 'jbook',
+    'ISSUER': 'jbook',
+    'JWK_URL': 'http://localhost/jwks.json',
 }
 
 # Session settings
