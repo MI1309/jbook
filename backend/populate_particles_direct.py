@@ -162,6 +162,144 @@ particles = [
             {"jp": "食べた( )です。", "id": "Baru saja makan.", "answer": "ばかり"}
         ]
     },
+    # N3
+    {
+        "character": "さえ (sae)", 
+        "meaning": "Bahkan", 
+        "explanation": "Menunjukkan sesuatu yang ekstrem sebagai contoh.", 
+        "jlpt_level": 3,
+        "sentences": [
+            {"jp": "子供( )知っています。", "id": "Bahkan anak kecil pun tahu.", "answer": "さえ"}
+        ]
+    },
+    {
+        "character": "つつ (tsutsu)", 
+        "meaning": "Sambil / Meskipun", 
+        "explanation": "Dua aksi terjadi bersamaan (lebih formal dari nagara).", 
+        "jlpt_level": 3,
+        "sentences": [
+            {"jp": "体に悪いと知り( )、タバコがやめられない。", "id": "Meskipun tahu itu buruk bagi tubuh, saya tidak bisa berhenti merokok.", "answer": "つつ"}
+        ]
+    },
+    {
+        "character": "どころか (dokoroka)", 
+        "meaning": "Jangankan... malah...", 
+        "explanation": "Menyatakan sesuatu yang sangat berbeda dari yang diharapkan.", 
+        "jlpt_level": 3,
+        "sentences": [
+            {"jp": "独身( )、子供が三人います。", "id": "Jangankan lajang, saya malah punya tiga anak.", "answer": "どころか"}
+        ]
+    },
+    {
+        "character": "なんて (nante)", 
+        "meaning": "Hal seperti...", 
+        "explanation": "Menunjukkan keraguan, kejutan, atau merendahkan sesuatu.", 
+        "jlpt_level": 3,
+        "sentences": [
+            {"jp": "日本料理( )嫌いです。", "id": "Hal seperti masakan Jepang saya benci.", "answer": "なんて"}
+        ]
+    },
+    {
+        "character": "向け (muke)", 
+        "meaning": "Ditujukan untuk", 
+        "explanation": "Dibuat khusus untuk target tertentu.", 
+        "jlpt_level": 3,
+        "sentences": [
+            {"jp": "これは子供( )の本です。", "id": "Ini adalah buku yang ditujukan untuk anak-anak.", "answer": "向け"}
+        ]
+    },
+    # N2
+    {
+        "character": "きり (kiri)", 
+        "meaning": "Hanya / Semenjak", 
+        "explanation": "Hanya itu saja dan tidak ada lagi.", 
+        "jlpt_level": 2,
+        "sentences": [
+            {"jp": "二人( )で話したいです。", "id": "Saya ingin bicara berdua saja.", "answer": "きり"}
+        ]
+    },
+    {
+        "character": "こそ (koso)", 
+        "meaning": "Justru / Justru karena", 
+        "explanation": "Memberikan penekanan kuat pada subjek.", 
+        "jlpt_level": 2,
+        "sentences": [
+            {"jp": "今日( )頑張ります。", "id": "Justru hari ini saya akan berjuang.", "answer": "こそ"}
+        ]
+    },
+    {
+        "character": "っぱなし (ppanashi)", 
+        "meaning": "Dibiarkan (begitu saja)", 
+        "explanation": "Membiarkan sesuatu dalam keadaan tertentu tanpa membereskannya.", 
+        "jlpt_level": 2,
+        "sentences": [
+            {"jp": "窓を開け( )にしないでください。", "id": "Jangan biarkan jendela terbuka begitu saja.", "answer": "っぱなし"}
+        ]
+    },
+    {
+        "character": "まみれ (mamire)", 
+        "meaning": "Berlumuran", 
+        "explanation": "Tertutup oleh sesuatu yang kotor (debu, darah, lumpur).", 
+        "jlpt_level": 2,
+        "sentences": [
+            {"jp": "泥( )の靴。", "id": "Sepatu yang berlumuran lumpur.", "answer": "まみれ"}
+        ]
+    },
+    {
+        "character": "やら (yara)", 
+        "meaning": "...dan...", 
+        "explanation": "Menyebutkan beberapa contoh dalam daftar (tidak pasti/acak).", 
+        "jlpt_level": 2,
+        "sentences": [
+            {"jp": "嬉しい( )悲しい( )。", "id": "Entah senang entah sedih.", "answer": "やら"}
+        ]
+    },
+    # N1
+    {
+        "character": "がてら (gatera)", 
+        "meaning": "Sekalian / Sambil", 
+        "explanation": "Melakukan aksi kedua saat melakukan aksi utama.", 
+        "jlpt_level": 1,
+        "sentences": [
+            {"jp": "散歩( )パンを買いに行く。", "id": "Sekalian jalan-jalan, pergi membeli roti.", "answer": "がてら"}
+        ]
+    },
+    {
+        "character": "ごとき (gotoki)", 
+        "meaning": "Seperti", 
+        "explanation": "Bentuk formal/klasik dari 'you na'.", 
+        "jlpt_level": 1,
+        "sentences": [
+            {"jp": "私( )の未熟者。", "id": "Orang yang belum berpengalaman seperti saya.", "answer": "ごとき"}
+        ]
+    },
+    {
+        "character": "たりとも (taritomo)", 
+        "meaning": "Bahkan (satu) pun tidak", 
+        "explanation": "Penekanan pada jumlah paling kecil (biasanya diikuti bentuk negatif).", 
+        "jlpt_level": 1,
+        "sentences": [
+            {"jp": "一秒( )無駄にできない。", "id": "Bahkan satu detik pun tidak bisa disia-siakan.", "answer": "たりとも"}
+        ]
+    },
+    {
+        "character": "なりに (nari ni)", 
+        "meaning": "Sesuai dengan / Dengan cara sendiri", 
+        "explanation": "Sesuai dengan kemampuan atau kapasitas yang ada.", 
+        "jlpt_level": 1,
+        "sentences": [
+            {"jp": "自分( )精一杯頑張った。", "id": "Saya sudah berjuang sekuat tenaga dengan cara saya sendiri.", "answer": "なりに"}
+        ]
+    },
+    {
+        "character": "べからず (bekarazu)", 
+        "meaning": "Dilarang / Tidak boleh", 
+        "explanation": "Larangan keras dalam pernyataan tertulis.", 
+        "jlpt_level": 1,
+        "sentences": [
+            {"jp": "芝生に入る( )。", "id": "Dilarang masuk ke area rumput.", "answer": "べからず"}
+        ]
+    },
 ]
 
 conn = sqlite3.connect(db_path)
