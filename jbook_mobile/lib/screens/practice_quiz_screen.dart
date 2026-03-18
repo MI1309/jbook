@@ -220,7 +220,9 @@ class _PracticeQuizScreenState extends State<PracticeQuizScreen> {
                   Text(
                     question.character,
                     style: TextStyle(
-                      fontSize: widget.type == 'kanji' ? 80 : 40,
+                      fontSize: question.character.length > 10 
+                        ? 28 
+                        : (widget.type == 'kanji' ? 80 : 44),
                       fontWeight: FontWeight.bold,
                     ),
                     textAlign: TextAlign.center,
