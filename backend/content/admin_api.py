@@ -6,7 +6,9 @@ from ninja import Router, Schema
 from ninja.security import HttpBearer
 from ninja.errors import HttpError
 from pydantic import BaseModel
-from .models import Kanji, Grammar, Blog, JLPTLevel
+import csv
+from django.http import HttpResponse
+from .models import Kanji, Grammar, Blog, JLPTLevel, Vocab, Particle
 from users.api import AuthBearer
 
 router = Router()
@@ -180,6 +182,16 @@ def admin_delete_kanji(request, id: str):
     kanji.delete()
     return {"success": True}
 
+@router.get("/kanji/export/csv", auth=AdminAuth())
+def admin_export_kanji_csv(request):
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="kanji_export.csv"'
+    writer = csv.writer(response)
+    writer.writerow(['ID', 'Character', 'Meaning', 'Onyomi', 'Kunyomi', 'Strokes', 'JLPT Level', 'Radical'])
+    for obj in Kanji.objects.all():
+        writer.writerow([obj.id, obj.character, obj.meaning, ", ".join(obj.onyomi), ", ".join(obj.kunyomi), obj.strokes, obj.jlpt_level, obj.radical])
+    return response
+
 # Bunpo Schemas
 class GrammarCreateSchema(BaseModel):
     title: str
@@ -236,6 +248,16 @@ def admin_delete_bunpo(request, id: str):
     grammar = get_object_or_404(Grammar, id=id)
     grammar.delete()
     return {"success": True}
+
+@router.get("/bunpo/export/csv", auth=AdminAuth())
+def admin_export_grammar_csv(request):
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="grammar_export.csv"'
+    writer = csv.writer(response)
+    writer.writerow(['ID', 'Title', 'Structure', 'Explanation', 'Chapter', 'JLPT Level'])
+    for obj in Grammar.objects.all():
+        writer.writerow([obj.id, obj.title, obj.structure, obj.explanation, obj.chapter, obj.jlpt_level])
+    return response
 
 # Vocab Schemas
 from .models import Vocab
@@ -295,3 +317,25 @@ def admin_delete_vocab(request, id: str):
     vocab = get_object_or_404(Vocab, id=id)
     vocab.delete()
     return {"success": True}
+
+@router.get("/vocab/export/csv", auth=AdminAuth())
+def admin_export_vocab_csv(request):
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="vocab_export.csv"'
+    writer = csv.writer(response)
+    writer.writerow(['ID', 'Word', 'Reading', 'Meaning', 'JLPT Level'])
+    for obj in Vocab.objects.all():
+        writer.writerow([obj.id, obj.word, obj.reading, obj.meaning, obj.jlpt_level])
+    return response
+
+@router.get("/particle/export/csv", auth=AdminAuth())
+def admin_export_particle_csv(request):
+    import json
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="particle_export.csv"'
+    writer = csv.writer(response)
+    writer.writerow(['ID', 'Character', 'Meaning', 'Explanation', 'JLPT Level', 'Sentences'])
+    for obj in Particle.objects.all():
+        sentences_str = json.dumps(obj.sentences)
+        writer.writerow([obj.id, obj.character, obj.meaning, obj.explanation, obj.jlpt_level, sentences_str])
+    return response
