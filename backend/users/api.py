@@ -164,7 +164,21 @@ def password_reset_request(request, data: PasswordResetRequestSchema):
         token = default_token_generator.make_token(user)
         
         # Determine base URL for reset link
-        base_url = getattr(settings, 'FRONTEND_URL', 'http://localhost:3000')
+        # 1. Try Origin header (sent by browsers for POST)
+        # 2. Try Referer header (common fallback)
+        # 3. Fallback to settings.FRONTEND_URL
+        origin = request.headers.get('origin')
+        referer = request.headers.get('referer')
+        
+        if origin:
+            base_url = origin
+        elif referer:
+            from urllib.parse import urlparse
+            parsed_referer = urlparse(referer)
+            base_url = f"{parsed_referer.scheme}://{parsed_referer.netloc}"
+        else:
+            base_url = getattr(settings, 'FRONTEND_URL', 'http://localhost:3000')
+            
         reset_link = f"{base_url}/reset-password?uid={uid}&token={token}"
         
         # Also generate OTP for backward compatibility
