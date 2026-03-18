@@ -123,10 +123,17 @@ def generate_quiz(request, limit: int = 10, level: Optional[int] = None, type: s
             reading = item.structure 
             meaning = item.explanation
         elif type == 'particle':
-            display_text = item.character
-            correct_answer = item.meaning
-            # For particles, use other particles as distractors
-            distractor_answers = [d.meaning for d in distractors]
+            # Use sentence if available
+            if item.sentences:
+                sentence = random.choice(item.sentences)
+                display_text = sentence.get("jp", item.character)
+                correct_answer = sentence.get("answer", item.character.split()[0])
+            else:
+                display_text = item.character
+                correct_answer = item.character.split()[0]
+                
+            # For particles, use other particle characters as distractors
+            distractor_answers = [d.character.split()[0] for d in distractors]
             reading = item.explanation
             meaning = item.meaning
 

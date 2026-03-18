@@ -7,6 +7,7 @@ export default function ForgotPasswordPage() {
     const [email, setEmail] = useState('');
     const [error, setError] = useState('');
     const [successMessage, setSuccessMessage] = useState('');
+    const [debugResetLink, setDebugResetLink] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const { forgotPassword } = useAuth();
 
@@ -21,6 +22,9 @@ export default function ForgotPasswordPage() {
             setError(res.error || 'Something went wrong. Please try again.');
         } else {
             setSuccessMessage(res.message || 'Check your email for a password reset link.');
+            if (res.reset_link) {
+                setDebugResetLink(res.reset_link);
+            }
         }
 
         setIsLoading(false);
@@ -46,6 +50,19 @@ export default function ForgotPasswordPage() {
                     {successMessage && (
                         <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative" role="alert">
                             <span className="block sm:inline">{successMessage}</span>
+                            {debugResetLink && (
+                                <div className="mt-4 p-2 bg-white rounded border border-green-200">
+                                    <p className="text-xs text-gray-500 mb-1 font-mono uppercase tracking-wider">Debug Reset Link:</p>
+                                    <a 
+                                        href={debugResetLink} 
+                                        className="text-blue-600 underline break-all text-sm"
+                                        target="_blank" 
+                                        rel="noopener noreferrer"
+                                    >
+                                        {debugResetLink}
+                                    </a>
+                                </div>
+                            )}
                         </div>
                     )}
                     <div className="rounded-md shadow-sm space-y-4">

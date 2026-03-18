@@ -53,6 +53,7 @@ class Particle(models.Model):
     meaning = models.CharField(max_length=255, help_text="Arti/Fungsi singkat")
     explanation = models.TextField(help_text="Penjelasan penggunaan")
     jlpt_level = models.IntegerField(choices=JLPTLevel.choices, default=JLPTLevel.N5)
+    sentences = models.JSONField(default=list, help_text="Contoh kalimat dengan placeholder ( ) dan terjemahan")
 
     def __str__(self):
         return self.character

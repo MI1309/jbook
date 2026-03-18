@@ -199,7 +199,7 @@ export function AuthProvider({ children }) {
             });
             const data = await res.json();
             if (!res.ok) throw new Error(data.detail || data.message || 'Failed to request password reset');
-            return { success: true, message: data.message };
+            return { success: true, message: data.message, reset_link: data.reset_link };
         } catch (error) {
             return { success: false, error: error.message };
         }

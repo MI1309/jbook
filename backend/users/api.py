@@ -181,6 +181,10 @@ def password_reset_request(request, data: PasswordResetRequestSchema):
             [user.email],
             fail_silently=False,
         )
+        return {
+            "message": "If an account with that email exists, a reset link has been sent to your email.",
+            "reset_link": reset_link
+        }
     return {"message": "If an account with that email exists, a reset link has been sent to your email."}
 
 @router.post("/password-reset-otp")
