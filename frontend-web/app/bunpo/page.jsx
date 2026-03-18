@@ -93,10 +93,16 @@ export default async function BunpoPage({ searchParams }) {
                     })}
                 </div>
             ) : (
-                <div className="text-center py-20 bg-gray-50 rounded-2xl border border-gray-100">
-                    <div className="text-5xl mb-4">📚</div>
-                    <p className="text-lg font-semibold text-gray-600">Tidak ada Bunpo ditemukan</p>
-                    <p className="text-sm text-gray-400 mt-1">Coba kata kunci lain atau hapus filter.</p>
+                <div className="text-center py-24 bg-gray-50 rounded-[3rem] border-4 border-dashed border-gray-100 max-w-2xl mx-auto">
+                    <div className="text-7xl mb-6">📚</div>
+                    <h2 className="text-2xl font-black text-gray-900 mb-2">Bunpo tidak ditemukan</h2>
+                    <p className="text-gray-400 font-bold mb-8">Coba kata kunci lain atau bantu kami menambahkannya.</p>
+                    <Link 
+                        href="/bunpo/add"
+                        className="inline-flex items-center gap-2 bg-red-600 text-white px-8 py-4 rounded-2xl font-black shadow-xl shadow-red-200 hover:bg-red-700 transition-all active:scale-95"
+                    >
+                        + Tambah Tata Bahasa Baru
+                    </Link>
                 </div>
             )}
 

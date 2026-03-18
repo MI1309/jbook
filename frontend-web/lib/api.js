@@ -304,8 +304,22 @@ export async function getBlogDetailBySlug(slug) {
         cache: 'no-store',
     });
 
+    return res.json();
+}
+
+/**
+ * @param {Object} payload 
+ * @returns {Promise<{message: string}>}
+ */
+export async function suggestContent(payload) {
+    const res = await fetch(`${API_URL}/content/suggest`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+    });
+
     if (!res.ok) {
-        throw new Error('Failed to fetch blog detail');
+        throw new Error('Failed to submit suggestion');
     }
 
     return res.json();

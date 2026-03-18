@@ -70,3 +70,23 @@ class Blog(models.Model):
 
     def __str__(self):
         return self.title
+
+class ContentSuggestion(models.Model):
+    TYPES = [
+        ('kanji', 'Kanji'),
+        ('bunpo', 'Grammar'),
+    ]
+    STATUS = [
+        ('pending', 'Pending'),
+        ('approved', 'Approved'),
+        ('rejected', 'Rejected'),
+    ]
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    type = models.CharField(max_length=10, choices=TYPES)
+    data = models.JSONField()
+    status = models.CharField(max_length=10, choices=STATUS, default='pending')
+    approval_token = models.UUIDField(default=uuid.uuid4, editable=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.type} suggestion - {self.status}"

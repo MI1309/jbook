@@ -215,6 +215,7 @@ DEFAULT_FROM_EMAIL = os.environ.get(
 )
 
 FRONTEND_URL = os.environ.get("FRONTEND_URL", "http://localhost:3000")
+BACKEND_URL = os.environ.get("BACKEND_URL", "https://imronm.pythonanywhere.com")
 
 
 # ===============================

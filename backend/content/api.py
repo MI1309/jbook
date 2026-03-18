@@ -164,3 +164,60 @@ def list_blog(request):
 @router.get("/blog/{slug}", response=BlogSchema)
 def get_blog(request, slug: str):
     return get_object_or_404(Blog, slug=slug, is_published=True)
+
+class SuggestionSchema(Schema):
+    type: str
+    data: dict
+
+@router.post("/suggest")
+def suggest_content(request, payload: SuggestionSchema):
+    from django.core.mail import send_mail
+    from django.conf import settings
+    import json
+    from django.http import HttpResponse # Import here to avoid overlap
+    
+    suggestion = ContentSuggestion.objects.create(
+        type=payload.type,
+        data=payload.data
+    )
+    
+    approve_url = f"{settings.BACKEND_URL}/api/content/suggest/{suggestion.id}/approve?token={suggestion.approval_token}"
+    reject_url = f"{settings.BACKEND_URL}/api/content/suggest/{suggestion.id}/reject?token={suggestion.approval_token}"
+    
+    subject = f"[JBook] New Content Suggestion: {payload.type.upper()}"
+    message = f"Tipe: {payload.type}\nData:\n{json.dumps(payload.data, indent=2)}\n\n" \
+              f"Klik link di bawah untuk menyetujui:\n{approve_url}\n\n" \
+              f"Klik link di bawah untuk menolak:\n{reject_url}"
+              
+    send_mail(
+        subject,
+        message,
+        settings.DEFAULT_FROM_EMAIL,
+        [settings.EMAIL_HOST_USER],
+        fail_silently=False,
+    )
+    
+    return {"message": "Saran kamu sudah dikirim ke admin untuk direview. Terima kasih!"}
+
+@router.get("/suggest/{id}/approve")
+def approve_suggestion(request, id: UUID, token: UUID):
+    from django.http import HttpResponse
+    suggestion = get_object_or_404(ContentSuggestion, id=id, approval_token=token, status='pending')
+    
+    if suggestion.type == 'kanji':
+        Kanji.objects.create(**suggestion.data)
+    elif suggestion.type == 'bunpo':
+        Grammar.objects.create(**suggestion.data)
+        
+    suggestion.status = 'approved'
+    suggestion.save()
+    
+    return HttpResponse("Suggestion approved! Content has been added to the database.")
+
+@router.get("/suggest/{id}/reject")
+def reject_suggestion(request, id: UUID, token: UUID):
+    from django.http import HttpResponse
+    suggestion = get_object_or_404(ContentSuggestion, id=id, approval_token=token, status='pending')
+    suggestion.status = 'rejected'
+    suggestion.save()
+    return HttpResponse("Suggestion rejected.")

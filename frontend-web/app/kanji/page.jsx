@@ -124,10 +124,16 @@ export default async function KanjiPage({ searchParams }) {
                     })}
                 </div>
             ) : (
-                <div className="text-center py-32 bg-gray-50 rounded-[3rem] border-4 border-dashed border-gray-100">
+                <div className="text-center py-32 bg-gray-50 rounded-[3rem] border-4 border-dashed border-gray-100 max-w-2xl mx-auto">
                     <div className="text-7xl mb-6">🛰️</div>
-                    <h2 className="text-2xl font-black text-gray-900">Belum ada Kanji</h2>
-                    <p className="text-gray-400 font-bold mt-2">Coba sesuaikan filter atau kata kunci pencarian kamu.</p>
+                    <h2 className="text-2xl font-black text-gray-900 mb-2">Kanji tidak ditemukan</h2>
+                    <p className="text-gray-400 font-bold mb-8">Bantu pengembangan JBook dengan menambahkan karakter ini.</p>
+                    <Link 
+                        href="/kanji/add"
+                        className="inline-flex items-center gap-2 bg-red-600 text-white px-8 py-4 rounded-2xl font-black shadow-xl shadow-red-200 hover:bg-red-700 transition-all active:scale-95"
+                    >
+                        + Tambah Kanji Baru
+                    </Link>
                 </div>
             )}
 
