@@ -8,6 +8,20 @@ class JLPTLevel(models.IntegerChoices):
     N2 = 2, 'N2'
     N1 = 1, 'N1'
 
+class WordType(models.TextChoices):
+    NOUN = 'noun', 'Noun (Kata Benda)'
+    GODAN_VERB = 'godan', 'Godan Verb (Kata Kerja Golongan 1)'
+    ICHIDAN_VERB = 'ichidan', 'Ichidan Verb (Kata Kerja Golongan 2)'
+    SURU_VERB = 'suru', 'Suru Verb (Kata Kerja Golongan 3)'
+    INTRANSITIVE_VERB = 'intransitive', 'Intransitive Verb (Kata Kerja Intransitif)'
+    TRANSITIVE_VERB = 'transitive', 'Transitive Verb (Kata Kerja Transitif)'
+    ADJECTIVE_I = 'i_adj', 'I-Adjective (Kata Sifat I)'
+    ADJECTIVE_NA = 'na_adj', 'Na-Adjective (Kata Sifat Na)'
+    ADVERB = 'adverb', 'Adverb (Kata Keterangan)'
+    PARTICLE = 'particle', 'Particle (Partikel)'
+    SUFFIX = 'suffix', 'Suffix (Akhiran)'
+    OTHER = 'other', 'Lain-lain'
+
 class Kanji(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     character = models.CharField(max_length=1)
@@ -40,6 +54,7 @@ class Vocab(models.Model):
     reading = models.CharField(max_length=255)
     furigana = models.CharField(max_length=255, blank=True, null=True, help_text="Cara baca spesifik dalam Kana (Furigana)")
     meaning = models.CharField(max_length=255, help_text="Arti kata dalam Bahasa Indonesia")
+    word_type = models.CharField(max_length=20, choices=WordType.choices, blank=True, null=True, help_text="Tipe kata (e.g. Noun, Godan Verb)")
     kanji_rel = models.ManyToManyField(Kanji, related_name='vocab', blank=True)
     jlpt_level = models.IntegerField(choices=JLPTLevel.choices, default=JLPTLevel.N5)
     examples = models.JSONField(default=list, help_text="Contoh kalimat")

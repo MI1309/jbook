@@ -36,8 +36,8 @@ class KanjiAdmin(admin.ModelAdmin):
 
 @admin.register(Vocab)
 class VocabAdmin(admin.ModelAdmin):
-    list_display = ('word', 'reading', 'meaning', 'jlpt_level')
-    list_filter = ('jlpt_level',)
+    list_display = ('word', 'reading', 'meaning', 'word_type', 'jlpt_level')
+    list_filter = ('word_type', 'jlpt_level')
     search_fields = ('word', 'reading', 'meaning')
     ordering = ('jlpt_level', 'word')
     actions = [export_as_csv]

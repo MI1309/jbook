@@ -60,6 +60,11 @@ export default async function KanjiDetailPage({ params }) {
                                                 <rt className="text-sm text-red-500 font-normal">{ex.reading}</rt>
                                             )}
                                         </ruby>
+                                        {ex.type && (
+                                            <span className="ml-2 text-xs font-semibold px-2 py-0.5 rounded-full bg-blue-100 text-blue-800 align-middle">
+                                                {ex.type}
+                                            </span>
+                                        )}
                                     </p>
                                     <p className="text-gray-600">{ex.meaning}</p>
                                 </div>

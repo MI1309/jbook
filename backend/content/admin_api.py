@@ -266,6 +266,7 @@ class VocabCreateSchema(BaseModel):
     word: str
     reading: str
     meaning: str
+    word_type: Optional[str] = None
     jlpt_level: int
     examples: List[dict] = []
     # kanji_rel is ManyToMany, handle separately or via list of IDs?
