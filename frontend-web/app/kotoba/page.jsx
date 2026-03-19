@@ -51,6 +51,13 @@ export default async function KotobaPage({ searchParams }) {
                             <div className="w-full text-center text-gray-500 text-xs sm:text-sm border-t border-gray-50 pt-2 sm:pt-3 mt-2 sm:mt-3 font-medium line-clamp-2">
                                 {vocab.meaning}
                             </div>
+                            {vocab.word_type && (
+                                <div className="mt-1.5">
+                                    <span className="px-2 py-0.5 bg-blue-50 text-blue-500 text-[9px] sm:text-[10px] font-bold rounded-full border border-blue-100">
+                                        {vocab.word_type.replace(/_/g, ' ')}
+                                    </span>
+                                </div>
+                            )}
                         </Link>
                     ))}
                 </div>

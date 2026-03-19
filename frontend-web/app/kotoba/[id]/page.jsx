@@ -35,15 +35,24 @@ export default async function KotobaDetailPage({ params }) {
                             <p className="text-lg sm:text-xl md:text-2xl font-bold text-gray-800 leading-relaxed">{vocab.meaning}</p>
                         </div>
 
+<<<<<<< HEAD
                         <div className="flex justify-center gap-4">
                             {vocab.word_type && (
                                 <span className="px-4 py-2 bg-blue-50 text-blue-600 border border-blue-100 rounded-full font-bold text-sm">
                                     {vocab.word_type}
                                 </span>
                             )}
+=======
+                        <div className="flex justify-center gap-4 flex-wrap">
+>>>>>>> b5ddb9a (penambahan badge tipe)
                             <span className="px-4 py-2 bg-gray-100 rounded-full text-gray-600 font-bold text-sm">
                                 JLPT N{vocab.jlpt_level}
                             </span>
+                            {vocab.word_type && (
+                                <span className="px-4 py-2 bg-blue-50 rounded-full text-blue-600 font-bold text-sm border border-blue-100">
+                                    {vocab.word_type.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase())}
+                                </span>
+                            )}
                         </div>
                     </div>
                 </div>
