@@ -30,8 +30,15 @@ export default async function KotobaPage({ searchParams }) {
                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-4 mb-8">
                     {vocabList.map((vocab) => (
                         <Link href={`/kotoba/${vocab.id}`} key={vocab.id} className="bg-white rounded-2xl shadow-sm border border-gray-100 p-4 sm:p-5 hover:shadow-md hover:border-red-300 hover:ring-2 hover:ring-red-100 hover:-translate-y-1 transition-all duration-300 relative group flex flex-col items-center justify-between min-h-[110px] sm:min-h-[130px]">
-                            <div className="absolute top-2 right-2 px-1.5 py-0.5 bg-gray-50 text-[9px] sm:text-[10px] font-bold text-gray-400 rounded group-hover:bg-red-50 group-hover:text-red-500 transition-colors">
-                                N{vocab.jlpt_level}
+                            <div className="absolute top-2 right-2 flex gap-1">
+                                {vocab.word_type && (
+                                    <div className="px-1.5 py-0.5 bg-blue-50 text-[9px] sm:text-[10px] font-bold text-blue-400 rounded group-hover:bg-blue-100 group-hover:text-blue-500 transition-colors">
+                                        {vocab.word_type}
+                                    </div>
+                                )}
+                                <div className="px-1.5 py-0.5 bg-gray-50 text-[9px] sm:text-[10px] font-bold text-gray-400 rounded group-hover:bg-red-50 group-hover:text-red-500 transition-colors">
+                                    N{vocab.jlpt_level}
+                                </div>
                             </div>
                             <div className="flex-1 flex flex-col justify-center items-center w-full mt-3 sm:mt-2">
                                 <ruby className="text-lg sm:text-xl md:text-2xl font-bold text-gray-800 tracking-wide text-center break-words max-w-full" style={{ rubyPosition: 'under' }}>

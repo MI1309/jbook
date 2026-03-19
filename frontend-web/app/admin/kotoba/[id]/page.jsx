@@ -13,6 +13,7 @@ export default function KotobaForm({ params }) {
         word: '',
         reading: '',
         meaning: '',
+        word_type: '',
         jlpt_level: 5
     });
     const [loading, setLoading] = useState(!isNew);
@@ -114,6 +115,29 @@ export default function KotobaForm({ params }) {
                         value={formData.meaning}
                         onChange={e => setFormData({ ...formData, meaning: e.target.value })}
                     ></textarea>
+                </div>
+
+                <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Word Type</label>
+                    <select
+                        className="w-full border border-gray-300 rounded-md p-2"
+                        value={formData.word_type || ''}
+                        onChange={e => setFormData({ ...formData, word_type: e.target.value })}
+                    >
+                        <option value="">-- No Type --</option>
+                        <option value="noun">Noun (Kata Benda)</option>
+                        <option value="godan">Godan Verb (Golongan 1)</option>
+                        <option value="ichidan">Ichidan Verb (Golongan 2)</option>
+                        <option value="suru">Suru Verb (Golongan 3)</option>
+                        <option value="intransitive">Intransitive Verb</option>
+                        <option value="transitive">Transitive Verb</option>
+                        <option value="i_adj">I-Adjective</option>
+                        <option value="na_adj">Na-Adjective</option>
+                        <option value="adverb">Adverb (Kata Keterangan)</option>
+                        <option value="particle">Particle (Partikel)</option>
+                        <option value="suffix">Suffix (Akhiran)</option>
+                        <option value="other">Other (Lain-lain)</option>
+                    </select>
                 </div>
 
                 <div>
