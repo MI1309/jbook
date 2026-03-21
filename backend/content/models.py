@@ -20,6 +20,10 @@ class WordType(models.TextChoices):
     ADVERB = 'adverb', 'Adverb (Kata Keterangan)'
     PARTICLE = 'particle', 'Particle (Partikel)'
     SUFFIX = 'suffix', 'Suffix (Akhiran)'
+    CONJUNCTION = 'conjunction', 'Conjunction (Kata Sambung)'
+    INTERJECTION = 'interjection', 'Interjection (Kata Seru)'
+    PRONOUN = 'pronoun', 'Pronoun (Kata Ganti)'
+    COUNTER = 'counter', 'Counter (Kata Bantu Bilangan)'
     OTHER = 'other', 'Lain-lain'
 
 class Kanji(models.Model):

@@ -114,6 +114,9 @@ function FilterContent() {
                         <option value="suffix">Suffix</option>
                         <option value="particle">Particle</option>
                         <option value="counter">Counter</option>
+                        <option value="conjunction">Conjunction</option>
+                        <option value="interjection">Interjection</option>
+                        <option value="pronoun">Pronoun</option>
                     </select>
                 </div>
             </div>
