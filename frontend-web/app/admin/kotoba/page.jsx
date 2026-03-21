@@ -15,6 +15,7 @@ export default function KotobaAdmin() {
     const [level, setLevel] = useState('');
     const [currentPage, setCurrentPage] = useState(1);
     const [debugInfo, setDebugInfo] = useState(null);
+    const [serverLevel, setServerLevel] = useState(null);
     const router = useRouter();
 
     useEffect(() => { 
@@ -58,6 +59,7 @@ export default function KotobaAdmin() {
                         page: data.page || 1, 
                         pages: data.pages || 1 
                     });
+                    setServerLevel(data.debug_level);
                 }
             } else {
                 console.error("Fetch failed");
@@ -102,7 +104,7 @@ export default function KotobaAdmin() {
 
             {/* DEBUG INFO */}
             <div className="text-[10px] text-gray-400 mb-2 font-mono break-all opacity-50">
-                Fetching: {debugInfo || '...'}
+                Fetching: {debugInfo || '...'} | Server Level: {serverLevel === null ? 'All' : `N${serverLevel}`}
             </div>
 
             <div className="bg-white shadow rounded-lg overflow-hidden">

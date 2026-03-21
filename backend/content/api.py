@@ -212,6 +212,8 @@ class VocabListResponse(BaseModel):
     total: int
     page: int
     pages: int
+    debug_level: Optional[int] = None
+    debug_search: Optional[str] = None
 
 @router.get("/vocab", response=VocabListResponse)
 def list_vocab(request, 
@@ -250,7 +252,9 @@ def list_vocab(request,
         "items": list(qs[offset : offset + limit]),
         "total": total,
         "page": page,
-        "pages": pages
+        "pages": pages,
+        "debug_level": level,
+        "debug_search": search
     }
 
 @router.get("/vocab/{vocab_id}", response=VocabSchema)
