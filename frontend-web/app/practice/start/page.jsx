@@ -348,10 +348,10 @@ function PracticeContent() {
                         {currentQuestion.type === 'kanji' ? 'Kanji' : currentQuestion.type === 'vocab' ? 'Kosakata' : 'Tata Bahasa'}
                     </span>
                     <div className={`${
-                        currentQuestion.character.length > 20 ? 'text-2xl md:text-3xl' :
-                        currentQuestion.character.length > 10 ? 'text-4xl md:text-5xl' :
-                        currentQuestion.type === 'grammar' || currentQuestion.type === 'particle' ? 'text-5xl md:text-6xl' : 
-                        'text-8xl md:text-[8rem]'
+                        currentQuestion.character.length > 20 ? 'text-lg md:text-xl' :
+                        currentQuestion.character.length > 10 ? 'text-2xl md:text-3xl' :
+                        currentQuestion.type === 'grammar' || currentQuestion.type === 'particle' ? 'text-3xl md:text-4xl' : 
+                        'text-6xl md:text-[6rem]'
                     } leading-tight font-medium text-gray-800 select-none pb-2`}>
                         {currentQuestion.character}
                     </div>
