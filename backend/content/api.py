@@ -71,7 +71,36 @@ def list_kanji(request,
 
 @router.get("/kanji/{kanji_id}", response=KanjiSchema)
 def get_kanji(request, kanji_id: UUID):
-    return get_object_or_404(Kanji, id=kanji_id)
+    kanji = get_object_or_404(Kanji, id=kanji_id)
+    from .models import Vocab
+    
+    # Dynamically find vocabulary that contains this Kanji
+    vocab_matches = Vocab.objects.filter(word__contains=kanji.character)[:10]
+    
+    # Convert to example format
+    dynamic_examples = []
+    for v in vocab_matches:
+        dynamic_examples.append({
+            "word": v.word,
+            "reading": v.reading,
+            "meaning": v.meaning,
+            "type": v.word_type
+        })
+        
+    # Merge with existing static examples, avoiding duplicates by word
+    existing_words = {ex.get('word') for ex in kanji.examples}
+    
+    # We create a new list to avoid mutating the database object directly if it's cached
+    merged_examples = list(kanji.examples)
+    for dex in dynamic_examples:
+        if dex['word'] not in existing_words:
+            merged_examples.append(dex)
+            existing_words.add(dex['word'])
+            
+    # Update the object's examples field for the response (doesn't save to DB)
+    kanji.examples = merged_examples
+    
+    return kanji
 
 @router.get("/grammar", response=List[GrammarSchema])
 def list_grammar(request, 
