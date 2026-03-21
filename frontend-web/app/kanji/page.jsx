@@ -69,7 +69,7 @@ export default async function KanjiPage({ searchParams }) {
     return (
         <div className="container mx-auto px-6 py-12 max-w-7xl">
             {/* Header */}
-            <header className="mb-12 text-center md:text-left flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-gray-100 pb-12">
+            <header className="mb-12 text-center md:text-left flex flex-col md:flex-row md:items-center justify-between gap-6 border-b border-gray-100 pb-12">
                 <div>
                     <h1 className="text-5xl font-black text-gray-900 tracking-tight leading-none">
                         漢字 <span className="text-red-600 ml-2">Kanji</span>
