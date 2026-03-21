@@ -7,7 +7,12 @@ export const metadata = {
 };
 
 export default async function BlogListPage() {
-    const blogs = await getBlogList();
+    let blogs = [];
+    try {
+        blogs = await getBlogList();
+    } catch (error) {
+        console.error('Failed to fetch blogs during prerender:', error.message);
+    }
 
     return (
         <div className="container mx-auto px-6 py-12 max-w-5xl">

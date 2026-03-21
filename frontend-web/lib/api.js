@@ -65,6 +65,8 @@ export async function getKanjiList({ level, search, radical, limit = 100, page =
         return handleResponse(res, 'getKanjiList');
     } catch (error) {
         if (error.status) throw error;
+        console.error('[getKanjiList] Network error:', error.message);
+        if (typeof window === 'undefined') return [];
         throw new Error('Koneksi gagal. Mohon periksa internet Anda.');
     }
 }
@@ -79,6 +81,8 @@ export async function getKanjiDetail(id) {
         return handleResponse(res, 'getKanjiDetail');
     } catch (error) {
         if (error.status) throw error;
+        console.error(`[getKanjiDetail] Network error for ${id}:`, error.message);
+        if (typeof window === 'undefined') return null;
         throw new Error('Koneksi gagal. Mohon periksa internet Anda.');
     }
 }
@@ -120,6 +124,8 @@ export async function getGrammarList({ level, search, chapter, limit = 100, page
         return handleResponse(res, 'getGrammarList');
     } catch (error) {
         if (error.status) throw error;
+        console.error('[getGrammarList] Network error:', error.message);
+        if (typeof window === 'undefined') return [];
         throw new Error('Koneksi gagal. Mohon periksa internet Anda.');
     }
 }
@@ -134,6 +140,8 @@ export async function getGrammarDetail(id) {
         return handleResponse(res, 'getGrammarDetail');
     } catch (error) {
         if (error.status) throw error;
+        console.error(`[getGrammarDetail] Network error for ${id}:`, error.message);
+        if (typeof window === 'undefined') return null;
         throw new Error('Koneksi gagal. Mohon periksa internet Anda.');
     }
 }
@@ -272,6 +280,8 @@ export async function getVocabList({ level, search, limit = 100, page = 1 } = {}
         return handleResponse(res, 'getVocabList');
     } catch (error) {
         if (error.status) throw error;
+        console.error('[getVocabList] Network error:', error.message);
+        if (typeof window === 'undefined') return [];
         throw new Error('Koneksi gagal. Mohon periksa internet Anda.');
     }
 }
@@ -288,6 +298,8 @@ export async function getVocabDetail(id) {
         return handleResponse(res, 'getVocabDetail');
     } catch (error) {
         if (error.status) throw error;
+        console.error(`[getVocabDetail] Network error for ${id}:`, error.message);
+        if (typeof window === 'undefined') return null;
         throw new Error('Koneksi gagal. Mohon periksa internet Anda.');
     }
 }
@@ -312,7 +324,14 @@ export async function getBlogList() {
         });
         return handleResponse(res, 'getBlogList');
     } catch (error) {
+        // If it's a backend error with a status, throw it
         if (error.status) throw error;
+        
+        // On server-side (build/SSR), log the error but don't crash if it's just a network failure
+        console.error('[getBlogList] Network error:', error.message);
+        if (typeof window === 'undefined') {
+            return []; // Return empty list during build if API is down
+        }
         throw new Error('Koneksi gagal. Mohon periksa internet Anda.');
     }
 }
@@ -322,11 +341,17 @@ export async function getBlogList() {
  * @returns {Promise<Blog>}
  */
 export async function getBlogDetailBySlug(slug) {
-    const res = await fetch(`${API_URL}/content/blog/${slug}`, {
-        cache: 'no-store',
-    });
-
-    return res.json();
+    try {
+        const res = await fetch(`${API_URL}/content/blog/${slug}`, {
+            cache: 'no-store',
+        });
+        return handleResponse(res, 'getBlogDetailBySlug');
+    } catch (error) {
+        if (error.status) throw error;
+        console.error(`[getBlogDetailBySlug] Network error for ${slug}:`, error.message);
+        if (typeof window === 'undefined') return null;
+        throw new Error('Koneksi gagal. Mohon periksa internet Anda.');
+    }
 }
 
 /**

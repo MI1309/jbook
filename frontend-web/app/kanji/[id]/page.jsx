@@ -7,6 +7,16 @@ export default async function KanjiDetailPage({ params }) {
     const { id } = await params;
     const kanji = await getKanjiDetail(id);
 
+    if (!kanji) {
+        return (
+            <div className="container mx-auto px-4 py-16 text-center uppercase tracking-widest font-black">
+                <div className="text-6xl mb-6">🏮</div>
+                <h1 className="text-2xl text-gray-800 mb-4">Kanji Tidak Ditemukan</h1>
+                <Link href="/kanji" className="text-red-500 hover:underline">Kembali ke Daftar</Link>
+            </div>
+        );
+    }
+
     return (
         <div className="container mx-auto px-4 py-8">
             <Link href="/kanji" className="text-blue-500 hover:underline mb-4 inline-block">&larr; Kembali ke Daftar</Link>

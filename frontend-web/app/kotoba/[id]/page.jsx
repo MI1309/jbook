@@ -6,6 +6,16 @@ export default async function KotobaDetailPage({ params }) {
     const { id } = await params;
     const vocab = await getVocabDetail(id);
 
+    if (!vocab) {
+        return (
+            <div className="container mx-auto px-4 py-16 text-center uppercase tracking-widest font-black">
+                <div className="text-6xl mb-6">🏜️</div>
+                <h1 className="text-2xl text-gray-800 mb-4">Kosakata Tidak Ditemukan</h1>
+                <Link href="/kotoba" className="text-red-500 hover:underline">Kembali ke Daftar</Link>
+            </div>
+        );
+    }
+
     return (
         <div className="container mx-auto px-4 py-8 min-h-[80vh] flex flex-col items-center justify-center">
             <div className="w-full max-w-2xl">
