@@ -279,11 +279,14 @@ class VocabSchema(VocabCreateSchema):
 
 # Vocab CRUD
 @router.get("/vocab", auth=AdminAuth(), response=List[VocabSchema])
-def admin_list_vocabs(request, search: str = None, page: int = 1, limit: int = 50):
+def admin_list_vocabs(request, level: int = None, search: str = None, page: int = 1, limit: int = 50):
     from utils.kana import to_kana
     
     query = Vocab.objects.all().order_by('word')
     
+    if level:
+        query = query.filter(jlpt_level=level)
+        
     if search:
         search_kana = to_kana(search)
         query = query.filter(
