@@ -46,15 +46,13 @@ function handleNetworkError(context, error, defaultValue = null) {
     throw new Error('Koneksi gagal. Mohon periksa internet Anda.');
 }
 
-export async function getKanjiList({ level, search, radical, limit = 100, page = 1 } = {}) {
+export async function getKanjiList({ level, search, radical, limit = 50, page = 1 } = {}) {
     const queryParams = new URLSearchParams();
     if (level) queryParams.append('level', level);
     if (search) queryParams.append('search', search);
     if (radical) queryParams.append('radical', radical);
     if (limit) queryParams.append('limit', limit);
-
-    const offset = (page - 1) * limit;
-    queryParams.append('offset', offset);
+    if (page) queryParams.append('page', page);
 
     try {
         const res = await fetch(`${API_URL}/content/kanji?${queryParams.toString()}`, {
@@ -63,7 +61,7 @@ export async function getKanjiList({ level, search, radical, limit = 100, page =
         return handleResponse(res, 'getKanjiList');
     } catch (error) {
         if (error.status) throw error;
-        return handleNetworkError('getKanjiList', error, []);
+        return handleNetworkError('getKanjiList', error, { items: [], total: 0, page: 1, pages: 1 });
     }
 }
 
@@ -77,15 +75,13 @@ export async function getKanjiDetail(id) {
     }
 }
 
-export async function getGrammarList({ level, search, chapter, limit = 100, page = 1 } = {}) {
+export async function getGrammarList({ level, search, chapter, limit = 50, page = 1 } = {}) {
     const queryParams = new URLSearchParams();
     if (level) queryParams.append('level', level);
     if (search) queryParams.append('search', search);
     if (chapter) queryParams.append('chapter', chapter);
     if (limit) queryParams.append('limit', limit);
-
-    const offset = (page - 1) * limit;
-    queryParams.append('offset', offset);
+    if (page) queryParams.append('page', page);
 
     try {
         const res = await fetch(`${API_URL}/content/grammar?${queryParams.toString()}`, {
@@ -94,7 +90,7 @@ export async function getGrammarList({ level, search, chapter, limit = 100, page
         return handleResponse(res, 'getGrammarList');
     } catch (error) {
         if (error.status) throw error;
-        return handleNetworkError('getGrammarList', error, []);
+        return handleNetworkError('getGrammarList', error, { items: [], total: 0, page: 1, pages: 1 });
     }
 }
 
@@ -191,15 +187,13 @@ export async function resetPracticeProgress() {
     }
 }
 
-export async function getVocabList({ level, search, word_type, limit = 100, page = 1 } = {}) {
+export async function getVocabList({ level, search, word_type, limit = 50, page = 1 } = {}) {
     const queryParams = new URLSearchParams();
     if (level) queryParams.append('level', level);
     if (search) queryParams.append('search', search);
     if (word_type) queryParams.append('word_type', word_type);
     if (limit) queryParams.append('limit', limit);
-
-    const offset = (page - 1) * limit;
-    queryParams.append('offset', offset);
+    if (page) queryParams.append('page', page);
 
     try {
         const res = await fetch(`${API_URL}/content/vocab?${queryParams.toString()}`, {
@@ -208,7 +202,7 @@ export async function getVocabList({ level, search, word_type, limit = 100, page
         return handleResponse(res, 'getVocabList');
     } catch (error) {
         if (error.status) throw error;
-        return handleNetworkError('getVocabList', error, []);
+        return handleNetworkError('getVocabList', error, { items: [], total: 0, page: 1, pages: 1 });
     }
 }
 

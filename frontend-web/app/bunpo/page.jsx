@@ -16,9 +16,9 @@ export default async function BunpoPage({ searchParams }) {
     const page   = parseInt(params.page) || 1;
     const limit  = 24;
 
-    let grammarList = [];
+    let data = { items: [], total: 0, pages: 1 };
     try {
-        grammarList = await getGrammarList({
+        data = await getGrammarList({
             level:   params.level,
             search:  params.search,
             chapter: params.chapter,
@@ -26,10 +26,13 @@ export default async function BunpoPage({ searchParams }) {
             page,
         });
     } catch (error) {
-        console.error('Failed to fetch grammar during build:', error.message);
+        console.error('Failed to fetch grammar:', error.message);
     }
 
-    const hasMore = grammarList.length === limit;
+    const grammarList = data.items || [];
+    const totalPages = data.pages || 1;
+    const hasMore = page < totalPages;
+    const totalCount = data.total || 0;
 
     return (
         <div className="container mx-auto px-4 py-8">
@@ -44,6 +47,11 @@ export default async function BunpoPage({ searchParams }) {
             <Suspense fallback={<div className="h-12 bg-gray-100 rounded-xl animate-pulse mb-6" />}>
                 <BunpoFilter />
             </Suspense>
+
+            <div className="flex justify-between items-center mb-6 text-[10px] font-bold text-gray-400 uppercase tracking-widest px-1">
+                <span>Total: {totalCount} Bunpo</span>
+                <span>Halaman {page} dari {totalPages}</span>
+            </div>
 
             {grammarList.length > 0 ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">

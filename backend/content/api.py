@@ -37,13 +37,25 @@ class GrammarSchema(Schema):
     jlpt_level: int
     sentences: List[dict] = []
 
-@router.get("/kanji", response=List[KanjiSchema])
+class KanjiListResponse(BaseModel):
+    items: List[KanjiSchema]
+    total: int
+    page: int
+    pages: int
+
+class GrammarListResponse(BaseModel):
+    items: List[GrammarSchema]
+    total: int
+    page: int
+    pages: int
+
+@router.get("/kanji", response=KanjiListResponse)
 def list_kanji(request, 
                level: Optional[int] = None, 
                search: Optional[str] = None,
                radical: Optional[str] = None,
-               limit: int = 100,
-               offset: int = 0):
+               limit: int = 50,
+               page: int = 1):
     qs = Kanji.objects.all()
     
     if level:
@@ -67,24 +79,30 @@ def list_kanji(request,
     # Order by level and strokes for consistency
     qs = qs.order_by('jlpt_level', 'strokes')
     
+    total = qs.count()
+    pages = (total + limit - 1) // limit
+    offset = (page - 1) * limit
+    
     # Pagination
-    results = qs[offset : offset + limit]
+    results = list(qs[offset : offset + limit])
     
     # Dynamically add word_type from Vocab if it exists for the single character
     from .models import Vocab
     for k in results:
-        # Check if there is a vocab entry that is exactly this character
-        # or most relevant vocab for it
         v = Vocab.objects.filter(word=k.character).first()
         if v:
             k.word_type = v.word_type
         else:
-            # Fallback check for tilde version e.g ~方
             v_tilde = Vocab.objects.filter(word=f"～{k.character}").first()
             if v_tilde:
                 k.word_type = v_tilde.word_type
 
-    return results
+    return {
+        "items": results,
+        "total": total,
+        "page": page,
+        "pages": pages
+    }
 
 @router.get("/kanji/{kanji_id}", response=KanjiSchema)
 def get_kanji(request, kanji_id: UUID):
@@ -129,13 +147,13 @@ def get_kanji(request, kanji_id: UUID):
             
     return kanji
 
-@router.get("/grammar", response=List[GrammarSchema])
+@router.get("/grammar", response=GrammarListResponse)
 def list_grammar(request, 
                  level: Optional[int] = None,
                  search: Optional[str] = None,
                  chapter: Optional[int] = None,
-                 limit: int = 100,
-                 offset: int = 0):
+                 limit: int = 50,
+                 page: int = 1):
     qs = Grammar.objects.all()
     if level:
         qs = qs.filter(jlpt_level=level)
@@ -154,8 +172,16 @@ def list_grammar(request,
     # Order by chapter then title
     qs = qs.order_by('chapter', 'title')
     
-    # Pagination
-    return qs[offset : offset + limit]
+    total = qs.count()
+    pages = (total + limit - 1) // limit
+    offset = (page - 1) * limit
+    
+    return {
+        "items": list(qs[offset : offset + limit]),
+        "total": total,
+        "page": page,
+        "pages": pages
+    }
 
 @router.get("/grammar/{grammar_id}", response=GrammarSchema)
 def get_grammar(request, grammar_id: UUID):
@@ -181,13 +207,19 @@ def get_random_kotoba(request):
         return 404, {"message": "No vocabulary found"}
     return vocab
 
-@router.get("/vocab", response=List[VocabSchema])
+class VocabListResponse(BaseModel):
+    items: List[VocabSchema]
+    total: int
+    page: int
+    pages: int
+
+@router.get("/vocab", response=VocabListResponse)
 def list_vocab(request, 
                level: Optional[int] = None,
                search: Optional[str] = None,
                word_type: Optional[str] = None,
-               limit: int = 100,
-               offset: int = 0):
+               limit: int = 50,
+               page: int = 1):
     from .models import Vocab
     from django.db.models import Q
     from utils.kana import to_kana
@@ -210,8 +242,16 @@ def list_vocab(request,
             Q(reading__icontains=search_kana) # Determine if input was romaji, searching in kana reading
         )
         
-        
-    return qs[offset : offset + limit]
+    total = qs.count()
+    pages = (total + limit - 1) // limit
+    offset = (page - 1) * limit
+    
+    return {
+        "items": list(qs[offset : offset + limit]),
+        "total": total,
+        "page": page,
+        "pages": pages
+    }
 
 @router.get("/vocab/{vocab_id}", response=VocabSchema)
 def get_vocab(request, vocab_id: UUID):

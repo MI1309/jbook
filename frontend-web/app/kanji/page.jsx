@@ -51,9 +51,9 @@ export default async function KanjiPage({ searchParams }) {
     const page   = parseInt(params.page) || 1;
     const limit  = 30; // Increased for better grid fill
 
-    let kanjiList = [];
+    let data = { items: [], total: 0, pages: 1 };
     try {
-        kanjiList = await getKanjiList({
+        data = await getKanjiList({
             level:   params.level,
             search:  params.search,
             radical: params.radical,
@@ -61,10 +61,13 @@ export default async function KanjiPage({ searchParams }) {
             page,
         });
     } catch (error) {
-        console.error('Failed to fetch kanji during build:', error.message);
+        console.error('Failed to fetch kanji:', error.message);
     }
 
-    const hasMore = kanjiList.length === limit;
+    const kanjiList = data.items || [];
+    const totalPages = data.pages || 1;
+    const hasMore = page < totalPages;
+    const totalCount = data.total || 0;
 
     return (
         <div className="container mx-auto px-6 py-12 max-w-7xl">
@@ -83,6 +86,11 @@ export default async function KanjiPage({ searchParams }) {
                     </div>
                 </Suspense>
             </header>
+
+            <div className="flex justify-between items-center mb-6 text-sm font-bold text-gray-400 uppercase tracking-widest">
+                <span>Total: {totalCount} Kanji</span>
+                <span>Halaman {page} dari {totalPages}</span>
+            </div>
 
             {kanjiList.length > 0 ? (
                 <div className="grid grid-cols-2 xs:grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-8 gap-4 mb-16">

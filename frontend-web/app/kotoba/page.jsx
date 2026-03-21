@@ -11,9 +11,9 @@ export default async function KotobaPage({ searchParams }) {
     const word_type = params.word_type || '';
     const limit = 50;
 
-    let vocabList = [];
+    let data = { items: [], total: 0, pages: 1 };
     try {
-        vocabList = await getVocabList({
+        data = await getVocabList({
             level,
             search,
             word_type,
@@ -21,20 +21,23 @@ export default async function KotobaPage({ searchParams }) {
             page
         });
     } catch (error) {
-        console.error('Failed to fetch vocab during build:', error.message);
+        console.error('Failed to fetch vocab:', error.message);
     }
 
-    const hasMore = vocabList.length === limit;
+    const vocabList = data.items || [];
+    const totalPages = data.pages || 1;
+    const hasMore = page < totalPages;
 
     return (
         <div className="container mx-auto px-4 py-8">
             <h1 className="text-3xl font-bold mb-6 text-center text-red-600">Daftar Kosakata (言葉)</h1>
             
-            <div className="flex justify-center gap-4 text-sm text-gray-400 mb-6 font-medium">
+            <div className="flex flex-wrap justify-center gap-4 text-sm text-gray-400 mb-6 font-medium bg-gray-50/50 p-2 rounded-lg">
                 <span>Filter aktif:</span>
                 <span className="text-red-500">{level ? `N${level}` : 'Semua Level'}</span>
                 {search && <span className="text-red-500">| Cari: "{search}"</span>}
                 {word_type && <span className="text-red-500">| Tipe: {word_type.replace(/_/g, ' ')}</span>}
+                <span className="text-gray-400">| Halaman {page} dari {totalPages}</span>
             </div>
 
             {/* Live Search Filter */}
