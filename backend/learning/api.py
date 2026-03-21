@@ -3,9 +3,11 @@ from ninja import Router, Schema
 from django.db.models import Count
 from django.shortcuts import get_object_or_404
 from django.contrib.auth import get_user_model
-from .models import QuizAttempt
+from .models import QuizAttempt, UserProgress
 from content.models import Kanji, Vocab, Grammar, Particle
 import random
+import uuid
+from datetime import datetime
 
 from ninja_jwt.authentication import JWTAuth
 User = get_user_model()
@@ -43,6 +45,27 @@ class AnalyticsSchema(Schema):
     total_attempts: int
     accuracy: float
     wrong_stats: List[WrongStatSchema]
+
+class QuizAttemptExportSchema(Schema):
+    kanji_id: Optional[uuid.UUID] = None
+    vocab_id: Optional[uuid.UUID] = None
+    grammar_id: Optional[uuid.UUID] = None
+    particle_id: Optional[uuid.UUID] = None
+    is_correct: bool
+    answer_given: Optional[str] = None
+    timestamp: datetime
+
+class UserProgressExportSchema(Schema):
+    content_type_app: str
+    content_type_model: str
+    object_id: uuid.UUID
+    srs_stage: int
+    next_review: Optional[datetime] = None
+    last_reviewed: Optional[datetime] = None
+
+class ExportDataSchema(Schema):
+    attempts: List[QuizAttemptExportSchema]
+    progress: List[UserProgressExportSchema]
 
 @router.get("/practice/generate", response=List[QuestionSchema])
 def generate_quiz(request, limit: int = 10, level: Optional[int] = None, type: str = 'kanji'):
@@ -290,3 +313,92 @@ def reset_progress(request):
         "message": f"Deleted {deleted_count} attempts",
         "deleted_count": deleted_count
     }
+
+@router.get("/practice/export", response=ExportDataSchema, auth=JWTAuth())
+def export_practice_data(request):
+    user = request.auth
+    
+    attempts = QuizAttempt.objects.filter(user=user)
+    progress = UserProgress.objects.filter(user=user)
+    
+    export_attempts = []
+    for a in attempts:
+        export_attempts.append({
+            "kanji_id": a.kanji_id,
+            "vocab_id": a.vocab_id,
+            "grammar_id": a.grammar_id,
+            "particle_id": a.particle_id,
+            "is_correct": a.is_correct,
+            "answer_given": a.answer_given,
+            "timestamp": a.timestamp
+        })
+        
+    export_progress = []
+    for p in progress:
+        export_progress.append({
+            "content_type_app": p.content_type.app_label,
+            "content_type_model": p.content_type.model,
+            "object_id": p.object_id,
+            "srs_stage": p.srs_stage,
+            "next_review": p.next_review,
+            "last_reviewed": p.last_reviewed
+        })
+        
+    return {
+        "attempts": export_attempts,
+        "progress": export_progress
+    }
+
+@router.post("/practice/import", auth=JWTAuth())
+def import_practice_data(request, payload: ExportDataSchema):
+    user = request.auth
+    from django.contrib.contenttypes.models import ContentType
+    
+    # Optional: Clear existing data before import? 
+    # For now, let's just append or handle duplicates if needed.
+    # To avoid duplicates, we can check for same user, timestamp and target.
+    
+    new_attempts = []
+    for a in payload.attempts:
+        # Check if already exists to avoid duplication if imported multiple times
+        exists = QuizAttempt.objects.filter(
+            user=user,
+            timestamp=a.timestamp,
+            kanji_id=a.kanji_id,
+            vocab_id=a.vocab_id,
+            grammar_id=a.grammar_id,
+            particle_id=a.particle_id
+        ).exists()
+        
+        if not exists:
+            new_attempts.append(QuizAttempt(
+                user=user,
+                kanji_id=a.kanji_id,
+                vocab_id=a.vocab_id,
+                grammar_id=a.grammar_id,
+                particle_id=a.particle_id,
+                is_correct=a.is_correct,
+                answer_given=a.answer_given,
+                timestamp=a.timestamp
+            ))
+            
+    if new_attempts:
+        QuizAttempt.objects.bulk_create(new_attempts)
+        
+    for p in payload.progress:
+        try:
+            ct = ContentType.objects.get(app_label=p.content_type_app, model=p.content_type_model)
+            UserProgress.objects.update_or_create(
+                user=user,
+                content_type=ct,
+                object_id=p.object_id,
+                defaults={
+                    "srs_stage": p.srs_stage,
+                    "next_review": p.next_review,
+                    "last_reviewed": p.last_reviewed
+                }
+            )
+        except ContentType.DoesNotExist:
+            continue
+            
+    return {"status": "success", "message": "Data imported successfully"}

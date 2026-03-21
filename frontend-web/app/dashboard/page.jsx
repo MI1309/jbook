@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { useRouter } from 'next/navigation';
-import { getUserAnalytics } from '@/lib/api';
+import { getUserAnalytics, exportPracticeData, importPracticeData } from '@/lib/api';
 import Link from 'next/link';
 
 export default function DashboardPage() {
@@ -11,28 +11,63 @@ export default function DashboardPage() {
     const router = useRouter();
     const [analytics, setAnalytics] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
+    const [isExporting, setIsExporting] = useState(false);
+    const [isImporting, setIsImporting] = useState(false);
     const [error, setError] = useState(null);
 
-    useEffect(() => {
-        if (!loading && !user) {
-            router.push('/login');
+    const fetchAnalytics = async () => {
+        if (!user) return;
+        try {
+            const data = await getUserAnalytics();
+            setAnalytics(data);
+        } catch (err) {
+            console.error("Error fetching analytics:", err);
+            setError("Gagal memuat data latihan. Coba lagi nanti.");
+        } finally {
+            setIsLoading(false);
         }
-    }, [user, loading, router]);
+    };
 
-    useEffect(() => {
-        const fetchAnalytics = async () => {
-            if (!user) return;
+    const handleExport = async () => {
+        setIsExporting(true);
+        try {
+            const data = await exportPracticeData();
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `jbook_practice_data_${new Date().toISOString().split('T')[0]}.json`;
+            link.click();
+            URL.revokeObjectURL(url);
+        } catch (err) {
+            alert("Gagal mengekspor data.");
+        } finally {
+            setIsExporting(false);
+        }
+    };
+
+    const handleImport = async (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        setIsImporting(true);
+        const reader = new FileReader();
+        reader.onload = async (event) => {
             try {
-                const data = await getUserAnalytics();
-                setAnalytics(data);
+                const data = JSON.parse(event.target.result);
+                await importPracticeData(data);
+                alert("Data berhasil diimpor!");
+                fetchAnalytics(); // Refresh data
             } catch (err) {
-                console.error("Error fetching analytics:", err);
-                setError("Gagal memuat data latihan. Coba lagi nanti.");
+                alert("Gagal mengimpor data. Pastikan format file benar.");
             } finally {
-                setIsLoading(false);
+                setIsImporting(false);
             }
         };
+        reader.readAsText(file);
+    };
 
+    useEffect(() => {
         if (user) {
             fetchAnalytics();
         }
@@ -53,8 +88,9 @@ export default function DashboardPage() {
         );
     }
 
-    if (!user) {
-        return null; // Will redirect
+    if (!user && !loading) {
+        router.push('/login');
+        return null;
     }
 
     // Prepare data
@@ -134,7 +170,7 @@ export default function DashboardPage() {
             </div>
 
             {/* Analysis Section */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-10">
 
                 {/* Top Mistakes */}
                 <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
@@ -242,6 +278,58 @@ export default function DashboardPage() {
                 </div>
 
             </div>
+
+            {/* Management Section */}
+            <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+                <div className="border-b border-gray-100 bg-gray-50 px-6 py-4">
+                    <h2 className="text-lg font-bold text-gray-900 flex items-center">
+                        <span className="bg-gray-200 text-gray-600 p-1 rounded mr-2">
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                        </span>
+                        Manajemen Data Latihan
+                    </h2>
+                </div>
+                <div className="p-6">
+                    <div className="flex flex-col md:flex-row gap-4">
+                        <button
+                            onClick={handleExport}
+                            disabled={isExporting}
+                            className="flex-1 flex items-center justify-center px-4 py-2 bg-white border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 disabled:opacity-50"
+                        >
+                            <svg className="w-5 h-5 mr-2 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                            {isExporting ? 'Mengekspor...' : 'Export Data (.json)'}
+                        </button>
+
+                        <label className={`flex-1 flex items-center justify-center px-4 py-2 bg-white border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 cursor-pointer focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-red-500 ${isImporting ? 'opacity-50 pointer-events-none' : ''}`}>
+                            <svg className="w-5 h-5 mr-2 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
+                            {isImporting ? 'Mengimpor...' : 'Import Data (.json)'}
+                            <input
+                                type="file"
+                                accept=".json"
+                                className="sr-only"
+                                onChange={handleImport}
+                                disabled={isImporting}
+                            />
+                        </label>
+                    </div>
+                    <p className="mt-4 text-xs text-gray-500 text-center">
+                        Gunakan fitur ini untuk mencadangkan atau memindahkan riwayat kuis dan progres belajar Anda ke perangkat lain.
+                    </p>
+                </div>
+            </div>
         </div>
     );
 }
+
+const LoadingDashboard = () => (
+    <div className="flex justify-center items-center min-h-[60vh]">
+        <div className="animate-pulse space-y-4">
+            <div className="h-8 w-64 bg-gray-200 rounded"></div>
+            <div className="h-32 w-full max-w-2xl bg-gray-200 rounded"></div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="h-48 w-full bg-gray-200 rounded"></div>
+                <div className="h-48 w-full bg-gray-200 rounded"></div>
+            </div>
+        </div>
+    </div>
+);

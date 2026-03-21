@@ -324,3 +324,47 @@ export async function suggestContent(payload) {
 
     return res.json();
 }
+/**
+ * @returns {Promise<Object>}
+ */
+export async function exportPracticeData() {
+    const token = Cookies.get('access_token');
+    const headers = {};
+    if (token) headers['Authorization'] = `Bearer ${token}`;
+
+    const res = await fetch(`${API_URL}/learning/practice/export`, {
+        headers,
+        cache: 'no-store',
+    });
+
+    if (!res.ok) {
+        throw new Error('Failed to export practice data');
+    }
+
+    return res.json();
+}
+
+/**
+ * @param {Object} data 
+ * @returns {Promise<Object>}
+ */
+export async function importPracticeData(data) {
+    const token = Cookies.get('access_token');
+    const headers = {
+        'Content-Type': 'application/json',
+    };
+    if (token) headers['Authorization'] = `Bearer ${token}`;
+
+    const res = await fetch(`${API_URL}/learning/practice/import`, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify(data),
+    });
+
+    if (!res.ok) {
+        const errorText = await res.text();
+        throw new Error(`Failed to import practice data: ${errorText}`);
+    }
+
+    return res.json();
+}
