@@ -145,6 +145,7 @@ class KanjiCreateSchema(BaseModel):
     strokes: int
     jlpt_level: int
     radical: Optional[str] = None
+    word_type: Optional[str] = None
     examples: List[dict] = []
 
 class KanjiSchema(KanjiCreateSchema):

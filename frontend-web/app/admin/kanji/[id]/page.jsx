@@ -18,7 +18,8 @@ export default function KanjiForm({ params }) {
         kunyomi: '',
         strokes: 0,
         jlpt_level: 5,
-        radical: ''
+        radical: '',
+        word_type: ''
     });
 
     useEffect(() => {
@@ -43,7 +44,8 @@ export default function KanjiForm({ params }) {
                     kunyomi: kanji.kunyomi.join(', '),
                     strokes: kanji.strokes,
                     jlpt_level: kanji.jlpt_level,
-                    radical: kanji.radical || ''
+                    radical: kanji.radical || '',
+                    word_type: kanji.word_type || ''
                 });
             } else {
                 console.error("Fetch failed:", res.status, res.statusText);
@@ -188,6 +190,30 @@ export default function KanjiForm({ params }) {
                                 value={formData.radical}
                                 onChange={(e) => setFormData({ ...formData, radical: e.target.value })}
                             />
+                        </div>
+                        <div>
+                            <label className="block text-sm font-bold text-gray-700 mb-1">Word Type (Tipe Kata)</label>
+                            <select
+                                className="block w-full border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500 p-2 border bg-white"
+                                value={formData.word_type}
+                                onChange={(e) => setFormData({ ...formData, word_type: e.target.value })}
+                            >
+                                <option value="">- Pilih Tipe -</option>
+                                <option value="noun">Noun (Kata Benda)</option>
+                                <option value="godan">Godan Verb (Gol. 1)</option>
+                                <option value="ichidan">Ichidan Verb (Gol. 2)</option>
+                                <option value="suru">Suru Verb (Gol. 3)</option>
+                                <option value="i_adj">I-Adjective (Sifat I)</option>
+                                <option value="na_adj">Na-Adjective (Sifat Na)</option>
+                                <option value="adverb">Adverb (Keterangan)</option>
+                                <option value="particle">Particle (Partikel)</option>
+                                <option value="suffix">Suffix (Akhiran)</option>
+                                <option value="conjunction">Conjunction (Sambung)</option>
+                                <option value="interjection">Interjection (Seru)</option>
+                                <option value="pronoun">Pronoun (Ganti)</option>
+                                <option value="counter">Counter (Bantu Bilangan)</option>
+                                <option value="other">Lain-lain</option>
+                            </select>
                         </div>
                     </div>
 
