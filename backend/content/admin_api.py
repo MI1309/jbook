@@ -279,15 +279,21 @@ class VocabListResponse(BaseModel):
     total: int
     page: int
     pages: int
+    debug_level: Optional[int] = None
+    debug_search: Optional[str] = None
 
 # Vocab CRUD
 @router.get("/vocab", auth=AdminAuth(), response=VocabListResponse)
 def admin_list_vocabs(request, level: int = None, search: str = None, page: int = 1, limit: int = 50):
     from utils.kana import to_kana
     
-    query = Vocab.objects.all().order_by('word')
+    query = Vocab.objects.all().order_by('-created_at')
     
-    if level:
+    # Debug
+    applied_level = level
+    applied_search = search
+
+    if level is not None:
         query = query.filter(jlpt_level=level)
         
     if search:
@@ -307,7 +313,9 @@ def admin_list_vocabs(request, level: int = None, search: str = None, page: int 
         "items": list(query[offset : offset + limit]),
         "total": total,
         "page": page,
-        "pages": pages
+        "pages": pages,
+        "debug_level": applied_level,
+        "debug_search": applied_search
     }
 
 @router.post("/vocab", auth=AdminAuth(), response=VocabSchema)

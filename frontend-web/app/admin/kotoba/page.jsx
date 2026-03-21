@@ -14,6 +14,7 @@ export default function KotobaAdmin() {
     const [search, setSearch] = useState('');
     const [level, setLevel] = useState('');
     const [currentPage, setCurrentPage] = useState(1);
+    const [debugInfo, setDebugInfo] = useState(null);
     const router = useRouter();
 
     useEffect(() => { 
@@ -26,7 +27,8 @@ export default function KotobaAdmin() {
         setLoading(true);
         try {
             const token = Cookies.get('access_token');
-            let url = 'https://imronm.pythonanywhere.com/api/admin/vocab';
+            // Adding trailing slash to avoid redirect issues which might drop query params
+            let url = 'https://imronm.pythonanywhere.com/api/admin/vocab/';
             const params = new URLSearchParams();
             if (search) params.append('search', search);
             if (level) params.append('level', level);
@@ -35,7 +37,13 @@ export default function KotobaAdmin() {
             
             const queryString = params.toString();
             if (queryString) url += `?${queryString}`;
-            const res = await fetch(url, { headers: { 'Authorization': `Bearer ${token}` } });
+            
+            setDebugInfo(url); // Save URL for debug
+
+            const res = await fetch(url, { 
+                headers: { 'Authorization': `Bearer ${token}` },
+                cache: 'no-store' // Disable caching
+            });
             if (res.ok) {
                 const data = await res.json();
                 if (Array.isArray(data)) {
@@ -90,6 +98,11 @@ export default function KotobaAdmin() {
                 <Link href="/admin/kotoba/new" className="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 font-medium no-underline text-sm">
                     + New Kotoba
                 </Link>
+            </div>
+
+            {/* DEBUG INFO */}
+            <div className="text-[10px] text-gray-400 mb-2 font-mono break-all opacity-50">
+                Fetching: {debugInfo || '...'}
             </div>
 
             <div className="bg-white shadow rounded-lg overflow-hidden">
