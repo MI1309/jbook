@@ -31,6 +31,7 @@ class Kanji(models.Model):
     strokes = models.IntegerField()
     jlpt_level = models.IntegerField(choices=JLPTLevel.choices)
     radical = models.CharField(max_length=5, blank=True, null=True, help_text="Radikal utama")
+    word_type = models.CharField(max_length=20, choices=WordType.choices, blank=True, null=True, help_text="Tipe kata utama jika ada")
     examples = models.JSONField(default=list, help_text="List of words using this Kanji with Indonesian meanings")
 
     def __str__(self):

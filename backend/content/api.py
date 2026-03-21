@@ -117,14 +117,15 @@ def get_kanji(request, kanji_id: UUID):
     # Update the object's examples field for the response (doesn't save to DB)
     kanji.examples = merged_examples
     
-    # Also find top-level word_type
-    v = Vocab.objects.filter(word=kanji.character).first()
-    if v:
-        kanji.word_type = v.word_type
-    else:
-        v_tilde = Vocab.objects.filter(word=f"～{kanji.character}").first()
-        if v_tilde:
-            kanji.word_type = v_tilde.word_type
+    # Also find top-level word_type if not already set (fallback)
+    if not kanji.word_type:
+        v = Vocab.objects.filter(word=kanji.character).first()
+        if v:
+            kanji.word_type = v.word_type
+        else:
+            v_tilde = Vocab.objects.filter(word=f"～{kanji.character}").first()
+            if v_tilde:
+                kanji.word_type = v_tilde.word_type
             
     return kanji
 
