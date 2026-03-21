@@ -16,7 +16,7 @@ function PracticeContent() {
 
     // Get config from URL
     const limit = searchParams.get('limit') ? parseInt(searchParams.get('limit')) : 10;
-    const level = searchParams.get('level') ? parseInt(searchParams.get('level')) : null;
+    const level = searchParams.get('level') || null; // Keep as string for multi-level (e.g. "4,5")
     const type = searchParams.get('type') || 'kanji';
     const initialTimer = searchParams.get('timer') ? parseInt(searchParams.get('timer')) * 60 : null;
 

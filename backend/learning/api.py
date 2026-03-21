@@ -68,85 +68,77 @@ class ExportDataSchema(Schema):
     progress: List[UserProgressExportSchema]
 
 @router.get("/practice/generate", response=List[QuestionSchema])
-def generate_quiz(request, limit: int = 10, level: Optional[int] = None, type: str = 'kanji'):
-    if type == 'kanji':
-        Model = Kanji
-    elif type == 'vocab' or type == 'kotoba':
-        Model = Vocab
-        type = 'vocab' # Normalize
-    elif type == 'grammar' or type == 'bunpo':
-        Model = Grammar
-        type = 'grammar' # Normalize
-    elif type == 'particle':
-        Model = Particle
-    else:
-        return [] # Invalid type
+def generate_quiz(request, limit: int = 10, level: Optional[str] = None, type: str = 'kanji'):
+    # Support multiple types and levels (comma separated)
+    requested_types = [t.strip().lower() for t in type.split(',')]
+    requested_levels = [int(l.strip()) for l in level.split(',') if l.strip().isdigit()] if level else []
 
-    qs = Model.objects.all()
-    
-    if level:
-        qs = qs.filter(jlpt_level=level)
+    combined_pool = []
+    # Fetch items for each type and pool them
+    for t in requested_types:
+        if t == 'kanji':
+            Model = Kanji
+            display_type = 'kanji'
+        elif t in ['vocab', 'kotoba']:
+            Model = Vocab
+            display_type = 'vocab'
+        elif t in ['grammar', 'bunpo']:
+            Model = Grammar
+            display_type = 'grammar'
+        elif t == 'particle':
+            Model = Particle
+            display_type = 'particle'
+        else:
+            continue
 
-    items = list(qs)
-    if len(items) < 4:
-         return []
-    
+        qs = Model.objects.all()
+        if requested_levels:
+            qs = qs.filter(jlpt_level__in=requested_levels)
+        
+        items = list(qs)
+        for item in items:
+            combined_pool.append((item, display_type, items))
+
+    if not combined_pool or len(combined_pool) < 4:
+        return []
+
     # Ensure limit doesn't exceed available items
-    quiz_limit = min(len(items), limit)
-    selected_items = random.sample(items, quiz_limit)
+    quiz_limit = min(len(combined_pool), limit)
+    selected_samples = random.sample(combined_pool, quiz_limit)
     
     questions = []
-    
-    for item in selected_items:
-        # Distractors must come from the same pool (items) to ensure level consistency 
-        # but excluding current item
-        possible_distractors = [k for k in items if k.id != item.id]
+    for item, d_type, same_type_pool in selected_samples:
+        # Distractors must come from the same pool to ensure level/type consistency
+        possible_distractors = [k for k in same_type_pool if k.id != item.id]
         
         if len(possible_distractors) < 3:
-             # Fallback if somehow not enough items
              distractors = possible_distractors
         else:
              distractors = random.sample(possible_distractors, 3)
 
         # Prepare question data based on type
-        if type == 'kanji':
+        if d_type == 'kanji':
             display_text = item.character
             correct_answer = item.meaning
             distractor_answers = [d.meaning for d in distractors]
             
-            # Format Onyomi and Kunyomi as the reading hint
             onyomi_str = ", ".join(item.onyomi) if item.onyomi else "-"
             kunyomi_str = ", ".join(item.kunyomi) if item.kunyomi else "-"
-            reading_hint = f"On: {onyomi_str} | Kun: {kunyomi_str}"
-            reading = reading_hint
-            
+            reading = f"On: {onyomi_str} | Kun: {kunyomi_str}"
             meaning = item.meaning
-        elif type == 'vocab':
+        elif d_type == 'vocab':
             display_text = item.word
             correct_answer = item.meaning
             distractor_answers = [d.meaning for d in distractors]
             reading = item.furigana if item.furigana else item.reading
             meaning = item.meaning
-        elif type == 'grammar':
-            display_text = item.title # e.g. "〜ても"
-            # For grammar, maybe asking for usage or meaning? 
-            # Let's assume meaning for now.
-            # But Grammar model has 'structure' and 'explanation'.
-            # Ideally we want a short meaning. 'explanation' might be long.
-            # But creating distractors from long explanations is hard.
-            # Let's use 'structure' as answer? Or 'explanation' truncated?
-            # Let's use title as prompt, and structure/explanation as clue?
-            # Actually, typically grammar quiz is: Sentence with blank -> select correct grammar.
-            # But our data structure is: Grammar -> Sentences.
-            # Doing a proper grammar quiz is complex. 
-            # For "Random Grammar" mode, maybe just matching Title <-> Meaning/Explanation?
-            # Let's use Explanation (truncated) as the answer for now.
+        elif d_type == 'grammar':
+            display_text = item.title
             correct_answer = item.explanation[:50] + "..." if len(item.explanation) > 50 else item.explanation
             distractor_answers = [(d.explanation[:50] + "..." if len(d.explanation) > 50 else d.explanation) for d in distractors]
             reading = item.structure 
             meaning = item.explanation
-        elif type == 'particle':
-            # Use sentence if available
+        elif d_type == 'particle':
             if item.sentences:
                 sentence = random.choice(item.sentences)
                 display_text = sentence.get("jp", item.character)
@@ -155,7 +147,6 @@ def generate_quiz(request, limit: int = 10, level: Optional[int] = None, type: s
                 display_text = item.character
                 correct_answer = item.character.split()[0]
                 
-            # For particles, use other particle characters as distractors
             distractor_answers = [d.character.split()[0] for d in distractors]
             reading = item.explanation
             meaning = item.meaning
@@ -169,7 +160,7 @@ def generate_quiz(request, limit: int = 10, level: Optional[int] = None, type: s
         questions.append({
             "id": str(item.id),
             "character": display_text,
-            "type": type,
+            "type": d_type,
             "options": options,
             "reading": reading,
             "meaning": meaning
