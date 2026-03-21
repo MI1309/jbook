@@ -29,6 +29,13 @@ export default async function KotobaPage({ searchParams }) {
     return (
         <div className="container mx-auto px-4 py-8">
             <h1 className="text-3xl font-bold mb-6 text-center text-red-600">Daftar Kosakata (言葉)</h1>
+            
+            <div className="flex justify-center gap-4 text-sm text-gray-400 mb-6 font-medium">
+                <span>Filter aktif:</span>
+                <span className="text-red-500">{level ? `N${level}` : 'Semua Level'}</span>
+                {search && <span className="text-red-500">| Cari: "{search}"</span>}
+                {word_type && <span className="text-red-500">| Tipe: {word_type.replace(/_/g, ' ')}</span>}
+            </div>
 
             {/* Live Search Filter */}
             <KotobaFilter />
