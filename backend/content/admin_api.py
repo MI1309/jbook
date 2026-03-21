@@ -273,12 +273,14 @@ class VocabCreateSchema(BaseModel):
     # For simplicity, let's ignore relations for now or add if needed.
     # The current requirement is simple CRUD.
 
-class VocabSchema(VocabCreateSchema):
-    id: UUID
-    model_config = {"from_attributes": True}
+class VocabListResponse(BaseModel):
+    items: List[VocabSchema]
+    total: int
+    page: int
+    pages: int
 
 # Vocab CRUD
-@router.get("/vocab", auth=AdminAuth(), response=List[VocabSchema])
+@router.get("/vocab", auth=AdminAuth(), response=VocabListResponse)
 def admin_list_vocabs(request, level: int = None, search: str = None, page: int = 1, limit: int = 50):
     from utils.kana import to_kana
     
@@ -296,8 +298,16 @@ def admin_list_vocabs(request, level: int = None, search: str = None, page: int 
             Q(reading__icontains=search_kana)
         )
         
+    total = query.count()
+    pages = (total + limit - 1) // limit
     offset = (page - 1) * limit
-    return query[offset : offset + limit]
+    
+    return {
+        "items": list(query[offset : offset + limit]),
+        "total": total,
+        "page": page,
+        "pages": pages
+    }
 
 @router.post("/vocab", auth=AdminAuth(), response=VocabSchema)
 def admin_create_vocab(request, payload: VocabCreateSchema):
