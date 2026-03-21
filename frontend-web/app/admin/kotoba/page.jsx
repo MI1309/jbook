@@ -38,9 +38,23 @@ export default function KotobaAdmin() {
             const res = await fetch(url, { headers: { 'Authorization': `Bearer ${token}` } });
             if (res.ok) {
                 const data = await res.json();
-                setVocabs(data.items);
-                setPagination({ total: data.total, page: data.page, pages: data.pages });
-            } else console.error("Fetch failed");
+                if (Array.isArray(data)) {
+                    // Legacy support for array response
+                    setVocabs(data);
+                    setPagination({ total: data.length, page: 1, pages: 1 });
+                } else {
+                    // New paginated response
+                    setVocabs(data.items || []);
+                    setPagination({ 
+                        total: data.total || 0, 
+                        page: data.page || 1, 
+                        pages: data.pages || 1 
+                    });
+                }
+            } else {
+                console.error("Fetch failed");
+                setVocabs([]);
+            }
         } catch (error) {
             console.error("Failed to fetch vocabs", error);
         } finally {
