@@ -61,13 +61,8 @@ export default async function KanjiDetailPage({ params }) {
                                             )}
                                         </ruby>
                                         {ex.type && (
-<<<<<<< HEAD
-                                            <span className="ml-2 text-xs font-semibold px-2 py-0.5 rounded-full bg-blue-100 text-blue-800 align-middle">
-                                                {ex.type}
-=======
                                             <span className="ml-2 px-1.5 py-0.5 bg-blue-50 text-blue-500 text-[10px] font-bold rounded-full border border-blue-100 align-middle">
                                                 {ex.type.replace(/_/g, ' ')}
->>>>>>> b5ddb9a (penambahan badge tipe)
                                             </span>
                                         )}
                                     </p>

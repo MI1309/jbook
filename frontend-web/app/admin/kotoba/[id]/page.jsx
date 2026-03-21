@@ -13,13 +13,8 @@ export default function KotobaForm({ params }) {
         word: '',
         reading: '',
         meaning: '',
-<<<<<<< HEAD
         word_type: '',
         jlpt_level: 5
-=======
-        jlpt_level: 5,
-        word_type: ''
->>>>>>> b5ddb9a (penambahan badge tipe)
     });
     const [loading, setLoading] = useState(!isNew);
     const [saving, setSaving] = useState(false);
@@ -158,31 +153,6 @@ export default function KotobaForm({ params }) {
                     </select>
                 </div>
 
-                <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Word Type (Tipe Kata)</label>
-                    <select
-                        className="w-full border border-gray-300 rounded-md p-2"
-                        value={formData.word_type || ''}
-                        onChange={e => setFormData({ ...formData, word_type: e.target.value || null })}
-                    >
-                        <option value="">-- Pilih Tipe Kata (Opsional) --</option>
-                        <option value="noun">Noun (Kata Benda)</option>
-                        <option value="godan_verb">Godan Verb (Kata Kerja Gol. 1)</option>
-                        <option value="ichidan_verb">Ichidan Verb (Kata Kerja Gol. 2)</option>
-                        <option value="suru_verb">Suru Verb (Kata Kerja Gol. 3)</option>
-                        <option value="intransitive_verb">Intransitive Verb (Intransitif)</option>
-                        <option value="transitive_verb">Transitive Verb (Transitif)</option>
-                        <option value="i_adjective">I-Adjective (Kata Sifat -i)</option>
-                        <option value="na_adjective">Na-Adjective (Kata Sifat -na)</option>
-                        <option value="adverb">Adverb (Kata Keterangan)</option>
-                        <option value="particle">Particle (Partikel)</option>
-                        <option value="suffix">Suffix (Akhiran)</option>
-                        <option value="prefix">Prefix (Awalan)</option>
-                        <option value="conjunction">Conjunction (Kata Sambung)</option>
-                        <option value="expression">Expression (Ungkapan)</option>
-                        <option value="other">Other (Lain-lain)</option>
-                    </select>
-                </div>
 
                 <div className="border-t pt-4">
                     <div className="flex justify-between items-center mb-4">
