@@ -25,8 +25,15 @@ export default async function KanjiDetailPage({ params }) {
                 <div className="text-center mb-8">
                     <div className="text-9xl font-bold text-gray-800 mb-4">{kanji.character}</div>
                     <h1 className="text-3xl font-semibold text-gray-700">{kanji.meaning}</h1>
-                    <div className="mt-2 inline-block bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-semibold">
-                        JLPT N{kanji.jlpt_level}
+                    <div className="mt-4 flex justify-center gap-2">
+                        <div className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-semibold shadow-sm border border-blue-200">
+                            JLPT N{kanji.jlpt_level}
+                        </div>
+                        {kanji.word_type && (
+                            <div className="bg-purple-100 text-purple-800 px-3 py-1 rounded-full text-sm font-semibold uppercase shadow-sm border border-purple-200">
+                                {kanji.word_type.replace(/_/g, ' ')}
+                            </div>
+                        )}
                     </div>
                 </div>
 

@@ -106,9 +106,16 @@ export default async function KanjiPage({ searchParams }) {
                                 <div className={`absolute inset-0 bg-gradient-to-b ${s.bg} opacity-0 group-hover:opacity-100 transition-opacity duration-300`} />
                                 
                                 {/* Level badge */}
-                                <span className={`relative z-10 self-end text-[10px] font-black px-2.5 py-1 rounded-xl border ${s.badge} shadow-sm`}>
-                                    N{kanji.jlpt_level}
-                                </span>
+                                <div className="relative z-10 self-end flex gap-1.5 items-center">
+                                    {kanji.word_type && (
+                                        <span className="text-[8px] font-black px-1.5 py-0.5 rounded-lg bg-purple-50 text-purple-600 border border-purple-100 uppercase tracking-tighter shadow-sm">
+                                            {kanji.word_type === 'suffix' ? 'Suf' : kanji.word_type.substring(0, 3)}
+                                        </span>
+                                    )}
+                                    <span className={`text-[10px] font-black px-2.5 py-1 rounded-xl border ${s.badge} shadow-sm`}>
+                                        N{kanji.jlpt_level}
+                                    </span>
+                                </div>
 
                                 {/* Character */}
                                 <span className={`relative z-10 text-6xl font-serif leading-none ${s.char} transition-all duration-300 drop-shadow-sm`}>
