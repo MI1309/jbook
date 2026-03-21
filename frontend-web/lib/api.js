@@ -38,15 +38,14 @@ async function handleResponse(res, context = 'API') {
     throw error;
 }
 
-/**
- * @param {Object} params
- * @param {number} [params.level]
- * @param {string} [params.search]
- * @param {string} [params.radical]
- * @param {number} [params.limit]
- * @param {number} [params.offset]
- * @returns {Promise<Kanji[]>}
- */
+function handleNetworkError(context, error, defaultValue = null) {
+    console.error(`[${context}] Network error:`, error.message);
+    if (typeof window === 'undefined') {
+        return defaultValue;
+    }
+    throw new Error('Koneksi gagal. Mohon periksa internet Anda.');
+}
+
 export async function getKanjiList({ level, search, radical, limit = 100, page = 1 } = {}) {
     const queryParams = new URLSearchParams();
     if (level) queryParams.append('level', level);
@@ -54,7 +53,6 @@ export async function getKanjiList({ level, search, radical, limit = 100, page =
     if (radical) queryParams.append('radical', radical);
     if (limit) queryParams.append('limit', limit);
 
-    // Calculate offset from page
     const offset = (page - 1) * limit;
     queryParams.append('offset', offset);
 
@@ -65,47 +63,20 @@ export async function getKanjiList({ level, search, radical, limit = 100, page =
         return handleResponse(res, 'getKanjiList');
     } catch (error) {
         if (error.status) throw error;
-        console.error('[getKanjiList] Network error:', error.message);
-        if (typeof window === 'undefined') return [];
-        throw new Error('Koneksi gagal. Mohon periksa internet Anda.');
+        return handleNetworkError('getKanjiList', error, []);
     }
 }
 
-/**
- * @param {string} id
- * @returns {Promise<Kanji>}
- */
 export async function getKanjiDetail(id) {
     try {
         const res = await fetch(`${API_URL}/content/kanji/${id}`);
         return handleResponse(res, 'getKanjiDetail');
     } catch (error) {
         if (error.status) throw error;
-        console.error(`[getKanjiDetail] Network error for ${id}:`, error.message);
-        if (typeof window === 'undefined') return null;
-        throw new Error('Koneksi gagal. Mohon periksa internet Anda.');
+        return handleNetworkError('getKanjiDetail', error, null);
     }
 }
 
-/**
- * @typedef {Object} Grammar
- * @property {string} id
- * @property {string} title
- * @property {string} structure
- * @property {string} explanation
- * @property {number} jlpt_level
- * @property {any[]} sentences
- */
-
-/**
- * @param {Object} params
- * @param {number} [params.level]
- * @param {string} [params.search]
- * @param {number} [params.chapter]
- * @param {number} [params.limit]
- * @param {number} [params.offset]
- * @returns {Promise<Grammar[]>}
- */
 export async function getGrammarList({ level, search, chapter, limit = 100, page = 1 } = {}) {
     const queryParams = new URLSearchParams();
     if (level) queryParams.append('level', level);
@@ -113,7 +84,6 @@ export async function getGrammarList({ level, search, chapter, limit = 100, page
     if (chapter) queryParams.append('chapter', chapter);
     if (limit) queryParams.append('limit', limit);
 
-    // Calculate offset from page
     const offset = (page - 1) * limit;
     queryParams.append('offset', offset);
 
@@ -124,42 +94,20 @@ export async function getGrammarList({ level, search, chapter, limit = 100, page
         return handleResponse(res, 'getGrammarList');
     } catch (error) {
         if (error.status) throw error;
-        console.error('[getGrammarList] Network error:', error.message);
-        if (typeof window === 'undefined') return [];
-        throw new Error('Koneksi gagal. Mohon periksa internet Anda.');
+        return handleNetworkError('getGrammarList', error, []);
     }
 }
 
-/**
- * @param {string} id
- * @returns {Promise<Grammar>}
- */
 export async function getGrammarDetail(id) {
     try {
         const res = await fetch(`${API_URL}/content/grammar/${id}`);
         return handleResponse(res, 'getGrammarDetail');
     } catch (error) {
         if (error.status) throw error;
-        console.error(`[getGrammarDetail] Network error for ${id}:`, error.message);
-        if (typeof window === 'undefined') return null;
-        throw new Error('Koneksi gagal. Mohon periksa internet Anda.');
+        return handleNetworkError('getGrammarDetail', error, null);
     }
 }
-/**
- * @typedef {Object} QuizQuestion
- * @property {string} kanji_id
- * @property {string} character
- * @property {Object[]} options
- * @property {string} options.text
- * @property {boolean} options.is_correct
- */
 
-/**
- * @param {Object} params
- * @param {number} [params.limit]
- * @param {number} [params.level]
- * @returns {Promise<QuizQuestion[]>}
- */
 export async function getPracticeQuestions({ limit = 10, level = null, type = 'kanji' } = {}) {
     const params = new URLSearchParams();
     if (limit) params.append('limit', limit);
@@ -173,14 +121,10 @@ export async function getPracticeQuestions({ limit = 10, level = null, type = 'k
         return handleResponse(res, 'getPracticeQuestions');
     } catch (error) {
         if (error.status) throw error;
-        throw new Error('Koneksi gagal. Mohon periksa internet Anda.');
+        return handleNetworkError('getPracticeQuestions', error, []);
     }
 }
 
-/**
- * @param {Object[]} results
- * @returns {Promise<Object>}
- */
 export async function submitPracticeResults(results) {
     const token = Cookies.get('access_token');
     const headers = {
@@ -197,38 +141,39 @@ export async function submitPracticeResults(results) {
         return handleResponse(res, 'submitPracticeResults');
     } catch (error) {
         if (error.status) throw error;
-        throw new Error('Koneksi gagal. Mohon periksa internet Anda.');
+        return handleNetworkError('submitPracticeResults', error);
     }
 }
 
-/**
- * @returns {Promise<Object>}
- */
 export async function getUserAnalytics() {
     const token = Cookies.get('access_token');
     const headers = {};
     if (token) headers['Authorization'] = `Bearer ${token}`;
 
-    const res = await fetch(`${API_URL}/learning/practice/analytics`, {
-        headers,
-        cache: 'no-store',
-    });
+    try {
+        const res = await fetch(`${API_URL}/learning/practice/analytics`, {
+            headers,
+            cache: 'no-store',
+        });
 
-    if (!res.ok) {
-        // Return default empty structure if auth fails or error
-        return {
+        if (!res.ok) {
+            return {
+                total_attempts: 0,
+                accuracy: 0,
+                wrong_stats: []
+            };
+        }
+
+        return res.json();
+    } catch (error) {
+        return handleNetworkError('getUserAnalytics', error, {
             total_attempts: 0,
             accuracy: 0,
             wrong_stats: []
-        };
+        });
     }
-
-    return res.json();
 }
 
-/**
- * @returns {Promise<Object>}
- */
 export async function resetPracticeProgress() {
     const token = Cookies.get('access_token');
     const headers = {};
@@ -242,34 +187,16 @@ export async function resetPracticeProgress() {
         return handleResponse(res, 'resetPracticeProgress');
     } catch (error) {
         if (error.status) throw error;
-        throw new Error('Koneksi gagal. Mohon periksa internet Anda.');
+        return handleNetworkError('resetPracticeProgress', error);
     }
 }
 
-/**
- * @typedef {Object} Vocab
- * @property {string} id
- * @property {string} word
- * @property {string} reading
- * @property {string} meaning
- * @property {number} jlpt_level
- */
-
-/**
- * @param {Object} params
- * @param {number} [params.level]
- * @param {string} [params.search]
- * @param {number} [params.limit]
- * @param {number} [params.page]
- * @returns {Promise<Vocab[]>}
- */
 export async function getVocabList({ level, search, limit = 100, page = 1 } = {}) {
     const queryParams = new URLSearchParams();
     if (level) queryParams.append('level', level);
     if (search) queryParams.append('search', search);
     if (limit) queryParams.append('limit', limit);
 
-    // Calculate offset from page
     const offset = (page - 1) * limit;
     queryParams.append('offset', offset);
 
@@ -280,16 +207,10 @@ export async function getVocabList({ level, search, limit = 100, page = 1 } = {}
         return handleResponse(res, 'getVocabList');
     } catch (error) {
         if (error.status) throw error;
-        console.error('[getVocabList] Network error:', error.message);
-        if (typeof window === 'undefined') return [];
-        throw new Error('Koneksi gagal. Mohon periksa internet Anda.');
+        return handleNetworkError('getVocabList', error, []);
     }
 }
 
-/**
- * @param {string} id
- * @returns {Promise<Vocab>}
- */
 export async function getVocabDetail(id) {
     try {
         const res = await fetch(`${API_URL}/content/vocab/${id}`, {
@@ -298,25 +219,10 @@ export async function getVocabDetail(id) {
         return handleResponse(res, 'getVocabDetail');
     } catch (error) {
         if (error.status) throw error;
-        console.error(`[getVocabDetail] Network error for ${id}:`, error.message);
-        if (typeof window === 'undefined') return null;
-        throw new Error('Koneksi gagal. Mohon periksa internet Anda.');
+        return handleNetworkError('getVocabDetail', error, null);
     }
 }
 
-/**
- * @typedef {Object} Blog
- * @property {string} id
- * @property {string} title
- * @property {string} slug
- * @property {string} content
- * @property {string[]} tags
- * @property {string} created_at
- */
-
-/**
- * @returns {Promise<Blog[]>}
- */
 export async function getBlogList() {
     try {
         const res = await fetch(`${API_URL}/content/blog`, {
@@ -324,22 +230,11 @@ export async function getBlogList() {
         });
         return handleResponse(res, 'getBlogList');
     } catch (error) {
-        // If it's a backend error with a status, throw it
         if (error.status) throw error;
-        
-        // On server-side (build/SSR), log the error but don't crash if it's just a network failure
-        console.error('[getBlogList] Network error:', error.message);
-        if (typeof window === 'undefined') {
-            return []; // Return empty list during build if API is down
-        }
-        throw new Error('Koneksi gagal. Mohon periksa internet Anda.');
+        return handleNetworkError('getBlogList', error, []);
     }
 }
 
-/**
- * @param {string} slug
- * @returns {Promise<Blog>}
- */
 export async function getBlogDetailBySlug(slug) {
     try {
         const res = await fetch(`${API_URL}/content/blog/${slug}`, {
@@ -348,16 +243,10 @@ export async function getBlogDetailBySlug(slug) {
         return handleResponse(res, 'getBlogDetailBySlug');
     } catch (error) {
         if (error.status) throw error;
-        console.error(`[getBlogDetailBySlug] Network error for ${slug}:`, error.message);
-        if (typeof window === 'undefined') return null;
-        throw new Error('Koneksi gagal. Mohon periksa internet Anda.');
+        return handleNetworkError('getBlogDetailBySlug', error, null);
     }
 }
 
-/**
- * @param {Object} payload 
- * @returns {Promise<{message: string}>}
- */
 export async function suggestContent(payload) {
     try {
         const res = await fetch(`${API_URL}/content/suggest`, {
@@ -368,12 +257,10 @@ export async function suggestContent(payload) {
         return handleResponse(res, 'suggestContent');
     } catch (error) {
         if (error.status) throw error;
-        throw new Error('Koneksi gagal. Mohon periksa internet Anda.');
+        return handleNetworkError('suggestContent', error);
     }
 }
-/**
- * @returns {Promise<Object>}
- */
+
 export async function exportPracticeData() {
     const token = Cookies.get('access_token');
     const headers = {};
@@ -387,14 +274,10 @@ export async function exportPracticeData() {
         return handleResponse(res, 'exportPracticeData');
     } catch (error) {
         if (error.status) throw error;
-        throw new Error('Koneksi gagal. Mohon periksa internet Anda.');
+        return handleNetworkError('exportPracticeData', error);
     }
 }
 
-/**
- * @param {Object} data 
- * @returns {Promise<Object>}
- */
 export async function importPracticeData(data) {
     const token = Cookies.get('access_token');
     const headers = {
@@ -411,6 +294,6 @@ export async function importPracticeData(data) {
         return handleResponse(res, 'importPracticeData');
     } catch (error) {
         if (error.status) throw error;
-        throw new Error('Koneksi gagal. Mohon periksa internet Anda.');
+        return handleNetworkError('importPracticeData', error);
     }
 }

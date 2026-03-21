@@ -10,12 +10,17 @@ export default async function KotobaPage({ searchParams }) {
     const level = params.level ? parseInt(params.level) : null;
     const limit = 50;
 
-    const vocabList = await getVocabList({
-        level,
-        search,
-        limit,
-        page
-    });
+    let vocabList = [];
+    try {
+        vocabList = await getVocabList({
+            level,
+            search,
+            limit,
+            page
+        });
+    } catch (error) {
+        console.error('Failed to fetch vocab during build:', error.message);
+    }
 
     const hasMore = vocabList.length === limit;
 

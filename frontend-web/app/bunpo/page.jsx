@@ -16,13 +16,18 @@ export default async function BunpoPage({ searchParams }) {
     const page   = parseInt(params.page) || 1;
     const limit  = 24;
 
-    const grammarList = await getGrammarList({
-        level:   params.level,
-        search:  params.search,
-        chapter: params.chapter,
-        limit,
-        page,
-    });
+    let grammarList = [];
+    try {
+        grammarList = await getGrammarList({
+            level:   params.level,
+            search:  params.search,
+            chapter: params.chapter,
+            limit,
+            page,
+        });
+    } catch (error) {
+        console.error('Failed to fetch grammar during build:', error.message);
+    }
 
     const hasMore = grammarList.length === limit;
 

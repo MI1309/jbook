@@ -8,6 +8,16 @@ export default async function KotobaDetailPage({ params }) {
 
     if (!vocab) {
         return (
+            <div className="container mx-auto px-4 py-32 text-center min-h-screen flex flex-col items-center justify-center">
+                <div className="text-6xl mb-6">🏮</div>
+                <h1 className="text-3xl font-black text-gray-900 mb-4">Kosakata Tidak Ditemukan</h1>
+                <Link href="/kotoba" className="text-red-600 font-bold hover:underline">Kembali ke Daftar</Link>
+            </div>
+        );
+    }
+
+    if (!vocab) {
+        return (
             <div className="container mx-auto px-4 py-16 text-center uppercase tracking-widest font-black">
                 <div className="text-6xl mb-6">🏜️</div>
                 <h1 className="text-2xl text-gray-800 mb-4">Kosakata Tidak Ditemukan</h1>

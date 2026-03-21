@@ -51,13 +51,18 @@ export default async function KanjiPage({ searchParams }) {
     const page   = parseInt(params.page) || 1;
     const limit  = 30; // Increased for better grid fill
 
-    const kanjiList = await getKanjiList({
-        level:   params.level,
-        search:  params.search,
-        radical: params.radical,
-        limit,
-        page,
-    });
+    let kanjiList = [];
+    try {
+        kanjiList = await getKanjiList({
+            level:   params.level,
+            search:  params.search,
+            radical: params.radical,
+            limit,
+            page,
+        });
+    } catch (error) {
+        console.error('Failed to fetch kanji during build:', error.message);
+    }
 
     const hasMore = kanjiList.length === limit;
 

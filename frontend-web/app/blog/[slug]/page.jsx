@@ -22,7 +22,17 @@ export default async function BlogDetailPage({ params }) {
     try {
         blog = await getBlogDetailBySlug(slug);
     } catch (error) {
-        notFound();
+        console.error('Blog fetch error:', error.message);
+    }
+
+    if (!blog) {
+        return (
+            <div className="container mx-auto px-6 py-32 text-center min-h-screen flex flex-col items-center justify-center">
+                <div className="text-6xl mb-6">🏜️</div>
+                <h1 className="text-3xl font-black text-gray-900 mb-4">Postingan Tidak Ditemukan</h1>
+                <Link href="/blog" className="text-red-600 font-bold hover:underline">Kembali ke Blog</Link>
+            </div>
+        );
     }
 
     return (
