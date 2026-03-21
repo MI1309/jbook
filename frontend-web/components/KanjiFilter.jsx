@@ -135,6 +135,13 @@ function FilterContent() {
     const [selectedLevel, setSelectedLevel] = useState(initialLevel);
     const [expandedGroup, setExpandedGroup] = useState(null);
     const [showRadicals, setShowRadicals] = useState(false);
+    
+    // Sync state with URL changes (e.g. back button)
+    useEffect(() => {
+        setSearchTerm(searchParams.get('search') || '');
+        setSelectedRadical(searchParams.get('radical') || '');
+        setSelectedLevel(searchParams.get('level') || '');
+    }, [searchParams]);
 
     // Debounce search term to avoid too many URL updates
     const [debouncedSearch] = useDebounce(searchTerm, 500);

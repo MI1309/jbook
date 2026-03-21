@@ -194,9 +194,9 @@ def list_vocab(request,
     
     qs = Vocab.objects.all().order_by('word')
     
-    if level:
+    if level is not None:
         qs = qs.filter(jlpt_level=level)
-
+        
     if word_type:
         qs = qs.filter(word_type=word_type)
 

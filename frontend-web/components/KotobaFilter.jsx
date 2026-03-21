@@ -17,6 +17,13 @@ function FilterContent() {
     const [level, setLevel] = useState(initialLevel);
     const [wordType, setWordType] = useState(initialType);
 
+    // Sync state with URL changes (e.g. back button)
+    useEffect(() => {
+        setSearchTerm(searchParams.get('search') || '');
+        setLevel(searchParams.get('level') || '');
+        setWordType(searchParams.get('word_type') || '');
+    }, [searchParams]);
+
     // Debounce search term to avoid too many URL updates (500ms delay)
     const [debouncedSearch] = useDebounce(searchTerm, 500);
 
