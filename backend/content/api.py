@@ -129,6 +129,7 @@ def get_random_kotoba(request):
 def list_vocab(request, 
                level: Optional[int] = None,
                search: Optional[str] = None,
+               word_type: Optional[str] = None,
                limit: int = 100,
                offset: int = 0):
     from .models import Vocab
@@ -139,6 +140,9 @@ def list_vocab(request,
     
     if level:
         qs = qs.filter(jlpt_level=level)
+
+    if word_type:
+        qs = qs.filter(word_type=word_type)
 
     if search:
         search_kana = to_kana(search)

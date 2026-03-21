@@ -4,6 +4,7 @@ import { hasKanji } from '@/lib/utils';
 
 export default async function KotobaDetailPage({ params }) {
     const { id } = await params;
+    const vocab = await getVocabDetail(id);
     if (!vocab) {
         return (
             <div className="container mx-auto px-4 py-32 text-center min-h-screen flex flex-col items-center justify-center">

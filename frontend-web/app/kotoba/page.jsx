@@ -8,6 +8,7 @@ export default async function KotobaPage({ searchParams }) {
     const page = parseInt(params.page) || 1;
     const search = params.search || '';
     const level = params.level ? parseInt(params.level) : null;
+    const word_type = params.word_type || '';
     const limit = 50;
 
     let vocabList = [];
@@ -15,6 +16,7 @@ export default async function KotobaPage({ searchParams }) {
         vocabList = await getVocabList({
             level,
             search,
+            word_type,
             limit,
             page
         });

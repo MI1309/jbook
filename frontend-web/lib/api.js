@@ -191,10 +191,11 @@ export async function resetPracticeProgress() {
     }
 }
 
-export async function getVocabList({ level, search, limit = 100, page = 1 } = {}) {
+export async function getVocabList({ level, search, word_type, limit = 100, page = 1 } = {}) {
     const queryParams = new URLSearchParams();
     if (level) queryParams.append('level', level);
     if (search) queryParams.append('search', search);
+    if (word_type) queryParams.append('word_type', word_type);
     if (limit) queryParams.append('limit', limit);
 
     const offset = (page - 1) * limit;

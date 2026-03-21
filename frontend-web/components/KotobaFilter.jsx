@@ -11,14 +11,16 @@ function FilterContent() {
 
     const initialSearch = searchParams.get('search') || '';
     const initialLevel = searchParams.get('level') || '';
+    const initialType = searchParams.get('word_type') || '';
 
     const [searchTerm, setSearchTerm] = useState(initialSearch);
     const [level, setLevel] = useState(initialLevel);
+    const [wordType, setWordType] = useState(initialType);
 
     // Debounce search term to avoid too many URL updates (500ms delay)
     const [debouncedSearch] = useDebounce(searchTerm, 500);
 
-    // Update URL when search term or level changes
+    // Update URL when search term, level, or type changes
     useEffect(() => {
         const params = new URLSearchParams(searchParams.toString());
 
@@ -34,22 +36,29 @@ function FilterContent() {
             params.delete('level');
         }
 
+        if (wordType) {
+            params.set('word_type', wordType);
+        } else {
+            params.delete('word_type');
+        }
+
         const currentSearch = searchParams.get('search') || '';
         const currentLevel = searchParams.get('level') || '';
+        const currentType = searchParams.get('word_type') || '';
 
         // Only push if changed
-        if (debouncedSearch !== currentSearch || level !== currentLevel) {
+        if (debouncedSearch !== currentSearch || level !== currentLevel || wordType !== currentType) {
             params.delete('page'); // Reset pagination on new search/filter
             router.push(`/kotoba?${params.toString()}`);
         }
 
-    }, [debouncedSearch, level, router, searchParams]);
+    }, [debouncedSearch, level, wordType, router, searchParams]);
 
     return (
-        <div className="bg-white p-6 rounded-2xl shadow-md mb-8 max-w-xl mx-auto border border-gray-100">
-            <div className="flex flex-col sm:flex-row gap-4">
-                <div className="flex-1">
-                    <label className="block text-gray-700 font-bold mb-2 flex items-center gap-2">
+        <div className="bg-white p-6 rounded-2xl shadow-md mb-8 max-w-2xl mx-auto border border-gray-100">
+            <div className="flex flex-col md:flex-row gap-4">
+                <div className="flex-[2]">
+                    <label className="block text-gray-700 font-bold mb-2 flex items-center gap-2 text-sm uppercase tracking-wider">
                         <span>🔍</span> Cari Kosakata
                     </label>
                     <div className="relative">
@@ -71,8 +80,8 @@ function FilterContent() {
                     </div>
                 </div>
 
-                <div className="w-full sm:w-1/3">
-                    <label className="block text-gray-700 font-bold mb-2 flex items-center gap-2">
+                <div className="flex-1">
+                    <label className="block text-gray-700 font-bold mb-2 flex items-center gap-2 text-sm uppercase tracking-wider">
                         Level
                     </label>
                     <select
@@ -86,6 +95,25 @@ function FilterContent() {
                         <option value="3">N3</option>
                         <option value="2">N2</option>
                         <option value="1">N1</option>
+                    </select>
+                </div>
+
+                <div className="flex-1">
+                    <label className="block text-gray-700 font-bold mb-2 flex items-center gap-2 text-sm uppercase tracking-wider">
+                        Tipe
+                    </label>
+                    <select
+                        className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-all text-gray-900 bg-gray-50 cursor-pointer shadow-inner appearance-none"
+                        value={wordType}
+                        onChange={(e) => setWordType(e.target.value)}
+                    >
+                        <option value="">Semua Tipe</option>
+                        <option value="noun">Noun</option>
+                        <option value="verb">Verb</option>
+                        <option value="adjective">Adjective</option>
+                        <option value="suffix">Suffix</option>
+                        <option value="particle">Particle</option>
+                        <option value="counter">Counter</option>
                     </select>
                 </div>
             </div>
