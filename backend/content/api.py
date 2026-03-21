@@ -112,6 +112,7 @@ class VocabSchema(Schema):
     reading: str
     furigana: Optional[str] = None
     meaning: str
+    word_type: Optional[str] = None
     jlpt_level: int
     examples: List[dict] = []
 
