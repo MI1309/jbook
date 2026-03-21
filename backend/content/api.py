@@ -25,6 +25,7 @@ class KanjiSchema(Schema):
     kunyomi: List[str]
     strokes: int
     jlpt_level: int
+    word_type: Optional[str] = None
     examples: List[dict] = []
 
 class GrammarSchema(Schema):
@@ -67,7 +68,23 @@ def list_kanji(request,
     qs = qs.order_by('jlpt_level', 'strokes')
     
     # Pagination
-    return qs[offset : offset + limit]
+    results = qs[offset : offset + limit]
+    
+    # Dynamically add word_type from Vocab if it exists for the single character
+    from .models import Vocab
+    for k in results:
+        # Check if there is a vocab entry that is exactly this character
+        # or most relevant vocab for it
+        v = Vocab.objects.filter(word=k.character).first()
+        if v:
+            k.word_type = v.word_type
+        else:
+            # Fallback check for tilde version e.g ~方
+            v_tilde = Vocab.objects.filter(word=f"～{k.character}").first()
+            if v_tilde:
+                k.word_type = v_tilde.word_type
+
+    return results
 
 @router.get("/kanji/{kanji_id}", response=KanjiSchema)
 def get_kanji(request, kanji_id: UUID):
@@ -100,6 +117,15 @@ def get_kanji(request, kanji_id: UUID):
     # Update the object's examples field for the response (doesn't save to DB)
     kanji.examples = merged_examples
     
+    # Also find top-level word_type
+    v = Vocab.objects.filter(word=kanji.character).first()
+    if v:
+        kanji.word_type = v.word_type
+    else:
+        v_tilde = Vocab.objects.filter(word=f"～{kanji.character}").first()
+        if v_tilde:
+            kanji.word_type = v_tilde.word_type
+            
     return kanji
 
 @router.get("/grammar", response=List[GrammarSchema])
