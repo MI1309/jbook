@@ -93,9 +93,9 @@ export default async function KanjiPage({ searchParams }) {
                                 key={kanji.id}
                                 href={`/kanji/${kanji.id}`}
                                 className={`
-                                    group flex flex-col items-center justify-between
+                                    group flex flex-col items-center justify-start
                                     bg-white rounded-[2rem] border-2 ${s.border} ${s.glow}
-                                    px-4 pt-4 pb-6 min-h-[160px]
+                                    px-4 pt-3 pb-5 min-h-[170px]
                                     hover:shadow-2xl hover:-translate-y-2
                                     active:scale-95 active:shadow-sm
                                     transition-all duration-300 ease-out
@@ -106,24 +106,24 @@ export default async function KanjiPage({ searchParams }) {
                                 <div className={`absolute inset-0 bg-gradient-to-b ${s.bg} opacity-0 group-hover:opacity-100 transition-opacity duration-300`} />
                                 
                                 {/* Level badge */}
-                                <div className="relative z-10 self-end flex gap-1.5 items-center">
+                                <div className="relative z-10 self-end flex gap-1.5 items-center mb-1">
                                     {kanji.word_type && (
                                         <span className="text-[8px] font-black px-1.5 py-0.5 rounded-lg bg-purple-50 text-purple-600 border border-purple-100 uppercase tracking-tighter shadow-sm">
                                             {kanji.word_type === 'suffix' ? 'Suf' : kanji.word_type.substring(0, 3)}
                                         </span>
                                     )}
-                                    <span className={`text-[10px] font-black px-2.5 py-1 rounded-xl border ${s.badge} shadow-sm`}>
+                                    <span className={`text-[10px] font-black px-2 py-0.5 rounded-xl border ${s.badge} shadow-sm`}>
                                         N{kanji.jlpt_level}
                                     </span>
                                 </div>
 
                                 {/* Character */}
-                                <span className={`relative z-10 text-6xl font-serif leading-none ${s.char} transition-all duration-300 drop-shadow-sm`}>
+                                <span className={`relative z-10 text-6xl font-serif leading-none ${s.char} transition-all duration-300 drop-shadow-sm -mt-0.5`}>
                                     {kanji.character}
                                 </span>
 
                                 {/* Info */}
-                                <div className="relative z-10 w-full text-center mt-3">
+                                <div className="relative z-10 w-full text-center mt-auto">
                                     <div className="text-sm font-black text-gray-800 truncate px-1">
                                         {kanji.meaning}
                                     </div>
