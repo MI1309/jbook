@@ -138,14 +138,18 @@ export function AuthProvider({ children }) {
             });
 
             const data = await res.json();
-            if (!res.ok) throw new Error(data.detail || data.message || 'Login failed');
+            if (!res.ok) throw new Error(data.detail || data.message || 'Login gagal.');
 
             setAuthCookies(data.access, data.refresh);
             setUser(data.user);
             router.push('/');
             return { success: true };
         } catch (error) {
-            return { success: false, error: error.message };
+            console.error("Login error:", error);
+            const message = error.message === 'Failed to fetch' 
+                ? 'Koneksi gagal. Mohon periksa internet Anda.' 
+                : error.message;
+            return { success: false, error: message };
         }
     };
 
@@ -158,14 +162,18 @@ export function AuthProvider({ children }) {
             });
 
             const data = await res.json();
-            if (!res.ok) throw new Error(data.detail || data.message || 'Registration failed');
+            if (!res.ok) throw new Error(data.detail || data.message || 'Pendaftaran gagal.');
 
             setAuthCookies(data.access, data.refresh);
             setUser(data.user);
             router.push('/');
             return { success: true };
         } catch (error) {
-            return { success: false, error: error.message };
+            console.error("Registration error:", error);
+            const message = error.message === 'Failed to fetch' 
+                ? 'Koneksi gagal. Mohon periksa internet Anda.' 
+                : error.message;
+            return { success: false, error: message };
         }
     };
 
@@ -178,7 +186,7 @@ export function AuthProvider({ children }) {
             });
 
             const data = await res.json();
-            if (!res.ok) throw new Error(data.detail || data.message || 'Google login failed');
+            if (!res.ok) throw new Error(data.detail || data.message || 'Login Google gagal.');
 
             setAuthCookies(data.access, data.refresh);
             setUser(data.user);
@@ -186,7 +194,10 @@ export function AuthProvider({ children }) {
             return { success: true };
         } catch (error) {
             console.error("Google login error:", error);
-            return { success: false, error: error.message };
+            const message = error.message === 'Failed to fetch' 
+                ? 'Koneksi gagal. Mohon periksa internet Anda.' 
+                : error.message;
+            return { success: false, error: message };
         }
     };
 
@@ -198,10 +209,14 @@ export function AuthProvider({ children }) {
                 body: JSON.stringify({ email }),
             });
             const data = await res.json();
-            if (!res.ok) throw new Error(data.detail || data.message || 'Failed to request password reset');
+            if (!res.ok) throw new Error(data.detail || data.message || 'Gagal meminta reset password.');
             return { success: true, message: data.message, reset_link: data.reset_link };
         } catch (error) {
-            return { success: false, error: error.message };
+            console.error("Forgot password error:", error);
+            const message = error.message === 'Failed to fetch' 
+                ? 'Koneksi gagal. Mohon periksa internet Anda.' 
+                : error.message;
+            return { success: false, error: message };
         }
     };
 
@@ -213,10 +228,14 @@ export function AuthProvider({ children }) {
                 body: JSON.stringify({ uid, token, new_password: newPassword }),
             });
             const data = await res.json();
-            if (!res.ok) throw new Error(data.message || data.detail || 'Password reset failed');
+            if (!res.ok) throw new Error(data.message || data.detail || 'Reset password gagal.');
             return { success: true, message: data.message };
         } catch (error) {
-            return { success: false, error: error.message };
+            console.error("Reset password error:", error);
+            const message = error.message === 'Failed to fetch' 
+                ? 'Koneksi gagal. Mohon periksa internet Anda.' 
+                : error.message;
+            return { success: false, error: message };
         }
     };
 

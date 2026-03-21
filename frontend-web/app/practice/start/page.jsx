@@ -29,13 +29,14 @@ function PracticeContent() {
     const [submitting, setSubmitting] = useState(false);
     const [results, setResults] = useState([]); // Store attempt data to submit
     const [finished, setFinished] = useState(false);
-    const [timeLeft, setTimeLeft] = useState(initialTimer);
+    const [error, setError] = useState(null);
 
     // Timer logic
     const handleFinish = useCallback(async (finalResultsOverride) => {
         if (submitting || finished) return;
 
         setSubmitting(true);
+        setError(null);
         const resultsToSubmit = finalResultsOverride || results;
 
         try {
@@ -51,7 +52,7 @@ function PracticeContent() {
             sessionStorage.removeItem('guest_practice_session'); // Clear cache on finish
         } catch (error) {
             console.error('Failed to submit results:', error);
-            alert('Gagal menyimpan hasil latihan.');
+            setError(`Gagal menyimpan hasil latihan: ${error.message}`);
         } finally {
             setSubmitting(false);
         }
@@ -86,7 +87,7 @@ function PracticeContent() {
                 setQuestions(data);
             } catch (error) {
                 console.error('Failed to load questions:', error);
-                alert('Gagal memuat pertanyaan. Silakan coba lagi.');
+                setError(`Gagal memuat pertanyaan: ${error.message}`);
             } finally {
                 setLoading(false);
             }
@@ -223,6 +224,30 @@ function PracticeContent() {
             nextTimeoutRef.current = null;
         }, delay);
     };
+
+    if (error && !finished) {
+        return (
+            <div className="flex flex-col items-center justify-center min-h-[50vh] text-center px-4">
+                <div className="text-6xl mb-4">⚠️</div>
+                <h3 className="text-2xl font-bold text-gray-700 mb-2">Terjadi Kesalahan</h3>
+                <p className="text-gray-500 mb-6 max-w-md">{error}</p>
+                <div className="flex gap-4">
+                    <button
+                        onClick={() => window.location.reload()}
+                        className="bg-red-600 text-white px-6 py-2 rounded-xl font-bold hover:bg-red-700 transition-all"
+                    >
+                        Coba Lagi
+                    </button>
+                    <button
+                        onClick={() => router.push('/practice')}
+                        className="text-gray-600 font-bold hover:underline"
+                    >
+                        Kembali
+                    </button>
+                </div>
+            </div>
+        );
+    }
 
     if (loading) {
         return (

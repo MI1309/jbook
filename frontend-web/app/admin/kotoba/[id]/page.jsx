@@ -16,8 +16,7 @@ export default function KotobaForm({ params }) {
         word_type: '',
         jlpt_level: 5
     });
-    const [loading, setLoading] = useState(!isNew);
-    const [saving, setSaving] = useState(false);
+    const [error, setError] = useState(null);
 
     useEffect(() => {
         if (!isNew) {
@@ -26,6 +25,8 @@ export default function KotobaForm({ params }) {
     }, [id]);
 
     const fetchVocab = async () => {
+        setLoading(true);
+        setError(null);
         try {
             const token = Cookies.get('access_token');
             const res = await fetch(`https://imronm.pythonanywhere.com/api/admin/vocab/${id}`, {
@@ -35,10 +36,12 @@ export default function KotobaForm({ params }) {
                 const data = await res.json();
                 setFormData(data);
             } else {
-                alert('Failed to fetch data');
+                const data = await res.json().catch(() => ({}));
+                setError(data.detail || data.message || `Gagal memuat data (Status: ${res.status})`);
             }
-        } catch (error) {
-            console.error(error);
+        } catch (err) {
+            console.error(err);
+            setError("Koneksi gagal. Mohon periksa internet Anda.");
         } finally {
             setLoading(false);
         }
@@ -47,6 +50,7 @@ export default function KotobaForm({ params }) {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setSaving(true);
+        setError(null);
 
         try {
             const token = Cookies.get('access_token');
@@ -67,21 +71,35 @@ export default function KotobaForm({ params }) {
             if (res.ok) {
                 router.push('/admin/kotoba');
             } else {
-                alert('Failed to save');
+                const data = await res.json().catch(() => ({}));
+                setError(data.detail || data.message || `Gagal menyimpan (Status: ${res.status})`);
             }
-        } catch (error) {
-            console.error(error);
-            alert('Error saving data');
+        } catch (err) {
+            console.error(err);
+            setError("Koneksi gagal. Mohon periksa internet Anda.");
         } finally {
             setSaving(false);
         }
     };
 
-    if (loading) return <div>Loading...</div>;
+    if (loading) return (
+        <div className="flex justify-center items-center min-h-[50vh]">
+            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-red-600"></div>
+        </div>
+    );
 
     return (
         <div className="max-w-2xl mx-auto">
             <h1 className="text-2xl font-bold mb-6">{isNew ? 'New Vocabulary' : 'Edit Vocabulary'}</h1>
+
+            {error && (
+                <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-6 flex items-center justify-between" role="alert">
+                    <div className="flex items-center gap-2">
+                        <span className="text-xl">❌</span>
+                        <span>{error}</span>
+                    </div>
+                </div>
+            )}
 
             <form onSubmit={handleSubmit} className="bg-white p-6 shadow rounded-lg space-y-6">
                 <div>

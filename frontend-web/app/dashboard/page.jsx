@@ -11,9 +11,8 @@ export default function DashboardPage() {
     const router = useRouter();
     const [analytics, setAnalytics] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
-    const [isExporting, setIsExporting] = useState(false);
-    const [isImporting, setIsImporting] = useState(false);
     const [error, setError] = useState(null);
+    const [actionError, setActionError] = useState(null);
 
     const fetchAnalytics = async () => {
         if (!user) return;
@@ -30,6 +29,7 @@ export default function DashboardPage() {
 
     const handleExport = async () => {
         setIsExporting(true);
+        setActionError(null);
         try {
             const data = await exportPracticeData();
             const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
@@ -40,7 +40,7 @@ export default function DashboardPage() {
             link.click();
             URL.revokeObjectURL(url);
         } catch (err) {
-            alert("Gagal mengekspor data.");
+            setActionError(`Ekspor gagal: ${err.message}`);
         } finally {
             setIsExporting(false);
         }
@@ -51,6 +51,7 @@ export default function DashboardPage() {
         if (!file) return;
 
         setIsImporting(true);
+        setActionError(null);
         const reader = new FileReader();
         reader.onload = async (event) => {
             try {
@@ -59,9 +60,15 @@ export default function DashboardPage() {
                 alert("Data berhasil diimpor!");
                 fetchAnalytics(); // Refresh data
             } catch (err) {
-                alert("Gagal mengimpor data. Pastikan format file benar.");
+                console.error("Import error:", err);
+                const msg = err instanceof SyntaxError 
+                    ? "Format file tidak valid. Pastikan file adalah JSON." 
+                    : err.message;
+                setActionError(`Impor gagal: ${msg}`);
             } finally {
                 setIsImporting(false);
+                // Reset file input so same file can be selected again
+                e.target.value = '';
             }
         };
         reader.readAsText(file);
@@ -124,8 +131,19 @@ export default function DashboardPage() {
             <p className="text-gray-600 mb-8">Statistik dan analisis dari latihan kamu sejauh ini.</p>
 
             {error && (
-                <div className="bg-red-50 text-red-700 p-4 rounded-lg mb-8" role="alert">
+                <div className="bg-red-50 text-red-700 p-4 rounded-lg mb-4" role="alert">
                     {error}
+                </div>
+            )}
+
+            {actionError && (
+                <div className="bg-amber-50 border border-amber-200 text-amber-800 p-4 rounded-lg mb-4 flex items-start gap-3" role="alert">
+                    <span className="text-xl">⚠️</span>
+                    <div>
+                        <div className="font-bold">Terjadi Kendala</div>
+                        <div className="text-sm">{actionError}</div>
+                    </div>
+                    <button onClick={() => setActionError(null)} className="ml-auto text-amber-500 hover:text-amber-700">&times;</button>
                 </div>
             )}
 

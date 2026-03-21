@@ -14,6 +14,30 @@ import Cookies from 'js-cookie';
  * @property {any[]} examples
  */
 
+async function handleResponse(res, context = 'API') {
+    if (res.ok) return res.json();
+    
+    let detail = '';
+    try {
+        const data = await res.json();
+        detail = data.detail || data.message || '';
+    } catch (e) {
+        try {
+            detail = await res.text();
+        } catch (e2) {
+            detail = res.statusText;
+        }
+    }
+    
+    const errorMessage = detail ? `${detail}` : `Error ${res.status}: ${res.statusText}`;
+    console.error(`[${context}] ${res.status} ${res.url}`, detail);
+    
+    const error = new Error(errorMessage);
+    error.status = res.status;
+    error.detail = detail;
+    throw error;
+}
+
 /**
  * @param {Object} params
  * @param {number} [params.level]
@@ -34,15 +58,15 @@ export async function getKanjiList({ level, search, radical, limit = 100, page =
     const offset = (page - 1) * limit;
     queryParams.append('offset', offset);
 
-    const res = await fetch(`${API_URL}/content/kanji?${queryParams.toString()}`, {
-        cache: 'no-store', // dynamic data
-    });
-
-    if (!res.ok) {
-        throw new Error('Failed to fetch Kanji');
+    try {
+        const res = await fetch(`${API_URL}/content/kanji?${queryParams.toString()}`, {
+            cache: 'no-store',
+        });
+        return handleResponse(res, 'getKanjiList');
+    } catch (error) {
+        if (error.status) throw error;
+        throw new Error('Koneksi gagal. Mohon periksa internet Anda.');
     }
-
-    return res.json();
 }
 
 /**
@@ -50,13 +74,13 @@ export async function getKanjiList({ level, search, radical, limit = 100, page =
  * @returns {Promise<Kanji>}
  */
 export async function getKanjiDetail(id) {
-    const res = await fetch(`${API_URL}/content/kanji/${id}`);
-
-    if (!res.ok) {
-        throw new Error('Failed to fetch Kanji detail');
+    try {
+        const res = await fetch(`${API_URL}/content/kanji/${id}`);
+        return handleResponse(res, 'getKanjiDetail');
+    } catch (error) {
+        if (error.status) throw error;
+        throw new Error('Koneksi gagal. Mohon periksa internet Anda.');
     }
-
-    return res.json();
 }
 
 /**
@@ -89,15 +113,15 @@ export async function getGrammarList({ level, search, chapter, limit = 100, page
     const offset = (page - 1) * limit;
     queryParams.append('offset', offset);
 
-    const res = await fetch(`${API_URL}/content/grammar?${queryParams.toString()}`, {
-        cache: 'no-store',
-    });
-
-    if (!res.ok) {
-        throw new Error('Failed to fetch Grammar');
+    try {
+        const res = await fetch(`${API_URL}/content/grammar?${queryParams.toString()}`, {
+            cache: 'no-store',
+        });
+        return handleResponse(res, 'getGrammarList');
+    } catch (error) {
+        if (error.status) throw error;
+        throw new Error('Koneksi gagal. Mohon periksa internet Anda.');
     }
-
-    return res.json();
 }
 
 /**
@@ -105,13 +129,13 @@ export async function getGrammarList({ level, search, chapter, limit = 100, page
  * @returns {Promise<Grammar>}
  */
 export async function getGrammarDetail(id) {
-    const res = await fetch(`${API_URL}/content/grammar/${id}`);
-
-    if (!res.ok) {
-        throw new Error('Failed to fetch Grammar detail');
+    try {
+        const res = await fetch(`${API_URL}/content/grammar/${id}`);
+        return handleResponse(res, 'getGrammarDetail');
+    } catch (error) {
+        if (error.status) throw error;
+        throw new Error('Koneksi gagal. Mohon periksa internet Anda.');
     }
-
-    return res.json();
 }
 /**
  * @typedef {Object} QuizQuestion
@@ -134,15 +158,15 @@ export async function getPracticeQuestions({ limit = 10, level = null, type = 'k
     if (level) params.append('level', level);
     if (type) params.append('type', type);
 
-    const res = await fetch(`${API_URL}/learning/practice/generate?${params.toString()}`, {
-        cache: 'no-store',
-    });
-
-    if (!res.ok) {
-        throw new Error('Failed to fetch practice questions');
+    try {
+        const res = await fetch(`${API_URL}/learning/practice/generate?${params.toString()}`, {
+            cache: 'no-store',
+        });
+        return handleResponse(res, 'getPracticeQuestions');
+    } catch (error) {
+        if (error.status) throw error;
+        throw new Error('Koneksi gagal. Mohon periksa internet Anda.');
     }
-
-    return res.json();
 }
 
 /**
@@ -156,17 +180,17 @@ export async function submitPracticeResults(results) {
     };
     if (token) headers['Authorization'] = `Bearer ${token}`;
 
-    const res = await fetch(`${API_URL}/learning/practice/submit`, {
-        method: 'POST',
-        headers,
-        body: JSON.stringify({ results }),
-    });
-
-    if (!res.ok) {
-        throw new Error('Failed to submit practice results');
+    try {
+        const res = await fetch(`${API_URL}/learning/practice/submit`, {
+            method: 'POST',
+            headers,
+            body: JSON.stringify({ results }),
+        });
+        return handleResponse(res, 'submitPracticeResults');
+    } catch (error) {
+        if (error.status) throw error;
+        throw new Error('Koneksi gagal. Mohon periksa internet Anda.');
     }
-
-    return res.json();
 }
 
 /**
@@ -202,16 +226,16 @@ export async function resetPracticeProgress() {
     const headers = {};
     if (token) headers['Authorization'] = `Bearer ${token}`;
 
-    const res = await fetch(`${API_URL}/learning/practice/reset`, {
-        method: 'POST',
-        headers,
-    });
-
-    if (!res.ok) {
-        throw new Error('Failed to reset practice progress');
+    try {
+        const res = await fetch(`${API_URL}/learning/practice/reset`, {
+            method: 'POST',
+            headers,
+        });
+        return handleResponse(res, 'resetPracticeProgress');
+    } catch (error) {
+        if (error.status) throw error;
+        throw new Error('Koneksi gagal. Mohon periksa internet Anda.');
     }
-
-    return res.json();
 }
 
 /**
@@ -241,15 +265,15 @@ export async function getVocabList({ level, search, limit = 100, page = 1 } = {}
     const offset = (page - 1) * limit;
     queryParams.append('offset', offset);
 
-    const res = await fetch(`${API_URL}/content/vocab?${queryParams.toString()}`, {
-        cache: 'no-store',
-    });
-
-    if (!res.ok) {
-        throw new Error('Failed to fetch Vocab');
+    try {
+        const res = await fetch(`${API_URL}/content/vocab?${queryParams.toString()}`, {
+            cache: 'no-store',
+        });
+        return handleResponse(res, 'getVocabList');
+    } catch (error) {
+        if (error.status) throw error;
+        throw new Error('Koneksi gagal. Mohon periksa internet Anda.');
     }
-
-    return res.json();
 }
 
 /**
@@ -257,17 +281,15 @@ export async function getVocabList({ level, search, limit = 100, page = 1 } = {}
  * @returns {Promise<Vocab>}
  */
 export async function getVocabDetail(id) {
-    const res = await fetch(`${API_URL}/content/vocab/${id}`, {
-        cache: 'no-store',
-    });
-
-    if (!res.ok) {
-        const errorText = await res.text();
-        console.error(`[getVocabDetail] Fetch error: ${res.status}`, errorText);
-        throw new Error(`Failed to fetch Vocab detail: ${res.status} ${res.statusText}`);
+    try {
+        const res = await fetch(`${API_URL}/content/vocab/${id}`, {
+            cache: 'no-store',
+        });
+        return handleResponse(res, 'getVocabDetail');
+    } catch (error) {
+        if (error.status) throw error;
+        throw new Error('Koneksi gagal. Mohon periksa internet Anda.');
     }
-
-    return res.json();
 }
 
 /**
@@ -284,15 +306,15 @@ export async function getVocabDetail(id) {
  * @returns {Promise<Blog[]>}
  */
 export async function getBlogList() {
-    const res = await fetch(`${API_URL}/content/blog`, {
-        cache: 'no-store',
-    });
-
-    if (!res.ok) {
-        throw new Error('Failed to fetch blog list');
+    try {
+        const res = await fetch(`${API_URL}/content/blog`, {
+            cache: 'no-store',
+        });
+        return handleResponse(res, 'getBlogList');
+    } catch (error) {
+        if (error.status) throw error;
+        throw new Error('Koneksi gagal. Mohon periksa internet Anda.');
     }
-
-    return res.json();
 }
 
 /**
@@ -312,17 +334,17 @@ export async function getBlogDetailBySlug(slug) {
  * @returns {Promise<{message: string}>}
  */
 export async function suggestContent(payload) {
-    const res = await fetch(`${API_URL}/content/suggest`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
-    });
-
-    if (!res.ok) {
-        throw new Error('Failed to submit suggestion');
+    try {
+        const res = await fetch(`${API_URL}/content/suggest`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload),
+        });
+        return handleResponse(res, 'suggestContent');
+    } catch (error) {
+        if (error.status) throw error;
+        throw new Error('Koneksi gagal. Mohon periksa internet Anda.');
     }
-
-    return res.json();
 }
 /**
  * @returns {Promise<Object>}
@@ -332,16 +354,16 @@ export async function exportPracticeData() {
     const headers = {};
     if (token) headers['Authorization'] = `Bearer ${token}`;
 
-    const res = await fetch(`${API_URL}/learning/practice/export`, {
-        headers,
-        cache: 'no-store',
-    });
-
-    if (!res.ok) {
-        throw new Error('Failed to export practice data');
+    try {
+        const res = await fetch(`${API_URL}/learning/practice/export`, {
+            headers,
+            cache: 'no-store',
+        });
+        return handleResponse(res, 'exportPracticeData');
+    } catch (error) {
+        if (error.status) throw error;
+        throw new Error('Koneksi gagal. Mohon periksa internet Anda.');
     }
-
-    return res.json();
 }
 
 /**
@@ -355,16 +377,15 @@ export async function importPracticeData(data) {
     };
     if (token) headers['Authorization'] = `Bearer ${token}`;
 
-    const res = await fetch(`${API_URL}/learning/practice/import`, {
-        method: 'POST',
-        headers,
-        body: JSON.stringify(data),
-    });
-
-    if (!res.ok) {
-        const errorText = await res.text();
-        throw new Error(`Failed to import practice data: ${errorText}`);
+    try {
+        const res = await fetch(`${API_URL}/learning/practice/import`, {
+            method: 'POST',
+            headers,
+            body: JSON.stringify(data),
+        });
+        return handleResponse(res, 'importPracticeData');
+    } catch (error) {
+        if (error.status) throw error;
+        throw new Error('Koneksi gagal. Mohon periksa internet Anda.');
     }
-
-    return res.json();
 }
