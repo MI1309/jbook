@@ -11,6 +11,8 @@ export default function DashboardPage() {
     const router = useRouter();
     const [analytics, setAnalytics] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
+    const [isExporting, setIsExporting] = useState(false);
+    const [isImporting, setIsImporting] = useState(false);
     const [error, setError] = useState(null);
     const [actionError, setActionError] = useState(null);
 

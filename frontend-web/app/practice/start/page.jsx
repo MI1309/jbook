@@ -19,6 +19,7 @@ function PracticeContent() {
     const level = searchParams.get('level') || null; // Keep as string for multi-level (e.g. "4,5")
     const type = searchParams.get('type') || 'kanji';
     const initialTimer = searchParams.get('timer') ? parseInt(searchParams.get('timer')) * 60 : null;
+    const [timeLeft, setTimeLeft] = useState(initialTimer);
 
     const [questions, setQuestions] = useState([]);
     const [currentIndex, setCurrentIndex] = useState(0);
