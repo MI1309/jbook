@@ -28,23 +28,18 @@ export default function KotobaAdmin() {
         setLoading(true);
         try {
             const token = Cookies.get('access_token');
-            // Adding trailing slash to avoid redirect issues which might drop query params
+            console.log('Token:', token); // tambah ini
+            
             let url = 'https://imronm.pythonanywhere.com/api/admin/vocab';
-            const params = new URLSearchParams();
-            if (search) params.append('search', search);
-            if (level) params.append('level', level);
-            params.append('page', currentPage);
-            params.append('limit', 50);
+            // ... rest of code
             
-            const queryString = params.toString();
-            if (queryString) url += `?${queryString}`;
-            
-            setDebugInfo(url); // Save URL for debug
-
             const res = await fetch(url, { 
                 headers: { 'Authorization': `Bearer ${token}` },
-                cache: 'no-store' // Disable caching
+                cache: 'no-store'
             });
+            
+            console.log('Response status:', res.status); // tambah ini
+            
             if (res.ok) {
                 const data = await res.json();
                 if (Array.isArray(data)) {

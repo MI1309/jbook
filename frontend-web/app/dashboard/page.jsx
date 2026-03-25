@@ -58,8 +58,14 @@ export default function DashboardPage() {
         reader.onload = async (event) => {
             try {
                 const data = JSON.parse(event.target.result);
-                await importPracticeData(data);
-                alert("Data berhasil diimpor!");
+                const result = await importPracticeData(data);
+                if (result.skipped > 0 && result.imported === 0) {
+                    alert(`Semua data sudah ada di database (${result.skipped} data dilewati). Tidak ada data baru yang diimpor.`);
+                } else if (result.skipped > 0) {
+                    alert(`Berhasil mengimpor ${result.imported} data baru. ${result.skipped} data sudah ada (dilewati).`);
+                } else {
+                    alert(`Data berhasil diimpor! (${result.imported} data latihan)`);
+                }
                 fetchAnalytics(); // Refresh data
             } catch (err) {
                 console.error("Import error:", err);
