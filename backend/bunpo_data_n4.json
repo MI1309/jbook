@@ -1,0 +1,1902 @@
+[
+  {
+    "id": "76d8b9a1-8e2c-4b5a-9d3f-c1e0f2a4b6d7",
+    "title": "～んです (~n desu)",
+    "structure": "V/i-adj/na-adj/N Plain Form + んです (Khusus na-adj & N + な)",
+    "explanation": "Digunakan dalam bahasa lisan untuk menjelaskan alasan, latar belakang, atau mengonfirmasi informasi yang dilihat atau didengar.",
+    "chapter": 26,
+    "jlpt_level": 4,
+    "sentences": [
+      {
+        "jp": "渡辺さんは 時々 大阪弁を 使いますね。大阪に 住んでいたんですか。",
+        "id": "Ibu Watanabe terkadang menggunakan dialek Osaka ya. Apakah Anda (dulu) tinggal di Osaka?"
+      },
+      {
+        "jp": "どうして 遅れたんですか。…バスが 来なかったんです。",
+        "id": "Mengapa Anda terlambat? ...Karena bus tidak datang."
+      }
+    ]
+  },
+  {
+    "id": "16587af2-a0da-4336-924f-a9d797e32acf",
+    "title": "Vて-form いただけませんか",
+    "structure": "Kata Kerja Bentuk Te + いただけませんか",
+    "explanation": "Merupakan ungkapan permohonan bantuan atau izin yang lebih sopan daripada '~te kudasai'.",
+    "chapter": 26,
+    "jlpt_level": 4,
+    "sentences": [
+      {
+        "jp": "いい 先生を 紹介して いただけませんか。",
+        "id": "Bisakah Anda memperkenalkan guru yang baik kepada saya?"
+      }
+    ]
+  },
+  {
+    "id": "3d13d767-6883-447d-93da-12be46c8d7dd",
+    "title": "Kata Tanya + Vた-form ら いいですか",
+    "structure": "Interrogative + V-ta + ら いいですか",
+    "explanation": "Digunakan ketika pembicara meminta saran atau instruksi mengenai tindakan apa yang sebaiknya dilakukan.",
+    "chapter": 26,
+    "jlpt_level": 4,
+    "sentences": [
+      {
+        "jp": "どこで カメラを 買ったら いいですか。",
+        "id": "Sebaiknya saya membeli kamera di mana?"
+      }
+    ]
+  },
+  {
+    "id": "cc2b819a-9e12-4d11-b1e1-a2b3c4d5e6f7",
+    "title": "N (objek) は",
+    "structure": "N + は",
+    "explanation": "Partikel 'wa' digunakan untuk menonjolkan objek sebagai topik kalimat, sering kali menggantikan partikel 'o' atau 'ga'.",
+    "chapter": 26,
+    "jlpt_level": 4,
+    "sentences": [
+      {
+        "jp": "運動会に 参加しますか。…いいえ、スポーツは あまり 好きじゃないんです。",
+        "id": "Apakah Anda akan ikut serta dalam hari olahraga? ...Tidak, kalau olahraga saya tidak begitu suka."
+      }
+    ]
+  },
+  {
+    "id": "77393e41-20a2-43a2-9030-e478760e9da7",
+    "title": "Kata Kerja Potensial (Potential Verbs)",
+    "structure": "Gol I: i -> e + masu | Gol II: +rare | Gol III: dekiru/korareru",
+    "explanation": "Menunjukkan kemampuan atau kemungkinan untuk melakukan suatu tindakan.",
+    "chapter": 27,
+    "jlpt_level": 4,
+    "sentences": [
+      {
+        "jp": "かきます → かけます / たべます → たべられます",
+        "id": "Menulis → Bisa menulis / Makan → Bisa makan."
+      }
+    ]
+  },
+  {
+    "id": "88b338a2-4747-4673-a205-2dc22c7c1c4b",
+    "title": "Kalimat Kata Kerja Potensial",
+    "structure": "N が + V-Potential",
+    "explanation": "Dalam bentuk potensial, objek yang biasanya menggunakan partikel 'o' akan berubah menggunakan partikel 'ga'.",
+    "chapter": 27,
+    "jlpt_level": 4,
+    "sentences": [
+      {
+        "jp": "ミラーさんは 漢字が 読めます。",
+        "id": "Sdr. Miller bisa membaca Kanji."
+      }
+    ]
+  },
+  {
+    "id": "fac52c98-cec9-45de-ae68-136f9de1e3f2",
+    "title": "見えます (Miemasu) & 聞こえます (Kikoemasu)",
+    "structure": "N が 見えます / 聞こえます",
+    "explanation": "Digunakan untuk menyatakan penglihatan atau pendengaran yang terjadi secara alami tanpa niat khusus pembicara.",
+    "chapter": 27,
+    "jlpt_level": 4,
+    "sentences": [
+      {
+        "jp": "新幹線から 富士山が 見えます。",
+        "id": "Gunung Fuji terlihat dari Shinkansen."
+      },
+      {
+        "jp": "ラジオの 音が 聞こえます。",
+        "id": "Suara radio terdengar."
+      }
+    ]
+  },
+  {
+    "id": "aaab8b64-6aed-4cca-aff1-17daf2b0de78",
+    "title": "できます (Dekimasu)",
+    "structure": "N が できます",
+    "explanation": "Selain berarti 'bisa', dalam konteks ini 'dekimasu' berarti sesuatu telah selesai dibuat, terbentuk, atau dibangun.",
+    "chapter": 27,
+    "jlpt_level": 4,
+    "sentences": [
+      {
+        "jp": "駅の 前に 大きい スーパーが できました。",
+        "id": "Sebuah supermarket besar telah selesai dibangun di depan stasiun."
+      }
+    ]
+  },
+  {
+    "id": "e091c667-0e55-49c3-852d-dd43d2ab0c95",
+    "title": "Partikel は (Kontras)",
+    "structure": "N1 は ～ が、N2 は ～",
+    "explanation": "Digunakan untuk menonjolkan perbedaan atau perbandingan antara dua hal.",
+    "chapter": 27,
+    "jlpt_level": 4,
+    "sentences": [
+      {
+        "jp": "きのうは 山が 見えましたが、きょうは 見えません。",
+        "id": "Kemarin gunungnya terlihat, tapi hari ini tidak terlihat."
+      }
+    ]
+  },
+  {
+    "id": "ac177b58-aa73-4ed6-b0f2-6c1962decad8",
+    "title": "Partikel も",
+    "structure": "N + も",
+    "explanation": "Partikel 'mo' menggantikan 'ga' atau 'o' ketika informasi yang ditambahkan serupa, dan diletakkan setelah partikel lain (seperti 'kara').",
+    "chapter": 27,
+    "jlpt_level": 4,
+    "sentences": [
+      {
+        "jp": "わたしの 部屋から 海が 見えます。弟の 部屋からも 見えます。",
+        "id": "Laut terlihat dari kamar saya. Dari kamar adik laki-laki saya pun terlihat."
+      }
+    ]
+  },
+  {
+    "id": "d76d92b7-7552-4ccd-ace0-d0f49caf07c4",
+    "title": "しか (Shika)",
+    "structure": "N + しか + V-Negative",
+    "explanation": "Berarti 'hanya' dengan nuansa rasa tidak cukup atau keterbatasan, dan selalu diikuti bentuk negatif.",
+    "chapter": 27,
+    "jlpt_level": 4,
+    "sentences": [
+      {
+        "jp": "ローマ字しか 書けません。",
+        "id": "Saya hanya bisa menulis huruf Romawi (tidak bisa yang lain)."
+      }
+    ]
+  },
+  {
+    "id": "95eac7ce-0562-43e7-98ab-6edaf2c16553",
+    "title": "V1 ます-form ながら V2",
+    "structure": "Kata Kerja 1 (Bentuk ます tanpa ます) + ながら + Kata Kerja 2",
+    "explanation": "Menunjukkan bahwa seseorang melakukan dua tindakan secara bersamaan, dengan penekanan lebih pada tindakan kedua (V2).",
+    "chapter": 28,
+    "jlpt_level": 4,
+    "sentences": [
+      {
+        "jp": "音楽を 聞きながら 食事します。",
+        "id": "Saya makan sambil mendengarkan musik."
+      },
+      {
+        "jp": "働きながら 日本語を 勉強して います。",
+        "id": "Saya belajar bahasa Jepang sambil bekerja."
+      }
+    ]
+  },
+  {
+    "id": "5a08d449-6fca-49eb-ada6-077c2d5eef27",
+    "title": "Vて-form います (Kebiasaan)",
+    "structure": "Kata Kerja Bentuk て + います",
+    "explanation": "Digunakan untuk menyatakan tindakan yang dilakukan secara rutin atau terus-menerus sebagai kebiasaan.",
+    "chapter": 28,
+    "jlpt_level": 4,
+    "sentences": [
+      {
+        "jp": "毎朝 ジョギングを しています。",
+        "id": "Saya joging setiap pagi."
+      }
+    ]
+  },
+  {
+    "id": "c9c853c9-45da-4beb-99f2-baae763c6fb1",
+    "title": "Plain form し、～ (Mendaftarkan Hal/Alasan)",
+    "structure": "Bentuk Biasa + し、[Bentuk Biasa + し]、～",
+    "explanation": "Digunakan untuk menghubungkan kalimat yang mendeskripsikan beberapa keunggulan subjek, atau menyebutkan lebih dari satu penyebab/alasan.",
+    "chapter": 28,
+    "jlpt_level": 4,
+    "sentences": [
+      {
+        "jp": "ワット先生は 熱心だし、まじめだし、経験も あります。",
+        "id": "Pak Watt orangnya tekun, serius, dan juga berpengalaman."
+      },
+      {
+        "jp": "色も きれいだし、この 靴を 買います。",
+        "id": "Karena warnanya bagus (dan ada alasan lain juga), saya akan membeli sepatu ini."
+      }
+    ]
+  },
+  {
+    "id": "66fa843a-a258-4125-bef2-753a1b48283f",
+    "title": "それに (Selain itu)",
+    "structure": "Kalimat 1 + それに + Kalimat 2",
+    "explanation": "Digunakan untuk menambahkan fakta atau situasi serupa lainnya pada informasi sebelumnya.",
+    "chapter": 28,
+    "jlpt_level": 4,
+    "sentences": [
+      {
+        "jp": "いい 先生も 多いし、それに 家から 近いですから。",
+        "id": "Guru yang baik juga banyak, dan lagipula karena dekat dari rumah."
+      }
+    ]
+  },
+  {
+    "id": "f6d34f2e-3a53-45ae-841d-a74ca167c2bb",
+    "title": "それで (Oleh karena itu)",
+    "structure": "Kalimat 1 + それで + Kalimat 2",
+    "explanation": "Kata sambung untuk menunjukkan bahwa kalimat sebelumnya adalah penyebab atau alasan dari kalimat berikutnya.",
+    "chapter": 28,
+    "jlpt_level": 4,
+    "sentences": [
+      {
+        "jp": "この レストランは 値段も 安いし、おいしいんです。…それで 人が 多いんですね。",
+        "id": "Restoran ini harganya murah dan rasanya enak. ...Oleh karena itu banyak orang ya."
+      }
+    ]
+  },
+  {
+    "id": "c99d6524-0827-4019-bf0f-aeb25796dd23",
+    "title": "Partikel に (Tujuan)",
+    "structure": "Tempat + に + V-Gerak",
+    "explanation": "Partikel に digunakan untuk menunjukkan tujuan, menggantikan partikel へ pada kata kerja seperti 来ます dan 行きます.",
+    "chapter": 28,
+    "jlpt_level": 4,
+    "sentences": [
+      {
+        "jp": "よく この 喫茶店に 来るんですか。",
+        "id": "Apakah Anda sering datang ke kedai kopi ini?"
+      }
+    ]
+  },
+  {
+    "id": "7b9b5569-e1c7-456e-a596-3405054d6d68",
+    "title": "Vて-form います (Kondisi/Keadaan)",
+    "structure": "N が + Kata Kerja Intransitif Bentuk て + います",
+    "explanation": "Menyatakan kondisi atau keadaan yang terjadi sebagai akibat dari suatu tindakan di masa lalu yang masih tersisa saat ini.",
+    "chapter": 29,
+    "jlpt_level": 4,
+    "sentences": [
+      {
+        "jp": "窓が 割れて います。",
+        "id": "Jendelanya pecah."
+      },
+      {
+        "jp": "電気は ついて います。",
+        "id": "Lampunya menyala."
+      }
+    ]
+  },
+  {
+    "id": "8817d768-8dbb-4874-bfd9-5d97ea6b278c",
+    "title": "Vて-form しまいました／しまいます (Selesai)",
+    "structure": "Kata Kerja Bentuk て + しまいました／しまいます",
+    "explanation": "Menekankan bahwa suatu tindakan atau kejadian telah selesai dilakukan secara tuntas.",
+    "chapter": 29,
+    "jlpt_level": 4,
+    "sentences": [
+      {
+        "jp": "漢字の 宿題は もう やって しまいました。",
+        "id": "Pekerjaan rumah Kanji sudah saya selesaikan semuanya."
+      },
+      {
+        "jp": "昼ごはんまでに レポートを 書いて しまいます。",
+        "id": "Saya akan menyelesaikan penulisan laporan sebelum jam makan siang."
+      }
+    ]
+  },
+  {
+    "id": "7043dd84-3378-4450-b3f7-06c38921d89a",
+    "title": "Vて-form しまいました (Penyesalan)",
+    "structure": "Kata Kerja Bentuk て + しまいました",
+    "explanation": "Mengungkapkan perasaan malu, menyesal, atau kecewa dalam situasi yang sulit atau tidak sengaja.",
+    "chapter": 29,
+    "jlpt_level": 4,
+    "sentences": [
+      {
+        "jp": "パスポートを なくして しまいました。",
+        "id": "Paspor saya hilang (saya tidak sengaja menghilangkannya)."
+      },
+      {
+        "jp": "パソコンが 故障して しまいました。",
+        "id": "Komputer saya rusak (dan saya menyesalinya)."
+      }
+    ]
+  },
+  {
+    "id": "bc7531e7-37fb-472a-9875-532f9e4e3744",
+    "title": "ありました (Ditemukan)",
+    "structure": "N が + ありました",
+    "explanation": "Digunakan untuk menunjukkan bahwa pembicara telah menemukan sesuatu yang tadinya hilang, atau menyatakan keberadaan di masa lalu.",
+    "chapter": 29,
+    "jlpt_level": 4,
+    "sentences": [
+      {
+        "jp": "かばんが ありましたよ。",
+        "id": "Tasnya sudah ketemu lho."
+      }
+    ]
+  },
+  {
+    "id": "ee8f1870-83d3-4a37-8f12-045ff1b005a5",
+    "title": "どこかで / どこかに",
+    "structure": "Kata Tanya + Partikel",
+    "explanation": "Penggunaan partikel (へ, に, を) setelah kata ganti tidak tentu. Khusus partikel へ dan に, bisa digabungkan menjadi どこかへ/に, namun partikel を atau が sering dihilangkan (menjadi どこか).",
+    "chapter": 29,
+    "jlpt_level": 4,
+    "sentences": [
+      {
+        "jp": "どこかで 財布を なくして しまいました。",
+        "id": "Saya telah kehilangan dompet di suatu tempat."
+      },
+      {
+        "jp": "どこかに 電話が ありませんか。",
+        "id": "Apakah ada telepon umum di sekitar sini?"
+      }
+    ]
+  },
+  {
+    "id": "b0a1c2d3-e4f5-4a1b-9c2d-3e4f5a6b7c8d",
+    "title": "N1 に N2 が Vて-form あります",
+    "structure": "N1 (Tempat) に N2 (Objek) が V-te (Transitif) あります",
+    "explanation": "Menyatakan keberadaan suatu benda dalam keadaan tertentu sebagai hasil dari tindakan yang sengaja dilakukan oleh seseorang untuk tujuan tertentu.",
+    "chapter": 30,
+    "jlpt_level": 4,
+    "sentences": [
+      {
+        "jp": "机の 上に メモが 置いて あります。",
+        "id": "Di atas meja ada catatan yang diletakkan (oleh seseorang)."
+      }
+    ]
+  },
+  {
+    "id": "c2e0e47d-817b-4520-9a38-6c7539e6caa9",
+    "title": "N2 は N1 に Vて-form あります",
+    "structure": "N2 (Objek) は N1 (Tempat) に V-te (Transitif) あります",
+    "explanation": "Digunakan ketika objek (N2) dijadikan sebagai topik kalimat.",
+    "chapter": 30,
+    "jlpt_level": 4,
+    "sentences": [
+      {
+        "jp": "カレンダーに 今月の 予定が 書いて あります。",
+        "id": "Jadwal bulan ini sudah tertulis di kalender."
+      }
+    ]
+  },
+  {
+    "id": "ce7b924b-88c6-4d09-870e-d82505a4bda9",
+    "title": "Vて-form あります (Persiapan Selesai)",
+    "structure": "V-te form + あります",
+    "explanation": "Menyatakan bahwa suatu persiapan untuk tujuan tertentu telah selesai dilakukan.",
+    "chapter": 30,
+    "jlpt_level": 4,
+    "sentences": [
+      {
+        "jp": "誕生日の プレゼントは もう 買って あります。",
+        "id": "Hadiah ulang tahun sudah (saya) beli."
+      }
+    ]
+  },
+  {
+    "id": "25abbd55-8e6a-473d-b3cd-92fa83e6288e",
+    "title": "Vて-form おきます (Penyelesaian Tindakan)",
+    "structure": "V-te form + おきます",
+    "explanation": "Menyatakan penyelesaian suatu tindakan yang diperlukan sebelum waktu tertentu.",
+    "chapter": 30,
+    "jlpt_level": 4,
+    "sentences": [
+      {
+        "jp": "旅行の まえに 切符を 買っておきます。",
+        "id": "Saya akan membeli tiket sebelum perjalanan."
+      }
+    ]
+  },
+  {
+    "id": "9e9c9074-97c4-49e3-903e-c0a0bb0f90fa",
+    "title": "Vて-form おきます (Tindakan Lanjutan)",
+    "structure": "V-te form + おきます",
+    "explanation": "Menyatakan penyelesaian suatu tindakan sebagai persiapan untuk penggunaan selanjutnya atau langkah berikutnya.",
+    "chapter": 30,
+    "jlpt_level": 4,
+    "sentences": [
+      {
+        "jp": "はさみを 使ったら、元の 所に 戻して おいて ください。",
+        "id": "Kalau sudah memakai gunting, tolong kembalikan ke tempat semula."
+      }
+    ]
+  },
+  {
+    "id": "9c5ce4cb-9566-4a31-a0bb-30e6761159c4",
+    "title": "Vて-form おきます (Membiarkan Keadaan)",
+    "structure": "V-te form + おきます",
+    "explanation": "Menyatakan tindakan membiarkan suatu keadaan tetap sebagaimana adanya.",
+    "chapter": 30,
+    "jlpt_level": 4,
+    "sentences": [
+      {
+        "jp": "あした 会議が ありますから、いすは この ままに して おいて ください。",
+        "id": "Karena besok ada rapat, biarkanlah kursi-kursi ini seperti ini saja."
+      }
+    ]
+  },
+  {
+    "id": "bb024e7f-c8f9-4f01-92a7-dae46d2fec23",
+    "title": "まだ V (Affirmative)",
+    "structure": "まだ + V (Bentuk Positif)",
+    "explanation": "Berarti 'masih', menunjukkan bahwa suatu tindakan atau keadaan sedang berlanjut.",
+    "chapter": 30,
+    "jlpt_level": 4,
+    "sentences": [
+      {
+        "jp": "まだ 雨が 降って います。",
+        "id": "Masih turun hujan."
+      }
+    ]
+  },
+  {
+    "id": "fb546045-c35e-4c86-8a67-e985689e9bfa",
+    "title": "それは ～",
+    "structure": "それは + Kalimat",
+    "explanation": "Kata sambung 'sore wa' digunakan untuk merujuk pada hal yang baru saja dikatakan oleh lawan bicara.",
+    "chapter": 30,
+    "jlpt_level": 4,
+    "sentences": [
+      {
+        "jp": "ブロードウェイで ミュージカルを 見たいと 思うんですが。…それは いいですね。",
+        "id": "Saya rasa saya ingin menonton musikal di Broadway. ...Itu bagus ya."
+      }
+    ]
+  },
+  {
+    "id": "b4fd7ad0-a6d7-4891-8a8e-570e55784e27",
+    "title": "Bentuk Maksud (Volitional Form)",
+    "structure": "Gol I: i-line -> o-line + u | Gol II: masu -> you | Gol III: kuru -> koyou, suru -> shiyou",
+    "explanation": "Cara pembentukan kata kerja bentuk maksud.",
+    "chapter": 31,
+    "jlpt_level": 4,
+    "sentences": [
+      {
+        "jp": "かきます → かこう / たべます → たべよう",
+        "id": "Menulis → Akan/mari menulis / Makan → Akan/mari makan."
+      }
+    ]
+  },
+  {
+    "id": "1f13444f-f0b4-46a6-8224-28f4cfba0ca9",
+    "title": "Bentuk Maksud (Plain Style)",
+    "structure": "V-Volitional",
+    "explanation": "Digunakan sebagai bentuk biasa (plain style) dari '~mashou' untuk mengajak atau menawarkan bantuan kepada teman atau orang dekat.",
+    "chapter": 31,
+    "jlpt_level": 4,
+    "sentences": [
+      {
+        "jp": "ちょっと 休まない？ …うん、休もう。",
+        "id": "Mau istirahat sebentar? ...Ya, mari kita istirahat."
+      }
+    ]
+  },
+  {
+    "id": "3fa5d295-cb23-4e22-8984-0b829b5c4c73",
+    "title": "V-volitional form と 思って います",
+    "structure": "V-Volitional + と 思って います",
+    "explanation": "Menyatakan niat pembicara untuk melakukan sesuatu. Bentuk 'omotte imasu' menunjukkan bahwa keputusan tersebut sudah dibuat sejak lama.",
+    "chapter": 31,
+    "jlpt_level": 4,
+    "sentences": [
+      {
+        "jp": "週末は 海に 行こうと 思って います。",
+        "id": "Saya berniat pergi ke laut pada akhir pekan."
+      }
+    ]
+  },
+  {
+    "id": "527ce7de-f90d-4667-86a2-6df54291ce73",
+    "title": "V-dictionary/nai form つもりです",
+    "structure": "V-dictionary form / V-nai form + つもりです",
+    "explanation": "Menyatakan tekad atau niat yang kuat untuk melakukan (atau tidak melakukan) sesuatu. Terasa lebih pasti daripada '~to omotte imasu'.",
+    "chapter": 31,
+    "jlpt_level": 4,
+    "sentences": [
+      {
+        "jp": "あしたからは たばこを 吸わない つもりです。",
+        "id": "Mulai besok saya bertekad tidak akan merokok."
+      }
+    ]
+  },
+  {
+    "id": "b6a02e67-3215-4b8c-9baf-0016d934233d",
+    "title": "V-dictionary form/N の 予定です",
+    "structure": "V-dictionary form / N + の + 予定です",
+    "explanation": "Menyatakan rencana atau jadwal yang sudah pasti.",
+    "chapter": 31,
+    "jlpt_level": 4,
+    "sentences": [
+      {
+        "jp": "7月の 終わりに ドイツへ 出張する 予定です。",
+        "id": "Rencananya saya akan dinas ke Jerman pada akhir bulan Juli."
+      }
+    ]
+  },
+  {
+    "id": "2c9ee544-c7b5-4266-9ff7-2b0224079f75",
+    "title": "まだ Vて-form いません",
+    "structure": "まだ + V-te + いません",
+    "explanation": "Menyatakan bahwa suatu tindakan atau kejadian belum dilakukan atau belum terjadi sampai saat ini.",
+    "chapter": 31,
+    "jlpt_level": 4,
+    "sentences": [
+      {
+        "jp": "銀行は まだ 開いて いません。",
+        "id": "Bank belum buka."
+      }
+    ]
+  },
+  {
+    "id": "e4b140dd-d4aa-42a8-b980-efc0e43a44ed",
+    "title": "こ～ / そ～ (Demonstrative dalam Tulisan)",
+    "structure": "こ-series / そ-series",
+    "explanation": "Dalam bahasa tulisan, seri 'ko' merujuk pada hal yang segera disebutkan, sedangkan seri 'so' merujuk pada hal yang telah disebutkan sebelumnya.",
+    "chapter": 31,
+    "jlpt_level": 4,
+    "sentences": [
+      {
+        "jp": "東京に ない 物が 1つだけ ある。それは 美しい 自然だ。",
+        "id": "Hanya ada satu hal yang tidak ada di Tokyo. Hal itu adalah alam yang indah."
+      }
+    ]
+  },
+  {
+    "id": "9ac96e89-295c-4171-9f50-3e199e28ece2",
+    "title": "Vた-form / Vない-form ほうが いいです",
+    "structure": "Kata Kerja Bentuk た / Kata Kerja Bentuk ない + ほうが いいです",
+    "explanation": "Digunakan untuk memberikan saran atau nasihat yang kuat kepada lawan bicara.",
+    "chapter": 32,
+    "jlpt_level": 4,
+    "sentences": [
+      {
+        "jp": "毎日 運動した ほうが いいです。",
+        "id": "Sebaiknya (Anda) berolahraga setiap hari."
+      }
+    ]
+  },
+  {
+    "id": "907b6547-807c-48a7-a5a4-0aa3f60345e7",
+    "title": "～でしょう (Dugaan)",
+    "structure": "V/i-adj/na-adj/N Plain Form + でしょう (na-adj & N tanpa だ)",
+    "explanation": "Menyatakan dugaan atau kesimpulan pembicara berdasarkan informasi yang ada.",
+    "chapter": 32,
+    "jlpt_level": 4,
+    "sentences": [
+      {
+        "jp": "あしたは 雨が 降るでしょう。",
+        "id": "Besok sepertinya akan turun hujan."
+      }
+    ]
+  },
+  {
+    "id": "e8dd5a4b-f47f-4823-ade7-2a05da7b7b0d",
+    "title": "～かもしれません (Kemungkinan)",
+    "structure": "V/i-adj/na-adj/N Plain Form + かもしれません (na-adj & N tanpa だ)",
+    "explanation": "Menyatakan kemungkinan suatu kejadian (tingkat kepastian lebih rendah dari 'deshou').",
+    "chapter": 32,
+    "jlpt_level": 4,
+    "sentences": [
+      {
+        "jp": "約束の 時間に 間に 合わないかもしれません。",
+        "id": "Mungkin saya tidak akan sempat tepat waktu sesuai janji."
+      }
+    ]
+  },
+  {
+    "id": "84bc6854-c0c3-43c4-95d5-9aeaf92dcde4",
+    "title": "きっと / たぶん / もしかしたら",
+    "structure": "Adverb + Kalimat",
+    "explanation": "Kata keterangan tingkat keyakinan: 'kitto' (yakin), 'tabun' (mungkin), 'moshikashitara' (mungkin sekali).",
+    "chapter": 32,
+    "jlpt_level": 4,
+    "sentences": [
+      {
+        "jp": "ミラーさんは きっと 来ます。",
+        "id": "Sdr. Miller pasti akan datang."
+      }
+    ]
+  },
+  {
+    "id": "a83c4527-be8e-4c91-80d5-2a2daaeec53c",
+    "title": "Kata Tanya + Kata Sifat + こと",
+    "structure": "Interrogative + Adj + こと",
+    "explanation": "Pola untuk merujuk pada hal atau isi tertentu sesuai kata sifatnya.",
+    "chapter": 32,
+    "jlpt_level": 4,
+    "sentences": [
+      {
+        "jp": "何か 心配な ことが あるんですか。",
+        "id": "Apakah ada sesuatu yang sedang Anda khawatirkan?"
+      }
+    ]
+  },
+  {
+    "id": "2093fb7a-51ba-4c0a-9195-95a9074cab9b",
+    "title": "Quantifier で",
+    "structure": "Kata Bilangan + で",
+    "explanation": "Menunjukkan batas harga, waktu, atau jumlah yang diperlukan untuk mencapai suatu keadaan.",
+    "chapter": 32,
+    "jlpt_level": 4,
+    "sentences": [
+      {
+        "jp": "3万円で ビデオが 買えますか。",
+        "id": "Bisakah membeli video dengan harga 30.000 yen?"
+      }
+    ]
+  },
+  {
+    "id": "f522c916-fd7f-486a-9e17-8abf0088ec3f",
+    "title": "Bentuk Perintah & Larangan (Imperative & Prohibitive)",
+    "structure": "Perintah (Gol I: i->e, Gol II: +ro) | Larangan (V-Dict + な)",
+    "explanation": "Cara pembentukan kata kerja untuk perintah langsung atau larangan keras.",
+    "chapter": 33,
+    "jlpt_level": 4,
+    "sentences": [
+      {
+        "jp": "早く 寝ろ。 / 遅れるな。",
+        "id": "Cepat tidur! / Jangan terlambat!"
+      }
+    ]
+  },
+  {
+    "id": "4f5a180c-6c2b-4f49-9d1c-e4b01dd13cf7",
+    "title": "Vます-form なさい",
+    "structure": "Vます (tanpa masu) + なさい",
+    "explanation": "Bentuk perintah yang lebih halus, sering digunakan orang tua kepada anak atau guru kepada murid.",
+    "chapter": 33,
+    "jlpt_level": 4,
+    "sentences": [
+      {
+        "jp": "勉強しなさい。",
+        "id": "Belajarlah."
+      }
+    ]
+  },
+  {
+    "id": "e7421f09-7423-4da0-83f2-968a885d9716",
+    "title": "～と 読みます / ～と 書いて あります",
+    "structure": "Kanji/Tanda + と 読みます / 書いて あります",
+    "explanation": "Menyatakan cara membaca Kanji atau isi dari suatu tulisan di suatu tempat.",
+    "chapter": 33,
+    "jlpt_level": 4,
+    "sentences": [
+      {
+        "jp": "あそこに 「止まれ」と 書いて あります。",
+        "id": "Di sana tertulis 'Stop'."
+      }
+    ]
+  },
+  {
+    "id": "f8cd7be0-27e8-418d-ade4-bbbce0e1b09e",
+    "title": "X は Y という 意味です",
+    "structure": "X は Y という 意味です",
+    "explanation": "Digunakan untuk menjelaskan arti dari sebuah tanda, kata, atau frasa.",
+    "chapter": 33,
+    "jlpt_level": 4,
+    "sentences": [
+      {
+        "jp": "この マークは どういう 意味ですか。…洗濯機で 洗えるという意味です。",
+        "id": "Apa arti tanda ini? ...Artinya bisa dicuci dengan mesin cuci."
+      }
+    ]
+  },
+  {
+    "id": "38c1ddf2-4bdc-4d50-af34-1700534fff4d",
+    "title": "～と 言っていました",
+    "structure": "Subjek + は + Plain Form + と 言っていました",
+    "explanation": "Digunakan untuk menyampaikan pesan atau perkataan orang ketiga (lebih berfokus pada penyampaian berita daripada sekadar kutipan).",
+    "chapter": 33,
+    "jlpt_level": 4,
+    "sentences": [
+      {
+        "jp": "田中さんは 「あした 休みます」と 言っていました。",
+        "id": "Sdr. Tanaka (tadi) berkata 'Besok saya libur'."
+      }
+    ]
+  },
+  {
+    "id": "03526a16-550b-402b-87f3-f4b111f8a079",
+    "title": "～と 伝えて いただけませんか",
+    "structure": "Plain Form + と 伝えて いただけませんか",
+    "explanation": "Ungkapan sopan untuk meminta bantuan seseorang menyampaikan pesan kepada pihak lain.",
+    "chapter": 33,
+    "jlpt_level": 4,
+    "sentences": [
+      {
+        "jp": "渡辺さんに あしたの パーティーは 6時からだと 伝えて いただけませんか。",
+        "id": "Bisakah Anda tolong sampaikan kepada Sdr. Watanabe bahwa pesta besok mulai jam 6?"
+      }
+    ]
+  },
+  {
+    "id": "a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d",
+    "title": "V1 とおりに、V2 (Sesuai dengan...)",
+    "structure": "V1 dictionary form / V1 ta-form + とおりに、V2",
+    "explanation": "Menyatakan bahwa tindakan V2 dilakukan tepat sesuai dengan apa yang didengar atau dilihat (V1).",
+    "chapter": 34,
+    "jlpt_level": 4,
+    "sentences": [
+      {
+        "jp": "わたしが 言うとおりに、書いて ください。",
+        "id": "Tolong tulis sesuai dengan yang saya katakan."
+      }
+    ]
+  },
+  {
+    "id": "b2c3d4e5-f6a7-4b8c-9d0e-1f2a3b4c5d6e",
+    "title": "N のとおりに、V (Sesuai dengan...)",
+    "structure": "N + のとおりに、V",
+    "explanation": "Menyatakan bahwa suatu tindakan dilakukan sesuai dengan pola atau petunjuk yang ada pada kata benda tersebut.",
+    "chapter": 34,
+    "jlpt_level": 4,
+    "sentences": [
+      {
+        "jp": "線のとおりに、紙を 切って ください。",
+        "id": "Tolong potong kertasnya sesuai dengan (garis) ini."
+      }
+    ]
+  },
+  {
+    "id": "c3d4e5f6-a7b8-4c9d-0e1f-2a3b4c5d6e7f",
+    "title": "V1 たあとで、V2 (Setelah...)",
+    "structure": "V1 ta-form + あとで、V2",
+    "explanation": "Menunjukkan bahwa tindakan V2 dilakukan setelah tindakan V1 selesai sepenuhnya.",
+    "chapter": 34,
+    "jlpt_level": 4,
+    "sentences": [
+      {
+        "jp": "新しいのを 買った あとで、なくした 時計が 見つかりました。",
+        "id": "Setelah membeli yang baru, jam tangan yang hilang ketemu."
+      }
+    ]
+  },
+  {
+    "id": "d4e5f6a7-b8c9-4d0e-1f2a-3b4c5d6e7f8a",
+    "title": "N のあとで、V2 (Setelah...)",
+    "structure": "N + の + あとで、V2",
+    "explanation": "Menunjukkan bahwa tindakan V2 dilakukan setelah kejadian yang disebutkan pada kata benda tersebut.",
+    "chapter": 34,
+    "jlpt_level": 4,
+    "sentences": [
+      {
+        "jp": "仕事の あとで、飲みに行きませんか。",
+        "id": "Maukah pergi minum setelah pekerjaan selesai?"
+      }
+    ]
+  },
+  {
+    "id": "e5f6a7b8-c9d0-4e1f-2a3b-4c5d6e7f8a9b",
+    "title": "V1 て／ないで、V2 (Kondisi Penyerta)",
+    "structure": "V1 te-form / V1 nai-form ないで + V2",
+    "explanation": "V1 menjelaskan kondisi atau cara yang menyertai tindakan utama V2.",
+    "chapter": 34,
+    "jlpt_level": 4,
+    "sentences": [
+      {
+        "jp": "しょうゆを つけないで 食べます。",
+        "id": "Makan tanpa memakai kecap asin."
+      }
+    ]
+  },
+  {
+    "id": "f6a7b8c9-d0e1-4f2a-3b4c-5d6e7f8a9b0c",
+    "title": "V1 ないで、V2 (Sebagai Gantinya)",
+    "structure": "V1 nai-form ないで + V2",
+    "explanation": "Digunakan ketika seseorang memilih untuk melakukan V2 alih-alih melakukan V1 yang seharusnya dilakukan.",
+    "chapter": 34,
+    "jlpt_level": 4,
+    "sentences": [
+      {
+        "jp": "日曜日は どこも 行かないで、うちで ゆっくり 休みます。",
+        "id": "Hari Minggu saya tidak pergi ke mana-mana, (sebagai gantinya) saya beristirahat santai di rumah."
+      }
+    ]
+  },
+  {
+    "id": "c9a0b3e1-fd51-4107-bb74-df93524c7122",
+    "title": "Pembentukan Bentuk Pengandaian (Conditional Form)",
+    "structure": "V: e-line+ba | Adj-i: kereba | Adj-na/N: nara",
+    "explanation": "Aturan dasar perubahan kata kerja, kata sifat, dan kata benda menjadi bentuk pengandaian.",
+    "chapter": 35,
+    "jlpt_level": 4,
+    "sentences": [
+      {
+        "jp": "かきます → かけば / たべます → たべれば",
+        "id": "Menulis → Kalau menulis / Makan → Kalau makan."
+      }
+    ]
+  },
+  {
+    "id": "1505c69d-4c2c-41f6-8b72-f816d4904c6e",
+    "title": "Bentuk ～ば (Syarat Mutlak)",
+    "structure": "Kalimat 1 (Bentuk Pengandaian) ～ば、Kalimat 2",
+    "explanation": "Menjelaskan syarat yang diperlukan agar suatu kejadian di Kalimat 2 dapat terwujud.",
+    "chapter": 35,
+    "jlpt_level": 4,
+    "sentences": [
+      {
+        "jp": "ボタンを 押せば、窓が 開きます。",
+        "id": "Kalau menekan tombol, jendelanya terbuka."
+      }
+    ]
+  },
+  {
+    "id": "aae31200-b0c4-465c-8a54-d25f7bc44b08",
+    "title": "Bentuk ～ば (Penilaian atas Situasi)",
+    "structure": "Kalimat 1 (Bentuk Pengandaian) ～ば、Kalimat 2",
+    "explanation": "Digunakan untuk menyatakan pendapat atau keputusan pembicara berdasarkan situasi yang dikatakan orang lain.",
+    "chapter": 35,
+    "jlpt_level": 4,
+    "sentences": [
+      {
+        "jp": "ほかに 意見が なければ、これで 終わりましょう。",
+        "id": "Kalau tidak ada pendapat lain, mari kita akhiri sampai di sini."
+      }
+    ]
+  },
+  {
+    "id": "582d1727-0cf4-4ce8-b60d-ce58bb50b2c8",
+    "title": "N なら (Kalau N...)",
+    "structure": "N + なら",
+    "explanation": "Memberikan informasi atau saran mengenai topik yang baru saja diangkat oleh lawan bicara.",
+    "chapter": 35,
+    "jlpt_level": 4,
+    "sentences": [
+      {
+        "jp": "温泉なら、白馬が いいですよ。",
+        "id": "Kalau (maksud Anda) pemandian air panas, Hakuba bagus lho."
+      }
+    ]
+  },
+  {
+    "id": "4f53dad3-b643-4345-a319-fae597bc26b6",
+    "title": "Interrogative + V conditional + いいですか",
+    "structure": "Kata Tanya + V-conditional + いいですか",
+    "explanation": "Meminta saran mengenai tindakan terbaik. Memiliki arti yang sama dengan '~tara ii desu ka'.",
+    "chapter": 35,
+    "jlpt_level": 4,
+    "sentences": [
+      {
+        "jp": "本を 借りたいんですが、どう すれば いいですか。",
+        "id": "Saya ingin meminjam buku, sebaiknya bagaimana saya melakukannya?"
+      }
+    ]
+  },
+  {
+    "id": "cfab4f90-4826-4c86-821f-e5ff140dd5aa",
+    "title": "～ば ～ほど (Semakin... semakin...)",
+    "structure": "V-ba V-dict / Adj-ba Adj-plain + ほど",
+    "explanation": "Menyatakan perubahan tingkat yang berbanding lurus antara bagian awal dan akhir kalimat.",
+    "chapter": 35,
+    "jlpt_level": 4,
+    "sentences": [
+      {
+        "jp": "ビートルズの 音楽は 聞けば 聞くほど 好きに なります。",
+        "id": "Musik The Beatles kalau didengarkan, semakin didengar semakin menjadi suka."
+      }
+    ]
+  },
+  {
+    "id": "a6b1c2d3-e4f5-4a7b-8c9d-0e1f2a3b4c5d",
+    "title": "V1 dictionary/nai-form ように、V2",
+    "structure": "Kata Kerja 1 (Bentuk Kamus / Bentuk ない) + ように、Kata Kerja 2",
+    "explanation": "V1 menunjukkan tujuan (biasanya kata kerja non-volisional seperti potensial, arimasu, atau bentuk nai), sementara V2 menunjukkan tindakan volisional untuk mendekati tujuan tersebut.",
+    "chapter": 36,
+    "jlpt_level": 4,
+    "sentences": [
+      {
+        "jp": "早く 泳げるように、毎日 練習して います。",
+        "id": "Saya berlatih setiap hari agar bisa berenang dengan cepat."
+      },
+      {
+        "jp": "忘れないように、メモして ください。",
+        "id": "Tolong catatlah supaya tidak lupa."
+      }
+    ]
+  },
+  {
+    "id": "b7c2d3e4-f5a6-4b8c-9d0e-1f2a3b4c5d6e",
+    "title": "V dictionary form ように なります / なくなります",
+    "structure": "Kata Kerja (Bentuk Kamus) + ように なります / Kata Kerja (Bentuk ない tanpa い) + なくなります",
+    "explanation": "Menunjukkan adanya perubahan kondisi dari tidak bisa menjadi bisa, atau perubahan keadaan/kebiasaan seiring berjalannya waktu.",
+    "chapter": 36,
+    "jlpt_level": 4,
+    "sentences": [
+      {
+        "jp": "毎日 練習すれば、泳げるように なります。",
+        "id": "Kalau berlatih setiap hari, Anda akan (menjadi) bisa berenang."
+      },
+      {
+        "jp": "年を 取ると、小さい 字が 読めなく なります。",
+        "id": "Seiring bertambahnya usia, (seseorang) menjadi tidak bisa membaca huruf kecil."
+      }
+    ]
+  },
+  {
+    "id": "c8d3e4f5-a7b8-4c9d-0e1f-2a3b4c5d6e7f",
+    "title": "V dictionary/nai-form ように します",
+    "structure": "Kata Kerja (Bentuk Kamus / Bentuk ない) + ように します",
+    "explanation": "Menyatakan bahwa seseorang berusaha secara sadar dan rutin untuk melakukan (atau tidak melakukan) sesuatu sebagai sebuah kebiasaan.",
+    "chapter": 36,
+    "jlpt_level": 4,
+    "sentences": [
+      {
+        "jp": "毎日 運動して、何でも 食べるように して います。",
+        "id": "Saya berusaha berolahraga setiap hari dan makan apa saja."
+      },
+      {
+        "jp": "もっと 野菜を 食べるように して ください。",
+        "id": "Tolong berusahalah untuk makan lebih banyak sayuran."
+      }
+    ]
+  },
+  {
+    "id": "d9e4f5a6-b8c9-4d0e-1f2a-3b4c5d6e7f8a",
+    "title": "～とか",
+    "structure": "N1 とか、N2 とか",
+    "explanation": "Digunakan untuk memberikan contoh beberapa hal dalam daftar yang tidak terbatas. Lebih sering digunakan dalam bahasa lisan dibandingkan partikel 'ya'.",
+    "chapter": 36,
+    "jlpt_level": 4,
+    "sentences": [
+      {
+        "jp": "どんな スポーツを して いますか。…そうですね。テニスとか 水泳とか……。",
+        "id": "Olahraga apa yang Anda lakukan? ...Mari kita lihat. Seperti tenis, renang, dan sebagainya."
+      }
+    ]
+  },
+  {
+    "id": "e0f5a6b7-c9d0-4e1f-2a3b-4c5d6e7f8a9b",
+    "title": "Kata Kerja Bentuk Pasif (Passive Verbs)",
+    "structure": "Gol I: i-line -> a-line + reru | Gol II: + rareru | Gol III: korareru, sareru",
+    "explanation": "Cara pembentukan kata kerja pasif. Seluruh kata kerja pasif merupakan Golongan II.",
+    "chapter": 37,
+    "jlpt_level": 4,
+    "sentences": [
+      {
+        "jp": "かきます → かかれます / たべます → たべられます",
+        "id": "Menulis → Ditulis / Makan → Dimakan."
+      }
+    ]
+  },
+  {
+    "id": "f1a6b7c8-d0e1-4f2a-3b4c-5d6e7f8a9b0c",
+    "title": "N1 (person1) は N2 (person2) に V-passive",
+    "structure": "N1 (Subjek/Penerima) は N2 (Pelaku) に + V-Passive",
+    "explanation": "Digunakan ketika tindakan dari satu orang diarahkan ke orang lain, dan orang yang menerima tindakan tersebut dijadikan topik kalimat.",
+    "chapter": 37,
+    "jlpt_level": 4,
+    "sentences": [
+      {
+        "jp": "わたしは 先生に ほめられました。",
+        "id": "Saya dipuji oleh guru."
+      },
+      {
+        "jp": "わたしは 犬に かまれました。",
+        "id": "Saya digigit oleh anjing."
+      }
+    ]
+  },
+  {
+    "id": "1d961549-4fc8-475c-a80c-95b7b4d8051e",
+    "title": "N1 (person1) は N2 (person2) に N3 を V-passive",
+    "structure": "N1 は N2 に N3 (Benda) を + V-Passive",
+    "explanation": "Digunakan saat seseorang (N2) melakukan tindakan yang merugikan atau mengganggu terhadap benda milik orang lain (N1).",
+    "chapter": 37,
+    "jlpt_level": 4,
+    "sentences": [
+      {
+        "jp": "わたしは 弟に パソコンを 壊されました。",
+        "id": "Komputer saya dirusak oleh adik laki-laki saya."
+      },
+      {
+        "jp": "わたしは 犬に 手を かまれました。",
+        "id": "Tangan saya digigit oleh anjing."
+      }
+    ]
+  },
+  {
+    "id": "ca84b6c3-bb90-42c7-8c03-5ad555035da0",
+    "title": "N (thing) が / は V-passive",
+    "structure": "N (Benda/Kejadian) が / は + V-Passive",
+    "explanation": "Digunakan saat tidak perlu menyebutkan pelaku tindakan secara spesifik, biasanya untuk fakta sejarah, berita, atau ekspor/impor.",
+    "chapter": 37,
+    "jlpt_level": 4,
+    "sentences": [
+      {
+        "jp": "日本の 車は 世界中へ 輸出されて います。",
+        "id": "Mobil Jepang diekspor ke seluruh dunia."
+      },
+      {
+        "jp": "会議は 神戸で 開かれました。",
+        "id": "Rapat telah diselenggarakan di Kobe."
+      }
+    ]
+  },
+  {
+    "id": "7a3ef047-1a4f-4abf-b59b-dc3dcf0f197b",
+    "title": "N1 は N2 (person) によって V-passive",
+    "structure": "N1 は N2 に よって + V-Passive",
+    "explanation": "Digunakan untuk menyatakan siapa pencipta, penemu, atau perancang suatu benda atau karya.",
+    "chapter": 37,
+    "jlpt_level": 4,
+    "sentences": [
+      {
+        "jp": "「源氏物語」は 紫式部に よって 書かれました。",
+        "id": "'Kisah Genji' ditulis oleh Murasaki Shikibu."
+      },
+      {
+        "jp": "電話は ベルに よって 発明されました。",
+        "id": "Telepon ditemukan oleh Bell."
+      }
+    ]
+  },
+  {
+    "id": "a79cc214-b045-4e40-b710-675afaba2794",
+    "title": "N から / N で つくります",
+    "structure": "Bahan Baku + から / Bahan Dasar + で + つくります",
+    "explanation": "'Kara' digunakan jika bahan aslinya sudah tidak terlihat bentuknya (perubahan kimia), sedangkan 'de' digunakan jika bahan aslinya masih terlihat jelas (perubahan fisik).",
+    "chapter": 37,
+    "jlpt_level": 4,
+    "sentences": [
+      {
+        "jp": "ビールは 麦から 造られます。",
+        "id": "Bir dibuat dari gandum."
+      },
+      {
+        "jp": "昔 日本の 家は 木で 造られました。",
+        "id": "Dulu rumah di Jepang dibuat dari kayu."
+      }
+    ]
+  },
+  {
+    "id": "1a2b3c4d-5e6f-4a7b-8c9d-0e1f2a3b4c5d",
+    "title": "V plain form の (Nominalisasi)",
+    "structure": "V-Plain Form + の",
+    "explanation": "Partikel 'no' ditambahkan pada bentuk biasa kata kerja untuk mengubah seluruh frasa tersebut menjadi kata benda.",
+    "chapter": 38,
+    "jlpt_level": 4,
+    "sentences": [
+      {
+        "jp": "テニスをするのはおもしろいです。",
+        "id": "Bermain tenis itu menyenangkan."
+      }
+    ]
+  },
+  {
+    "id": "2b3c4d5e-f6a7-4b8c-9d0e-1f2a3b4c5d6e",
+    "title": "V dictionary form のは adjective です",
+    "structure": "V-dict + のは + Adjective + です",
+    "explanation": "Digunakan untuk memberikan deskripsi atau penilaian terhadap suatu tindakan yang dijadikan subjek kalimat.",
+    "chapter": 38,
+    "jlpt_level": 4,
+    "sentences": [
+      {
+        "jp": "テニスを見るのはおもしろいです。",
+        "id": "Menonton tenis itu menyenangkan."
+      }
+    ]
+  },
+  {
+    "id": "3c4d5e6f-a7b8-4c9d-0e1f-1f2a3b4c5d6e",
+    "title": "V dictionary form のが adjective です",
+    "structure": "V-dict + のが + Adjective + です",
+    "explanation": "Digunakan untuk menyatakan kesukaan, ketidaksukaan, kemampuan, atau kemahiran terhadap suatu aktivitas.",
+    "chapter": 38,
+    "jlpt_level": 4,
+    "sentences": [
+      {
+        "jp": "わたしは 花を 育てるのが 好きです。",
+        "id": "Saya suka menanam bunga."
+      }
+    ]
+  },
+  {
+    "id": "517a9f62-a232-4437-aad3-563574da0fd6",
+    "title": "V dictionary form のを 忘れました",
+    "structure": "V-dict + のを + 忘れました",
+    "explanation": "Digunakan untuk menyatakan bahwa seseorang lupa melakukan suatu tindakan tertentu.",
+    "chapter": 38,
+    "jlpt_level": 4,
+    "sentences": [
+      {
+        "jp": "かぎを かけるのを 忘れました。",
+        "id": "Saya lupa mengunci pintu."
+      }
+    ]
+  },
+  {
+    "id": "a48cb1ba-e4e7-4eb8-a16e-a3743a031a66",
+    "title": "V plain form のを 知っていますか",
+    "structure": "V-plain + のを + 知っていますか",
+    "explanation": "Digunakan untuk menanyakan apakah lawan bicara mengetahui suatu informasi atau fakta yang dijelaskan dalam klausa tersebut.",
+    "chapter": 38,
+    "jlpt_level": 4,
+    "sentences": [
+      {
+        "jp": "鈴木さんが 来月 結婚するのを 知っていますか。",
+        "id": "Apakah Anda tahu bahwa Sdr. Suzuki akan menikah bulan depan?"
+      }
+    ]
+  },
+  {
+    "id": "45e8c1da-836c-4875-9e89-e64e86a3c28d",
+    "title": "Plain form のは N です",
+    "structure": "V/i-adj/na-adj/N Plain Form + のは + N + です",
+    "explanation": "Struktur untuk memfokuskan informasi pada kata benda (N) di akhir kalimat. Catatan: Untuk na-adj dan N, gunakan 'na' sebelum 'no wa'.",
+    "chapter": 38,
+    "jlpt_level": 4,
+    "sentences": [
+      {
+        "jp": "娘が 生まれたのは 北海道の 小さな 町です。",
+        "id": "Tempat di mana anak perempuan saya lahir adalah sebuah kota kecil di Hokkaido."
+      }
+    ]
+  },
+  {
+    "id": "c38bf30b-a0a4-4818-8d63-471b5438ae45",
+    "title": "～とき (mo/ya/no/ni)",
+    "structure": "V-plain + とき + Partikel",
+    "explanation": "Berbagai partikel dapat ditambahkan setelah 'toki' (ketika) karena kata tersebut berfungsi sebagai kata benda.",
+    "chapter": 38,
+    "jlpt_level": 4,
+    "sentences": [
+      {
+        "jp": "疲れた ときや 寂しい とき、田舎を 思い出す。",
+        "id": "Saat lelah atau saat merasa kesepian, saya teringat kampung halaman."
+      }
+    ]
+  },
+  {
+    "id": "3e99541a-7ad5-4f8e-81af-d978ed8ceb51",
+    "title": "Vて / Vなくて / i-adj-くて / na-adj-で (Sebab-Akibat)",
+    "structure": "Bentuk て / Bentuk ない (なくて) / Kata Sifat",
+    "explanation": "Menyatakan penyebab atau alasan yang menghasilkan konsekuensi di bagian akhir kalimat (biasanya perasaan, kata kerja potensial, atau situasi masa lalu).",
+    "chapter": 39,
+    "jlpt_level": 4,
+    "sentences": [
+      {
+        "jp": "ニュースを 聞いて、びっくりしました。",
+        "id": "Saya terkejut mendengar berita tersebut."
+      },
+      {
+        "jp": "土曜日は 都合が 悪くて、行けません。",
+        "id": "Karena hari Sabtu waktunya tidak cocok, saya tidak bisa pergi."
+      }
+    ]
+  },
+  {
+    "id": "3b05c04a-8fc7-42ad-be91-1be87ae9d9c8",
+    "title": "N で (Penyebab/Alasan)",
+    "structure": "N + で",
+    "explanation": "Menunjukkan penyebab atau alasan yang berupa fenomena alam atau kejadian tertentu (seperti gempa bumi, sakit, kecelakaan).",
+    "chapter": 39,
+    "jlpt_level": 4,
+    "sentences": [
+      {
+        "jp": "地震で ビルが 倒れました。",
+        "id": "Karena gempa bumi, gedungnya roboh."
+      }
+    ]
+  },
+  {
+    "id": "ca694178-ac57-47a6-bd9f-fef67e5abf7f",
+    "title": "～ので (Karena - Objektif/Halus)",
+    "structure": "V/i-adj/na-adj/N Plain Form + ので (na-adj & N + な)",
+    "explanation": "Menyatakan alasan secara objektif dan lebih halus daripada '~kara'. Sering digunakan untuk meminta izin atau memberikan alasan kepada atasan.",
+    "chapter": 39,
+    "jlpt_level": 4,
+    "sentences": [
+      {
+        "jp": "日本語が わからないので、英語で 話して いただけませんか。",
+        "id": "Karena saya tidak mengerti bahasa Jepang, bisakah Anda berbicara dalam bahasa Inggris?"
+      }
+    ]
+  },
+  {
+    "id": "340a19dc-a5dd-43e2-9502-35d31255a35f",
+    "title": "途中で (Di tengah-tengah)",
+    "structure": "V-dict form / N の + 途中で",
+    "explanation": "Digunakan untuk menyatakan suatu kejadian yang terjadi saat suatu tindakan atau kegiatan sedang berlangsung.",
+    "chapter": 39,
+    "jlpt_level": 4,
+    "sentences": [
+      {
+        "jp": "マラソンの 途中で 気分が 悪く なりました。",
+        "id": "Di tengah-tengah lari maraton, saya merasa tidak enak badan."
+      }
+    ]
+  },
+  {
+    "id": "a0b1c2d3-e4f5-5a6b-7c8d-9e0f1a2b3c4d",
+    "title": "Interrogative + Plain Form + か",
+    "structure": "Kata Tanya + V/i-adj/na-adj/N Plain Form + か",
+    "explanation": "Sebuah kalimat tanya yang mengandung kata tanya digunakan sebagai bagian (komponen) dari kalimat yang lebih panjang.",
+    "chapter": 40,
+    "jlpt_level": 4,
+    "sentences": [
+      {
+        "jp": "JL107便は 何時に 到着するか、調べて ください。",
+        "id": "Tolong periksa jam berapa pesawat JL107 akan tiba."
+      }
+    ]
+  },
+  {
+    "id": "b72f9ef0-f132-4e6e-8456-055c847b5922",
+    "title": "Plain Form + か どうか",
+    "structure": "V/i-adj/na-adj/N Plain Form + か どうか",
+    "explanation": "Sebuah kalimat tanya yang tidak mengandung kata tanya (pertanyaan ya/tidak) digunakan sebagai bagian dari kalimat lain. Khusus untuk na-adj dan N, akhiran 'da' dihilangkan.",
+    "chapter": 40,
+    "jlpt_level": 4,
+    "sentences": [
+      {
+        "jp": "忘年会に 出席するか どうか、20日までに 返事を ください。",
+        "id": "Tolong beri jawaban sebelum tanggal 20 apakah Anda akan hadir di pesta akhir tahun atau tidak."
+      }
+    ]
+  },
+  {
+    "id": "bcad6723-75a1-47d9-824a-c28b9937c1c2",
+    "title": "Vて-form みます",
+    "structure": "Kata Kerja Bentuk て + みます",
+    "explanation": "Digunakan untuk menunjukkan bahwa tindakan tersebut dilakukan sebagai percobaan atau uji coba.",
+    "chapter": 40,
+    "jlpt_level": 4,
+    "sentences": [
+      {
+        "jp": "もう 一度 考えて みます。",
+        "id": "Saya akan mencoba memikirkannya sekali lagi."
+      },
+      {
+        "jp": "この ズボンを はいて みても いいですか。",
+        "id": "Bolehkah saya mencoba memakai celana ini?"
+      }
+    ]
+  },
+  {
+    "id": "e5346bce-f4c5-436b-bc73-3d84fdf1e2ed",
+    "title": "い-adj (~い) → ~さ",
+    "structure": "Kata Sifat-i (tanpa 'i') + さ",
+    "explanation": "Mengubah kata sifat menjadi kata benda untuk menyatakan derajat atau ukuran.",
+    "chapter": 40,
+    "jlpt_level": 4,
+    "sentences": [
+      {
+        "jp": "新しい 橋の 長さは 3,911メートルです。",
+        "id": "Panjang jembatan yang baru adalah 3.911 meter."
+      }
+    ]
+  },
+  {
+    "id": "503c444c-f0d6-4844-8996-f97b5b029f5a",
+    "title": "～でしょうか",
+    "structure": "Kalimat + でしょうか",
+    "explanation": "Bentuk tanya yang lebih sopan dan halus untuk menanyakan situasi atau keadaan seseorang/sesuatu.",
+    "chapter": 40,
+    "jlpt_level": 4,
+    "sentences": [
+      {
+        "jp": "ハンスは 学校で どうでしょうか。",
+        "id": "Bagaimana kabar Hans di sekolah?"
+      }
+    ]
+  },
+  {
+    "id": "a22a6c1a-a164-4249-a76d-175f034a0f56",
+    "title": "Pemberian dan Penerimaan Benda (Keigo)",
+    "structure": "やrimasu / いただきます / くださいます",
+    "explanation": "Penggunaan variasi kata 'memberi/menerima' berdasarkan status sosial: 'yarimasu' (kepada bawahan/hewan), 'itadakimasu' (menerima dari atasan), 'kudasaimasu' (atasan memberi kepada saya).",
+    "chapter": 41,
+    "jlpt_level": 4,
+    "sentences": [
+      {
+        "jp": "わたしは 部長に お土産を いただきました。",
+        "id": "Saya menerima oleh-oleh dari manajer departemen."
+      },
+      {
+        "jp": "部長が 娘に お土産を くださいました。",
+        "id": "Manajer departemen memberikan oleh-oleh kepada anak perempuan saya."
+      }
+    ]
+  },
+  {
+    "id": "50d3c15e-3aa3-4375-b23f-3bdabf958cbe",
+    "title": "Pemberian dan Penerimaan Tindakan (Keigo)",
+    "structure": "V-te + やrimasu / いただきます / くださいます",
+    "explanation": "Menyatakan tindakan yang dilakukan untuk orang lain atau bantuan yang diterima dengan tingkat kesopanan yang sesuai.",
+    "chapter": 41,
+    "jlpt_level": 4,
+    "sentences": [
+      {
+        "jp": "わたしは 課長に 手紙の まちがいを 直して いただきました。",
+        "id": "Saya meminta manajer bagian membetulkan kesalahan pada surat saya."
+      },
+      {
+        "jp": "部長の 奥さんは [わたしに] お茶を 教えて くださいました。",
+        "id": "Istri manajer departemen telah mengajari saya upacara minum teh."
+      }
+    ]
+  },
+  {
+    "id": "fcd008b4-f5e8-4660-8254-6baf067d1d6a",
+    "title": "Vて-form くださいませんか",
+    "structure": "Kata Kerja Bentuk て + くださいませんか",
+    "explanation": "Ungkapan permohonan yang sopan. Lebih halus dari '~te kudasai', meskipun sedikit kurang formal dibanding '~te itadakemasen ka'.",
+    "chapter": 41,
+    "jlpt_level": 4,
+    "sentences": [
+      {
+        "jp": "コピー機の 使い方を 教えて くださいませんか。",
+        "id": "Bisakah Anda tolong ajarkan cara menggunakan mesin fotokopi ini?"
+      }
+    ]
+  },
+  {
+    "id": "5689bf0d-7eec-480f-9af1-beee4b1d37a1",
+    "title": "N に V (Sebagai tanda/kenang-kenangan)",
+    "structure": "N + に + Kata Kerja",
+    "explanation": "Partikel 'ni' dalam konteks ini berarti 'sebagai tanda' atau 'sebagai kenang-kenangan' atas suatu peristiwa.",
+    "chapter": 41,
+    "jlpt_level": 4,
+    "sentences": [
+      {
+        "jp": "田中さんが 結婚の お祝いに この お皿を くださいました。",
+        "id": "Sdr. Tanaka memberikan piring ini sebagai hadiah pernikahan."
+      }
+    ]
+  },
+  {
+    "id": "a42b1c2d-e4f5-5a6b-7c8d-9e0f1a2b3c4d",
+    "title": "～ために (Untuk/Demi)",
+    "structure": "V-dictionary form / N の + ために",
+    "explanation": "Pola kalimat ini digunakan untuk menunjukkan suatu tujuan yang ingin dicapai secara sengaja.",
+    "chapter": 42,
+    "jlpt_level": 4,
+    "sentences": [
+      {
+        "jp": "自分の 店を 持つ ために、貯金して います。",
+        "id": "Saya menabung uang untuk memiliki toko sendiri."
+      },
+      {
+        "jp": "家族の ために、うちを 建てます。",
+        "id": "Saya akan membangun rumah demi keluarga."
+      }
+    ]
+  },
+  {
+    "id": "81698928-7c3c-4a8b-9126-01b61a501d08",
+    "title": "～のに (Untuk kegunaan/tujuan)",
+    "structure": "V-dictionary form のに / N に + (tsukaimasu/benri desu/yaku ni tachimasu, dll)",
+    "explanation": "Digunakan untuk menunjukkan kegunaan atau tujuan suatu benda, serta waktu atau biaya yang diperlukan untuk suatu hal.",
+    "chapter": 42,
+    "jlpt_level": 4,
+    "sentences": [
+      {
+        "jp": "この はさみは 花を 切るのに 使います。",
+        "id": "Gunting ini digunakan untuk memotong bunga."
+      },
+      {
+        "jp": "電話番号を 調べるのに 時間が かかりました。",
+        "id": "Butuh waktu banyak untuk mencari nomor telepon."
+      }
+    ]
+  },
+  {
+    "id": "6ca18fa3-43f6-4d4c-9e36-2d212102884e",
+    "title": "Quantifier + は (Minimum)",
+    "structure": "Kata Bilangan + は",
+    "explanation": "Partikel 'wa' setelah kata bilangan menunjukkan jumlah minimum yang diperkirakan atau diperlukan oleh pembicara.",
+    "chapter": 42,
+    "jlpt_level": 4,
+    "sentences": [
+      {
+        "jp": "日本では 結婚式を するのに 200万円は 要ります。",
+        "id": "Di Jepang, setidaknya dibutuhkan 2 juta yen untuk melangsungkan pernikahan."
+      }
+    ]
+  },
+  {
+    "id": "1e40940c-6cab-468f-976b-1b1a2da0beb1",
+    "title": "Quantifier + も (Penekanan Jumlah Banyak)",
+    "structure": "Kata Bilangan + も",
+    "explanation": "Partikel 'mo' setelah kata bilangan menunjukkan bahwa pembicara merasa jumlah tersebut sangatlah banyak.",
+    "chapter": 42,
+    "jlpt_level": 4,
+    "sentences": [
+      {
+        "jp": "駅まで 行くのに 2時間も かかりました。",
+        "id": "Butuh waktu sebanyak dua jam untuk sampai ke stasiun."
+      }
+    ]
+  },
+  {
+    "id": "3eb9f578-7464-401f-8749-1f89fdf1829c",
+    "title": "～そうです (Kelihatannya/Tampaknya)",
+    "structure": "V-masu form / i-adj (tanpa i) / na-adj (tanpa na) + そうです",
+    "explanation": "Menyatakan dugaan berdasarkan pengamatan visual langsung terhadap suatu benda atau situasi.",
+    "chapter": 43,
+    "jlpt_level": 4,
+    "sentences": [
+      {
+        "jp": "今にも 雨が 降りそうです。",
+        "id": "Kelihatannya akan turun hujan kapan saja."
+      }
+    ]
+  },
+  {
+    "id": "74240f21-4ebb-4ec6-acec-1fa7875d92d7",
+    "title": "Vて-form 来ます (Pergi untuk... lalu kembali)",
+    "structure": "Kata Kerja Bentuk て + 来ます",
+    "explanation": "Menunjukkan tindakan pergi ke suatu tempat untuk melakukan aktivitas tertentu, lalu kembali ke titik asal.",
+    "chapter": 43,
+    "jlpt_level": 4,
+    "sentences": [
+      {
+        "jp": "ちょっと たばこを 買って 来ます。",
+        "id": "Saya pergi sebentar untuk membeli rokok (dan akan kembali)."
+      }
+    ]
+  },
+  {
+    "id": "cf3de860-8eb6-498e-bb04-720078d839f7",
+    "title": "Vて-form くれませんか",
+    "structure": "Kata Kerja Bentuk て + くれませんか",
+    "explanation": "Bentuk permohonan sopan yang setingkat dengan '~te kudasai' namun terasa lebih halus.",
+    "chapter": 43,
+    "jlpt_level": 4,
+    "sentences": [
+      {
+        "jp": "すみませんが、ちょっと コピーして くれませんか。",
+        "id": "Maaf, bisakah Anda tolong buatkan fotokopi sebentar?"
+      }
+    ]
+  },
+  {
+    "id": "7a8b9c0d-e1f2-4a3b-b4c5-d6e7f8a9b0c1",
+    "title": "～すぎます (Terlalu/Berlebihan)",
+    "structure": "Vます-form / i-adj (tanpa い) / na-adj (tanpa な) + すぎます",
+    "explanation": "Menunjukkan bahwa derajat suatu tindakan atau keadaan adalah berlebihan atau melampaui batas normal.",
+    "chapter": 44,
+    "jlpt_level": 4,
+    "sentences": [
+      {
+        "jp": "ゆうべ お酒を 飲みすぎました。",
+        "id": "Tadi malam saya terlalu banyak minum sake."
+      },
+      {
+        "jp": "この セーターは 大きすぎます。",
+        "id": "Sweter ini terlalu besar."
+      }
+    ]
+  },
+  {
+    "id": "e40d5ca2-b10f-45de-b4a0-57e6a95acb17",
+    "title": "～やすいです / ～にくいです",
+    "structure": "Vます-form + やすいです / にくいです",
+    "explanation": "Digunakan untuk menyatakan kemudahan atau kesulitan dalam menangani sesuatu, atau kecenderungan sesuatu untuk berubah menjadi keadaan tertentu.",
+    "chapter": 44,
+    "jlpt_level": 4,
+    "sentences": [
+      {
+        "jp": "この パソコンは 使いやすいです。",
+        "id": "Komputer ini mudah digunakan."
+      },
+      {
+        "jp": "東京は 住みにくいです。",
+        "id": "Tokyo sulit untuk ditinggali."
+      }
+    ]
+  },
+  {
+    "id": "20db3f44-9d70-4733-80cd-e6b395959e17",
+    "title": "～く / ～に します (Membuat menjadi...)",
+    "structure": "i-adj (～く) / na-adj (～に) / N (に) + します",
+    "explanation": "Menunjukkan bahwa seseorang secara sengaja mengubah atau membuat suatu benda menjadi keadaan tertentu.",
+    "chapter": 44,
+    "jlpt_level": 4,
+    "sentences": [
+      {
+        "jp": "音を 大きく します。",
+        "id": "Saya akan mengeraskan (memperbesar) suaranya."
+      },
+      {
+        "jp": "部屋を きれいに します。",
+        "id": "Saya akan membersihkan (membuat bersih) kamarnya."
+      }
+    ]
+  },
+  {
+    "id": "13f8eb7f-b175-420d-9fb9-6bb910441649",
+    "title": "N に します (Memilih/Memutuskan)",
+    "structure": "N + に します",
+    "explanation": "Digunakan untuk menyatakan suatu pilihan atau keputusan dalam sebuah situasi.",
+    "chapter": 44,
+    "jlpt_level": 4,
+    "sentences": [
+      {
+        "jp": "晩ごはんは すしに します。",
+        "id": "Untuk makan malam saya pilih (memutuskan makan) sushi."
+      },
+      {
+        "jp": "会議は あしたに します。",
+        "id": "Rapatnya diputuskan besok saja."
+      }
+    ]
+  },
+  {
+    "id": "123fd062-f84b-4dfc-995a-d7abf93ca11a",
+    "title": "Kata Sifat sebagai Keterangan (Adverbs)",
+    "structure": "i-adj (～く) / na-adj (～に) + Verb",
+    "explanation": "Mengubah kata sifat menjadi kata keterangan untuk menerangkan bagaimana suatu tindakan dilakukan.",
+    "chapter": 44,
+    "jlpt_level": 4,
+    "sentences": [
+      {
+        "jp": "野菜を 細かく 切って ください。",
+        "id": "Tolong potong sayurannya sampai halus."
+      },
+      {
+        "jp": "電気や 水は 大切に 使いましょう。",
+        "id": "Mari kita gunakan listrik dan air dengan hemat (menghargainya)."
+      }
+    ]
+  },
+  {
+    "id": "2565bda9-4d42-4f16-9439-79c1d65c7435",
+    "title": "～場合は (Dalam hal/Seandainya)",
+    "structure": "V plain / i-adj plain / na-adj plain (～な) / N (～の) + 場合は",
+    "explanation": "Digunakan untuk membicarakan situasi hipotetis dan bagaimana konsekuensi atau cara menanganinya.",
+    "chapter": 45,
+    "jlpt_level": 4,
+    "sentences": [
+      {
+        "jp": "会議に 間に 合わない 場合は、連絡して ください。",
+        "id": "Seandainya Anda tidak sempat ikut rapat tepat waktu, tolong hubungi kami."
+      },
+      {
+        "jp": "火事や 地震の 場合は、エレベーターを 使わないで ください。",
+        "id": "Dalam hal terjadi kebakaran atau gempa bumi, tolong jangan gunakan lift."
+      }
+    ]
+  },
+  {
+    "id": "318e59a3-bd2b-4b79-8411-03e081d94b2c",
+    "title": "～のに (Padahal/Meskipun)",
+    "structure": "V plain / i-adj plain / na-adj plain (～な) / N (～な) + のに",
+    "explanation": "Menunjukkan bahwa kenyataan yang terjadi berbeda atau berlawanan dengan apa yang diharapkan. Seringkali mengandung nuansa kekecewaan.",
+    "chapter": 45,
+    "jlpt_level": 4,
+    "sentences": [
+      {
+        "jp": "約束を したのに、彼女は 来ませんでした。",
+        "id": "Padahal sudah berjanji, tapi dia (perempuan) tidak datang."
+      },
+      {
+        "jp": "きょうは 日曜日な のに、働かなければ なりません。",
+        "id": "Meskipun hari ini hari Minggu, saya harus bekerja."
+      }
+    ]
+  },
+  {
+    "id": "a92b1c3d-e4f5-4a1b-9c2d-3e4f5a6b7c8d",
+    "title": "～ところです (Titik Waktu Tindakan)",
+    "structure": "V-dict / V-te iru / V-ta + ところです",
+    "explanation": "Menunjukkan tahap spesifik dari suatu tindakan: akan dimulai (V-dict), sedang berlangsung (V-te iru), atau baru saja selesai dilakukan (V-ta).",
+    "chapter": 46,
+    "jlpt_level": 4,
+    "sentences": [
+      {
+        "jp": "これから 食べる ところです。",
+        "id": "Saya baru mau makan sekarang."
+      },
+      {
+        "jp": "今 調べて いる ところです。",
+        "id": "Sekarang saya sedang (dalam proses) memeriksanya."
+      },
+      {
+        "jp": "たった今 バスが 出た ところです。",
+        "id": "Bus baru saja (beberapa detik lalu) berangkat."
+      }
+    ]
+  },
+  {
+    "id": "45fd5d44-84f8-4115-ad80-704d71cebaca",
+    "title": "Vた-form ばかりです",
+    "structure": "Kata Kerja Bentuk た + ばかりです",
+    "explanation": "Menyatakan bahwa suatu tindakan baru saja selesai dilakukan menurut perasaan atau persepsi pembicara, meskipun waktu sebenarnya mungkin sudah agak lama berlalu.",
+    "chapter": 46,
+    "jlpt_level": 4,
+    "sentences": [
+      {
+        "jp": "さっき 昼ごはんを 食べた ばかりです。",
+        "id": "Tadi saya baru saja makan siang (sehingga belum lapar)."
+      },
+      {
+        "jp": "木村さんは 先月 この 会社に 入った ばかりです。",
+        "id": "Sdr. Kimura baru saja masuk ke perusahaan ini bulan lalu."
+      }
+    ]
+  },
+  {
+    "id": "5787d020-f15e-4198-8352-6da413903851",
+    "title": "～はずです (Seharusnya/Pasti)",
+    "structure": "Plain Form + はずです (na-adj + な / N + の)",
+    "explanation": "Menyatakan keyakinan kuat pembicara bahwa sesuatu pasti terjadi atau berada dalam kondisi tertentu berdasarkan alasan atau bukti yang logis.",
+    "chapter": 46,
+    "jlpt_level": 4,
+    "sentences": [
+      {
+        "jp": "ミラーさんは きょう 来る はずです。",
+        "id": "Sdr. Miller seharusnya (pasti) datang hari ini."
+      },
+      {
+        "jp": "速達ですから、あした 着く はずです。",
+        "id": "Karena dikirim dengan kilat, seharusnya besok sudah sampai."
+      }
+    ]
+  },
+  {
+    "id": "6d72210f-4b42-4096-8441-a672c0324fff",
+    "title": "Plain Form そうです (Katanya/Kabar Burung)",
+    "structure": "Plain Form + そうです",
+    "explanation": "Digunakan untuk menyampaikan informasi yang didapat dari sumber lain tanpa menambahkan opini pribadi (kabar burung/hearsay).",
+    "chapter": 47,
+    "jlpt_level": 4,
+    "sentences": [
+      {
+        "jp": "天気予報に よると、あしたは 寒く なるそうです。",
+        "id": "Menurut ramalan cuaca, besok katanya akan menjadi dingin."
+      },
+      {
+        "jp": "バリ島は とても きれいだそうです。",
+        "id": "Katanya pulau Bali sangat indah."
+      }
+    ]
+  },
+  {
+    "id": "48776fbc-b375-4d1a-b530-8cfda0e6d587",
+    "title": "～ようです (Sepertinya/Rupanya)",
+    "structure": "Plain Form + ようです (na-adj + な / N + の)",
+    "explanation": "Menyatakan dugaan subjektif pembicara berdasarkan pengamatan panca indra atau informasi yang diterima dari situasi sekitar.",
+    "chapter": 47,
+    "jlpt_level": 4,
+    "sentences": [
+      {
+        "jp": "人が 大勢 集まって いますね。事故の ようですね。",
+        "id": "Orang-orang berkumpul banyak ya. Sepertinya ada kecelakaan."
+      },
+      {
+        "jp": "せきも 出るし、頭も 痛い。どうも かぜを ひいたようだ。",
+        "id": "Batuk juga dan kepala pun sakit. Rupanya saya kena flu."
+      }
+    ]
+  },
+  {
+    "id": "868f9f53-91e8-4520-83ef-0b91adf051d4",
+    "title": "声／音／におい／味が します",
+    "structure": "N (Suara/Bunyi/Bau/Rasa) + が します",
+    "explanation": "Digunakan untuk mendeskripsikan fenomena yang ditangkap oleh indra pendengar, penciuman, atau perasa.",
+    "chapter": 47,
+    "jlpt_level": 4,
+    "sentences": [
+      {
+        "jp": "変な 音が しますね。",
+        "id": "Terdengar bunyi yang aneh ya."
+      },
+      {
+        "jp": "この 料理は 変な 味が します。",
+        "id": "Masakan ini rasanya aneh."
+      }
+    ]
+  },
+  {
+    "id": "a48b1c2d-e3f4-4a1b-9c2d-3e4f5a6b7c8d",
+    "title": "Kata Kerja Kausatif (Causative Verbs)",
+    "structure": "Gol I: i-line -> a-line + seru | Gol II: + saseru | Gol III: kosaseru, saseru",
+    "explanation": "Cara pembentukan kata kerja kausatif. Digunakan untuk menyatakan perintah (paksaan) atau pemberian izin kepada seseorang.",
+    "chapter": 48,
+    "jlpt_level": 4,
+    "sentences": [
+      {
+        "jp": "かきます → かかせます / たべます → たべさせます",
+        "id": "Menulis → Menyuruh menulis / Makan → Menyuruh makan."
+      }
+    ]
+  },
+  {
+    "id": "a9cf9ae8-6db2-47da-8c16-ebe099aa2863",
+    "title": "Kalimat Kata Kerja Kausatif",
+    "structure": "N1 (Orang) は N2 (Pelaku) を/に + V-Causative",
+    "explanation": "Untuk kata kerja intransitif, pelaku ditandai dengan partikel 'o' (kecuali jika ada keterangan tempat 'o' lain). Untuk kata kerja transitif, pelaku ditandai dengan partikel 'ni'.",
+    "chapter": 48,
+    "jlpt_level": 4,
+    "sentences": [
+      {
+        "jp": "部長は 加藤さんを 大阪へ 出張させます。",
+        "id": "Manajer departemen menyuruh Sdr. Kato dinas ke Osaka."
+      },
+      {
+        "jp": "わたしは 娘に 朝ごはんの 準備を 手伝わせます。",
+        "id": "Saya menyuruh anak perempuan saya membantu menyiapkan sarapan."
+      }
+    ]
+  },
+  {
+    "id": "a9917ce7-82c7-418d-af29-cc7d0b3e3204",
+    "title": "Penggunaan Bentuk Kausatif",
+    "structure": "V-Causative",
+    "explanation": "Menunjukkan paksaan (compulsion) atau pemberian izin (permission). Digunakan saat hubungan atasan-bawahan atau orang tua-anak sangat jelas.",
+    "chapter": 48,
+    "jlpt_level": 4,
+    "sentences": [
+      {
+        "jp": "わたしは 娘を 自由に 遊ばせました。",
+        "id": "Saya membiarkan (mengizinkan) anak perempuan saya bermain dengan bebas."
+      }
+    ]
+  },
+  {
+    "id": "98dcb9ca-3fdf-446c-aa57-452880850cc1",
+    "title": "V-causative て-form いただけませんか",
+    "structure": "Kata Kerja Kausatif Bentuk て + いただけませんか",
+    "explanation": "Ungkapan permohonan izin yang sangat sopan kepada orang lain untuk membiarkan pembicara melakukan sesuatu.",
+    "chapter": 48,
+    "jlpt_level": 4,
+    "sentences": [
+      {
+        "jp": "友達の 結婚式が あるので、早退させて いただけませんか。",
+        "id": "Karena ada pernikahan teman, bisakah Anda mengizinkan saya pulang lebih awal?"
+      }
+    ]
+  },
+  {
+    "id": "b4f95158-6daf-4fa9-befe-a54ef91212bd",
+    "title": "Kata Kerja Bentuk Hormat (Respectful Verbs)",
+    "structure": "Sama dengan bentuk pasif (V-Passive)",
+    "explanation": "Kata kerja pasif dapat digunakan sebagai bentuk hormat untuk menyatakan tindakan lawan bicara atau orang ketiga.",
+    "chapter": 49,
+    "jlpt_level": 4,
+    "sentences": [
+      {
+        "jp": "中村さんは 7時に 来られます。",
+        "id": "Sdr. Nakamura (hormat) datang pada jam 7."
+      }
+    ]
+  },
+  {
+    "id": "7c6d4315-37a3-40d2-895e-13df95ac8eef",
+    "title": "お Vます-form に なります",
+    "structure": "お + Vます-form (tanpa ます) + に なります",
+    "explanation": "Bentuk hormat yang lebih tinggi daripada bentuk pasif. Tidak digunakan untuk kata kerja satu suku kata (misalnya: miru, neru) atau kata kerja Golongan III.",
+    "chapter": 49,
+    "jlpt_level": 4,
+    "sentences": [
+      {
+        "jp": "社長は もう お帰りに なりました。",
+        "id": "Presiden direktur sudah pulang (hormat)."
+      }
+    ]
+  },
+  {
+    "id": "8aaa12b0-6d8a-4d26-a881-d2dd6034f9c9",
+    "title": "Kata Kerja Hormat Khusus (Special Respectful Words)",
+    "structure": "irasshaimasu, meshiagarimasu, dll",
+    "explanation": "Beberapa kata kerja memiliki padanan bentuk hormat yang benar-benar berbeda dari kata aslinya.",
+    "chapter": 49,
+    "jlpt_level": 4,
+    "sentences": [
+      {
+        "jp": "どうぞ 召し上がって ください。",
+        "id": "Silakan makan/minum (hormat)."
+      },
+      {
+        "jp": "ワット先生は 研究室に いらっしゃいます。",
+        "id": "Prof. Watt ada (hormat) di ruang penelitian."
+      }
+    ]
+  },
+  {
+    "id": "0e418589-72a5-4805-a70a-b66970edd25a",
+    "title": "お Vます-form ください",
+    "structure": "お + Vます-form + ください / ご + Kata Benda + ください",
+    "explanation": "Digunakan untuk memberikan instruksi atau mempersilakan orang lain melakukan sesuatu dengan cara yang sangat hormat.",
+    "chapter": 49,
+    "jlpt_level": 4,
+    "sentences": [
+      {
+        "jp": "あちらから お入り ください。",
+        "id": "Silakan masuk lewat sebelah sana."
+      }
+    ]
+  },
+  {
+    "id": "8e3070ff-2c79-42d5-94b7-c28663f79144",
+    "title": "Hormat pada Kata Benda, Sifat, dan Keterangan (O/Go)",
+    "structure": "お + (Bahasa Jepang asli) / ご + (Bahasa serapan China)",
+    "explanation": "Awalan 'o' atau 'go' ditambahkan pada kata benda atau kata sifat untuk menunjukkan rasa hormat kepada pemiliknya.",
+    "chapter": 49,
+    "jlpt_level": 4,
+    "sentences": [
+      {
+        "jp": "部長の 奥様も ご一緒に ゴルフに 行かれます。",
+        "id": "Istri manajer departemen juga ikut serta bermain golf bersama."
+      }
+    ]
+  },
+  {
+    "id": "e5fe4022-ea98-4f8b-a73a-de0df3a7e9b6",
+    "title": "～まして (~mashite)",
+    "structure": "V-te form -> V-mashite",
+    "explanation": "Merupakan bentuk sopan dari bentuk sambung '~te' untuk menjaga tingkat kesopanan dalam kalimat.",
+    "chapter": 49,
+    "jlpt_level": 4,
+    "sentences": [
+      {
+        "jp": "ハンスが 夕べ 熱を 出しまして、きょうも まだ 下がらないんです。",
+        "id": "Hans semalam demam, dan hari ini suhunya masih belum turun."
+      }
+    ]
+  },
+  {
+    "id": "2c1ab10a-7b32-4c21-bf8c-f2d5cc4dad39",
+    "title": "謙譲語 (Kenjougo - Humble Expressions)",
+    "structure": "お + Vます-form + します / ご + N (III) + します",
+    "explanation": "Digunakan untuk merendahkan diri pembicara dalam rangka menghormati lawan bicara atau orang yang menerima tindakan tersebut.",
+    "chapter": 50,
+    "jlpt_level": 4,
+    "sentences": [
+      {
+        "jp": "重そうですね。お持ちしましょうか。",
+        "id": "Kelihatannya berat ya. Mari saya bawakan (rendah hati)."
+      },
+      {
+        "jp": "江戸東京博物館へ ご案内します。",
+        "id": "Saya akan memandu (rendah hati) Anda ke Museum Edo-Tokyo."
+      }
+    ]
+  },
+  {
+    "id": "9c8dc20c-acaf-4cab-b033-80fbd758ba9f",
+    "title": "Kata Kerja Rendah Hati Khusus (Special Humble Words)",
+    "structure": "mairimasu, orimasu, itadakimasu, moshimasu, dll",
+    "explanation": "Padanan kata rendah hati yang berbeda dari kata aslinya. Beberapa digunakan saat tindakan pembicara memengaruhi orang lain (Kenjougo), dan beberapa hanya untuk merendahkan diri sendiri (Taikyogo).",
+    "chapter": 50,
+    "jlpt_level": 4,
+    "sentences": [
+      {
+        "jp": "ミラーと 申します。",
+        "id": "Nama saya (rendah hati menyebutkan nama) Miller."
+      },
+      {
+        "jp": "あしたは だれが 手伝いに 来て くれますか。…わたしが 伺います。",
+        "id": "Besok siapa yang akan datang membantu? ...Saya yang akan datang (rendah hati)."
+      }
+    ]
+  },
+  {
+    "id": "f900b721-2916-4f1d-afaa-a6a726e17bb6",
+    "title": "丁寧語 (Teineigo - Polite Expressions)",
+    "structure": "gozaimasu, de gozaimasu, yoroshii deshou ka",
+    "explanation": "Bentuk bahasa yang sangat sopan untuk menyatakan keberadaan, identitas, atau bertanya kepada orang lain.",
+    "chapter": 50,
+    "jlpt_level": 4,
+    "sentences": [
+      {
+        "jp": "電話は 階段の 横に ございます。",
+        "id": "Telepon ada (sangat sopan) di sebelah tangga."
+      },
+      {
+        "jp": "この パンフレットを いただいても よろしいでしょうか。",
+        "id": "Bolehkah saya mengambil pamflet ini? (Sangat sopan)"
+      }
+    ]
+  }
+]

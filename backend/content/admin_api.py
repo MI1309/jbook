@@ -270,9 +270,10 @@ class VocabCreateSchema(BaseModel):
     word_type: Optional[str] = None
     jlpt_level: int
     examples: List[dict] = []
-    # kanji_rel is ManyToMany, handle separately or via list of IDs?
-    # For simplicity, let's ignore relations for now or add if needed.
-    # The current requirement is simple CRUD.
+
+class VocabSchema(VocabCreateSchema):
+    id: UUID
+    model_config = {"from_attributes": True}
 
 class VocabListResponse(BaseModel):
     items: List[VocabSchema]
