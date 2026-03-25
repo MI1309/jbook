@@ -2,6 +2,7 @@ from django.db import models
 from django.conf import settings
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
+from django.utils import timezone
 import uuid
 
 class StudySession(models.Model):
@@ -37,7 +38,7 @@ class QuizAttempt(models.Model):
     
     is_correct = models.BooleanField()
     answer_given = models.CharField(max_length=255, blank=True, null=True)
-    timestamp = models.DateTimeField(auto_now_add=True)
+    timestamp = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
         target = self.kanji or self.vocab or self.grammar or "Unknown"

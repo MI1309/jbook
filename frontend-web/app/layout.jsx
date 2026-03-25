@@ -3,6 +3,7 @@ import "./globals.css";
 import { AuthProvider } from "@/context/AuthContext";
 import { PracticeProvider } from "@/context/PracticeContext";
 import ClientShell from "@/components/ClientShell";
+import OfflineIndicator from "@/components/OfflineIndicator";
 
 const geistSans = Geist({
     variable: "--font-geist-sans",
@@ -50,6 +51,7 @@ export default function RootLayout({ children }) {
                         <ClientShell footer={footer}>
                             {children}
                         </ClientShell>
+                        <OfflineIndicator />
                     </PracticeProvider>
                 </AuthProvider>
             </body>

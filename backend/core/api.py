@@ -1,4 +1,4 @@
-pfrom ninja import NinjaAPI
+from ninja import NinjaAPI
 from content.api import router as content_router
 from learning.api import router as learning_router
 from users.api import router as users_router

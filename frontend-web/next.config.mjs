@@ -24,13 +24,33 @@ const withPWA = withPWAInit({
                     },
                 },
             },
-            // API calls — NetworkOnly, jangan di-cache
+            // API calls (same-origin) — NetworkFirst, cache sebagai fallback offline
             {
                 urlPattern: ({ url, sameOrigin }) =>
                     sameOrigin && url.pathname.startsWith("/api/"),
-                handler: "NetworkOnly", // ← API tidak di-cache sama sekali
+                handler: "NetworkFirst",
                 options: {
                     cacheName: "apis",
+                    networkTimeoutSeconds: 10,
+                    expiration: {
+                        maxEntries: 64,
+                        maxAgeSeconds: 7 * 24 * 60 * 60,
+                    },
+                },
+            },
+            // External API (PythonAnywhere backend) — cache data untuk offline
+            {
+                urlPattern: ({ url }) =>
+                    url.hostname === "imronm.pythonanywhere.com" &&
+                    url.pathname.startsWith("/api/"),
+                handler: "NetworkFirst",
+                options: {
+                    cacheName: "backend-api",
+                    networkTimeoutSeconds: 10,
+                    expiration: {
+                        maxEntries: 128,
+                        maxAgeSeconds: 7 * 24 * 60 * 60,
+                    },
                 },
             },
         ],

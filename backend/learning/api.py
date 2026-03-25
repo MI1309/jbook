@@ -345,11 +345,9 @@ def import_practice_data(request, payload: ExportDataSchema):
     user = request.auth
     from django.contrib.contenttypes.models import ContentType
     
-    # Optional: Clear existing data before import? 
-    # For now, let's just append or handle duplicates if needed.
-    # To avoid duplicates, we can check for same user, timestamp and target.
-    
     new_attempts = []
+    skipped_count = 0
+    
     for a in payload.attempts:
         # Check if already exists to avoid duplication if imported multiple times
         exists = QuizAttempt.objects.filter(
@@ -358,7 +356,8 @@ def import_practice_data(request, payload: ExportDataSchema):
             kanji_id=a.kanji_id,
             vocab_id=a.vocab_id,
             grammar_id=a.grammar_id,
-            particle_id=a.particle_id
+            particle_id=a.particle_id,
+            is_correct=a.is_correct
         ).exists()
         
         if not exists:
@@ -372,10 +371,13 @@ def import_practice_data(request, payload: ExportDataSchema):
                 answer_given=a.answer_given,
                 timestamp=a.timestamp
             ))
+        else:
+            skipped_count += 1
             
     if new_attempts:
         QuizAttempt.objects.bulk_create(new_attempts)
         
+    progress_count = 0
     for p in payload.progress:
         try:
             ct = ContentType.objects.get(app_label=p.content_type_app, model=p.content_type_model)
@@ -389,7 +391,14 @@ def import_practice_data(request, payload: ExportDataSchema):
                     "last_reviewed": p.last_reviewed
                 }
             )
+            progress_count += 1
         except ContentType.DoesNotExist:
             continue
             
-    return {"status": "success", "message": "Data imported successfully"}
+    return {
+        "status": "success",
+        "imported": len(new_attempts),
+        "skipped": skipped_count,
+        "progress_updated": progress_count,
+        "message": f"Berhasil mengimpor {len(new_attempts)} data latihan. {skipped_count} data sudah ada (dilewati)."
+    }
