@@ -26,7 +26,9 @@ export default async function BunpoPage({ searchParams }) {
             page,
         });
     } catch (error) {
-        console.error('Failed to fetch grammar:', error.message);
+        console.error('Failed to fetch grammar:', error.message, error.status);
+        // Tambah ini untuk lihat di Vercel logs:
+        console.error('API URL:', process.env.NEXT_PUBLIC_API_URL);
     }
 
     const grammarList = data.items || [];

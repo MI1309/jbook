@@ -29,7 +29,7 @@ export default function KotobaAdmin() {
         try {
             const token = Cookies.get('access_token');
             // Adding trailing slash to avoid redirect issues which might drop query params
-            let url = 'https://imronm.pythonanywhere.com/api/admin/vocab/';
+            let url = 'https://imronm.pythonanywhere.com/api/admin/vocab';
             const params = new URLSearchParams();
             if (search) params.append('search', search);
             if (level) params.append('level', level);

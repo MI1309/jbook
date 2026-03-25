@@ -40,7 +40,8 @@ async function handleResponse(res, context = 'API') {
 
 function handleNetworkError(context, error, defaultValue = null) {
     console.error(`[${context}] Network error:`, error.message);
-    if (typeof window === 'undefined') {
+    // Hapus pengecekan window — biarkan throw di semua environment
+    if (defaultValue !== null) {
         return defaultValue;
     }
     throw new Error('Koneksi gagal. Mohon periksa internet Anda.');
@@ -87,7 +88,18 @@ export async function getGrammarList({ level, search, chapter, limit = 50, page 
         const res = await fetch(`${API_URL}/content/grammar?${queryParams.toString()}`, {
             cache: 'no-store',
         });
-        return handleResponse(res, 'getGrammarList');
+        const data = await handleResponse(res, 'getGrammarList');
+        
+        // Backend return array, normalize ke object
+        if (Array.isArray(data)) {
+            return {
+                items: data,
+                total: data.length,
+                pages: 1,
+                page: 1,
+            };
+        }
+        return data;
     } catch (error) {
         if (error.status) throw error;
         return handleNetworkError('getGrammarList', error, { items: [], total: 0, page: 1, pages: 1 });
@@ -199,7 +211,18 @@ export async function getVocabList({ level, search, word_type, limit = 50, page 
         const res = await fetch(`${API_URL}/content/vocab?${queryParams.toString()}`, {
             cache: 'no-store',
         });
-        return handleResponse(res, 'getVocabList');
+        const data = await handleResponse(res, 'getVocabList');
+        
+        // Handle array response dari backend
+        if (Array.isArray(data)) {
+            return {
+                items: data,
+                total: data.length,
+                pages: 1,
+                page: 1,
+            };
+        }
+        return data;
     } catch (error) {
         if (error.status) throw error;
         return handleNetworkError('getVocabList', error, { items: [], total: 0, page: 1, pages: 1 });

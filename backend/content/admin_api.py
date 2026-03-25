@@ -324,6 +324,16 @@ def admin_create_vocab(request, payload: VocabCreateSchema):
     vocab = Vocab.objects.create(**payload.dict())
     return vocab
 
+@router.get("/vocab/export/csv", auth=AdminAuth())
+def admin_export_vocab_csv(request):
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="vocab_export.csv"'
+    writer = csv.writer(response)
+    writer.writerow(['ID', 'Word', 'Reading', 'Meaning', 'JLPT Level'])
+    for obj in Vocab.objects.all():
+        writer.writerow([obj.id, obj.word, obj.reading, obj.meaning, obj.jlpt_level])
+    return response
+
 @router.get("/vocab/{id}", auth=AdminAuth(), response=VocabSchema)
 def admin_get_vocab(request, id: str):
     return get_object_or_404(Vocab, id=id)
@@ -341,16 +351,6 @@ def admin_delete_vocab(request, id: str):
     vocab = get_object_or_404(Vocab, id=id)
     vocab.delete()
     return {"success": True}
-
-@router.get("/vocab/export/csv", auth=AdminAuth())
-def admin_export_vocab_csv(request):
-    response = HttpResponse(content_type='text/csv')
-    response['Content-Disposition'] = 'attachment; filename="vocab_export.csv"'
-    writer = csv.writer(response)
-    writer.writerow(['ID', 'Word', 'Reading', 'Meaning', 'JLPT Level'])
-    for obj in Vocab.objects.all():
-        writer.writerow([obj.id, obj.word, obj.reading, obj.meaning, obj.jlpt_level])
-    return response
 
 @router.get("/particle/export/csv", auth=AdminAuth())
 def admin_export_particle_csv(request):
