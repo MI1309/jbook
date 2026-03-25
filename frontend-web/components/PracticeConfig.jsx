@@ -7,6 +7,7 @@ export default function PracticeConfig() {
     const router = useRouter();
     const [limit, setLimit] = useState(10);
     const [timer, setTimer] = useState(5); // Default 5 minutes
+    const [isUnlimitedTime, setIsUnlimitedTime] = useState(false);
     
     // Multi-select states
     const [selectedTypes, setSelectedTypes] = useState(['kanji']);
@@ -50,7 +51,7 @@ export default function PracticeConfig() {
         if (selectedLevels.length > 0) {
             params.append('level', selectedLevels.join(','));
         }
-        if (timer) params.append('timer', timer);
+        if (!isUnlimitedTime && timer) params.append('timer', timer);
         
         router.push(`/practice/start?${params.toString()}`);
     };
@@ -146,14 +147,26 @@ export default function PracticeConfig() {
                                     <label className="block text-sm font-black text-gray-400 uppercase tracking-widest mb-2">
                                         Waktu
                                     </label>
-                                    <div className="flex items-center gap-3">
-                                        <input
-                                            type="number"
-                                            value={timer}
-                                            onChange={(e) => setTimer(Math.max(1, parseInt(e.target.value) || 0))}
-                                            className="w-full bg-gray-50 border-2 border-gray-100 rounded-xl px-4 py-3 font-bold text-gray-700 focus:border-red-500 transition-colors outline-none"
-                                        />
-                                        <span className="text-gray-400 font-bold">Menit</span>
+                                    <div className="flex flex-col gap-2">
+                                        <div className={`flex items-center gap-3 transition-opacity ${isUnlimitedTime ? 'opacity-50 pointer-events-none grayscale' : ''}`}>
+                                            <input
+                                                type="number"
+                                                value={timer}
+                                                onChange={(e) => setTimer(Math.max(1, parseInt(e.target.value) || 0))}
+                                                disabled={isUnlimitedTime}
+                                                className="w-full bg-gray-50 border-2 border-gray-100 rounded-xl px-4 py-3 font-bold text-gray-700 focus:border-red-500 transition-colors outline-none"
+                                            />
+                                            <span className="text-gray-400 font-bold">Menit</span>
+                                        </div>
+                                        <label className="flex items-center gap-2 cursor-pointer mt-1 select-none">
+                                            <input 
+                                                type="checkbox" 
+                                                checked={isUnlimitedTime} 
+                                                onChange={() => setIsUnlimitedTime(!isUnlimitedTime)}
+                                                className="w-4 h-4 text-red-600 rounded focus:ring-red-500 border-gray-300 cursor-pointer"
+                                            />
+                                            <span className="text-sm font-bold text-gray-500 hover:text-gray-700 transition-colors">Tanpa Batas Waktu</span>
+                                        </label>
                                     </div>
                                 </div>
                             </div>
