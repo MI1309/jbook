@@ -86,3 +86,25 @@ def to_kana(text: str) -> str:
         i += 1
         
     return res
+
+def to_katakana(text: str) -> str:
+    hiragana = to_kana(text)
+    katakana = ""
+    for char in hiragana:
+        code = ord(char)
+        if 0x3041 <= code <= 0x3096:
+            katakana += chr(code + 0x60)
+        else:
+            katakana += char
+    return katakana
+
+def format_reading(reading_list: list, is_onyomi: bool = True) -> str:
+    if not reading_list:
+        return "-"
+    
+    if is_onyomi:
+        # Convert romaji (usually uppercase) to Katakana
+        return ", ".join([to_katakana(r.lower()) for r in reading_list])
+    else:
+        # Convert romaji (usually lowercase) to Hiragana
+        return ", ".join([to_kana(r.lower()) for r in reading_list])

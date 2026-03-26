@@ -118,12 +118,13 @@ def generate_quiz(request, limit: int = 10, level: Optional[str] = None, type: s
 
         # Prepare question data based on type
         if d_type == 'kanji':
+            from utils.kana import format_reading
             display_text = item.character
             correct_answer = item.meaning
             distractor_answers = [d.meaning for d in distractors]
             
-            onyomi_str = ", ".join(item.onyomi) if item.onyomi else "-"
-            kunyomi_str = ", ".join(item.kunyomi) if item.kunyomi else "-"
+            onyomi_str = format_reading(item.onyomi, is_onyomi=True)
+            kunyomi_str = format_reading(item.kunyomi, is_onyomi=False)
             reading = f"On: {onyomi_str} | Kun: {kunyomi_str}"
             meaning = item.meaning
         elif d_type == 'vocab':
@@ -134,8 +135,8 @@ def generate_quiz(request, limit: int = 10, level: Optional[str] = None, type: s
             meaning = item.meaning
         elif d_type == 'grammar':
             display_text = item.title
-            correct_answer = item.explanation[:50] + "..." if len(item.explanation) > 50 else item.explanation
-            distractor_answers = [(d.explanation[:50] + "..." if len(d.explanation) > 50 else d.explanation) for d in distractors]
+            correct_answer = item.explanation
+            distractor_answers = [d.explanation for d in distractors]
             reading = item.structure 
             meaning = item.explanation
         elif d_type == 'particle':

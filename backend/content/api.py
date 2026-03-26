@@ -87,7 +87,9 @@ def list_kanji(request,
     # Pagination
     results = list(qs[offset : offset + limit])
     
-    # Dynamically add word_type from Vocab if it exists for the single character
+    from utils.kana import to_kana, to_katakana
+    
+    # Dynamically add word_type from Vocab and format readings
     from .models import Vocab
     for k in results:
         v = Vocab.objects.filter(word=k.character).first()
@@ -97,6 +99,10 @@ def list_kanji(request,
             v_tilde = Vocab.objects.filter(word=f"～{k.character}").first()
             if v_tilde:
                 k.word_type = v_tilde.word_type
+        
+        # Format onyomi/kunyomi to Katakana/Hiragana
+        k.onyomi = [to_katakana(r.lower()) for r in k.onyomi]
+        k.kunyomi = [to_kana(r.lower()) for r in k.kunyomi]
 
     return {
         "items": results,
@@ -145,6 +151,11 @@ def get_kanji(request, kanji_id: UUID):
             v_tilde = Vocab.objects.filter(word=f"～{kanji.character}").first()
             if v_tilde:
                 kanji.word_type = v_tilde.word_type
+    
+    # Format readings
+    from utils.kana import to_kana, to_katakana
+    kanji.onyomi = [to_katakana(r.lower()) for r in kanji.onyomi]
+    kanji.kunyomi = [to_kana(r.lower()) for r in kanji.kunyomi]
             
     return kanji
 

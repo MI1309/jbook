@@ -158,7 +158,14 @@ def admin_list_kanjis(request, level: int = None):
     query = Kanji.objects.all().order_by('jlpt_level', 'id')
     if level:
         query = query.filter(jlpt_level=level)
-    return query
+    
+    results = list(query)
+    from utils.kana import to_kana, to_katakana
+    for k in results:
+        k.onyomi = [to_katakana(r.lower()) for r in k.onyomi]
+        k.kunyomi = [to_kana(r.lower()) for r in k.kunyomi]
+        
+    return results
 
 @router.post("/kanji", auth=AdminAuth(), response=KanjiSchema)
 def admin_create_kanji(request, payload: KanjiCreateSchema):
@@ -167,7 +174,11 @@ def admin_create_kanji(request, payload: KanjiCreateSchema):
 
 @router.get("/kanji/{id}", auth=AdminAuth(), response=KanjiSchema)
 def admin_get_kanji(request, id: str):
-    return get_object_or_404(Kanji, id=id)
+    kanji = get_object_or_404(Kanji, id=id)
+    from utils.kana import to_kana, to_katakana
+    kanji.onyomi = [to_katakana(r.lower()) for r in kanji.onyomi]
+    kanji.kunyomi = [to_kana(r.lower()) for r in kanji.kunyomi]
+    return kanji
 
 @router.put("/kanji/{id}", auth=AdminAuth(), response=KanjiSchema)
 def admin_update_kanji(request, id: str, payload: KanjiCreateSchema):
@@ -188,9 +199,11 @@ def admin_export_kanji_csv(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="kanji_export.csv"'
     writer = csv.writer(response)
-    writer.writerow(['ID', 'Character', 'Meaning', 'Onyomi', 'Kunyomi', 'Strokes', 'JLPT Level', 'Radical'])
+    from utils.kana import format_reading
     for obj in Kanji.objects.all():
-        writer.writerow([obj.id, obj.character, obj.meaning, ", ".join(obj.onyomi), ", ".join(obj.kunyomi), obj.strokes, obj.jlpt_level, obj.radical])
+        onyomi_str = format_reading(obj.onyomi, is_onyomi=True)
+        kunyomi_str = format_reading(obj.kunyomi, is_onyomi=False)
+        writer.writerow([obj.id, obj.character, obj.meaning, onyomi_str, kunyomi_str, obj.strokes, obj.jlpt_level, obj.radical])
     return response
 
 # Bunpo Schemas

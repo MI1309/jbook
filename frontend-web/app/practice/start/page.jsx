@@ -262,7 +262,7 @@ function PracticeContent() {
     if (finished) {
         return (
             <div className="container mx-auto px-4 py-8 flex flex-col items-center justify-center min-h-[60vh]">
-                <div className="bg-white rounded-3xl shadow-2xl p-8 max-w-md w-full text-center border border-red-100 relative overflow-hidden">
+                <div className="bg-white rounded-3xl shadow-2xl p-4 md:p-8 max-w-md w-full text-center border border-red-100 relative overflow-hidden">
                     <div className="absolute top-0 inset-x-0 h-2 bg-gradient-to-r from-red-500 via-red-600 to-red-500"></div>
 
                     <div className="mb-6">
@@ -368,16 +368,17 @@ function PracticeContent() {
             </div>
 
             {/* Question Card */}
-            <div className="bg-white rounded-3xl shadow-xl p-8 mb-8 text-center border border-gray-100 relative flex-grow flex flex-col justify-center">
+            <div className="bg-white rounded-3xl shadow-xl p-4 md:p-8 mb-8 text-center border border-gray-100 relative flex-grow flex flex-col justify-center">
                 <div className="mb-8 relative p-4 flex flex-col items-center">
                     <span className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-2 block">
                         {currentQuestion.type === 'kanji' ? 'Kanji' : currentQuestion.type === 'vocab' ? 'Kosakata' : 'Tata Bahasa'}
                     </span>
                     <div className={`${
+                        currentQuestion.character.length > 50 ? 'text-base md:text-lg' :
                         currentQuestion.character.length > 20 ? 'text-lg md:text-xl' :
-                        currentQuestion.character.length > 10 ? 'text-2xl md:text-3xl' :
-                        currentQuestion.type === 'grammar' || currentQuestion.type === 'particle' ? 'text-3xl md:text-4xl' : 
-                        'text-6xl md:text-[6rem]'
+                        currentQuestion.character.length > 10 ? 'text-xl md:text-2xl' :
+                        currentQuestion.type === 'grammar' || currentQuestion.type === 'particle' ? 'text-2xl md:text-4xl' : 
+                        'text-5xl md:text-[6rem]'
                     } leading-tight font-medium text-gray-800 select-none pb-2 break-words whitespace-normal`}>
                         {currentQuestion.character}
                     </div>
