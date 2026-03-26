@@ -2,6 +2,7 @@
 
 import { useState, useEffect, use } from 'react';
 import { useRouter } from 'next/navigation';
+import { API_URL } from '@/lib/api';
 import Link from 'next/link';
 import Cookies from 'js-cookie';
 
@@ -31,7 +32,7 @@ export default function KanjiForm({ params }) {
     const fetchKanji = async () => {
         try {
             const token = Cookies.get('access_token');
-            const res = await fetch(`https://imronm.pythonanywhere.com/api/admin/kanji/${id}`, {
+            const res = await fetch(`${API_URL}/admin/kanji/${id}`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
 
@@ -77,8 +78,8 @@ export default function KanjiForm({ params }) {
             };
 
             const url = isNew
-                ? 'https://imronm.pythonanywhere.com/api/admin/kanji'
-                : `https://imronm.pythonanywhere.com/api/admin/kanji/${id}`;
+                ? `${API_URL}/admin/kanji`
+                : `${API_URL}/admin/kanji/${id}`;
 
             const method = isNew ? 'POST' : 'PUT';
 

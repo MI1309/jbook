@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/context/AuthContext';
+import { API_URL } from '@/lib/api';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import Cookies from 'js-cookie';
@@ -19,7 +20,7 @@ export default function KanjiAdmin() {
         setLoading(true);
         try {
             const token = Cookies.get('access_token');
-            let url = 'https://imronm.pythonanywhere.com/api/admin/kanji';
+            let url = `${API_URL}/admin/kanji`;
             if (filterLevel) url += `?level=${filterLevel}`;
             const res = await fetch(url, { headers: { 'Authorization': `Bearer ${token}` } });
             if (res.ok) setKanjis(await res.json());
@@ -36,7 +37,7 @@ export default function KanjiAdmin() {
         if (!confirm('Are you sure you want to delete this Kanji?')) return;
         try {
             const token = Cookies.get('access_token');
-            const res = await fetch(`https://imronm.pythonanywhere.com/api/admin/kanji/${id}`, {
+            const res = await fetch(`${API_URL}/admin/kanji/${id}`, {
                 method: 'DELETE',
                 headers: { 'Authorization': `Bearer ${token}` }
             });

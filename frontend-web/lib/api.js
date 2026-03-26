@@ -85,7 +85,7 @@ export async function getGrammarList({ level, search, chapter, limit = 50, page 
     if (page) queryParams.append('page', page);
 
     try {
-        const res = await fetch(`${API_URL}/content/grammar?${queryParams.toString()}`, {
+        const res = await fetch(`${API_URL}/content/bunpo?${queryParams.toString()}`, {
             cache: 'no-store',
         });
         const data = await handleResponse(res, 'getGrammarList');
@@ -108,7 +108,7 @@ export async function getGrammarList({ level, search, chapter, limit = 50, page 
 
 export async function getGrammarDetail(id) {
     try {
-        const res = await fetch(`${API_URL}/content/grammar/${id}`);
+        const res = await fetch(`${API_URL}/content/bunpo/${id}`);
         return handleResponse(res, 'getGrammarDetail');
     } catch (error) {
         if (error.status) throw error;
@@ -208,7 +208,7 @@ export async function getVocabList({ level, search, word_type, limit = 50, page 
     if (page) queryParams.append('page', page);
 
     try {
-        const res = await fetch(`${API_URL}/content/vocab?${queryParams.toString()}`, {
+        const res = await fetch(`${API_URL}/content/kotoba?${queryParams.toString()}`, {
             cache: 'no-store',
         });
         const data = await handleResponse(res, 'getVocabList');
@@ -231,7 +231,7 @@ export async function getVocabList({ level, search, word_type, limit = 50, page 
 
 export async function getVocabDetail(id) {
     try {
-        const res = await fetch(`${API_URL}/content/vocab/${id}`, {
+        const res = await fetch(`${API_URL}/content/kotoba/${id}`, {
             cache: 'no-store',
         });
         return handleResponse(res, 'getVocabDetail');

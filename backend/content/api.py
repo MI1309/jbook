@@ -159,7 +159,7 @@ def get_kanji(request, kanji_id: UUID):
             
     return kanji
 
-@router.get("/grammar", response=GrammarListResponse)
+@router.get("/bunpo", response=GrammarListResponse)
 def list_grammar(request, 
                  level: Optional[int] = None,
                  search: Optional[str] = None,
@@ -195,7 +195,7 @@ def list_grammar(request,
         "pages": pages
     }
 
-@router.get("/grammar/{grammar_id}", response=GrammarSchema)
+@router.get("/bunpo/{grammar_id}", response=GrammarSchema)
 def get_grammar(request, grammar_id: UUID):
     return get_object_or_404(Grammar, id=grammar_id)
 
@@ -227,7 +227,7 @@ class VocabListResponse(BaseModel):
     debug_level: Optional[int] = None
     debug_search: Optional[str] = None
 
-@router.get("/vocab", response=VocabListResponse)
+@router.get("/kotoba", response=VocabListResponse)
 def list_vocab(request, 
                level: Optional[int] = None,
                search: Optional[str] = None,
@@ -276,7 +276,7 @@ def list_vocab(request,
         "debug_search": search
     }
 
-@router.get("/vocab/{vocab_id}", response=VocabSchema)
+@router.get("/kotoba/{vocab_id}", response=VocabSchema)
 def get_vocab(request, vocab_id: UUID):
     from .models import Vocab
     vocab = get_object_or_404(Vocab, id=vocab_id)

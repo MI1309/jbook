@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/context/AuthContext';
+import { API_URL } from '@/lib/api';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import Cookies from 'js-cookie';
@@ -34,7 +35,7 @@ export default function KotobaAdmin() {
             params.append('page', currentPage);
             params.append('limit', 50);
 
-            let url = `https://imronm.pythonanywhere.com/api/admin/vocab?${params.toString()}`;
+            let url = `${API_URL}/admin/kotoba?${params.toString()}`;
             setDebugInfo(url);
             
             const res = await fetch(url, { 
@@ -79,7 +80,7 @@ export default function KotobaAdmin() {
         if (!confirm('Are you sure you want to delete this Vocabulary?')) return;
         try {
             const token = Cookies.get('access_token');
-            const res = await fetch(`https://imronm.pythonanywhere.com/api/admin/vocab/${id}`, {
+            const res = await fetch(`${API_URL}/admin/kotoba/${id}`, {
                 method: 'DELETE',
                 headers: { 'Authorization': `Bearer ${token}` }
             });

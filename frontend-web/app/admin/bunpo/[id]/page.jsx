@@ -2,6 +2,7 @@
 
 import { useState, useEffect, use } from 'react';
 import { useRouter } from 'next/navigation';
+import { API_URL } from '@/lib/api';
 import Link from 'next/link';
 import Cookies from 'js-cookie';
 
@@ -31,7 +32,7 @@ export default function BunpoForm({ params }) {
     const fetchBunpo = async () => {
         try {
             const token = Cookies.get('access_token');
-            const res = await fetch(`https://imronm.pythonanywhere.com/api/admin/bunpo/${id}`, {
+            const res = await fetch(`${API_URL}/admin/bunpo/${id}`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
 
@@ -86,8 +87,8 @@ export default function BunpoForm({ params }) {
             };
 
             const url = isNew
-                ? 'https://imronm.pythonanywhere.com/api/admin/bunpo'
-                : `https://imronm.pythonanywhere.com/api/admin/bunpo/${id}`;
+                ? `${API_URL}/admin/bunpo`
+                : `${API_URL}/admin/bunpo/${id}`;
 
             const method = isNew ? 'POST' : 'PUT';
 

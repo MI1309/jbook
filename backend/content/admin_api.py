@@ -297,7 +297,7 @@ class VocabListResponse(BaseModel):
     debug_search: Optional[str] = None
 
 # Vocab CRUD
-@router.get("/vocab", auth=AdminAuth(), response=VocabListResponse)
+@router.get("/kotoba", auth=AdminAuth(), response=VocabListResponse)
 def admin_list_vocabs(request, level: int = None, search: str = None, page: int = 1, limit: int = 50):
     from utils.kana import to_kana
     
@@ -337,12 +337,12 @@ def admin_list_vocabs(request, level: int = None, search: str = None, page: int 
         "debug_search": applied_search
     }
 
-@router.post("/vocab", auth=AdminAuth(), response=VocabSchema)
+@router.post("/kotoba", auth=AdminAuth(), response=VocabSchema)
 def admin_create_vocab(request, payload: VocabCreateSchema):
     vocab = Vocab.objects.create(**payload.dict())
     return vocab
 
-@router.get("/vocab/export/csv", auth=AdminAuth())
+@router.get("/kotoba/export/csv", auth=AdminAuth())
 def admin_export_vocab_csv(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="vocab_export.csv"'
@@ -353,14 +353,14 @@ def admin_export_vocab_csv(request):
         writer.writerow([obj.id, obj.word, to_kana(obj.reading.lower()), obj.meaning, obj.jlpt_level])
     return response
 
-@router.get("/vocab/{id}", auth=AdminAuth(), response=VocabSchema)
+@router.get("/kotoba/{id}", auth=AdminAuth(), response=VocabSchema)
 def admin_get_vocab(request, id: str):
     vocab = get_object_or_404(Vocab, id=id)
     from utils.kana import to_kana
     vocab.reading = to_kana(vocab.reading.lower())
     return vocab
 
-@router.put("/vocab/{id}", auth=AdminAuth(), response=VocabSchema)
+@router.put("/kotoba/{id}", auth=AdminAuth(), response=VocabSchema)
 def admin_update_vocab(request, id: str, payload: VocabCreateSchema):
     vocab = get_object_or_404(Vocab, id=id)
     for attr, value in payload.dict().items():
@@ -368,7 +368,7 @@ def admin_update_vocab(request, id: str, payload: VocabCreateSchema):
     vocab.save()
     return vocab
 
-@router.delete("/vocab/{id}", auth=AdminAuth())
+@router.delete("/kotoba/{id}", auth=AdminAuth())
 def admin_delete_vocab(request, id: str):
     vocab = get_object_or_404(Vocab, id=id)
     vocab.delete()

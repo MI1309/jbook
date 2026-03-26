@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/context/AuthContext';
+import { API_URL } from '@/lib/api';
 import Link from 'next/link';
 import Cookies from 'js-cookie';
 
@@ -31,7 +32,7 @@ export default function AdminDashboard() {
     const fetchStats = async () => {
         try {
             const token = Cookies.get('access_token');
-            const res = await fetch('https://imronm.pythonanywhere.com/api/admin/stats', {
+            const res = await fetch(`${API_URL}/admin/stats`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             if (res.ok) {
@@ -47,7 +48,7 @@ export default function AdminDashboard() {
         setIsSearching(true);
         try {
             const token = Cookies.get('access_token');
-            const res = await fetch(`https://imronm.pythonanywhere.com/api/admin/search?q=${encodeURIComponent(searchQuery)}`, {
+            const res = await fetch(`${API_URL}/admin/search?q=${encodeURIComponent(searchQuery)}`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             if (res.ok) {
@@ -64,7 +65,7 @@ export default function AdminDashboard() {
     const handleExport = async (type) => {
         try {
             const token = Cookies.get('access_token');
-            const res = await fetch(`https://imronm.pythonanywhere.com/api/admin/${type}/export/csv`, {
+            const res = await fetch(`${API_URL}/admin/${type}/export/csv`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             
@@ -109,7 +110,7 @@ export default function AdminDashboard() {
                         <span className="text-lg">📚</span> Bunpo
                     </button>
                     <button 
-                        onClick={() => handleExport('vocab')}
+                        onClick={() => handleExport('kotoba')}
                         className="bg-white hover:bg-red-50 text-gray-700 border border-gray-200 hover:border-red-200 px-4 py-2.5 rounded-xl text-xs font-bold transition-all flex flex-col items-center justify-center gap-1 shadow-sm active:scale-95"
                     >
                         <span className="text-lg">🗣️</span> Kotoba

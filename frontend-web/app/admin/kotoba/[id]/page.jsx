@@ -2,6 +2,7 @@
 
 import { useState, useEffect, use } from 'react';
 import { useRouter } from 'next/navigation';
+import { API_URL } from '@/lib/api';
 import Cookies from 'js-cookie';
 
 export default function KotobaForm({ params }) {
@@ -31,7 +32,7 @@ export default function KotobaForm({ params }) {
         setError(null);
         try {
             const token = Cookies.get('access_token');
-            const res = await fetch(`https://imronm.pythonanywhere.com/api/admin/vocab/${id}`, {
+            const res = await fetch(`${API_URL}/admin/kotoba/${id}`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             if (res.ok) {
@@ -57,8 +58,8 @@ export default function KotobaForm({ params }) {
         try {
             const token = Cookies.get('access_token');
             const url = isNew
-                ? 'https://imronm.pythonanywhere.com/api/admin/vocab'
-                : `https://imronm.pythonanywhere.com/api/admin/vocab/${id}`;
+                ? `${API_URL}/admin/kotoba`
+                : `${API_URL}/admin/kotoba/${id}`;
             const method = isNew ? 'POST' : 'PUT';
 
             const res = await fetch(url, {
