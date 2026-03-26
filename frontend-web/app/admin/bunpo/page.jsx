@@ -29,7 +29,7 @@ export default function BunpoAdmin() {
         setLoading(true);
         try {
             const token = Cookies.get('access_token');
-            let url = `${API_URL}/admin/bunpo?page=${page}&limit=${LIMIT}&`;
+            let url = `${API_URL}admin/bunpo?page=${page}&limit=${LIMIT}&`;
             if (filterLevel) url += `level=${filterLevel}&`;
             if (debouncedChapter && !isNaN(parseInt(debouncedChapter))) url += `chapter=${parseInt(debouncedChapter)}&`;
             if (debouncedSearch) url += `search=${encodeURIComponent(debouncedSearch)}&`;
@@ -49,7 +49,7 @@ export default function BunpoAdmin() {
         if (!confirm('Are you sure you want to delete this Grammar point?')) return;
         try {
             const token = Cookies.get('access_token');
-            const res = await fetch(`${API_URL}/admin/bunpo/${id}`, {
+            const res = await fetch(`${API_URL}admin/bunpo/${id}`, {
                 method: 'DELETE',
                 headers: { 'Authorization': `Bearer ${token}` }
             });

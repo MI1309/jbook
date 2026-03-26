@@ -35,7 +35,7 @@ export default function KotobaAdmin() {
             params.append('page', currentPage);
             params.append('limit', 50);
 
-            let url = `${API_URL}/admin/vocab?${params.toString()}`;
+            let url = `${API_URL}admin/vocab?${params.toString()}`;
             setDebugInfo(url);
             
             const res = await fetch(url, { 
@@ -80,7 +80,7 @@ export default function KotobaAdmin() {
         if (!confirm('Are you sure you want to delete this Vocabulary?')) return;
         try {
             const token = Cookies.get('access_token');
-            const res = await fetch(`${API_URL}/admin/vocab/${id}`, {
+            const res = await fetch(`${API_URL}admin/vocab/${id}`, {
                 method: 'DELETE',
                 headers: { 'Authorization': `Bearer ${token}` }
             });
