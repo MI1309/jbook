@@ -298,6 +298,7 @@ class VocabListResponse(BaseModel):
 
 # Vocab CRUD
 @router.get("/kotoba", auth=AdminAuth(), response=VocabListResponse)
+@router.get("/vocab", auth=AdminAuth(), response=VocabListResponse)
 def admin_list_vocabs(request, level: int = None, search: str = None, page: int = 1, limit: int = 50):
     from utils.kana import to_kana
     
@@ -338,11 +339,13 @@ def admin_list_vocabs(request, level: int = None, search: str = None, page: int 
     }
 
 @router.post("/kotoba", auth=AdminAuth(), response=VocabSchema)
+@router.post("/vocab", auth=AdminAuth(), response=VocabSchema)
 def admin_create_vocab(request, payload: VocabCreateSchema):
     vocab = Vocab.objects.create(**payload.dict())
     return vocab
 
 @router.get("/kotoba/export/csv", auth=AdminAuth())
+@router.get("/vocab/export/csv", auth=AdminAuth())
 def admin_export_vocab_csv(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="vocab_export.csv"'
@@ -354,6 +357,7 @@ def admin_export_vocab_csv(request):
     return response
 
 @router.get("/kotoba/{id}", auth=AdminAuth(), response=VocabSchema)
+@router.get("/vocab/{id}", auth=AdminAuth(), response=VocabSchema)
 def admin_get_vocab(request, id: str):
     vocab = get_object_or_404(Vocab, id=id)
     from utils.kana import to_kana
@@ -361,6 +365,7 @@ def admin_get_vocab(request, id: str):
     return vocab
 
 @router.put("/kotoba/{id}", auth=AdminAuth(), response=VocabSchema)
+@router.put("/vocab/{id}", auth=AdminAuth(), response=VocabSchema)
 def admin_update_vocab(request, id: str, payload: VocabCreateSchema):
     vocab = get_object_or_404(Vocab, id=id)
     for attr, value in payload.dict().items():
@@ -369,26 +374,6 @@ def admin_update_vocab(request, id: str, payload: VocabCreateSchema):
     return vocab
 
 @router.delete("/kotoba/{id}", auth=AdminAuth())
-def admin_delete_vocab_alias(request, id: str):
-    return admin_delete_vocab(request, id)
-
-# Aliases for compatibility
-@router.get("/vocab", auth=AdminAuth(), response=VocabListResponse)
-def admin_list_vocabs_alias(request, **kwargs):
-    return admin_list_vocabs(request, **kwargs)
-
-@router.post("/vocab", auth=AdminAuth(), response=VocabSchema)
-def admin_create_vocab_alias(request, payload: VocabCreateSchema):
-    return admin_create_vocab(request, payload)
-
-@router.get("/vocab/{id}", auth=AdminAuth(), response=VocabSchema)
-def admin_get_vocab_alias(request, id: str):
-    return admin_get_vocab(request, id)
-
-@router.put("/vocab/{id}", auth=AdminAuth(), response=VocabSchema)
-def admin_update_vocab_alias(request, id: str, payload: VocabCreateSchema):
-    return admin_update_vocab(request, id, payload)
-
 @router.delete("/vocab/{id}", auth=AdminAuth())
 def admin_delete_vocab(request, id: str):
     vocab = get_object_or_404(Vocab, id=id)

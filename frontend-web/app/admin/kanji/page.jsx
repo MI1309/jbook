@@ -14,30 +14,45 @@ export default function KanjiAdmin() {
     const [filterLevel, setFilterLevel] = useState('');
     const router = useRouter();
 
-    useEffect(() => { fetchKanjis(); }, [filterLevel]);
+    useEffect(() => { fetchKanjis(); }, [level, search]);
 
     const fetchKanjis = async () => {
         setLoading(true);
         try {
             const token = Cookies.get('access_token');
-            let url = `${API_URL}/admin/kanji`;
-            if (filterLevel) url += `?level=${filterLevel}`;
-            const res = await fetch(url, { headers: { 'Authorization': `Bearer ${token}` } });
-            if (res.ok) setKanjis(await res.json());
-            else alert(`Gagal mengambil data Kanji: ${res.status} ${res.statusText}`);
+            let url = `${API_URL}admin/kanji`;
+
+            const queryParams = new URLSearchParams();
+            if (level && level !== 'all') queryParams.append('level', level);
+            if (search) queryParams.append('search', search);
+
+            const queryString = queryParams.toString();
+            if (queryString) {
+                url += `?${queryString}`;
+            }
+
+            const res = await fetch(url, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+
+            if (res.ok) {
+                const data = await res.json();
+                setKanjiList(data);
+            } else {
+                alert(`Gagal mengambil data Kanji: ${res.status} ${res.statusText}`);
+            }
         } catch (error) {
-            console.error("Failed to fetch kanjis", error);
+            console.error("Failed to fetch", error);
         } finally {
             setLoading(false);
         }
     };
 
-    const handleDelete = async (e, id) => {
-        e.stopPropagation();
-        if (!confirm('Are you sure you want to delete this Kanji?')) return;
+    const handleDelete = async (id) => {
+        if (!window.confirm("Yakin ingin menghapus Kanji ini?")) return;
         try {
             const token = Cookies.get('access_token');
-            const res = await fetch(`${API_URL}/admin/kanji/${id}`, {
+            const res = await fetch(`${API_URL}admin/kanji/${id}`, {
                 method: 'DELETE',
                 headers: { 'Authorization': `Bearer ${token}` }
             });

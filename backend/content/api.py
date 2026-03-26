@@ -160,6 +160,7 @@ def get_kanji(request, kanji_id: UUID):
     return kanji
 
 @router.get("/bunpo", response=GrammarListResponse)
+@router.get("/grammar", response=GrammarListResponse)
 def list_grammar(request, 
                  level: Optional[int] = None,
                  search: Optional[str] = None,
@@ -195,16 +196,8 @@ def list_grammar(request,
         "pages": pages
     }
 
-# Alias for compatibility with production/older frontend
-@router.get("/grammar", response=GrammarListResponse)
-def list_grammar_alias(request, **kwargs):
-    return list_grammar(request, **kwargs)
-
-@router.get("/grammar/{grammar_id}", response=GrammarSchema)
-def get_grammar_alias(request, grammar_id: UUID):
-    return get_grammar(request, grammar_id)
-
 @router.get("/bunpo/{grammar_id}", response=GrammarSchema)
+@router.get("/grammar/{grammar_id}", response=GrammarSchema)
 def get_grammar(request, grammar_id: UUID):
     return get_object_or_404(Grammar, id=grammar_id)
 
@@ -237,6 +230,7 @@ class VocabListResponse(BaseModel):
     debug_search: Optional[str] = None
 
 @router.get("/kotoba", response=VocabListResponse)
+@router.get("/vocab", response=VocabListResponse)
 def list_vocab(request, 
                level: Optional[int] = None,
                search: Optional[str] = None,
@@ -285,16 +279,10 @@ def list_vocab(request,
         "debug_search": search
     }
 
-# Alias for compatibility with production/older frontend
-@router.get("/vocab", response=VocabListResponse)
-def list_vocab_alias(request, **kwargs):
-    return list_vocab(request, **kwargs)
 
-@router.get("/vocab/{vocab_id}", response=VocabSchema)
-def get_vocab_alias(request, vocab_id: UUID):
-    return get_vocab(request, vocab_id)
 
 @router.get("/kotoba/{vocab_id}", response=VocabSchema)
+@router.get("/vocab/{vocab_id}", response=VocabSchema)
 def get_vocab(request, vocab_id: UUID):
     from .models import Vocab
     vocab = get_object_or_404(Vocab, id=vocab_id)

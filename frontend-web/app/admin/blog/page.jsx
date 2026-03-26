@@ -19,7 +19,7 @@ export default function BlogAdmin() {
     const fetchBlogs = async () => {
         try {
             const token = Cookies.get('access_token');
-            const res = await fetch(`${API_URL}/admin/blog`, {
+            const res = await fetch(`${API_URL}admin/blog`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             if (res.ok) {
@@ -38,7 +38,7 @@ export default function BlogAdmin() {
             const tagsArray = formData.tags.split(',').map(tag => tag.trim());
             const payload = { ...formData, tags: tagsArray };
 
-            const res = await fetch(`${API_URL}/admin/blog`, {
+            const res = await fetch(`${API_URL}admin/blog`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

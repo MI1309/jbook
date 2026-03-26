@@ -7,7 +7,8 @@ import Cookies from 'js-cookie';
 
 const AuthContext = createContext();
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://imronm.pythonanywhere.com/api/';
+const base_url = process.env.NEXT_PUBLIC_API_URL || 'https://imronm.pythonanywhere.com/api/';
+const API_URL = base_url.endsWith('/') ? base_url : `${base_url}/`;
 
 // Cookie expires in 90 days
 const COOKIE_EXPIRES_DAYS = 90;
@@ -52,7 +53,7 @@ export function AuthProvider({ children }) {
         if (!refreshToken) return null;
 
         try {
-            const res = await fetch(`${API_URL}/auth/token/refresh`, {
+            const res = await fetch(`${API_URL}auth/token/refresh`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ refresh: refreshToken }),
@@ -96,7 +97,7 @@ export function AuthProvider({ children }) {
 
     const fetchUserWithToken = async (token) => {
         try {
-            const res = await fetch(`${API_URL}/auth/me`, {
+            const res = await fetch(`${API_URL}auth/me`, {
                 headers: { 'Authorization': `Bearer ${token}` },
             });
 
@@ -107,7 +108,7 @@ export function AuthProvider({ children }) {
                 // Access token expired — try to refresh silently
                 const newToken = await refreshAccessToken();
                 if (newToken) {
-                    const retryRes = await fetch(`${API_URL}/auth/me`, {
+                    const retryRes = await fetch(`${API_URL}auth/me`, {
                         headers: { 'Authorization': `Bearer ${newToken}` },
                     });
                     if (retryRes.ok) {
@@ -131,7 +132,7 @@ export function AuthProvider({ children }) {
 
     const login = async (email, password) => {
         try {
-            const res = await fetch(`${API_URL}/auth/login`, {
+            const res = await fetch(`${API_URL}auth/login`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ identifier: email, password }),
@@ -155,7 +156,7 @@ export function AuthProvider({ children }) {
 
     const register = async (username, email, password) => {
         try {
-            const res = await fetch(`${API_URL}/auth/register`, {
+            const res = await fetch(`${API_URL}auth/register`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ username, email, password }),
@@ -179,7 +180,7 @@ export function AuthProvider({ children }) {
 
     const googleLogin = async (credentialResponse) => {
         try {
-            const res = await fetch(`${API_URL}/auth/google`, {
+            const res = await fetch(`${API_URL}auth/google`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ token: credentialResponse.credential }),
@@ -203,7 +204,7 @@ export function AuthProvider({ children }) {
 
     const forgotPassword = async (email) => {
         try {
-            const res = await fetch(`${API_URL}/auth/password-reset`, {
+            const res = await fetch(`${API_URL}auth/password-reset`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email }),
@@ -222,7 +223,7 @@ export function AuthProvider({ children }) {
 
     const resetPassword = async (uid, token, newPassword) => {
         try {
-            const res = await fetch(`${API_URL}/auth/password-reset-confirm`, {
+            const res = await fetch(`${API_URL}auth/password-reset-confirm`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ uid, token, new_password: newPassword }),
