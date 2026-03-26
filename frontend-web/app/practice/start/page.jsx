@@ -282,9 +282,9 @@ function PracticeContent() {
                         <h3 className="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
                             <span>📋</span> Ringkasan Jawaban
                         </h3>
-                        <div className="space-y-3 max-h-[300px] overflow-y-auto pr-2 custom-scrollbar">
+                        <div className="space-y-3 max-h-[350px] overflow-y-auto pr-2 custom-scrollbar">
                             {results.map((res, idx) => (
-                                <div key={idx} className={`p-4 rounded-xl border ${res.is_correct ? 'bg-green-50 border-green-100' : 'bg-red-50 border-red-100'} transition-all`}>
+                                <div key={idx} className={`p-4 rounded-xl border ${res.is_correct ? 'bg-green-50 border-green-100' : 'bg-red-50 border-red-100'} transition-all break-words whitespace-normal`}>
                                     <div className="flex justify-between items-start mb-2">
                                         <div className="flex items-center gap-3">
                                             <span className="text-2xl font-bold">{res.character}</span>
@@ -378,7 +378,7 @@ function PracticeContent() {
                         currentQuestion.character.length > 10 ? 'text-2xl md:text-3xl' :
                         currentQuestion.type === 'grammar' || currentQuestion.type === 'particle' ? 'text-3xl md:text-4xl' : 
                         'text-6xl md:text-[6rem]'
-                    } leading-tight font-medium text-gray-800 select-none pb-2`}>
+                    } leading-tight font-medium text-gray-800 select-none pb-2 break-words whitespace-normal`}>
                         {currentQuestion.character}
                     </div>
                     {currentQuestion.type === 'kanji' && currentQuestion.reading && (
@@ -401,7 +401,7 @@ function PracticeContent() {
 
                 <div className="grid gap-3 grid-cols-1 md:grid-cols-2">
                     {currentQuestion.options.map((option, idx) => {
-                        let btnClass = "p-4 text-lg font-medium border-2 rounded-xl transition-all relative overflow-hidden ";
+                        let btnClass = "p-4 text-base md:text-lg font-medium border-2 rounded-xl transition-all relative break-words whitespace-normal ";
 
                         if (isAnswered) {
                             if (option.is_correct) {

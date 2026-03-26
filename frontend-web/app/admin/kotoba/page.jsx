@@ -28,26 +28,26 @@ export default function KotobaAdmin() {
         setLoading(true);
         try {
             const token = Cookies.get('access_token');
-            console.log('Token:', token); // tambah ini
-            
-            let url = 'https://imronm.pythonanywhere.com/api/admin/vocab';
-            // ... rest of code
+            const params = new URLSearchParams();
+            if (level) params.append('level', level);
+            if (search) params.append('search', search);
+            params.append('page', currentPage);
+            params.append('limit', 50);
+
+            let url = `https://imronm.pythonanywhere.com/api/admin/vocab?${params.toString()}`;
+            setDebugInfo(url);
             
             const res = await fetch(url, { 
                 headers: { 'Authorization': `Bearer ${token}` },
                 cache: 'no-store'
             });
             
-            console.log('Response status:', res.status); // tambah ini
-            
             if (res.ok) {
                 const data = await res.json();
                 if (Array.isArray(data)) {
-                    // Legacy support for array response
                     setVocabs(data);
                     setPagination({ total: data.length, page: 1, pages: 1 });
                 } else {
-                    // New paginated response
                     setVocabs(data.items || []);
                     setPagination({ 
                         total: data.total || 0, 
@@ -57,11 +57,18 @@ export default function KotobaAdmin() {
                     setServerLevel(data.debug_level);
                 }
             } else {
-                console.error("Fetch failed");
+                const errorData = await res.json().catch(() => ({}));
+                console.error("Fetch failed:", res.status, errorData);
+                if (res.status === 403) {
+                    alert("Admin access denied. Please login with admin account (imronm1309@gmail.com)");
+                } else {
+                    alert(`Gagal mengambil data: ${res.status} ${res.statusText}`);
+                }
                 setVocabs([]);
             }
         } catch (error) {
             console.error("Failed to fetch vocabs", error);
+            alert(`Terjadi kesalahan: ${error.message}`);
         } finally {
             setLoading(false);
         }

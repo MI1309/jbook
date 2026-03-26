@@ -17,6 +17,8 @@ export default function KotobaForm({ params }) {
         jlpt_level: 5
     });
     const [error, setError] = useState(null);
+    const [loading, setLoading] = useState(false);
+    const [saving, setSaving] = useState(false);
 
     useEffect(() => {
         if (!isNew) {

@@ -288,7 +288,7 @@ class VocabListResponse(BaseModel):
 def admin_list_vocabs(request, level: int = None, search: str = None, page: int = 1, limit: int = 50):
     from utils.kana import to_kana
     
-    query = Vocab.objects.all().order_by('-created_at')
+    query = Vocab.objects.all().order_by('jlpt_level', 'word')
     
     # Debug
     applied_level = level
