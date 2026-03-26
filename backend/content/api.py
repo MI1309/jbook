@@ -195,6 +195,15 @@ def list_grammar(request,
         "pages": pages
     }
 
+# Alias for compatibility with production/older frontend
+@router.get("/grammar", response=GrammarListResponse)
+def list_grammar_alias(request, **kwargs):
+    return list_grammar(request, **kwargs)
+
+@router.get("/grammar/{grammar_id}", response=GrammarSchema)
+def get_grammar_alias(request, grammar_id: UUID):
+    return get_grammar(request, grammar_id)
+
 @router.get("/bunpo/{grammar_id}", response=GrammarSchema)
 def get_grammar(request, grammar_id: UUID):
     return get_object_or_404(Grammar, id=grammar_id)
@@ -275,6 +284,15 @@ def list_vocab(request,
         "debug_level": level,
         "debug_search": search
     }
+
+# Alias for compatibility with production/older frontend
+@router.get("/vocab", response=VocabListResponse)
+def list_vocab_alias(request, **kwargs):
+    return list_vocab(request, **kwargs)
+
+@router.get("/vocab/{vocab_id}", response=VocabSchema)
+def get_vocab_alias(request, vocab_id: UUID):
+    return get_vocab(request, vocab_id)
 
 @router.get("/kotoba/{vocab_id}", response=VocabSchema)
 def get_vocab(request, vocab_id: UUID):

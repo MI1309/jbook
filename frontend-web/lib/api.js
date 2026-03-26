@@ -1,5 +1,5 @@
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://imronm.pythonanywhere.com/api';
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://imronm.pythonanywhere.com/api/';
 import Cookies from 'js-cookie';
 
 /**
@@ -56,7 +56,7 @@ export async function getKanjiList({ level, search, radical, limit = 50, page = 
     if (page) queryParams.append('page', page);
 
     try {
-        const res = await fetch(`${API_URL}/content/kanji?${queryParams.toString()}`, {
+        const res = await fetch(`${API_URL}content/kanji/?${queryParams.toString()}`, {
             cache: 'no-store',
         });
         return handleResponse(res, 'getKanjiList');
@@ -68,7 +68,7 @@ export async function getKanjiList({ level, search, radical, limit = 50, page = 
 
 export async function getKanjiDetail(id) {
     try {
-        const res = await fetch(`${API_URL}/content/kanji/${id}`);
+        const res = await fetch(`${API_URL}content/kanji/${id}/`);
         return handleResponse(res, 'getKanjiDetail');
     } catch (error) {
         if (error.status) throw error;
@@ -85,7 +85,7 @@ export async function getGrammarList({ level, search, chapter, limit = 50, page 
     if (page) queryParams.append('page', page);
 
     try {
-        const res = await fetch(`${API_URL}/content/bunpo?${queryParams.toString()}`, {
+        const res = await fetch(`${API_URL}content/grammar?${queryParams.toString()}`, {
             cache: 'no-store',
         });
         const data = await handleResponse(res, 'getGrammarList');
@@ -108,7 +108,7 @@ export async function getGrammarList({ level, search, chapter, limit = 50, page 
 
 export async function getGrammarDetail(id) {
     try {
-        const res = await fetch(`${API_URL}/content/bunpo/${id}`);
+        const res = await fetch(`${API_URL}content/grammar/${id}`);
         return handleResponse(res, 'getGrammarDetail');
     } catch (error) {
         if (error.status) throw error;
@@ -123,7 +123,7 @@ export async function getPracticeQuestions({ limit = 10, level = null, type = 'k
     if (type) params.append('type', type);
 
     try {
-        const res = await fetch(`${API_URL}/learning/practice/generate?${params.toString()}`, {
+        const res = await fetch(`${API_URL}learning/practice/generate/?${params.toString()}`, {
             cache: 'no-store',
         });
         return handleResponse(res, 'getPracticeQuestions');
@@ -141,7 +141,7 @@ export async function submitPracticeResults(results) {
     if (token) headers['Authorization'] = `Bearer ${token}`;
 
     try {
-        const res = await fetch(`${API_URL}/learning/practice/submit`, {
+        const res = await fetch(`${API_URL}learning/practice/submit/`, {
             method: 'POST',
             headers,
             body: JSON.stringify({ results }),
@@ -208,7 +208,7 @@ export async function getVocabList({ level, search, word_type, limit = 50, page 
     if (page) queryParams.append('page', page);
 
     try {
-        const res = await fetch(`${API_URL}/content/kotoba?${queryParams.toString()}`, {
+        const res = await fetch(`${API_URL}content/vocab?${queryParams.toString()}`, {
             cache: 'no-store',
         });
         const data = await handleResponse(res, 'getVocabList');
@@ -231,7 +231,7 @@ export async function getVocabList({ level, search, word_type, limit = 50, page 
 
 export async function getVocabDetail(id) {
     try {
-        const res = await fetch(`${API_URL}/content/kotoba/${id}`, {
+        const res = await fetch(`${API_URL}content/vocab/${id}`, {
             cache: 'no-store',
         });
         return handleResponse(res, 'getVocabDetail');

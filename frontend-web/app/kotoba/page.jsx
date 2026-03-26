@@ -82,7 +82,8 @@ export default async function KotobaPage({ searchParams }) {
                 </div>
             ) : (
                 <div className="text-center py-20 bg-gray-50 rounded-lg">
-                    <p className="text-xl text-gray-500">Tidak ada kosakata yang ditemukan.</p>
+                    <p className="text-xl text-gray-500 mb-2">Tidak ada kosakata yang ditemukan.</p>
+                    <p className="text-[10px] text-gray-300 break-all">API: {process.env.NEXT_PUBLIC_API_URL || 'https://imronm.pythonanywhere.com/api'}/content/kotoba</p>
                 </div>
             )}
 
