@@ -369,6 +369,27 @@ def admin_update_vocab(request, id: str, payload: VocabCreateSchema):
     return vocab
 
 @router.delete("/kotoba/{id}", auth=AdminAuth())
+def admin_delete_vocab_alias(request, id: str):
+    return admin_delete_vocab(request, id)
+
+# Aliases for compatibility
+@router.get("/vocab", auth=AdminAuth(), response=VocabListResponse)
+def admin_list_vocabs_alias(request, **kwargs):
+    return admin_list_vocabs(request, **kwargs)
+
+@router.post("/vocab", auth=AdminAuth(), response=VocabSchema)
+def admin_create_vocab_alias(request, payload: VocabCreateSchema):
+    return admin_create_vocab(request, payload)
+
+@router.get("/vocab/{id}", auth=AdminAuth(), response=VocabSchema)
+def admin_get_vocab_alias(request, id: str):
+    return admin_get_vocab(request, id)
+
+@router.put("/vocab/{id}", auth=AdminAuth(), response=VocabSchema)
+def admin_update_vocab_alias(request, id: str, payload: VocabCreateSchema):
+    return admin_update_vocab(request, id, payload)
+
+@router.delete("/vocab/{id}", auth=AdminAuth())
 def admin_delete_vocab(request, id: str):
     vocab = get_object_or_404(Vocab, id=id)
     vocab.delete()
