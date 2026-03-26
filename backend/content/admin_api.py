@@ -323,8 +323,13 @@ def admin_list_vocabs(request, level: int = None, search: str = None, page: int 
     pages = (total + limit - 1) // limit
     offset = (page - 1) * limit
     
+    items = list(query[offset : offset + limit])
+    from utils.kana import to_kana
+    for v in items:
+        v.reading = to_kana(v.reading.lower())
+        
     return {
-        "items": list(query[offset : offset + limit]),
+        "items": items,
         "total": total,
         "page": page,
         "pages": pages,
@@ -343,13 +348,17 @@ def admin_export_vocab_csv(request):
     response['Content-Disposition'] = 'attachment; filename="vocab_export.csv"'
     writer = csv.writer(response)
     writer.writerow(['ID', 'Word', 'Reading', 'Meaning', 'JLPT Level'])
+    from utils.kana import to_kana
     for obj in Vocab.objects.all():
-        writer.writerow([obj.id, obj.word, obj.reading, obj.meaning, obj.jlpt_level])
+        writer.writerow([obj.id, obj.word, to_kana(obj.reading.lower()), obj.meaning, obj.jlpt_level])
     return response
 
 @router.get("/vocab/{id}", auth=AdminAuth(), response=VocabSchema)
 def admin_get_vocab(request, id: str):
-    return get_object_or_404(Vocab, id=id)
+    vocab = get_object_or_404(Vocab, id=id)
+    from utils.kana import to_kana
+    vocab.reading = to_kana(vocab.reading.lower())
+    return vocab
 
 @router.put("/vocab/{id}", auth=AdminAuth(), response=VocabSchema)
 def admin_update_vocab(request, id: str, payload: VocabCreateSchema):

@@ -97,6 +97,13 @@ function PracticeContent() {
         // DOUBLE CHECK: Ensure localStorage is wiped, in case context cleanup missed it
         localStorage.removeItem('guest_practice_session');
 
+        // FORCE CLEAR OLD CACHE (one-time fix for Romaji/Truncation issues)
+        const cacheVersion = 'v1.1';
+        if (sessionStorage.getItem('practice_cache_version') !== cacheVersion) {
+            sessionStorage.removeItem('guest_practice_session');
+            sessionStorage.setItem('practice_cache_version', cacheVersion);
+        }
+
         const savedSession = sessionStorage.getItem('guest_practice_session');
         if (savedSession) {
             try {
@@ -374,16 +381,17 @@ function PracticeContent() {
                         {currentQuestion.type === 'kanji' ? 'Kanji' : currentQuestion.type === 'vocab' ? 'Kosakata' : 'Tata Bahasa'}
                     </span>
                     <div className={`${
-                        currentQuestion.character.length > 50 ? 'text-base md:text-lg' :
-                        currentQuestion.character.length > 20 ? 'text-lg md:text-xl' :
-                        currentQuestion.character.length > 10 ? 'text-xl md:text-2xl' :
+                        currentQuestion.character.length > 50 ? 'text-sm md:text-lg' :
+                        currentQuestion.character.length > 20 ? 'text-base md:text-xl' :
+                        currentQuestion.character.length > 10 ? 'text-lg md:text-2xl' :
+                        currentQuestion.character.length > 5 ? 'text-xl md:text-3xl' :
                         currentQuestion.type === 'grammar' || currentQuestion.type === 'particle' ? 'text-2xl md:text-4xl' : 
-                        'text-5xl md:text-[6rem]'
+                        'text-4xl md:text-[6rem]'
                     } leading-tight font-medium text-gray-800 select-none pb-2 break-words whitespace-normal`}>
                         {currentQuestion.character}
                     </div>
                     {currentQuestion.type === 'kanji' && currentQuestion.reading && (
-                        <div className="text-2xl text-gray-500 font-serif mt-2">
+                        <div className="text-2xl text-gray-500 font-serif mt-2 break-words whitespace-normal">
                             {currentQuestion.reading}
                         </div>
                     )}
@@ -392,10 +400,10 @@ function PracticeContent() {
                 {isAnswered && (currentQuestion.reading || currentQuestion.meaning) && (
                     <div className="mb-6 animate-fade-in-up">
                         {currentQuestion.reading && (
-                            <div className="text-2xl text-red-500 font-serif mb-1">{currentQuestion.reading}</div>
+                            <div className="text-2xl text-red-500 font-serif mb-1 break-words whitespace-normal">{currentQuestion.reading}</div>
                         )}
                         {currentQuestion.meaning && (
-                            <div className="text-lg text-gray-600 font-medium">{currentQuestion.meaning}</div>
+                            <div className="text-lg text-gray-600 font-medium break-words whitespace-normal">{currentQuestion.meaning}</div>
                         )}
                     </div>
                 )}

@@ -260,8 +260,15 @@ def list_vocab(request,
     pages = (total + limit - 1) // limit
     offset = (page - 1) * limit
     
+    items = list(qs[offset : offset + limit])
+    from utils.kana import to_kana
+    for v in items:
+        v.reading = to_kana(v.reading.lower())
+        if v.furigana:
+            v.furigana = to_kana(v.furigana.lower())
+            
     return {
-        "items": list(qs[offset : offset + limit]),
+        "items": items,
         "total": total,
         "page": page,
         "pages": pages,
@@ -272,7 +279,12 @@ def list_vocab(request,
 @router.get("/vocab/{vocab_id}", response=VocabSchema)
 def get_vocab(request, vocab_id: UUID):
     from .models import Vocab
-    return get_object_or_404(Vocab, id=vocab_id)
+    vocab = get_object_or_404(Vocab, id=vocab_id)
+    from utils.kana import to_kana
+    vocab.reading = to_kana(vocab.reading.lower())
+    if vocab.furigana:
+        vocab.furigana = to_kana(vocab.furigana.lower())
+    return vocab
 
 @router.get("/blog", response=List[BlogSchema])
 def list_blog(request):

@@ -131,7 +131,8 @@ def generate_quiz(request, limit: int = 10, level: Optional[str] = None, type: s
             display_text = item.word
             correct_answer = item.meaning
             distractor_answers = [d.meaning for d in distractors]
-            reading = item.furigana if item.furigana else item.reading
+            from utils.kana import to_kana
+            reading = to_kana((item.furigana if item.furigana else item.reading).lower()) if (item.furigana or item.reading) else ""
             meaning = item.meaning
         elif d_type == 'grammar':
             display_text = item.title
