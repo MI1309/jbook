@@ -7,7 +7,7 @@ import Cookies from 'js-cookie';
 
 const AuthContext = createContext();
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api';
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://imronm.pythonanywhere.com/api';
 
 // Cookie expires in 90 days
 const COOKIE_EXPIRES_DAYS = 90;

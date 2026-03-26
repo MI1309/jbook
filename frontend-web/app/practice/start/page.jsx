@@ -98,7 +98,7 @@ function PracticeContent() {
         localStorage.removeItem('guest_practice_session');
 
         // FORCE CLEAR OLD CACHE (one-time fix for Romaji/Truncation issues)
-        const cacheVersion = 'v1.1';
+        const cacheVersion = 'v1.2';
         if (sessionStorage.getItem('practice_cache_version') !== cacheVersion) {
             sessionStorage.removeItem('guest_practice_session');
             sessionStorage.setItem('practice_cache_version', cacheVersion);

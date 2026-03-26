@@ -30,6 +30,7 @@ ROMAJI_MAP = {
     'ja': 'じゃ', 'ju': 'じゅ', 'jo': 'じょ',
     'bya': 'びゃ', 'byu': 'びゅ', 'byo': 'びょ',
     'pya': 'ぴゃ', 'pyu': 'ぴゅ', 'pyo': 'ぴょ',
+    'tsu': 'つ', 'chi': 'ち', 'shi': 'し', 'fu': 'ふ',
 }
 
 def to_kana(text: str) -> str:
@@ -62,13 +63,9 @@ def to_kana(text: str) -> str:
                 # classic rule: 'nn' -> 'ん' if end or next is not vowel
                 # but let's handle 'nn' separately?
                 if sub[0] == 'n':
-                   # 'nn' usually means 'ん'
+                   # 'nn' should be 'ん'
                    res += 'ん'
-                   i += 1 # Consume first n, second n will be processed next iteration? 
-                   # Wait, 'nna' -> 'んな'. 'nn' -> 'ん'.
-                   # Simplification: consume both?
-                   # usage of 'nn' for 'ん' is common.
-                   # If we consume one 'n' as 'ん', the next 'n' starts next syllable.
+                   i += 2 # Consume both n's
                    continue
 
                 res += 'っ'
