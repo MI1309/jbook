@@ -32,7 +32,7 @@ export default function KotobaForm({ params }) {
         setError(null);
         try {
             const token = Cookies.get('access_token');
-            const res = await fetch(`${API_URL}admin/vocab/${id}`, {
+            const res = await fetch(`${API_URL}/admin/vocab/${id}`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             if (res.ok) {
@@ -58,8 +58,8 @@ export default function KotobaForm({ params }) {
         try {
             const token = Cookies.get('access_token');
             const url = isNew
-                ? `${API_URL}admin/vocab`
-                : `${API_URL}admin/vocab/${id}`;
+                ? `${API_URL}/admin/vocab`
+                : `${API_URL}/admin/vocab/${id}`;
             const method = isNew ? 'POST' : 'PUT';
 
             const res = await fetch(url, {

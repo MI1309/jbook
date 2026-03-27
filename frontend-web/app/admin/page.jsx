@@ -32,7 +32,7 @@ export default function AdminDashboard() {
     const fetchStats = async () => {
         try {
             const token = Cookies.get('access_token');
-            const res = await fetch(`${API_URL}admin/stats`, {
+            const res = await fetch(`${API_URL}/admin/stats`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             if (res.ok) {
@@ -48,7 +48,7 @@ export default function AdminDashboard() {
         setIsSearching(true);
         try {
             const token = Cookies.get('access_token');
-            const res = await fetch(`${API_URL}admin/search?q=${encodeURIComponent(searchQuery)}`, {
+            const res = await fetch(`${API_URL}/admin/search?q=${encodeURIComponent(searchQuery)}`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             if (res.ok) {
@@ -65,7 +65,7 @@ export default function AdminDashboard() {
     const handleExport = async (type) => {
         try {
             const token = Cookies.get('access_token');
-            const res = await fetch(`${API_URL}admin/${type}/export/csv`, {
+            const res = await fetch(`${API_URL}/admin/${type}/export/csv`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             

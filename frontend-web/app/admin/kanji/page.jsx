@@ -20,7 +20,7 @@ export default function KanjiAdmin() {
         setLoading(true);
         try {
             const token = Cookies.get('access_token');
-            let url = `${API_URL}admin/kanji`;
+            let url = `${API_URL}/admin/kanji`;
 
             const queryParams = new URLSearchParams();
             if (level && level !== 'all') queryParams.append('level', level);
@@ -52,7 +52,7 @@ export default function KanjiAdmin() {
         if (!window.confirm("Yakin ingin menghapus Kanji ini?")) return;
         try {
             const token = Cookies.get('access_token');
-            const res = await fetch(`${API_URL}admin/kanji/${id}`, {
+            const res = await fetch(`${API_URL}/admin/kanji/${id}`, {
                 method: 'DELETE',
                 headers: { 'Authorization': `Bearer ${token}` }
             });

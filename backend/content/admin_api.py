@@ -221,7 +221,8 @@ class GrammarSchema(GrammarCreateSchema):
 
 # Bunpo CRUD
 @router.get("/bunpo", auth=AdminAuth(), response=List[GrammarSchema])
-def admin_list_bunpos(request, level: int = None, chapter: int = None, search: str = None, page: int = 1, limit: int = 20):
+@router.get("/grammar", auth=AdminAuth(), response=List[GrammarSchema])
+def admin_list_bunpos(request, level: int = None, chapter: int = None, search: str = None):
     query = Grammar.objects.all().order_by('chapter', 'jlpt_level', 'id')
     
     if level:
@@ -236,9 +237,7 @@ def admin_list_bunpos(request, level: int = None, chapter: int = None, search: s
             Q(explanation__icontains=search)
         )
         
-    # Pagination
-    offset = (page - 1) * limit
-    return query[offset : offset + limit]
+    return list(query[:1000])  # grammar lists are usually small, safety cap
 
 @router.post("/bunpo", auth=AdminAuth(), response=GrammarSchema)
 def admin_create_bunpo(request, payload: GrammarCreateSchema):
@@ -291,22 +290,16 @@ class VocabSchema(VocabCreateSchema):
 class VocabListResponse(BaseModel):
     items: List[VocabSchema]
     total: int
-    page: int
-    pages: int
     debug_level: Optional[int] = None
     debug_search: Optional[str] = None
 
 # Vocab CRUD
-@router.get("/kotoba", auth=AdminAuth(), response=VocabListResponse)
-@router.get("/vocab", auth=AdminAuth(), response=VocabListResponse)
-def admin_list_vocabs(request, level: int = None, search: str = None, page: int = 1, limit: int = 50):
+@router.get("/kotoba", auth=AdminAuth(), response=List[VocabSchema])
+@router.get("/vocab", auth=AdminAuth(), response=List[VocabSchema])
+def admin_list_vocabs(request, level: int = None, search: str = None):
     from utils.kana import to_kana
     
     query = Vocab.objects.all().order_by('jlpt_level', 'word')
-    
-    # Debug
-    applied_level = level
-    applied_search = search
 
     if level is not None:
         query = query.filter(jlpt_level=level)
@@ -320,23 +313,13 @@ def admin_list_vocabs(request, level: int = None, search: str = None, page: int 
             Q(reading__icontains=search_kana)
         )
         
-    total = query.count()
-    pages = (total + limit - 1) // limit
-    offset = (page - 1) * limit
-    
-    items = list(query[offset : offset + limit])
+    items = list(query[:10000])  # limit to 10,000 to prevent catastrophic memory
     from utils.kana import to_kana
     for v in items:
-        v.reading = to_kana(v.reading.lower())
+        if v.reading:
+            v.reading = to_kana(v.reading.lower())
         
-    return {
-        "items": items,
-        "total": total,
-        "page": page,
-        "pages": pages,
-        "debug_level": applied_level,
-        "debug_search": applied_search
-    }
+    return items
 
 @router.post("/kotoba", auth=AdminAuth(), response=VocabSchema)
 @router.post("/vocab", auth=AdminAuth(), response=VocabSchema)

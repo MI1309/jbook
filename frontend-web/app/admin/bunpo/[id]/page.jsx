@@ -32,7 +32,7 @@ export default function BunpoForm({ params }) {
     const fetchBunpo = async () => {
         try {
             const token = Cookies.get('access_token');
-            const res = await fetch(`${API_URL}admin/bunpo/${id}`, {
+            const res = await fetch(`${API_URL}/admin/grammar/${id}`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
 
@@ -87,8 +87,8 @@ export default function BunpoForm({ params }) {
             };
 
             const url = isNew
-                ? `${API_URL}admin/bunpo`
-                : `${API_URL}admin/bunpo/${id}`;
+                ? `${API_URL}/admin/grammar`
+                : `${API_URL}/admin/grammar/${id}`;
 
             const method = isNew ? 'POST' : 'PUT';
 

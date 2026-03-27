@@ -19,29 +19,68 @@ export default function BunpoAdmin() {
     const LIMIT = 20;
     const router = useRouter();
 
+    const [allBunpos, setAllBunpos] = useState([]);
+
     const [debouncedChapter] = useDebounce(filterChapter, 500);
     const [debouncedSearch] = useDebounce(search, 500);
 
     useEffect(() => { setPage(1); }, [filterLevel, debouncedChapter, debouncedSearch]);
-    useEffect(() => { fetchBunpos(); }, [filterLevel, debouncedChapter, debouncedSearch, page]);
+    
+    useEffect(() => { fetchAllBunpos(); }, []);
 
-    const fetchBunpos = async () => {
+    useEffect(() => {
+        applyFiltersAndPagination();
+    }, [allBunpos, filterLevel, debouncedChapter, debouncedSearch, page]);
+
+    const fetchAllBunpos = async () => {
         setLoading(true);
         try {
             const token = Cookies.get('access_token');
-            let url = `${API_URL}admin/bunpo?page=${page}&limit=${LIMIT}&`;
-            if (filterLevel) url += `level=${filterLevel}&`;
-            if (debouncedChapter && !isNaN(parseInt(debouncedChapter))) url += `chapter=${parseInt(debouncedChapter)}&`;
-            if (debouncedSearch) url += `search=${encodeURIComponent(debouncedSearch)}&`;
-
+            const url = `${API_URL}/admin/grammar`;
             const res = await fetch(url, { headers: { 'Authorization': `Bearer ${token}` } });
-            if (res.ok) setBunpos(await res.json());
-            else alert(`Gagal mengambil data Bunpo: ${res.status} ${res.statusText}`);
+            if (res.ok) {
+                const data = await res.json();
+                setAllBunpos(Array.isArray(data) ? data : (data.items || []));
+            } else {
+                alert(`Gagal mengambil data Bunpo: ${res.status} ${res.statusText}`);
+            }
         } catch (error) {
             console.error("Failed to fetch bunpos", error);
+            alert(`Terjadi kesalahan jaringan.`);
         } finally {
             setLoading(false);
         }
+    };
+
+    const applyFiltersAndPagination = () => {
+        let filtered = [...allBunpos];
+
+        if (filterLevel) {
+            filtered = filtered.filter(b => b.jlpt_level == filterLevel);
+        }
+        if (debouncedChapter && !isNaN(parseInt(debouncedChapter))) {
+            const ch = parseInt(debouncedChapter);
+            filtered = filtered.filter(b => b.chapter === ch);
+        }
+        if (debouncedSearch) {
+            const ls = debouncedSearch.toLowerCase();
+            filtered = filtered.filter(b => 
+                (b.title && b.title.toLowerCase().includes(ls)) ||
+                (b.structure && b.structure.toLowerCase().includes(ls)) ||
+                (b.explanation && b.explanation.toLowerCase().includes(ls))
+            );
+        }
+
+        const totalItems = filtered.length;
+        const totalPages = Math.max(1, Math.ceil(totalItems / LIMIT));
+        const safePage = Math.min(page, totalPages);
+        
+        if (safePage !== page) {
+            setPage(safePage);
+        }
+
+        const offset = (safePage - 1) * LIMIT;
+        setBunpos(filtered.slice(offset, offset + LIMIT));
     };
 
     const handleDelete = async (e, id) => {
@@ -49,11 +88,11 @@ export default function BunpoAdmin() {
         if (!confirm('Are you sure you want to delete this Grammar point?')) return;
         try {
             const token = Cookies.get('access_token');
-            const res = await fetch(`${API_URL}admin/bunpo/${id}`, {
+            const res = await fetch(`${API_URL}/admin/grammar/${id}`, {
                 method: 'DELETE',
                 headers: { 'Authorization': `Bearer ${token}` }
             });
-            if (res.ok) fetchBunpos();
+            if (res.ok) fetchAllBunpos();
             else alert('Failed to delete');
         } catch (error) {
             console.error("Delete error", error);
@@ -193,11 +232,11 @@ export default function BunpoAdmin() {
                             <div className="text-sm text-gray-500">Page {page}</div>
                             <div className="flex gap-2">
                                 <button onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page === 1}
-                                    className={`px-3 py-1 rounded border text-sm ${page === 1 ? 'bg-gray-100 text-gray-400' : 'bg-white text-gray-700 hover:bg-gray-50'}`}>
+                                    className={`px-3 py-1 rounded border text-sm ${page === 1 ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-white text-gray-700 hover:bg-gray-50'}`}>
                                     Previous
                                 </button>
                                 <button onClick={() => setPage(p => p + 1)} disabled={bunpos.length < LIMIT}
-                                    className={`px-3 py-1 rounded border text-sm ${bunpos.length < LIMIT ? 'bg-gray-100 text-gray-400' : 'bg-white text-gray-700 hover:bg-gray-50'}`}>
+                                    className={`px-3 py-1 rounded border text-sm ${bunpos.length < LIMIT ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-white text-gray-700 hover:bg-gray-50'}`}>
                                     Next
                                 </button>
                             </div>

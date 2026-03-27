@@ -32,7 +32,7 @@ export default function KanjiForm({ params }) {
     const fetchKanji = async () => {
         try {
             const token = Cookies.get('access_token');
-            const res = await fetch(`${API_URL}admin/kanji/${id}`, {
+            const res = await fetch(`${API_URL}/admin/kanji/${id}`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
 
@@ -78,8 +78,8 @@ export default function KanjiForm({ params }) {
             };
 
             const url = isNew
-                ? `${API_URL}admin/kanji`
-                : `${API_URL}admin/kanji/${id}`;
+                ? `${API_URL}/admin/kanji`
+                : `${API_URL}/admin/kanji/${id}`;
 
             const method = isNew ? 'POST' : 'PUT';
 

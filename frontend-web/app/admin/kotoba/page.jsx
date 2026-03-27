@@ -19,60 +19,87 @@ export default function KotobaAdmin() {
     const [serverLevel, setServerLevel] = useState(null);
     const router = useRouter();
 
+    const [allVocabs, setAllVocabs] = useState([]);
+    const [filteredVocabs, setFilteredVocabs] = useState([]);
+
     useEffect(() => { 
-        setCurrentPage(1); // Reset to first page on filter change
+        setCurrentPage(1);
     }, [search, level]);
 
-    useEffect(() => { fetchVocabs(); }, [search, level, currentPage]);
+    useEffect(() => { fetchAllVocabs(); }, []);
 
-    const fetchVocabs = async () => {
+    useEffect(() => {
+        applyFiltersAndPagination();
+    }, [allVocabs, search, level, currentPage]);
+
+    const fetchAllVocabs = async () => {
         setLoading(true);
         try {
             const token = Cookies.get('access_token');
-            const params = new URLSearchParams();
-            if (level) params.append('level', level);
-            if (search) params.append('search', search);
-            params.append('page', currentPage);
-            params.append('limit', 50);
-
-            let url = `${API_URL}admin/vocab?${params.toString()}`;
-            setDebugInfo(url);
-            
-            const res = await fetch(url, { 
+            // Fetch everything
+            const res = await fetch(`${API_URL}/admin/vocab?limit=10000`, { 
                 headers: { 'Authorization': `Bearer ${token}` },
                 cache: 'no-store'
             });
             
             if (res.ok) {
                 const data = await res.json();
-                if (Array.isArray(data)) {
-                    setVocabs(data);
-                    setPagination({ total: data.length, page: 1, pages: 1 });
-                } else {
-                    setVocabs(data.items || []);
-                    setPagination({ 
-                        total: data.total || 0, 
-                        page: data.page || 1, 
-                        pages: data.pages || 1 
-                    });
-                    setServerLevel(data.debug_level);
-                }
+                const fetchedItems = Array.isArray(data) ? data : (data.items || []);
+                setAllVocabs(fetchedItems);
+                setServerLevel(data.debug_level || null);
             } else {
                 const errorData = await res.json().catch(() => ({}));
                 console.error("Fetch failed:", res.status, errorData);
                 if (res.status === 403) {
                     alert("Admin access denied. Please login with admin account (imronm1309@gmail.com)");
+                } else if (res.status === 500) {
+                    alert(`Server Error 500. Silakan pastikan server PythonAnywhere sudah diperbarui.`);
                 } else {
                     alert(`Gagal mengambil data: ${res.status} ${res.statusText}`);
                 }
-                setVocabs([]);
             }
         } catch (error) {
             console.error("Failed to fetch vocabs", error);
-            alert(`Terjadi kesalahan: ${error.message}`);
+            alert(`Terjadi kesalahan jaringan: ${error.message}`);
         } finally {
             setLoading(false);
         }
+    };
+
+    const applyFiltersAndPagination = () => {
+        const pageSize = 50;
+        let filtered = [...allVocabs];
+
+        if (level) {
+            filtered = filtered.filter(v => v.jlpt_level == level);
+        }
+
+        if (search) {
+            const searchLower = search.toLowerCase();
+            filtered = filtered.filter(v => 
+                (v.word && v.word.toLowerCase().includes(searchLower)) ||
+                (v.reading && v.reading.toLowerCase().includes(searchLower)) ||
+                (v.meaning && v.meaning.toLowerCase().includes(searchLower))
+            );
+        }
+
+        const totalItems = filtered.length;
+        const totalPages = Math.max(1, Math.ceil(totalItems / pageSize));
+        const safePage = Math.min(currentPage, totalPages);
+        
+        if (safePage !== currentPage) {
+            setCurrentPage(safePage);
+        }
+
+        const offset = (safePage - 1) * pageSize;
+        const paginatedItems = filtered.slice(offset, offset + pageSize);
+
+        setVocabs(paginatedItems);
+        setPagination({
+            total: totalItems,
+            page: safePage,
+            pages: totalPages
+        });
     };
 
     const handleDelete = async (e, id) => {
@@ -80,11 +107,11 @@ export default function KotobaAdmin() {
         if (!confirm('Are you sure you want to delete this Vocabulary?')) return;
         try {
             const token = Cookies.get('access_token');
-            const res = await fetch(`${API_URL}admin/vocab/${id}`, {
+            const res = await fetch(`${API_URL}/admin/vocab/${id}`, {
                 method: 'DELETE',
                 headers: { 'Authorization': `Bearer ${token}` }
             });
-            if (res.ok) fetchVocabs();
+            if (res.ok) fetchAllVocabs();
             else alert('Failed to delete');
         } catch (error) {
             console.error("Delete error", error);
