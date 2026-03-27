@@ -1,6 +1,5 @@
-
-const base_url = process.env.NEXT_PUBLIC_API_URL || 'https://imronm.pythonanywhere.com/api/';
-export const API_URL = base_url.endsWith('/') ? base_url : `${base_url}/`;
+const base_url = process.env.NEXT_PUBLIC_API_URL || 'https://imronm.pythonanywhere.com/api';
+export const API_URL = base_url.endsWith('/') ? base_url.slice(0, -1) : base_url;
 import Cookies from 'js-cookie';
 
 /**
@@ -57,7 +56,7 @@ export async function getKanjiList({ level, search, radical, limit = 50, page = 
     if (page) queryParams.append('page', page);
 
     try {
-        const res = await fetch(`${API_URL}content/kanji?${queryParams.toString()}`, {
+        const res = await fetch(`${API_URL}/content/kanji?${queryParams.toString()}`, {
             cache: 'no-store',
         });
         return handleResponse(res, 'getKanjiList');
@@ -69,7 +68,7 @@ export async function getKanjiList({ level, search, radical, limit = 50, page = 
 
 export async function getKanjiDetail(id) {
     try {
-        const res = await fetch(`${API_URL}content/kanji/${id}`);
+        const res = await fetch(`${API_URL}/content/kanji/${id}`);
         return handleResponse(res, 'getKanjiDetail');
     } catch (error) {
         if (error.status) throw error;
@@ -86,7 +85,7 @@ export async function getGrammarList({ level, search, chapter, limit = 50, page 
     if (page) queryParams.append('page', page);
 
     try {
-        const res = await fetch(`${API_URL}content/grammar?${queryParams.toString()}`, {
+        const res = await fetch(`${API_URL}/content/grammar?${queryParams.toString()}`, {
             cache: 'no-store',
         });
         const data = await handleResponse(res, 'getGrammarList');
@@ -109,7 +108,7 @@ export async function getGrammarList({ level, search, chapter, limit = 50, page 
 
 export async function getGrammarDetail(id) {
     try {
-        const res = await fetch(`${API_URL}content/grammar/${id}`);
+        const res = await fetch(`${API_URL}/content/grammar/${id}`);
         return handleResponse(res, 'getGrammarDetail');
     } catch (error) {
         if (error.status) throw error;
@@ -124,7 +123,7 @@ export async function getPracticeQuestions({ limit = 10, level = null, type = 'k
     if (type) params.append('type', type);
 
     try {
-        const res = await fetch(`${API_URL}learning/practice/generate/?${params.toString()}`, {
+        const res = await fetch(`${API_URL}/learning/practice/generate?${params.toString()}`, {
             cache: 'no-store',
         });
         return handleResponse(res, 'getPracticeQuestions');
@@ -142,7 +141,7 @@ export async function submitPracticeResults(results) {
     if (token) headers['Authorization'] = `Bearer ${token}`;
 
     try {
-        const res = await fetch(`${API_URL}learning/practice/submit`, {
+        const res = await fetch(`${API_URL}/learning/practice/submit`, {
             method: 'POST',
             headers,
             body: JSON.stringify({ results }),
@@ -160,7 +159,7 @@ export async function getUserAnalytics() {
     if (token) headers['Authorization'] = `Bearer ${token}`;
 
     try {
-        const res = await fetch(`${API_URL}learning/practice/analytics`, {
+        const res = await fetch(`${API_URL}/learning/practice/analytics`, {
             headers,
             cache: 'no-store',
         });
@@ -189,7 +188,7 @@ export async function resetPracticeProgress() {
     if (token) headers['Authorization'] = `Bearer ${token}`;
 
     try {
-        const res = await fetch(`${API_URL}learning/practice/reset`, {
+        const res = await fetch(`${API_URL}/learning/practice/reset`, {
             method: 'POST',
             headers,
         });
@@ -209,7 +208,7 @@ export async function getVocabList({ level, search, word_type, limit = 50, page 
     if (page) queryParams.append('page', page);
 
     try {
-        const res = await fetch(`${API_URL}content/vocab?${queryParams.toString()}`, {
+        const res = await fetch(`${API_URL}/content/kotoba?${queryParams.toString()}`, {
             cache: 'no-store',
         });
         const data = await handleResponse(res, 'getVocabList');
@@ -232,7 +231,7 @@ export async function getVocabList({ level, search, word_type, limit = 50, page 
 
 export async function getVocabDetail(id) {
     try {
-        const res = await fetch(`${API_URL}content/vocab/${id}`, {
+        const res = await fetch(`${API_URL}/content/kotoba/${id}`, {
             cache: 'no-store',
         });
         return handleResponse(res, 'getVocabDetail');
@@ -244,7 +243,7 @@ export async function getVocabDetail(id) {
 
 export async function getBlogList() {
     try {
-        const res = await fetch(`${API_URL}content/blog`, {
+        const res = await fetch(`${API_URL}/content/blog`, {
             cache: 'no-store',
         });
         return handleResponse(res, 'getBlogList');
@@ -256,7 +255,7 @@ export async function getBlogList() {
 
 export async function getBlogDetailBySlug(slug) {
     try {
-        const res = await fetch(`${API_URL}content/blog/${slug}`, {
+        const res = await fetch(`${API_URL}/content/blog/${slug}`, {
             cache: 'no-store',
         });
         return handleResponse(res, 'getBlogDetailBySlug');
@@ -268,7 +267,7 @@ export async function getBlogDetailBySlug(slug) {
 
 export async function suggestContent(payload) {
     try {
-        const res = await fetch(`${API_URL}content/suggest`, {
+        const res = await fetch(`${API_URL}/content/suggest`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload),
@@ -286,7 +285,7 @@ export async function exportPracticeData() {
     if (token) headers['Authorization'] = `Bearer ${token}`;
 
     try {
-        const res = await fetch(`${API_URL}learning/practice/export`, {
+        const res = await fetch(`${API_URL}/learning/practice/export`, {
             headers,
             cache: 'no-store',
         });
@@ -305,7 +304,7 @@ export async function importPracticeData(data) {
     if (token) headers['Authorization'] = `Bearer ${token}`;
 
     try {
-        const res = await fetch(`${API_URL}learning/practice/import`, {
+        const res = await fetch(`${API_URL}/learning/practice/import`, {
             method: 'POST',
             headers,
             body: JSON.stringify(data),
