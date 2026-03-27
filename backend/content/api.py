@@ -205,7 +205,7 @@ def get_grammar(request, grammar_id: UUID):
 class VocabSchema(Schema):
     id: UUID
     word: str
-    reading: str
+    reading: Optional[str] = None
     furigana: Optional[str] = None
     meaning: str
     word_type: Optional[str] = None
@@ -266,7 +266,8 @@ def list_vocab(request,
     items = list(qs[offset : offset + limit])
     from utils.kana import to_kana
     for v in items:
-        v.reading = to_kana(v.reading.lower())
+        if v.reading:
+            v.reading = to_kana(v.reading.lower())
         if v.furigana:
             v.furigana = to_kana(v.furigana.lower())
             
@@ -287,7 +288,8 @@ def get_vocab(request, vocab_id: UUID):
     from .models import Vocab
     vocab = get_object_or_404(Vocab, id=vocab_id)
     from utils.kana import to_kana
-    vocab.reading = to_kana(vocab.reading.lower())
+    if vocab.reading:
+        vocab.reading = to_kana(vocab.reading.lower())
     if vocab.furigana:
         vocab.furigana = to_kana(vocab.furigana.lower())
     return vocab

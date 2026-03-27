@@ -277,11 +277,11 @@ from .models import Vocab
 
 class VocabCreateSchema(BaseModel):
     word: str
-    reading: str
-    meaning: str
+    reading: Optional[str] = None
+    meaning: Optional[str] = None
     word_type: Optional[str] = None
     jlpt_level: int
-    examples: List[dict] = []
+    examples: Optional[List[dict]] = []
 
 class VocabSchema(VocabCreateSchema):
     id: UUID
@@ -296,7 +296,7 @@ class VocabListResponse(BaseModel):
 # Vocab CRUD
 @router.get("/kotoba", auth=AdminAuth(), response=List[VocabSchema])
 @router.get("/vocab", auth=AdminAuth(), response=List[VocabSchema])
-def admin_list_vocabs(request, level: int = None, search: str = None):
+def admin_list_vocabs(request, level: int = None, search: str = None, limit: int = 10000):
     from utils.kana import to_kana
     
     query = Vocab.objects.all().order_by('jlpt_level', 'word')
@@ -313,9 +313,11 @@ def admin_list_vocabs(request, level: int = None, search: str = None):
             Q(reading__icontains=search_kana)
         )
         
-    items = list(query[:10000])  # limit to 10,000 to prevent catastrophic memory
+    items = list(query[:limit])  # safely cap from query param
     from utils.kana import to_kana
     for v in items:
+        if v.reading:
+            v.reading = to_kana(v.reading.lower())
         if v.reading:
             v.reading = to_kana(v.reading.lower())
         
