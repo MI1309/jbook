@@ -89,59 +89,79 @@ export async function getKanjiList({ level, search, radical, limit = 50, page = 
     if (limit) queryParams.append('limit', limit);
     if (page) queryParams.append('page', page);
 
-    // 1. Prioritas Utama: Data Offline (IndexedDB) - Hanya di Browser
-    if (typeof window !== 'undefined') {
-        const hasOffline = await dbHasData('kanji');
-        if (hasOffline) {
-            const offline = await serveFromDb('kanji', { level, search, radical, page, limit });
-            // Jika ada data offline, kembalikan. Jika kosong tapi online, lanjut ke API.
-            if (offline && (offline.items.length > 0 || !navigator.onLine)) {
-                return offline;
+    const cacheKey = `kanji-list-${queryParams.toString()}`;
+    
+    // 1. Jika Online: Ambil dari API (Selalu Prioritas Utama)
+    if (typeof window === 'undefined' || navigator.onLine) {
+        console.info(`[jbook-api] Online: Mencoba mengambil Kanji dari API...`);
+        try {
+            const data = await fetchWithCache(cacheKey, async () => {
+                const res = await fetch(`${API_URL}/content/kanji?${queryParams.toString()}`);
+                return handleResponse(res, 'getKanjiList');
+            });
+            console.info(`[jbook-api] Berhasil mengambil Kanji dari API/Cache Browser.`);
+            return data;
+        } catch (error) {
+            console.warn(`[jbook-api] API Gagal, mencoba fallback ke Database Lokal...`, error.message);
+            if (typeof window !== 'undefined') {
+                const offline = await serveFromDb('kanji', { level, search, radical, page, limit });
+                if (offline && offline.items.length > 0) {
+                    console.info(`[jbook-api] Berhasil memuat data Kanji cadangan dari Database Lokal.`);
+                    return offline;
+                }
             }
+            throw error;
         }
     }
 
-    // 2. Fallback ke API & LocalStorage Cache
-    const cacheKey = `kanji-list-${queryParams.toString()}`;
-    try {
-        return await fetchWithCache(cacheKey, async () => {
-            const res = await fetch(`${API_URL}/content/kanji?${queryParams.toString()}`);
-            return handleResponse(res, 'getKanjiList');
-        });
-    } catch (error) {
-        if (error.status) throw error; // real HTTP error, don't use offline data
-        // Network failed — serve from IndexedDB
+    // 2. Jika Benar-benar Offline: Ambil dari Database Lokal
+    console.info(`[jbook-api] Offline: Mengambil Kanji dari Database Lokal...`);
+    if (typeof window !== 'undefined') {
         const offline = await serveFromDb('kanji', { level, search, radical, page, limit });
-        if (offline) return offline;
-        return handleNetworkError('getKanjiList', error, { items: [], total: 0, page: 1, pages: 1 });
+        if (offline && offline.items.length > 0) {
+            console.info(`[jbook-api] Berhasil memuat data Kanji dari Database Lokal.`);
+            return offline;
+        }
     }
+    
+    console.error(`[jbook-api] Tidak ada koneksi internet dan data lokal kosong (Belum didownload).`);
+    return handleNetworkError('getKanjiList', new Error('Offline'), { items: [], total: 0, page: 1, pages: 1 });
 }
 
 export async function getKanjiDetail(id) {
-    // 1. Prioritas Utama: Data Offline (IndexedDB) - Hanya di Browser
+    // 1. Jika Online: Ambil dari API
+    if (typeof window === 'undefined' || navigator.onLine) {
+        console.info(`[jbook-api] Online: Mengambil Kanji Detail (${id}) dari API...`);
+        try {
+            return await fetchWithCache(`kanji-detail-${id}`, async () => {
+                const res = await fetch(`${API_URL}/content/kanji/${id}`);
+                return handleResponse(res, 'getKanjiDetail');
+            });
+        } catch (error) {
+            console.warn(`[jbook-api] API Gagal, mencoba fallback ke Database Lokal.`);
+            if (typeof window !== 'undefined') {
+                try {
+                    const local = await dbGet('kanji', id);
+                    if (local) return local;
+                } catch {}
+            }
+            throw error;
+        }
+    }
+
+    // 2. Jika Offline: Ambil dari Database Lokal
+    console.info(`[jbook-api] Offline: Mengambil Kanji Detail (${id}) dari Database Lokal...`);
     if (typeof window !== 'undefined') {
         try {
             const local = await dbGet('kanji', id);
-            if (local) return local;
+            if (local) {
+                console.info(`[jbook-api] Berhasil memuat Kanji Detail dari Database Lokal.`);
+                return local;
+            }
         } catch {}
     }
 
-    // 2. Fallback ke API & LocalStorage Cache
-    try {
-        return await fetchWithCache(`kanji-detail-${id}`, async () => {
-            const res = await fetch(`${API_URL}/content/kanji/${id}`);
-            return handleResponse(res, 'getKanjiDetail');
-        });
-    } catch (error) {
-        if (error.status) throw error;
-        // Fallback: search IndexedDB for this specific kanji by id
-        try {
-            const all = await dbGetAll('kanji');
-            const found = all.find(k => k.id === id);
-            if (found) return found;
-        } catch {}
-        return handleNetworkError('getKanjiDetail', error, null);
-    }
+    return handleNetworkError('getKanjiDetail', new Error('Offline'), null);
 }
 
 export async function getGrammarList({ level, search, chapter, limit = 50, page = 1 } = {}) {
@@ -152,36 +172,57 @@ export async function getGrammarList({ level, search, chapter, limit = 50, page 
     if (limit) queryParams.append('limit', limit);
     if (page) queryParams.append('page', page);
 
-    // 1. Prioritas Utama: Data Offline (IndexedDB) - Hanya di Browser
-    if (typeof window !== 'undefined') {
-        const hasOffline = await dbHasData('grammar');
-        if (hasOffline) {
-            const offline = await serveFromDb('grammar', { level, search, chapter, page, limit });
-            if (offline && (offline.items.length > 0 || !navigator.onLine)) {
-                return offline;
+    // Prioritas Baru: API Pertama (Online) > Database Lokal (Offline/Gagal)
+    const cacheKey = `grammar-list-${queryParams.toString()}`;
+    
+    // 1. Jika Online: Ambil dari API
+    if (typeof window === 'undefined' || navigator.onLine) {
+        try {
+            return await fetchWithCache(cacheKey, async () => {
+                const res = await fetch(`${API_URL}/content/grammar?${queryParams.toString()}`);
+                const data = await handleResponse(res, 'getGrammarList');
+                if (Array.isArray(data)) return { items: data, total: data.length, pages: 1, page: 1 };
+                return data;
+            });
+        } catch (error) {
+            // Jika API Gagal (misal: timeout), coba fallback ke Offline
+            if (typeof window !== 'undefined') {
+                const offline = await serveFromDb('grammar', { level, search, chapter, page, limit });
+                if (offline && offline.items.length > 0) return offline;
             }
+            throw error;
         }
     }
 
-    // 2. Fallback ke API & LocalStorage Cache
-    const cacheKey = `grammar-list-${queryParams.toString()}`;
-    try {
-        return await fetchWithCache(cacheKey, async () => {
-            const res = await fetch(`${API_URL}/content/grammar?${queryParams.toString()}`);
-            const data = await handleResponse(res, 'getGrammarList');
-            if (Array.isArray(data)) return { items: data, total: data.length, pages: 1, page: 1 };
-            return data;
-        });
-    } catch (error) {
-        if (error.status) throw error;
+    // 2. Jika Benar-benar Offline: Ambil dari Database Lokal
+    if (typeof window !== 'undefined') {
         const offline = await serveFromDb('grammar', { level, search, chapter, page, limit });
-        if (offline) return offline;
-        return handleNetworkError('getGrammarList', error, { items: [], total: 0, page: 1, pages: 1 });
+        if (offline && offline.items.length > 0) return offline;
     }
+    
+    return handleNetworkError('getGrammarList', new Error('Offline'), { items: [], total: 0, page: 1, pages: 1 });
 }
 
 export async function getGrammarDetail(id) {
-    // 1. Prioritas Utama: Data Offline (IndexedDB) - Hanya di Browser
+    // 1. Jika Online: Ambil dari API
+    if (typeof window === 'undefined' || navigator.onLine) {
+        try {
+            return await fetchWithCache(`grammar-detail-${id}`, async () => {
+                const res = await fetch(`${API_URL}/content/grammar/${id}`);
+                return handleResponse(res, 'getGrammarDetail');
+            });
+        } catch (error) {
+            if (typeof window !== 'undefined') {
+                try {
+                    const local = await dbGet('grammar', id);
+                    if (local) return local;
+                } catch {}
+            }
+            throw error;
+        }
+    }
+
+    // 2. Jika Offline: Ambil dari Database Lokal
     if (typeof window !== 'undefined') {
         try {
             const local = await dbGet('grammar', id);
@@ -189,21 +230,7 @@ export async function getGrammarDetail(id) {
         } catch {}
     }
 
-    // 2. Fallback ke API & LocalStorage Cache
-    try {
-        return await fetchWithCache(`grammar-detail-${id}`, async () => {
-            const res = await fetch(`${API_URL}/content/grammar/${id}`);
-            return handleResponse(res, 'getGrammarDetail');
-        });
-    } catch (error) {
-        if (error.status) throw error;
-        try {
-            const all = await dbGetAll('grammar');
-            const found = all.find(g => g.id === id);
-            if (found) return found;
-        } catch {}
-        return handleNetworkError('getGrammarDetail', error, null);
-    }
+    return handleNetworkError('getGrammarDetail', new Error('Offline'), null);
 }
 
 export async function getPracticeQuestions({ limit = 10, level = null, type = 'kanji' } = {}) {
@@ -213,14 +240,86 @@ export async function getPracticeQuestions({ limit = 10, level = null, type = 'k
     if (type) params.append('type', type);
 
     const cacheKey = `practice-questions-${params.toString()}`;
+
+    // 1. Jika Online: Ambil dari API (Selalu Prioritas Utama)
+    if (typeof window === 'undefined' || navigator.onLine) {
+        console.info(`[jbook-api] Online: Membuat soal Latihan dari API...`);
+        try {
+            return await fetchWithCache(cacheKey, async () => {
+                const res = await fetch(`${API_URL}/learning/practice/generate?${params.toString()}`);
+                return handleResponse(res, 'getPracticeQuestions');
+            }, 24 * 60 * 60 * 1000); 
+        } catch (error) {
+            console.warn(`[jbook-api] API Gagal, mencoba membuat soal Latihan secara lokal...`);
+            if (typeof window !== 'undefined') {
+                const questions = await generateOfflineQuestions({ limit, level, type });
+                if (questions && questions.length > 0) return questions;
+            }
+            throw error;
+        }
+    }
+
+    // 2. Jika Offline: Buat soal Latihan secara Lokal (Simulator)
+    console.info(`[jbook-api] Offline: Membuat soal Latihan secara lokal (Database Download)...`);
+    if (typeof window !== 'undefined') {
+        const questions = await generateOfflineQuestions({ limit, level, type });
+        if (questions && questions.length > 0) {
+            console.info(`[jbook-api] Berhasil membuat ${questions.length} soal latihan offline.`);
+            return questions;
+        }
+    }
+
+    console.error(`[jbook-api] Tidak bisa membuat soal latihan offline (Data belum didownload).`);
+    return handleNetworkError('getPracticeQuestions', new Error('Offline'), []);
+}
+
+/**
+ * Simulator generator soal latihan offline
+ */
+async function generateOfflineQuestions({ limit, level, type }) {
     try {
-        return await fetchWithCache(cacheKey, async () => {
-            const res = await fetch(`${API_URL}/learning/practice/generate?${params.toString()}`);
-            return handleResponse(res, 'getPracticeQuestions');
-        }, 24 * 60 * 60 * 1000); // 1 day TTL for practice questions
-    } catch (error) {
-        if (error.status) throw error;
-        return handleNetworkError('getPracticeQuestions', error, []);
+        const storeName = type === 'kanji' ? 'kanji' : (type === 'vocab' || type === 'kotoba' ? 'vocab' : 'grammar');
+        let pool = await dbGetAll(storeName);
+        if (!pool || pool.length < 4) return [];
+
+        if (level) {
+            pool = pool.filter(i => String(i.jlpt_level) === String(level));
+        }
+        if (pool.length < 4) return [];
+
+        // Shuffle pool
+        const shuffled = [...pool].sort(() => 0.5 - Math.random());
+        const selected = shuffled.slice(0, Math.min(limit, shuffled.length));
+
+        return selected.map(item => {
+            const distractors = pool.filter(p => p.id !== item.id).sort(() => 0.5 - Math.random()).slice(0, 3);
+            let options = [];
+
+            if (storeName === 'kanji') {
+                options = [item.meaning, ...distractors.map(d => d.meaning)];
+            } else if (storeName === 'vocab') {
+                options = [item.meaning, ...distractors.map(d => d.meaning)];
+            } else {
+                options = [item.explanation, ...distractors.map(d => d.explanation)];
+            }
+
+            const formattedOptions = options.map((opt, idx) => ({
+                text: opt,
+                is_correct: idx === 0
+            })).sort(() => 0.5 - Math.random());
+
+            return {
+                id: item.id,
+                character: item.character || item.word || item.title,
+                type: storeName,
+                options: formattedOptions,
+                reading: item.reading || (item.onyomi ? item.onyomi.join(', ') : ''),
+                meaning: item.meaning || item.explanation
+            };
+        });
+    } catch (err) {
+        console.error("Failed to generate offline questions", err);
+        return [];
     }
 }
 
@@ -298,36 +397,57 @@ export async function getVocabList({ level, search, word_type, limit = 50, page 
     if (limit) queryParams.append('limit', limit);
     if (page) queryParams.append('page', page);
 
-    // 1. Prioritas Utama: Data Offline (IndexedDB) - Hanya di Browser
-    if (typeof window !== 'undefined') {
-        const hasOffline = await dbHasData('vocab');
-        if (hasOffline) {
-            const offline = await serveFromDb('vocab', { level, search, word_type, page, limit });
-            if (offline && (offline.items.length > 0 || !navigator.onLine)) {
-                return offline;
+    // Prioritas Baru: API Pertama (Online) > Database Lokal (Offline/Gagal)
+    const cacheKey = `vocab-list-${queryParams.toString()}`;
+    
+    // 1. Jika Online: Ambil dari API
+    if (typeof window === 'undefined' || navigator.onLine) {
+        try {
+            return await fetchWithCache(cacheKey, async () => {
+                const res = await fetch(`${API_URL}/content/vocab?${queryParams.toString()}`);
+                const data = await handleResponse(res, 'getVocabList');
+                if (Array.isArray(data)) return { items: data, total: data.length, pages: 1, page: 1 };
+                return data;
+            });
+        } catch (error) {
+            // Jika API Gagal (misal: timeout), coba fallback ke Offline
+            if (typeof window !== 'undefined') {
+                const offline = await serveFromDb('vocab', { level, search, word_type, page, limit });
+                if (offline && offline.items.length > 0) return offline;
             }
+            throw error;
         }
     }
 
-    // 2. Fallback ke API & LocalStorage Cache
-    const cacheKey = `vocab-list-${queryParams.toString()}`;
-    try {
-        return await fetchWithCache(cacheKey, async () => {
-            const res = await fetch(`${API_URL}/content/vocab?${queryParams.toString()}`);
-            const data = await handleResponse(res, 'getVocabList');
-            if (Array.isArray(data)) return { items: data, total: data.length, pages: 1, page: 1 };
-            return data;
-        });
-    } catch (error) {
-        if (error.status) throw error;
+    // 2. Jika Benar-benar Offline: Ambil dari Database Lokal
+    if (typeof window !== 'undefined') {
         const offline = await serveFromDb('vocab', { level, search, word_type, page, limit });
-        if (offline) return offline;
-        return handleNetworkError('getVocabList', error, { items: [], total: 0, page: 1, pages: 1 });
+        if (offline && offline.items.length > 0) return offline;
     }
+    
+    return handleNetworkError('getVocabList', new Error('Offline'), { items: [], total: 0, page: 1, pages: 1 });
 }
 
 export async function getVocabDetail(id) {
-    // 1. Prioritas Utama: Data Offline (IndexedDB) - Hanya di Browser
+    // 1. Jika Online: Ambil dari API
+    if (typeof window === 'undefined' || navigator.onLine) {
+        try {
+            return await fetchWithCache(`vocab-detail-${id}`, async () => {
+                const res = await fetch(`${API_URL}/content/vocab/${id}`);
+                return handleResponse(res, 'getVocabDetail');
+            });
+        } catch (error) {
+            if (typeof window !== 'undefined') {
+                try {
+                    const local = await dbGet('vocab', id);
+                    if (local) return local;
+                } catch {}
+            }
+            throw error;
+        }
+    }
+
+    // 2. Jika Offline: Ambil dari Database Lokal
     if (typeof window !== 'undefined') {
         try {
             const local = await dbGet('vocab', id);
@@ -335,21 +455,7 @@ export async function getVocabDetail(id) {
         } catch {}
     }
 
-    // 2. Fallback ke API & LocalStorage Cache
-    try {
-        return await fetchWithCache(`vocab-detail-${id}`, async () => {
-            const res = await fetch(`${API_URL}/content/vocab/${id}`);
-            return handleResponse(res, 'getVocabDetail');
-        });
-    } catch (error) {
-        if (error.status) throw error;
-        try {
-            const all = await dbGetAll('vocab');
-            const found = all.find(v => v.id === id);
-            if (found) return found;
-        } catch {}
-        return handleNetworkError('getVocabDetail', error, null);
-    }
+    return handleNetworkError('getVocabDetail', new Error('Offline'), null);
 }
 
 export async function getBlogList() {

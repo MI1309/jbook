@@ -3,15 +3,13 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { API_URL } from '@/lib/api';
-import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import Cookies from 'js-cookie';
 
 export default function AdminDashboard() {
-    const { user } = useAuth();
-    const [stats, setStats] = useState({ kanji_count: 0, bunpo_count: 0, blog_count: 0 });
-    const [searchQuery, setSearchQuery] = useState('');
-    const [searchResults, setSearchResults] = useState([]);
     const [isSearching, setIsSearching] = useState(false);
+    const router = useRouter();
+    const { user } = useAuth();
 
     useEffect(() => {
         fetchStats();
@@ -62,30 +60,8 @@ export default function AdminDashboard() {
         }
     };
 
-    const handleExport = async (type) => {
-        try {
-            const token = Cookies.get('access_token');
-            const res = await fetch(`${API_URL}/admin/${type}/export/csv`, {
-                headers: { 'Authorization': `Bearer ${token}` }
-            });
-            
-            if (res.ok) {
-                const blob = await res.blob();
-                const url = window.URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = `${type}_export_${new Date().toISOString().split('T')[0]}.csv`;
-                document.body.appendChild(a);
-                a.click();
-                a.remove();
-                window.URL.revokeObjectURL(url);
-            } else {
-                alert("Gagal mengekspor data.");
-            }
-        } catch (error) {
-            console.error("Export failed", error);
-            alert("Terjadi kesalahan saat mengekspor.");
-        }
+    const handleExport = (type) => {
+        router.push(`/admin/export?type=${type}`);
     };
 
     return (
