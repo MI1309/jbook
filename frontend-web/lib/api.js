@@ -1,6 +1,40 @@
 const base_url = process.env.NEXT_PUBLIC_API_URL || 'https://imronm.pythonanywhere.com/api';
 export const API_URL = base_url.endsWith('/') ? base_url.slice(0, -1) : base_url;
 import Cookies from 'js-cookie';
+import { fetchWithCache } from '@/lib/cache-store';
+import { dbGetAll } from '@/lib/offline-db';
+
+/**
+ * Try to serve from IndexedDB. Returns null if store is empty.
+ * Applies filters and pagination client-side.
+ */
+async function serveFromDb(storeName, { level, search, chapter, word_type, radical, page = 1, limit = 50 } = {}) {
+    try {
+        let items = await dbGetAll(storeName);
+        if (!items || items.length === 0) return null;
+        if (level) items = items.filter(i => String(i.jlpt_level) === String(level));
+        if (chapter) items = items.filter(i => String(i.chapter) === String(chapter));
+        if (word_type) items = items.filter(i => i.word_type === word_type);
+        if (radical) items = items.filter(i => i.radical === radical);
+        if (search) {
+            const q = search.toLowerCase();
+            items = items.filter(i =>
+                i.character?.toLowerCase().includes(q) ||
+                i.word?.toLowerCase().includes(q) ||
+                i.reading?.toLowerCase().includes(q) ||
+                i.meaning?.toLowerCase().includes(q) ||
+                i.title?.toLowerCase().includes(q) ||
+                i.structure?.toLowerCase().includes(q)
+            );
+        }
+        const total = items.length;
+        const offset = (page - 1) * limit;
+        return { items: items.slice(offset, offset + Number(limit)), total, page, pages: Math.ceil(total / Number(limit)) || 1 };
+    } catch (e) {
+        console.warn('[offline-db] serveFromDb failed:', e.message);
+        return null;
+    }
+}
 
 /**
  * @typedef {Object} Kanji
@@ -55,23 +89,35 @@ export async function getKanjiList({ level, search, radical, limit = 50, page = 
     if (limit) queryParams.append('limit', limit);
     if (page) queryParams.append('page', page);
 
+    const cacheKey = `kanji-list-${queryParams.toString()}`;
     try {
-        const res = await fetch(`${API_URL}/content/kanji?${queryParams.toString()}`, {
-            cache: 'no-store',
+        return await fetchWithCache(cacheKey, async () => {
+            const res = await fetch(`${API_URL}/content/kanji?${queryParams.toString()}`);
+            return handleResponse(res, 'getKanjiList');
         });
-        return handleResponse(res, 'getKanjiList');
     } catch (error) {
-        if (error.status) throw error;
+        if (error.status) throw error; // real HTTP error, don't use offline data
+        // Network failed — serve from IndexedDB
+        const offline = await serveFromDb('kanji', { level, search, radical, page, limit });
+        if (offline) return offline;
         return handleNetworkError('getKanjiList', error, { items: [], total: 0, page: 1, pages: 1 });
     }
 }
 
 export async function getKanjiDetail(id) {
     try {
-        const res = await fetch(`${API_URL}/content/kanji/${id}`);
-        return handleResponse(res, 'getKanjiDetail');
+        return await fetchWithCache(`kanji-detail-${id}`, async () => {
+            const res = await fetch(`${API_URL}/content/kanji/${id}`);
+            return handleResponse(res, 'getKanjiDetail');
+        });
     } catch (error) {
         if (error.status) throw error;
+        // Fallback: search IndexedDB for this specific kanji by id
+        try {
+            const all = await dbGetAll('kanji');
+            const found = all.find(k => k.id === id);
+            if (found) return found;
+        } catch {}
         return handleNetworkError('getKanjiDetail', error, null);
     }
 }
@@ -84,34 +130,35 @@ export async function getGrammarList({ level, search, chapter, limit = 50, page 
     if (limit) queryParams.append('limit', limit);
     if (page) queryParams.append('page', page);
 
+    const cacheKey = `grammar-list-${queryParams.toString()}`;
     try {
-        const res = await fetch(`${API_URL}/content/grammar?${queryParams.toString()}`, {
-            cache: 'no-store',
+        return await fetchWithCache(cacheKey, async () => {
+            const res = await fetch(`${API_URL}/content/grammar?${queryParams.toString()}`);
+            const data = await handleResponse(res, 'getGrammarList');
+            if (Array.isArray(data)) return { items: data, total: data.length, pages: 1, page: 1 };
+            return data;
         });
-        const data = await handleResponse(res, 'getGrammarList');
-        
-        // Backend return array, normalize ke object
-        if (Array.isArray(data)) {
-            return {
-                items: data,
-                total: data.length,
-                pages: 1,
-                page: 1,
-            };
-        }
-        return data;
     } catch (error) {
         if (error.status) throw error;
+        const offline = await serveFromDb('grammar', { level, search, chapter, page, limit });
+        if (offline) return offline;
         return handleNetworkError('getGrammarList', error, { items: [], total: 0, page: 1, pages: 1 });
     }
 }
 
 export async function getGrammarDetail(id) {
     try {
-        const res = await fetch(`${API_URL}/content/grammar/${id}`);
-        return handleResponse(res, 'getGrammarDetail');
+        return await fetchWithCache(`grammar-detail-${id}`, async () => {
+            const res = await fetch(`${API_URL}/content/grammar/${id}`);
+            return handleResponse(res, 'getGrammarDetail');
+        });
     } catch (error) {
         if (error.status) throw error;
+        try {
+            const all = await dbGetAll('grammar');
+            const found = all.find(g => g.id === id);
+            if (found) return found;
+        } catch {}
         return handleNetworkError('getGrammarDetail', error, null);
     }
 }
@@ -122,11 +169,12 @@ export async function getPracticeQuestions({ limit = 10, level = null, type = 'k
     if (level) params.append('level', level);
     if (type) params.append('type', type);
 
+    const cacheKey = `practice-questions-${params.toString()}`;
     try {
-        const res = await fetch(`${API_URL}/learning/practice/generate?${params.toString()}`, {
-            cache: 'no-store',
-        });
-        return handleResponse(res, 'getPracticeQuestions');
+        return await fetchWithCache(cacheKey, async () => {
+            const res = await fetch(`${API_URL}/learning/practice/generate?${params.toString()}`);
+            return handleResponse(res, 'getPracticeQuestions');
+        }, 24 * 60 * 60 * 1000); // 1 day TTL for practice questions
     } catch (error) {
         if (error.status) throw error;
         return handleNetworkError('getPracticeQuestions', error, []);
@@ -207,46 +255,45 @@ export async function getVocabList({ level, search, word_type, limit = 50, page 
     if (limit) queryParams.append('limit', limit);
     if (page) queryParams.append('page', page);
 
+    const cacheKey = `vocab-list-${queryParams.toString()}`;
     try {
-        const res = await fetch(`${API_URL}/content/vocab?${queryParams.toString()}`, {
-            cache: 'no-store',
+        return await fetchWithCache(cacheKey, async () => {
+            const res = await fetch(`${API_URL}/content/vocab?${queryParams.toString()}`);
+            const data = await handleResponse(res, 'getVocabList');
+            if (Array.isArray(data)) return { items: data, total: data.length, pages: 1, page: 1 };
+            return data;
         });
-        const data = await handleResponse(res, 'getVocabList');
-        
-        // Handle array response dari backend
-        if (Array.isArray(data)) {
-            return {
-                items: data,
-                total: data.length,
-                pages: 1,
-                page: 1,
-            };
-        }
-        return data;
     } catch (error) {
         if (error.status) throw error;
+        const offline = await serveFromDb('vocab', { level, search, word_type, page, limit });
+        if (offline) return offline;
         return handleNetworkError('getVocabList', error, { items: [], total: 0, page: 1, pages: 1 });
     }
 }
 
 export async function getVocabDetail(id) {
     try {
-        const res = await fetch(`${API_URL}/content/vocab/${id}`, {
-            cache: 'no-store',
+        return await fetchWithCache(`vocab-detail-${id}`, async () => {
+            const res = await fetch(`${API_URL}/content/vocab/${id}`);
+            return handleResponse(res, 'getVocabDetail');
         });
-        return handleResponse(res, 'getVocabDetail');
     } catch (error) {
         if (error.status) throw error;
+        try {
+            const all = await dbGetAll('vocab');
+            const found = all.find(v => v.id === id);
+            if (found) return found;
+        } catch {}
         return handleNetworkError('getVocabDetail', error, null);
     }
 }
 
 export async function getBlogList() {
     try {
-        const res = await fetch(`${API_URL}/content/blog`, {
-            cache: 'no-store',
+        return await fetchWithCache('blog-list', async () => {
+            const res = await fetch(`${API_URL}/content/blog`);
+            return handleResponse(res, 'getBlogList');
         });
-        return handleResponse(res, 'getBlogList');
     } catch (error) {
         if (error.status) throw error;
         return handleNetworkError('getBlogList', error, []);
@@ -255,10 +302,10 @@ export async function getBlogList() {
 
 export async function getBlogDetailBySlug(slug) {
     try {
-        const res = await fetch(`${API_URL}/content/blog/${slug}`, {
-            cache: 'no-store',
+        return await fetchWithCache(`blog-detail-${slug}`, async () => {
+            const res = await fetch(`${API_URL}/content/blog/${slug}`);
+            return handleResponse(res, 'getBlogDetailBySlug');
         });
-        return handleResponse(res, 'getBlogDetailBySlug');
     } catch (error) {
         if (error.status) throw error;
         return handleNetworkError('getBlogDetailBySlug', error, null);
@@ -285,10 +332,7 @@ export async function exportPracticeData() {
     if (token) headers['Authorization'] = `Bearer ${token}`;
 
     try {
-        const res = await fetch(`${API_URL}/learning/practice/export`, {
-            headers,
-            cache: 'no-store',
-        });
+        const res = await fetch(`${API_URL}/learning/practice/export`, { headers });
         return handleResponse(res, 'exportPracticeData');
     } catch (error) {
         if (error.status) throw error;

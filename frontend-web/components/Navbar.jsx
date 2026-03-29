@@ -5,13 +5,24 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import { usePractice } from '@/context/PracticeContext';
+import OfflineDownloadModal from '@/components/OfflineDownloadModal';
+import { dbGetStats } from '@/lib/offline-download';
 
 export default function Navbar() {
     const { user, logout, loading } = useAuth();
     const { isPracticing } = usePractice();
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [scrolled, setScrolled] = useState(false);
+    const [showOfflineModal, setShowOfflineModal] = useState(false);
+    const [hasOfflineData, setHasOfflineData] = useState(false);
     const pathname = usePathname();
+
+    // Check if offline data exists
+    useEffect(() => {
+        dbGetStats().then(s => {
+            setHasOfflineData(s.vocab > 0 || s.kanji > 0);
+        }).catch(() => {});
+    }, [showOfflineModal]); // recheck after modal closes
 
     // Detect scroll for opacity effect
     useEffect(() => {
@@ -100,6 +111,20 @@ export default function Navbar() {
 
                         {/* Desktop Auth */}
                         <div className="hidden md:flex items-center space-x-2">
+                            {/* Offline Download Button */}
+                            <button
+                                onClick={() => setShowOfflineModal(true)}
+                                title={hasOfflineData ? 'Data offline tersedia' : 'Unduh untuk offline'}
+                                className="relative p-2 rounded-lg text-gray-500 hover:text-red-600 hover:bg-gray-100 transition-all duration-200"
+                            >
+                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                                        d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                                </svg>
+                                {hasOfflineData && (
+                                    <span className="absolute top-1 right-1 w-2 h-2 bg-green-500 rounded-full" />
+                                )}
+                            </button>
                             {!loading && (
                                 user ? (
                                     <div className="flex items-center space-x-2">
@@ -135,19 +160,36 @@ export default function Navbar() {
                             )}
                         </div>
 
-                        {/* Mobile Hamburger */}
-                        <button
-                            onClick={() => setIsMenuOpen(!isMenuOpen)}
-                            className="md:hidden p-2 rounded-md text-gray-500 hover:text-gray-700 hover:bg-gray-100 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-red-500"
-                            aria-label="Toggle menu"
-                        >
-                            {/* Animated hamburger → X */}
-                            <div className="w-5 h-4 flex flex-col justify-between">
-                                <span className={`block h-0.5 bg-current rounded-full transition-all duration-300 origin-center ${isMenuOpen ? 'rotate-45 translate-y-[7px]' : ''}`} />
-                                <span className={`block h-0.5 bg-current rounded-full transition-all duration-300 ${isMenuOpen ? 'opacity-0 scale-x-0' : ''}`} />
-                                <span className={`block h-0.5 bg-current rounded-full transition-all duration-300 origin-center ${isMenuOpen ? '-rotate-45 -translate-y-[9px]' : ''}`} />
-                            </div>
-                        </button>
+                        {/* Mobile: Download icon + Hamburger */}
+                        <div className="flex items-center gap-1 md:hidden">
+                            <button
+                                onClick={() => setShowOfflineModal(true)}
+                                title={hasOfflineData ? 'Data offline tersedia' : 'Unduh untuk offline'}
+                                className="relative p-2 rounded-md text-gray-500 hover:text-red-600 hover:bg-gray-100 transition-all duration-200"
+                                aria-label="Mode offline"
+                            >
+                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                                        d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                                </svg>
+                                {hasOfflineData && (
+                                    <span className="absolute top-1 right-1 w-2 h-2 bg-green-500 rounded-full" />
+                                )}
+                            </button>
+
+                            <button
+                                onClick={() => setIsMenuOpen(!isMenuOpen)}
+                                className="p-2 rounded-md text-gray-500 hover:text-gray-700 hover:bg-gray-100 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-red-500"
+                                aria-label="Toggle menu"
+                            >
+                                {/* Animated hamburger → X */}
+                                <div className="w-5 h-4 flex flex-col justify-between">
+                                    <span className={`block h-0.5 bg-current rounded-full transition-all duration-300 origin-center ${isMenuOpen ? 'rotate-45 translate-y-[7px]' : ''}`} />
+                                    <span className={`block h-0.5 bg-current rounded-full transition-all duration-300 ${isMenuOpen ? 'opacity-0 scale-x-0' : ''}`} />
+                                    <span className={`block h-0.5 bg-current rounded-full transition-all duration-300 origin-center ${isMenuOpen ? '-rotate-45 -translate-y-[9px]' : ''}`} />
+                                </div>
+                            </button>
+                        </div>
                     </div>
                 </div>
 
@@ -228,6 +270,12 @@ export default function Navbar() {
 
             {/* Spacer so content doesn't go under fixed navbar */}
             <div className="h-16" />
+
+            {/* Offline Download Modal */}
+            <OfflineDownloadModal
+                isOpen={showOfflineModal}
+                onClose={() => setShowOfflineModal(false)}
+            />
         </>
     );
 }

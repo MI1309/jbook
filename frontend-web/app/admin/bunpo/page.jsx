@@ -7,6 +7,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useDebounce } from 'use-debounce';
 import Cookies from 'js-cookie';
+import { cacheGet, cacheSet } from '@/lib/cache-store';
 
 export default function BunpoAdmin() {
     const { user } = useAuth();
@@ -34,18 +35,33 @@ export default function BunpoAdmin() {
 
     const fetchAllBunpos = async () => {
         setLoading(true);
+
+        if (typeof navigator !== 'undefined' && !navigator.onLine) {
+            const cached = cacheGet('admin-bunpo-all');
+            if (cached) { setAllBunpos(cached); setLoading(false); return; }
+            alert('Tidak ada koneksi internet dan data admin belum tersedia secara offline.');
+            setLoading(false);
+            return;
+        }
+
         try {
             const token = Cookies.get('access_token');
             const url = `${API_URL}/admin/grammar`;
             const res = await fetch(url, { headers: { 'Authorization': `Bearer ${token}` } });
             if (res.ok) {
                 const data = await res.json();
-                setAllBunpos(Array.isArray(data) ? data : (data.items || []));
+                const items = Array.isArray(data) ? data : (data.items || []);
+                setAllBunpos(items);
+                cacheSet('admin-bunpo-all', items);
             } else {
+                const cached = cacheGet('admin-bunpo-all');
+                if (cached) { setAllBunpos(cached); return; }
                 alert(`Gagal mengambil data Bunpo: ${res.status} ${res.statusText}`);
             }
         } catch (error) {
             console.error("Failed to fetch bunpos", error);
+            const cached = cacheGet('admin-bunpo-all');
+            if (cached) { setAllBunpos(cached); return; }
             alert(`Terjadi kesalahan jaringan.`);
         } finally {
             setLoading(false);

@@ -6,6 +6,7 @@ import { useAuth } from '@/context/AuthContext';
 import { usePractice } from '@/context/PracticeContext';
 import { saveGuestResults } from '@/lib/local-analytics';
 import { submitPracticeResults, getPracticeQuestions } from '@/lib/api';
+import { enqueueResults, syncPendingResults, pendingCount } from '@/lib/offline-queue';
 
 function PracticeContent() {
     const router = useRouter();
@@ -32,6 +33,29 @@ function PracticeContent() {
     const [finished, setFinished] = useState(false);
     const [error, setError] = useState(null);
 
+    const [pendingSyncs, setPendingSyncs] = useState(0);
+
+    // Sync offline queue when back online
+    useEffect(() => {
+        const handleOnline = async () => {
+            if (!user) return;
+            const count = await syncPendingResults(submitPracticeResults);
+            if (count > 0) {
+                setPendingSyncs(0);
+                console.log(`[offline-queue] Synced ${count} pending result batch(es).`);
+            }
+        };
+        window.addEventListener('online', handleOnline);
+        // Also try on mount in case we're back online
+        if (navigator.onLine && user) handleOnline();
+        return () => window.removeEventListener('online', handleOnline);
+    }, [user]);
+
+    // Show pending count badge
+    useEffect(() => {
+        setPendingSyncs(pendingCount());
+    }, []);
+
     // Timer logic
     const handleFinish = useCallback(async (finalResultsOverride) => {
         if (submitting || finished) return;
@@ -42,17 +66,31 @@ function PracticeContent() {
 
         try {
             if (user) {
-                // Logged in: Submit to API
-                await submitPracticeResults(resultsToSubmit);
+                if (!navigator.onLine) {
+                    // Offline: queue for later sync
+                    enqueueResults(resultsToSubmit);
+                    setPendingSyncs(pendingCount());
+                    console.log('[offline-queue] Results queued for later sync.');
+                } else {
+                    // Online: try submitting immediately
+                    try {
+                        await submitPracticeResults(resultsToSubmit);
+                    } catch (submitErr) {
+                        // Network failed mid-submit — queue it
+                        enqueueResults(resultsToSubmit);
+                        setPendingSyncs(pendingCount());
+                        console.warn('[offline-queue] Submit failed, queued:', submitErr.message);
+                    }
+                }
             } else {
                 // Guest: Save to Local Storage
                 saveGuestResults(resultsToSubmit);
             }
 
             setFinished(true);
-            sessionStorage.removeItem('guest_practice_session'); // Clear cache on finish
+            sessionStorage.removeItem('guest_practice_session');
         } catch (error) {
-            console.error('Failed to submit results:', error);
+            console.error('Failed to finish session:', error);
             setError(`Gagal menyimpan hasil latihan: ${error.message}`);
         } finally {
             setSubmitting(false);
@@ -276,6 +314,11 @@ function PracticeContent() {
                         <div className="text-6xl mb-2">🎉</div>
                         <h2 className="text-3xl font-black text-gray-800 mb-1">Latihan Selesai!</h2>
                         <p className="text-gray-500 text-sm">Kerja bagus hari ini!</p>
+                        {pendingSyncs > 0 && (
+                            <div className="mt-3 bg-amber-50 border border-amber-200 text-amber-700 text-xs px-3 py-2 rounded-lg">
+                                ⏳ {pendingSyncs} sesi latihan menunggu sinkronisasi ke server saat online.
+                            </div>
+                        )}
                     </div>
 
                     <div className="bg-red-50 rounded-2xl p-6 mb-6 border border-red-100">

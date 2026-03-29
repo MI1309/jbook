@@ -14,8 +14,8 @@ def export_as_csv(modeladmin, request, queryset):
 
     writer = csv.writer(response)
     
-    # Get all field names of the model
-    field_names = [field.name for field in opts.fields]
+    # Get all field names of the model, excluding 'id'
+    field_names = [field.name for field in opts.fields if field.name != 'id']
     writer.writerow(field_names)
 
     # Write data rows

@@ -6,6 +6,7 @@ import { API_URL } from '@/lib/api';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import Cookies from 'js-cookie';
+import { cacheGet, cacheSet } from '@/lib/cache-store';
 
 export default function KotobaAdmin() {
     const { user } = useAuth();
@@ -34,12 +35,24 @@ export default function KotobaAdmin() {
 
     const fetchAllVocabs = async () => {
         setLoading(true);
+
+        // If offline, try cache first
+        if (typeof navigator !== 'undefined' && !navigator.onLine) {
+            const cached = cacheGet('admin-vocab-all');
+            if (cached) {
+                setAllVocabs(cached);
+                setLoading(false);
+                return;
+            }
+            alert('Tidak ada koneksi internet dan data admin belum tersedia secara offline.');
+            setLoading(false);
+            return;
+        }
+
         try {
             const token = Cookies.get('access_token');
-            // Fetch everything
             const res = await fetch(`${API_URL}/admin/vocab?limit=10000`, { 
-                headers: { 'Authorization': `Bearer ${token}` },
-                cache: 'no-store'
+                headers: { 'Authorization': `Bearer ${token}` }
             });
             
             if (res.ok) {
@@ -47,12 +60,17 @@ export default function KotobaAdmin() {
                 const fetchedItems = Array.isArray(data) ? data : (data.items || []);
                 setAllVocabs(fetchedItems);
                 setServerLevel(data.debug_level || null);
+                // Save to offline cache
+                cacheSet('admin-vocab-all', fetchedItems);
             } else {
                 const errorData = await res.json().catch(() => ({}));
                 console.error("Fetch failed:", res.status, errorData);
                 if (res.status === 403) {
                     alert("Admin access denied. Please login with admin account (imronm1309@gmail.com)");
                 } else if (res.status === 500) {
+                    // Try cache as fallback on 500
+                    const cached = cacheGet('admin-vocab-all');
+                    if (cached) { setAllVocabs(cached); return; }
                     alert(`Server Error 500. Silakan pastikan server PythonAnywhere sudah diperbarui.`);
                 } else {
                     alert(`Gagal mengambil data: ${res.status} ${res.statusText}`);
@@ -60,6 +78,12 @@ export default function KotobaAdmin() {
             }
         } catch (error) {
             console.error("Failed to fetch vocabs", error);
+            // On network error, try cache
+            const cached = cacheGet('admin-vocab-all');
+            if (cached) {
+                setAllVocabs(cached);
+                return;
+            }
             alert(`Terjadi kesalahan jaringan: ${error.message}`);
         } finally {
             setLoading(false);

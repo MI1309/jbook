@@ -6,6 +6,7 @@ import { API_URL } from '@/lib/api';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import Cookies from 'js-cookie';
+import { cacheGet, cacheSet } from '@/lib/cache-store';
 
 export default function KanjiAdmin() {
     const { user } = useAuth();
@@ -18,6 +19,15 @@ export default function KanjiAdmin() {
 
     const fetchKanjis = async () => {
         setLoading(true);
+
+        if (typeof navigator !== 'undefined' && !navigator.onLine) {
+            const cached = cacheGet('admin-kanji-all');
+            if (cached) { setKanjiList(cached); setLoading(false); return; }
+            alert('Tidak ada koneksi internet dan data admin belum tersedia secara offline.');
+            setLoading(false);
+            return;
+        }
+
         try {
             const token = Cookies.get('access_token');
             let url = `${API_URL}/admin/kanji`;
@@ -27,9 +37,7 @@ export default function KanjiAdmin() {
             if (search) queryParams.append('search', search);
 
             const queryString = queryParams.toString();
-            if (queryString) {
-                url += `?${queryString}`;
-            }
+            if (queryString) url += `?${queryString}`;
 
             const res = await fetch(url, {
                 headers: { 'Authorization': `Bearer ${token}` }
@@ -38,11 +46,17 @@ export default function KanjiAdmin() {
             if (res.ok) {
                 const data = await res.json();
                 setKanjiList(data);
+                // Cache only full list (no active filters)
+                if (!level && !search) cacheSet('admin-kanji-all', data);
             } else {
+                const cached = cacheGet('admin-kanji-all');
+                if (cached) { setKanjiList(cached); return; }
                 alert(`Gagal mengambil data Kanji: ${res.status} ${res.statusText}`);
             }
         } catch (error) {
             console.error("Failed to fetch", error);
+            const cached = cacheGet('admin-kanji-all');
+            if (cached) { setKanjiList(cached); return; }
         } finally {
             setLoading(false);
         }

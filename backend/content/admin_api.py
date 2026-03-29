@@ -203,7 +203,7 @@ def admin_export_kanji_csv(request):
     for obj in Kanji.objects.all():
         onyomi_str = format_reading(obj.onyomi, is_onyomi=True)
         kunyomi_str = format_reading(obj.kunyomi, is_onyomi=False)
-        writer.writerow([obj.id, obj.character, obj.meaning, onyomi_str, kunyomi_str, obj.strokes, obj.jlpt_level, obj.radical])
+        writer.writerow([obj.character, obj.meaning, onyomi_str, kunyomi_str, obj.strokes, obj.jlpt_level, obj.radical])
     return response
 
 # Bunpo Schemas
@@ -267,9 +267,9 @@ def admin_export_grammar_csv(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="grammar_export.csv"'
     writer = csv.writer(response)
-    writer.writerow(['ID', 'Title', 'Structure', 'Explanation', 'Chapter', 'JLPT Level'])
+    writer.writerow(['Title', 'Structure', 'Explanation', 'Chapter', 'JLPT Level'])
     for obj in Grammar.objects.all():
-        writer.writerow([obj.id, obj.title, obj.structure, obj.explanation, obj.chapter, obj.jlpt_level])
+        writer.writerow([obj.title, obj.structure, obj.explanation, obj.chapter, obj.jlpt_level])
     return response
 
 # Vocab Schemas
@@ -335,10 +335,10 @@ def admin_export_vocab_csv(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="vocab_export.csv"'
     writer = csv.writer(response)
-    writer.writerow(['ID', 'Word', 'Reading', 'Meaning', 'JLPT Level'])
+    writer.writerow(['Word', 'Reading', 'Meaning', 'JLPT Level'])
     from utils.kana import to_kana
     for obj in Vocab.objects.all():
-        writer.writerow([obj.id, obj.word, to_kana(obj.reading.lower()), obj.meaning, obj.jlpt_level])
+        writer.writerow([obj.word, to_kana(obj.reading.lower()), obj.meaning, obj.jlpt_level])
     return response
 
 @router.get("/kotoba/{id}", auth=AdminAuth(), response=VocabSchema)
@@ -371,8 +371,8 @@ def admin_export_particle_csv(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="particle_export.csv"'
     writer = csv.writer(response)
-    writer.writerow(['ID', 'Character', 'Meaning', 'Explanation', 'JLPT Level', 'Sentences'])
+    writer.writerow(['Character', 'Meaning', 'Explanation', 'JLPT Level', 'Sentences'])
     for obj in Particle.objects.all():
         sentences_str = json.dumps(obj.sentences)
-        writer.writerow([obj.id, obj.character, obj.meaning, obj.explanation, obj.jlpt_level, sentences_str])
+        writer.writerow([obj.character, obj.meaning, obj.explanation, obj.jlpt_level, sentences_str])
     return response
