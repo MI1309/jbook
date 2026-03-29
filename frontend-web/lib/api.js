@@ -2,7 +2,7 @@ const base_url = process.env.NEXT_PUBLIC_API_URL || 'https://imronm.pythonanywhe
 export const API_URL = base_url.endsWith('/') ? base_url.slice(0, -1) : base_url;
 import Cookies from 'js-cookie';
 import { fetchWithCache } from '@/lib/cache-store';
-import { dbGetAll } from '@/lib/offline-db';
+import { dbGetAll, dbHasData, dbGet } from '@/lib/offline-db';
 
 /**
  * Try to serve from IndexedDB. Returns null if store is empty.
@@ -89,6 +89,14 @@ export async function getKanjiList({ level, search, radical, limit = 50, page = 
     if (limit) queryParams.append('limit', limit);
     if (page) queryParams.append('page', page);
 
+    // 1. Prioritas Utama: Data Offline (IndexedDB)
+    const hasOffline = await dbHasData('kanji');
+    if (hasOffline) {
+        const offline = await serveFromDb('kanji', { level, search, radical, page, limit });
+        if (offline) return offline;
+    }
+
+    // 2. Fallback ke API & LocalStorage Cache
     const cacheKey = `kanji-list-${queryParams.toString()}`;
     try {
         return await fetchWithCache(cacheKey, async () => {
@@ -105,6 +113,13 @@ export async function getKanjiList({ level, search, radical, limit = 50, page = 
 }
 
 export async function getKanjiDetail(id) {
+    // 1. Prioritas Utama: Data Offline (IndexedDB)
+    try {
+        const local = await dbGet('kanji', id);
+        if (local) return local;
+    } catch {}
+
+    // 2. Fallback ke API & LocalStorage Cache
     try {
         return await fetchWithCache(`kanji-detail-${id}`, async () => {
             const res = await fetch(`${API_URL}/content/kanji/${id}`);
@@ -130,6 +145,14 @@ export async function getGrammarList({ level, search, chapter, limit = 50, page 
     if (limit) queryParams.append('limit', limit);
     if (page) queryParams.append('page', page);
 
+    // 1. Prioritas Utama: Data Offline (IndexedDB)
+    const hasOffline = await dbHasData('grammar');
+    if (hasOffline) {
+        const offline = await serveFromDb('grammar', { level, search, chapter, page, limit });
+        if (offline) return offline;
+    }
+
+    // 2. Fallback ke API & LocalStorage Cache
     const cacheKey = `grammar-list-${queryParams.toString()}`;
     try {
         return await fetchWithCache(cacheKey, async () => {
@@ -147,6 +170,13 @@ export async function getGrammarList({ level, search, chapter, limit = 50, page 
 }
 
 export async function getGrammarDetail(id) {
+    // 1. Prioritas Utama: Data Offline (IndexedDB)
+    try {
+        const local = await dbGet('grammar', id);
+        if (local) return local;
+    } catch {}
+
+    // 2. Fallback ke API & LocalStorage Cache
     try {
         return await fetchWithCache(`grammar-detail-${id}`, async () => {
             const res = await fetch(`${API_URL}/content/grammar/${id}`);
@@ -255,6 +285,14 @@ export async function getVocabList({ level, search, word_type, limit = 50, page 
     if (limit) queryParams.append('limit', limit);
     if (page) queryParams.append('page', page);
 
+    // 1. Prioritas Utama: Data Offline (IndexedDB)
+    const hasOffline = await dbHasData('vocab');
+    if (hasOffline) {
+        const offline = await serveFromDb('vocab', { level, search, word_type, page, limit });
+        if (offline) return offline;
+    }
+
+    // 2. Fallback ke API & LocalStorage Cache
     const cacheKey = `vocab-list-${queryParams.toString()}`;
     try {
         return await fetchWithCache(cacheKey, async () => {
@@ -272,6 +310,13 @@ export async function getVocabList({ level, search, word_type, limit = 50, page 
 }
 
 export async function getVocabDetail(id) {
+    // 1. Prioritas Utama: Data Offline (IndexedDB)
+    try {
+        const local = await dbGet('vocab', id);
+        if (local) return local;
+    } catch {}
+
+    // 2. Fallback ke API & LocalStorage Cache
     try {
         return await fetchWithCache(`vocab-detail-${id}`, async () => {
             const res = await fetch(`${API_URL}/content/vocab/${id}`);
@@ -289,25 +334,21 @@ export async function getVocabDetail(id) {
 }
 
 export async function getBlogList() {
+    // Blog harus online — bypass cache-store jika offline, atau gunakan TTL sangat pendek
     try {
-        return await fetchWithCache('blog-list', async () => {
-            const res = await fetch(`${API_URL}/content/blog`);
-            return handleResponse(res, 'getBlogList');
-        });
+        const res = await fetch(`${API_URL}/content/blog`, { cache: 'no-store' });
+        return handleResponse(res, 'getBlogList');
     } catch (error) {
-        if (error.status) throw error;
         return handleNetworkError('getBlogList', error, []);
     }
 }
 
 export async function getBlogDetailBySlug(slug) {
+    // Blog harus online
     try {
-        return await fetchWithCache(`blog-detail-${slug}`, async () => {
-            const res = await fetch(`${API_URL}/content/blog/${slug}`);
-            return handleResponse(res, 'getBlogDetailBySlug');
-        });
+        const res = await fetch(`${API_URL}/content/blog/${slug}`, { cache: 'no-store' });
+        return handleResponse(res, 'getBlogDetailBySlug');
     } catch (error) {
-        if (error.status) throw error;
         return handleNetworkError('getBlogDetailBySlug', error, null);
     }
 }
