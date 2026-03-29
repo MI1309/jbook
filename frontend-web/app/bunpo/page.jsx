@@ -1,147 +1,114 @@
+'use client';
+
+import { useState, useEffect, Suspense } from 'react';
 import { getGrammarList } from '@/lib/api';
 import BunpoFilter from '@/components/BunpoFilter';
 import Link from 'next/link';
-import { Suspense } from 'react';
+import { useSearchParams } from 'next/navigation';
 
-const levelStyles = {
-    1: { bar: 'bg-red-500',    badge: 'bg-red-100 text-red-700',    code: 'bg-red-50 border-red-100'    },
-    2: { bar: 'bg-orange-400', badge: 'bg-orange-100 text-orange-700', code: 'bg-orange-50 border-orange-100' },
-    3: { bar: 'bg-yellow-400', badge: 'bg-yellow-100 text-yellow-700', code: 'bg-yellow-50 border-yellow-100' },
-    4: { bar: 'bg-teal-400',   badge: 'bg-teal-100 text-teal-700',   code: 'bg-teal-50 border-teal-100'   },
-    5: { bar: 'bg-green-400',  badge: 'bg-green-100 text-green-700', code: 'bg-green-50 border-green-100' },
-};
+function BunpoContent() {
+    const searchParams = useSearchParams();
+    const [data, setData] = useState({ items: [], total: 0, pages: 1 });
+    const [loading, setLoading] = useState(true);
 
-export default async function BunpoPage({ searchParams }) {
-    const params = await searchParams;
-    const page   = parseInt(params.page) || 1;
-    const limit  = 24;
+    const page = parseInt(searchParams.get('page')) || 1;
+    const level = searchParams.get('level');
+    const search = searchParams.get('search');
+    const chapter = searchParams.get('chapter');
+    const limit = 30;
 
-    let data = { items: [], total: 0, pages: 1 };
-    try {
-        data = await getGrammarList({
-            level:   params.level,
-            search:  params.search,
-            chapter: params.chapter,
-            limit,
-            page,
-        });
-    } catch (error) {
-        console.error('Failed to fetch grammar:', error.message, error.status);
-        // Tambah ini untuk lihat di Vercel logs:
-        console.error('API URL:', process.env.NEXT_PUBLIC_API_URL);
-    }
+    useEffect(() => {
+        async function fetchData() {
+            setLoading(true);
+            console.info(`[jbook-client] Memulai pengambilan data Bunpo untuk Page ${page}...`);
+            try {
+                const result = await getGrammarList({ level, search, chapter, limit, page });
+                setData(result || { items: [], total: 0, pages: 1 });
+            } catch (err) {
+                console.error('[jbook-client] Gagal memuat Bunpo:', err.message);
+            } finally {
+                setLoading(false);
+            }
+        }
+        fetchData();
+    }, [page, level, search, chapter]);
 
-    const grammarList = data.items || [];
+    const items = data.items || [];
     const totalPages = data.pages || 1;
     const hasMore = page < totalPages;
     const totalCount = data.total || 0;
 
+    const getLevelColor = (level) => {
+        switch (level) {
+            case 1: return 'from-red-50 to-white hover:border-red-400 text-red-600';
+            case 2: return 'from-orange-50 to-white hover:border-orange-400 text-orange-600';
+            case 3: return 'from-yellow-50 to-white hover:border-yellow-400 text-yellow-600';
+            case 4: return 'from-teal-50 to-white hover:border-teal-400 text-teal-600';
+            case 5: return 'from-green-50 to-white hover:border-green-400 text-green-600';
+            default: return 'from-gray-50 to-white hover:border-gray-400 text-gray-600';
+        }
+    };
+
+    if (loading) return <div className="py-32 text-center animate-pulse">🏮 Memuat Bunpo...</div>;
+
     return (
-        <div className="container mx-auto px-4 py-8">
-            {/* Header */}
-            <div className="text-center mb-8">
-                <h1 className="text-4xl font-extrabold text-gray-900 mb-1">
-                    文法 <span className="text-red-600">Bunpo</span>
-                </h1>
-                <p className="text-sm text-gray-400">Ketuk kartu untuk melihat penjelasan lengkap</p>
-            </div>
-
-            <Suspense fallback={<div className="h-12 bg-gray-100 rounded-xl animate-pulse mb-6" />}>
-                <BunpoFilter />
-            </Suspense>
-
-            <div className="flex justify-between items-center mb-6 text-[10px] font-bold text-gray-400 uppercase tracking-widest px-1">
-                <span>Total: {totalCount} Bunpo</span>
+        <>
+            <div className="flex justify-between items-center mb-6 text-sm font-bold text-gray-400 uppercase tracking-widest">
+                <span>Total: {totalCount} Pola</span>
                 <span>Halaman {page} dari {totalPages}</span>
             </div>
 
-            {grammarList.length > 0 ? (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
-                    {grammarList.map((grammar) => {
-                        const s = levelStyles[grammar.jlpt_level] ?? levelStyles[5];
-                        return (
-                            <Link
-                                key={grammar.id}
-                                href={`/bunpo/${grammar.id}`}
-                                className="
-                                    group relative flex flex-col gap-2.5
-                                    bg-white rounded-2xl border border-gray-100
-                                    px-5 pt-4 pb-4 overflow-hidden
-                                    hover:shadow-lg hover:-translate-y-0.5
-                                    active:scale-[0.98] active:shadow-sm
-                                    transition-all duration-200
-                                "
-                            >
-                                {/* Left color bar */}
-                                <div className={`absolute left-0 top-0 bottom-0 w-1.5 ${s.bar} rounded-l-2xl`} />
-
-                                {/* Top: chapter + level */}
-                                <div className="flex items-center justify-between">
-                                    <span className="text-xs text-gray-400 font-medium">Bab {grammar.chapter}</span>
-                                    <span className={`text-xs font-extrabold px-2 py-0.5 rounded-full ${s.badge}`}>
-                                        N{grammar.jlpt_level}
-                                    </span>
-                                </div>
-
-                                {/* Title */}
-                                <h3 className="text-[15px] font-bold text-gray-900 leading-snug line-clamp-2 group-hover:text-red-700 transition-colors duration-150">
-                                    {grammar.title}
-                                </h3>
-
-                                {/* Structure */}
-                                {grammar.structure && (
-                                    <div className={`rounded-lg border px-3 py-2 ${s.code}`}>
-                                        <code className="text-xs font-mono text-gray-600 break-all leading-relaxed">
-                                            {grammar.structure}
-                                        </code>
-                                    </div>
-                                )}
-
-                                {/* Footer arrow */}
-                                <div className="flex justify-end pt-0.5">
-                                    <span className="text-xs text-gray-300 group-hover:text-red-400 group-hover:translate-x-1 transition-all duration-200 select-none">
-                                        Lihat detail →
-                                    </span>
-                                </div>
-                            </Link>
-                        );
-                    })}
+            {items.length > 0 ? (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16">
+                    {items.map((grammar) => (
+                        <Link
+                            key={grammar.id}
+                            href={`/bunpo/${grammar.id}`}
+                            className={`group block p-6 bg-white rounded-[2rem] border-2 border-gray-100 bg-gradient-to-br ${getLevelColor(grammar.jlpt_level)} transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 active:scale-95 shadow-sm overflow-hidden relative`}
+                        >
+                             <div className="flex justify-between items-start mb-4">
+                                <span className="bg-white/80 px-3 py-1 rounded-xl text-[10px] font-black border border-inherit shadow-sm uppercase tracking-tighter">N{grammar.jlpt_level}</span>
+                                {grammar.chapter && <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest leading-none">Bab {grammar.chapter}</span>}
+                            </div>
+                            <h2 className="text-xl font-serif font-black mb-2 text-gray-900 leading-tight">{grammar.title}</h2>
+                            <p className="text-xs font-bold text-gray-500 mb-4 line-clamp-2 uppercase tracking-wide opacity-70 italic">{grammar.structure}</p>
+                            <p className="text-sm font-black text-gray-800 line-clamp-3 bg-white/40 p-3 rounded-2xl italic leading-relaxed">{grammar.explanation}</p>
+                        </Link>
+                    ))}
                 </div>
             ) : (
-                <div className="text-center py-24 bg-gray-50 rounded-[3rem] border-4 border-dashed border-gray-100 max-w-2xl mx-auto">
-                    <div className="text-7xl mb-6">📚</div>
+                <div className="text-center py-32 bg-gray-50 rounded-[3rem] border-4 border-dashed border-gray-100 max-w-2xl mx-auto">
+                    <div className="text-7xl mb-6">🛸</div>
                     <h2 className="text-2xl font-black text-gray-900 mb-2">Bunpo tidak ditemukan</h2>
-                    <p className="text-gray-400 font-bold mb-4">Coba kata kunci lain atau bantu kami menambahkannya.</p>
-                    <p className="text-[10px] text-gray-300 mb-8 break-all">Attempted API: {process.env.NEXT_PUBLIC_API_URL || 'https://imronm.pythonanywhere.com/api'}/content/bunpo</p>
-                    <Link 
-                        href="/bunpo/add"
-                        className="inline-flex items-center gap-2 bg-red-600 text-white px-8 py-4 rounded-2xl font-black shadow-xl shadow-red-200 hover:bg-red-700 transition-all active:scale-95"
-                    >
-                        + Tambah Tata Bahasa Baru
-                    </Link>
+                    <p className="text-gray-400 font-bold mb-8">Silakan coba filter atau pencarian lain.</p>
                 </div>
             )}
 
-            {/* Pagination */}
-            <div className="flex justify-center items-center gap-3">
-                {page > 1 && (
-                    <Link
-                        href={{ pathname: '/bunpo', query: { ...params, page: page - 1 } }}
-                        className="bg-white border border-gray-200 text-gray-700 px-5 py-2.5 rounded-xl hover:bg-gray-50 transition shadow-sm font-medium text-sm"
-                    >
-                        ← Sebelumnya
-                    </Link>
-                )}
-                <span className="text-sm text-gray-400">Hal. {page}</span>
-                {hasMore && (
-                    <Link
-                        href={{ pathname: '/bunpo', query: { ...params, page: page + 1 } }}
-                        className="bg-red-600 text-white px-5 py-2.5 rounded-xl hover:bg-red-700 transition shadow-sm font-medium text-sm"
-                    >
-                        Selanjutnya →
-                    </Link>
-                )}
+            <div className="flex justify-center items-center gap-6 mt-8">
+                {page > 1 && <Link href={`?page=${page - 1}`} className="bg-white border-2 border-gray-100 text-gray-500 hover:text-red-600 px-6 py-3 rounded-2xl font-black text-sm transition-all shadow-sm">← Prev</Link>}
+                <span className="w-10 h-10 rounded-xl bg-red-600 text-white flex items-center justify-center font-black text-sm shadow-lg">{page}</span>
+                {hasMore && <Link href={`?page=${page + 1}`} className="bg-red-600 text-white border-2 border-red-600 hover:bg-red-700 px-6 py-3 rounded-2xl font-black text-sm transition-all shadow-xl shadow-red-100">Next →</Link>}
             </div>
+        </>
+    );
+}
+
+export default function BunpoPage() {
+    return (
+        <div className="container mx-auto px-6 py-12 max-w-7xl">
+            <header className="mb-12 text-center md:text-left flex flex-col md:flex-row md:items-center justify-between gap-6 border-b border-gray-100 pb-12">
+                <div>
+                    <h1 className="text-5xl font-black text-gray-900 tracking-tight leading-none">文法 <span className="text-red-600 ml-2">Bunpo</span></h1>
+                    <p className="text-gray-400 font-bold mt-4 tracking-wide uppercase text-xs">Kuasai tata bahasa Jepang dengan mudah</p>
+                </div>
+                <Suspense fallback={<div className="h-12 w-full md:w-96 bg-gray-50 rounded-2xl animate-pulse" />}>
+                     <BunpoFilter />
+                </Suspense>
+            </header>
+
+            <Suspense fallback={<div className="py-32 text-center animate-pulse">Memuat...</div>}>
+                <BunpoContent />
+            </Suspense>
         </div>
     );
 }

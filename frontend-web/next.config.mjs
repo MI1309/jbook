@@ -15,8 +15,7 @@ const withPWA = withPWAInit({
         runtimeCaching: [
             // Blog — Selalu Online (NetworkOnly atau NetworkFirst dengan timeout cepat & tanpa cache panjang)
             {
-                urlPattern: ({ url, sameOrigin }) =>
-                    sameOrigin && url.pathname.startsWith("/blog"),
+                urlPattern: ({ url }) => url.pathname.startsWith("/blog"),
                 handler: "NetworkFirst",
                 options: {
                     cacheName: "blog-online-only",
@@ -29,8 +28,7 @@ const withPWA = withPWAInit({
             },
             // Halaman navigasi umum — NetworkFirst, cache 30 hari
             {
-                urlPattern: ({ url, sameOrigin }) =>
-                    sameOrigin && !url.pathname.startsWith("/api/") && !url.pathname.startsWith("/blog"),
+                urlPattern: ({ url }) => !url.pathname.startsWith("/api/") && !url.pathname.startsWith("/blog"),
                 handler: "NetworkFirst",
                 options: {
                     cacheName: "pages",
@@ -43,8 +41,7 @@ const withPWA = withPWAInit({
             },
             // API calls (same-origin)
             {
-                urlPattern: ({ url, sameOrigin }) =>
-                    sameOrigin && url.pathname.startsWith("/api/"),
+                urlPattern: ({ url }) => url.pathname.startsWith("/api/"),
                 handler: "NetworkFirst",
                 options: {
                     cacheName: "apis",

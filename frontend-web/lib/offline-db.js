@@ -17,12 +17,21 @@ const DB_VERSION = 1;
 const STORES = ['vocab', 'kanji', 'grammar', 'practice', 'meta'];
 
 let _db = null;
+let _isDBBroken = false; // Flag untuk mencegah loop jika DB korup/rusak di browser
 
 function openDB() {
     if (typeof window === 'undefined') return Promise.reject(new Error('IndexedDB is not available on server'));
+    
+    // Jika sudah ditandai rusak (misal: UnknownError), jangan coba lagi di sesi ini
+    if (_isDBBroken) {
+        return Promise.reject(new Error('IndexedDB is disabled due to previous fatal error (possibly corrupt backing store)'));
+    }
+
     if (_db) return Promise.resolve(_db);
+    
     return new Promise((resolve, reject) => {
-        const req = indexedDB.open(DB_NAME, DB_VERSION);
+        try {
+            const req = indexedDB.open(DB_NAME, DB_VERSION);
         req.onupgradeneeded = (e) => {
             const db = e.target.result;
             STORES.forEach(name => {
@@ -31,8 +40,24 @@ function openDB() {
                 }
             });
         };
-        req.onsuccess = (e) => { _db = e.target.result; resolve(_db); };
-        req.onerror = () => reject(req.error);
+        req.onsuccess = (e) => { 
+            _db = e.target.result; 
+            resolve(_db); 
+        };
+        req.onerror = () => {
+            const error = req.error;
+            // Deteksi UnknownError (Internal error opening backing store)
+            // Atau QuotaExceededError (Penyimpanan Penuh)
+            if (error?.name === 'UnknownError' || error?.name === 'QuotaExceededError' || error?.name === 'VersionError') {
+                console.error(`[offline-db] Fatal IndexedDB Error (${error.name}). Disabling offline storage for this session.`);
+                _isDBBroken = true;
+            }
+            reject(error);
+        };
+    } catch (e) {
+        _isDBBroken = true;
+        reject(e);
+    }
     });
 }
 

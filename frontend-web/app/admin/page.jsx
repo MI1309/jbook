@@ -5,9 +5,13 @@ import { useAuth } from '@/context/AuthContext';
 import { API_URL } from '@/lib/api';
 import { useRouter } from 'next/navigation';
 import Cookies from 'js-cookie';
+import Link from 'next/link';
 
 export default function AdminDashboard() {
     const [isSearching, setIsSearching] = useState(false);
+    const [stats, setStats] = useState({ kanji_count: 0, bunpo_count: 0, blog_count: 0 });
+    const [searchQuery, setSearchQuery] = useState('');
+    const [searchResults, setSearchResults] = useState([]);
     const router = useRouter();
     const { user } = useAuth();
 

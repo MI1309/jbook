@@ -112,7 +112,15 @@ def list_kanji(request,
     }
 
 @router.get("/kanji/{kanji_id}", response=KanjiSchema)
-def get_kanji(request, kanji_id: UUID):
+def get_kanji(request, kanji_id: str):
+    try:
+        # Menangani UUID baik dengan atau tanpa strip
+        if '-' not in kanji_id and len(kanji_id) == 32:
+            import uuid
+            kanji_id = str(uuid.UUID(kanji_id))
+    except (ValueError, TypeError):
+        pass
+        
     kanji = get_object_or_404(Kanji, id=kanji_id)
     from .models import Vocab
     
@@ -198,7 +206,13 @@ def list_grammar(request,
 
 @router.get("/bunpo/{grammar_id}", response=GrammarSchema)
 @router.get("/grammar/{grammar_id}", response=GrammarSchema)
-def get_grammar(request, grammar_id: UUID):
+def get_grammar(request, grammar_id: str):
+    try:
+        if '-' not in grammar_id and len(grammar_id) == 32:
+            import uuid
+            grammar_id = str(uuid.UUID(grammar_id))
+    except (ValueError, TypeError):
+        pass
     return get_object_or_404(Grammar, id=grammar_id)
 
 
@@ -284,8 +298,14 @@ def list_vocab(request,
 
 @router.get("/kotoba/{vocab_id}", response=VocabSchema)
 @router.get("/vocab/{vocab_id}", response=VocabSchema)
-def get_vocab(request, vocab_id: UUID):
+def get_vocab(request, vocab_id: str):
     from .models import Vocab
+    try:
+        if '-' not in vocab_id and len(vocab_id) == 32:
+            import uuid
+            vocab_id = str(uuid.UUID(vocab_id))
+    except (ValueError, TypeError):
+        pass
     vocab = get_object_or_404(Vocab, id=vocab_id)
     from utils.kana import to_kana
     if vocab.reading:

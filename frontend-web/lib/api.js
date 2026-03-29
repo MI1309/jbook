@@ -92,7 +92,7 @@ export async function getKanjiList({ level, search, radical, limit = 50, page = 
     const cacheKey = `kanji-list-${queryParams.toString()}`;
     
     // 1. Jika Online: Ambil dari API (Selalu Prioritas Utama)
-    if (typeof window === 'undefined' || navigator.onLine) {
+    if (typeof window === 'undefined' || (typeof navigator !== 'undefined' && navigator.onLine)) {
         console.info(`[jbook-api] Online: Mencoba mengambil Kanji dari API...`);
         try {
             const data = await fetchWithCache(cacheKey, async () => {
@@ -130,11 +130,17 @@ export async function getKanjiList({ level, search, radical, limit = 50, page = 
 
 export async function getKanjiDetail(id) {
     // 1. Jika Online: Ambil dari API
-    if (typeof window === 'undefined' || navigator.onLine) {
+    if (typeof window === 'undefined' || (typeof navigator !== 'undefined' && navigator.onLine)) {
         console.info(`[jbook-api] Online: Mengambil Kanji Detail (${id}) dari API...`);
         try {
+            const url = `${API_URL}/content/kanji/${id}`;
+            console.debug(`[jbook-api] Fetching Kanji Detail: ${url}`);
             return await fetchWithCache(`kanji-detail-${id}`, async () => {
-                const res = await fetch(`${API_URL}/content/kanji/${id}`);
+                const res = await fetch(url);
+                if (res.status === 404) {
+                    console.warn(`[jbook-api] Kanji Detail NOT FOUND (404): ${url}`);
+                    return null;
+                }
                 return handleResponse(res, 'getKanjiDetail');
             });
         } catch (error) {
@@ -145,7 +151,8 @@ export async function getKanjiDetail(id) {
                     if (local) return local;
                 } catch {}
             }
-            throw error;
+            // Return null alih-alih melempar error agar Server Component tidak crash
+            return null;
         }
     }
 
@@ -176,7 +183,7 @@ export async function getGrammarList({ level, search, chapter, limit = 50, page 
     const cacheKey = `grammar-list-${queryParams.toString()}`;
     
     // 1. Jika Online: Ambil dari API
-    if (typeof window === 'undefined' || navigator.onLine) {
+    if (typeof window === 'undefined' || (typeof navigator !== 'undefined' && navigator.onLine)) {
         try {
             return await fetchWithCache(cacheKey, async () => {
                 const res = await fetch(`${API_URL}/content/grammar?${queryParams.toString()}`);
@@ -205,10 +212,16 @@ export async function getGrammarList({ level, search, chapter, limit = 50, page 
 
 export async function getGrammarDetail(id) {
     // 1. Jika Online: Ambil dari API
-    if (typeof window === 'undefined' || navigator.onLine) {
+    if (typeof window === 'undefined' || (typeof navigator !== 'undefined' && navigator.onLine)) {
         try {
+            const url = `${API_URL}/content/grammar/${id}`;
+            console.debug(`[jbook-api] Fetching Grammar Detail: ${url}`);
             return await fetchWithCache(`grammar-detail-${id}`, async () => {
-                const res = await fetch(`${API_URL}/content/grammar/${id}`);
+                const res = await fetch(url);
+                if (res.status === 404) {
+                    console.warn(`[jbook-api] Grammar Detail NOT FOUND (404): ${url}`);
+                    return null;
+                }
                 return handleResponse(res, 'getGrammarDetail');
             });
         } catch (error) {
@@ -218,7 +231,7 @@ export async function getGrammarDetail(id) {
                     if (local) return local;
                 } catch {}
             }
-            throw error;
+            return null;
         }
     }
 
@@ -242,7 +255,7 @@ export async function getPracticeQuestions({ limit = 10, level = null, type = 'k
     const cacheKey = `practice-questions-${params.toString()}`;
 
     // 1. Jika Online: Ambil dari API (Selalu Prioritas Utama)
-    if (typeof window === 'undefined' || navigator.onLine) {
+    if (typeof window === 'undefined' || (typeof navigator !== 'undefined' && navigator.onLine)) {
         console.info(`[jbook-api] Online: Membuat soal Latihan dari API...`);
         try {
             return await fetchWithCache(cacheKey, async () => {
@@ -401,7 +414,7 @@ export async function getVocabList({ level, search, word_type, limit = 50, page 
     const cacheKey = `vocab-list-${queryParams.toString()}`;
     
     // 1. Jika Online: Ambil dari API
-    if (typeof window === 'undefined' || navigator.onLine) {
+    if (typeof window === 'undefined' || (typeof navigator !== 'undefined' && navigator.onLine)) {
         try {
             return await fetchWithCache(cacheKey, async () => {
                 const res = await fetch(`${API_URL}/content/vocab?${queryParams.toString()}`);
@@ -430,10 +443,16 @@ export async function getVocabList({ level, search, word_type, limit = 50, page 
 
 export async function getVocabDetail(id) {
     // 1. Jika Online: Ambil dari API
-    if (typeof window === 'undefined' || navigator.onLine) {
+    if (typeof window === 'undefined' || (typeof navigator !== 'undefined' && navigator.onLine)) {
         try {
+            const url = `${API_URL}/content/vocab/${id}`;
+            console.debug(`[jbook-api] Fetching Vocab Detail: ${url}`);
             return await fetchWithCache(`vocab-detail-${id}`, async () => {
-                const res = await fetch(`${API_URL}/content/vocab/${id}`);
+                const res = await fetch(url);
+                if (res.status === 404) {
+                    console.warn(`[jbook-api] Vocab Detail NOT FOUND (404): ${url}`);
+                    return null;
+                }
                 return handleResponse(res, 'getVocabDetail');
             });
         } catch (error) {
@@ -443,7 +462,7 @@ export async function getVocabDetail(id) {
                     if (local) return local;
                 } catch {}
             }
-            throw error;
+            return null;
         }
     }
 

@@ -46,7 +46,7 @@ export default async function BunpoDetailPage({ params }) {
                 <div>
                     <h2 className="text-xl font-bold mb-3 text-gray-700">Contoh Kalimat</h2>
                     <div className="space-y-4">
-                        {grammar.sentences.length > 0 ? (
+                        {Array.isArray(grammar.sentences) && grammar.sentences.length > 0 ? (
                             grammar.sentences.map((sent, i) => (
                                 <div key={i} className="p-4 bg-gray-50 rounded-lg border-l-4 border-blue-400">
                                     <p className="text-lg font-medium mb-1">{sent.jp}</p>

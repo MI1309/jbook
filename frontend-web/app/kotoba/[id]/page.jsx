@@ -32,16 +32,16 @@ export default async function KotobaDetailPage({ params }) {
 
                         <div className="mb-6 sm:mb-8 flex justify-center w-full overflow-hidden px-2">
                             <ruby className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-800 tracking-wider select-all break-words max-w-full leading-snug" style={{ rubyPosition: 'under' }}>
-                                {vocab.word}
-                                {hasKanji(vocab.word) && (
-                                    <rt className="text-lg sm:text-xl md:text-2xl text-red-500 font-bold leading-none mt-1 sm:mt-2 opacity-90">{vocab.furigana || vocab.reading}</rt>
+                                {vocab?.word || 'N/A'}
+                                {hasKanji(vocab?.word) && (
+                                    <rt className="text-lg sm:text-xl md:text-2xl text-red-500 font-bold leading-none mt-1 sm:mt-2 opacity-90">{vocab?.furigana || vocab?.reading || ''}</rt>
                                 )}
                             </ruby>
                         </div>
 
                         <div className="bg-gradient-to-br from-red-50 to-white p-5 sm:p-6 md:p-8 rounded-2xl border border-red-100 shadow-sm mb-6 sm:mb-8">
                             <h3 className="text-[10px] sm:text-xs font-bold text-red-400 uppercase tracking-[0.2em] mb-2 sm:mb-3">Arti / Makna</h3>
-                            <p className="text-lg sm:text-xl md:text-2xl font-bold text-gray-800 leading-relaxed">{vocab.meaning}</p>
+                            <p className="text-lg sm:text-xl md:text-2xl font-bold text-gray-800 leading-relaxed">{vocab?.meaning || 'Tidak ada arti'}</p>
                         </div>
 
                         <div className="flex justify-center gap-4 flex-wrap">
