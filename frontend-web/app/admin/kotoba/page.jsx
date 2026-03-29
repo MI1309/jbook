@@ -142,6 +142,36 @@ export default function KotobaAdmin() {
         }
     };
 
+    const handleExport = async () => {
+        try {
+            const token = Cookies.get('access_token');
+            const queryParams = new URLSearchParams();
+            if (level) queryParams.append('level', level);
+            if (search) queryParams.append('search', search);
+            
+            const res = await fetch(`${API_URL}/admin/vocab/export/csv?${queryParams.toString()}`, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            
+            if (res.ok) {
+                const blob = await res.blob();
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `vocab_export_${new Date().toISOString().split('T')[0]}.csv`;
+                document.body.appendChild(a);
+                a.click();
+                a.remove();
+                window.URL.revokeObjectURL(url);
+            } else {
+                alert("Gagal mengekspor data.");
+            }
+        } catch (error) {
+            console.error("Export failed", error);
+            alert("Terjadi kesalahan saat mengekspor.");
+        }
+    };
+
     const levelColor = (level) => {
         const colors = { 5: 'bg-green-100 text-green-700', 4: 'bg-teal-100 text-teal-700', 3: 'bg-blue-100 text-blue-700', 2: 'bg-purple-100 text-purple-700', 1: 'bg-red-100 text-red-700' };
         return colors[level] || 'bg-gray-100 text-gray-700';
@@ -179,10 +209,16 @@ export default function KotobaAdmin() {
                         </select>
                         <input
                             type="text" placeholder="Search..."
-                            className="border border-gray-300 rounded-md text-sm p-2 w-40 md:w-56"
+                            className="border border-gray-300 rounded-md text-sm p-2 w-32 md:w-48"
                             value={search}
                             onChange={(e) => setSearch(e.target.value)}
                         />
+                        <button 
+                            onClick={handleExport}
+                            className="bg-emerald-600 text-white px-3 py-2 rounded-md hover:bg-emerald-700 text-xs font-bold transition-all shadow-sm flex items-center gap-1"
+                        >
+                            <span>📥</span> Export
+                        </button>
                     </div>
                 </div>
 

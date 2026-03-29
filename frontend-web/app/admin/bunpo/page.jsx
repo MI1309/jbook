@@ -115,6 +115,37 @@ export default function BunpoAdmin() {
         }
     };
 
+    const handleExport = async () => {
+        try {
+            const token = Cookies.get('access_token');
+            const queryParams = new URLSearchParams();
+            if (filterLevel) queryParams.append('level', filterLevel);
+            if (filterChapter) queryParams.append('chapter', filterChapter);
+            if (search) queryParams.append('search', search);
+            
+            const res = await fetch(`${API_URL}/admin/grammar/export/csv?${queryParams.toString()}`, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            
+            if (res.ok) {
+                const blob = await res.blob();
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `grammar_export_${new Date().toISOString().split('T')[0]}.csv`;
+                document.body.appendChild(a);
+                a.click();
+                a.remove();
+                window.URL.revokeObjectURL(url);
+            } else {
+                alert("Gagal mengekspor data.");
+            }
+        } catch (error) {
+            console.error("Export failed", error);
+            alert("Terjadi kesalahan saat mengekspor.");
+        }
+    };
+
     return (
         <div>
             <div className="flex justify-between items-center mb-6">
@@ -146,14 +177,20 @@ export default function BunpoAdmin() {
                         </select>
                         <input
                             type="number" min="1"
-                            className="border border-gray-300 rounded-md text-sm p-2 w-24"
+                            className="border border-gray-300 rounded-md text-sm p-2 w-20"
                             value={filterChapter}
                             onChange={(e) => {
                                 const val = parseInt(e.target.value);
                                 if (e.target.value === '' || (!isNaN(val) && val >= 1)) setFilterChapter(e.target.value);
                             }}
-                            placeholder="Chapter"
+                            placeholder="Ch"
                         />
+                        <button 
+                            onClick={handleExport}
+                            className="bg-emerald-600 text-white px-3 py-2 rounded-md hover:bg-emerald-700 text-xs font-bold transition-all shadow-sm flex items-center gap-1"
+                        >
+                            <span>📥</span> Export
+                        </button>
                     </div>
                 </div>
 

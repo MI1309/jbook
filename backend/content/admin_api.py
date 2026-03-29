@@ -195,12 +195,20 @@ def admin_delete_kanji(request, id: str):
     return {"success": True}
 
 @router.get("/kanji/export/csv", auth=AdminAuth())
-def admin_export_kanji_csv(request):
+def admin_export_kanji_csv(request, level: int = None, search: str = None):
+    query = Kanji.objects.all().order_by('jlpt_level', 'character')
+    if level:
+        query = query.filter(jlpt_level=level)
+    if search:
+        query = query.filter(Q(character__icontains=search) | Q(meaning__icontains=search))
+        
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="kanji_export.csv"'
     writer = csv.writer(response)
+    writer.writerow(['Character', 'Meaning', 'Onyomi', 'Kunyomi', 'Strokes', 'JLPT Level', 'Radical'])
+    
     from utils.kana import format_reading
-    for obj in Kanji.objects.all():
+    for obj in query:
         onyomi_str = format_reading(obj.onyomi, is_onyomi=True)
         kunyomi_str = format_reading(obj.kunyomi, is_onyomi=False)
         writer.writerow([obj.character, obj.meaning, onyomi_str, kunyomi_str, obj.strokes, obj.jlpt_level, obj.radical])
@@ -263,12 +271,20 @@ def admin_delete_bunpo(request, id: str):
     return {"success": True}
 
 @router.get("/bunpo/export/csv", auth=AdminAuth())
-def admin_export_grammar_csv(request):
+def admin_export_grammar_csv(request, level: int = None, chapter: int = None, search: str = None):
+    query = Grammar.objects.all().order_by('chapter', 'jlpt_level', 'id')
+    if level:
+        query = query.filter(jlpt_level=level)
+    if chapter:
+        query = query.filter(chapter=chapter)
+    if search:
+        query = query.filter(Q(title__icontains=search) | Q(structure__icontains=search) | Q(explanation__icontains=search))
+
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="grammar_export.csv"'
     writer = csv.writer(response)
     writer.writerow(['Title', 'Structure', 'Explanation', 'Chapter', 'JLPT Level'])
-    for obj in Grammar.objects.all():
+    for obj in query:
         writer.writerow([obj.title, obj.structure, obj.explanation, obj.chapter, obj.jlpt_level])
     return response
 
@@ -331,13 +347,21 @@ def admin_create_vocab(request, payload: VocabCreateSchema):
 
 @router.get("/kotoba/export/csv", auth=AdminAuth())
 @router.get("/vocab/export/csv", auth=AdminAuth())
-def admin_export_vocab_csv(request):
+def admin_export_vocab_csv(request, level: int = None, search: str = None):
+    query = Vocab.objects.all().order_by('jlpt_level', 'word')
+    if level is not None:
+        query = query.filter(jlpt_level=level)
+    if search:
+        from utils.kana import to_kana
+        search_kana = to_kana(search)
+        query = query.filter(Q(word__icontains=search) | Q(reading__icontains=search) | Q(meaning__icontains=search) | Q(reading__icontains=search_kana))
+
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="vocab_export.csv"'
     writer = csv.writer(response)
     writer.writerow(['Word', 'Reading', 'Meaning', 'JLPT Level'])
     from utils.kana import to_kana
-    for obj in Vocab.objects.all():
+    for obj in query:
         writer.writerow([obj.word, to_kana(obj.reading.lower()), obj.meaning, obj.jlpt_level])
     return response
 
@@ -366,13 +390,17 @@ def admin_delete_vocab(request, id: str):
     return {"success": True}
 
 @router.get("/particle/export/csv", auth=AdminAuth())
-def admin_export_particle_csv(request):
+def admin_export_particle_csv(request, level: int = None):
+    query = Particle.objects.all().order_by('jlpt_level', 'character')
+    if level:
+        query = query.filter(jlpt_level=level)
+        
     import json
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="particle_export.csv"'
     writer = csv.writer(response)
     writer.writerow(['Character', 'Meaning', 'Explanation', 'JLPT Level', 'Sentences'])
-    for obj in Particle.objects.all():
+    for obj in query:
         sentences_str = json.dumps(obj.sentences)
         writer.writerow([obj.character, obj.meaning, obj.explanation, obj.jlpt_level, sentences_str])
     return response

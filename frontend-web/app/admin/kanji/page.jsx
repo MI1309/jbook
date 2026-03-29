@@ -10,12 +10,13 @@ import { cacheGet, cacheSet } from '@/lib/cache-store';
 
 export default function KanjiAdmin() {
     const { user } = useAuth();
-    const [kanjis, setKanjis] = useState([]);
+    const [kanjiList, setKanjiList] = useState([]);
     const [loading, setLoading] = useState(true);
     const [filterLevel, setFilterLevel] = useState('');
+    const [search, setSearch] = useState('');
     const router = useRouter();
 
-    useEffect(() => { fetchKanjis(); }, [level, search]);
+    useEffect(() => { fetchKanjis(); }, [filterLevel, search]);
 
     const fetchKanjis = async () => {
         setLoading(true);
@@ -33,7 +34,7 @@ export default function KanjiAdmin() {
             let url = `${API_URL}/admin/kanji`;
 
             const queryParams = new URLSearchParams();
-            if (level && level !== 'all') queryParams.append('level', level);
+            if (filterLevel && filterLevel !== 'all') queryParams.append('level', filterLevel);
             if (search) queryParams.append('search', search);
 
             const queryString = queryParams.toString();
@@ -47,7 +48,7 @@ export default function KanjiAdmin() {
                 const data = await res.json();
                 setKanjiList(data);
                 // Cache only full list (no active filters)
-                if (!level && !search) cacheSet('admin-kanji-all', data);
+                if (!filterLevel && !search) cacheSet('admin-kanji-all', data);
             } else {
                 const cached = cacheGet('admin-kanji-all');
                 if (cached) { setKanjiList(cached); return; }
@@ -77,6 +78,36 @@ export default function KanjiAdmin() {
         }
     };
 
+    const handleExport = async () => {
+        try {
+            const token = Cookies.get('access_token');
+            const queryParams = new URLSearchParams();
+            if (filterLevel && filterLevel !== 'all') queryParams.append('level', filterLevel);
+            if (search) queryParams.append('search', search);
+            
+            const res = await fetch(`${API_URL}/admin/kanji/export/csv?${queryParams.toString()}`, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            
+            if (res.ok) {
+                const blob = await res.blob();
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `kanji_export_${new Date().toISOString().split('T')[0]}.csv`;
+                document.body.appendChild(a);
+                a.click();
+                a.remove();
+                window.URL.revokeObjectURL(url);
+            } else {
+                alert("Gagal mengekspor data.");
+            }
+        } catch (error) {
+            console.error("Export failed", error);
+            alert("Terjadi kesalahan saat mengekspor.");
+        }
+    };
+
     return (
         <div>
             <div className="flex justify-between items-center mb-6">
@@ -89,12 +120,27 @@ export default function KanjiAdmin() {
             <div className="bg-white shadow rounded-lg overflow-hidden">
                 <div className="p-4 border-b border-gray-200 bg-gray-50 flex justify-between items-center">
                     <h3 className="font-bold text-gray-700">Kanji List</h3>
-                    <div className="flex items-center gap-2">
-                        <span className="text-sm text-gray-600">Level:</span>
-                        <select className="border border-gray-300 rounded-md text-sm p-1" value={filterLevel} onChange={(e) => setFilterLevel(e.target.value)}>
-                            <option value="">All</option>
-                            {[5, 4, 3, 2, 1].map(l => <option key={l} value={l}>N{l}</option>)}
-                        </select>
+                    <div className="flex flex-wrap items-center gap-3">
+                        <input 
+                            type="text" 
+                            placeholder="Search Kanji..." 
+                            className="border border-gray-300 rounded-md text-sm p-1.5 w-32 md:w-48"
+                            value={search}
+                            onChange={(e) => setSearch(e.target.value)}
+                        />
+                        <div className="flex items-center gap-2">
+                            <span className="text-sm text-gray-600">Level:</span>
+                            <select className="border border-gray-300 rounded-md text-sm p-1.5" value={filterLevel} onChange={(e) => setFilterLevel(e.target.value)}>
+                                <option value="">All</option>
+                                {[5, 4, 3, 2, 1].map(l => <option key={l} value={l}>N{l}</option>)}
+                            </select>
+                        </div>
+                        <button 
+                            onClick={handleExport}
+                            className="bg-emerald-600 text-white px-3 py-1.5 rounded-md hover:bg-emerald-700 text-xs font-bold transition-all shadow-sm flex items-center gap-1"
+                        >
+                            <span>📥</span> Export CSV
+                        </button>
                     </div>
                 </div>
 
@@ -114,7 +160,7 @@ export default function KanjiAdmin() {
                                 </tr>
                             </thead>
                             <tbody className="bg-white divide-y divide-gray-200">
-                                {kanjis.map((k) => (
+                                {kanjiList.map((k) => (
                                     <tr key={k.id} className="hover:bg-gray-50">
                                         <td className="px-6 py-4 whitespace-nowrap text-2xl font-serif">{k.character}</td>
                                         <td className="px-6 py-4 whitespace-nowrap">{k.meaning}</td>
@@ -140,8 +186,8 @@ export default function KanjiAdmin() {
 
                         {/* Mobile Cards */}
                         <div className="md:hidden divide-y divide-gray-100">
-                            {kanjis.length === 0 && <div className="p-6 text-center text-gray-500">No Kanji found.</div>}
-                            {kanjis.map((k) => (
+                            {kanjiList.length === 0 && <div className="p-6 text-center text-gray-500">No Kanji found.</div>}
+                            {kanjiList.map((k) => (
                                 <div key={k.id} className="flex items-center">
                                     {/* Tap area → public detail page */}
                                     <div

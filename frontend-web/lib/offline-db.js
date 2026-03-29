@@ -19,6 +19,7 @@ const STORES = ['vocab', 'kanji', 'grammar', 'practice', 'meta'];
 let _db = null;
 
 function openDB() {
+    if (typeof window === 'undefined') return Promise.reject(new Error('IndexedDB is not available on server'));
     if (_db) return Promise.resolve(_db);
     return new Promise((resolve, reject) => {
         const req = indexedDB.open(DB_NAME, DB_VERSION);
@@ -37,6 +38,7 @@ function openDB() {
 
 /** Save an array of items to a store (replaces all) */
 export async function dbPutAll(storeName, items) {
+    if (typeof window === 'undefined') return;
     const db = await openDB();
     return new Promise((resolve, reject) => {
         const tx = db.transaction(storeName, 'readwrite');
@@ -50,6 +52,7 @@ export async function dbPutAll(storeName, items) {
 
 /** Get all items from a store */
 export async function dbGetAll(storeName) {
+    if (typeof window === 'undefined') return [];
     const db = await openDB();
     return new Promise((resolve, reject) => {
         const tx = db.transaction(storeName, 'readonly');
@@ -61,6 +64,7 @@ export async function dbGetAll(storeName) {
 
 /** Get a single item by id */
 export async function dbGet(storeName, id) {
+    if (typeof window === 'undefined') return null;
     const db = await openDB();
     return new Promise((resolve, reject) => {
         const tx = db.transaction(storeName, 'readonly');
@@ -72,6 +76,7 @@ export async function dbGet(storeName, id) {
 
 /** Check if a store has data */
 export async function dbHasData(storeName) {
+    if (typeof window === 'undefined') return false;
     const db = await openDB();
     return new Promise((resolve, reject) => {
         const tx = db.transaction(storeName, 'readonly');
@@ -83,6 +88,7 @@ export async function dbHasData(storeName) {
 
 /** Count items in a store */
 export async function dbCount(storeName) {
+    if (typeof window === 'undefined') return 0;
     const db = await openDB();
     return new Promise((resolve, reject) => {
         const tx = db.transaction(storeName, 'readonly');
@@ -94,6 +100,7 @@ export async function dbCount(storeName) {
 
 /** Save metadata (e.g. download timestamp) */
 export async function dbSetMeta(key, value) {
+    if (typeof window === 'undefined') return;
     const db = await openDB();
     return new Promise((resolve, reject) => {
         const tx = db.transaction('meta', 'readwrite');
@@ -105,6 +112,7 @@ export async function dbSetMeta(key, value) {
 
 /** Get metadata */
 export async function dbGetMeta(key) {
+    if (typeof window === 'undefined') return null;
     const db = await openDB();
     return new Promise((resolve, reject) => {
         const tx = db.transaction('meta', 'readonly');
@@ -116,6 +124,7 @@ export async function dbGetMeta(key) {
 
 /** Delete all offline data */
 export async function dbClearAll() {
+    if (typeof window === 'undefined') return;
     const db = await openDB();
     return new Promise((resolve, reject) => {
         const tx = db.transaction(STORES, 'readwrite');

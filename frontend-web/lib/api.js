@@ -89,11 +89,16 @@ export async function getKanjiList({ level, search, radical, limit = 50, page = 
     if (limit) queryParams.append('limit', limit);
     if (page) queryParams.append('page', page);
 
-    // 1. Prioritas Utama: Data Offline (IndexedDB)
-    const hasOffline = await dbHasData('kanji');
-    if (hasOffline) {
-        const offline = await serveFromDb('kanji', { level, search, radical, page, limit });
-        if (offline) return offline;
+    // 1. Prioritas Utama: Data Offline (IndexedDB) - Hanya di Browser
+    if (typeof window !== 'undefined') {
+        const hasOffline = await dbHasData('kanji');
+        if (hasOffline) {
+            const offline = await serveFromDb('kanji', { level, search, radical, page, limit });
+            // Jika ada data offline, kembalikan. Jika kosong tapi online, lanjut ke API.
+            if (offline && (offline.items.length > 0 || !navigator.onLine)) {
+                return offline;
+            }
+        }
     }
 
     // 2. Fallback ke API & LocalStorage Cache
@@ -113,11 +118,13 @@ export async function getKanjiList({ level, search, radical, limit = 50, page = 
 }
 
 export async function getKanjiDetail(id) {
-    // 1. Prioritas Utama: Data Offline (IndexedDB)
-    try {
-        const local = await dbGet('kanji', id);
-        if (local) return local;
-    } catch {}
+    // 1. Prioritas Utama: Data Offline (IndexedDB) - Hanya di Browser
+    if (typeof window !== 'undefined') {
+        try {
+            const local = await dbGet('kanji', id);
+            if (local) return local;
+        } catch {}
+    }
 
     // 2. Fallback ke API & LocalStorage Cache
     try {
@@ -145,11 +152,15 @@ export async function getGrammarList({ level, search, chapter, limit = 50, page 
     if (limit) queryParams.append('limit', limit);
     if (page) queryParams.append('page', page);
 
-    // 1. Prioritas Utama: Data Offline (IndexedDB)
-    const hasOffline = await dbHasData('grammar');
-    if (hasOffline) {
-        const offline = await serveFromDb('grammar', { level, search, chapter, page, limit });
-        if (offline) return offline;
+    // 1. Prioritas Utama: Data Offline (IndexedDB) - Hanya di Browser
+    if (typeof window !== 'undefined') {
+        const hasOffline = await dbHasData('grammar');
+        if (hasOffline) {
+            const offline = await serveFromDb('grammar', { level, search, chapter, page, limit });
+            if (offline && (offline.items.length > 0 || !navigator.onLine)) {
+                return offline;
+            }
+        }
     }
 
     // 2. Fallback ke API & LocalStorage Cache
@@ -170,11 +181,13 @@ export async function getGrammarList({ level, search, chapter, limit = 50, page 
 }
 
 export async function getGrammarDetail(id) {
-    // 1. Prioritas Utama: Data Offline (IndexedDB)
-    try {
-        const local = await dbGet('grammar', id);
-        if (local) return local;
-    } catch {}
+    // 1. Prioritas Utama: Data Offline (IndexedDB) - Hanya di Browser
+    if (typeof window !== 'undefined') {
+        try {
+            const local = await dbGet('grammar', id);
+            if (local) return local;
+        } catch {}
+    }
 
     // 2. Fallback ke API & LocalStorage Cache
     try {
@@ -285,11 +298,15 @@ export async function getVocabList({ level, search, word_type, limit = 50, page 
     if (limit) queryParams.append('limit', limit);
     if (page) queryParams.append('page', page);
 
-    // 1. Prioritas Utama: Data Offline (IndexedDB)
-    const hasOffline = await dbHasData('vocab');
-    if (hasOffline) {
-        const offline = await serveFromDb('vocab', { level, search, word_type, page, limit });
-        if (offline) return offline;
+    // 1. Prioritas Utama: Data Offline (IndexedDB) - Hanya di Browser
+    if (typeof window !== 'undefined') {
+        const hasOffline = await dbHasData('vocab');
+        if (hasOffline) {
+            const offline = await serveFromDb('vocab', { level, search, word_type, page, limit });
+            if (offline && (offline.items.length > 0 || !navigator.onLine)) {
+                return offline;
+            }
+        }
     }
 
     // 2. Fallback ke API & LocalStorage Cache
@@ -310,11 +327,13 @@ export async function getVocabList({ level, search, word_type, limit = 50, page 
 }
 
 export async function getVocabDetail(id) {
-    // 1. Prioritas Utama: Data Offline (IndexedDB)
-    try {
-        const local = await dbGet('vocab', id);
-        if (local) return local;
-    } catch {}
+    // 1. Prioritas Utama: Data Offline (IndexedDB) - Hanya di Browser
+    if (typeof window !== 'undefined') {
+        try {
+            const local = await dbGet('vocab', id);
+            if (local) return local;
+        } catch {}
+    }
 
     // 2. Fallback ke API & LocalStorage Cache
     try {
