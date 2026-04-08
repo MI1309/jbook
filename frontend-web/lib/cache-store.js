@@ -73,7 +73,7 @@ export function cacheClear(key) {
  */
 export async function fetchWithCache(cacheKey, fetchFn, ttlMs = DEFAULT_TTL_MS) {
     // If offline, serve from cache immediately
-    if (typeof navigator !== 'undefined' && !navigator.onLine) {
+    if (typeof window !== 'undefined' && typeof navigator !== 'undefined' && !navigator.onLine) {
         const cached = cacheGet(cacheKey);
         if (cached !== null) {
             console.info(`[cache-store] Offline — serving cached: ${cacheKey}`);

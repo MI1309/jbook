@@ -7,7 +7,7 @@ from .models import QuizAttempt, UserProgress
 from content.models import Kanji, Vocab, Grammar, Particle
 import random
 import uuid
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from ninja_jwt.authentication import JWTAuth
 User = get_user_model()
@@ -354,12 +354,13 @@ def import_practice_data(request, payload: ExportDataSchema):
         # Check if already exists to avoid duplication if imported multiple times
         exists = QuizAttempt.objects.filter(
             user=user,
-            timestamp=a.timestamp,
             kanji_id=a.kanji_id,
             vocab_id=a.vocab_id,
             grammar_id=a.grammar_id,
             particle_id=a.particle_id,
-            is_correct=a.is_correct
+            is_correct=a.is_correct,
+            timestamp__gte=a.timestamp - timedelta(seconds=1),
+            timestamp__lte=a.timestamp + timedelta(seconds=1)
         ).exists()
         
         if not exists:
