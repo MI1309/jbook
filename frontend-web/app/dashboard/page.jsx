@@ -138,8 +138,10 @@ export default function DashboardPage() {
     const getMistakeTypeIcon = (type) => {
         switch (type) {
             case 'kanji': return '語';
-            case 'vocab': return '文';
-            case 'grammar': return '法';
+            case 'vocab':
+            case 'kotoba': return '文';
+            case 'grammar':
+            case 'bunpo': return '法';
             default: return '？';
         }
     };
@@ -147,8 +149,10 @@ export default function DashboardPage() {
     const getMistakeTypeLabel = (type) => {
         switch (type) {
             case 'kanji': return 'Kanji';
-            case 'vocab': return 'Kotoba';
-            case 'grammar': return 'Tata Bahasa';
+            case 'vocab':
+            case 'kotoba': return 'Kotoba';
+            case 'grammar':
+            case 'bunpo': return 'Tata Bahasa';
             default: return 'Lainnya';
         }
     };
@@ -327,7 +331,7 @@ export default function DashboardPage() {
                                 </li>
                             )}
 
-                            {topMistakes.some(m => m.type === 'grammar') && (
+                            {topMistakes.some(m => m.type === 'grammar' || m.type === 'bunpo') && (
                                 <li className="flex items-start">
                                     <div className="flex-shrink-0 w-6 h-6 rounded-full bg-yellow-100 text-yellow-600 flex items-center justify-center mr-3 mt-0.5">
                                         <span className="font-bold text-xs">T</span>
@@ -407,7 +411,7 @@ export default function DashboardPage() {
                     {(detailView.type === 'vocab' || detailView.type === 'kotoba') && (
                         <KotobaDetailModal id={detailView.id} onClose={() => setDetailView(null)} />
                     )}
-                    {detailView.type === 'grammar' && (
+                    {(detailView.type === 'grammar' || detailView.type === 'bunpo') && (
                         <BunpoDetailModal id={detailView.id} onClose={() => setDetailView(null)} />
                     )}
                 </div>

@@ -55,8 +55,10 @@ export default function HistoryPage() {
     const getMistakeTypeLabel = (type) => {
         switch (type) {
             case 'kanji': return 'Kanji';
-            case 'vocab': return 'Kotoba';
-            case 'grammar': return 'Bunpo';
+            case 'vocab':
+            case 'kotoba': return 'Kotoba';
+            case 'grammar':
+            case 'bunpo': return 'Bunpo';
             default: return 'Lainnya';
         }
     };
@@ -64,7 +66,11 @@ export default function HistoryPage() {
     const allMistakes = analytics?.wrong_stats || [];
     const filtered = filterType === 'all'
         ? allMistakes
-        : allMistakes.filter(m => m.type === filterType);
+        : allMistakes.filter(m => {
+            if (filterType === 'grammar') return m.type === 'grammar' || m.type === 'bunpo';
+            if (filterType === 'vocab') return m.type === 'vocab' || m.type === 'kotoba';
+            return m.type === filterType;
+        });
     const sorted = [...filtered].sort((a, b) =>
         sortBy === 'count' ? b.count - a.count : a.character.localeCompare(b.character)
     );
@@ -269,7 +275,7 @@ export default function HistoryPage() {
                         {(detailView.type === 'vocab' || detailView.type === 'kotoba') && (
                             <KotobaDetailModal id={detailView.id} onClose={() => setDetailView(null)} />
                         )}
-                        {detailView.type === 'grammar' && (
+                        {(detailView.type === 'grammar' || detailView.type === 'bunpo') && (
                             <BunpoDetailModal id={detailView.id} onClose={() => setDetailView(null)} />
                         )}
                     </div>
