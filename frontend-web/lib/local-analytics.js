@@ -14,7 +14,23 @@ export function getGuestAnalytics() {
     }
 
     try {
-        return JSON.parse(data);
+        let current = JSON.parse(data);
+        
+        // Migrate old 'bunpo' to 'grammar'
+        let changed = false;
+        if (current.wrong_stats) {
+            current.wrong_stats.forEach(item => {
+                if (item.type === 'bunpo') {
+                    item.type = 'grammar';
+                    changed = true;
+                }
+            });
+        }
+        if (changed) {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(current));
+        }
+        
+        return current;
     } catch (e) {
         console.error("Failed to parse guest analytics", e);
         return { total_attempts: 0, accuracy: 0, wrong_stats: [] };
