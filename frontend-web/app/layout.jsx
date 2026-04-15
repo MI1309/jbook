@@ -2,6 +2,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { AuthProvider } from "@/context/AuthContext";
 import { PracticeProvider } from "@/context/PracticeContext";
+import { ThemeProvider } from "@/context/ThemeContext";
 import ClientShell from "@/components/ClientShell";
 import OfflineIndicator from "@/components/OfflineIndicator";
 
@@ -32,28 +33,23 @@ export const viewport = {
     maximumScale: 1,
 };
 
-const footer = (
-    <footer className="bg-white border-t border-gray-200 mt-auto">
-        <div className="container mx-auto px-4 py-6 text-center text-sm text-gray-500">
-            &copy; {new Date().getFullYear()} JBook. Belajar Bahasa Jepang.
-        </div>
-    </footer>
-);
 
 export default function RootLayout({ children }) {
     return (
-        <html lang="en">
+        <html lang="en" suppressHydrationWarning>
             <body
-                className={`${geistSans.variable} ${geistMono.variable} antialiased bg-gray-50 min-h-screen flex flex-col`}
+                className={`${geistSans.variable} ${geistMono.variable} antialiased bg-background text-foreground min-h-screen flex flex-col transition-colors duration-300`}
             >
-                <AuthProvider>
-                    <PracticeProvider>
-                        <ClientShell footer={footer}>
-                            {children}
-                        </ClientShell>
-                        <OfflineIndicator />
-                    </PracticeProvider>
-                </AuthProvider>
+                <ThemeProvider>
+                    <AuthProvider>
+                        <PracticeProvider>
+                            <ClientShell>
+                                {children}
+                            </ClientShell>
+                            <OfflineIndicator />
+                        </PracticeProvider>
+                    </AuthProvider>
+                </ThemeProvider>
             </body>
         </html>
     );

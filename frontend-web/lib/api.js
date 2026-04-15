@@ -3,6 +3,7 @@ export const API_URL = base_url.endsWith('/') ? base_url.slice(0, -1) : base_url
 import Cookies from 'js-cookie';
 import { fetchWithCache } from '@/lib/cache-store';
 import { dbGetAll, dbHasData, dbGet } from '@/lib/offline-db';
+import { hasKanji, extractKanji, getScriptTypes } from '@/lib/utils';
 
 /**
  * Try to serve from IndexedDB. Returns null if store is empty.
@@ -16,16 +17,56 @@ async function serveFromDb(storeName, { level, search, chapter, word_type, radic
         if (chapter) items = items.filter(i => String(i.chapter) === String(chapter));
         if (word_type) items = items.filter(i => i.word_type === word_type);
         if (radical) items = items.filter(i => i.radical === radical);
+
         if (search) {
             const q = search.toLowerCase();
-            items = items.filter(i =>
-                i.character?.toLowerCase().includes(q) ||
-                i.word?.toLowerCase().includes(q) ||
-                i.reading?.toLowerCase().includes(q) ||
-                i.meaning?.toLowerCase().includes(q) ||
-                i.title?.toLowerCase().includes(q) ||
-                i.structure?.toLowerCase().includes(q)
-            );
+            
+            // 1. Basic Filtering
+            items = items.filter(i => {
+                const charMatch = i.character?.toLowerCase().includes(q);
+                const wordMatch = i.word?.toLowerCase().includes(q);
+                const readMatch = i.reading?.toLowerCase().includes(q);
+                const meanMatch = i.meaning?.toLowerCase().includes(q);
+                const titleMatch = i.title?.toLowerCase().includes(q);
+                const structMatch = i.structure?.toLowerCase().includes(q);
+
+                // Attach match info for UI highlighting
+                if (charMatch || wordMatch) i._matchTarget = 'word';
+                else if (readMatch) i._matchTarget = 'reading';
+                else if (meanMatch || titleMatch || structMatch) i._matchTarget = 'meaning';
+                
+                return charMatch || wordMatch || readMatch || meanMatch || titleMatch || structMatch;
+            });
+
+            // 2. Smart Search for Kanji: Search in Vocab meanings too
+            // Always check Vocab related to ensures we find Kanjis based on words (e.g. "hari" -> "日")
+            if (storeName === 'kanji') {
+                const vocabs = await dbGetAll('vocab');
+                const matchedVocab = vocabs.filter(v => v.meaning?.toLowerCase().includes(q));
+                
+                if (matchedVocab.length > 0) {
+                    const allKanjis = await dbGetAll('kanji');
+                    const relatedKanjiChars = new Set();
+                    matchedVocab.forEach(v => {
+                        extractKanji(v.word).forEach(k => relatedKanjiChars.add(k));
+                    });
+
+                    relatedKanjiChars.forEach(char => {
+                        if (!items.find(it => it.character === char)) {
+                            const found = allKanjis.find(k => k.character === char);
+                            if (found) {
+                                // Find which vocab matched to show as context
+                                const contextVocab = matchedVocab.find(v => v.word.includes(char));
+                                items.push({
+                                    ...found,
+                                    _isSmartMatch: true,
+                                    _smartContext: contextVocab ? `${contextVocab.meaning} (${contextVocab.word})` : q
+                                });
+                            }
+                        }
+                    });
+                }
+            }
         }
         const total = items.length;
         const offset = (page - 1) * limit;
@@ -81,6 +122,73 @@ function handleNetworkError(context, error, defaultValue = null) {
     throw new Error('Koneksi gagal. Mohon periksa internet Anda.');
 }
 
+/**
+ * Finds an ID in IndexedDB by a specific field value.
+ * Used for cross-category navigation (e.g., clicking a kanji in a word).
+ */
+export async function findIdByString(storeName, value) {
+    if (typeof window === 'undefined') return null;
+    try {
+        const items = await dbGetAll(storeName);
+        if (!items) return null;
+        
+        // Try matching character (for Kanji) or word (for Kotoba)
+        const found = items.find(i => 
+            i.character === value || 
+            i.word === value || 
+            i.title === value
+        );
+        return found ? found.id : null;
+    } catch (e) {
+        console.warn(`[offline-db] findIdByString failed for ${storeName}:`, e.message);
+        return null;
+    }
+}
+
+/**
+ * Resolves the actual database ID for a content item by its character/word/title.
+ *
+ * Priority:
+ *   1. Online  → search the API (always returns the canonical server ID)
+ *   2. Offline → lookup from IndexedDB (requires prior offline download)
+ *
+ * @param {'kanji'|'vocab'|'grammar'} type
+ * @param {string} character  - the character, word, or grammar title
+ * @returns {Promise<number|string|null>}
+ */
+export async function resolveContentId(type, character) {
+    if (!character) return null;
+
+    // --- Online: Search the API ---
+    if (typeof navigator !== 'undefined' && navigator.onLine) {
+        try {
+            const token = Cookies.get('access_token');
+            const headers = token ? { Authorization: `Bearer ${token}` } : {};
+
+            let url = '';
+            if (type === 'kanji')   url = `${API_URL}/content/kanji?search=${encodeURIComponent(character)}&limit=1`;
+            if (type === 'vocab')   url = `${API_URL}/content/vocab?search=${encodeURIComponent(character)}&limit=1`;
+            if (type === 'grammar') url = `${API_URL}/content/grammar?search=${encodeURIComponent(character)}&limit=1`;
+            if (!url) return null;
+
+            const res = await fetch(url, { headers });
+            if (res.ok) {
+                const data = await res.json();
+                const items = Array.isArray(data) ? data : (data.items || data.results || []);
+                if (items.length > 0) {
+                    return items[0].id ?? null;
+                }
+            }
+        } catch (e) {
+            console.warn('[resolveContentId] API lookup failed, falling back to offline:', e.message);
+        }
+    }
+
+    // --- Offline fallback: search IndexedDB ---
+    const storeMap = { kanji: 'kanji', vocab: 'vocab', grammar: 'grammar' };
+    return findIdByString(storeMap[type] || type, character);
+}
+
 export async function getKanjiList({ level, search, radical, limit = 50, page = 1 } = {}) {
     const queryParams = new URLSearchParams();
     if (level) queryParams.append('level', level);
@@ -91,6 +199,12 @@ export async function getKanjiList({ level, search, radical, limit = 50, page = 
 
     const cacheKey = `kanji-list-${queryParams.toString()}`;
     
+    // Check local smart matches first (Parallel or Fallback)
+    let localSmartResults = null;
+    if (typeof window !== 'undefined') {
+        localSmartResults = await serveFromDb('kanji', { level, search, radical, page: 1, limit: 200 });
+    }
+
     // 1. Jika Online: Ambil dari API (Selalu Prioritas Utama)
     if (typeof window === 'undefined' || (typeof navigator !== 'undefined' && navigator.onLine)) {
         console.info(`[jbook-api] Online: Mencoba mengambil Kanji dari API...`);
@@ -99,33 +213,34 @@ export async function getKanjiList({ level, search, radical, limit = 50, page = 
                 const res = await fetch(`${API_URL}/content/kanji?${queryParams.toString()}`);
                 return handleResponse(res, 'getKanjiList');
             });
-            console.info(`[jbook-api] Berhasil mengambil Kanji dari API/Cache Browser.`);
+
+            // Merge with local results if search is active
+            if (search && localSmartResults) {
+                const apiItems = data.items || [];
+                const localSmartItems = localSmartResults.items.filter(li => li._isSmartMatch);
+                
+                // Add unique smart items that are not in API result
+                localSmartItems.forEach(si => {
+                    if (!apiItems.find(ai => ai.character === si.character)) {
+                        apiItems.push(si);
+                    }
+                });
+                
+                data.items = apiItems;
+                data.total = apiItems.length;
+            }
+
             return data;
         } catch (error) {
             console.warn(`[jbook-api] API Gagal, mencoba fallback ke Database Lokal...`, error.message);
-            if (typeof window !== 'undefined') {
-                const offline = await serveFromDb('kanji', { level, search, radical, page, limit });
-                if (offline && offline.items.length > 0) {
-                    console.info(`[jbook-api] Berhasil memuat data Kanji cadangan dari Database Lokal.`);
-                    return offline;
-                }
-            }
+            if (localSmartResults) return localSmartResults;
             throw error;
         }
     }
 
     // 2. Jika Benar-benar Offline: Ambil dari Database Lokal
     console.info(`[jbook-api] Offline: Mengambil Kanji dari Database Lokal...`);
-    if (typeof window !== 'undefined') {
-        const offline = await serveFromDb('kanji', { level, search, radical, page, limit });
-        if (offline && offline.items.length > 0) {
-            console.info(`[jbook-api] Berhasil memuat data Kanji dari Database Lokal.`);
-            return offline;
-        }
-    }
-    
-    console.error(`[jbook-api] Tidak ada koneksi internet dan data lokal kosong (Belum didownload).`);
-    return handleNetworkError('getKanjiList', new Error('Offline'), { items: [], total: 0, page: 1, pages: 1 });
+    return localSmartResults || { items: [], total: 0, page, pages: 1 };
 }
 
 export async function getKanjiDetail(id) {
@@ -291,26 +406,43 @@ export async function getPracticeQuestions({ limit = 10, level = null, type = 'k
  */
 async function generateOfflineQuestions({ limit, level, type }) {
     try {
-        const storeName = type === 'kanji' ? 'kanji' : (type === 'vocab' || type === 'kotoba' ? 'vocab' : 'grammar');
-        let pool = await dbGetAll(storeName);
-        if (!pool || pool.length < 4) return [];
+        const requestedTypes = type.split(',').map(t => t.trim());
+        let fullPool = [];
 
-        if (level) {
-            pool = pool.filter(i => String(i.jlpt_level) === String(level));
+        // Fetch pool for each type
+        for (const t of requestedTypes) {
+            const storeName = t === 'kanji' ? 'kanji' : (t === 'vocab' || t === 'kotoba' ? 'vocab' : 'grammar');
+            let pool = await dbGetAll(storeName);
+            
+            if (level) {
+                // Support multi-level filtering
+                const levels = String(level).split(',').map(l => l.trim());
+                pool = pool.filter(i => levels.includes(String(i.jlpt_level)));
+            }
+            
+            // Tag items with their type for later processing
+            pool.forEach(item => {
+                fullPool.push({ item, type: storeName, originalPool: pool });
+            });
         }
-        if (pool.length < 4) return [];
+
+        if (!fullPool || fullPool.length < 4) return [];
 
         // Shuffle pool
-        const shuffled = [...pool].sort(() => 0.5 - Math.random());
+        const shuffled = [...fullPool].sort(() => 0.5 - Math.random());
         const selected = shuffled.slice(0, Math.min(limit, shuffled.length));
 
-        return selected.map(item => {
-            const distractors = pool.filter(p => p.id !== item.id).sort(() => 0.5 - Math.random()).slice(0, 3);
+        return selected.map(({ item, type, originalPool }) => {
+            // Find distractors from the same category pool
+            const distractors = originalPool
+                .filter(p => p.id !== item.id)
+                .sort(() => 0.5 - Math.random())
+                .slice(0, 3);
+                
             let options = [];
-
-            if (storeName === 'kanji') {
+            if (type === 'kanji') {
                 options = [item.meaning, ...distractors.map(d => d.meaning)];
-            } else if (storeName === 'vocab') {
+            } else if (type === 'vocab') {
                 options = [item.meaning, ...distractors.map(d => d.meaning)];
             } else {
                 options = [item.explanation, ...distractors.map(d => d.explanation)];
@@ -324,7 +456,7 @@ async function generateOfflineQuestions({ limit, level, type }) {
             return {
                 id: item.id,
                 character: item.character || item.word || item.title,
-                type: storeName,
+                type: type, // Correctly use the category's type
                 options: formattedOptions,
                 reading: item.reading || (item.onyomi ? item.onyomi.join(', ') : ''),
                 meaning: item.meaning || item.explanation
@@ -335,6 +467,7 @@ async function generateOfflineQuestions({ limit, level, type }) {
         return [];
     }
 }
+
 
 export async function submitPracticeResults(results) {
     const token = Cookies.get('access_token');

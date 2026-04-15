@@ -64,27 +64,49 @@ export function saveGuestResults(newResults) {
         wrongMap.set(item.character + '|' + item.type, { ...item });
     });
 
-    // Process new mistakes
+    // Process new results
     newResults.forEach(res => {
-        if (!res.is_correct && res.character) { // Ensure character is available
-            const key = res.character + '|' + res.type;
-            if (wrongMap.has(key)) {
-                const item = wrongMap.get(key);
-                item.count += 1;
-            } else {
-                wrongMap.set(key, {
-                    character: res.character,
-                    count: 1,
-                    type: res.type
-                });
-            }
+        const label = res.character || res.word || res.title;
+        if (!label) return;
+
+        const key = label + '|' + res.type;
+        if (!wrongMap.has(key)) {
+            wrongMap.set(key, {
+                character: label,
+                count: 0,
+                right_count: 0,
+                type: res.type
+            });
+        }
+
+        const item = wrongMap.get(key);
+        if (res.is_correct) {
+            item.right_count = (item.right_count || 0) + 1;
+        } else {
+            item.count += 1;
         }
     });
 
-    // Convert map back to array and sort
+    // Helper for status (Logic must match backend learning/api.py)
+    const getStatusLabel = (wrong, right) => {
+        if (wrong <= 0) return null;
+        if (wrong === 1 && (right || 0) >= 1) return null;
+        if (wrong >= 4) return "Perbaiki";
+        if (wrong === 3) return "Cukup";
+        if (wrong === 2) return "Lumayan";
+        return "Lumayan"; // fallback for 1 wrong 0 right
+    };
+
+    // Convert map back to array, filter out items that don't have mistakes anymore (or never did), and sort
     const wrong_stats = Array.from(wrongMap.values())
+        .filter(item => item.count > 0)
+        .map(item => ({
+            ...item,
+            status: getStatusLabel(item.count, item.right_count)
+        }))
         .sort((a, b) => b.count - a.count)
-        .slice(0, 5); // Keep top 5
+        .slice(0, 50); // Keep top 50
+
 
     const updated = {
         total_attempts: newTotal,

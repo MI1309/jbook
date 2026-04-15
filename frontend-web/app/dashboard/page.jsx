@@ -2,12 +2,17 @@
 
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/context/AuthContext';
+import { useTheme } from '@/context/ThemeContext';
 import { useRouter } from 'next/navigation';
-import { getUserAnalytics, exportPracticeData, importPracticeData } from '@/lib/api';
+import { getUserAnalytics, exportPracticeData, importPracticeData, resolveContentId } from '@/lib/api';
 import Link from 'next/link';
+import KanjiDetailModal from '@/components/KanjiDetailModal';
+import KotobaDetailModal from '@/components/KotobaDetailModal';
+import BunpoDetailModal from '@/components/BunpoDetailModal';
 
 export default function DashboardPage() {
     const { user, loading } = useAuth();
+    const { theme, mounted } = useTheme();
     const router = useRouter();
     const [analytics, setAnalytics] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
@@ -15,6 +20,7 @@ export default function DashboardPage() {
     const [isImporting, setIsImporting] = useState(false);
     const [error, setError] = useState(null);
     const [actionError, setActionError] = useState(null);
+    const [detailView, setDetailView] = useState(null); // { id, type }
 
     const fetchAnalytics = async () => {
         if (!user) return;
@@ -26,6 +32,20 @@ export default function DashboardPage() {
             setError("Gagal memuat data latihan. Coba lagi nanti.");
         } finally {
             setIsLoading(false);
+        }
+    };
+
+    // Resolve character → ID (online: from API, offline: from IndexedDB)
+    const handleOpenMistake = async (mistake) => {
+        try {
+            const id = await resolveContentId(mistake.type, mistake.character);
+            if (id) {
+                setDetailView({ id, type: mistake.type });
+            } else {
+                alert(`Detail untuk "${mistake.character}" tidak ditemukan. Jika offline, pastikan kamu sudah mengunduh materi.`);
+            }
+        } catch (err) {
+            console.error('[jbook] handleOpenMistake error:', err);
         }
     };
 
@@ -199,45 +219,58 @@ export default function DashboardPage() {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-10">
 
                 {/* Top Mistakes */}
-                <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-                    <div className="border-b border-gray-100 bg-gray-50 px-6 py-4">
-                        <h2 className="text-lg font-bold text-gray-900 flex items-center">
-                            <span className="bg-red-100 text-red-600 p-1 rounded mr-2">
-                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                <div className={`rounded-2xl shadow-sm border overflow-hidden transition-colors ${!mounted ? 'bg-white border-gray-100' : (theme === 'dark' ? 'bg-[#0a0a0a] border-red-950/20' : 'bg-white border-gray-100')}`}>
+                    <div className={`border-b px-6 py-4 flex items-center justify-between transition-colors ${!mounted ? 'bg-gray-50 border-gray-100' : (theme === 'dark' ? 'bg-black/40 border-red-950/20' : 'bg-gray-50 border-gray-100')}`}>
+                        <h2 className={`text-lg font-black flex items-center gap-2 transition-colors ${!mounted ? 'text-gray-900' : (theme === 'dark' ? 'text-white' : 'text-gray-900')}`}>
+                            <span className="bg-red-600 text-white p-1.5 rounded-xl shadow-sm shadow-red-500/20">
+                                <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
                             </span>
                             Sering Salah
                         </h2>
+                        <Link
+                            href="/dashboard/history"
+                            className="text-[10px] font-black uppercase tracking-widest text-red-600 hover:text-red-700 flex items-center gap-1 transition-colors"
+                        >
+                            Lihat Semua →
+                        </Link>
                     </div>
                     <div className="p-6">
                         {topMistakes.length > 0 ? (
-                            <div className="space-y-4">
+                            <div className="space-y-3">
                                 {topMistakes.map((mistake, idx) => (
-                                    <div key={idx} className="flex items-center justify-between group">
-                                        <div className="flex items-center">
-                                            <div className="w-10 h-10 rounded bg-gray-100 text-gray-600 flex items-center justify-center font-bold text-xl mr-4 group-hover:bg-red-50 group-hover:text-red-600 transition-colors">
-                                                {mistake.character.length > 3 ? mistake.character.substring(0, 2) + ".." : mistake.character}
+                                    <button
+                                        key={idx}
+                                        onClick={() => handleOpenMistake(mistake)}
+                                        className={`w-full flex items-center justify-between group cursor-pointer p-3 rounded-xl border-2 transition-all hover:border-red-500 hover:scale-[1.01] active:scale-[0.99] text-left ${!mounted ? 'bg-white border-gray-100' : (theme === 'dark' ? 'bg-black/20 border-red-950/20 hover:bg-red-950/10' : 'bg-white border-gray-100 hover:bg-red-50/50')}`}
+                                    >
+                                        <div className="flex items-center gap-3">
+                                            <div className="w-10 h-10 rounded-xl bg-red-600 text-white flex items-center justify-center font-black text-lg shadow-sm shadow-red-500/20 group-hover:rotate-3 transition-transform flex-shrink-0">
+                                                {(mistake.character?.length || 0) > 3 ? mistake.character.substring(0, 2) + ".." : (mistake.character || '?')}
                                             </div>
                                             <div>
-                                                <div className="font-semibold text-gray-900">{mistake.character}</div>
-                                                <div className="text-xs text-gray-500 font-medium">
-                                                    Kategori: <span className="text-gray-700">{getMistakeTypeLabel(mistake.type)}</span>
+                                                <div className={`font-black transition-colors ${!mounted ? 'text-gray-900' : (theme === 'dark' ? 'text-white' : 'text-gray-900')}`}>{mistake.character}</div>
+                                                <div className={`text-[10px] font-black uppercase tracking-widest transition-colors ${!mounted ? 'text-gray-400' : (theme === 'dark' ? 'text-gray-600' : 'text-gray-400')}`}>
+                                                    {getMistakeTypeLabel(mistake.type)}
                                                 </div>
                                             </div>
                                         </div>
-                                        <div className="flex flex-col items-end">
-                                            <div className="font-bold text-red-600">{mistake.count}x</div>
-                                            <div className="text-xs text-gray-400">salah</div>
+                                        <div className="flex items-center gap-3">
+                                            <div className="text-right">
+                                                <div className="font-black text-red-600 text-lg leading-none">{mistake.count}x</div>
+                                                <div className="text-[10px] text-gray-400 font-bold">salah</div>
+                                            </div>
+                                            <span className="text-gray-300 group-hover:text-red-500 transition-colors text-lg">→</span>
                                         </div>
-                                    </div>
+                                    </button>
                                 ))}
                             </div>
                         ) : (
                             <div className="text-center py-8">
                                 <div className="text-gray-300 mb-3 flex justify-center">
-                                    <svg className="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7"></path></svg>
+                                    <svg className="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7"></path></svg>
                                 </div>
-                                <p className="text-gray-500 font-medium">Belum ada data kesalahan.</p>
-                                <p className="text-sm text-gray-400">Bagus! Ayo mulai latihan untuk melihat analisisnya.</p>
+                                <p className={`font-medium transition-colors ${!mounted ? 'text-gray-500' : (theme === 'dark' ? 'text-gray-400' : 'text-gray-500')}`}>Belum ada data kesalahan.</p>
+                                <p className={`text-sm mt-1 transition-colors ${!mounted ? 'text-gray-400' : (theme === 'dark' ? 'text-gray-600' : 'text-gray-400')}`}>Ayo mulai latihan untuk melihat analisisnya.</p>
                             </div>
                         )}
                     </div>
@@ -343,6 +376,21 @@ export default function DashboardPage() {
                     </p>
                 </div>
             </div>
+
+            {/* Detail View Overlay */}
+            {detailView && (
+                <div className="fixed inset-0 z-[110]">
+                    {detailView.type === 'kanji' && (
+                        <KanjiDetailModal id={detailView.id} onClose={() => setDetailView(null)} />
+                    )}
+                    {(detailView.type === 'vocab' || detailView.type === 'kotoba') && (
+                        <KotobaDetailModal id={detailView.id} onClose={() => setDetailView(null)} />
+                    )}
+                    {detailView.type === 'grammar' && (
+                        <BunpoDetailModal id={detailView.id} onClose={() => setDetailView(null)} />
+                    )}
+                </div>
+            )}
         </div>
     );
 }

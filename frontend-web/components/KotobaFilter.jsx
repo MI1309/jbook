@@ -4,8 +4,10 @@ import { Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import { useDebounce } from 'use-debounce';
+import { useTheme } from '@/context/ThemeContext';
 
 function FilterContent() {
+    const { theme, mounted } = useTheme();
     const router = useRouter();
     const searchParams = useSearchParams();
 
@@ -61,25 +63,29 @@ function FilterContent() {
 
     }, [debouncedSearch, level, wordType, router, searchParams]);
 
+    const textColor = !mounted ? 'text-black' : (theme === 'dark' ? 'text-white' : 'text-black');
+    const subTextColor = !mounted ? 'text-black/50' : (theme === 'dark' ? 'text-white/50' : 'text-black/50');
+    const inputBg = !mounted ? 'bg-background' : (theme === 'dark' ? 'bg-black/40' : 'bg-background');
+
     return (
-        <div className="bg-white p-6 rounded-2xl shadow-md mb-8 max-w-2xl mx-auto border border-gray-100">
-            <div className="flex flex-col md:flex-row gap-4">
+        <div className={`bg-card card-texture p-6 rounded-3xl shadow-lg mb-8 max-w-4xl mx-auto border transition-all ${theme === 'dark' ? 'border-red-950 shadow-red-950/5' : 'border-gray-100 shadow-red-100/20'}`}>
+            <div className="flex flex-col md:flex-row gap-6">
                 <div className="flex-[2]">
-                    <label className="block text-gray-700 font-bold mb-2 flex items-center gap-2 text-sm uppercase tracking-wider">
+                    <label className={`block font-black mb-2 flex items-center gap-2 text-xs uppercase tracking-widest transition-colors ${subTextColor}`}>
                         <span>🔍</span> Cari Kosakata
                     </label>
-                    <div className="relative">
+                    <div className="relative group">
                         <input
                             type="text"
                             placeholder="Masukan kata, huruf, atau arti..."
-                            className="w-full px-5 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-all text-gray-900 bg-gray-50 focus:bg-white shadow-inner"
+                            className={`w-full px-5 py-3 border rounded-2xl focus:outline-none focus:ring-2 focus:ring-brand/40 focus:border-brand transition-all group-hover:border-brand/30 ${inputBg} ${textColor} ${theme === 'dark' ? 'border-red-950' : 'border-gray-100'}`}
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
                         />
                         {searchTerm && (
                             <button
                                 onClick={() => setSearchTerm('')}
-                                className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-red-500 transition-colors bg-gray-100 hover:bg-red-100 rounded-full w-6 h-6 flex items-center justify-center text-xs"
+                                className={`absolute right-4 top-1/2 transform -translate-y-1/2 transition-colors rounded-full w-6 h-6 flex items-center justify-center text-xs ${theme === 'dark' ? 'bg-red-950/40 text-red-400 hover:text-red-300' : 'bg-gray-100 text-gray-400 hover:text-red-500'}`}
                             >
                                 ✕
                             </button>
@@ -88,11 +94,11 @@ function FilterContent() {
                 </div>
 
                 <div className="flex-1">
-                    <label className="block text-gray-700 font-bold mb-2 flex items-center gap-2 text-sm uppercase tracking-wider">
+                    <label className={`block font-black mb-2 flex items-center gap-2 text-xs uppercase tracking-widest transition-colors ${subTextColor}`}>
                         Level
                     </label>
                     <select
-                        className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-all text-gray-900 bg-gray-50 cursor-pointer shadow-inner appearance-none"
+                        className={`w-full px-5 py-3 border rounded-2xl focus:outline-none focus:ring-2 focus:ring-brand/40 focus:border-brand transition-all cursor-pointer appearance-none ${inputBg} ${textColor} ${theme === 'dark' ? 'border-red-950' : 'border-gray-100'}`}
                         value={level}
                         onChange={(e) => setLevel(e.target.value)}
                     >
@@ -106,11 +112,11 @@ function FilterContent() {
                 </div>
 
                 <div className="flex-1">
-                    <label className="block text-gray-700 font-bold mb-2 flex items-center gap-2 text-sm uppercase tracking-wider">
+                    <label className={`block font-black mb-2 flex items-center gap-2 text-xs uppercase tracking-widest transition-colors ${subTextColor}`}>
                         Tipe
                     </label>
                     <select
-                        className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-all text-gray-900 bg-gray-50 cursor-pointer shadow-inner appearance-none"
+                        className={`w-full px-5 py-3 border rounded-2xl focus:outline-none focus:ring-2 focus:ring-brand/40 focus:border-brand transition-all cursor-pointer appearance-none ${inputBg} ${textColor} ${theme === 'dark' ? 'border-red-950' : 'border-gray-100'}`}
                         value={wordType}
                         onChange={(e) => setWordType(e.target.value)}
                     >

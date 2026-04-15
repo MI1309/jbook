@@ -40,6 +40,8 @@ class WrongStatSchema(Schema):
     character: str
     count: int
     type: str
+    status: Optional[str] = None
+
 
 class AnalyticsSchema(Schema):
     total_attempts: int
@@ -54,6 +56,8 @@ class QuizAttemptExportSchema(Schema):
     is_correct: bool
     answer_given: Optional[str] = None
     timestamp: datetime
+    mistake_count: Optional[int] = 0 # New field for export
+
 
 class UserProgressExportSchema(Schema):
     content_type_app: str
@@ -191,9 +195,10 @@ def submit_quiz(request, payload: SubmissionSchema):
         elif res.type == 'vocab':
             attempt_data["vocab_id"] = res.question_id
             filter_kwargs["vocab_id"] = res.question_id
-        elif res.type == 'grammar':
+        elif res.type in ['grammar', 'bunpo']:
             attempt_data["grammar_id"] = res.question_id
             filter_kwargs["grammar_id"] = res.question_id
+
         elif res.type == 'particle':
             attempt_data["particle_id"] = res.question_id
             filter_kwargs["particle_id"] = res.question_id
@@ -237,53 +242,81 @@ def get_analytics(request):
     correct_count = qs.filter(is_correct=True).count()
     accuracy = (correct_count / total_attempts * 100) if total_attempts > 0 else 0.0
     
-    # Get wrong stats for all types
-    # This is tricky because we need to join different tables.
-    # For now, let's just do Kanji errors as it's the main feature, or try to aggregate.
-    # Group by all foreign keys is hard in one query.
-    # Let's fetch top 5 wrong regardless of type? 
-    # Or just fetch top 5 wrong Kanji for now to keep it simple and consistent with previous behavior.
-    
-    wrong_stats_qs = qs.filter(is_correct=False, kanji__isnull=False).values('kanji__character')\
-        .annotate(count=Count('id')).order_by('-count')[:5]
+    def get_status_label(wrong, right):
+        if wrong <= 0: return None
+        if wrong == 1 and right >= 1: return None
+        if wrong >= 4: return "Perbaiki"
+        if wrong == 3: return "Cukup"
+        if wrong == 2: return "Lumayan"
+        return "Lumayan" # Default for 1 wrong 0 right
+
+    from django.db.models import Q
+
+    # Kanji stats
+    kanji_stats = qs.filter(kanji__isnull=False).values('kanji__character')\
+        .annotate(
+            wrong=Count('id', filter=Q(is_correct=False)),
+            right=Count('id', filter=Q(is_correct=True))
+        ).order_by('-wrong')[:30]
         
-    wrong_stats = [
-        {"character": item['kanji__character'], "count": item['count'], "type": "kanji"}
-        for item in wrong_stats_qs
-    ]
+    wrong_stats = []
+    for item in kanji_stats:
+        if item['wrong'] > 0:
+            wrong_stats.append({
+                "character": item['kanji__character'], 
+                "count": item['wrong'], 
+                "type": "kanji",
+                "status": get_status_label(item['wrong'], item['right'])
+            })
     
-    # We could also add Vocab errors...
-    wrong_vocab_qs = qs.filter(is_correct=False, vocab__isnull=False).values('vocab__word')\
-        .annotate(count=Count('id')).order_by('-count')[:5]
+    # Vocab stats
+    vocab_stats = qs.filter(vocab__isnull=False).values('vocab__word')\
+        .annotate(
+            wrong=Count('id', filter=Q(is_correct=False)),
+            right=Count('id', filter=Q(is_correct=True))
+        ).order_by('-wrong')[:30]
     
-    for item in wrong_vocab_qs:
-        wrong_stats.append({
-            "character": item['vocab__word'], 
-            "count": item['count'], 
-            "type": "vocab"
-        })
+    for item in vocab_stats:
+        if item['wrong'] > 0:
+            wrong_stats.append({
+                "character": item['vocab__word'], 
+                "count": item['wrong'], 
+                "type": "vocab",
+                "status": get_status_label(item['wrong'], item['right'])
+            })
 
-    # Add Grammar errors
-    wrong_grammar_qs = qs.filter(is_correct=False, grammar__isnull=False).values('grammar__title')\
-        .annotate(count=Count('id')).order_by('-count')[:5]
+    # Grammar stats
+    grammar_stats = qs.filter(grammar__isnull=False).values('grammar__title')\
+        .annotate(
+            wrong=Count('id', filter=Q(is_correct=False)),
+            right=Count('id', filter=Q(is_correct=True))
+        ).order_by('-wrong')[:30]
 
-    for item in wrong_grammar_qs:
-        wrong_stats.append({
-            "character": item['grammar__title'],
-            "count": item['count'],
-            "type": "grammar"
-        })
+    for item in grammar_stats:
+        if item['wrong'] > 0:
+            wrong_stats.append({
+                "character": item['grammar__title'],
+                "count": item['wrong'],
+                "type": "grammar",
+                "status": get_status_label(item['wrong'], item['right'])
+            })
         
-    # Add Particle errors
-    wrong_particle_qs = qs.filter(is_correct=False, particle__isnull=False).values('particle__character')\
-        .annotate(count=Count('id')).order_by('-count')[:5]
+    # Particle stats
+    particle_stats = qs.filter(particle__isnull=False).values('particle__character')\
+        .annotate(
+            wrong=Count('id', filter=Q(is_correct=False)),
+            right=Count('id', filter=Q(is_correct=True))
+        ).order_by('-wrong')[:30]
 
-    for item in wrong_particle_qs:
-        wrong_stats.append({
-            "character": item['particle__character'],
-            "count": item['count'],
-            "type": "particle"
-        })
+    for item in particle_stats:
+        if item['wrong'] > 0:
+            wrong_stats.append({
+                "character": item['particle__character'],
+                "count": item['wrong'],
+                "type": "particle",
+                "status": get_status_label(item['wrong'], item['right'])
+            })
+
         
     # Sort combined stats
     wrong_stats.sort(key=lambda x: x['count'], reverse=True)
@@ -291,7 +324,8 @@ def get_analytics(request):
     return {
         "total_attempts": total_attempts,
         "accuracy": round(accuracy, 1),
-        "wrong_stats": wrong_stats[:5]
+        "wrong_stats": wrong_stats[:50]
+
     }
 
 @router.post("/practice/reset", auth=JWTAuth())
@@ -314,8 +348,20 @@ def export_practice_data(request):
     attempts = QuizAttempt.objects.filter(user=user)
     progress = UserProgress.objects.filter(user=user)
     
+    # Pre-calculate mistake counts for all items to avoid N+1 queries in loops
+    from django.db.models import Q
+    mistake_counts = attempts.filter(is_correct=False).values('kanji_id', 'vocab_id', 'grammar_id', 'particle_id')\
+        .annotate(count=Count('id'))
+    
+    # Create a lookup map
+    lookup = {}
+    for entry in mistake_counts:
+        key = entry['kanji_id'] or entry['vocab_id'] or entry['grammar_id'] or entry['particle_id']
+        if key: lookup[str(key)] = entry['count']
+
     export_attempts = []
     for a in attempts:
+        target_id = a.kanji_id or a.vocab_id or a.grammar_id or a.particle_id
         export_attempts.append({
             "kanji_id": a.kanji_id,
             "vocab_id": a.vocab_id,
@@ -323,8 +369,10 @@ def export_practice_data(request):
             "particle_id": a.particle_id,
             "is_correct": a.is_correct,
             "answer_given": a.answer_given,
-            "timestamp": a.timestamp
+            "timestamp": a.timestamp,
+            "mistake_count": lookup.get(str(target_id), 0) if target_id else 0
         })
+
         
     export_progress = []
     for p in progress:

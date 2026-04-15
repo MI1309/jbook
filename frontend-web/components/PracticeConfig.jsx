@@ -2,8 +2,10 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useTheme } from '@/context/ThemeContext';
 
 export default function PracticeConfig() {
+    const { theme, mounted } = useTheme();
     const router = useRouter();
     const [limit, setLimit] = useState(10);
     const [timer, setTimer] = useState(5); // Default 5 minutes
@@ -45,31 +47,42 @@ export default function PracticeConfig() {
     const handleStart = () => {
         sessionStorage.removeItem('guest_practice_session');
 
+        // Parse and validate inputs before starting
+        const finalLimit = Math.max(1, parseInt(limit) || 10);
+        const finalTimer = Math.max(1, parseInt(timer) || 5);
+
         const params = new URLSearchParams();
-        params.append('limit', limit);
+        params.append('limit', finalLimit);
         params.append('type', selectedTypes.join(','));
         if (selectedLevels.length > 0) {
             params.append('level', selectedLevels.join(','));
         }
-        if (!isUnlimitedTime && timer) params.append('timer', timer);
+        if (!isUnlimitedTime) params.append('timer', finalTimer);
+        params.append('play', 'true');
         
-        router.push(`/practice/start?${params.toString()}`);
+        router.push(`?${params.toString()}`);
     };
 
+    const textColor = !mounted ? 'text-black' : (theme === 'dark' ? 'text-white' : 'text-black');
+    const subTextColor = !mounted ? 'text-gray-400' : (theme === 'dark' ? 'text-gray-500' : 'text-gray-400');
+    const cardBg = !mounted ? 'bg-white' : (theme === 'dark' ? 'bg-[#0a0a0a]' : 'bg-white');
+    const inputBg = !mounted ? 'bg-gray-50' : (theme === 'dark' ? 'bg-black/40' : 'bg-gray-50');
+    const borderStyle = !mounted ? 'border-gray-100' : (theme === 'dark' ? 'border-red-950/30' : 'border-gray-100');
+
     return (
-        <div className="bg-white/80 backdrop-blur-md p-6 md:p-10 rounded-3xl shadow-2xl max-w-3xl mx-auto border border-white/20 relative overflow-hidden">
+        <div className={`${cardBg}/80 backdrop-blur-md p-6 md:p-10 rounded-3xl shadow-2xl max-w-3xl mx-auto border ${theme === 'dark' ? 'border-red-950/20' : 'border-white/20'} relative overflow-hidden transition-colors`}>
             <div className="absolute top-0 right-0 p-4 opacity-5 text-[12rem] font-serif select-none pointer-events-none text-red-900 leading-none">
                 学
             </div>
 
             <div className="relative z-10">
-                <h2 className="text-4xl font-black text-gray-900 mb-2 tracking-tight">Atur Latihanmu</h2>
-                <p className="text-gray-500 mb-10 text-lg">Pilih materi, level, dan target waktu kuis hari ini.</p>
+                <h2 className={`text-4xl font-black mb-2 tracking-tight transition-colors ${textColor}`}>Atur Latihanmu</h2>
+                <p className={`mb-10 text-lg transition-colors ${subTextColor}`}>Pilih materi, level, dan target waktu kuis hari ini.</p>
 
                 <div className="space-y-10">
                     {/* Materi Selection */}
                     <div>
-                        <label className="block text-sm font-black text-gray-400 uppercase tracking-widest mb-4">
+                        <label className={`block text-sm font-black uppercase tracking-widest mb-4 transition-colors ${subTextColor}`}>
                             Materi Latihan
                         </label>
                         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -79,15 +92,15 @@ export default function PracticeConfig() {
                                     onClick={() => toggleType(t.id)}
                                     className={`flex flex-col items-center justify-center p-4 rounded-2xl border-2 transition-all duration-300 ${
                                         selectedTypes.includes(t.id)
-                                            ? 'bg-red-50 border-red-500 shadow-lg shadow-red-100'
-                                            : 'bg-white border-gray-100 hover:border-red-200 hover:bg-red-50/30'
+                                            ? 'bg-red-50 dark:bg-red-950/20 border-red-500 shadow-lg shadow-red-100/10'
+                                            : `${cardBg} ${borderStyle} hover:border-red-200 dark:hover:border-red-800`
                                     }`}
                                 >
                                     <span className="text-3xl mb-2">{t.icon}</span>
-                                    <span className={`font-bold ${selectedTypes.includes(t.id) ? 'text-red-700' : 'text-gray-700'}`}>
+                                    <span className={`font-bold transition-colors ${selectedTypes.includes(t.id) ? 'text-red-700 dark:text-red-400' : textColor}`}>
                                         {t.label}
                                     </span>
-                                    <span className="text-[10px] text-gray-400 mt-1 uppercase font-medium">{t.sub}</span>
+                                    <span className={`text-[10px] mt-1 uppercase font-medium transition-colors ${subTextColor}`}>{t.sub}</span>
                                 </button>
                             ))}
                         </div>
@@ -96,7 +109,7 @@ export default function PracticeConfig() {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
                         {/* JLPT Levels */}
                         <div>
-                            <label className="block text-sm font-black text-gray-400 uppercase tracking-widest mb-4">
+                            <label className={`block text-sm font-black uppercase tracking-widest mb-4 transition-colors ${subTextColor}`}>
                                 JLPT Level
                             </label>
                             <div className="flex flex-wrap gap-3">
@@ -106,8 +119,8 @@ export default function PracticeConfig() {
                                         onClick={() => toggleLevel(l.id)}
                                         className={`w-12 h-12 rounded-xl border-2 font-black transition-all ${
                                             selectedLevels.includes(l.id)
-                                                ? 'bg-red-600 border-red-600 text-white shadow-lg shadow-red-100 scale-110'
-                                                : 'bg-white border-gray-100 text-gray-400 hover:border-red-200'
+                                                ? 'bg-red-600 border-red-600 text-white shadow-lg shadow-red-500/20 scale-110'
+                                                : `${cardBg} ${borderStyle} ${subTextColor} hover:border-red-200 dark:hover:border-red-800`
                                         }`}
                                     >
                                         {l.label}
@@ -117,8 +130,8 @@ export default function PracticeConfig() {
                                     onClick={() => setSelectedLevels([])}
                                     className={`px-4 h-12 rounded-xl border-2 font-bold transition-all ${
                                         selectedLevels.length === 0
-                                            ? 'bg-gray-800 border-gray-800 text-white'
-                                            : 'bg-white border-gray-100 text-gray-400 hover:bg-gray-50'
+                                            ? 'bg-gray-800 dark:bg-gray-700 border-gray-800 dark:border-gray-700 text-white'
+                                            : `${cardBg} ${borderStyle} ${subTextColor} hover:bg-gray-50 dark:hover:bg-gray-900`
                                     }`}
                                 >
                                     Semua
@@ -130,21 +143,22 @@ export default function PracticeConfig() {
                         <div className="space-y-6">
                             <div className="flex items-center justify-between gap-4">
                                 <div className="flex-1">
-                                    <label className="block text-sm font-black text-gray-400 uppercase tracking-widest mb-2">
+                                    <label className={`block text-sm font-black uppercase tracking-widest mb-2 transition-colors ${subTextColor}`}>
                                         Jumlah Soal
                                     </label>
                                     <div className="flex items-center gap-3">
                                         <input
                                             type="number"
                                             value={limit}
-                                            onChange={(e) => setLimit(Math.max(1, parseInt(e.target.value) || 0))}
-                                            className="w-full bg-gray-50 border-2 border-gray-100 rounded-xl px-4 py-3 font-bold text-gray-700 focus:border-red-500 transition-colors outline-none"
+                                            onChange={(e) => setLimit(e.target.value)}
+                                            placeholder="10"
+                                            className={`w-full ${inputBg} border-2 ${borderStyle} rounded-xl px-4 py-3 font-bold transition-colors outline-none focus:border-red-500 ${textColor}`}
                                         />
-                                        <span className="text-gray-400 font-bold">Soal</span>
+                                        <span className={`font-bold transition-colors ${subTextColor}`}>Soal</span>
                                     </div>
                                 </div>
                                 <div className="flex-1">
-                                    <label className="block text-sm font-black text-gray-400 uppercase tracking-widest mb-2">
+                                    <label className={`block text-sm font-black uppercase tracking-widest mb-2 transition-colors ${subTextColor}`}>
                                         Waktu
                                     </label>
                                     <div className="flex flex-col gap-2">
@@ -152,11 +166,12 @@ export default function PracticeConfig() {
                                             <input
                                                 type="number"
                                                 value={timer}
-                                                onChange={(e) => setTimer(Math.max(1, parseInt(e.target.value) || 0))}
+                                                onChange={(e) => setTimer(e.target.value)}
                                                 disabled={isUnlimitedTime}
-                                                className="w-full bg-gray-50 border-2 border-gray-100 rounded-xl px-4 py-3 font-bold text-gray-700 focus:border-red-500 transition-colors outline-none"
+                                                placeholder="5"
+                                                className={`w-full ${inputBg} border-2 ${borderStyle} rounded-xl px-4 py-3 font-bold transition-colors outline-none focus:border-red-500 ${textColor}`}
                                             />
-                                            <span className="text-gray-400 font-bold">Menit</span>
+                                            <span className={`font-bold transition-colors ${subTextColor}`}>Menit</span>
                                         </div>
                                         <label className="flex items-center gap-2 cursor-pointer mt-1 select-none">
                                             <input 
@@ -165,7 +180,7 @@ export default function PracticeConfig() {
                                                 onChange={() => setIsUnlimitedTime(!isUnlimitedTime)}
                                                 className="w-4 h-4 text-red-600 rounded focus:ring-red-500 border-gray-300 cursor-pointer"
                                             />
-                                            <span className="text-sm font-bold text-gray-500 hover:text-gray-700 transition-colors">Tanpa Batas Waktu</span>
+                                            <span className={`text-sm font-bold transition-colors hover:text-red-500 ${subTextColor}`}>Tanpa Batas Waktu</span>
                                         </label>
                                     </div>
                                 </div>

@@ -18,12 +18,36 @@ export async function isOfflineDataStale() {
 }
 
 /**
+ * Request navigator to persist storage to avoid sudden eviction on mobile
+ */
+async function requestPersistentStorage() {
+    if (typeof window !== 'undefined' && navigator.storage && navigator.storage.persist) {
+        try {
+            const isPersisted = await navigator.storage.persisted();
+            if (!isPersisted) {
+                const granted = await navigator.storage.persist();
+                if (granted) {
+                    console.info('[offline-download] Storage persistence granted.');
+                } else {
+                    console.warn('[offline-download] Storage persistence not granted by the browser.');
+                }
+            } else {
+                console.info('[offline-download] Storage is already persisted.');
+            }
+        } catch (e) {
+            console.error('[offline-download] Failed to request persistent storage', e);
+        }
+    }
+}
+
+/**
  * Download all content to device.
  * 
  * @param {Function} onProgress - called with { step, total, label, percent }
  * @returns {Promise<{ vocab: number, kanji: number, grammar: number }>}
  */
 export async function downloadAllForOffline(onProgress = () => {}) {
+    await requestPersistentStorage();
     const steps = [
         {
             key: 'vocab',
