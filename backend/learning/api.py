@@ -56,7 +56,9 @@ class QuizAttemptExportSchema(Schema):
     is_correct: bool
     answer_given: Optional[str] = None
     timestamp: datetime
-    mistake_count: Optional[int] = 0 # New field for export
+    type: Optional[str] = None
+    label: Optional[str] = None
+    wrong_count: Optional[int] = 0
 
 
 class UserProgressExportSchema(Schema):
@@ -359,9 +361,36 @@ def export_practice_data(request):
         key = entry['kanji_id'] or entry['vocab_id'] or entry['grammar_id'] or entry['particle_id']
         if key: lookup[str(key)] = entry['count']
 
+    # Fetch all related labels at once to avoid N+1 in the loop
+    from content.models import Kanji, Vocab, Grammar, Particle
+    kanji_map = {str(k.id): k.character for k in Kanji.objects.filter(id__in=attempts.values_list('kanji_id', flat=True).distinct()) if k.id}
+    vocab_map = {str(v.id): v.word for v in Vocab.objects.filter(id__in=attempts.values_list('vocab_id', flat=True).distinct()) if v.id}
+    grammar_map = {str(g.id): g.title for g in Grammar.objects.filter(id__in=attempts.values_list('grammar_id', flat=True).distinct()) if g.id}
+    p_map = {str(p.id): p.character for p in Particle.objects.filter(id__in=attempts.values_list('particle_id', flat=True).distinct()) if p.id}
+
     export_attempts = []
     for a in attempts:
-        target_id = a.kanji_id or a.vocab_id or a.grammar_id or a.particle_id
+        target_id = None
+        item_type = None
+        label = None
+        
+        if a.kanji_id:
+            target_id = a.kanji_id
+            item_type = 'kanji'
+            label = kanji_map.get(str(a.kanji_id))
+        elif a.vocab_id:
+            target_id = a.vocab_id
+            item_type = 'vocab'
+            label = vocab_map.get(str(a.vocab_id))
+        elif a.grammar_id:
+            target_id = a.grammar_id
+            item_type = 'grammar'
+            label = grammar_map.get(str(a.grammar_id))
+        elif a.particle_id:
+            target_id = a.particle_id
+            item_type = 'particle'
+            label = p_map.get(str(a.particle_id))
+
         export_attempts.append({
             "kanji_id": a.kanji_id,
             "vocab_id": a.vocab_id,
@@ -370,7 +399,9 @@ def export_practice_data(request):
             "is_correct": a.is_correct,
             "answer_given": a.answer_given,
             "timestamp": a.timestamp,
-            "mistake_count": lookup.get(str(target_id), 0) if target_id else 0
+            "type": item_type,
+            "label": label,
+            "wrong_count": lookup.get(str(target_id), 0) if target_id else 0
         })
 
         

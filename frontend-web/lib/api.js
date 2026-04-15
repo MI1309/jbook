@@ -646,34 +646,161 @@ export async function suggestContent(payload) {
 
 export async function exportPracticeData() {
     const token = Cookies.get('access_token');
-    const headers = {};
-    if (token) headers['Authorization'] = `Bearer ${token}`;
+    let data;
 
-    try {
-        const res = await fetch(`${API_URL}/learning/practice/export`, { headers });
-        return handleResponse(res, 'exportPracticeData');
-    } catch (error) {
-        if (error.status) throw error;
-        return handleNetworkError('exportPracticeData', error);
+    if (token) {
+        // Online Export (Logged In)
+        try {
+            const res = await fetch(`${API_URL}/learning/practice/export`, { 
+                headers: { 'Authorization': `Bearer ${token}` } 
+            });
+            data = await handleResponse(res, 'exportPracticeData');
+        } catch (error) {
+            console.error("[jbook-api] Server export failed, falling back to local if possible", error);
+        }
     }
+
+    // If Guest or if server export failed, try to get local guest analytics
+    if (!data) {
+        const { getGuestAnalytics } = await import('./local-analytics');
+        const analytics = getGuestAnalytics();
+        data = {
+            total_attempts: analytics.total_attempts,
+            accuracy: analytics.accuracy,
+            wrong_stats: analytics.wrong_stats,
+            attempts: [], // Individual attempts are not stored locally for guests
+            progress: []
+        };
+    }
+
+    // Ensure mistake summary is explicitly present for easy reading
+    // If it's already in wrong_stats, we just make sure it's at the top level
+    return {
+        ...data,
+        export_date: new Date().toISOString(),
+        wrong_summary: data.wrong_stats || []
+    };
 }
 
-export async function importPracticeData(data) {
+export async function importPracticeData(rawData) {
     const token = Cookies.get('access_token');
-    const headers = {
-        'Content-Type': 'application/json',
-    };
-    if (token) headers['Authorization'] = `Bearer ${token}`;
+    
+    // Data Protection & Migration Transformer
+    const data = JSON.parse(JSON.stringify(rawData)); // Deep clone
+    
+    const { dbGet } = await import('./offline-db');
 
-    try {
-        const res = await fetch(`${API_URL}/learning/practice/import`, {
-            method: 'POST',
-            headers,
-            body: JSON.stringify(data),
-        });
-        return handleResponse(res, 'importPracticeData');
-    } catch (error) {
-        if (error.status) throw error;
-        return handleNetworkError('importPracticeData', error);
+    // 1. Migrate & Repair old/missing data
+    if (data.attempts && Array.isArray(data.attempts)) {
+        for (const a of data.attempts) {
+            // Repair Tipe missing
+            if (!a.type) {
+                if (a.grammar_id) a.type = 'grammar';
+                else if (a.kanji_id) a.type = 'kanji';
+                else if (a.vocab_id) a.type = 'vocab';
+                else if (a.particle_id) a.type = 'particle';
+            }
+            
+            // Normalize names
+            if (a.type === 'bunpo') a.type = 'grammar';
+            if (a.type === 'kotoba') a.type = 'vocab';
+
+            // Repair Label (Character/Title) missing from old data
+            if (!a.label && !a.character) {
+                const targetId = a.kanji_id || a.vocab_id || a.grammar_id || a.particle_id;
+                if (targetId) {
+                    try {
+                        const storeName = a.type === 'grammar' ? 'grammar' : (a.type === 'vocab' || a.type === 'vocab' ? 'vocab' : (a.type === 'particle' ? 'particle' : 'kanji'));
+                        const item = await dbGet(storeName, targetId);
+                        if (item) {
+                            a.label = item.character || item.word || item.title;
+                            a.character = a.label; // Compatibility for different code paths
+                        }
+                    } catch (e) {
+                        console.warn("[jbook-api] Failed to repair label for ID", targetId, e);
+                    }
+                }
+            } else if (a.label && !a.character) {
+                a.character = a.label;
+            } else if (!a.label && a.character) {
+                a.label = a.character;
+            }
+
+            // Sync mistake_count -> wrong_count
+            if (a.mistake_count !== undefined && a.wrong_count === undefined) {
+                a.wrong_count = a.mistake_count;
+            }
+        }
     }
+
+    if (data.progress && Array.isArray(data.progress)) {
+        data.progress.forEach(p => {
+            if (p.content_type === 'bunpo') p.content_type = 'grammar';
+        });
+    }
+
+    // 2. If Logged In, Sync to Server
+    if (token) {
+        try {
+            const res = await fetch(`${API_URL}/learning/practice/import`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify(data),
+            });
+            return await handleResponse(res, 'importPracticeData');
+        } catch (error) {
+            console.error("[jbook-api] Server import failed", error);
+            throw error;
+        }
+    }
+
+    // 3. If Guest, Merge into LocalStorage
+    const { getGuestAnalytics, STORAGE_KEY } = await import('./local-analytics');
+    const current = getGuestAnalytics();
+    
+    const total = (current.total_attempts || 0) + (data.total_attempts || 0);
+    const accuracy = total > 0 
+        ? ((current.accuracy * (current.total_attempts || 0)) + (data.accuracy * (data.total_attempts || 0))) / total
+        : 0;
+
+    const newWrong = data.wrong_summary || data.wrong_stats || [];
+    
+    // If summary is missing, generate it from attempts
+    if (newWrong.length === 0 && data.attempts) {
+        const tempMap = new Map();
+        data.attempts.forEach(a => {
+            if (!a.is_correct && a.label) {
+                const k = a.label + '|' + a.type;
+                if (!tempMap.has(k)) tempMap.set(k, { character: a.label, count: 0, type: a.type });
+                tempMap.get(k).count++;
+            }
+        });
+        newWrong.push(...Array.from(tempMap.values()));
+    }
+
+    const wrongMap = new Map();
+    (current.wrong_stats || []).forEach(w => wrongMap.set(w.character + '|' + w.type, w));
+    
+    newWrong.forEach(w => {
+        const key = w.character + '|' + w.type;
+        if (wrongMap.has(key)) {
+            const existing = wrongMap.get(key);
+            existing.count += (w.count || (w.wrong_count || 1));
+            existing.right_count = (existing.right_count || 0) + (w.right_count || 0);
+        } else {
+            wrongMap.set(key, { ...w });
+        }
+    });
+
+    const merged = {
+        total_attempts: total,
+        accuracy: Math.round(accuracy * 100) / 100,
+        wrong_stats: Array.from(wrongMap.values()).sort((a, b) => b.count - a.count).slice(0, 50)
+    };
+
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(merged));
+    return { imported: data.attempts?.length || 0, skipped: 0 };
 }

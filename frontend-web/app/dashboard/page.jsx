@@ -5,6 +5,7 @@ import { useAuth } from '@/context/AuthContext';
 import { useTheme } from '@/context/ThemeContext';
 import { useRouter } from 'next/navigation';
 import { getUserAnalytics, exportPracticeData, importPracticeData, resolveContentId } from '@/lib/api';
+import { getGuestAnalytics } from '@/lib/local-analytics';
 import Link from 'next/link';
 import KanjiDetailModal from '@/components/KanjiDetailModal';
 import KotobaDetailModal from '@/components/KotobaDetailModal';
@@ -23,10 +24,15 @@ export default function DashboardPage() {
     const [detailView, setDetailView] = useState(null); // { id, type }
 
     const fetchAnalytics = async () => {
-        if (!user) return;
+        setIsLoading(true);
         try {
-            const data = await getUserAnalytics();
-            setAnalytics(data);
+            if (user) {
+                const data = await getUserAnalytics();
+                setAnalytics(data);
+            } else {
+                const data = getGuestAnalytics();
+                setAnalytics(data);
+            }
         } catch (err) {
             console.error("Error fetching analytics:", err);
             setError("Gagal memuat data latihan. Coba lagi nanti.");
@@ -103,14 +109,14 @@ export default function DashboardPage() {
     };
 
     useEffect(() => {
-        if (user) {
+        if (!loading) {
             fetchAnalytics();
         }
-    }, [user]);
+    }, [user, loading]);
 
-    if (loading || isLoading) {
+    if (loading || (isLoading && !analytics)) {
         return (
-            <div className="flex justify-center items-center min-h-[60vh]">
+            <div className={`flex justify-center items-center min-h-[60vh] ${!mounted ? 'bg-white' : (theme === 'dark' ? 'bg-black' : 'bg-white')}`}>
                 <div className="animate-pulse space-y-4">
                     <div className="h-8 w-64 bg-gray-200 rounded"></div>
                     <div className="h-32 w-full max-w-2xl bg-gray-200 rounded"></div>
@@ -121,11 +127,6 @@ export default function DashboardPage() {
                 </div>
             </div>
         );
-    }
-
-    if (!user && !loading) {
-        router.push('/login');
-        return null;
     }
 
     // Prepare data
@@ -155,8 +156,28 @@ export default function DashboardPage() {
 
     return (
         <div className="container mx-auto px-4 py-8 max-w-5xl">
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">Dashboard Latihan</h1>
-            <p className="text-gray-600 mb-8">Statistik dan analisis dari latihan kamu sejauh ini.</p>
+            <h1 className={`text-3xl font-black mb-2 transition-colors ${!mounted ? 'text-gray-900' : (theme === 'dark' ? 'text-white' : 'text-gray-900')}`}>Dashboard Latihan</h1>
+            <p className={`mb-8 transition-colors ${!mounted ? 'text-gray-600' : (theme === 'dark' ? 'text-gray-400' : 'text-gray-600')}`}>Statistik dan analisis dari latihan kamu sejauh ini.</p>
+
+            {!user && (
+                <div className="bg-blue-600/10 border-2 border-blue-600/20 rounded-2xl p-6 mb-8 flex flex-col md:flex-row items-center justify-between gap-4 animate-in fade-in slide-in-from-top-4 duration-500">
+                    <div className="flex items-center gap-4 text-center md:text-left">
+                        <div className="w-12 h-12 bg-blue-600 rounded-2xl flex items-center justify-center text-white text-2xl shadow-lg shadow-blue-500/20">
+                            👤
+                        </div>
+                        <div>
+                            <h3 className={`font-black ${!mounted ? 'text-gray-900' : (theme === 'dark' ? 'text-white' : 'text-gray-900')}`}>Mode Tamu (Guest)</h3>
+                            <p className="text-xs text-blue-600/80 font-bold uppercase tracking-wider">Data hanya tersimpan di browser ini</p>
+                        </div>
+                    </div>
+                    <Link 
+                        href="/login" 
+                        className="bg-blue-600 text-white px-6 py-3 rounded-2xl font-black text-sm hover:scale-[1.05] active:scale-[0.95] transition-all shadow-lg shadow-blue-500/20"
+                    >
+                        Pindahkan Data ke Akun →
+                    </Link>
+                </div>
+            )}
 
             {error && (
                 <div className="bg-red-50 text-red-700 p-4 rounded-lg mb-4" role="alert">
