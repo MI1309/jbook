@@ -1,0 +1,98 @@
+import sqlite3
+import json
+import os
+
+db_path = os.path.join(os.path.dirname(__file__), '../backend/db.sqlite3')
+
+# Data contoh kata (Examples) untuk 14 kanji baru
+EXAMPLES_DATA = {
+    "二": [
+        {"word": "二つ", "reading": "ふたつ", "meaning": "Dua buah"},
+        {"word": "二月", "reading": "にがつ", "meaning": "Februari"},
+        {"word": "二十日", "reading": "はつか", "meaning": "Tanggal 20"}
+    ],
+    "十": [
+        {"word": "十", "reading": "じゅう", "meaning": "Sepuluh"},
+        {"word": "十日", "reading": "とおか", "meaning": "Tanggal 10"},
+        {"word": "十分", "reading": "じゅうぶん", "meaning": "Cukup / 10 Menit"}
+    ],
+    "会": [
+        {"word": "会う", "reading": "あう", "meaning": "Bertemu"},
+        {"word": "会社", "reading": "かいしゃ", "meaning": "Perusahaan"},
+        {"word": "会話", "reading": "かいわ", "meaning": "Percakapan"}
+    ],
+    "力": [
+        {"word": "力", "reading": "ちkara", "meaning": "Kekuatan / Tenaga"},
+        {"word": "電力", "reading": "でんりょく", "meaning": "Tenaga listrik"},
+        {"word": "努力", "reading": "どりょく", "meaning": "Usaha / Upaya"}
+    ],
+    "勉": [
+        {"word": "勉強", "reading": "べんきょう", "meaning": "Belajar"}
+    ],
+    "口": [
+        {"word": "口", "reading": "くち", "meaning": "Mulut"},
+        {"word": "入口", "reading": "いりぐち", "meaning": "Pintu masuk"},
+        {"word": "出口", "reading": "でぐち", "meaning": "Pintu keluar"}
+    ],
+    "夕": [
+        {"word": "夕方", "reading": "ゆうがata", "meaning": "Sore hari"},
+        {"word": "夕食", "reading": "ゆうしょく", "meaning": "Makan malam"},
+        {"word": "夕日", "reading": "ゆうひ", "meaning": "Matahari terbenam"}
+    ],
+    "曜": [
+        {"word": "曜日", "reading": "ようび", "meaning": "Hari (dalam seminggu)"},
+        {"word": "何曜日", "reading": "なんようび", "meaning": "Hari apa?"}
+    ],
+    "楽": [
+        {"word": "楽しい", "reading": "たのしい", "meaning": "Menyenangkan"},
+        {"word": "音楽", "reading": "おんがく", "meaning": "Musik"},
+        {"word": "楽な", "reading": "らくな", "meaning": "Mudah / Nyaman"}
+    ],
+    "犬": [
+        {"word": "犬", "reading": "いぬ", "meaning": "Anjing"},
+        {"word": "子犬", "reading": "こいぬ", "meaning": "Anak anjing"}
+    ],
+    "田": [
+        {"word": "田んぼ", "reading": "たんぼ", "meaning": "Sawah"},
+        {"word": "水田", "reading": "すいでん", "meaning": "Sawah padi"}
+    ],
+    "空": [
+        {"word": "空", "reading": "そら", "meaning": "Langit"},
+        {"word": "空港", "reading": "くうこう", "meaning": "Bandara"},
+        {"word": "空気", "reading": "くうき", "meaning": "Udara"}
+    ],
+    "飲": [
+        {"word": "飲む", "reading": "のむ", "meaning": "Minum"},
+        {"word": "飲み物", "reading": "のみもの", "meaning": "Minuman"},
+        {"word": "飲食店", "reading": "いんしょくてん", "meaning": "Restoran / Tempat makan"}
+    ],
+    "駅": [
+        {"word": "駅", "reading": "えき", "meaning": "Stasiun"},
+        {"word": "駅員", "reading": "えきいん", "meaning": "Petugas stasiun"},
+        {"word": "駅前", "reading": "えきまえ", "meaning": "Depan stasiun"}
+    ]
+}
+
+def update_examples():
+    conn = sqlite3.connect(db_path)
+    cursor = conn.cursor()
+    
+    print("Memulai update contoh kata (examples)...")
+    updated_count = 0
+    
+    for char, examples in EXAMPLES_DATA.items():
+        examples_json = json.dumps(examples, ensure_ascii=False)
+        cursor.execute(
+            "UPDATE content_kanji SET examples = ? WHERE character = ?",
+            (examples_json, char)
+        )
+        if cursor.rowcount > 0:
+            print(f"Updated examples for: {char}")
+            updated_count += 1
+            
+    conn.commit()
+    conn.close()
+    print(f"\nSelesai! {updated_count} kanji telah dilengkapi dengan contoh kata.")
+
+if __name__ == "__main__":
+    update_examples()

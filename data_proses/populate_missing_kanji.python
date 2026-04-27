@@ -1,0 +1,123 @@
+import sqlite3
+import requests
+import json
+import os
+import uuid
+import time
+
+# Path database
+db_path = os.path.join(os.path.dirname(__file__), '../backend/db.sqlite3')
+missing_file = os.path.join(os.path.dirname(__file__), 'kanji_hilang.json')
+
+# Pemetaan terjemahan manual untuk akurasi terbaik (Indonesian)
+TRANSLATIONS = {
+    "二": "Dua",
+    "十": "Sepuluh",
+    "会": "Bertemu, Pertemuan",
+    "力": "Kekuatan, Tenaga",
+    "勉": "Belajar, Berusaha",
+    "口": "Mulut",
+    "夕": "Sore, Malam",
+    "曜": "Hari (dalam seminggu)",
+    "楽": "Nyaman, Senang, Musik",
+    "犬": "Anjing",
+    "田": "Sawah",
+    "空": "Langit, Kosong",
+    "飲": "Minum",
+    "駅": "Stasiun"
+}
+
+def get_missing_list():
+    with open(missing_file, 'r', encoding='utf-8') as f:
+        data = json.load(f)
+    
+    # Ambil N5 dan N4
+    missing = []
+    if "N5" in data:
+        for char in data["N5"].get("missing_kanji", []):
+            missing.append({"char": char, "level": 5})
+    if "N4" in data:
+        for char in data["N4"].get("missing_kanji", []):
+            missing.append({"char": char, "level": 4})
+    return missing
+
+def fetch_kanji_detail(char):
+    url = f"https://kanjiapi.dev/v1/kanji/{char}"
+    print(f"Mengambil detail untuk: {char}...")
+    try:
+        response = requests.get(url, timeout=10)
+        if response.status_code == 200:
+            return response.json()
+        else:
+            print(f"Gagal mengambil {char}: Status {response.status_code}")
+            return None
+    except Exception as e:
+        print(f"Error {char}: {e}")
+        return None
+
+def save_to_db(kanji_data, level):
+    conn = sqlite3.connect(db_path)
+    cursor = conn.cursor()
+    
+    char = kanji_data["kanji"]
+    # Gunakan terjemahan manual jika ada, jika tidak gabungkan dari API
+    meaning = TRANSLATIONS.get(char, ", ".join(kanji_data["meanings"]))
+    onyomi = json.dumps(kanji_data["on_readings"], ensure_ascii=False)
+    kunyomi = json.dumps(kanji_data["kun_readings"], ensure_ascii=False)
+    strokes = kanji_data["stroke_count"]
+    
+    # Generate UUID (tanpa strip agar cocok dengan format char(32) Django jika tidak pakai hyphen)
+    new_id = str(uuid.uuid4()).replace('-', '')
+    
+    query = """
+        INSERT INTO content_kanji (id, character, meaning, onyomi, kunyomi, strokes, jlpt_level, examples, radical, word_type)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    """
+    
+    try:
+        cursor.execute(query, (
+            new_id,
+            char,
+            meaning,
+            onyomi,
+            kunyomi,
+            strokes,
+            level,
+            "[]",  # examples default empty list
+            None,  # radical
+            None   # word_type
+        ))
+        conn.commit()
+        print(f"Berhasil menyimpan: {char} ({meaning})")
+        return True
+    except sqlite3.IntegrityError:
+        print(f"Skip: {char} sudah ada di database.")
+        return False
+    except Exception as e:
+        print(f"Gagal menyimpan {char}: {e}")
+        return False
+    finally:
+        conn.close()
+
+def main():
+    missing = get_missing_list()
+    if not missing:
+        print("Tidak ada kanji N4/N5 yang hilang.")
+        return
+
+    print(f"Memproses {len(missing)} kanji yang hilang...\n")
+    success_count = 0
+    
+    for item in missing:
+        detail = fetch_kanji_detail(item["char"])
+        if detail:
+            if save_to_db(detail, item["level"]):
+                success_count += 1
+        
+        # Delay 1 detik untuk API
+        time.sleep(1)
+    
+    print(f"\nSelesai! Berhasil menambahkan {success_count} kanji baru.")
+
+if __name__ == "__main__":
+    main()

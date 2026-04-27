@@ -1,31 +1,15 @@
 {
   "N5": {
     "api_count": 79,
-    "local_count": 84,
-    "missing_count": 2,
-    "missing_kanji": [
-      "二",
-      "十"
-    ]
+    "local_count": 86,
+    "missing_count": 0,
+    "missing_kanji": []
   },
   "N4": {
     "api_count": 166,
-    "local_count": 157,
-    "missing_count": 12,
-    "missing_kanji": [
-      "会",
-      "力",
-      "勉",
-      "口",
-      "夕",
-      "曜",
-      "楽",
-      "犬",
-      "田",
-      "空",
-      "飲",
-      "駅"
-    ]
+    "local_count": 169,
+    "missing_count": 0,
+    "missing_kanji": []
   },
   "N3": {
     "api_count": 367,
