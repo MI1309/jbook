@@ -1,0 +1,92 @@
+import sqlite3
+import requests
+import json
+import os
+import time
+
+# Path database
+db_path = os.path.join(os.path.dirname(__file__), '../backend/db.sqlite3')
+output_file = os.path.join(os.path.dirname(__file__), 'kanji_hilang.json')
+
+def get_local_kanji():
+    """Mengambil semua kanji dari database lokal dikelompokkan per level."""
+    conn = sqlite3.connect(db_path)
+    cursor = conn.cursor()
+    local_data = {5: set(), 4: set(), 3: set(), 2: set(), 1: set()}
+    
+    try:
+        cursor.execute("SELECT character, jlpt_level FROM content_kanji")
+        for row in cursor.fetchall():
+            char, level = row[0].strip(), row[1]
+            if level in local_data:
+                local_data[level].add(char)
+    finally:
+        conn.close()
+    return local_data
+
+def get_api_kanji(level):
+    """Mengambil daftar kanji dari kanjiapi.dev untuk level tertentu."""
+    # Format URL yang benar: https://kanjiapi.dev/v1/kanji/jlpt-{level}
+    url = f"https://kanjiapi.dev/v1/kanji/jlpt-{level}"
+    print(f"Meminta data N{level} dari kanjiapi.dev...")
+    try:
+        response = requests.get(url, timeout=15)
+        if response.status_code == 200:
+            return set(response.json())
+        else:
+            print(f"Gagal mengambil data N{level}: Status {response.status_code}")
+            return set()
+    except Exception as e:
+        print(f"Error saat memanggil API N{level}: {e}")
+        return set()
+
+def main():
+    print("--- PERBANDINGAN DATA KANJI (LOKAL VS KANJIAPI.DEV) ---\n")
+    
+    # 1. Ambil data lokal
+    local_kanji_map = get_local_kanji()
+    total_local = sum(len(s) for s in local_kanji_map.values())
+    print(f"Ditemukan {total_local} kanji di database lokal.\n")
+    
+    missing_report = {}
+    total_missing = 0
+    
+    # 2. Iterasi level N5 sampai N1
+    for level in range(5, 0, -1):
+        api_kanji = get_api_kanji(level)
+        local_kanji = local_kanji_map[level]
+        
+        # Cari kanji yang ada di API tapi tidak ada di lokal
+        missing = api_kanji - local_kanji
+        
+        missing_list = sorted(list(missing))
+        missing_report[f"N{level}"] = {
+            "api_count": len(api_kanji),
+            "local_count": len(local_kanji),
+            "missing_count": len(missing_list),
+            "missing_kanji": missing_list
+        }
+        
+        total_missing += len(missing_list)
+        print(f"Level N{level}: API memiliki {len(api_kanji)} kanji. Lokal memiliki {len(local_kanji)}. Hilang {len(missing_list)}.")
+        
+        # Delay agar tidak terkena rate limit
+        time.sleep(1.5)
+    
+    # 3. Simpan hasil
+    with open(output_file, 'w', encoding='utf-8') as f:
+        json.dump(missing_report, f, indent=2, ensure_ascii=False)
+    
+    print(f"\n--- HASIL AKHIR ---")
+    print(f"Total Kanji yang belum ada di database lokal: {total_missing}")
+    print(f"Daftar lengkap telah disimpan di: {output_file}")
+    
+    if total_missing > 0:
+        print("\nContoh beberapa kanji yang belum ada:")
+        for level in range(5, 0, -1):
+            key = f"N{level}"
+            if missing_report[key]["missing_count"] > 0:
+                print(f"N{level} ({missing_report[key]['missing_count']} missing): {' '.join(missing_report[key]['missing_kanji'][:15])}...")
+
+if __name__ == "__main__":
+    main()

@@ -1,0 +1,5820 @@
+[
+  {
+    "character": "日",
+    "meaning": "Matahari, Hari",
+    "onyomi": [
+      "NICHI",
+      "JITSU"
+    ],
+    "kunyomi": [
+      "hi",
+      "bi",
+      "ka"
+    ],
+    "jlpt_level": 5,
+    "radical": "日",
+    "strokes": 4,
+    "examples": [
+      {
+        "word": "日本",
+        "reading": "にっぽん",
+        "meaning": "Jepang"
+      },
+      {
+        "word": "日曜日",
+        "reading": "にちようび",
+        "meaning": "Hari Minggu"
+      },
+      {
+        "word": "毎日",
+        "reading": "まいにち",
+        "meaning": "Setiap hari"
+      }
+    ]
+  },
+  {
+    "character": "本",
+    "meaning": "Buku, Asal",
+    "onyomi": [
+      "HON"
+    ],
+    "kunyomi": [
+      "moto"
+    ],
+    "jlpt_level": 5,
+    "radical": "木",
+    "strokes": 5,
+    "examples": [
+      {
+        "word": "本",
+        "reading": "ほん",
+        "meaning": "Buku"
+      },
+      {
+        "word": "山本",
+        "reading": "やまもと",
+        "meaning": "Yamamoto (Nama orang)"
+      }
+    ]
+  },
+  {
+    "character": "学",
+    "meaning": "Belajar",
+    "onyomi": [
+      "GAKU"
+    ],
+    "kunyomi": [
+      "mana-bu"
+    ],
+    "jlpt_level": 5,
+    "radical": "子",
+    "strokes": 8,
+    "examples": [
+      {
+        "word": "学生",
+        "reading": "がくせい",
+        "meaning": "Siswa"
+      },
+      {
+        "word": "学校",
+        "reading": "がっこう",
+        "meaning": "Sekolah"
+      }
+    ]
+  },
+  {
+    "character": "水",
+    "meaning": "Air",
+    "onyomi": [
+      "SUI"
+    ],
+    "kunyomi": [
+      "mizu"
+    ],
+    "jlpt_level": 5,
+    "radical": "⺡",
+    "strokes": 4,
+    "examples": []
+  },
+  {
+    "character": "火",
+    "meaning": "Api",
+    "onyomi": [
+      "KA"
+    ],
+    "kunyomi": [
+      "hi"
+    ],
+    "jlpt_level": 5,
+    "radical": "火",
+    "strokes": 4,
+    "examples": []
+  },
+  {
+    "character": "木",
+    "meaning": "Pohon",
+    "onyomi": [
+      "MOKU",
+      "BOKU"
+    ],
+    "kunyomi": [
+      "ki"
+    ],
+    "jlpt_level": 5,
+    "radical": "木",
+    "strokes": 4,
+    "examples": []
+  },
+  {
+    "character": "金",
+    "meaning": "Emas, Uang",
+    "onyomi": [
+      "KIN",
+      "KON"
+    ],
+    "kunyomi": [
+      "kane"
+    ],
+    "jlpt_level": 5,
+    "radical": "金",
+    "strokes": 8,
+    "examples": []
+  },
+  {
+    "character": "土",
+    "meaning": "Tanah",
+    "onyomi": [
+      "DO",
+      "TO"
+    ],
+    "kunyomi": [
+      "tsuchi"
+    ],
+    "jlpt_level": 5,
+    "radical": "土",
+    "strokes": 3,
+    "examples": []
+  },
+  {
+    "character": "月",
+    "meaning": "Bulan",
+    "onyomi": [
+      "GETSU",
+      "GATSU"
+    ],
+    "kunyomi": [
+      "tsuki"
+    ],
+    "jlpt_level": 5,
+    "radical": "月",
+    "strokes": 4,
+    "examples": []
+  },
+  {
+    "character": "人",
+    "meaning": "Orang",
+    "onyomi": [
+      "JIN",
+      "NIN"
+    ],
+    "kunyomi": [
+      "hito"
+    ],
+    "jlpt_level": 5,
+    "radical": "人",
+    "strokes": 2,
+    "examples": []
+  },
+  {
+    "character": "山",
+    "meaning": "Gunung",
+    "onyomi": [
+      "SAN"
+    ],
+    "kunyomi": [
+      "yama"
+    ],
+    "jlpt_level": 5,
+    "radical": "山",
+    "strokes": 3,
+    "examples": []
+  },
+  {
+    "character": "川",
+    "meaning": "Sungai",
+    "onyomi": [
+      "SEN"
+    ],
+    "kunyomi": [
+      "kawa"
+    ],
+    "jlpt_level": 5,
+    "radical": "川",
+    "strokes": 3,
+    "examples": []
+  },
+  {
+    "character": "田",
+    "meaning": "Sawah",
+    "onyomi": [
+      "DEN"
+    ],
+    "kunyomi": [
+      "ta"
+    ],
+    "jlpt_level": 5,
+    "radical": "田",
+    "strokes": 5,
+    "examples": []
+  },
+  {
+    "character": "口",
+    "meaning": "Mulut",
+    "onyomi": [
+      "KOU",
+      "KU"
+    ],
+    "kunyomi": [
+      "kuchi"
+    ],
+    "jlpt_level": 5,
+    "radical": "口",
+    "strokes": 3,
+    "examples": []
+  },
+  {
+    "character": "車",
+    "meaning": "Mobil",
+    "onyomi": [
+      "SHA"
+    ],
+    "kunyomi": [
+      "kuruma"
+    ],
+    "jlpt_level": 5,
+    "radical": "車",
+    "strokes": 7,
+    "examples": []
+  },
+  {
+    "character": "門",
+    "meaning": "Gerbang",
+    "onyomi": [
+      "MON"
+    ],
+    "kunyomi": [
+      "kado"
+    ],
+    "jlpt_level": 5,
+    "radical": "門",
+    "strokes": 8,
+    "examples": []
+  },
+  {
+    "character": "女",
+    "meaning": "Wanita",
+    "onyomi": [
+      "JO",
+      "NYO"
+    ],
+    "kunyomi": [
+      "onna"
+    ],
+    "jlpt_level": 5,
+    "radical": "女",
+    "strokes": 3,
+    "examples": []
+  },
+  {
+    "character": "力",
+    "meaning": "Kekuatan",
+    "onyomi": [
+      "RYOKU",
+      "RIKI"
+    ],
+    "kunyomi": [
+      "chikara"
+    ],
+    "jlpt_level": 5,
+    "radical": "力",
+    "strokes": 2,
+    "examples": []
+  },
+  {
+    "character": "雨",
+    "meaning": "Hujan",
+    "onyomi": [
+      "U"
+    ],
+    "kunyomi": [
+      "ame"
+    ],
+    "jlpt_level": 5,
+    "radical": "雨",
+    "strokes": 8,
+    "examples": []
+  },
+  {
+    "character": "空",
+    "meaning": "Langit",
+    "onyomi": [
+      "KUU"
+    ],
+    "kunyomi": [
+      "sora"
+    ],
+    "jlpt_level": 5,
+    "radical": "穴",
+    "strokes": 8,
+    "examples": []
+  },
+  {
+    "character": "白",
+    "meaning": "Putih",
+    "onyomi": [
+      "HAKU",
+      "BYAKU"
+    ],
+    "kunyomi": [
+      "shiro",
+      "shiro-i"
+    ],
+    "jlpt_level": 5,
+    "radical": "白",
+    "strokes": 5,
+    "examples": []
+  },
+  {
+    "character": "中",
+    "meaning": "Tengah, Dalam",
+    "onyomi": [
+      "CHUU"
+    ],
+    "kunyomi": [
+      "naka"
+    ],
+    "jlpt_level": 5,
+    "radical": "丨",
+    "strokes": 4,
+    "examples": []
+  },
+  {
+    "character": "一",
+    "meaning": "Satu",
+    "onyomi": [
+      "ICHI",
+      "ITSU"
+    ],
+    "kunyomi": [
+      "hito",
+      "hito-tsu"
+    ],
+    "jlpt_level": 5,
+    "radical": "一",
+    "strokes": 1,
+    "examples": []
+  },
+  {
+    "character": "国",
+    "meaning": "Negara",
+    "onyomi": [
+      "KOKU"
+    ],
+    "kunyomi": [
+      "kuni"
+    ],
+    "jlpt_level": 5,
+    "radical": "囗",
+    "strokes": 8,
+    "examples": []
+  },
+  {
+    "character": "会",
+    "meaning": "Bertemu",
+    "onyomi": [
+      "KAI",
+      "E"
+    ],
+    "kunyomi": [
+      "a-u"
+    ],
+    "jlpt_level": 5,
+    "radical": "人",
+    "strokes": 6,
+    "examples": []
+  },
+  {
+    "character": "年",
+    "meaning": "Tahun",
+    "onyomi": [
+      "NEN"
+    ],
+    "kunyomi": [
+      "toshi"
+    ],
+    "jlpt_level": 5,
+    "radical": "干",
+    "strokes": 6,
+    "examples": []
+  },
+  {
+    "character": "大",
+    "meaning": "Besar",
+    "onyomi": [
+      "DAI",
+      "TAI"
+    ],
+    "kunyomi": [
+      "oo-kii"
+    ],
+    "jlpt_level": 5,
+    "radical": "大",
+    "strokes": 3,
+    "examples": []
+  },
+  {
+    "character": "長",
+    "meaning": "Panjang, Pemimpin",
+    "onyomi": [
+      "CHOU"
+    ],
+    "kunyomi": [
+      "naga-i"
+    ],
+    "jlpt_level": 5,
+    "radical": "長",
+    "strokes": 8,
+    "examples": []
+  },
+  {
+    "character": "出",
+    "meaning": "Keluar",
+    "onyomi": [
+      "SHUTSU",
+      "SUI"
+    ],
+    "kunyomi": [
+      "de-ru",
+      "da-su"
+    ],
+    "jlpt_level": 5,
+    "radical": "凵",
+    "strokes": 5,
+    "examples": []
+  },
+  {
+    "character": "三",
+    "meaning": "Tiga",
+    "onyomi": [
+      "SAN"
+    ],
+    "kunyomi": [
+      "mi",
+      "mit-tsu"
+    ],
+    "jlpt_level": 5,
+    "radical": "一",
+    "strokes": 3,
+    "examples": []
+  },
+  {
+    "character": "時",
+    "meaning": "Waktu",
+    "onyomi": [
+      "JI"
+    ],
+    "kunyomi": [
+      "toki"
+    ],
+    "jlpt_level": 5,
+    "radical": "日",
+    "strokes": 10,
+    "examples": []
+  },
+  {
+    "character": "行",
+    "meaning": "Pergi",
+    "onyomi": [
+      "KOU",
+      "GYOU"
+    ],
+    "kunyomi": [
+      "i-ku",
+      "yu-ku",
+      "okona-u"
+    ],
+    "jlpt_level": 5,
+    "radical": "行",
+    "strokes": 6,
+    "examples": []
+  },
+  {
+    "character": "見",
+    "meaning": "Melihat",
+    "onyomi": [
+      "KEN"
+    ],
+    "kunyomi": [
+      "mi-ru"
+    ],
+    "jlpt_level": 5,
+    "radical": "見",
+    "strokes": 7,
+    "examples": []
+  },
+  {
+    "character": "分",
+    "meaning": "Menit, Bagian",
+    "onyomi": [
+      "BUN",
+      "FUN",
+      "BU"
+    ],
+    "kunyomi": [
+      "wa-keru",
+      "wa-karu"
+    ],
+    "jlpt_level": 5,
+    "radical": "刀",
+    "strokes": 4,
+    "examples": []
+  },
+  {
+    "character": "後",
+    "meaning": "Belakang, Setelah",
+    "onyomi": [
+      "GO",
+      "KOU"
+    ],
+    "kunyomi": [
+      "ato",
+      "ushi-ro",
+      "nochi"
+    ],
+    "jlpt_level": 5,
+    "radical": "彳",
+    "strokes": 9,
+    "examples": []
+  },
+  {
+    "character": "前",
+    "meaning": "Depan, Sebelum",
+    "onyomi": [
+      "ZEN"
+    ],
+    "kunyomi": [
+      "mae"
+    ],
+    "jlpt_level": 5,
+    "radical": "刀",
+    "strokes": 9,
+    "examples": []
+  },
+  {
+    "character": "生",
+    "meaning": "Hidup, Lahir",
+    "onyomi": [
+      "SEI",
+      "SHOU"
+    ],
+    "kunyomi": [
+      "i-kiru",
+      "u-mu",
+      "nama"
+    ],
+    "jlpt_level": 5,
+    "radical": "生",
+    "strokes": 5,
+    "examples": []
+  },
+  {
+    "character": "五",
+    "meaning": "Lima",
+    "onyomi": [
+      "GO"
+    ],
+    "kunyomi": [
+      "itsatsu"
+    ],
+    "jlpt_level": 5,
+    "radical": "二",
+    "strokes": 4,
+    "examples": []
+  },
+  {
+    "character": "間",
+    "meaning": "Antara, Interval",
+    "onyomi": [
+      "KAN",
+      "KEN"
+    ],
+    "kunyomi": [
+      "aida",
+      "ma"
+    ],
+    "jlpt_level": 5,
+    "radical": "門",
+    "strokes": 12,
+    "examples": []
+  },
+  {
+    "character": "上",
+    "meaning": "Atas",
+    "onyomi": [
+      "JOU",
+      "SHOU"
+    ],
+    "kunyomi": [
+      "ue",
+      "a-garu"
+    ],
+    "jlpt_level": 5,
+    "radical": "一",
+    "strokes": 3,
+    "examples": []
+  },
+  {
+    "character": "東",
+    "meaning": "Timur",
+    "onyomi": [
+      "TOU"
+    ],
+    "kunyomi": [
+      "higashi"
+    ],
+    "jlpt_level": 5,
+    "radical": "木",
+    "strokes": 8,
+    "examples": []
+  },
+  {
+    "character": "四",
+    "meaning": "Empat",
+    "onyomi": [
+      "SHI"
+    ],
+    "kunyomi": [
+      "yon",
+      "yot-tsu"
+    ],
+    "jlpt_level": 5,
+    "radical": "囗",
+    "strokes": 5,
+    "examples": []
+  },
+  {
+    "character": "今",
+    "meaning": "Sekarang",
+    "onyomi": [
+      "KON",
+      "KIN"
+    ],
+    "kunyomi": [
+      "ima"
+    ],
+    "jlpt_level": 5,
+    "radical": "人",
+    "strokes": 4,
+    "examples": []
+  },
+  {
+    "character": "九",
+    "meaning": "Sembilan",
+    "onyomi": [
+      "KYUU",
+      "KU"
+    ],
+    "kunyomi": [
+      "kokono-tsu"
+    ],
+    "jlpt_level": 5,
+    "radical": "乙",
+    "strokes": 2,
+    "examples": []
+  },
+  {
+    "character": "入",
+    "meaning": "Masuk",
+    "onyomi": [
+      "NYUU"
+    ],
+    "kunyomi": [
+      "hai-ru",
+      "i-reru"
+    ],
+    "jlpt_level": 5,
+    "radical": "入",
+    "strokes": 2,
+    "examples": []
+  },
+  {
+    "character": "高",
+    "meaning": "Tinggi, Mahal",
+    "onyomi": [
+      "KOU"
+    ],
+    "kunyomi": [
+      "taka-i"
+    ],
+    "jlpt_level": 5,
+    "radical": "高",
+    "strokes": 10,
+    "examples": []
+  },
+  {
+    "character": "円",
+    "meaning": "Lingkaran, Yen",
+    "onyomi": [
+      "EN"
+    ],
+    "kunyomi": [
+      "maru-i"
+    ],
+    "jlpt_level": 5,
+    "radical": "囗",
+    "strokes": 4,
+    "examples": []
+  },
+  {
+    "character": "子",
+    "meaning": "Anak",
+    "onyomi": [
+      "SHI",
+      "SU"
+    ],
+    "kunyomi": [
+      "ko"
+    ],
+    "jlpt_level": 5,
+    "radical": "子",
+    "strokes": 3,
+    "examples": []
+  },
+  {
+    "character": "外",
+    "meaning": "Luar",
+    "onyomi": [
+      "GAI",
+      "GE"
+    ],
+    "kunyomi": [
+      "soto",
+      "hoka",
+      "hazu-su"
+    ],
+    "jlpt_level": 5,
+    "radical": "夕",
+    "strokes": 5,
+    "examples": []
+  },
+  {
+    "character": "八",
+    "meaning": "Delapan",
+    "onyomi": [
+      "HACHI"
+    ],
+    "kunyomi": [
+      "yat-tsu",
+      "ya"
+    ],
+    "jlpt_level": 5,
+    "radical": "八",
+    "strokes": 2,
+    "examples": []
+  },
+  {
+    "character": "六",
+    "meaning": "Enam",
+    "onyomi": [
+      "ROKU"
+    ],
+    "kunyomi": [
+      "mut-tsu"
+    ],
+    "jlpt_level": 5,
+    "radical": "八",
+    "strokes": 4,
+    "examples": []
+  },
+  {
+    "character": "下",
+    "meaning": "Bawah",
+    "onyomi": [
+      "KA",
+      "GE"
+    ],
+    "kunyomi": [
+      "shita",
+      "sa-garu"
+    ],
+    "jlpt_level": 5,
+    "radical": "一",
+    "strokes": 3,
+    "examples": []
+  },
+  {
+    "character": "来",
+    "meaning": "Datang",
+    "onyomi": [
+      "RAI"
+    ],
+    "kunyomi": [
+      "ku-ru"
+    ],
+    "jlpt_level": 5,
+    "radical": "木",
+    "strokes": 7,
+    "examples": []
+  },
+  {
+    "character": "気",
+    "meaning": "Semangat, Udara",
+    "onyomi": [
+      "KI",
+      "KE"
+    ],
+    "kunyomi": [],
+    "jlpt_level": 5,
+    "radical": "气",
+    "strokes": 6,
+    "examples": []
+  },
+  {
+    "character": "小",
+    "meaning": "Kecil",
+    "onyomi": [
+      "SHOU"
+    ],
+    "kunyomi": [
+      "chii-sai",
+      "ko"
+    ],
+    "jlpt_level": 5,
+    "radical": "小",
+    "strokes": 3,
+    "examples": []
+  },
+  {
+    "character": "七",
+    "meaning": "Tujuh",
+    "onyomi": [
+      "SHICHI"
+    ],
+    "kunyomi": [
+      "nana-tsu",
+      "nana"
+    ],
+    "jlpt_level": 5,
+    "radical": "一",
+    "strokes": 2,
+    "examples": []
+  },
+  {
+    "character": "話",
+    "meaning": "Bicara",
+    "onyomi": [
+      "WA"
+    ],
+    "kunyomi": [
+      "hana-su",
+      "hanashi"
+    ],
+    "jlpt_level": 5,
+    "radical": "言",
+    "strokes": 13,
+    "examples": []
+  },
+  {
+    "character": "北",
+    "meaning": "Utara",
+    "onyomi": [
+      "HOKU"
+    ],
+    "kunyomi": [
+      "kita"
+    ],
+    "jlpt_level": 5,
+    "radical": "匕",
+    "strokes": 5,
+    "examples": []
+  },
+  {
+    "character": "午",
+    "meaning": "Siang",
+    "onyomi": [
+      "GO"
+    ],
+    "kunyomi": [],
+    "jlpt_level": 5,
+    "radical": "十",
+    "strokes": 4,
+    "examples": []
+  },
+  {
+    "character": "百",
+    "meaning": "Seratus",
+    "onyomi": [
+      "HYAKU"
+    ],
+    "kunyomi": [
+      "momo"
+    ],
+    "jlpt_level": 5,
+    "radical": "白",
+    "strokes": 6,
+    "examples": []
+  },
+  {
+    "character": "書",
+    "meaning": "Menulis",
+    "onyomi": [
+      "SHO"
+    ],
+    "kunyomi": [
+      "ka-ku"
+    ],
+    "jlpt_level": 5,
+    "radical": "日",
+    "strokes": 10,
+    "examples": []
+  },
+  {
+    "character": "先",
+    "meaning": "Dahulu, Ujung",
+    "onyomi": [
+      "SEN"
+    ],
+    "kunyomi": [
+      "saki"
+    ],
+    "jlpt_level": 5,
+    "radical": "儿",
+    "strokes": 6,
+    "examples": []
+  },
+  {
+    "character": "名",
+    "meaning": "Nama",
+    "onyomi": [
+      "MEI",
+      "MYOU"
+    ],
+    "kunyomi": [
+      "na"
+    ],
+    "jlpt_level": 5,
+    "radical": "口",
+    "strokes": 6,
+    "examples": []
+  },
+  {
+    "character": "千",
+    "meaning": "Seribu",
+    "onyomi": [
+      "SEN"
+    ],
+    "kunyomi": [
+      "chi"
+    ],
+    "jlpt_level": 5,
+    "radical": "十",
+    "strokes": 3,
+    "examples": []
+  },
+  {
+    "character": "半",
+    "meaning": "Setengah",
+    "onyomi": [
+      "HAN"
+    ],
+    "kunyomi": [
+      "naka-ba"
+    ],
+    "jlpt_level": 5,
+    "radical": "十",
+    "strokes": 5,
+    "examples": []
+  },
+  {
+    "character": "男",
+    "meaning": "Pria",
+    "onyomi": [
+      "DAN",
+      "NAN"
+    ],
+    "kunyomi": [
+      "otoko"
+    ],
+    "jlpt_level": 5,
+    "radical": "田",
+    "strokes": 7,
+    "examples": []
+  },
+  {
+    "character": "西",
+    "meaning": "Barat",
+    "onyomi": [
+      "SEI",
+      "SAI"
+    ],
+    "kunyomi": [
+      "nishi"
+    ],
+    "jlpt_level": 5,
+    "radical": "襾",
+    "strokes": 6,
+    "examples": []
+  },
+  {
+    "character": "電",
+    "meaning": "Listrik",
+    "onyomi": [
+      "DEN"
+    ],
+    "kunyomi": [],
+    "jlpt_level": 5,
+    "radical": "雨",
+    "strokes": 13,
+    "examples": []
+  },
+  {
+    "character": "校",
+    "meaning": "Sekolah",
+    "onyomi": [
+      "KOU"
+    ],
+    "kunyomi": [],
+    "jlpt_level": 5,
+    "radical": "木",
+    "strokes": 10,
+    "examples": []
+  },
+  {
+    "character": "語",
+    "meaning": "Bahasa, Kata",
+    "onyomi": [
+      "GO"
+    ],
+    "kunyomi": [
+      "kata-ru"
+    ],
+    "jlpt_level": 5,
+    "radical": "言",
+    "strokes": 14,
+    "examples": []
+  },
+  {
+    "character": "聞",
+    "meaning": "Mendengar",
+    "onyomi": [
+      "BUN",
+      "MON"
+    ],
+    "kunyomi": [
+      "ki-ku"
+    ],
+    "jlpt_level": 5,
+    "radical": "耳",
+    "strokes": 14,
+    "examples": []
+  },
+  {
+    "character": "食",
+    "meaning": "Makan",
+    "onyomi": [
+      "SHOKU"
+    ],
+    "kunyomi": [
+      "ta-beru",
+      "ku-u"
+    ],
+    "jlpt_level": 5,
+    "radical": "食",
+    "strokes": 9,
+    "examples": []
+  },
+  {
+    "character": "何",
+    "meaning": "Apa",
+    "onyomi": [
+      "KA"
+    ],
+    "kunyomi": [
+      "nani",
+      "nan"
+    ],
+    "jlpt_level": 5,
+    "radical": "人",
+    "strokes": 7,
+    "examples": []
+  },
+  {
+    "character": "南",
+    "meaning": "Selatan",
+    "onyomi": [
+      "NAN"
+    ],
+    "kunyomi": [
+      "minami"
+    ],
+    "jlpt_level": 5,
+    "radical": "十",
+    "strokes": 9,
+    "examples": []
+  },
+  {
+    "character": "万",
+    "meaning": "Sepuluh Ribu",
+    "onyomi": [
+      "MAN",
+      "BAN"
+    ],
+    "kunyomi": [],
+    "jlpt_level": 5,
+    "radical": "一",
+    "strokes": 3,
+    "examples": []
+  },
+  {
+    "character": "毎",
+    "meaning": "Setiap",
+    "onyomi": [
+      "MAI"
+    ],
+    "kunyomi": [],
+    "jlpt_level": 5,
+    "radical": "母",
+    "strokes": 6,
+    "examples": []
+  },
+  {
+    "character": "天",
+    "meaning": "Surga, Langit",
+    "onyomi": [
+      "TEN"
+    ],
+    "kunyomi": [
+      "ame",
+      "ama"
+    ],
+    "jlpt_level": 5,
+    "radical": "大",
+    "strokes": 4,
+    "examples": []
+  },
+  {
+    "character": "母",
+    "meaning": "Ibu",
+    "onyomi": [
+      "BO"
+    ],
+    "kunyomi": [
+      "haha"
+    ],
+    "jlpt_level": 5,
+    "radical": "母",
+    "strokes": 5,
+    "examples": []
+  },
+  {
+    "character": "右",
+    "meaning": "Kanan",
+    "onyomi": [
+      "U",
+      "YUU"
+    ],
+    "kunyomi": [
+      "migi"
+    ],
+    "jlpt_level": 5,
+    "radical": "口",
+    "strokes": 5,
+    "examples": []
+  },
+  {
+    "character": "読",
+    "meaning": "Membaca",
+    "onyomi": [
+      "DOKU",
+      "TOKU"
+    ],
+    "kunyomi": [
+      "yo-mu"
+    ],
+    "jlpt_level": 5,
+    "radical": "言",
+    "strokes": 14,
+    "examples": []
+  },
+  {
+    "character": "友",
+    "meaning": "Teman",
+    "onyomi": [
+      "YUU"
+    ],
+    "kunyomi": [
+      "tomo"
+    ],
+    "jlpt_level": 5,
+    "radical": "又",
+    "strokes": 4,
+    "examples": []
+  },
+  {
+    "character": "左",
+    "meaning": "Kiri",
+    "onyomi": [
+      "SA"
+    ],
+    "kunyomi": [
+      "hidari"
+    ],
+    "jlpt_level": 5,
+    "radical": "工",
+    "strokes": 5,
+    "examples": []
+  },
+  {
+    "character": "休",
+    "meaning": "Istirahat",
+    "onyomi": [
+      "KYUU"
+    ],
+    "kunyomi": [
+      "yasu-mu"
+    ],
+    "jlpt_level": 5,
+    "radical": "人",
+    "strokes": 6,
+    "examples": []
+  },
+  {
+    "character": "父",
+    "meaning": "Ayah",
+    "onyomi": [
+      "FU"
+    ],
+    "kunyomi": [
+      "chichi"
+    ],
+    "jlpt_level": 5,
+    "radical": "父",
+    "strokes": 4,
+    "examples": []
+  },
+  {
+    "character": "同",
+    "meaning": "Sama",
+    "onyomi": [
+      "DOU"
+    ],
+    "kunyomi": [
+      "ona-ji"
+    ],
+    "jlpt_level": 4,
+    "radical": "囗",
+    "strokes": 6,
+    "examples": []
+  },
+  {
+    "character": "事",
+    "meaning": "Hal, Perkara",
+    "onyomi": [
+      "JI",
+      "ZU"
+    ],
+    "kunyomi": [
+      "koto"
+    ],
+    "jlpt_level": 4,
+    "radical": "亅",
+    "strokes": 8,
+    "examples": []
+  },
+  {
+    "character": "自",
+    "meaning": "Diri Sendiri",
+    "onyomi": [
+      "JI",
+      "SHI"
+    ],
+    "kunyomi": [
+      "mizuka-ra"
+    ],
+    "jlpt_level": 4,
+    "radical": "自",
+    "strokes": 6,
+    "examples": []
+  },
+  {
+    "character": "社",
+    "meaning": "Perusahaan, Kuil",
+    "onyomi": [
+      "SHA"
+    ],
+    "kunyomi": [
+      "yashiro"
+    ],
+    "jlpt_level": 4,
+    "radical": "示",
+    "strokes": 7,
+    "examples": []
+  },
+  {
+    "character": "発",
+    "meaning": "Berangkat, Menerbitkan",
+    "onyomi": [
+      "HATSU",
+      "HOTSU"
+    ],
+    "kunyomi": [],
+    "jlpt_level": 4,
+    "radical": "癶",
+    "strokes": 9,
+    "examples": []
+  },
+  {
+    "character": "者",
+    "meaning": "Orang",
+    "onyomi": [
+      "SHA"
+    ],
+    "kunyomi": [
+      "mono"
+    ],
+    "jlpt_level": 4,
+    "radical": "老",
+    "strokes": 8,
+    "examples": []
+  },
+  {
+    "character": "地",
+    "meaning": "Tanah, Bumi",
+    "onyomi": [
+      "CHI",
+      "JI"
+    ],
+    "kunyomi": [],
+    "jlpt_level": 4,
+    "radical": "土",
+    "strokes": 6,
+    "examples": []
+  },
+  {
+    "character": "業",
+    "meaning": "Bisnis, Karma",
+    "onyomi": [
+      "GYOU",
+      "GOU"
+    ],
+    "kunyomi": [
+      "waza"
+    ],
+    "jlpt_level": 4,
+    "radical": "木",
+    "strokes": 13,
+    "examples": []
+  },
+  {
+    "character": "方",
+    "meaning": "Arah, Orang",
+    "onyomi": [
+      "HOU"
+    ],
+    "kunyomi": [
+      "kata"
+    ],
+    "jlpt_level": 4,
+    "radical": "方",
+    "strokes": 4,
+    "examples": []
+  },
+  {
+    "character": "新",
+    "meaning": "Baru",
+    "onyomi": [
+      "SHIN"
+    ],
+    "kunyomi": [
+      "atara-shii",
+      "ara-ta"
+    ],
+    "jlpt_level": 4,
+    "radical": "斤",
+    "strokes": 13,
+    "examples": []
+  },
+  {
+    "character": "場",
+    "meaning": "Tempat",
+    "onyomi": [
+      "JOU"
+    ],
+    "kunyomi": [
+      "ba"
+    ],
+    "jlpt_level": 4,
+    "radical": "土",
+    "strokes": 12,
+    "examples": []
+  },
+  {
+    "character": "員",
+    "meaning": "Anggota, Pegawai",
+    "onyomi": [
+      "IN"
+    ],
+    "kunyomi": [],
+    "jlpt_level": 4,
+    "radical": "口",
+    "strokes": 10,
+    "examples": []
+  },
+  {
+    "character": "立",
+    "meaning": "Berdiri",
+    "onyomi": [
+      "RITSU",
+      "RYUU"
+    ],
+    "kunyomi": [
+      "ta-tsu"
+    ],
+    "jlpt_level": 4,
+    "radical": "立",
+    "strokes": 5,
+    "examples": []
+  },
+  {
+    "character": "開",
+    "meaning": "Membuka",
+    "onyomi": [
+      "KAI"
+    ],
+    "kunyomi": [
+      "hira-ku",
+      "a-ku"
+    ],
+    "jlpt_level": 4,
+    "radical": "門",
+    "strokes": 12,
+    "examples": []
+  },
+  {
+    "character": "手",
+    "meaning": "Tangan",
+    "onyomi": [
+      "SHU"
+    ],
+    "kunyomi": [
+      "te"
+    ],
+    "jlpt_level": 4,
+    "radical": "手",
+    "strokes": 4,
+    "examples": []
+  },
+  {
+    "character": "問",
+    "meaning": "Pertanyaan",
+    "onyomi": [
+      "MON"
+    ],
+    "kunyomi": [
+      "to-u",
+      "to-i"
+    ],
+    "jlpt_level": 4,
+    "radical": "門",
+    "strokes": 11,
+    "examples": []
+  },
+  {
+    "character": "代",
+    "meaning": "Menggantikan, Biaya",
+    "onyomi": [
+      "DAI",
+      "TAI"
+    ],
+    "kunyomi": [
+      "ka-waru",
+      "yo"
+    ],
+    "jlpt_level": 4,
+    "radical": "人",
+    "strokes": 5,
+    "examples": []
+  },
+  {
+    "character": "明",
+    "meaning": "Terang",
+    "onyomi": [
+      "MEI",
+      "MYOU"
+    ],
+    "kunyomi": [
+      "aka-rui",
+      "a-kiraka"
+    ],
+    "jlpt_level": 4,
+    "radical": "日",
+    "strokes": 8,
+    "examples": []
+  },
+  {
+    "character": "動",
+    "meaning": "Bergerak",
+    "onyomi": [
+      "DOU"
+    ],
+    "kunyomi": [
+      "ugo-ku"
+    ],
+    "jlpt_level": 4,
+    "radical": "力",
+    "strokes": 11,
+    "examples": []
+  },
+  {
+    "character": "京",
+    "meaning": "Ibukota",
+    "onyomi": [
+      "KYOU",
+      "KEI"
+    ],
+    "kunyomi": [],
+    "jlpt_level": 4,
+    "radical": "亠",
+    "strokes": 8,
+    "examples": []
+  },
+  {
+    "character": "目",
+    "meaning": "Mata",
+    "onyomi": [
+      "MOKU",
+      "BOKU"
+    ],
+    "kunyomi": [
+      "me"
+    ],
+    "jlpt_level": 4,
+    "radical": "目",
+    "strokes": 5,
+    "examples": []
+  },
+  {
+    "character": "通",
+    "meaning": "Melewati",
+    "onyomi": [
+      "TSUU",
+      "TSU"
+    ],
+    "kunyomi": [
+      "too-ru",
+      "kayo-u"
+    ],
+    "jlpt_level": 4,
+    "radical": "辵",
+    "strokes": 10,
+    "examples": []
+  },
+  {
+    "character": "言",
+    "meaning": "Berkata",
+    "onyomi": [
+      "GEN",
+      "GON"
+    ],
+    "kunyomi": [
+      "i-u",
+      "koto"
+    ],
+    "jlpt_level": 4,
+    "radical": "言",
+    "strokes": 7,
+    "examples": []
+  },
+  {
+    "character": "理",
+    "meaning": "Logika, Alasan",
+    "onyomi": [
+      "RI"
+    ],
+    "kunyomi": [
+      "kotowari"
+    ],
+    "jlpt_level": 4,
+    "radical": "玉",
+    "strokes": 11,
+    "examples": []
+  },
+  {
+    "character": "体",
+    "meaning": "Tubuh",
+    "onyomi": [
+      "TAI",
+      "TEI"
+    ],
+    "kunyomi": [
+      "karada"
+    ],
+    "jlpt_level": 4,
+    "radical": "人",
+    "strokes": 7,
+    "examples": []
+  },
+  {
+    "character": "主",
+    "meaning": "Tuan, Utama",
+    "onyomi": [
+      "SHU",
+      "SU"
+    ],
+    "kunyomi": [
+      "nushi",
+      "omo"
+    ],
+    "jlpt_level": 4,
+    "radical": "丶",
+    "strokes": 5,
+    "examples": []
+  },
+  {
+    "character": "題",
+    "meaning": "Topik, Judul",
+    "onyomi": [
+      "DAI"
+    ],
+    "kunyomi": [],
+    "jlpt_level": 4,
+    "radical": "頁",
+    "strokes": 18,
+    "examples": []
+  },
+  {
+    "character": "意",
+    "meaning": "Pikiran, Maksud",
+    "onyomi": [
+      "I"
+    ],
+    "kunyomi": [],
+    "jlpt_level": 4,
+    "radical": "心",
+    "strokes": 13,
+    "examples": []
+  },
+  {
+    "character": "不",
+    "meaning": "Tidak",
+    "onyomi": [
+      "FU",
+      "BU"
+    ],
+    "kunyomi": [],
+    "jlpt_level": 4,
+    "radical": "一",
+    "strokes": 4,
+    "examples": []
+  },
+  {
+    "character": "作",
+    "meaning": "Membuat",
+    "onyomi": [
+      "SAKU",
+      "SA"
+    ],
+    "kunyomi": [
+      "tsuku-ru"
+    ],
+    "jlpt_level": 4,
+    "radical": "人",
+    "strokes": 7,
+    "examples": []
+  },
+  {
+    "character": "用",
+    "meaning": "Menggunakan, Urusan",
+    "onyomi": [
+      "YOU"
+    ],
+    "kunyomi": [
+      "mochi-iru"
+    ],
+    "jlpt_level": 4,
+    "radical": "用",
+    "strokes": 5,
+    "examples": []
+  },
+  {
+    "character": "度",
+    "meaning": "Derajat, Kali",
+    "onyomi": [
+      "DO",
+      "TO",
+      "TAKU"
+    ],
+    "kunyomi": [
+      "tabi"
+    ],
+    "jlpt_level": 4,
+    "radical": "广",
+    "strokes": 9,
+    "examples": []
+  },
+  {
+    "character": "強",
+    "meaning": "Kuat",
+    "onyomi": [
+      "KYOU",
+      "GOU"
+    ],
+    "kunyomi": [
+      "tsuyo-i"
+    ],
+    "jlpt_level": 4,
+    "radical": "弓",
+    "strokes": 11,
+    "examples": []
+  },
+  {
+    "character": "公",
+    "meaning": "Publik",
+    "onyomi": [
+      "KOU"
+    ],
+    "kunyomi": [
+      "ooyake"
+    ],
+    "jlpt_level": 4,
+    "radical": "八",
+    "strokes": 4,
+    "examples": []
+  },
+  {
+    "character": "持",
+    "meaning": "Memegang",
+    "onyomi": [
+      "JI"
+    ],
+    "kunyomi": [
+      "mo-tsu"
+    ],
+    "jlpt_level": 4,
+    "radical": "手",
+    "strokes": 9,
+    "examples": []
+  },
+  {
+    "character": "野",
+    "meaning": "Lapangan",
+    "onyomi": [
+      "YA"
+    ],
+    "kunyomi": [
+      "no"
+    ],
+    "jlpt_level": 4,
+    "radical": "里",
+    "strokes": 11,
+    "examples": []
+  },
+  {
+    "character": "以",
+    "meaning": "Oleh karena, Menggunakan",
+    "onyomi": [
+      "I"
+    ],
+    "kunyomi": [],
+    "jlpt_level": 4,
+    "radical": "人",
+    "strokes": 5,
+    "examples": []
+  },
+  {
+    "character": "思",
+    "meaning": "Berpikir",
+    "onyomi": [
+      "SHI"
+    ],
+    "kunyomi": [
+      "omo-u"
+    ],
+    "jlpt_level": 4,
+    "radical": "心",
+    "strokes": 9,
+    "examples": []
+  },
+  {
+    "character": "家",
+    "meaning": "Rumah",
+    "onyomi": [
+      "KA",
+      "KE"
+    ],
+    "kunyomi": [
+      "ie",
+      "ya"
+    ],
+    "jlpt_level": 4,
+    "radical": "宀",
+    "strokes": 10,
+    "examples": []
+  },
+  {
+    "character": "世",
+    "meaning": "Dunia, Generasi",
+    "onyomi": [
+      "SEI",
+      "SE"
+    ],
+    "kunyomi": [
+      "yo"
+    ],
+    "jlpt_level": 4,
+    "radical": "一",
+    "strokes": 5,
+    "examples": []
+  },
+  {
+    "character": "多",
+    "meaning": "Banyak",
+    "onyomi": [
+      "TA"
+    ],
+    "kunyomi": [
+      "oo-i"
+    ],
+    "jlpt_level": 4,
+    "radical": "夕",
+    "strokes": 6,
+    "examples": []
+  },
+  {
+    "character": "正",
+    "meaning": "Benar",
+    "onyomi": [
+      "SEI",
+      "SHOU"
+    ],
+    "kunyomi": [
+      "tada-shii",
+      "masa"
+    ],
+    "jlpt_level": 4,
+    "radical": "止",
+    "strokes": 5,
+    "examples": []
+  },
+  {
+    "character": "安",
+    "meaning": "Murah, Aman",
+    "onyomi": [
+      "AN"
+    ],
+    "kunyomi": [
+      "yasu-i"
+    ],
+    "jlpt_level": 4,
+    "radical": "宀",
+    "strokes": 6,
+    "examples": []
+  },
+  {
+    "character": "院",
+    "meaning": "Institusi",
+    "onyomi": [
+      "IN"
+    ],
+    "kunyomi": [],
+    "jlpt_level": 4,
+    "radical": "阜",
+    "strokes": 10,
+    "examples": []
+  },
+  {
+    "character": "心",
+    "meaning": "Hati",
+    "onyomi": [
+      "SHIN"
+    ],
+    "kunyomi": [
+      "kokoro"
+    ],
+    "jlpt_level": 4,
+    "radical": "心",
+    "strokes": 4,
+    "examples": []
+  },
+  {
+    "character": "界",
+    "meaning": "Dunia, Batas",
+    "onyomi": [
+      "KAI"
+    ],
+    "kunyomi": [],
+    "jlpt_level": 4,
+    "radical": "田",
+    "strokes": 9,
+    "examples": []
+  },
+  {
+    "character": "教",
+    "meaning": "Mengajar",
+    "onyomi": [
+      "KYOU"
+    ],
+    "kunyomi": [
+      "oshi-eru",
+      "oso-waru"
+    ],
+    "jlpt_level": 4,
+    "radical": "攴",
+    "strokes": 11,
+    "examples": []
+  },
+  {
+    "character": "文",
+    "meaning": "Kalimat, Tulisan",
+    "onyomi": [
+      "BUN",
+      "MON"
+    ],
+    "kunyomi": [
+      "fumi"
+    ],
+    "jlpt_level": 4,
+    "radical": "文",
+    "strokes": 4,
+    "examples": []
+  },
+  {
+    "character": "元",
+    "meaning": "Asal",
+    "onyomi": [
+      "GEN",
+      "GAN"
+    ],
+    "kunyomi": [
+      "moto"
+    ],
+    "jlpt_level": 4,
+    "radical": "儿",
+    "strokes": 4,
+    "examples": []
+  },
+  {
+    "character": "重",
+    "meaning": "Berat",
+    "onyomi": [
+      "JUU",
+      "CHOU"
+    ],
+    "kunyomi": [
+      "omo-i",
+      "kasa-naru"
+    ],
+    "jlpt_level": 4,
+    "radical": "里",
+    "strokes": 9,
+    "examples": []
+  },
+  {
+    "character": "近",
+    "meaning": "Dekat",
+    "onyomi": [
+      "KIN"
+    ],
+    "kunyomi": [
+      "chika-i"
+    ],
+    "jlpt_level": 4,
+    "radical": "辵",
+    "strokes": 7,
+    "examples": []
+  },
+  {
+    "character": "考",
+    "meaning": "Berpikir",
+    "onyomi": [
+      "KOU"
+    ],
+    "kunyomi": [
+      "kanga-eru"
+    ],
+    "jlpt_level": 4,
+    "radical": "老",
+    "strokes": 6,
+    "examples": []
+  },
+  {
+    "character": "画",
+    "meaning": "Gambar, Goresan",
+    "onyomi": [
+      "GA",
+      "KAKU"
+    ],
+    "kunyomi": [],
+    "jlpt_level": 4,
+    "radical": "田",
+    "strokes": 8,
+    "examples": []
+  },
+  {
+    "character": "海",
+    "meaning": "Laut",
+    "onyomi": [
+      "KAI"
+    ],
+    "kunyomi": [
+      "umi"
+    ],
+    "jlpt_level": 4,
+    "radical": "水",
+    "strokes": 9,
+    "examples": []
+  },
+  {
+    "character": "売",
+    "meaning": "Menjual",
+    "onyomi": [
+      "BAI"
+    ],
+    "kunyomi": [
+      "u-ru"
+    ],
+    "jlpt_level": 4,
+    "radical": "士",
+    "strokes": 7,
+    "examples": []
+  },
+  {
+    "character": "知",
+    "meaning": "Tahu",
+    "onyomi": [
+      "CHI"
+    ],
+    "kunyomi": [
+      "shi-ru"
+    ],
+    "jlpt_level": 4,
+    "radical": "矢",
+    "strokes": 8,
+    "examples": []
+  },
+  {
+    "character": "道",
+    "meaning": "Jalan",
+    "onyomi": [
+      "DOU"
+    ],
+    "kunyomi": [
+      "michi"
+    ],
+    "jlpt_level": 4,
+    "radical": "辵",
+    "strokes": 12,
+    "examples": []
+  },
+  {
+    "character": "集",
+    "meaning": "Berkumpul",
+    "onyomi": [
+      "SHUU"
+    ],
+    "kunyomi": [
+      "atsu-maru"
+    ],
+    "jlpt_level": 4,
+    "radical": "隹",
+    "strokes": 12,
+    "examples": []
+  },
+  {
+    "character": "別",
+    "meaning": "Berpisah, Lain",
+    "onyomi": [
+      "BETSU"
+    ],
+    "kunyomi": [
+      "waka-reru"
+    ],
+    "jlpt_level": 4,
+    "radical": "刀",
+    "strokes": 7,
+    "examples": []
+  },
+  {
+    "character": "物",
+    "meaning": "Barang",
+    "onyomi": [
+      "BUTSU",
+      "MOTSU"
+    ],
+    "kunyomi": [
+      "mono"
+    ],
+    "jlpt_level": 4,
+    "radical": "牛",
+    "strokes": 8,
+    "examples": []
+  },
+  {
+    "character": "使",
+    "meaning": "Menggunakan",
+    "onyomi": [
+      "SHI"
+    ],
+    "kunyomi": [
+      "tsuka-u"
+    ],
+    "jlpt_level": 4,
+    "radical": "人",
+    "strokes": 8,
+    "examples": []
+  },
+  {
+    "character": "品",
+    "meaning": "Barang",
+    "onyomi": [
+      "HIN"
+    ],
+    "kunyomi": [
+      "shina"
+    ],
+    "jlpt_level": 4,
+    "radical": "口",
+    "strokes": 9,
+    "examples": []
+  },
+  {
+    "character": "計",
+    "meaning": "Mengukur",
+    "onyomi": [
+      "KEI"
+    ],
+    "kunyomi": [
+      "haka-ru"
+    ],
+    "jlpt_level": 4,
+    "radical": "言",
+    "strokes": 9,
+    "examples": []
+  },
+  {
+    "character": "死",
+    "meaning": "Mati",
+    "onyomi": [
+      "SHI"
+    ],
+    "kunyomi": [
+      "shi-nu"
+    ],
+    "jlpt_level": 4,
+    "radical": "歹",
+    "strokes": 6,
+    "examples": []
+  },
+  {
+    "character": "特",
+    "meaning": "Spesial",
+    "onyomi": [
+      "TOKU"
+    ],
+    "kunyomi": [],
+    "jlpt_level": 4,
+    "radical": "牛",
+    "strokes": 10,
+    "examples": []
+  },
+  {
+    "character": "私",
+    "meaning": "Saya",
+    "onyomi": [
+      "SHI"
+    ],
+    "kunyomi": [
+      "watashi",
+      "watakushi"
+    ],
+    "jlpt_level": 4,
+    "radical": "禾",
+    "strokes": 7,
+    "examples": []
+  },
+  {
+    "character": "始",
+    "meaning": "Mulai",
+    "onyomi": [
+      "SHI"
+    ],
+    "kunyomi": [
+      "haji-meru"
+    ],
+    "jlpt_level": 4,
+    "radical": "女",
+    "strokes": 8,
+    "examples": []
+  },
+  {
+    "character": "朝",
+    "meaning": "Pagi",
+    "onyomi": [
+      "CHOU"
+    ],
+    "kunyomi": [
+      "asa"
+    ],
+    "jlpt_level": 4,
+    "radical": "月",
+    "strokes": 12,
+    "examples": []
+  },
+  {
+    "character": "運",
+    "meaning": "Mengangkut, Nasib",
+    "onyomi": [
+      "UN"
+    ],
+    "kunyomi": [
+      "hako-bu"
+    ],
+    "jlpt_level": 4,
+    "radical": "辵",
+    "strokes": 12,
+    "examples": []
+  },
+  {
+    "character": "終",
+    "meaning": "Akhir",
+    "onyomi": [
+      "SHUU"
+    ],
+    "kunyomi": [
+      "o-waru"
+    ],
+    "jlpt_level": 4,
+    "radical": "糸",
+    "strokes": 11,
+    "examples": []
+  },
+  {
+    "character": "台",
+    "meaning": "Dasar, Merek",
+    "onyomi": [
+      "DAI",
+      "TAI"
+    ],
+    "kunyomi": [],
+    "jlpt_level": 4,
+    "radical": "口",
+    "strokes": 5,
+    "examples": []
+  },
+  {
+    "character": "広",
+    "meaning": "Luas",
+    "onyomi": [
+      "KOU"
+    ],
+    "kunyomi": [
+      "hiro-i"
+    ],
+    "jlpt_level": 4,
+    "radical": "广",
+    "strokes": 5,
+    "examples": []
+  },
+  {
+    "character": "住",
+    "meaning": "Tinggal",
+    "onyomi": [
+      "JUU"
+    ],
+    "kunyomi": [
+      "su-mu"
+    ],
+    "jlpt_level": 4,
+    "radical": "人",
+    "strokes": 7,
+    "examples": []
+  },
+  {
+    "character": "真",
+    "meaning": "Benar",
+    "onyomi": [
+      "SHIN"
+    ],
+    "kunyomi": [
+      "ma"
+    ],
+    "jlpt_level": 4,
+    "radical": "目",
+    "strokes": 10,
+    "examples": []
+  },
+  {
+    "character": "有",
+    "meaning": "Ada",
+    "onyomi": [
+      "YUU",
+      "U"
+    ],
+    "kunyomi": [
+      "a-ru"
+    ],
+    "jlpt_level": 4,
+    "radical": "月",
+    "strokes": 6,
+    "examples": []
+  },
+  {
+    "character": "少",
+    "meaning": "Sedikit",
+    "onyomi": [
+      "SHOU"
+    ],
+    "kunyomi": [
+      "suku-nai",
+      "suko-shi"
+    ],
+    "jlpt_level": 4,
+    "radical": "小",
+    "strokes": 4,
+    "examples": []
+  },
+  {
+    "character": "町",
+    "meaning": "Kota",
+    "onyomi": [
+      "CHOU"
+    ],
+    "kunyomi": [
+      "machi"
+    ],
+    "jlpt_level": 4,
+    "radical": "田",
+    "strokes": 7,
+    "examples": []
+  },
+  {
+    "character": "料",
+    "meaning": "Bahan, Biaya",
+    "onyomi": [
+      "RYOU"
+    ],
+    "kunyomi": [],
+    "jlpt_level": 4,
+    "radical": "斗",
+    "strokes": 10,
+    "examples": []
+  },
+  {
+    "character": "工",
+    "meaning": "Konstruksi",
+    "onyomi": [
+      "KOU",
+      "KU"
+    ],
+    "kunyomi": [],
+    "jlpt_level": 4,
+    "radical": "工",
+    "strokes": 3,
+    "examples": []
+  },
+  {
+    "character": "建",
+    "meaning": "Membangun",
+    "onyomi": [
+      "KEN",
+      "KON"
+    ],
+    "kunyomi": [
+      "ta-teru"
+    ],
+    "jlpt_level": 4,
+    "radical": "廴",
+    "strokes": 9,
+    "examples": []
+  },
+  {
+    "character": "急",
+    "meaning": "Buru-buru",
+    "onyomi": [
+      "KYUU"
+    ],
+    "kunyomi": [
+      "iso-gu"
+    ],
+    "jlpt_level": 4,
+    "radical": "心",
+    "strokes": 9,
+    "examples": []
+  },
+  {
+    "character": "止",
+    "meaning": "Berhenti",
+    "onyomi": [
+      "SHI"
+    ],
+    "kunyomi": [
+      "to-maru"
+    ],
+    "jlpt_level": 4,
+    "radical": "止",
+    "strokes": 4,
+    "examples": []
+  },
+  {
+    "character": "送",
+    "meaning": "Mengirim",
+    "onyomi": [
+      "SOU"
+    ],
+    "kunyomi": [
+      "oku-ru"
+    ],
+    "jlpt_level": 4,
+    "radical": "辵",
+    "strokes": 9,
+    "examples": []
+  },
+  {
+    "character": "切",
+    "meaning": "Memotong",
+    "onyomi": [
+      "SETSU",
+      "SAI"
+    ],
+    "kunyomi": [
+      "ki-ru"
+    ],
+    "jlpt_level": 4,
+    "radical": "刀",
+    "strokes": 4,
+    "examples": []
+  },
+  {
+    "character": "転",
+    "meaning": "Berputar",
+    "onyomi": [
+      "TEN"
+    ],
+    "kunyomi": [
+      "koro-bu"
+    ],
+    "jlpt_level": 4,
+    "radical": "車",
+    "strokes": 11,
+    "examples": []
+  },
+  {
+    "character": "研",
+    "meaning": "Mengasah, Penelitian",
+    "onyomi": [
+      "KEN"
+    ],
+    "kunyomi": [
+      "to-gu"
+    ],
+    "jlpt_level": 4,
+    "radical": "石",
+    "strokes": 9,
+    "examples": []
+  },
+  {
+    "character": "足",
+    "meaning": "Kaki",
+    "onyomi": [
+      "SOKU"
+    ],
+    "kunyomi": [
+      "ashi",
+      "ta-riru"
+    ],
+    "jlpt_level": 4,
+    "radical": "足",
+    "strokes": 7,
+    "examples": []
+  },
+  {
+    "character": "究",
+    "meaning": "Menyelidiki",
+    "onyomi": [
+      "KYUU"
+    ],
+    "kunyomi": [
+      "kiwa-meru"
+    ],
+    "jlpt_level": 4,
+    "radical": "穴",
+    "strokes": 7,
+    "examples": []
+  },
+  {
+    "character": "起",
+    "meaning": "Bangun",
+    "onyomi": [
+      "KI"
+    ],
+    "kunyomi": [
+      "o-kiru"
+    ],
+    "jlpt_level": 4,
+    "radical": "走",
+    "strokes": 10,
+    "examples": []
+  },
+  {
+    "character": "着",
+    "meaning": "Memakai, Tiba",
+    "onyomi": [
+      "CHAKU",
+      "JAKU"
+    ],
+    "kunyomi": [
+      "ki-ru",
+      "tsu-ku"
+    ],
+    "jlpt_level": 4,
+    "radical": "羊",
+    "strokes": 12,
+    "examples": []
+  },
+  {
+    "character": "店",
+    "meaning": "Toko",
+    "onyomi": [
+      "TEN"
+    ],
+    "kunyomi": [
+      "mise"
+    ],
+    "jlpt_level": 4,
+    "radical": "广",
+    "strokes": 8,
+    "examples": []
+  },
+  {
+    "character": "病",
+    "meaning": "Sakit",
+    "onyomi": [
+      "BYOU"
+    ],
+    "kunyomi": [
+      "ya-mu"
+    ],
+    "jlpt_level": 4,
+    "radical": "疒",
+    "strokes": 10,
+    "examples": []
+  },
+  {
+    "character": "質",
+    "meaning": "Kualitas",
+    "onyomi": [
+      "SHITSU",
+      "SHICHI"
+    ],
+    "kunyomi": [],
+    "jlpt_level": 4,
+    "radical": "貝",
+    "strokes": 15,
+    "examples": []
+  },
+  {
+    "character": "待",
+    "meaning": "Menunggu",
+    "onyomi": [
+      "TAI"
+    ],
+    "kunyomi": [
+      "ma-tsu"
+    ],
+    "jlpt_level": 4,
+    "radical": "彳",
+    "strokes": 9,
+    "examples": []
+  },
+  {
+    "character": "試",
+    "meaning": "Mencoba",
+    "onyomi": [
+      "SHI"
+    ],
+    "kunyomi": [
+      "tame-su"
+    ],
+    "jlpt_level": 4,
+    "radical": "言",
+    "strokes": 13,
+    "examples": []
+  },
+  {
+    "character": "族",
+    "meaning": "Suku, Keluarga",
+    "onyomi": [
+      "ZOKU"
+    ],
+    "kunyomi": [],
+    "jlpt_level": 4,
+    "radical": "方",
+    "strokes": 11,
+    "examples": []
+  },
+  {
+    "character": "銀",
+    "meaning": "Perak",
+    "onyomi": [
+      "GIN"
+    ],
+    "kunyomi": [],
+    "jlpt_level": 4,
+    "radical": "金",
+    "strokes": 14,
+    "examples": []
+  },
+  {
+    "character": "早",
+    "meaning": "Cepat, Awal",
+    "onyomi": [
+      "SOU"
+    ],
+    "kunyomi": [
+      "haya-i"
+    ],
+    "jlpt_level": 4,
+    "radical": "日",
+    "strokes": 6,
+    "examples": []
+  },
+  {
+    "character": "映",
+    "meaning": "Pantulan, Proyeksi",
+    "onyomi": [
+      "EI"
+    ],
+    "kunyomi": [
+      "utsu-ru"
+    ],
+    "jlpt_level": 4,
+    "radical": "日",
+    "strokes": 9,
+    "examples": []
+  },
+  {
+    "character": "親",
+    "meaning": "Orang Tua, Akrab",
+    "onyomi": [
+      "SHIN"
+    ],
+    "kunyomi": [
+      "oya",
+      "shita-shii"
+    ],
+    "jlpt_level": 4,
+    "radical": "見",
+    "strokes": 16,
+    "examples": []
+  },
+  {
+    "character": "験",
+    "meaning": "Ujian, Efek",
+    "onyomi": [
+      "KEN",
+      "GEN"
+    ],
+    "kunyomi": [],
+    "jlpt_level": 4,
+    "radical": "馬",
+    "strokes": 18,
+    "examples": []
+  },
+  {
+    "character": "英",
+    "meaning": "Inggris, Unggul",
+    "onyomi": [
+      "EI"
+    ],
+    "kunyomi": [],
+    "jlpt_level": 4,
+    "radical": "艸",
+    "strokes": 8,
+    "examples": []
+  },
+  {
+    "character": "医",
+    "meaning": "Dokter, Medis",
+    "onyomi": [
+      "I"
+    ],
+    "kunyomi": [],
+    "jlpt_level": 4,
+    "radical": "酉",
+    "strokes": 7,
+    "examples": []
+  },
+  {
+    "character": "仕",
+    "meaning": "Melayani",
+    "onyomi": [
+      "SHI"
+    ],
+    "kunyomi": [
+      "tsuka-eru"
+    ],
+    "jlpt_level": 4,
+    "radical": "人",
+    "strokes": 5,
+    "examples": []
+  },
+  {
+    "character": "去",
+    "meaning": "Pergi, Lalu",
+    "onyomi": [
+      "KYO",
+      "KO"
+    ],
+    "kunyomi": [
+      "sa-ru"
+    ],
+    "jlpt_level": 4,
+    "radical": "厶",
+    "strokes": 5,
+    "examples": []
+  },
+  {
+    "character": "味",
+    "meaning": "Rasa",
+    "onyomi": [
+      "MI"
+    ],
+    "kunyomi": [
+      "aji"
+    ],
+    "jlpt_level": 4,
+    "radical": "口",
+    "strokes": 8,
+    "examples": []
+  },
+  {
+    "character": "写",
+    "meaning": "Menyalin, Foto",
+    "onyomi": [
+      "SHA"
+    ],
+    "kunyomi": [
+      "utsu-su"
+    ],
+    "jlpt_level": 4,
+    "radical": "冖",
+    "strokes": 5,
+    "examples": []
+  },
+  {
+    "character": "字",
+    "meaning": "Huruf",
+    "onyomi": [
+      "JI"
+    ],
+    "kunyomi": [],
+    "jlpt_level": 4,
+    "radical": "子",
+    "strokes": 6,
+    "examples": []
+  },
+  {
+    "character": "答",
+    "meaning": "Jawaban",
+    "onyomi": [
+      "TOU"
+    ],
+    "kunyomi": [
+      "kota-eru"
+    ],
+    "jlpt_level": 4,
+    "radical": "竹",
+    "strokes": 12,
+    "examples": []
+  },
+  {
+    "character": "夜",
+    "meaning": "Malam",
+    "onyomi": [
+      "YA"
+    ],
+    "kunyomi": [
+      "yoru",
+      "yo"
+    ],
+    "jlpt_level": 4,
+    "radical": "夕",
+    "strokes": 8,
+    "examples": []
+  },
+  {
+    "character": "音",
+    "meaning": "Suara",
+    "onyomi": [
+      "ON",
+      "IN"
+    ],
+    "kunyomi": [
+      "oto",
+      "ne"
+    ],
+    "jlpt_level": 4,
+    "radical": "音",
+    "strokes": 9,
+    "examples": []
+  },
+  {
+    "character": "注",
+    "meaning": "Tuang, Catatan",
+    "onyomi": [
+      "CHUU"
+    ],
+    "kunyomi": [
+      "soso-gu"
+    ],
+    "jlpt_level": 4,
+    "radical": "水",
+    "strokes": 8,
+    "examples": []
+  },
+  {
+    "character": "帰",
+    "meaning": "Pulang",
+    "onyomi": [
+      "KI"
+    ],
+    "kunyomi": [
+      "kae-ru"
+    ],
+    "jlpt_level": 4,
+    "radical": "巾",
+    "strokes": 10,
+    "examples": []
+  },
+  {
+    "character": "古",
+    "meaning": "Kuno",
+    "onyomi": [
+      "KO"
+    ],
+    "kunyomi": [
+      "furu-i"
+    ],
+    "jlpt_level": 4,
+    "radical": "口",
+    "strokes": 5,
+    "examples": []
+  },
+  {
+    "character": "歌",
+    "meaning": "Lagu",
+    "onyomi": [
+      "KA"
+    ],
+    "kunyomi": [
+      "uta"
+    ],
+    "jlpt_level": 4,
+    "radical": "欠",
+    "strokes": 14,
+    "examples": []
+  },
+  {
+    "character": "買",
+    "meaning": "Membeli",
+    "onyomi": [
+      "BAI"
+    ],
+    "kunyomi": [
+      "ka-u"
+    ],
+    "jlpt_level": 4,
+    "radical": "貝",
+    "strokes": 12,
+    "examples": []
+  },
+  {
+    "character": "悪",
+    "meaning": "Buruk",
+    "onyomi": [
+      "AKU",
+      "O"
+    ],
+    "kunyomi": [
+      "waru-i"
+    ],
+    "jlpt_level": 4,
+    "radical": "心",
+    "strokes": 11,
+    "examples": []
+  },
+  {
+    "character": "図",
+    "meaning": "Peta, Rencana",
+    "onyomi": [
+      "ZU",
+      "TO"
+    ],
+    "kunyomi": [
+      "haka-ru"
+    ],
+    "jlpt_level": 4,
+    "radical": "囗",
+    "strokes": 7,
+    "examples": []
+  },
+  {
+    "character": "週",
+    "meaning": "Minggu",
+    "onyomi": [
+      "SHUU"
+    ],
+    "kunyomi": [],
+    "jlpt_level": 4,
+    "radical": "辵",
+    "strokes": 11,
+    "examples": []
+  },
+  {
+    "character": "室",
+    "meaning": "Ruangan",
+    "onyomi": [
+      "SHITSU"
+    ],
+    "kunyomi": [
+      "muro"
+    ],
+    "jlpt_level": 4,
+    "radical": "宀",
+    "strokes": 9,
+    "examples": []
+  },
+  {
+    "character": "歩",
+    "meaning": "Berjalan",
+    "onyomi": [
+      "HO",
+      "BU"
+    ],
+    "kunyomi": [
+      "aru-ku",
+      "ayu-mu"
+    ],
+    "jlpt_level": 4,
+    "radical": "止",
+    "strokes": 8,
+    "examples": []
+  },
+  {
+    "character": "風",
+    "meaning": "Angin",
+    "onyomi": [
+      "FUU"
+    ],
+    "kunyomi": [
+      "kaze"
+    ],
+    "jlpt_level": 4,
+    "radical": "風",
+    "strokes": 9,
+    "examples": []
+  },
+  {
+    "character": "紙",
+    "meaning": "Kertas",
+    "onyomi": [
+      "SHI"
+    ],
+    "kunyomi": [
+      "kami"
+    ],
+    "jlpt_level": 4,
+    "radical": "糸",
+    "strokes": 10,
+    "examples": []
+  },
+  {
+    "character": "黒",
+    "meaning": "Hitam",
+    "onyomi": [
+      "KOKU"
+    ],
+    "kunyomi": [
+      "kuro"
+    ],
+    "jlpt_level": 4,
+    "radical": "黒",
+    "strokes": 11,
+    "examples": []
+  },
+  {
+    "character": "花",
+    "meaning": "Bunga",
+    "onyomi": [
+      "KA"
+    ],
+    "kunyomi": [
+      "hana"
+    ],
+    "jlpt_level": 4,
+    "radical": "艸",
+    "strokes": 7,
+    "examples": []
+  },
+  {
+    "character": "春",
+    "meaning": "Musim Semi",
+    "onyomi": [
+      "SHUN"
+    ],
+    "kunyomi": [
+      "haru"
+    ],
+    "jlpt_level": 4,
+    "radical": "日",
+    "strokes": 9,
+    "examples": []
+  },
+  {
+    "character": "赤",
+    "meaning": "Merah",
+    "onyomi": [
+      "SEKI",
+      "SHAKU"
+    ],
+    "kunyomi": [
+      "aka"
+    ],
+    "jlpt_level": 4,
+    "radical": "赤",
+    "strokes": 7,
+    "examples": []
+  },
+  {
+    "character": "青",
+    "meaning": "Biru",
+    "onyomi": [
+      "SEI",
+      "SHOU"
+    ],
+    "kunyomi": [
+      "ao"
+    ],
+    "jlpt_level": 4,
+    "radical": "青",
+    "strokes": 8,
+    "examples": []
+  },
+  {
+    "character": "館",
+    "meaning": "Gedung",
+    "onyomi": [
+      "KAN"
+    ],
+    "kunyomi": [
+      "yakata"
+    ],
+    "jlpt_level": 4,
+    "radical": "食",
+    "strokes": 16,
+    "examples": []
+  },
+  {
+    "character": "屋",
+    "meaning": "Atap, Toko",
+    "onyomi": [
+      "OKU"
+    ],
+    "kunyomi": [
+      "ya"
+    ],
+    "jlpt_level": 4,
+    "radical": "尸",
+    "strokes": 9,
+    "examples": []
+  },
+  {
+    "character": "色",
+    "meaning": "Warna",
+    "onyomi": [
+      "SHOKU",
+      "SHIKI"
+    ],
+    "kunyomi": [
+      "iro"
+    ],
+    "jlpt_level": 4,
+    "radical": "色",
+    "strokes": 6,
+    "examples": []
+  },
+  {
+    "character": "走",
+    "meaning": "Lari",
+    "onyomi": [
+      "SOU"
+    ],
+    "kunyomi": [
+      "hashi-ru"
+    ],
+    "jlpt_level": 4,
+    "radical": "走",
+    "strokes": 7,
+    "examples": []
+  },
+  {
+    "character": "秋",
+    "meaning": "Musim Gugur",
+    "onyomi": [
+      "SHUU"
+    ],
+    "kunyomi": [
+      "aki"
+    ],
+    "jlpt_level": 4,
+    "radical": "禾",
+    "strokes": 9,
+    "examples": []
+  },
+  {
+    "character": "夏",
+    "meaning": "Musim Panas",
+    "onyomi": [
+      "KA"
+    ],
+    "kunyomi": [
+      "natsu"
+    ],
+    "jlpt_level": 4,
+    "radical": "夂",
+    "strokes": 10,
+    "examples": []
+  },
+  {
+    "character": "習",
+    "meaning": "Belajar",
+    "onyomi": [
+      "SHUU"
+    ],
+    "kunyomi": [
+      "nara-u"
+    ],
+    "jlpt_level": 4,
+    "radical": "羽",
+    "strokes": 11,
+    "examples": []
+  },
+  {
+    "character": "貸",
+    "meaning": "Meminjamkan",
+    "onyomi": [
+      "TAI"
+    ],
+    "kunyomi": [
+      "ka-su"
+    ],
+    "jlpt_level": 4,
+    "radical": "貝",
+    "strokes": 12,
+    "examples": []
+  },
+  {
+    "character": "借",
+    "meaning": "Meminjam",
+    "onyomi": [
+      "SHAKU"
+    ],
+    "kunyomi": [
+      "ka-riru"
+    ],
+    "jlpt_level": 4,
+    "radical": "人",
+    "strokes": 10,
+    "examples": []
+  },
+  {
+    "character": "旅",
+    "meaning": "Perjalanan",
+    "onyomi": [
+      "RYO"
+    ],
+    "kunyomi": [
+      "tabi"
+    ],
+    "jlpt_level": 4,
+    "radical": "方",
+    "strokes": 10,
+    "examples": []
+  },
+  {
+    "character": "洋",
+    "meaning": "Barat, Samudra",
+    "onyomi": [
+      "YOU"
+    ],
+    "kunyomi": [],
+    "jlpt_level": 4,
+    "radical": "水",
+    "strokes": 9,
+    "examples": []
+  },
+  {
+    "character": "堂",
+    "meaning": "Aula",
+    "onyomi": [
+      "DOU"
+    ],
+    "kunyomi": [],
+    "jlpt_level": 4,
+    "radical": "土",
+    "strokes": 11,
+    "examples": []
+  },
+  {
+    "character": "林",
+    "meaning": "Hutan Kecil",
+    "onyomi": [
+      "RIN"
+    ],
+    "kunyomi": [
+      "hayashi"
+    ],
+    "jlpt_level": 4,
+    "radical": "木",
+    "strokes": 8,
+    "examples": []
+  },
+  {
+    "character": "冬",
+    "meaning": "Musim Dingin",
+    "onyomi": [
+      "TOU"
+    ],
+    "kunyomi": [
+      "fuyu"
+    ],
+    "jlpt_level": 4,
+    "radical": "夂",
+    "strokes": 5,
+    "examples": []
+  },
+  {
+    "character": "飯",
+    "meaning": "Nasi, Makanan",
+    "onyomi": [
+      "HAN"
+    ],
+    "kunyomi": [
+      "meshi"
+    ],
+    "jlpt_level": 4,
+    "radical": "食",
+    "strokes": 12,
+    "examples": []
+  },
+  {
+    "character": "茶",
+    "meaning": "Teh",
+    "onyomi": [
+      "CHA",
+      "SA"
+    ],
+    "kunyomi": [],
+    "jlpt_level": 4,
+    "radical": "艸",
+    "strokes": 9,
+    "examples": []
+  },
+  {
+    "character": "肉",
+    "meaning": "Daging",
+    "onyomi": [
+      "NIKU"
+    ],
+    "kunyomi": [],
+    "jlpt_level": 4,
+    "radical": "肉",
+    "strokes": 6,
+    "examples": []
+  },
+  {
+    "character": "忘",
+    "meaning": "Lupa",
+    "onyomi": [
+      "BOU"
+    ],
+    "kunyomi": [
+      "wasu-reru"
+    ],
+    "jlpt_level": 4,
+    "radical": "心",
+    "strokes": 7,
+    "examples": []
+  },
+  {
+    "character": "漢",
+    "meaning": "China",
+    "onyomi": [
+      "KAN"
+    ],
+    "kunyomi": [],
+    "jlpt_level": 4,
+    "radical": "水",
+    "strokes": 13,
+    "examples": []
+  },
+  {
+    "character": "牛",
+    "meaning": "Sapi",
+    "onyomi": [
+      "GYUU"
+    ],
+    "kunyomi": [
+      "ushi"
+    ],
+    "jlpt_level": 4,
+    "radical": "牛",
+    "strokes": 4,
+    "examples": []
+  },
+  {
+    "character": "昼",
+    "meaning": "Siang Hari",
+    "onyomi": [
+      "CHU"
+    ],
+    "kunyomi": [
+      "hiru"
+    ],
+    "jlpt_level": 4,
+    "radical": "日",
+    "strokes": 9,
+    "examples": []
+  },
+  {
+    "character": "弟",
+    "meaning": "Adik Laki-laki",
+    "onyomi": [
+      "TEI",
+      "DAI"
+    ],
+    "kunyomi": [
+      "otouto"
+    ],
+    "jlpt_level": 4,
+    "radical": "弓",
+    "strokes": 7,
+    "examples": []
+  },
+  {
+    "character": "妹",
+    "meaning": "Adik Perempuan",
+    "onyomi": [
+      "MAI"
+    ],
+    "kunyomi": [
+      "imouto"
+    ],
+    "jlpt_level": 4,
+    "radical": "女",
+    "strokes": 8,
+    "examples": []
+  },
+  {
+    "character": "兄",
+    "meaning": "Kakak Laki-laki",
+    "onyomi": [
+      "KEI",
+      "KYOU"
+    ],
+    "kunyomi": [
+      "ani"
+    ],
+    "jlpt_level": 4,
+    "radical": "儿",
+    "strokes": 5,
+    "examples": []
+  },
+  {
+    "character": "姉",
+    "meaning": "Kakak Perempuan",
+    "onyomi": [
+      "SHI"
+    ],
+    "kunyomi": [
+      "ane"
+    ],
+    "jlpt_level": 4,
+    "radical": "女",
+    "strokes": 8,
+    "examples": []
+  },
+  {
+    "character": "服",
+    "meaning": "Pakaian",
+    "onyomi": [
+      "FUKU"
+    ],
+    "kunyomi": [],
+    "jlpt_level": 4,
+    "radical": "月",
+    "strokes": 8,
+    "examples": []
+  },
+  {
+    "character": "魚",
+    "meaning": "Ikan",
+    "onyomi": [
+      "GYO"
+    ],
+    "kunyomi": [
+      "sakana",
+      "uo"
+    ],
+    "jlpt_level": 4,
+    "radical": "魚",
+    "strokes": 11,
+    "examples": []
+  },
+  {
+    "character": "鳥",
+    "meaning": "Burung",
+    "onyomi": [
+      "CHOU"
+    ],
+    "kunyomi": [
+      "tori"
+    ],
+    "jlpt_level": 4,
+    "radical": "鳥",
+    "strokes": 11,
+    "examples": []
+  },
+  {
+    "character": "耳",
+    "meaning": "Telinga",
+    "onyomi": [
+      "JI"
+    ],
+    "kunyomi": [
+      "mimi"
+    ],
+    "jlpt_level": 4,
+    "radical": "耳",
+    "strokes": 6,
+    "examples": []
+  },
+  {
+    "character": "政",
+    "meaning": "Politik, Pemerintah",
+    "onyomi": [
+      "SEI",
+      "SHOU"
+    ],
+    "kunyomi": [
+      "matsurigoto"
+    ],
+    "jlpt_level": 3,
+    "radical": "攴",
+    "strokes": 9,
+    "examples": []
+  },
+  {
+    "character": "議",
+    "meaning": "Musyawarah",
+    "onyomi": [
+      "GI"
+    ],
+    "kunyomi": [],
+    "jlpt_level": 3,
+    "radical": "言",
+    "strokes": 20,
+    "examples": []
+  },
+  {
+    "character": "民",
+    "meaning": "Rakyat",
+    "onyomi": [
+      "MIN"
+    ],
+    "kunyomi": [
+      "tami"
+    ],
+    "jlpt_level": 3,
+    "radical": "氏",
+    "strokes": 5,
+    "examples": []
+  },
+  {
+    "character": "連",
+    "meaning": "Menghubungkan",
+    "onyomi": [
+      "REN"
+    ],
+    "kunyomi": [
+      "tsura-naru",
+      "tsu-reru"
+    ],
+    "jlpt_level": 3,
+    "radical": "辵",
+    "strokes": 10,
+    "examples": []
+  },
+  {
+    "character": "対",
+    "meaning": "Lawan, Terhadap",
+    "onyomi": [
+      "TAI",
+      "TSUI"
+    ],
+    "kunyomi": [],
+    "jlpt_level": 3,
+    "radical": "寸",
+    "strokes": 7,
+    "examples": []
+  },
+  {
+    "character": "部",
+    "meaning": "Bagian",
+    "onyomi": [
+      "BU"
+    ],
+    "kunyomi": [],
+    "jlpt_level": 3,
+    "radical": "邑",
+    "strokes": 11,
+    "examples": []
+  },
+  {
+    "character": "合",
+    "meaning": "Cocok, Bertemu",
+    "onyomi": [
+      "GOU",
+      "GATSU"
+    ],
+    "kunyomi": [
+      "a-u"
+    ],
+    "jlpt_level": 3,
+    "radical": "口",
+    "strokes": 6,
+    "examples": []
+  },
+  {
+    "character": "市",
+    "meaning": "Kota, Pasar",
+    "onyomi": [
+      "SHI"
+    ],
+    "kunyomi": [
+      "ichi"
+    ],
+    "jlpt_level": 3,
+    "radical": "巾",
+    "strokes": 5,
+    "examples": []
+  },
+  {
+    "character": "内",
+    "meaning": "Dalam",
+    "onyomi": [
+      "NAI",
+      "DAI"
+    ],
+    "kunyomi": [
+      "uchi"
+    ],
+    "jlpt_level": 3,
+    "radical": "入",
+    "strokes": 4,
+    "examples": []
+  },
+  {
+    "character": "相",
+    "meaning": "Bersama, Menteri",
+    "onyomi": [
+      "SOU",
+      "SHOU"
+    ],
+    "kunyomi": [
+      "ai"
+    ],
+    "jlpt_level": 3,
+    "radical": "目",
+    "strokes": 9,
+    "examples": []
+  },
+  {
+    "character": "定",
+    "meaning": "Menentukan",
+    "onyomi": [
+      "TEI",
+      "JOU"
+    ],
+    "kunyomi": [
+      "sada-meru"
+    ],
+    "jlpt_level": 3,
+    "radical": "宀",
+    "strokes": 8,
+    "examples": []
+  },
+  {
+    "character": "回",
+    "meaning": "Berputar, Kali",
+    "onyomi": [
+      "KAI",
+      "E"
+    ],
+    "kunyomi": [
+      "mawa-ru"
+    ],
+    "jlpt_level": 3,
+    "radical": "囗",
+    "strokes": 6,
+    "examples": []
+  },
+  {
+    "character": "選",
+    "meaning": "Memilih",
+    "onyomi": [
+      "SEN"
+    ],
+    "kunyomi": [
+      "era-bu"
+    ],
+    "jlpt_level": 3,
+    "radical": "辵",
+    "strokes": 15,
+    "examples": []
+  },
+  {
+    "character": "米",
+    "meaning": "Beras, Amerika",
+    "onyomi": [
+      "BEI",
+      "MAI"
+    ],
+    "kunyomi": [
+      "kome"
+    ],
+    "jlpt_level": 3,
+    "radical": "米",
+    "strokes": 6,
+    "examples": []
+  },
+  {
+    "character": "実",
+    "meaning": "Kenyataan, Buah",
+    "onyomi": [
+      "JITSU"
+    ],
+    "kunyomi": [
+      "mi",
+      "mino-ru"
+    ],
+    "jlpt_level": 3,
+    "radical": "宀",
+    "strokes": 8,
+    "examples": []
+  },
+  {
+    "character": "関",
+    "meaning": "Hubungan, Gerbang",
+    "onyomi": [
+      "KAN"
+    ],
+    "kunyomi": [
+      "seki"
+    ],
+    "jlpt_level": 3,
+    "radical": "門",
+    "strokes": 14,
+    "examples": []
+  },
+  {
+    "character": "決",
+    "meaning": "Memutuskan",
+    "onyomi": [
+      "KETSU"
+    ],
+    "kunyomi": [
+      "ki-meru"
+    ],
+    "jlpt_level": 3,
+    "radical": "水",
+    "strokes": 7,
+    "examples": []
+  },
+  {
+    "character": "全",
+    "meaning": "Semua",
+    "onyomi": [
+      "ZEN"
+    ],
+    "kunyomi": [
+      "sube-te"
+    ],
+    "jlpt_level": 3,
+    "radical": "入",
+    "strokes": 6,
+    "examples": []
+  },
+  {
+    "character": "表",
+    "meaning": "Permukaan, Tabel",
+    "onyomi": [
+      "HYOU"
+    ],
+    "kunyomi": [
+      "omote",
+      "arawa-su"
+    ],
+    "jlpt_level": 3,
+    "radical": "衣",
+    "strokes": 8,
+    "examples": []
+  },
+  {
+    "character": "戦",
+    "meaning": "Perang",
+    "onyomi": [
+      "SEN"
+    ],
+    "kunyomi": [
+      "ikusa",
+      "tataka-u"
+    ],
+    "jlpt_level": 3,
+    "radical": "戈",
+    "strokes": 13,
+    "examples": []
+  },
+  {
+    "character": "党",
+    "meaning": "Partai, Fraksi",
+    "onyomi": [
+      "TOU"
+    ],
+    "kunyomi": [],
+    "jlpt_level": 2,
+    "radical": "儿",
+    "strokes": 10,
+    "examples": []
+  },
+  {
+    "character": "協",
+    "meaning": "Kerjasama",
+    "onyomi": [
+      "KYOU"
+    ],
+    "kunyomi": [],
+    "jlpt_level": 2,
+    "radical": "十",
+    "strokes": 8,
+    "examples": []
+  },
+  {
+    "character": "総",
+    "meaning": "Umum, Total",
+    "onyomi": [
+      "SOU"
+    ],
+    "kunyomi": [
+      "sube-te"
+    ],
+    "jlpt_level": 2,
+    "radical": "糸",
+    "strokes": 14,
+    "examples": []
+  },
+  {
+    "character": "区",
+    "meaning": "Distrik, Bagian",
+    "onyomi": [
+      "KU"
+    ],
+    "kunyomi": [],
+    "jlpt_level": 2,
+    "radical": "匚",
+    "strokes": 4,
+    "examples": []
+  },
+  {
+    "character": "領",
+    "meaning": "Wilayah, Memimpin",
+    "onyomi": [
+      "RYOU"
+    ],
+    "kunyomi": [],
+    "jlpt_level": 2,
+    "radical": "頁",
+    "strokes": 14,
+    "examples": []
+  },
+  {
+    "character": "県",
+    "meaning": "Prefektur",
+    "onyomi": [
+      "KEN"
+    ],
+    "kunyomi": [],
+    "jlpt_level": 2,
+    "radical": "目",
+    "strokes": 9,
+    "examples": []
+  },
+  {
+    "character": "設",
+    "meaning": "Mendirikan, Mengatur",
+    "onyomi": [
+      "SETSU"
+    ],
+    "kunyomi": [
+      "mou-keru"
+    ],
+    "jlpt_level": 2,
+    "radical": "言",
+    "strokes": 11,
+    "examples": []
+  },
+  {
+    "character": "改",
+    "meaning": "Memperbaiki, Mengubah",
+    "onyomi": [
+      "KAI"
+    ],
+    "kunyomi": [
+      "arata-meru"
+    ],
+    "jlpt_level": 2,
+    "radical": "攴",
+    "strokes": 7,
+    "examples": []
+  },
+  {
+    "character": "府",
+    "meaning": "Pemerintah, Prefektur",
+    "onyomi": [
+      "FU"
+    ],
+    "kunyomi": [],
+    "jlpt_level": 2,
+    "radical": "广",
+    "strokes": 8,
+    "examples": []
+  },
+  {
+    "character": "査",
+    "meaning": "Memeriksa",
+    "onyomi": [
+      "SA"
+    ],
+    "kunyomi": [],
+    "jlpt_level": 2,
+    "radical": "木",
+    "strokes": 9,
+    "examples": []
+  },
+  {
+    "character": "委",
+    "meaning": "Mempercayakan, Komite",
+    "onyomi": [
+      "I"
+    ],
+    "kunyomi": [
+      "yuda-neru"
+    ],
+    "jlpt_level": 2,
+    "radical": "女",
+    "strokes": 8,
+    "examples": []
+  },
+  {
+    "character": "軍",
+    "meaning": "Tentara",
+    "onyomi": [
+      "GUN"
+    ],
+    "kunyomi": [],
+    "jlpt_level": 2,
+    "radical": "車",
+    "strokes": 9,
+    "examples": []
+  },
+  {
+    "character": "団",
+    "meaning": "Kelompok, Asosiasi",
+    "onyomi": [
+      "DAN",
+      "TON"
+    ],
+    "kunyomi": [],
+    "jlpt_level": 2,
+    "radical": "囗",
+    "strokes": 6,
+    "examples": []
+  },
+  {
+    "character": "各",
+    "meaning": "Setiap",
+    "onyomi": [
+      "KAKU"
+    ],
+    "kunyomi": [
+      "ono-ono"
+    ],
+    "jlpt_level": 2,
+    "radical": "口",
+    "strokes": 6,
+    "examples": []
+  },
+  {
+    "character": "島",
+    "meaning": "Pulau",
+    "onyomi": [
+      "TOU"
+    ],
+    "kunyomi": [
+      "shima"
+    ],
+    "jlpt_level": 2,
+    "radical": "山",
+    "strokes": 10,
+    "examples": []
+  },
+  {
+    "character": "革",
+    "meaning": "Kulit, Reformasi",
+    "onyomi": [
+      "KAKU"
+    ],
+    "kunyomi": [
+      "kawa"
+    ],
+    "jlpt_level": 2,
+    "radical": "革",
+    "strokes": 9,
+    "examples": []
+  },
+  {
+    "character": "村",
+    "meaning": "Desa",
+    "onyomi": [
+      "SON"
+    ],
+    "kunyomi": [
+      "mura"
+    ],
+    "jlpt_level": 2,
+    "radical": "木",
+    "strokes": 7,
+    "examples": []
+  },
+  {
+    "character": "勢",
+    "meaning": "Kekuatan, Tenaga",
+    "onyomi": [
+      "SEI"
+    ],
+    "kunyomi": [
+      "ikio-i"
+    ],
+    "jlpt_level": 2,
+    "radical": "力",
+    "strokes": 13,
+    "examples": []
+  },
+  {
+    "character": "減",
+    "meaning": "Berkurang",
+    "onyomi": [
+      "GEN"
+    ],
+    "kunyomi": [
+      "he-ru"
+    ],
+    "jlpt_level": 2,
+    "radical": "水",
+    "strokes": 12,
+    "examples": []
+  },
+  {
+    "character": "再",
+    "meaning": "Lagi",
+    "onyomi": [
+      "SAI",
+      "SA"
+    ],
+    "kunyomi": [
+      "futata-bi"
+    ],
+    "jlpt_level": 2,
+    "radical": "冂",
+    "strokes": 6,
+    "examples": []
+  },
+  {
+    "character": "税",
+    "meaning": "Pajak",
+    "onyomi": [
+      "ZEI"
+    ],
+    "kunyomi": [],
+    "jlpt_level": 2,
+    "radical": "禾",
+    "strokes": 12,
+    "examples": []
+  },
+  {
+    "character": "営",
+    "meaning": "Mengelola, Kamp",
+    "onyomi": [
+      "EI"
+    ],
+    "kunyomi": [
+      "itona-mu"
+    ],
+    "jlpt_level": 2,
+    "radical": "口",
+    "strokes": 12,
+    "examples": []
+  },
+  {
+    "character": "比",
+    "meaning": "Membandingkan",
+    "onyomi": [
+      "HI"
+    ],
+    "kunyomi": [
+      "kura-beru"
+    ],
+    "jlpt_level": 2,
+    "radical": "比",
+    "strokes": 4,
+    "examples": []
+  },
+  {
+    "character": "防",
+    "meaning": "Mencegah, Pertahanan",
+    "onyomi": [
+      "BOU"
+    ],
+    "kunyomi": [
+      "fuse-gu"
+    ],
+    "jlpt_level": 2,
+    "radical": "阜",
+    "strokes": 7,
+    "examples": []
+  },
+  {
+    "character": "補",
+    "meaning": "Melengkapi",
+    "onyomi": [
+      "HO"
+    ],
+    "kunyomi": [
+      "ogina-u"
+    ],
+    "jlpt_level": 2,
+    "radical": "衣",
+    "strokes": 12,
+    "examples": []
+  },
+  {
+    "character": "境",
+    "meaning": "Batas",
+    "onyomi": [
+      "KYOU",
+      "KEI"
+    ],
+    "kunyomi": [
+      "sakai"
+    ],
+    "jlpt_level": 2,
+    "radical": "土",
+    "strokes": 14,
+    "examples": []
+  },
+  {
+    "character": "導",
+    "meaning": "Memimpin",
+    "onyomi": [
+      "DOU"
+    ],
+    "kunyomi": [
+      "michibi-ku"
+    ],
+    "jlpt_level": 2,
+    "radical": "寸",
+    "strokes": 15,
+    "examples": []
+  },
+  {
+    "character": "副",
+    "meaning": "Wakil, Pembantu",
+    "onyomi": [
+      "FUKU"
+    ],
+    "kunyomi": [],
+    "jlpt_level": 2,
+    "radical": "刀",
+    "strokes": 11,
+    "examples": []
+  },
+  {
+    "character": "算",
+    "meaning": "Menghitung",
+    "onyomi": [
+      "SAN"
+    ],
+    "kunyomi": [],
+    "jlpt_level": 2,
+    "radical": "竹",
+    "strokes": 14,
+    "examples": []
+  },
+  {
+    "character": "輸",
+    "meaning": "Transportasi",
+    "onyomi": [
+      "YU"
+    ],
+    "kunyomi": [],
+    "jlpt_level": 2,
+    "radical": "車",
+    "strokes": 16,
+    "examples": []
+  },
+  {
+    "character": "述",
+    "meaning": "Menyatakan",
+    "onyomi": [
+      "JUTSU"
+    ],
+    "kunyomi": [
+      "no-beru"
+    ],
+    "jlpt_level": 2,
+    "radical": "辵",
+    "strokes": 8,
+    "examples": []
+  },
+  {
+    "character": "線",
+    "meaning": "Garis",
+    "onyomi": [
+      "SEN"
+    ],
+    "kunyomi": [],
+    "jlpt_level": 2,
+    "radical": "糸",
+    "strokes": 15,
+    "examples": []
+  },
+  {
+    "character": "農",
+    "meaning": "Pertanian",
+    "onyomi": [
+      "NOU"
+    ],
+    "kunyomi": [],
+    "jlpt_level": 2,
+    "radical": "辰",
+    "strokes": 13,
+    "examples": []
+  },
+  {
+    "character": "州",
+    "meaning": "Negara Bagian, Provinsi",
+    "onyomi": [
+      "SHUU"
+    ],
+    "kunyomi": [
+      "su"
+    ],
+    "jlpt_level": 2,
+    "radical": "巛",
+    "strokes": 6,
+    "examples": []
+  },
+  {
+    "character": "武",
+    "meaning": "Militer, Seni Bela Diri",
+    "onyomi": [
+      "BU",
+      "MU"
+    ],
+    "kunyomi": [],
+    "jlpt_level": 2,
+    "radical": "止",
+    "strokes": 8,
+    "examples": []
+  },
+  {
+    "character": "象",
+    "meaning": "Gajah, Fenomena",
+    "onyomi": [
+      "SHOU",
+      "ZOU"
+    ],
+    "kunyomi": [],
+    "jlpt_level": 2,
+    "radical": "豕",
+    "strokes": 12,
+    "examples": []
+  },
+  {
+    "character": "域",
+    "meaning": "Wilayah",
+    "onyomi": [
+      "IKI"
+    ],
+    "kunyomi": [],
+    "jlpt_level": 2,
+    "radical": "土",
+    "strokes": 11,
+    "examples": []
+  },
+  {
+    "character": "額",
+    "meaning": "Jumlah, Dahi",
+    "onyomi": [
+      "GAKU"
+    ],
+    "kunyomi": [
+      "hitai"
+    ],
+    "jlpt_level": 2,
+    "radical": "頁",
+    "strokes": 18,
+    "examples": []
+  },
+  {
+    "character": "欧",
+    "meaning": "Eropa",
+    "onyomi": [
+      "OU"
+    ],
+    "kunyomi": [],
+    "jlpt_level": 2,
+    "radical": "欠",
+    "strokes": 8,
+    "examples": []
+  },
+  {
+    "character": "担",
+    "meaning": "Memikul, Menanggung",
+    "onyomi": [
+      "TAN"
+    ],
+    "kunyomi": [
+      "katsu-gu",
+      "nina-u"
+    ],
+    "jlpt_level": 2,
+    "radical": "手",
+    "strokes": 8,
+    "examples": []
+  },
+  {
+    "character": "準",
+    "meaning": "Standar, Semi-",
+    "onyomi": [
+      "JUN"
+    ],
+    "kunyomi": [],
+    "jlpt_level": 2,
+    "radical": "水",
+    "strokes": 13,
+    "examples": []
+  },
+  {
+    "character": "賞",
+    "meaning": "Hadiah",
+    "onyomi": [
+      "SHOU"
+    ],
+    "kunyomi": [],
+    "jlpt_level": 2,
+    "radical": "貝",
+    "strokes": 15,
+    "examples": []
+  },
+  {
+    "character": "辺",
+    "meaning": "Sekitar, Sisi",
+    "onyomi": [
+      "HEN"
+    ],
+    "kunyomi": [
+      "atari",
+      "be"
+    ],
+    "jlpt_level": 2,
+    "radical": "辵",
+    "strokes": 5,
+    "examples": []
+  },
+  {
+    "character": "造",
+    "meaning": "Membuat",
+    "onyomi": [
+      "ZOU"
+    ],
+    "kunyomi": [
+      "tsuku-ru"
+    ],
+    "jlpt_level": 2,
+    "radical": "辵",
+    "strokes": 10,
+    "examples": []
+  },
+  {
+    "character": "被",
+    "meaning": "Menderita, Menutupi",
+    "onyomi": [
+      "HI"
+    ],
+    "kunyomi": [
+      "koumu-ru"
+    ],
+    "jlpt_level": 2,
+    "radical": "衣",
+    "strokes": 10,
+    "examples": []
+  },
+  {
+    "character": "技",
+    "meaning": "Keahlian",
+    "onyomi": [
+      "GI"
+    ],
+    "kunyomi": [
+      "waza"
+    ],
+    "jlpt_level": 2,
+    "radical": "手",
+    "strokes": 7,
+    "examples": []
+  },
+  {
+    "character": "低",
+    "meaning": "Rendah",
+    "onyomi": [
+      "TEI"
+    ],
+    "kunyomi": [
+      "hiku-i"
+    ],
+    "jlpt_level": 2,
+    "radical": "人",
+    "strokes": 7,
+    "examples": []
+  },
+  {
+    "character": "復",
+    "meaning": "Kembali, Memulihkan",
+    "onyomi": [
+      "FUKU"
+    ],
+    "kunyomi": [],
+    "jlpt_level": 2,
+    "radical": "彳",
+    "strokes": 12,
+    "examples": []
+  },
+  {
+    "character": "移",
+    "meaning": "Pindah",
+    "onyomi": [
+      "I"
+    ],
+    "kunyomi": [
+      "utsu-ru"
+    ],
+    "jlpt_level": 2,
+    "radical": "禾",
+    "strokes": 11,
+    "examples": []
+  },
+  {
+    "character": "個",
+    "meaning": "Individu",
+    "onyomi": [
+      "KO"
+    ],
+    "kunyomi": [],
+    "jlpt_level": 2,
+    "radical": "人",
+    "strokes": 10,
+    "examples": []
+  },
+  {
+    "character": "課",
+    "meaning": "Bab, Bagian",
+    "onyomi": [
+      "KA"
+    ],
+    "kunyomi": [],
+    "jlpt_level": 2,
+    "radical": "言",
+    "strokes": 15,
+    "examples": []
+  },
+  {
+    "character": "脳",
+    "meaning": "Otak",
+    "onyomi": [
+      "NOU"
+    ],
+    "kunyomi": [],
+    "jlpt_level": 2,
+    "radical": "肉",
+    "strokes": 11,
+    "examples": []
+  },
+  {
+    "character": "極",
+    "meaning": "Ekstrem, Kutub",
+    "onyomi": [
+      "KYOKU",
+      "GOKU"
+    ],
+    "kunyomi": [
+      "kiwa-meru"
+    ],
+    "jlpt_level": 2,
+    "radical": "木",
+    "strokes": 12,
+    "examples": []
+  },
+  {
+    "character": "含",
+    "meaning": "Termasuk",
+    "onyomi": [
+      "GAN"
+    ],
+    "kunyomi": [
+      "fuku-mu"
+    ],
+    "jlpt_level": 2,
+    "radical": "口",
+    "strokes": 7,
+    "examples": []
+  },
+  {
+    "character": "蔵",
+    "meaning": "Gudang, Memiliki",
+    "onyomi": [
+      "ZOU"
+    ],
+    "kunyomi": [
+      "kura"
+    ],
+    "jlpt_level": 2,
+    "radical": "艸",
+    "strokes": 15,
+    "examples": []
+  },
+  {
+    "character": "量",
+    "meaning": "Jumlah, Kuantitas",
+    "onyomi": [
+      "RYOU"
+    ],
+    "kunyomi": [
+      "haka-ru"
+    ],
+    "jlpt_level": 2,
+    "radical": "里",
+    "strokes": 12,
+    "examples": []
+  },
+  {
+    "character": "型",
+    "meaning": "Tipe, Model",
+    "onyomi": [
+      "KEI"
+    ],
+    "kunyomi": [
+      "kata"
+    ],
+    "jlpt_level": 2,
+    "radical": "土",
+    "strokes": 9,
+    "examples": []
+  },
+  {
+    "character": "況",
+    "meaning": "Kondisi",
+    "onyomi": [
+      "KYOU"
+    ],
+    "kunyomi": [],
+    "jlpt_level": 2,
+    "radical": "水",
+    "strokes": 8,
+    "examples": []
+  },
+  {
+    "character": "針",
+    "meaning": "Jarum",
+    "onyomi": [
+      "SHIN"
+    ],
+    "kunyomi": [
+      "hari"
+    ],
+    "jlpt_level": 2,
+    "radical": "金",
+    "strokes": 10,
+    "examples": []
+  },
+  {
+    "character": "専",
+    "meaning": "Khusus",
+    "onyomi": [
+      "SEN"
+    ],
+    "kunyomi": [
+      "moppa-ra"
+    ],
+    "jlpt_level": 2,
+    "radical": "寸",
+    "strokes": 9,
+    "examples": []
+  },
+  {
+    "character": "谷",
+    "meaning": "Lembah",
+    "onyomi": [
+      "KOKU"
+    ],
+    "kunyomi": [
+      "tani"
+    ],
+    "jlpt_level": 2,
+    "radical": "谷",
+    "strokes": 7,
+    "examples": []
+  },
+  {
+    "character": "史",
+    "meaning": "Sejarah",
+    "onyomi": [
+      "SHI"
+    ],
+    "kunyomi": [],
+    "jlpt_level": 2,
+    "radical": "口",
+    "strokes": 5,
+    "examples": []
+  },
+  {
+    "character": "階",
+    "meaning": "Lantai, Tingkat",
+    "onyomi": [
+      "KAI"
+    ],
+    "kunyomi": [],
+    "jlpt_level": 2,
+    "radical": "阜",
+    "strokes": 12,
+    "examples": []
+  },
+  {
+    "character": "管",
+    "meaning": "Pipa, Mengontrol",
+    "onyomi": [
+      "KAN"
+    ],
+    "kunyomi": [
+      "kuda"
+    ],
+    "jlpt_level": 2,
+    "radical": "竹",
+    "strokes": 14,
+    "examples": []
+  },
+  {
+    "character": "兵",
+    "meaning": "Prajurit",
+    "onyomi": [
+      "HEI",
+      "HYOU"
+    ],
+    "kunyomi": [],
+    "jlpt_level": 2,
+    "radical": "八",
+    "strokes": 7,
+    "examples": []
+  },
+  {
+    "character": "接",
+    "meaning": "Menyentuh, Koneksi",
+    "onyomi": [
+      "SETSU"
+    ],
+    "kunyomi": [
+      "tsu-gu"
+    ],
+    "jlpt_level": 2,
+    "radical": "手",
+    "strokes": 11,
+    "examples": []
+  },
+  {
+    "character": "細",
+    "meaning": "Halus, Tipis",
+    "onyomi": [
+      "SAI"
+    ],
+    "kunyomi": [
+      "hoso-i",
+      "koma-kai"
+    ],
+    "jlpt_level": 2,
+    "radical": "糸",
+    "strokes": 11,
+    "examples": []
+  },
+  {
+    "character": "効",
+    "meaning": "Efek",
+    "onyomi": [
+      "KOU"
+    ],
+    "kunyomi": [
+      "ki-ku"
+    ],
+    "jlpt_level": 2,
+    "radical": "力",
+    "strokes": 8,
+    "examples": []
+  },
+  {
+    "character": "丸",
+    "meaning": "Bulat",
+    "onyomi": [
+      "GAN"
+    ],
+    "kunyomi": [
+      "maru"
+    ],
+    "jlpt_level": 2,
+    "radical": "丶",
+    "strokes": 3,
+    "examples": []
+  },
+  {
+    "character": "湾",
+    "meaning": "Teluk",
+    "onyomi": [
+      "WAN"
+    ],
+    "kunyomi": [],
+    "jlpt_level": 2,
+    "radical": "水",
+    "strokes": 12,
+    "examples": []
+  },
+  {
+    "character": "録",
+    "meaning": "Merekam",
+    "onyomi": [
+      "ROKU"
+    ],
+    "kunyomi": [],
+    "jlpt_level": 2,
+    "radical": "金",
+    "strokes": 16,
+    "examples": []
+  },
+  {
+    "character": "省",
+    "meaning": "Kementerian, Menghemat",
+    "onyomi": [
+      "SEI",
+      "SHOU"
+    ],
+    "kunyomi": [
+      "habu-ku",
+      "kaeri-miru"
+    ],
+    "jlpt_level": 2,
+    "radical": "目",
+    "strokes": 9,
+    "examples": []
+  },
+  {
+    "character": "旧",
+    "meaning": "Lama, Bekas",
+    "onyomi": [
+      "KYUU"
+    ],
+    "kunyomi": [
+      "furu-i"
+    ],
+    "jlpt_level": 2,
+    "radical": "日",
+    "strokes": 5,
+    "examples": []
+  },
+  {
+    "character": "橋",
+    "meaning": "Jembatan",
+    "onyomi": [
+      "KYOU"
+    ],
+    "kunyomi": [
+      "hashi"
+    ],
+    "jlpt_level": 2,
+    "radical": "木",
+    "strokes": 16,
+    "examples": []
+  },
+  {
+    "character": "岸",
+    "meaning": "Pantai",
+    "onyomi": [
+      "GAN"
+    ],
+    "kunyomi": [
+      "kishi"
+    ],
+    "jlpt_level": 2,
+    "radical": "山",
+    "strokes": 8,
+    "examples": []
+  },
+  {
+    "character": "周",
+    "meaning": "Keliling",
+    "onyomi": [
+      "SHUU"
+    ],
+    "kunyomi": [
+      "mawa-ri"
+    ],
+    "jlpt_level": 2,
+    "radical": "口",
+    "strokes": 8,
+    "examples": []
+  },
+  {
+    "character": "材",
+    "meaning": "Bahan, Kayu",
+    "onyomi": [
+      "ZAI"
+    ],
+    "kunyomi": [],
+    "jlpt_level": 2,
+    "radical": "木",
+    "strokes": 7,
+    "examples": []
+  },
+  {
+    "character": "戸",
+    "meaning": "Pintu",
+    "onyomi": [
+      "KO"
+    ],
+    "kunyomi": [
+      "to"
+    ],
+    "jlpt_level": 2,
+    "radical": "戸",
+    "strokes": 4,
+    "examples": []
+  },
+  {
+    "character": "央",
+    "meaning": "Pusat",
+    "onyomi": [
+      "OU"
+    ],
+    "kunyomi": [],
+    "jlpt_level": 2,
+    "radical": "大",
+    "strokes": 5,
+    "examples": []
+  },
+  {
+    "character": "券",
+    "meaning": "Tiket",
+    "onyomi": [
+      "KEN"
+    ],
+    "kunyomi": [],
+    "jlpt_level": 2,
+    "radical": "刀",
+    "strokes": 8,
+    "examples": []
+  },
+  {
+    "character": "編",
+    "meaning": "Merajut, Mengedit",
+    "onyomi": [
+      "HEN"
+    ],
+    "kunyomi": [
+      "a-mu"
+    ],
+    "jlpt_level": 2,
+    "radical": "糸",
+    "strokes": 15,
+    "examples": []
+  },
+  {
+    "character": "捜",
+    "meaning": "Mencari (benda hilang/kriminal)",
+    "onyomi": [
+      "SOU"
+    ],
+    "kunyomi": [
+      "saga-su"
+    ],
+    "jlpt_level": 2,
+    "radical": "手",
+    "strokes": 10,
+    "examples": []
+  },
+  {
+    "character": "竹",
+    "meaning": "Bambu",
+    "onyomi": [
+      "CHIKU"
+    ],
+    "kunyomi": [
+      "take"
+    ],
+    "jlpt_level": 2,
+    "radical": "竹",
+    "strokes": 6,
+    "examples": []
+  },
+  {
+    "character": "超",
+    "meaning": "Melampaui",
+    "onyomi": [
+      "CHOU"
+    ],
+    "kunyomi": [
+      "ko-eru"
+    ],
+    "jlpt_level": 2,
+    "radical": "走",
+    "strokes": 12,
+    "examples": []
+  },
+  {
+    "character": "並",
+    "meaning": "Berbaris, Biasa",
+    "onyomi": [
+      "HEI"
+    ],
+    "kunyomi": [
+      "nami",
+      "nara-bu"
+    ],
+    "jlpt_level": 2,
+    "radical": "一",
+    "strokes": 8,
+    "examples": []
+  },
+  {
+    "character": "療",
+    "meaning": "Pengobatan",
+    "onyomi": [
+      "RYOU"
+    ],
+    "kunyomi": [],
+    "jlpt_level": 2,
+    "radical": "疒",
+    "strokes": 17,
+    "examples": []
+  },
+  {
+    "character": "採",
+    "meaning": "Memungut, Mengadopsi",
+    "onyomi": [
+      "SAI"
+    ],
+    "kunyomi": [
+      "to-ru"
+    ],
+    "jlpt_level": 2,
+    "radical": "手",
+    "strokes": 11,
+    "examples": []
+  },
+  {
+    "character": "森",
+    "meaning": "Hutan",
+    "onyomi": [
+      "SHIN"
+    ],
+    "kunyomi": [
+      "mori"
+    ],
+    "jlpt_level": 2,
+    "radical": "木",
+    "strokes": 12,
+    "examples": []
+  },
+  {
+    "character": "競",
+    "meaning": "Bersaing",
+    "onyomi": [
+      "KYOU",
+      "KEI"
+    ],
+    "kunyomi": [
+      "kiso-u"
+    ],
+    "jlpt_level": 2,
+    "radical": "立",
+    "strokes": 20,
+    "examples": []
+  },
+  {
+    "character": "介",
+    "meaning": "Perantara",
+    "onyomi": [
+      "KAI"
+    ],
+    "kunyomi": [],
+    "jlpt_level": 2,
+    "radical": "人",
+    "strokes": 4,
+    "examples": []
+  },
+  {
+    "character": "根",
+    "meaning": "Akar",
+    "onyomi": [
+      "KON"
+    ],
+    "kunyomi": [
+      "ne"
+    ],
+    "jlpt_level": 2,
+    "radical": "木",
+    "strokes": 10,
+    "examples": []
+  },
+  {
+    "character": "販",
+    "meaning": "Penjualan",
+    "onyomi": [
+      "HAN"
+    ],
+    "kunyomi": [],
+    "jlpt_level": 2,
+    "radical": "貝",
+    "strokes": 11,
+    "examples": []
+  },
+  {
+    "character": "歴",
+    "meaning": "Riwayat",
+    "onyomi": [
+      "REKI"
+    ],
+    "kunyomi": [],
+    "jlpt_level": 2,
+    "radical": "止",
+    "strokes": 14,
+    "examples": []
+  },
+  {
+    "character": "将",
+    "meaning": "Pemimpin, Akan",
+    "onyomi": [
+      "SHOU"
+    ],
+    "kunyomi": [],
+    "jlpt_level": 2,
+    "radical": "寸",
+    "strokes": 10,
+    "examples": []
+  },
+  {
+    "character": "幅",
+    "meaning": "Lebar",
+    "onyomi": [
+      "FUKU"
+    ],
+    "kunyomi": [
+      "haba"
+    ],
+    "jlpt_level": 2,
+    "radical": "巾",
+    "strokes": 12,
+    "examples": []
+  },
+  {
+    "character": "般",
+    "meaning": "Umum",
+    "onyomi": [
+      "HAN"
+    ],
+    "kunyomi": [],
+    "jlpt_level": 2,
+    "radical": "舟",
+    "strokes": 10,
+    "examples": []
+  },
+  {
+    "character": "貿",
+    "meaning": "Perdagangan",
+    "onyomi": [
+      "BOU"
+    ],
+    "kunyomi": [],
+    "jlpt_level": 2,
+    "radical": "貝",
+    "strokes": 12,
+    "examples": []
+  },
+  {
+    "character": "講",
+    "meaning": "Ceramah",
+    "onyomi": [
+      "KOU"
+    ],
+    "kunyomi": [],
+    "jlpt_level": 2,
+    "radical": "言",
+    "strokes": 17,
+    "examples": []
+  },
+  {
+    "character": "遺",
+    "meaning": "Meninggalkan",
+    "onyomi": [
+      "I",
+      "YUI"
+    ],
+    "kunyomi": [
+      "noko-su"
+    ],
+    "jlpt_level": 1,
+    "radical": "辵",
+    "strokes": 15,
+    "examples": []
+  },
+  {
+    "character": "劇",
+    "meaning": "Drama, Hebat",
+    "onyomi": [
+      "GEKI"
+    ],
+    "kunyomi": [],
+    "jlpt_level": 1,
+    "radical": "刀",
+    "strokes": 15,
+    "examples": []
+  },
+  {
+    "character": "推",
+    "meaning": "Menyimpulkan, Mendorong",
+    "onyomi": [
+      "SUI"
+    ],
+    "kunyomi": [
+      "o-su"
+    ],
+    "jlpt_level": 1,
+    "radical": "手",
+    "strokes": 11,
+    "examples": []
+  },
+  {
+    "character": "整",
+    "meaning": "Mengatur",
+    "onyomi": [
+      "SEI"
+    ],
+    "kunyomi": [
+      "todono-ru"
+    ],
+    "jlpt_level": 1,
+    "radical": "攴",
+    "strokes": 16,
+    "examples": []
+  },
+  {
+    "character": "策",
+    "meaning": "Rencana",
+    "onyomi": [
+      "SAKU"
+    ],
+    "kunyomi": [],
+    "jlpt_level": 1,
+    "radical": "竹",
+    "strokes": 12,
+    "examples": []
+  },
+  {
+    "character": "衆",
+    "meaning": "Massa, Publik",
+    "onyomi": [
+      "SHUU",
+      "SHU"
+    ],
+    "kunyomi": [],
+    "jlpt_level": 1,
+    "radical": "血",
+    "strokes": 12,
+    "examples": []
+  },
+  {
+    "character": "閣",
+    "meaning": "Kabinet, Gedung Tinggi",
+    "onyomi": [
+      "KAKU"
+    ],
+    "kunyomi": [],
+    "jlpt_level": 1,
+    "radical": "門",
+    "strokes": 14,
+    "examples": []
+  },
+  {
+    "character": "激",
+    "meaning": "Keras, Hebat",
+    "onyomi": [
+      "GEKI"
+    ],
+    "kunyomi": [
+      "hage-shii"
+    ],
+    "jlpt_level": 1,
+    "radical": "水",
+    "strokes": 16,
+    "examples": []
+  },
+  {
+    "character": "承",
+    "meaning": "Menerima",
+    "onyomi": [
+      "SHOU"
+    ],
+    "kunyomi": [
+      "uketamawa-ru"
+    ],
+    "jlpt_level": 1,
+    "radical": "手",
+    "strokes": 8,
+    "examples": []
+  },
+  {
+    "character": "臨",
+    "meaning": "Menghadapi",
+    "onyomi": [
+      "RIN"
+    ],
+    "kunyomi": [
+      "nozo-mu"
+    ],
+    "jlpt_level": 1,
+    "radical": "臣",
+    "strokes": 18,
+    "examples": []
+  },
+  {
+    "character": "裁",
+    "meaning": "Mengadili, Memotong (Kain)",
+    "onyomi": [
+      "SAI"
+    ],
+    "kunyomi": [
+      "saba-ku"
+    ],
+    "jlpt_level": 1,
+    "radical": "衣",
+    "strokes": 12,
+    "examples": []
+  },
+  {
+    "character": "弁",
+    "meaning": "Pidato, Katup",
+    "onyomi": [
+      "BEN"
+    ],
+    "kunyomi": [],
+    "jlpt_level": 1,
+    "radical": "廾",
+    "strokes": 5,
+    "examples": []
+  },
+  {
+    "character": "処",
+    "meaning": "Tempat, Mengurus",
+    "onyomi": [
+      "SHO"
+    ],
+    "kunyomi": [],
+    "jlpt_level": 1,
+    "radical": "几",
+    "strokes": 5,
+    "examples": []
+  },
+  {
+    "character": "看",
+    "meaning": "Melihat, Menjaga",
+    "onyomi": [
+      "KAN"
+    ],
+    "kunyomi": [
+      "mi-ru"
+    ],
+    "jlpt_level": 1,
+    "radical": "目",
+    "strokes": 9,
+    "examples": []
+  },
+  {
+    "character": "著",
+    "meaning": "Menulis, Terkenal",
+    "onyomi": [
+      "CHO"
+    ],
+    "kunyomi": [
+      "arawa-su",
+      "ichijiru-shii"
+    ],
+    "jlpt_level": 1,
+    "radical": "艸",
+    "strokes": 11,
+    "examples": []
+  },
+  {
+    "character": "誌",
+    "meaning": "Majalah, Dokumen",
+    "onyomi": [
+      "SHI"
+    ],
+    "kunyomi": [],
+    "jlpt_level": 1,
+    "radical": "言",
+    "strokes": 14,
+    "examples": []
+  },
+  {
+    "character": "憲",
+    "meaning": "Konstitusi",
+    "onyomi": [
+      "KEN"
+    ],
+    "kunyomi": [],
+    "jlpt_level": 1,
+    "radical": "心",
+    "strokes": 16,
+    "examples": []
+  },
+  {
+    "character": "簡",
+    "meaning": "Sederhana",
+    "onyomi": [
+      "KAN"
+    ],
+    "kunyomi": [],
+    "jlpt_level": 1,
+    "radical": "竹",
+    "strokes": 18,
+    "examples": []
+  },
+  {
+    "character": "臓",
+    "meaning": "Organ Dalam",
+    "onyomi": [
+      "ZOU"
+    ],
+    "kunyomi": [],
+    "jlpt_level": 1,
+    "radical": "肉",
+    "strokes": 19,
+    "examples": []
+  },
+  {
+    "character": "宇",
+    "meaning": "Alam Semesta",
+    "onyomi": [
+      "U"
+    ],
+    "kunyomi": [],
+    "jlpt_level": 1,
+    "radical": "宀",
+    "strokes": 6,
+    "examples": []
+  },
+  {
+    "character": "宙",
+    "meaning": "Angkasa",
+    "onyomi": [
+      "CHUU"
+    ],
+    "kunyomi": [],
+    "jlpt_level": 1,
+    "radical": "宀",
+    "strokes": 8,
+    "examples": []
+  },
+  {
+    "character": "垂",
+    "meaning": "Menggantung",
+    "onyomi": [
+      "SUI"
+    ],
+    "kunyomi": [
+      "ta-reru"
+    ],
+    "jlpt_level": 1,
+    "radical": "土",
+    "strokes": 8,
+    "examples": []
+  },
+  {
+    "character": "晩",
+    "meaning": "Malam",
+    "onyomi": [
+      "BAN"
+    ],
+    "kunyomi": [],
+    "jlpt_level": 1,
+    "radical": "日",
+    "strokes": 12,
+    "examples": []
+  },
+  {
+    "character": "忠",
+    "meaning": "Setia",
+    "onyomi": [
+      "CHUU"
+    ],
+    "kunyomi": [],
+    "jlpt_level": 1,
+    "radical": "心",
+    "strokes": 8,
+    "examples": []
+  },
+  {
+    "character": "郵",
+    "meaning": "Pos",
+    "onyomi": [
+      "YUU"
+    ],
+    "kunyomi": [],
+    "jlpt_level": 1,
+    "radical": "邑",
+    "strokes": 11,
+    "examples": []
+  },
+  {
+    "character": "届",
+    "meaning": "Sampai",
+    "onyomi": [
+      "KAI"
+    ],
+    "kunyomi": [
+      "todo-ku"
+    ],
+    "jlpt_level": 1,
+    "radical": "尸",
+    "strokes": 8,
+    "examples": []
+  },
+  {
+    "character": "装",
+    "meaning": "Pakaian, Menghias",
+    "onyomi": [
+      "SOU",
+      "SHOU"
+    ],
+    "kunyomi": [
+      "yosoo-u"
+    ],
+    "jlpt_level": 1,
+    "radical": "衣",
+    "strokes": 12,
+    "examples": []
+  },
+  {
+    "character": "諸",
+    "meaning": "Berbagai",
+    "onyomi": [
+      "SHO"
+    ],
+    "kunyomi": [
+      "moro"
+    ],
+    "jlpt_level": 1,
+    "radical": "言",
+    "strokes": 15,
+    "examples": []
+  },
+  {
+    "character": "尊",
+    "meaning": "Hormat",
+    "onyomi": [
+      "SON"
+    ],
+    "kunyomi": [
+      "touto-i"
+    ],
+    "jlpt_level": 1,
+    "radical": "寸",
+    "strokes": 12,
+    "examples": []
+  },
+  {
+    "character": "敬",
+    "meaning": "Menghormati",
+    "onyomi": [
+      "KEI"
+    ],
+    "kunyomi": [
+      "uyama-u"
+    ],
+    "jlpt_level": 1,
+    "radical": "攴",
+    "strokes": 12,
+    "examples": []
+  },
+  {
+    "character": "署",
+    "meaning": "Kantor Polisi, Tanda Tangan",
+    "onyomi": [
+      "SHO"
+    ],
+    "kunyomi": [],
+    "jlpt_level": 1,
+    "radical": "网",
+    "strokes": 13,
+    "examples": []
+  },
+  {
+    "character": "朗",
+    "meaning": "Cerah, Ceria",
+    "onyomi": [
+      "ROU"
+    ],
+    "kunyomi": [
+      "hoga-raka"
+    ],
+    "jlpt_level": 1,
+    "radical": "月",
+    "strokes": 10,
+    "examples": []
+  },
+  {
+    "character": "筋",
+    "meaning": "Otot",
+    "onyomi": [
+      "KIN"
+    ],
+    "kunyomi": [
+      "suji"
+    ],
+    "jlpt_level": 1,
+    "radical": "竹",
+    "strokes": 12,
+    "examples": []
+  },
+  {
+    "character": "聖",
+    "meaning": "Suci",
+    "onyomi": [
+      "SEI"
+    ],
+    "kunyomi": [
+      "hijiri"
+    ],
+    "jlpt_level": 1,
+    "radical": "耳",
+    "strokes": 13,
+    "examples": []
+  },
+  {
+    "character": "俳",
+    "meaning": "Aktor, Haiku",
+    "onyomi": [
+      "HAI"
+    ],
+    "kunyomi": [],
+    "jlpt_level": 1,
+    "radical": "人",
+    "strokes": 10,
+    "examples": []
+  },
+  {
+    "character": "誠",
+    "meaning": "Tulus",
+    "onyomi": [
+      "SEI"
+    ],
+    "kunyomi": [
+      "makoto"
+    ],
+    "jlpt_level": 1,
+    "radical": "言",
+    "strokes": 13,
+    "examples": []
+  },
+  {
+    "character": "潮",
+    "meaning": "Pasang Surut",
+    "onyomi": [
+      "CHOU"
+    ],
+    "kunyomi": [
+      "shio"
+    ],
+    "jlpt_level": 1,
+    "radical": "水",
+    "strokes": 15,
+    "examples": []
+  },
+  {
+    "character": "賃",
+    "meaning": "Sewa, Upah",
+    "onyomi": [
+      "CHIN"
+    ],
+    "kunyomi": [],
+    "jlpt_level": 1,
+    "radical": "貝",
+    "strokes": 13,
+    "examples": []
+  },
+  {
+    "character": "捨",
+    "meaning": "Membuang",
+    "onyomi": [
+      "SHA"
+    ],
+    "kunyomi": [
+      "su-teru"
+    ],
+    "jlpt_level": 1,
+    "radical": "手",
+    "strokes": 11,
+    "examples": []
+  },
+  {
+    "character": "召",
+    "meaning": "Memanggil, Makan/Minum (Hormat)",
+    "onyomi": [
+      "SHOU"
+    ],
+    "kunyomi": [
+      "me-su"
+    ],
+    "jlpt_level": 1,
+    "radical": "口",
+    "strokes": 5,
+    "examples": []
+  },
+  {
+    "character": "拝",
+    "meaning": "Menyembah",
+    "onyomi": [
+      "te"
+    ],
+    "kunyomi": [
+      "oga-mu"
+    ],
+    "jlpt_level": 1,
+    "radical": "手",
+    "strokes": 8,
+    "examples": []
+  },
+  {
+    "character": "拡",
+    "meaning": "Memperluas",
+    "onyomi": [
+      "KAKU"
+    ],
+    "kunyomi": [
+      "hiro-geru"
+    ],
+    "jlpt_level": 1,
+    "radical": "手",
+    "strokes": 8,
+    "examples": []
+  },
+  {
+    "character": "紅",
+    "meaning": "Merah Tua",
+    "onyomi": [
+      "KOU"
+    ],
+    "kunyomi": [
+      "beni",
+      "kurenai"
+    ],
+    "jlpt_level": 1,
+    "radical": "糸",
+    "strokes": 9,
+    "examples": []
+  },
+  {
+    "character": "純",
+    "meaning": "Murni",
+    "onyomi": [
+      "JUN"
+    ],
+    "kunyomi": [],
+    "jlpt_level": 1,
+    "radical": "糸",
+    "strokes": 10,
+    "examples": []
+  },
+  {
+    "character": "縦",
+    "meaning": "Vertikal",
+    "onyomi": [
+      "JUU"
+    ],
+    "kunyomi": [
+      "tate"
+    ],
+    "jlpt_level": 1,
+    "radical": "糸",
+    "strokes": 16,
+    "examples": []
+  },
+  {
+    "character": "縮",
+    "meaning": "Menyusut",
+    "onyomi": [
+      "SHUKU"
+    ],
+    "kunyomi": [
+      "chiji-mu"
+    ],
+    "jlpt_level": 1,
+    "radical": "糸",
+    "strokes": 17,
+    "examples": []
+  },
+  {
+    "character": "穴",
+    "meaning": "Lubang",
+    "onyomi": [
+      "KETSU"
+    ],
+    "kunyomi": [
+      "ana"
+    ],
+    "jlpt_level": 1,
+    "radical": "穴",
+    "strokes": 5,
+    "examples": []
+  },
+  {
+    "character": "善",
+    "meaning": "Baik",
+    "onyomi": [
+      "ZEN"
+    ],
+    "kunyomi": [
+      "yo-i"
+    ],
+    "jlpt_level": 1,
+    "radical": "口",
+    "strokes": 12,
+    "examples": []
+  },
+  {
+    "character": "奏",
+    "meaning": "Bermain Musik",
+    "onyomi": [
+      "SOU"
+    ],
+    "kunyomi": [
+      "kana-deru"
+    ],
+    "jlpt_level": 1,
+    "radical": "大",
+    "strokes": 9,
+    "examples": []
+  },
+  {
+    "character": "陛",
+    "meaning": "Yang Mulia",
+    "onyomi": [
+      "HEI"
+    ],
+    "kunyomi": [],
+    "jlpt_level": 1,
+    "radical": "阜",
+    "strokes": 10,
+    "examples": []
+  },
+  {
+    "character": "勤",
+    "meaning": "Bekerja",
+    "onyomi": [
+      "KIN",
+      "GON"
+    ],
+    "kunyomi": [
+      "tsuto-meru"
+    ],
+    "jlpt_level": 1,
+    "radical": "力",
+    "strokes": 12,
+    "examples": []
+  },
+  {
+    "character": "奮",
+    "meaning": "Bersemangat",
+    "onyomi": [
+      "FUN"
+    ],
+    "kunyomi": [
+      "furu-u"
+    ],
+    "jlpt_level": 1,
+    "radical": "大",
+    "strokes": 16,
+    "examples": []
+  },
+  {
+    "character": "訳",
+    "meaning": "Terjemahan, Alasan",
+    "onyomi": [
+      "YAKU"
+    ],
+    "kunyomi": [
+      "wake"
+    ],
+    "jlpt_level": 1,
+    "radical": "言",
+    "strokes": 11,
+    "examples": []
+  },
+  {
+    "character": "討",
+    "meaning": "Menyerang, Membahas",
+    "onyomi": [
+      "TOU"
+    ],
+    "kunyomi": [
+      "u-tsu"
+    ],
+    "jlpt_level": 1,
+    "radical": "言",
+    "strokes": 10,
+    "examples": []
+  },
+  {
+    "character": "訓",
+    "meaning": "Instruksi",
+    "onyomi": [
+      "KUN"
+    ],
+    "kunyomi": [],
+    "jlpt_level": 1,
+    "radical": "言",
+    "strokes": 10,
+    "examples": []
+  },
+  {
+    "character": "詐",
+    "meaning": "Penipuan",
+    "onyomi": [
+      "SA"
+    ],
+    "kunyomi": [],
+    "jlpt_level": 1,
+    "radical": "言",
+    "strokes": 12,
+    "examples": []
+  },
+  {
+    "character": "詔",
+    "meaning": "Titah Kaisar",
+    "onyomi": [
+      "SHOU"
+    ],
+    "kunyomi": [
+      "mikotonori"
+    ],
+    "jlpt_level": 1,
+    "radical": "言",
+    "strokes": 12,
+    "examples": []
+  }
+]

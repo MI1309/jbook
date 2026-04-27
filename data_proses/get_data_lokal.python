@@ -1,0 +1,78 @@
+import sqlite3
+import json
+import os
+
+# Menentukan path database yang benar (backend/db.sqlite3)
+db_path = os.path.join(os.path.dirname(__file__), '../backend/db.sqlite3')
+output_file = os.path.join(os.path.dirname(__file__), 'semua_kanji.json')
+
+# koneksi ke database
+conn = sqlite3.connect(db_path)
+cursor = conn.cursor()
+
+# ambil data dari tabel content_kanji (sesuai schema Django)
+# Diurutkan dari level 5 (N5) ke 1 (N1)
+query = """
+    SELECT character, meaning, onyomi, kunyomi, jlpt_level, radical, strokes, examples 
+    FROM content_kanji
+    ORDER BY jlpt_level DESC
+"""
+
+try:
+    print("Sedang mengambil data dari database...")
+    cursor.execute(query)
+    result = cursor.fetchall()
+
+    # convert ke dict dan proses datanya agar lengkap
+    # Kita gunakan List of Objects agar urutan (N5 -> N1) tetap terjaga
+    data_list = []
+    stats = {5: 0, 4: 0, 3: 0, 2: 0, 1: 0}
+
+    for row in result:
+        char = row[0].strip()
+        level = row[4]
+        
+        # Proses data JSON
+        try:
+            onyomi_list = json.loads(row[2]) if row[2] else []
+            kunyomi_list = json.loads(row[3]) if row[3] else []
+            examples_list = json.loads(row[7]) if row[7] else []
+        except json.JSONDecodeError:
+            onyomi_list = [row[2]] if row[2] else []
+            kunyomi_list = [row[3]] if row[3] else []
+            examples_list = []
+
+        item = {
+            "character": char,
+            "meaning": row[1],
+            "onyomi": onyomi_list,
+            "kunyomi": kunyomi_list,
+            "jlpt_level": level,
+            "radical": row[5],
+            "strokes": row[6],
+            "examples": examples_list
+        }
+        
+        data_list.append(item)
+        if level in stats:
+            stats[level] += 1
+
+    # Simpan ke file JSON
+    with open(output_file, 'w', encoding='utf-8') as f:
+        json.dump(data_list, f, indent=2, ensure_ascii=False)
+
+    print(f"\n--- RINGKASAN DATA ---")
+    print(f"Total Kanji Berhasil Diambil: {len(data_list)}")
+    print(f"Level N5: {stats[5]} data")
+    print(f"Level N4: {stats[4]} data")
+    print(f"Level N3: {stats[3]} data")
+    print(f"Level N2: {stats[2]} data")
+    print(f"Level N1: {stats[1]} data")
+    print(f"\nSemua data telah disimpan ke: {output_file}")
+
+except sqlite3.OperationalError as e:
+    print(f"Error Database: {e}")
+except Exception as e:
+    print(f"Error: {e}")
+finally:
+    conn.close()
