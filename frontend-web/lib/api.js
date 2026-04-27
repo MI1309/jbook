@@ -854,6 +854,16 @@ export async function importPracticeData(rawData) {
         });
     }
 
+    // Repair labels and types in wrong_stats / wrong_summary
+    ['wrong_stats', 'wrong_summary'].forEach(key => {
+        if (data[key] && Array.isArray(data[key])) {
+            data[key].forEach(w => {
+                if (w.type === 'bunpo') w.type = 'grammar';
+                if (w.type === 'kotoba') w.type = 'vocab';
+            });
+        }
+    });
+
     // 2. If Logged In, Sync to Server
     if (token) {
         try {
