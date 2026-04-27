@@ -1072,5 +1072,34 @@
         "strokes": 8,
         "level": 5,
         "radical": "雨"
+    },
+    {
+        "char": "二",
+        "meaning": "Dua",
+        "on": [
+            "JI",
+            "NI"
+        ],
+        "kun": [
+            "futa",
+            "futa-tsu"
+        ],
+        "strokes": 2,
+        "level": 5,
+        "radical": "二"
+    },
+    {
+        "char": "十",
+        "meaning": "Sepuluh",
+        "on": [
+            "JUU"
+        ],
+        "kun": [
+            "too",
+            "to"
+        ],
+        "strokes": 2,
+        "level": 5,
+        "radical": "十"
     }
 ]

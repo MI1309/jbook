@@ -1,0 +1,20 @@
+            "chichi"
+        ],
+        "strokes": 4,
+        "level": 5,
+        "radical": "父"
+    },
+    {
+        "char": "雨",
+        "meaning": "Hujan",
+        "on": [
+            "U"
+        ],
+        "kun": [
+            "ame"
+        ],
+        "strokes": 8,
+        "level": 5,
+        "radical": "雨"
+    }
+]

@@ -218,10 +218,10 @@ export async function getKanjiList({ level, search, radical, limit = 50, page = 
             // Merge with local results if search is active
             if (search && localSmartResults) {
                 const apiItems = data.items || [];
-                const localSmartItems = localSmartResults.items.filter(li => li._isSmartMatch);
+                // Merge all local results that aren't in the API response
+                const localItems = localSmartResults.items || [];
                 
-                // Add unique smart items that are not in API result
-                localSmartItems.forEach(si => {
+                localItems.forEach(si => {
                     if (!apiItems.find(ai => ai.character === si.character)) {
                         apiItems.push(si);
                     }

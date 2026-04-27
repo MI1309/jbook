@@ -214,35 +214,6 @@
     "examples": []
   },
   {
-    "character": "田",
-    "meaning": "Sawah",
-    "onyomi": [
-      "DEN"
-    ],
-    "kunyomi": [
-      "ta"
-    ],
-    "jlpt_level": 5,
-    "radical": "田",
-    "strokes": 5,
-    "examples": []
-  },
-  {
-    "character": "口",
-    "meaning": "Mulut",
-    "onyomi": [
-      "KOU",
-      "KU"
-    ],
-    "kunyomi": [
-      "kuchi"
-    ],
-    "jlpt_level": 5,
-    "radical": "口",
-    "strokes": 3,
-    "examples": []
-  },
-  {
     "character": "車",
     "meaning": "Mobil",
     "onyomi": [
@@ -286,21 +257,6 @@
     "examples": []
   },
   {
-    "character": "力",
-    "meaning": "Kekuatan",
-    "onyomi": [
-      "RYOKU",
-      "RIKI"
-    ],
-    "kunyomi": [
-      "chikara"
-    ],
-    "jlpt_level": 5,
-    "radical": "力",
-    "strokes": 2,
-    "examples": []
-  },
-  {
     "character": "雨",
     "meaning": "Hujan",
     "onyomi": [
@@ -311,20 +267,6 @@
     ],
     "jlpt_level": 5,
     "radical": "雨",
-    "strokes": 8,
-    "examples": []
-  },
-  {
-    "character": "空",
-    "meaning": "Langit",
-    "onyomi": [
-      "KUU"
-    ],
-    "kunyomi": [
-      "sora"
-    ],
-    "jlpt_level": 5,
-    "radical": "穴",
     "strokes": 8,
     "examples": []
   },
@@ -386,21 +328,6 @@
     "jlpt_level": 5,
     "radical": "囗",
     "strokes": 8,
-    "examples": []
-  },
-  {
-    "character": "会",
-    "meaning": "Bertemu",
-    "onyomi": [
-      "KAI",
-      "E"
-    ],
-    "kunyomi": [
-      "a-u"
-    ],
-    "jlpt_level": 5,
-    "radical": "人",
-    "strokes": 6,
     "examples": []
   },
   {
@@ -1261,6 +1188,168 @@
     "radical": "父",
     "strokes": 4,
     "examples": []
+  },
+  {
+    "character": "二",
+    "meaning": "Dua",
+    "onyomi": [
+      "ジ",
+      "ニ"
+    ],
+    "kunyomi": [
+      "ふた",
+      "ふた.つ"
+    ],
+    "jlpt_level": 5,
+    "radical": "二",
+    "strokes": 2,
+    "examples": [
+      {
+        "word": "二つ",
+        "reading": "ふたつ",
+        "meaning": "Dua buah"
+      },
+      {
+        "word": "二月",
+        "reading": "にがつ",
+        "meaning": "Februari"
+      }
+    ]
+  },
+  {
+    "character": "十",
+    "meaning": "Sepuluh",
+    "onyomi": [
+      "ジュウ"
+    ],
+    "kunyomi": [
+      "とお",
+      "と"
+    ],
+    "jlpt_level": 5,
+    "radical": "十",
+    "strokes": 2,
+    "examples": [
+      {
+        "word": "十",
+        "reading": "じゅう",
+        "meaning": "Sepuluh"
+      },
+      {
+        "word": "十日",
+        "reading": "とおか",
+        "meaning": "Tanggal 10"
+      }
+    ]
+  },
+  {
+    "character": "田",
+    "meaning": "Sawah",
+    "onyomi": [
+      "デン"
+    ],
+    "kunyomi": [
+      "た"
+    ],
+    "jlpt_level": 4,
+    "radical": "田",
+    "strokes": 5,
+    "examples": [
+      {
+        "word": "田んぼ",
+        "reading": "たんぼ",
+        "meaning": "Sawah"
+      }
+    ]
+  },
+  {
+    "character": "口",
+    "meaning": "Mulut",
+    "onyomi": [
+      "コウ",
+      "ク"
+    ],
+    "kunyomi": [
+      "くち"
+    ],
+    "jlpt_level": 4,
+    "radical": "口",
+    "strokes": 3,
+    "examples": [
+      {
+        "word": "口",
+        "reading": "くち",
+        "meaning": "Mulut"
+      }
+    ]
+  },
+  {
+    "character": "力",
+    "meaning": "Kekuatan, Tenaga",
+    "onyomi": [
+      "リョク",
+      "リキ"
+    ],
+    "kunyomi": [
+      "ちから"
+    ],
+    "jlpt_level": 4,
+    "radical": "力",
+    "strokes": 2,
+    "examples": [
+      {
+        "word": "力",
+        "reading": "ちから",
+        "meaning": "Kekuatan"
+      }
+    ]
+  },
+  {
+    "character": "空",
+    "meaning": "Langit, Kosong",
+    "onyomi": [
+      "クウ"
+    ],
+    "kunyomi": [
+      "そら",
+      "あ.く"
+    ],
+    "jlpt_level": 4,
+    "radical": "穴",
+    "strokes": 8,
+    "examples": [
+      {
+        "word": "空",
+        "reading": "そら",
+        "meaning": "Langit"
+      }
+    ]
+  },
+  {
+    "character": "会",
+    "meaning": "Bertemu, Pertemuan",
+    "onyomi": [
+      "カイ",
+      "エ"
+    ],
+    "kunyomi": [
+      "あ.う"
+    ],
+    "jlpt_level": 4,
+    "radical": "人",
+    "strokes": 6,
+    "examples": [
+      {
+        "word": "会う",
+        "reading": "あう",
+        "meaning": "Bertemu"
+      },
+      {
+        "word": "会社",
+        "reading": "かいしゃ",
+        "meaning": "Perusahaan"
+      }
+    ]
   },
   {
     "character": "同",
@@ -3468,6 +3557,143 @@
     "radical": "耳",
     "strokes": 6,
     "examples": []
+  },
+  {
+    "character": "勉",
+    "meaning": "Belajar, Berusaha",
+    "onyomi": [
+      "ベン"
+    ],
+    "kunyomi": [
+      "つと.める"
+    ],
+    "jlpt_level": 4,
+    "radical": "力",
+    "strokes": 10,
+    "examples": [
+      {
+        "word": "勉強",
+        "reading": "べんきょう",
+        "meaning": "Belajar"
+      }
+    ]
+  },
+  {
+    "character": "夕",
+    "meaning": "Sore, Malam",
+    "onyomi": [
+      "セキ"
+    ],
+    "kunyomi": [
+      "ゆう"
+    ],
+    "jlpt_level": 4,
+    "radical": "夕",
+    "strokes": 3,
+    "examples": [
+      {
+        "word": "夕方",
+        "reading": "ゆう가타",
+        "meaning": "Sore hari"
+      }
+    ]
+  },
+  {
+    "character": "曜",
+    "meaning": "Hari (dalam seminggu)",
+    "onyomi": [
+      "ヨウ"
+    ],
+    "kunyomi": [],
+    "jlpt_level": 4,
+    "radical": "日",
+    "strokes": 18,
+    "examples": [
+      {
+        "word": "曜日",
+        "reading": "ようび",
+        "meaning": "Hari"
+      }
+    ]
+  },
+  {
+    "character": "楽",
+    "meaning": "Nyaman, Senang, Musik",
+    "onyomi": [
+      "ガク",
+      "ラク"
+    ],
+    "kunyomi": [
+      "たの.しい"
+    ],
+    "jlpt_level": 4,
+    "radical": "木",
+    "strokes": 13,
+    "examples": [
+      {
+        "word": "音楽",
+        "reading": "おんがく",
+        "meaning": "Musik"
+      }
+    ]
+  },
+  {
+    "character": "犬",
+    "meaning": "Anjing",
+    "onyomi": [
+      "ケン"
+    ],
+    "kunyomi": [
+      "いぬ"
+    ],
+    "jlpt_level": 4,
+    "radical": "犬",
+    "strokes": 4,
+    "examples": [
+      {
+        "word": "犬",
+        "reading": "いぬ",
+        "meaning": "Anjing"
+      }
+    ]
+  },
+  {
+    "character": "飲",
+    "meaning": "Minum",
+    "onyomi": [
+      "イン"
+    ],
+    "kunyomi": [
+      "の.む"
+    ],
+    "jlpt_level": 4,
+    "radical": "食",
+    "strokes": 12,
+    "examples": [
+      {
+        "word": "飲む",
+        "reading": "のむ",
+        "meaning": "Minum"
+      }
+    ]
+  },
+  {
+    "character": "駅",
+    "meaning": "Stasiun",
+    "onyomi": [
+      "エキ"
+    ],
+    "kunyomi": [],
+    "jlpt_level": 4,
+    "radical": "馬",
+    "strokes": 14,
+    "examples": [
+      {
+        "word": "駅",
+        "reading": "えき",
+        "meaning": "Stasiun"
+      }
+    ]
   },
   {
     "character": "政",
