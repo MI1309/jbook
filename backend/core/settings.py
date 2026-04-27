@@ -116,29 +116,15 @@ WSGI_APPLICATION = "core.wsgi.application"
 
 
 # ===============================
-# DATABASE (TURSO)
+# DATABASE
 # ===============================
 
-TURSO_DATABASE_URL = os.environ.get("TURSO_DATABASE_URL")
-TURSO_AUTH_TOKEN = os.environ.get("TURSO_AUTH_TOKEN")
-
-if TURSO_DATABASE_URL:
-    DATABASES = {
-        "default": {
-            "ENGINE": "libsql",
-            "NAME": TURSO_DATABASE_URL,
-            "OPTIONS": {
-                "auth_token": TURSO_AUTH_TOKEN,
-            },
-        }
+DATABASES = {
+    "default": {
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": BASE_DIR / "db.sqlite3",
     }
-else:
-    DATABASES = {
-        "default": {
-            "ENGINE": "django.db.backends.sqlite3",
-            "NAME": BASE_DIR / "db.sqlite3",
-        }
-    }
+}
 
 
 # ===============================

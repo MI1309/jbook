@@ -59,8 +59,6 @@ itsdangerous==2.2.0
 Jinja2==3.1.6
 Kivy==2.3.1
 Kivy-Garden==0.1.5
-libsql-client==0.3.1
-libsql-experimental==0.0.38
 MarkupSafe==3.0.3
 multidict==6.7.1
 mypy_extensions==1.1.0
@@ -83,7 +81,6 @@ pyproject_hooks==1.2.0
 pystache==0.6.8
 python-discovery==1.1.1
 python-dotenv==1.2.2
-pyturso==0.4.4
 PyYAML==6.0.3
 requests==2.31.0
 rfc3986==1.5.0

@@ -1,0 +1,45 @@
+import requests
+import json
+
+# URL API di PythonAnywhere
+BASE_URL = "https://imronm.pythonanywhere.com/api/content/kanji"
+
+# Kanji yang baru kita tambahkan untuk dites
+TEST_KANJI = ["二", "十", "会", "駅"]
+
+def test_kanji_api():
+    print(f"--- MENGETES API DI SERVER: {BASE_URL} ---")
+    
+    for char in TEST_KANJI:
+        print(f"\nSearching for: {char}...")
+        try:
+            # Menggunakan parameter search untuk mencari kanji spesifik
+            response = requests.get(f"{BASE_URL}?search={char}", timeout=15)
+            
+            if response.status_code == 200:
+                data = response.json()
+                items = data.get("items", [])
+                
+                if items:
+                    # Cari item yang karakternya persis sama
+                    match = next((item for item in items if item["character"] == char), None)
+                    if match:
+                        print(f"✅ DITEMUKAN!")
+                        print(f"   ID: {match['id']}")
+                        print(f"   Arti: {match['meaning']}")
+                        print(f"   Contoh Kata: {len(match.get('examples', []))} items")
+                        if match.get('examples'):
+                            print(f"   Contoh 1: {match['examples'][0]['word']} ({match['examples'][0]['meaning']})")
+                    else:
+                        print(f"❌ TIDAK DITEMUKAN (Karakter tidak cocok dalam hasil pencarian)")
+                else:
+                    print(f"❌ TIDAK DITEMUKAN (Hasil pencarian kosong)")
+            else:
+                print(f"❌ ERROR: Status Code {response.status_code}")
+                print(response.text)
+                
+        except Exception as e:
+            print(f"❌ EXCEPTION: {e}")
+
+if __name__ == "__main__":
+    test_kanji_api()
