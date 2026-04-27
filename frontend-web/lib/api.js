@@ -95,7 +95,8 @@ async function handleResponse(res, context = 'API') {
     let detail = '';
     try {
         const data = await res.json();
-        detail = data.detail || data.message || '';
+        const rawDetail = data.detail || data.message || data;
+        detail = typeof rawDetail === 'object' ? JSON.stringify(rawDetail) : String(rawDetail);
     } catch (e) {
         try {
             detail = await res.text();
@@ -673,12 +674,83 @@ export async function exportPracticeData() {
         };
     }
 
-    // Ensure mistake summary is explicitly present for easy reading
-    // If it's already in wrong_stats, we just make sure it's at the top level
+    // NORMALIZE: Ensure we are working with the actual data object
+    let rawData = data;
+    if (data && data.data && !data.attempts) rawData = data.data;
+
+    // 1. Group wrong_stats
+    const rawWrong = rawData.wrong_stats || [];
+    const groupedWrong = new Map();
+    rawWrong.forEach(w => {
+        const key = `${w.type}|${w.character}`;
+        if (groupedWrong.has(key)) {
+            const existing = groupedWrong.get(key);
+            existing.count += (w.count || 1);
+        } else {
+            groupedWrong.set(key, { ...w, count: w.count || 1 });
+        }
+    });
+    const cleanedWrong = Array.from(groupedWrong.values());
+
+    // 2. Group attempts (The heaviest part)
+    const rawAttempts = rawData.attempts || [];
+    const attemptMap = new Map();
+    rawAttempts.forEach(a => {
+        const char = a.character || a.label || a.word || a.title;
+        if (!char) return;
+
+        const key = `${a.type}|${char}`;
+        if (!attemptMap.has(key)) {
+            attemptMap.set(key, {
+                type: a.type,
+                character: char,
+                kanji_id: a.kanji_id,
+                vocab_id: a.vocab_id,
+                grammar_id: a.grammar_id,
+                particle_id: a.particle_id,
+                wrong_count: a.is_correct ? 0 : 1,
+                right_count: a.is_correct ? 1 : 0,
+                last_attempt: a.created_at || a.timestamp || a.date
+            });
+        } else {
+            const existing = attemptMap.get(key);
+            // UPDATE: If existing group has no ID but this row has it, fill it in
+            if (!existing.kanji_id && a.kanji_id) existing.kanji_id = a.kanji_id;
+            if (!existing.vocab_id && a.vocab_id) existing.vocab_id = a.vocab_id;
+            if (!existing.grammar_id && a.grammar_id) existing.grammar_id = a.grammar_id;
+            if (!existing.particle_id && a.particle_id) existing.particle_id = a.particle_id;
+
+            if (a.is_correct) existing.right_count++;
+            else existing.wrong_count++;
+            
+            const ts = a.created_at || a.timestamp || a.date;
+            if (ts && (!existing.last_attempt || ts > existing.last_attempt)) {
+                existing.last_attempt = ts;
+            }
+        }
+    });
+    const cleanedAttempts = Array.from(attemptMap.values());
+
+    // 3. Group progress
+    const rawProgress = rawData.progress || [];
+    const progMap = new Map();
+    rawProgress.forEach(p => {
+        const key = `${p.content_type}|${p.content_id}`;
+        if (!progMap.has(key) || (p.updated_at > progMap.get(key).updated_at)) {
+            progMap.set(key, { ...p });
+        }
+    });
+    const cleanedProgress = Array.from(progMap.values());
+
     return {
-        ...data,
+        total_attempts: rawData.total_attempts || 0,
+        accuracy: rawData.accuracy || 0,
+        wrong_stats: cleanedWrong,
+        wrong_summary: cleanedWrong,
+        attempts: cleanedAttempts,
+        progress: cleanedProgress,
         export_date: new Date().toISOString(),
-        wrong_summary: data.wrong_stats || []
+        version: '2.2-type-preserved'
     };
 }
 
@@ -686,11 +758,54 @@ export async function importPracticeData(rawData) {
     const token = Cookies.get('access_token');
     
     // Data Protection & Migration Transformer
-    const data = JSON.parse(JSON.stringify(rawData)); // Deep clone
+    let data = JSON.parse(JSON.stringify(rawData)); // Deep clone
     
+    // NORMALIZE: Ensure we are working with the actual data object
+    if (data && data.data && !data.attempts) data = data.data;
+
     const { dbGet } = await import('./offline-db');
 
-    // 1. Migrate & Repair old/missing data
+    // 1. Handle unified format (v2.x) - Expand it back for server compatibility
+    if ((data.version?.startsWith('2.')) && data.attempts) {
+        const expandedAttempts = [];
+        const baseDate = data.export_date ? new Date(data.export_date) : new Date();
+        
+        data.attempts.forEach((a, idx) => {
+            const groupDate = a.last_attempt ? new Date(a.last_attempt) : new Date(baseDate.getTime() - (idx * 60000));
+
+            for (let i = 0; i < (a.wrong_count || 0); i++) {
+                const itemDate = new Date(groupDate.getTime() - (i * 1000));
+                expandedAttempts.push({
+                    type: a.type,
+                    character: a.character,
+                    kanji_id: a.kanji_id,
+                    vocab_id: a.vocab_id,
+                    grammar_id: a.grammar_id,
+                    particle_id: a.particle_id,
+                    is_correct: false,
+                    created_at: itemDate.toISOString(),
+                    timestamp: itemDate.toISOString()
+                });
+            }
+            for (let i = 0; i < (a.right_count || 0); i++) {
+                const itemDate = new Date(groupDate.getTime() - (i * 1000 + (a.wrong_count || 0) * 1000));
+                expandedAttempts.push({
+                    type: a.type,
+                    character: a.character,
+                    kanji_id: a.kanji_id,
+                    vocab_id: a.vocab_id,
+                    grammar_id: a.grammar_id,
+                    particle_id: a.particle_id,
+                    is_correct: true,
+                    created_at: itemDate.toISOString(),
+                    timestamp: itemDate.toISOString()
+                });
+            }
+        });
+        data.attempts = expandedAttempts;
+    }
+
+    // 2. Migrate & Repair old/missing data
     if (data.attempts && Array.isArray(data.attempts)) {
         for (const a of data.attempts) {
             // Repair Tipe missing
@@ -804,3 +919,6 @@ export async function importPracticeData(rawData) {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(merged));
     return { imported: data.attempts?.length || 0, skipped: 0 };
 }
+
+
+

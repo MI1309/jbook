@@ -33,8 +33,8 @@ export default function KanjiDetailUI({ kanji, onClose }) {
             {/* Premium Header / Hero Section */}
             <div className={`bg-gradient-to-b ${theme === 'dark' ? 'from-black to-[#0a0a0a]' : 'from-gray-50 to-white'} pt-12 pb-20 border-b ${borderStyle}`}>
                 <div className="container mx-auto px-6 max-w-5xl">
-                    <button onClick={onClose} className={`inline-flex items-center gap-2 text-sm font-black transition-all mb-12 group active:scale-95 ${subTextColor} hover:text-red-600`}>
-                        <span className="group-hover:-translate-x-1 transition-transform">←</span> Kembali ke Daftar
+                    <button onClick={() => onClose ? onClose() : router.back()} className={`inline-flex items-center gap-2 text-sm font-black transition-all mb-12 group active:scale-95 ${subTextColor} hover:text-red-600`}>
+                        <span className="group-hover:-translate-x-1 transition-transform">←</span> Kembali
                     </button>
 
                     <div className="flex flex-col md:flex-row items-center md:items-start gap-12 lg:gap-20">

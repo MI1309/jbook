@@ -61,7 +61,25 @@ export default function HistoryPage() {
         }
     };
 
-    const allMistakes = analytics?.wrong_stats || [];
+    const rawMistakes = analytics?.wrong_stats || [];
+    
+    // Satukan data yang sama (karakter & tipe sama) agar tidak double
+    const groupedMistakes = rawMistakes.reduce((acc, current) => {
+        // Konsistensi tipe: pastikan 'bunpo' diperlakukan sebagai 'grammar'
+        const type = current.type === 'bunpo' ? 'grammar' : current.type;
+        const key = `${type}-${current.character}`;
+        
+        if (!acc[key]) {
+            acc[key] = { ...current, type, count: current.count || 0 };
+        } else {
+            acc[key].count += (current.count || 0);
+            // Opsional: Jika status terbaru adalah 'Perbaiki', gunakan itu
+            if (current.status === 'Perbaiki') acc[key].status = 'Perbaiki';
+        }
+        return acc;
+    }, {});
+
+    const allMistakes = Object.values(groupedMistakes);
     const filtered = filterType === 'all'
         ? allMistakes
         : allMistakes.filter(m => m.type === filterType);
@@ -199,34 +217,35 @@ export default function HistoryPage() {
                             <button
                                 key={idx}
                                 onClick={() => handleOpenMistake(mistake)}
-                                className={`w-full flex items-center justify-between group p-5 rounded-2xl border-2 transition-all hover:border-red-500 hover:scale-[1.005] cursor-pointer text-left ${!mounted ? 'bg-white border-gray-100' : (theme === 'dark' ? 'bg-[#0a0a0a] border-red-950/20 hover:bg-red-950/10' : 'bg-white border-gray-100 hover:bg-red-50/40')}`}
+                                className={`w-full flex items-center justify-between group p-3 sm:p-5 rounded-2xl border-2 transition-all hover:border-red-500 hover:scale-[1.005] cursor-pointer text-left ${!mounted ? 'bg-white border-gray-100' : (theme === 'dark' ? 'bg-[#0a0a0a] border-red-950/20 hover:bg-red-950/10' : 'bg-white border-gray-100 hover:bg-red-50/40')}`}
                             >
-                                <div className="flex items-center gap-5">
-                                    {/* Rank badge */}
-                                    <div className={`w-7 h-7 rounded-full flex items-center justify-center text-[10px] font-black flex-shrink-0 ${idx === 0 ? 'bg-red-600 text-white shadow-md shadow-red-500/20' : idx === 1 ? 'bg-orange-500 text-white' : idx === 2 ? 'bg-yellow-500 text-white' : (theme === 'dark' ? 'bg-red-950/20 text-gray-600' : 'bg-gray-100 text-gray-400')}`}>
+                                <div className="flex items-center gap-2 sm:gap-5 min-w-0 flex-1 mr-2 sm:mr-4">
+                                    {/* Rank badge - hidden on very small screens to save space */}
+                                    <div className={`hidden xs:flex w-6 h-6 sm:w-7 sm:h-7 rounded-full items-center justify-center text-[9px] sm:text-[10px] font-black flex-shrink-0 ${idx === 0 ? 'bg-red-600 text-white shadow-md shadow-red-500/20' : idx === 1 ? 'bg-orange-500 text-white' : idx === 2 ? 'bg-yellow-500 text-white' : (theme === 'dark' ? 'bg-red-950/20 text-gray-600' : 'bg-gray-100 text-gray-400')}`}>
                                         {idx + 1}
                                     </div>
-
-                                    {/* Character icon */}
-                                    <div className="w-12 h-12 rounded-2xl bg-red-600 text-white flex items-center justify-center font-black text-xl flex-shrink-0 shadow-md shadow-red-500/20 group-hover:rotate-3 transition-transform">
-                                        {(mistake.character?.length || 0) > 3 ? mistake.character.substring(0, 2) + '..' : (mistake.character || '?')}
+                                    
+                                    {/* Character icon - dynamic width */}
+                                    <div className={`h-10 sm:h-12 px-2 min-w-[2.5rem] sm:min-w-[3rem] rounded-xl sm:rounded-2xl bg-red-600 text-white flex items-center justify-center font-black flex-shrink-0 shadow-md shadow-red-500/20 group-hover:rotate-3 transition-transform ${
+                                        (mistake.character?.length || 0) > 4 ? 'text-xs' : (mistake.character?.length || 0) > 2 ? 'text-sm' : 'text-lg'
+                                    }`}>
+                                        {mistake.character || '?'}
                                     </div>
 
-                                    <div>
-                                        <h3 className={`font-black text-xl leading-none mb-1 transition-colors ${textColor}`}>{mistake.character}</h3>
-                                        <div className="flex items-center gap-2">
-                                            <span className={`text-[9px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full ${theme === 'dark' ? 'bg-red-950/20 text-red-400' : 'bg-red-50 text-red-600'}`}>
+                                    <div className="min-w-0 flex-1">
+                                        <h3 className={`font-black text-base sm:text-xl leading-none mb-1 truncate transition-colors ${textColor}`}>{mistake.character}</h3>
+                                        <div className="flex flex-wrap items-center gap-1 sm:gap-2 mt-1 sm:mt-2">
+                                            <span className={`text-[8px] sm:text-[9px] font-black uppercase tracking-widest px-1.5 sm:px-2 py-0.5 rounded-full ${theme === 'dark' ? 'bg-red-950/20 text-red-400' : 'bg-red-50 text-red-600'}`}>
                                                 {getMistakeTypeLabel(mistake.type)}
                                             </span>
                                             {mistake.status && (
-                                                <span className={`text-[9px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full flex items-center gap-1 ${
+                                                <span className={`text-[8px] sm:text-[9px] font-black uppercase tracking-widest px-1.5 sm:px-2 py-0.5 rounded-full flex items-center gap-1 ${
                                                     mistake.status === 'Perbaiki' 
-                                                        ? 'bg-red-600 text-white shadow-sm shadow-red-500/20' 
+                                                        ? 'bg-red-600 text-white' 
                                                         : mistake.status === 'Cukup'
                                                             ? 'bg-orange-500 text-white'
                                                             : 'bg-emerald-500 text-white'
                                                 }`}>
-                                                    <span className="text-[10px]">{mistake.status === 'Perbaiki' ? '⚠️' : mistake.status === 'Cukup' ? '🕒' : '✨'}</span>
                                                     {mistake.status}
                                                 </span>
                                             )}
@@ -234,13 +253,12 @@ export default function HistoryPage() {
                                     </div>
                                 </div>
 
-                                <div className="flex items-center gap-4">
-                                    {/* Error bar */}
-                                    <div className="hidden sm:flex flex-col items-end gap-1">
-                                        <div className="text-2xl font-black text-red-600 leading-none">{mistake.count}x</div>
-                                        <div className={`text-[10px] font-black uppercase tracking-widest ${subTextColor}`}>salah</div>
+                                <div className="flex items-center gap-2 sm:gap-4 flex-shrink-0">
+                                    <div className="flex flex-col items-end">
+                                        <div className="text-lg sm:text-2xl font-black text-red-600 leading-none">{mistake.count}x</div>
+                                        <div className={`text-[8px] sm:text-[10px] font-black uppercase tracking-widest ${subTextColor}`}>salah</div>
                                     </div>
-                                    <span className={`text-xl transition-colors group-hover:text-red-500 group-hover:translate-x-1 transform transition-transform ${subTextColor}`}>→</span>
+                                    <span className={`text-sm sm:text-xl transition-colors group-hover:text-red-500 group-hover:translate-x-1 transform transition-transform ${subTextColor}`}>→</span>
                                 </div>
                             </button>
                         ))}

@@ -1,31 +1,38 @@
-# Logika Relasi Data: Integrasi Kanji \u0026 Kotoba
+# Logika Relasi Data: Integrasi Kanji & Kotoba
 
 Dokumen ini menjelaskan mekanisme teknis yang digunakan untuk menghubungkan karakter Kanji dengan kosa kata secara relasional di dalam aplikasi JBook.
 
-## 1. Konsep Dasar "Deep Linking"
-Aplikasi menggunakan data dari IndexedDB (Offline) sebagai sumber kebenaran utama untuk pemetaan relasi. Karena data mentah (raw data) sering kali tidak menyertakan ID relasi secara tertanam (embedded), sistem melakukan kalkulasi dinamis di sisi klien.
+## 1. File Terkait
+
+### Frontend (Logika Pembedahan)
+- **[components/KotobaDetailModal.jsx](file:///home/imron/jbook/frontend-web/components/KotobaDetailModal.jsx)**: Lokasi utama fungsi `extractKanji` yang membedah kata menjadi karakter kanji penyusun.
+- **[components/KanjiDetailModal.jsx](file:///home/imron/jbook/frontend-web/components/KanjiDetailModal.jsx)**: Menampilkan kosa kata yang menggunakan Kanji tersebut sebagai contoh kata (Examples).
+- **[lib/db.js](file:///home/imron/jbook/frontend-web/lib/db.js)**: Menyediakan akses cepat ke IndexedDB untuk mencocokkan karakter yang ditemukan dengan database detail Kanji.
+
+### Backend (Struktur Data)
+- **[backend/content/models.py](file:///home/imron/jbook/backend/content/models.py)**: Definisi model `Kanji` dan `Kotoba`. Hubungan antara keduanya bersifat implisit (melalui pencocokan string) untuk fleksibilitas database.
 
 ## 2. Pembedahan Kata (Kanji Dissection)
-Saat menampilkan sebuah kosa kata (Kotoba), sistem melakukan dua tingkat pembedahan:
+Saat menampilkan sebuah kosa kata (Kotoba), sistem melakukan pembedahan melalui algoritma berikut:
 
-### A. Inline Interaction
-String kata dipecah menjadi array karakter individu. Setiap karakter dicek menggunakan regex Kanji. Karakter yang terdeteksi sebagai Kanji dibungkus dengan komponen interaktif yang memungkinkan navigasi cepat.
-
-### B. Unit Dissection (Visual Section)
-Selain interaksi *inline*, sistem mengekstrak daftar unik karakter Kanji dari kata tersebut dan melakukan *prefetch* data detail dari database lokal. Karakter-karakter ini kemudian dirender dalam bagian "**Bedah Kanji (Karakter Penyusun)**" lengkap dengan:
-- **Makna Dasar**: Arti Kanji tersebut dalam bahasa Indonesia.
-- **Cara Baca**: On/Kunyomi utama untuk memberikan konteks bacaan dasar.
-- **Navigasi Langsung**: Kartu detail mandiri yang menghubungkan ke halaman Kanji terkait.
+### Langkah-langkah Teknis:
+1.  **Regex Filtering**: Menggunakan regex `[\u4e00-\u9faf]` untuk mendeteksi karakter yang masuk kategori Kanji dari sebuah string kosa kata.
+2.  **Unification**: Menggunakan `Set` untuk memastikan karakter yang sama tidak muncul dua kali dalam daftar bedah kanji (misal: kata `人々` akan hanya menampilkan satu entitas `人`).
+3.  **Local Lookup**: Setiap karakter yang ditemukan dikirim ke fungsi `getKanjiByChar(char)` di `lib/db.js` untuk mengambil makna (meaning) dan cara baca (onyomi/kunyomi).
+4.  **Rendering**: Menampilkan kartu kecil di bawah detail Kotoba yang memungkinkan user "masuk" ke detail Kanji penyusun tersebut tanpa meninggalkan konteks.
 
 ## 3. Pemetaan Contoh Kata (Example Mapping)
-Pada halaman detail Kanji, daftar contoh kata dihubungkan kembali ke database Kotoba:
-- **Lookup**: Saat contoh kata diklik, sistem mencari di store `vocab` untuk menemukan entri yang memiliki field `word` yang sama.
-- **Navigasi**: Jika ditemukan, sistem melakukan navigasi ke detail Kotoba tersebut. Jika tidak (misal data belum sinkron), sistem akan mengarahkan ke halaman pencarian Kotoba dengan query kata tersebut.
+Sebaliknya, saat menampilkan detail Kanji, sistem mencari kosa kata yang mengandung karakter tersebut.
 
-## 4. Penanganan Navigasi Modal (Modal-to-Modal)
-Untuk menjaga konteks pencarian pengguna:
-- Sistem mendukung transisi antar modal menggunakan URL query parameter `?detail=ID`.
-- Hal ini memungkinkan pengguna untuk "melompat" dari Detail Kanji ke Detail Kotoba tanpa menutup modal utama, menjaga navigasi tetap *seamless*.
+### Alur Pencarian:
+1.  **Backend Filter**: API `/api/content/kotoba?search=X` (di mana X adalah Kanji tersebut) dipanggil.
+2.  **Strict Matching**: Backend mencari di kolom `word` dan `reading` yang mengandung karakter tersebut.
+3.  **Categorization**: Contoh kata diurutkan berdasarkan level JLPT yang sama dengan Kanji tersebut untuk memastikan relevansi kesulitan materi.
+
+## 4. Keuntungan Arsitektur Ini
+- **Data Integrity**: Tidak perlu mendefinisikan *Many-to-Many relationship* secara manual di database yang akan memperberat migrasi data.
+- **Dynamic Linking**: Jika ada penambahan kosa kata baru di database, secara otomatis kosa kata tersebut akan muncul sebagai contoh di halaman Kanji yang bersangkutan.
+- **Offline Capability**: Karena pembedahan dilakukan di frontend, fitur ini tetap berjalan 100% meskipun user sedang offline (menggunakan data dari IndexedDB).
 
 ---
-*Status: Terintegrasi via `api.js` dan `utils.js`*
+*Relasi data yang cerdas memungkinkan pengalaman belajar yang terhubung dan komprehensif.*

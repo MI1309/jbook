@@ -60,7 +60,8 @@ export default function DashboardPage() {
         setActionError(null);
         try {
             const data = await exportPracticeData();
-            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            // Remove pretty print (null, 2) to save significant space
+            const blob = new Blob([JSON.stringify(data)], { type: 'application/json' });
             const url = URL.createObjectURL(blob);
             const link = document.createElement('a');
             link.href = url;
@@ -73,6 +74,8 @@ export default function DashboardPage() {
             setIsExporting(false);
         }
     };
+
+
 
     const handleImport = async (e) => {
         const file = e.target.files[0];
@@ -132,7 +135,20 @@ export default function DashboardPage() {
     // Prepare data
     const totalExercises = analytics?.total_attempts || 0;
     const accuracy = analytics?.accuracy || 0.0;
-    const topMistakes = analytics?.wrong_stats || [];
+    // Menyatukan data yang duplikat (karakter & tipe sama)
+    const rawMistakes = analytics?.wrong_stats || [];
+    const groupedMap = new Map();
+    rawMistakes.forEach(m => {
+        const type = m.type === 'bunpo' ? 'grammar' : (m.type === 'kotoba' ? 'vocab' : m.type);
+        const key = `${type}|${m.character}`;
+        if (groupedMap.has(key)) {
+            const existing = groupedMap.get(key);
+            existing.count += (m.count || 1);
+        } else {
+            groupedMap.set(key, { ...m, type, count: m.count || 1 });
+        }
+    });
+    const topMistakes = Array.from(groupedMap.values()).sort((a, b) => b.count - a.count);
 
     // Categorize top mistakes simply
     const getMistakeTypeIcon = (type) => {
@@ -258,24 +274,26 @@ export default function DashboardPage() {
                     <div className="p-6">
                         {topMistakes.length > 0 ? (
                             <div className="space-y-3">
-                                {topMistakes.map((mistake, idx) => (
+                                {topMistakes.slice(0, 5).map((mistake, idx) => (
                                     <button
                                         key={idx}
                                         onClick={() => handleOpenMistake(mistake)}
                                         className={`w-full flex items-center justify-between group cursor-pointer p-3 rounded-xl border-2 transition-all hover:border-red-500 hover:scale-[1.01] active:scale-[0.99] text-left ${!mounted ? 'bg-white border-gray-100' : (theme === 'dark' ? 'bg-black/20 border-red-950/20 hover:bg-red-950/10' : 'bg-white border-gray-100 hover:bg-red-50/50')}`}
                                     >
-                                        <div className="flex items-center gap-3">
-                                            <div className="w-10 h-10 rounded-xl bg-red-600 text-white flex items-center justify-center font-black text-lg shadow-sm shadow-red-500/20 group-hover:rotate-3 transition-transform flex-shrink-0">
-                                                {(mistake.character?.length || 0) > 3 ? mistake.character.substring(0, 2) + ".." : (mistake.character || '?')}
+                                        <div className="flex items-center gap-3 min-w-0 flex-1 mr-4">
+                                            <div className={`h-10 px-2 min-w-[2.5rem] rounded-xl bg-red-600 text-white flex items-center justify-center font-black shadow-sm shadow-red-500/20 group-hover:rotate-3 transition-transform flex-shrink-0 ${
+                                                (mistake.character?.length || 0) > 4 ? 'text-xs' : (mistake.character?.length || 0) > 2 ? 'text-sm' : 'text-lg'
+                                            }`}>
+                                                {mistake.character || '?'}
                                             </div>
-                                            <div>
-                                                <div className={`font-black transition-colors ${!mounted ? 'text-gray-900' : (theme === 'dark' ? 'text-white' : 'text-gray-900')}`}>{mistake.character}</div>
+                                            <div className="min-w-0 flex-1">
+                                                <div className={`font-black truncate transition-colors ${!mounted ? 'text-gray-900' : (theme === 'dark' ? 'text-white' : 'text-gray-900')}`} title={mistake.character}>{mistake.character}</div>
                                                 <div className={`text-[10px] font-black uppercase tracking-widest transition-colors ${!mounted ? 'text-gray-400' : (theme === 'dark' ? 'text-gray-600' : 'text-gray-400')}`}>
                                                     {getMistakeTypeLabel(mistake.type)}
                                                 </div>
                                             </div>
                                         </div>
-                                        <div className="flex items-center gap-3">
+                                        <div className="flex items-center gap-3 flex-shrink-0">
                                             <div className="text-right">
                                                 <div className="font-black text-red-600 text-lg leading-none">{mistake.count}x</div>
                                                 <div className="text-[10px] text-gray-400 font-bold">salah</div>
@@ -371,6 +389,7 @@ export default function DashboardPage() {
                 </div>
                 <div className="p-6">
                     <div className="flex flex-col md:flex-row gap-4">
+
                         <button
                             onClick={handleExport}
                             disabled={isExporting}

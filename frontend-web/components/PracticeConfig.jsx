@@ -66,17 +66,20 @@ export default function PracticeConfig() {
     const textColor = !mounted ? 'text-black' : (theme === 'dark' ? 'text-white' : 'text-black');
     const subTextColor = !mounted ? 'text-gray-400' : (theme === 'dark' ? 'text-gray-500' : 'text-gray-400');
     const cardBg = !mounted ? 'bg-white' : (theme === 'dark' ? 'bg-[#0a0a0a]' : 'bg-white');
+    const glassBg = !mounted ? 'bg-white/60' : (theme === 'dark' ? 'bg-[#0a0a0a]/60' : 'bg-white/60');
     const inputBg = !mounted ? 'bg-gray-50' : (theme === 'dark' ? 'bg-black/40' : 'bg-gray-50');
-    const borderStyle = !mounted ? 'border-gray-100' : (theme === 'dark' ? 'border-red-950/30' : 'border-gray-100');
+    const borderStyle = !mounted ? 'border-gray-100' : (theme === 'dark' ? 'border-white/5' : 'border-white/60');
 
     return (
-        <div className={`${cardBg}/80 backdrop-blur-md p-6 md:p-10 rounded-3xl shadow-2xl max-w-3xl mx-auto border ${theme === 'dark' ? 'border-red-950/20' : 'border-white/20'} relative overflow-hidden transition-colors`}>
+        <div className={`${glassBg} backdrop-blur-2xl p-6 md:p-10 rounded-[2.5rem] shadow-[0_8px_30px_rgb(0,0,0,0.12)] max-w-3xl mx-auto border ${borderStyle} relative overflow-hidden transition-colors`}>
             <div className="absolute top-0 right-0 p-4 opacity-5 text-[12rem] font-serif select-none pointer-events-none text-red-900 leading-none">
                 学
             </div>
 
             <div className="relative z-10">
-                <h2 className={`text-4xl font-black mb-2 tracking-tight transition-colors ${textColor}`}>Atur Latihanmu</h2>
+                <h2 className={`text-4xl md:text-5xl font-black mb-2 tracking-tight transition-colors ${textColor}`}>
+                    Atur <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-rose-500">Latihanmu</span>
+                </h2>
                 <p className={`mb-10 text-lg transition-colors ${subTextColor}`}>Pilih materi, level, dan target waktu kuis hari ini.</p>
 
                 <div className="space-y-10">
@@ -90,10 +93,10 @@ export default function PracticeConfig() {
                                 <button
                                     key={t.id}
                                     onClick={() => toggleType(t.id)}
-                                    className={`flex flex-col items-center justify-center p-4 rounded-2xl border-2 transition-all duration-300 ${
+                                    className={`flex flex-col items-center justify-center p-4 rounded-2xl border-2 transition-all duration-300 transform hover:scale-[1.03] ${
                                         selectedTypes.includes(t.id)
-                                            ? 'bg-red-50 dark:bg-red-950/20 border-red-500 shadow-lg shadow-red-100/10'
-                                            : `${cardBg} ${borderStyle} hover:border-red-200 dark:hover:border-red-800`
+                                            ? 'bg-gradient-to-br from-red-50 to-rose-50 dark:from-red-950/30 dark:to-rose-950/10 border-red-500 shadow-lg shadow-red-500/20'
+                                            : `${cardBg} ${borderStyle} hover:border-red-300 dark:hover:border-red-800 hover:shadow-md`
                                     }`}
                                 >
                                     <span className="text-3xl mb-2">{t.icon}</span>
@@ -117,10 +120,10 @@ export default function PracticeConfig() {
                                     <button
                                         key={l.id}
                                         onClick={() => toggleLevel(l.id)}
-                                        className={`w-12 h-12 rounded-xl border-2 font-black transition-all ${
+                                        className={`w-12 h-12 rounded-xl border-2 font-black transition-all duration-300 transform hover:scale-110 ${
                                             selectedLevels.includes(l.id)
-                                                ? 'bg-red-600 border-red-600 text-white shadow-lg shadow-red-500/20 scale-110'
-                                                : `${cardBg} ${borderStyle} ${subTextColor} hover:border-red-200 dark:hover:border-red-800`
+                                                ? 'bg-gradient-to-br from-red-500 to-rose-600 border-transparent text-white shadow-lg shadow-red-500/30 scale-110'
+                                                : `${cardBg} ${borderStyle} ${subTextColor} hover:border-red-300 dark:hover:border-red-800 hover:text-red-500 dark:hover:text-red-400`
                                         }`}
                                     >
                                         {l.label}
@@ -128,9 +131,9 @@ export default function PracticeConfig() {
                                 ))}
                                 <button
                                     onClick={() => setSelectedLevels([])}
-                                    className={`px-4 h-12 rounded-xl border-2 font-bold transition-all ${
+                                    className={`px-4 h-12 rounded-xl border-2 font-bold transition-all duration-300 transform hover:scale-105 ${
                                         selectedLevels.length === 0
-                                            ? 'bg-gray-800 dark:bg-gray-700 border-gray-800 dark:border-gray-700 text-white'
+                                            ? 'bg-gradient-to-br from-gray-800 to-gray-900 border-transparent text-white shadow-lg shadow-gray-900/20'
                                             : `${cardBg} ${borderStyle} ${subTextColor} hover:bg-gray-50 dark:hover:bg-gray-900`
                                     }`}
                                 >
@@ -152,7 +155,7 @@ export default function PracticeConfig() {
                                             value={limit}
                                             onChange={(e) => setLimit(e.target.value)}
                                             placeholder="10"
-                                            className={`w-full ${inputBg} border-2 ${borderStyle} rounded-xl px-4 py-3 font-bold transition-colors outline-none focus:border-red-500 ${textColor}`}
+                                            className={`w-full ${inputBg} border-2 ${borderStyle} rounded-xl px-4 py-3 font-bold transition-all outline-none focus:border-red-500 focus:ring-4 focus:ring-red-500/20 ${textColor}`}
                                         />
                                         <span className={`font-bold transition-colors ${subTextColor}`}>Soal</span>
                                     </div>
@@ -169,7 +172,7 @@ export default function PracticeConfig() {
                                                 onChange={(e) => setTimer(e.target.value)}
                                                 disabled={isUnlimitedTime}
                                                 placeholder="5"
-                                                className={`w-full ${inputBg} border-2 ${borderStyle} rounded-xl px-4 py-3 font-bold transition-colors outline-none focus:border-red-500 ${textColor}`}
+                                                className={`w-full ${inputBg} border-2 ${borderStyle} rounded-xl px-4 py-3 font-bold transition-all outline-none focus:border-red-500 focus:ring-4 focus:ring-red-500/20 ${textColor}`}
                                             />
                                             <span className={`font-bold transition-colors ${subTextColor}`}>Menit</span>
                                         </div>
@@ -191,10 +194,11 @@ export default function PracticeConfig() {
 
                 <button
                     onClick={handleStart}
-                    className="w-full mt-12 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white font-black py-5 rounded-2xl text-xl shadow-xl shadow-red-200 transition-all transform active:scale-[0.98] flex items-center justify-center gap-3 group"
+                    className="w-full mt-12 relative overflow-hidden bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-500 hover:to-rose-500 text-white font-black py-5 rounded-2xl text-xl shadow-[0_0_40px_rgba(225,29,72,0.3)] transition-all transform hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center gap-3 group border border-white/20"
                 >
-                    <span>Mulai Kuis Sekarang</span>
-                    <span className="text-2xl transition-transform group-hover:translate-x-2">→</span>
+                    <span className="relative z-10">Mulai Kuis Sekarang</span>
+                    <span className="text-2xl transition-transform group-hover:translate-x-2 relative z-10">→</span>
+                    <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out z-0"></div>
                 </button>
             </div>
         </div>

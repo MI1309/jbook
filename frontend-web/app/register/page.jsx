@@ -1,7 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useAuth } from '@/context/AuthContext';
+import { useTheme } from '@/context/ThemeContext';
 import Link from 'next/link';
 import { GoogleLogin } from '@react-oauth/google';
 
@@ -11,6 +12,7 @@ export default function RegisterPage() {
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const { register, googleLogin } = useAuth();
+    const { theme, mounted } = useTheme();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -21,67 +23,100 @@ export default function RegisterPage() {
         }
     };
 
+    if (!mounted) return null;
+
+    const isDark = theme === 'dark';
+
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-            <div className="max-w-md w-full space-y-8 bg-white p-8 rounded-lg shadow-md">
-                <div>
-                    <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-                        Buat Akun Baru
+        <div className={`min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 transition-all duration-500 relative overflow-hidden ${
+            isDark 
+                ? 'bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-neutral-900 via-black to-neutral-950' 
+                : 'bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-red-50 via-gray-50 to-white'
+        }`}>
+            {/* Animated Background Elements */}
+            <div className={`absolute top-0 left-0 w-96 h-96 rounded-full blur-[100px] opacity-20 animate-pulse ${isDark ? 'bg-red-900' : 'bg-red-200'}`} />
+            <div className={`absolute bottom-0 right-0 w-96 h-96 rounded-full blur-[100px] opacity-10 animate-pulse delay-700 ${isDark ? 'bg-red-800' : 'bg-red-100'}`} />
+
+            <div className={`max-w-md w-full space-y-8 p-10 rounded-[2.5rem] backdrop-blur-xl border transition-all duration-300 relative z-10 ${
+                isDark 
+                    ? 'bg-black/40 border-white/5 shadow-[0_0_50px_-12px_rgba(220,38,38,0.2)]' 
+                    : 'bg-white/80 border-gray-100 shadow-xl shadow-red-500/5'
+            }`}>
+                <div className="text-center">
+                    <div className="inline-block p-4 rounded-3xl bg-red-600 shadow-lg shadow-red-500/40 mb-6 group transition-transform hover:scale-110">
+                        <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
+                        </svg>
+                    </div>
+                    <h2 className={`text-4xl font-black tracking-tight transition-colors ${isDark ? 'text-white' : 'text-gray-900'}`}>
+                        Daftar
                     </h2>
-                    <p className="mt-2 text-center text-sm text-gray-600">
-                        Atau{' '}
-                        <Link href="/login" className="font-medium text-red-600 hover:text-red-500">
-                            masuk ke akun yang ada
-                        </Link>
+                    <p className={`mt-3 text-sm font-bold tracking-wide uppercase transition-colors ${isDark ? 'text-neutral-500' : 'text-gray-400'}`}>
+                        Mulai Perjalanan JBook Kamu
                     </p>
                 </div>
-                <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
+                
+                <form className="mt-10 space-y-6" onSubmit={handleSubmit}>
                     {error && (
-                        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg flex items-center shadow-sm" role="alert">
-                            <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                            <span className="block sm:inline text-sm font-medium">{error}</span>
+                        <div className={`p-4 rounded-2xl text-xs font-black uppercase tracking-widest border animate-shake transition-colors ${
+                            isDark ? 'bg-red-950/20 border-red-900/50 text-red-400' : 'bg-red-50 border-red-200 text-red-600'
+                        }`} role="alert">
+                            <span className="flex items-center gap-2">
+                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                                {error}
+                            </span>
                         </div>
                     )}
 
-                    <div className="space-y-4">
-                        <div>
-                            <label htmlFor="username" className="block text-sm font-medium text-gray-700 mb-1">Username</label>
+                    <div className="space-y-5">
+                        <div className="group">
+                            <label htmlFor="username" className={`block text-[10px] font-black uppercase tracking-[0.2em] mb-2 ml-1 transition-colors ${isDark ? 'text-neutral-600 group-focus-within:text-red-500' : 'text-gray-400 group-focus-within:text-red-600'}`}>Username</label>
                             <input
                                 id="username"
                                 name="username"
                                 type="text"
                                 required
-                                className="appearance-none relative block w-full px-4 py-3 border border-gray-300 placeholder-gray-400 text-gray-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors sm:text-sm"
-                                placeholder="Pilih username"
+                                className={`appearance-none block w-full px-5 py-4 border rounded-2xl font-bold transition-all focus:outline-none focus:ring-2 focus:ring-red-500/50 sm:text-sm ${
+                                    isDark 
+                                        ? 'bg-neutral-900/50 border-neutral-800 text-white placeholder-neutral-700 hover:bg-neutral-900' 
+                                        : 'bg-gray-50 border-gray-100 text-gray-900 placeholder-gray-400 hover:bg-white'
+                                }`}
+                                placeholder="Username"
                                 value={username}
                                 onChange={(e) => setUsername(e.target.value)}
                             />
                         </div>
 
-                        <div>
-                            <label htmlFor="email-address" className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                        <div className="group">
+                            <label htmlFor="email-address" className={`block text-[10px] font-black uppercase tracking-[0.2em] mb-2 ml-1 transition-colors ${isDark ? 'text-neutral-600 group-focus-within:text-red-500' : 'text-gray-400 group-focus-within:text-red-600'}`}>Email</label>
                             <input
                                 id="email-address"
                                 name="email"
                                 type="email"
-                                autoComplete="email"
                                 required
-                                className="appearance-none relative block w-full px-4 py-3 border border-gray-300 placeholder-gray-400 text-gray-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors sm:text-sm"
+                                className={`appearance-none block w-full px-5 py-4 border rounded-2xl font-bold transition-all focus:outline-none focus:ring-2 focus:ring-red-500/50 sm:text-sm ${
+                                    isDark 
+                                        ? 'bg-neutral-900/50 border-neutral-800 text-white placeholder-neutral-700 hover:bg-neutral-900' 
+                                        : 'bg-gray-50 border-gray-100 text-gray-900 placeholder-gray-400 hover:bg-white'
+                                }`}
                                 placeholder="nama@email.com"
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
                             />
                         </div>
 
-                        <div>
-                            <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">Password</label>
+                        <div className="group">
+                            <label htmlFor="password" className={`block text-[10px] font-black uppercase tracking-[0.2em] mb-2 ml-1 transition-colors ${isDark ? 'text-neutral-600 group-focus-within:text-red-500' : 'text-gray-400 group-focus-within:text-red-600'}`}>Password</label>
                             <input
                                 id="password"
                                 name="password"
                                 type="password"
-                                autoComplete="new-password"
                                 required
-                                className="appearance-none relative block w-full px-4 py-3 border border-gray-300 placeholder-gray-400 text-gray-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors sm:text-sm"
+                                className={`appearance-none block w-full px-5 py-4 border rounded-2xl font-bold transition-all focus:outline-none focus:ring-2 focus:ring-red-500/50 sm:text-sm ${
+                                    isDark 
+                                        ? 'bg-neutral-900/50 border-neutral-800 text-white placeholder-neutral-700 hover:bg-neutral-900' 
+                                        : 'bg-gray-50 border-gray-100 text-gray-900 placeholder-gray-400 hover:bg-white'
+                                }`}
                                 placeholder="Minimal 8 karakter"
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
@@ -89,37 +124,53 @@ export default function RegisterPage() {
                         </div>
                     </div>
 
-                    <div>
-                        <button
-                            type="submit"
-                            className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-bold rounded-lg text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-all shadow-sm hover:shadow-md"
-                        >
-                            Daftar Sekarang
-                        </button>
-                    </div>
+                    <button
+                        type="submit"
+                        className="w-full group relative flex justify-center py-4 px-4 border border-transparent text-xs font-black uppercase tracking-[0.2em] rounded-2xl text-white bg-red-600 hover:bg-red-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-all shadow-xl shadow-red-600/20 active:scale-95 overflow-hidden"
+                    >
+                        <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-white/0 via-white/20 to-white/0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 ease-in-out" />
+                        Daftar Sekarang
+                    </button>
                 </form>
 
-                <div className="mt-8 pt-6 border-t border-gray-100">
+                <div className="mt-10">
                     <div className="relative">
                         <div className="absolute inset-0 flex items-center">
-                            <div className="w-full border-t border-gray-200" />
+                            <div className={`w-full border-t ${isDark ? 'border-neutral-800' : 'border-gray-100'}`} />
                         </div>
-                        <div className="relative flex justify-center text-sm">
-                            <span className="px-4 bg-white text-gray-500 font-medium">
-                                Atau daftar cepat dengan
+                        <div className="relative flex justify-center text-[10px] font-black uppercase tracking-[0.2em]">
+                            <span className={`px-4 transition-colors ${isDark ? 'bg-black text-neutral-600' : 'bg-white text-gray-400'}`}>
+                                Atau
                             </span>
                         </div>
                     </div>
 
-                    <div className="mt-6 flex justify-center hover:scale-105 transition-transform duration-200">
-                        <GoogleLogin
-                            onSuccess={googleLogin}
-                            onError={() => setError('Google Registration Failed')}
-                            shape="pill"
-                        />
+                    <div className="mt-8 flex justify-center">
+                        <div className={`p-1 rounded-2xl transition-all ${isDark ? 'bg-neutral-800/50 hover:bg-neutral-800' : 'bg-gray-50 hover:bg-white'}`}>
+                            <GoogleLogin
+                                theme={isDark ? "dark" : "outline"}
+                                shape="circle"
+                                onSuccess={googleLogin}
+                                onError={() => setError('Google Registration Failed')}
+                            />
+                        </div>
                     </div>
+                </div>
+
+                <div className="text-center mt-10 space-y-6">
+                    <p className={`text-sm font-medium transition-colors ${isDark ? 'text-neutral-500' : 'text-gray-500'}`}>
+                        Sudah punya akun?{' '}
+                        <Link href="/login" className="font-black text-red-600 hover:text-red-400 transition-colors">
+                            Masuk
+                        </Link>
+                    </p>
+                    <Link href="/" className={`inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-widest transition-all ${isDark ? 'text-neutral-700 hover:text-white' : 'text-gray-400 hover:text-gray-900'}`}>
+                        <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg>
+                        Beranda
+                    </Link>
                 </div>
             </div>
         </div>
     );
 }
+

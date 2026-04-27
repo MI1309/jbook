@@ -45,6 +45,21 @@
 
 ## 2. Struktur Direktori
 
+### 2.1 Dokumentasi Spesifik (Deep Dive)
+Untuk pemahaman mendalam pada sistem tertentu, silakan baca dokumen berikut:
+
+- 📊 **[Sistem Rating Kesalahan](file:///home/imron/jbook/frontend-web/docs/SISTEM-RATING-KESALAHAN.md)**: Logika penentuan status "Perbaiki/Cukup/Lumayan".
+- 💡 **[Logika Saran Belajar](file:///home/imron/jbook/frontend-web/docs/LOGIKA-SARAN-BELAJAR.md)**: Bagaimana algoritma memberikan rekomendasi langkah belajar.
+- 📝 **[Logika Sistem Latihan](file:///home/imron/jbook/frontend-web/docs/LOGIKA-SISTEM-LATIHAN.md)**: Alur kuis dari pemilihan soal hingga pengiriman hasil.
+- 🔗 **[Logika Relasi Data](file:///home/imron/jbook/frontend-web/docs/LOGIKA-RELASI-DATA.md)**: Mekanisme "Bedah Kanji" dan keterhubungan antar materi.
+- 📦 **[Logika Pengelolaan Data](file:///home/imron/jbook/frontend-web/docs/LOGIKA-PENGELOLAAN-DATA-LATIHAN.md)**: Arsitektur penyatuan data untuk efisiensi impor/ekspor.
+- 📥 **[Logika Download Offline](file:///home/imron/jbook/frontend-web/docs/LOGIKA-DOWNLOAD-OFFLINE.md)**: Proses sinkronisasi database massal ke IndexedDB.
+- ⚙️ **[Logika Sistem Admin](file:///home/imron/jbook/frontend-web/docs/LOGIKA-SISTEM-ADMIN.md)**: Pusat kendali keamanan, manajemen konten, dan ekspor data.
+
+---
+
+## 2. Struktur Direktori
+
 ```
 frontend-web/
 ├── app/                    → Route pages (Next.js App Router)
@@ -188,9 +203,15 @@ Klik tombol tema
     └─ document.documentElement.classList.toggle('dark', newTheme === 'dark')
 ```
 
+### F. Sistem Tema (Hitam-Putih)
+Dark Mode premium dengan efek Glassmorphism.
+- **File Kunci**:
+  - `context/ThemeContext.js` (Penyimpan state tema)
+  - `app/globals.css` (Definisi variabel warna & animasi premium)
+
 ---
 
-## 5. Konteks Latihan (PracticeContext)
+## 6. Konteks Latihan (PracticeContext)
 
 **File:** `context/PracticeContext.js`
 
@@ -198,7 +219,7 @@ Menyimpan state global `isPracticing` (boolean). Digunakan untuk menyembunyikan 
 
 ---
 
-## 6. Lapisan Data & API (lib/api.js)
+## 7. Lapisan Data & API (lib/api.js)
 
 **File:** `lib/api.js`  
 **Base URL:** `process.env.NEXT_PUBLIC_API_URL` (default: `https://imronm.pythonanywhere.com/api`)

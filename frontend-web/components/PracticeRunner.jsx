@@ -316,8 +316,8 @@ function PracticeContent() {
 
     if (finished) {
         return (
-            <div className="container mx-auto px-4 py-8 flex flex-col items-center justify-center min-h-[60vh]">
-                <div className={`${cardBg} rounded-[2.5rem] shadow-2xl p-4 md:p-8 max-w-md w-full text-center border-2 ${theme === 'dark' ? 'border-red-950/20' : 'border-red-100'} relative overflow-hidden transition-colors`}>
+            <div className="container mx-auto px-4 py-8 flex flex-col items-center justify-center min-h-[60vh] relative z-10">
+                <div className={`${theme === 'dark' ? 'bg-[#0a0a0a]/80' : 'bg-white/80'} backdrop-blur-2xl rounded-[3rem] shadow-[0_8px_40px_rgb(0,0,0,0.12)] p-4 md:p-8 max-w-md w-full text-center border ${theme === 'dark' ? 'border-white/5' : 'border-white/60'} relative overflow-hidden transition-colors`}>
                     <div className="absolute top-0 inset-x-0 h-2 bg-red-600"></div>
 
                     <div className="mb-6">
@@ -452,16 +452,18 @@ function PracticeContent() {
                         </span>
                     </div>
                 </div>
-                <div className={`h-3 rounded-full overflow-hidden transition-colors ${theme === 'dark' ? 'bg-red-950/20' : 'bg-gray-100'}`}>
+                <div className={`h-3 rounded-full overflow-hidden transition-colors shadow-inner ${theme === 'dark' ? 'bg-black/40 border border-white/5' : 'bg-gray-100 border border-gray-200'}`}>
                     <div
-                        className="h-full bg-gradient-to-r from-red-500 to-red-600 transition-all duration-500 ease-out"
+                        className="h-full bg-gradient-to-r from-red-600 to-rose-500 transition-all duration-500 ease-out relative"
                         style={{ width: `${progressPercent}%` }}
-                    ></div>
+                    >
+                        <div className="absolute inset-0 bg-white/20 animate-pulse"></div>
+                    </div>
                 </div>
             </div>
 
             {/* Question Card */}
-            <div className={`${cardBg} rounded-[2.5rem] shadow-2xl p-4 md:p-8 mb-8 text-center border-2 ${borderStyle} relative flex-grow flex flex-col justify-center transition-colors`}>
+            <div className={`${theme === 'dark' ? 'bg-[#0a0a0a]/70' : 'bg-white/70'} backdrop-blur-2xl rounded-[3rem] shadow-[0_8px_30px_rgb(0,0,0,0.08)] p-4 md:p-8 mb-8 text-center border ${theme === 'dark' ? 'border-white/5' : 'border-white/60'} relative flex-grow flex flex-col justify-center transition-all`}>
                 <div className="mb-8 relative p-4 flex flex-col items-center">
                     <span className={`text-[10px] font-black uppercase tracking-[0.2em] mb-4 block transition-colors ${subTextColor}`}>
                         {currentQuestion.type === 'kanji' ? 'Kanji' : currentQuestion.type === 'vocab' ? 'Kosakata' : 'Tata Bahasa'}
@@ -496,18 +498,18 @@ function PracticeContent() {
 
                 <div className="grid gap-3 grid-cols-1 md:grid-cols-2">
                     {currentQuestion.options.map((option, idx) => {
-                        let btnClass = "p-4 text-base md:text-lg font-black border-2 rounded-2xl transition-all relative break-words ";
+                        let btnClass = "p-4 text-base md:text-lg font-black border-2 rounded-2xl transition-all duration-300 relative break-words ";
 
                         if (isAnswered) {
                             if (option.is_correct) {
-                                btnClass += theme === 'dark' ? "bg-green-950/40 border-green-500 text-green-400 shadow-lg shadow-green-500/10" : "bg-green-50 border-green-500 text-green-700 shadow-sm";
+                                btnClass += theme === 'dark' ? "bg-green-900/30 border-green-500 text-green-400 shadow-[0_0_20px_rgba(34,197,94,0.2)] scale-[1.02]" : "bg-green-50 border-green-500 text-green-700 shadow-[0_0_20px_rgba(34,197,94,0.3)] scale-[1.02]";
                             } else if (selectedOption === option && !option.is_correct) {
                                 btnClass += theme === 'dark' ? "bg-red-950/40 border-red-500 text-red-400 shadow-lg shadow-red-500/10" : "bg-red-50 border-red-500 text-red-700";
                             } else {
                                 btnClass += theme === 'dark' ? "bg-black/20 border-gray-900 text-gray-600 opacity-40" : "bg-gray-50 border-gray-100 text-gray-300 opacity-60";
                             }
                         } else {
-                            btnClass += `${cardBg} ${borderStyle} ${textColor} hover:border-brand hover:bg-brand/5 cursor-pointer hover:shadow-xl transform hover:-translate-y-1`;
+                            btnClass += `${theme === 'dark' ? 'bg-[#0a0a0a]/50' : 'bg-white/50'} ${borderStyle} ${textColor} hover:border-rose-400 dark:hover:border-rose-700 hover:bg-rose-50 dark:hover:bg-rose-950/30 cursor-pointer hover:shadow-lg transform hover:-translate-y-1 active:scale-95`;
                         }
 
                         return (
@@ -533,12 +535,13 @@ function PracticeContent() {
                     <div className="animate-fade-in-up w-full max-w-sm px-4">
                         <button
                             onClick={handleNext}
-                            className={`w-full py-4 rounded-xl font-bold text-white shadow-lg transition-all transform hover:scale-105 ${selectedOption?.is_correct
-                                ? "bg-green-500 hover:bg-green-600 shadow-green-200"
-                                : "bg-red-500 hover:bg-red-600 shadow-red-200"
+                            className={`w-full py-4 rounded-xl font-bold text-white shadow-xl transition-all transform hover:scale-[1.02] active:scale-[0.98] relative overflow-hidden group ${selectedOption?.is_correct
+                                ? "bg-gradient-to-r from-green-500 to-emerald-600 shadow-green-500/30"
+                                : "bg-gradient-to-r from-red-500 to-rose-600 shadow-red-500/30"
                                 }`}
                         >
-                            {currentIndex < questions.length - 1 ? "Lanjut (Klik untuk skip)" : "Lihat Hasil"}
+                            <span className="relative z-10">{currentIndex < questions.length - 1 ? "Lanjut (Klik untuk skip)" : "Lihat Hasil"}</span>
+                            <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out z-0"></div>
                         </button>
                         {!selectedOption?.is_correct && (
                             <p className={`text-center text-[10px] font-black uppercase tracking-widest mt-4 transition-colors ${subTextColor}`}>Otomatis lanjut dalam 2,5 detik...</p>

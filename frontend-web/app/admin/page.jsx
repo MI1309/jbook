@@ -2,12 +2,15 @@
 
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/context/AuthContext';
+import { useTheme } from '@/context/ThemeContext';
 import { API_URL } from '@/lib/api';
 import { useRouter } from 'next/navigation';
 import Cookies from 'js-cookie';
 import Link from 'next/link';
 
 export default function AdminDashboard() {
+    const { theme } = useTheme();
+    const [mounted, setMounted] = useState(false);
     const [isSearching, setIsSearching] = useState(false);
     const [stats, setStats] = useState({ kanji_count: 0, bunpo_count: 0, blog_count: 0 });
     const [searchQuery, setSearchQuery] = useState('');
@@ -16,12 +19,13 @@ export default function AdminDashboard() {
     const { user } = useAuth();
 
     useEffect(() => {
+        setMounted(true);
         fetchStats();
     }, []);
 
     useEffect(() => {
         const delayDebounceFn = setTimeout(() => {
-            if (searchQuery.length > 2) {
+            if (searchQuery.length > 0) {
                 performSearch();
             } else {
                 setSearchResults([]);
@@ -68,143 +72,150 @@ export default function AdminDashboard() {
         router.push(`/admin/export?type=${type}`);
     };
 
+    if (!mounted) return null;
+
     return (
-        <div className="max-w-7xl mx-auto space-y-8 pb-10">
-            <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
-                <div>
-                    <h2 className="text-3xl font-black text-gray-900 tracking-tight">Dashboard</h2>
-                    <p className="text-gray-500 mt-1 font-medium">Welcome back, <span className="text-red-600">{user?.username}</span> 👋</p>
+        <div className="max-w-7xl mx-auto space-y-10 pb-20">
+            {/* Header Section */}
+            <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-8">
+                <div className="animate-in fade-in slide-in-from-left-6 duration-700">
+                    <h2 className={`text-6xl font-black tracking-tighter ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>
+                        Admin <span className="text-red-600">Panel</span>
+                    </h2>
+                    <p className={`mt-4 text-sm font-bold uppercase tracking-[0.2em] flex items-center gap-2 ${theme === 'dark' ? 'text-neutral-500' : 'text-gray-400'}`}>
+                        <span className="w-12 h-[2px] bg-red-600"></span>
+                        Otoritas: <span className="text-red-600">{user?.username}</span>
+                    </p>
                 </div>
                 
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-                    <button 
-                        onClick={() => handleExport('kanji')}
-                        className="bg-white hover:bg-red-50 text-gray-700 border border-gray-200 hover:border-red-200 px-4 py-2.5 rounded-xl text-xs font-bold transition-all flex flex-col items-center justify-center gap-1 shadow-sm active:scale-95"
-                    >
-                        <span className="text-lg">🉐</span> Kanji
-                    </button>
-                    <button 
-                        onClick={() => handleExport('bunpo')}
-                        className="bg-white hover:bg-red-50 text-gray-700 border border-gray-200 hover:border-red-200 px-4 py-2.5 rounded-xl text-xs font-bold transition-all flex flex-col items-center justify-center gap-1 shadow-sm active:scale-95"
-                    >
-                        <span className="text-lg">📚</span> Bunpo
-                    </button>
-                    <button 
-                        onClick={() => handleExport('kotoba')}
-                        className="bg-white hover:bg-red-50 text-gray-700 border border-gray-200 hover:border-red-200 px-4 py-2.5 rounded-xl text-xs font-bold transition-all flex flex-col items-center justify-center gap-1 shadow-sm active:scale-95"
-                    >
-                        <span className="text-lg">🗣️</span> Kotoba
-                    </button>
-                    <button 
-                        onClick={() => handleExport('particle')}
-                        className="bg-white hover:bg-red-50 text-gray-700 border border-gray-200 hover:border-red-200 px-4 py-2.5 rounded-xl text-xs font-bold transition-all flex flex-col items-center justify-center gap-1 shadow-sm active:scale-95"
-                    >
-                        <span className="text-lg">⚓</span> Partikel
-                    </button>
+                <div className="flex flex-wrap gap-3">
+                    {[
+                        { id: 'kanji', icon: '🉐', label: 'Kanji' },
+                        { id: 'kotoba', icon: '🗣️', label: 'Kotoba' },
+                        { id: 'bunpo', icon: '📚', label: 'Bunpo' },
+                        { id: 'particle', icon: '⚓', label: 'Partikel' }
+                    ].map((item) => (
+                        <button 
+                            key={item.id}
+                            onClick={() => handleExport(item.id)}
+                            className={`px-5 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all active:scale-95 border flex items-center gap-3 ${
+                                theme === 'dark' 
+                                ? 'bg-white/5 border-white/5 text-neutral-400 hover:text-white hover:border-white/20' 
+                                : 'bg-white border-gray-100 text-gray-600 hover:border-red-200 hover:text-red-600 shadow-sm'
+                            }`}
+                        >
+                            <span className="text-lg">{item.icon}</span>
+                            {item.label}
+                        </button>
+                    ))}
                 </div>
             </div>
 
-            {/* Stats Grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 relative overflow-hidden group hover:shadow-md transition-all">
-                    <div className="absolute top-0 right-0 p-3 opacity-5 text-6xl group-hover:scale-110 transition-transform">🉐</div>
-                    <h3 className="text-gray-400 text-[10px] font-black uppercase tracking-widest">Total Kanji</h3>
-                    <p className="text-3xl font-black text-gray-900 mt-1">{stats.kanji_count}</p>
-                    <div className="h-1 w-12 bg-blue-500 mt-4 rounded-full"></div>
-                </div>
-                <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 relative overflow-hidden group hover:shadow-md transition-all">
-                    <div className="absolute top-0 right-0 p-3 opacity-5 text-6xl group-hover:scale-110 transition-transform">📚</div>
-                    <h3 className="text-gray-400 text-[10px] font-black uppercase tracking-widest">Total Bunpo</h3>
-                    <p className="text-3xl font-black text-gray-900 mt-1">{stats.bunpo_count}</p>
-                    <div className="h-1 w-12 bg-green-500 mt-4 rounded-full"></div>
-                </div>
-                <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 relative overflow-hidden group hover:shadow-md transition-all">
-                    <div className="absolute top-0 right-0 p-3 opacity-5 text-6xl group-hover:scale-110 transition-transform">✍️</div>
-                    <h3 className="text-gray-400 text-[10px] font-black uppercase tracking-widest">Total Blog</h3>
-                    <p className="text-3xl font-black text-gray-900 mt-1">{stats.blog_count}</p>
-                    <div className="h-1 w-12 bg-purple-500 mt-4 rounded-full"></div>
-                </div>
+            {/* Stats Grid - Vibrant & High Contrast */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                {[
+                    { label: 'Total Kanji', count: stats.kanji_count, icon: '🉐', color: 'from-blue-600 to-indigo-700', shadow: 'shadow-blue-500/20' },
+                    { label: 'Total Bunpo', count: stats.bunpo_count, icon: '📚', color: 'from-red-600 to-rose-700', shadow: 'shadow-red-500/20' },
+                    { label: 'Total Blog', count: stats.blog_count, icon: '✍️', color: 'from-amber-500 to-orange-600', shadow: 'shadow-amber-500/20' }
+                ].map((stat, idx) => (
+                    <div 
+                        key={idx}
+                        className={`relative overflow-hidden p-8 rounded-[2rem] bg-gradient-to-br ${stat.color} ${stat.shadow} text-white group hover:scale-[1.02] transition-all duration-500`}
+                    >
+                        <div className="absolute -right-4 -bottom-4 opacity-10 text-[10rem] font-black pointer-events-none group-hover:scale-110 group-hover:-rotate-6 transition-transform duration-700">
+                            {stat.icon}
+                        </div>
+                        <h3 className="text-[10px] font-black uppercase tracking-[0.2em] opacity-80">{stat.label}</h3>
+                        <p className="text-6xl font-black mt-2 tracking-tighter">{stat.count}</p>
+                        <div className="mt-8 flex items-center gap-2">
+                            <div className="w-10 h-1 bg-white/30 rounded-full overflow-hidden">
+                                <div className="h-full bg-white w-2/3"></div>
+                            </div>
+                            <span className="text-[10px] font-bold uppercase tracking-widest">Active Data</span>
+                        </div>
+                    </div>
+                ))}
             </div>
 
-            {/* Premium Search Engine */}
-            <div className="bg-white rounded-3xl shadow-xl shadow-gray-200/50 border border-gray-100 overflow-hidden">
-                <div className="p-8 md:p-10">
-                    <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+            {/* Search Engine - Glassmorphism UI */}
+            <div className={`backdrop-blur-xl border p-1 rounded-[3rem] transition-all duration-500 ${
+                theme === 'dark' ? 'bg-white/5 border-white/5 shadow-2xl' : 'bg-white border-gray-100 shadow-xl shadow-gray-200/50'
+            }`}>
+                <div className="p-8 md:p-12">
+                    <div className="flex items-center gap-4 mb-10 ml-2">
+                        <div className="w-12 h-12 bg-red-600 rounded-2xl flex items-center justify-center shadow-lg shadow-red-500/20">
+                            <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                            </svg>
+                        </div>
                         <div>
-                            <h3 className="text-2xl font-black text-gray-900 flex items-center gap-3">
-                                <span className="p-2 bg-red-50 text-red-600 rounded-xl">🔍</span>
-                                Search Engine
-                            </h3>
-                            <p className="text-sm text-gray-500 font-medium mt-1">Cari apa saja di database JBook</p>
+                            <h3 className={`text-2xl font-black tracking-tight ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>OmniSearch Engine</h3>
+                            <p className="text-[10px] font-bold text-neutral-500 uppercase tracking-widest">Global Database Query</p>
                         </div>
                     </div>
 
                     <div className="relative group">
                         <input
                             type="text"
-                            className="w-full p-6 pl-14 bg-gray-50 border-2 border-transparent rounded-2xl focus:bg-white focus:border-red-500 focus:ring-4 focus:ring-red-500/10 transition-all text-xl font-medium text-gray-800 placeholder:text-gray-400 shadow-inner"
+                            className={`w-full p-8 pl-16 rounded-3xl transition-all text-2xl font-bold outline-none ring-0 ${
+                                theme === 'dark' 
+                                ? 'bg-neutral-900/50 text-white placeholder-neutral-700 focus:bg-neutral-900 focus:ring-2 focus:ring-red-600/50' 
+                                : 'bg-gray-50 text-gray-800 placeholder:text-gray-300 focus:bg-white focus:ring-4 focus:ring-red-500/10 border-2 border-transparent focus:border-red-500'
+                            }`}
                             placeholder="Ketik Kanji, Bunpo, atau konten Blog..."
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
                         />
-                        <div className="absolute top-1/2 left-6 -translate-y-1/2 text-gray-400 group-focus-within:text-red-500 transition-colors">
+                        <div className="absolute top-1/2 left-8 -translate-y-1/2 text-neutral-600 group-focus-within:text-red-500 transition-colors">
                             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M12 11c0 3.517-1.009 6.799-2.753 9.571m-3.44-2.04l.054-.09A10.003 10.003 0 0012 20c4.478 0 8.268-2.943 9.542-7H12M12 4c2.21 0 4 1.79 4 4s-1.79 4-4 4-4-1.79-4-4 1.79-4 4-4z" />
                             </svg>
                         </div>
                         {isSearching && (
-                            <div className="absolute top-1/2 right-6 -translate-y-1/2">
-                                <div className="animate-spin h-6 w-6 border-2 border-red-500 border-t-transparent rounded-full"></div>
+                            <div className="absolute top-1/2 right-8 -translate-y-1/2">
+                                <div className="animate-spin h-6 w-6 border-4 border-red-600/20 border-t-red-600 rounded-full"></div>
                             </div>
                         )}
                     </div>
 
-                    {/* Search Results */}
+                    {/* Search Results - Refined Grid */}
                     {searchResults.length > 0 && (
-                        <div className="mt-10 space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-500">
-                            <div className="flex items-center justify-between border-b border-gray-100 pb-4 mb-4">
-                                <h4 className="text-xs font-black text-gray-400 uppercase tracking-widest">Matching Results ({searchResults.length})</h4>
-                                <button onClick={() => setSearchQuery('')} className="text-xs font-bold text-gray-400 hover:text-red-600 transition-colors">Clear</button>
+                        <div className="mt-12 space-y-6 animate-in fade-in zoom-in-95 duration-500">
+                            <div className="flex items-center justify-between px-2">
+                                <h4 className="text-[10px] font-black text-neutral-500 uppercase tracking-[0.2em]">Hasil Pencarian ({searchResults.length})</h4>
+                                <button onClick={() => setSearchQuery('')} className="text-[10px] font-black text-red-600 uppercase tracking-widest hover:underline">Reset</button>
                             </div>
                             
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 {searchResults.map((result) => (
                                     <Link href={`/admin/${result.type}/${result.id}`} key={result.id} className="group">
-                                        <div className="p-5 bg-white border border-gray-100 rounded-2xl hover:border-red-200 hover:shadow-lg hover:shadow-red-500/5 transition-all active:scale-[0.98]">
+                                        <div className={`p-6 rounded-[2rem] border transition-all active:scale-[0.98] ${
+                                            theme === 'dark'
+                                            ? 'bg-white/5 border-white/5 hover:border-white/20 hover:bg-white/10'
+                                            : 'bg-white border-gray-100 hover:border-red-100 hover:shadow-xl hover:shadow-red-500/5'
+                                        }`}>
                                             <div className="flex justify-between items-start">
-                                                <div className="flex items-start gap-4">
-                                                    <div className={`p-3 rounded-xl font-black text-xs uppercase tracking-wider ${
-                                                        result.type === 'kanji' ? 'bg-blue-50 text-blue-600' :
-                                                        result.type === 'bunpo' ? 'bg-green-50 text-green-600' :
-                                                        'bg-purple-50 text-purple-600'
+                                                <div className="flex items-center gap-5">
+                                                    <div className={`w-14 h-14 rounded-2xl flex items-center justify-center text-xl font-black shadow-lg ${
+                                                        result.type === 'kanji' ? 'bg-blue-600 text-white shadow-blue-600/20' :
+                                                        result.type === 'bunpo' ? 'bg-red-600 text-white shadow-red-600/20' :
+                                                        'bg-amber-500 text-white shadow-amber-500/20'
                                                     }`}>
-                                                        {result.type[0]}
+                                                        {result.title[0]}
                                                     </div>
                                                     <div>
-                                                        <h5 className="text-lg font-black text-gray-900 group-hover:text-red-600 transition-colors">{result.title}</h5>
-                                                        <p className="text-sm text-gray-500 font-medium line-clamp-1">{result.subtitle}</p>
+                                                        <h5 className={`text-xl font-black group-hover:text-red-500 transition-colors ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>{result.title}</h5>
+                                                        <p className="text-xs font-bold text-neutral-500 uppercase tracking-widest mt-1">{result.type}</p>
                                                     </div>
                                                 </div>
-                                                <div className="flex flex-wrap gap-1 justify-end max-w-[100px]">
-                                                    {result.tags.slice(0, 2).map((tag, idx) => (
-                                                        <span key={idx} className="bg-gray-50 text-gray-500 text-[10px] font-black px-2 py-0.5 rounded uppercase tracking-tighter">
-                                                            {tag}
-                                                        </span>
-                                                    ))}
+                                                <div className="text-neutral-700 group-hover:text-red-500 transition-colors">
+                                                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
                                                 </div>
                                             </div>
                                         </div>
                                     </Link>
                                 ))}
                             </div>
-                        </div>
-                    )}
-
-                    {searchQuery.length > 2 && searchResults.length === 0 && !isSearching && (
-                        <div className="mt-10 text-center py-12 bg-gray-50 rounded-3xl border-2 border-dashed border-gray-200">
-                            <div className="text-4xl mb-4">🌪️</div>
-                            <p className="text-gray-500 font-bold italic">No results found for "{searchQuery}"</p>
-                            <p className="text-xs text-gray-400 mt-1">Coba kata kunci lain atau periksa ejaan.</p>
                         </div>
                     )}
                 </div>

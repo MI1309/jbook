@@ -58,59 +58,28 @@ function PracticePageContent() {
     };
 
     return (
-        <div className="container mx-auto px-4 py-8">
-            {!isPlaying && (
-                <h1 className={`text-4xl font-extrabold mb-8 inline-block pb-2 border-b-4 border-red-500 transition-colors ${textColor}`}>
-                    Latihan <span className="text-red-600 dark:text-red-500">& Analitik</span>
-                </h1>
-            )}
+        <div className="relative min-h-screen">
+            {/* Decorative Background Glows */}
+            <div className="fixed inset-0 overflow-hidden pointer-events-none z-[-1]">
+                <div className="absolute top-[-10%] left-[-10%] w-[40vw] h-[40vw] rounded-full bg-red-400/20 dark:bg-red-900/20 blur-[120px] mix-blend-multiply dark:mix-blend-screen animate-pulse duration-10000" />
+                <div className="absolute bottom-[-10%] right-[-10%] w-[50vw] h-[50vw] rounded-full bg-rose-400/20 dark:bg-rose-900/20 blur-[150px] mix-blend-multiply dark:mix-blend-screen animate-pulse duration-7000 delay-1000" />
+            </div>
+
+            <div className="container mx-auto px-4 py-8 relative z-10">
+                {!isPlaying && (
+                    <div className="mb-10">
+                        <h1 className={`text-5xl md:text-6xl font-black mb-2 tracking-tight transition-colors ${textColor}`}>
+                            Latihan <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-rose-500 drop-shadow-sm">& Analitik</span>
+                        </h1>
+                        <div className="h-1.5 w-24 bg-gradient-to-r from-red-600 to-rose-500 rounded-full mt-4"></div>
+                    </div>
+                )}
 
             {/* Configuration Section */}
             <div className="mb-12">
                 {isPlaying ? <PracticeRunner /> : (
                     <div className="space-y-12">
                         <PracticeConfig />
-
-                        {/* Mistakes Review Section */}
-                        {analytics?.wrong_stats?.length > 0 && (
-                            <div className="animate-in fade-in slide-in-from-bottom-4 duration-700">
-                                <div className="flex items-center justify-between mb-6">
-                                    <div>
-                                        <h2 className={`text-2xl font-black transition-colors ${textColor}`}>Butuh Review?</h2>
-                                        <p className={`text-xs font-bold uppercase tracking-widest transition-colors ${!mounted ? 'text-gray-400' : (theme === 'dark' ? 'text-gray-500' : 'text-gray-400')}`}>
-                                            Materi yang paling sering salah kamu jawab
-                                        </p>
-                                    </div>
-                                    <div className="h-0.5 flex-grow mx-6 bg-gradient-to-r from-red-600/20 to-transparent rounded-full hidden md:block"></div>
-                                </div>
-
-                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                                    {analytics.wrong_stats.map((mistake, idx) => (
-                                        <div 
-                                            key={idx}
-                                            onClick={() => handleOpenMistake(mistake)}
-                                            className={`group p-5 rounded-3xl border-2 transition-all cursor-pointer hover:border-red-500 hover:scale-[1.02] flex items-center justify-between ${!mounted ? 'bg-white border-gray-100' : (theme === 'dark' ? 'bg-[#0a0a0a] border-red-950/20' : 'bg-white border-gray-100')}`}
-                                        >
-                                            <div className="flex items-center gap-4">
-                                                <div className="w-12 h-12 rounded-2xl bg-red-600 flex items-center justify-center text-white text-xl font-black shadow-lg shadow-red-500/20 group-hover:rotate-6 transition-transform">
-                                                    {mistake.character?.length > 1 ? mistake.character[0] : (mistake.character || '？')}
-                                                </div>
-                                                <div>
-                                                    <h3 className={`font-black text-lg transition-colors ${textColor}`}>{mistake.character}</h3>
-                                                    <span className={`text-[9px] font-black uppercase tracking-widest transition-colors ${!mounted ? 'text-gray-400' : (theme === 'dark' ? 'text-gray-600' : 'text-gray-400')}`}>
-                                                        {mistake.type === 'vocab' ? 'Kotoba' : mistake.type === 'grammar' ? 'Bunpo' : 'Kanji'}
-                                                    </span>
-                                                </div>
-                                            </div>
-                                            <div className="text-right">
-                                                <div className="text-red-600 font-black text-xl leading-none">{mistake.count}x</div>
-                                                <div className="text-[9px] font-black uppercase tracking-tighter text-gray-400">salah</div>
-                                            </div>
-                                        </div>
-                                    ))}
-                                </div>
-                            </div>
-                        )}
                     </div>
                 )}
             </div>
@@ -138,6 +107,7 @@ function PracticePageContent() {
                     )}
                 </div>
             )}
+            </div>
         </div>
     );
 }

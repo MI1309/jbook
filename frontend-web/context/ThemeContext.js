@@ -17,6 +17,11 @@ export function ThemeProvider({ children }) {
         setTheme(initialTheme);
         document.documentElement.classList.toggle('dark', initialTheme === 'dark');
         setMounted(true);
+
+        // Remove preload class to re-enable transitions after initial render completes
+        setTimeout(() => {
+            document.documentElement.classList.remove('preload');
+        }, 50);
     }, []);
 
     const toggleTheme = () => {
