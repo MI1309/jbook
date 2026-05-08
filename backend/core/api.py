@@ -10,25 +10,10 @@ api = NinjaAPI(
     docs_url="/docs"
 )
 
-# Attach routers with a check to prevent double-attachment errors
-def register_routers(api_instance):
-    routers_to_add = [
-        ("/content", content_router),
-        ("/learning", learning_router),
-        ("/auth", users_router),
-        ("/admin", admin_router),
-    ]
-    
-    # In some environments, the module might be re-executed
-    # Ninja 1.x routers can only be attached once
-    for prefix, router in routers_to_add:
-        try:
-            api_instance.add_router(prefix, router)
-        except Exception:
-            # If already attached or other config error, we skip to allow the server to boot
-            pass
-
-register_routers(api)
+api.add_router("/content", content_router)
+api.add_router("/learning", learning_router)
+api.add_router("/auth", users_router)
+api.add_router("/admin", admin_router)
 
 try:
     api.add_router("/auth/token", refresh_router)
