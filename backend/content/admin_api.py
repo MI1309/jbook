@@ -8,7 +8,7 @@ from ninja.errors import HttpError
 from pydantic import BaseModel
 import csv
 from django.http import HttpResponse
-from .models import Kanji, Grammar, Blog, JLPTLevel, Vocab, Particle
+from .models import Kanji, Grammar, Blog, JLPTLevel, Vocab, Particle, Announcement
 from users.api import AuthBearer
 
 router = Router()
@@ -54,6 +54,7 @@ def admin_get_stats(request):
         "kanji_count": Kanji.objects.count(),
         "bunpo_count": Grammar.objects.count(),
         "blog_count": Blog.objects.count(),
+        "announcement_count": Announcement.objects.count(),
     }
 
 # Unified Search Engine
@@ -404,3 +405,44 @@ def admin_export_particle_csv(request, level: int = None):
         sentences_str = json.dumps(obj.sentences)
         writer.writerow([obj.character, obj.meaning, obj.explanation, obj.jlpt_level, sentences_str])
     return response
+
+# Announcement Schemas
+class AnnouncementCreateSchema(BaseModel):
+    title: str
+    content: str
+    type: str
+    is_active: bool = True
+    show_as_popup: bool = False
+
+class AnnouncementSchema(AnnouncementCreateSchema):
+    id: UUID
+    created_at: str
+    model_config = {"from_attributes": True}
+
+# Announcement CRUD
+@router.get("/announcements", auth=AdminAuth(), response=List[AnnouncementSchema])
+def admin_list_announcements(request):
+    return Announcement.objects.all().order_by('-created_at')
+
+@router.post("/announcements", auth=AdminAuth(), response=AnnouncementSchema)
+def admin_create_announcement(request, payload: AnnouncementCreateSchema):
+    announcement = Announcement.objects.create(**payload.dict())
+    return announcement
+
+@router.get("/announcements/{id}", auth=AdminAuth(), response=AnnouncementSchema)
+def admin_get_announcement(request, id: str):
+    return get_object_or_404(Announcement, id=id)
+
+@router.put("/announcements/{id}", auth=AdminAuth(), response=AnnouncementSchema)
+def admin_update_announcement(request, id: str, payload: AnnouncementCreateSchema):
+    announcement = get_object_or_404(Announcement, id=id)
+    for attr, value in payload.dict().items():
+        setattr(announcement, attr, value)
+    announcement.save()
+    return announcement
+
+@router.delete("/announcements/{id}", auth=AdminAuth())
+def admin_delete_announcement(request, id: str):
+    announcement = get_object_or_404(Announcement, id=id)
+    announcement.delete()
+    return {"success": True}

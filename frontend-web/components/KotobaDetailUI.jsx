@@ -23,14 +23,36 @@ export default function KotobaDetailUI({ vocab, onClose }) {
         async function fetchKanjiDetails() {
             if (uniqueKanjis.length === 0) return;
             try {
-                // Get all Kanjis from local DB to find meanings/readings
+                // 1. Try local DB first
                 const allKanjis = await dbGetAll('kanji');
+                let foundKanjis = [];
                 if (allKanjis && allKanjis.length > 0) {
-                    const filtered = allKanjis.filter(k => uniqueKanjis.includes(k.character));
-                    setKanjiDetails(filtered);
+                    foundKanjis = allKanjis.filter(k => uniqueKanjis.includes(k.character));
                 }
+
+                // 2. If not all kanjis found locally, fetch from API
+                if (foundKanjis.length < uniqueKanjis.length) {
+                    const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+                    const fetchPromises = uniqueKanjis
+                        .filter(char => !foundKanjis.some(fk => fk.character === char))
+                        .map(async (char) => {
+                            try {
+                                // Find ID first
+                                const id = await findIdByString('kanji', char);
+                                if (!id) return null;
+                                const res = await fetch(`${baseUrl}/api/content/kanji/${id}`);
+                                if (res.ok) return await res.json();
+                            } catch (e) { return null; }
+                            return null;
+                        });
+                    
+                    const apiResults = (await Promise.all(fetchPromises)).filter(Boolean);
+                    foundKanjis = [...foundKanjis, ...apiResults];
+                }
+
+                setKanjiDetails(foundKanjis);
             } catch (err) {
-                console.warn('[jbook-vocab] Failed to fetch kanji details for dissection:', err);
+                console.warn('[jbook-vocab] Failed to fetch kanji details:', err);
             }
         }
         fetchKanjiDetails();
@@ -88,9 +110,11 @@ export default function KotobaDetailUI({ vocab, onClose }) {
                                         <span key={index} className="px-0.5">{char}</span>
                                     )
                                 ))}
-                                <rt className="text-base sm:text-lg md:text-xl text-gray-900 dark:text-white font-black leading-none">
-                                    {vocab?.furigana || vocab?.reading || ''}
-                                </rt>
+                                {hasKanji(vocab?.word) && (
+                                    <rt className="text-base sm:text-lg md:text-xl text-gray-900 dark:text-white font-black leading-none">
+                                        {vocab?.furigana || vocab?.reading || ''}
+                                    </rt>
+                                )}
                             </ruby>
                         </div>
 

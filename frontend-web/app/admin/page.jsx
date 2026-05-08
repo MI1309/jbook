@@ -90,14 +90,15 @@ export default function AdminDashboard() {
                 
                 <div className="flex flex-wrap gap-3">
                     {[
-                        { id: 'kanji', icon: '🉐', label: 'Kanji' },
-                        { id: 'kotoba', icon: '🗣️', label: 'Kotoba' },
-                        { id: 'bunpo', icon: '📚', label: 'Bunpo' },
-                        { id: 'particle', icon: '⚓', label: 'Partikel' }
+                        { id: 'kanji', icon: '🉐', label: 'Kanji', href: '/admin/kanji' },
+                        { id: 'kotoba', icon: '🗣️', label: 'Kotoba', href: '/admin/kotoba' },
+                        { id: 'bunpo', icon: '📚', label: 'Bunpo', href: '/admin/bunpo' },
+                        { id: 'particle', icon: '⚓', label: 'Partikel', href: '/admin/particle' },
+                        { id: 'announcements', icon: '📢', label: 'Pengumuman', href: '/admin/announcements' }
                     ].map((item) => (
-                        <button 
+                        <Link 
                             key={item.id}
-                            onClick={() => handleExport(item.id)}
+                            href={item.href || '#'}
                             className={`px-5 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all active:scale-95 border flex items-center gap-3 ${
                                 theme === 'dark' 
                                 ? 'bg-white/5 border-white/5 text-neutral-400 hover:text-white hover:border-white/20' 
@@ -106,7 +107,7 @@ export default function AdminDashboard() {
                         >
                             <span className="text-lg">{item.icon}</span>
                             {item.label}
-                        </button>
+                        </Link>
                     ))}
                 </div>
             </div>
