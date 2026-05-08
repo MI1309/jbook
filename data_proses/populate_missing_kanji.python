@@ -4,6 +4,7 @@ import json
 import os
 import uuid
 import time
+from deep_translator import GoogleTranslator
 
 # Path database
 db_path = os.path.join(os.path.dirname(__file__), '../backend/db.sqlite3')
@@ -31,7 +32,7 @@ def get_missing_list():
     with open(missing_file, 'r', encoding='utf-8') as f:
         data = json.load(f)
     
-    # Ambil N5 dan N4
+    # Ambil N5, N4, dan N3
     missing = []
     if "N5" in data:
         for char in data["N5"].get("missing_kanji", []):
@@ -39,6 +40,15 @@ def get_missing_list():
     if "N4" in data:
         for char in data["N4"].get("missing_kanji", []):
             missing.append({"char": char, "level": 4})
+    if "N3" in data:
+        for char in data["N3"].get("missing_kanji", []):
+            missing.append({"char": char, "level": 3})
+    if "N2" in data:
+        for char in data["N2"].get("missing_kanji", []):
+            missing.append({"char": char, "level": 2})
+    if "N1" in data:
+        for char in data["N1"].get("missing_kanji", []):
+            missing.append({"char": char, "level": 1})
     return missing
 
 def fetch_kanji_detail(char):
@@ -55,13 +65,28 @@ def fetch_kanji_detail(char):
         print(f"Error {char}: {e}")
         return None
 
+# Fungsi untuk menerjemahkan list makna ke Bahasa Indonesia
+def translate_meaning(english_meanings):
+    if not english_meanings:
+        return ""
+    try:
+        text_to_translate = ", ".join(english_meanings)
+        translated = GoogleTranslator(source='en', target='id').translate(text_to_translate)
+        return translated
+    except Exception as e:
+        print(f"Gagal menerjemahkan: {e}")
+        return ", ".join(english_meanings)
+
 def save_to_db(kanji_data, level):
     conn = sqlite3.connect(db_path)
     cursor = conn.cursor()
     
     char = kanji_data["kanji"]
-    # Gunakan terjemahan manual jika ada, jika tidak gabungkan dari API
-    meaning = TRANSLATIONS.get(char, ", ".join(kanji_data["meanings"]))
+    # Gunakan terjemahan manual jika ada, jika tidak gunakan translator
+    if char in TRANSLATIONS:
+        meaning = TRANSLATIONS[char]
+    else:
+        meaning = translate_meaning(kanji_data["meanings"])
     onyomi = json.dumps(kanji_data["on_readings"], ensure_ascii=False)
     kunyomi = json.dumps(kanji_data["kun_readings"], ensure_ascii=False)
     strokes = kanji_data["stroke_count"]

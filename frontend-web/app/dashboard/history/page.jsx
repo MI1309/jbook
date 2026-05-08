@@ -82,6 +82,7 @@ export default function HistoryPage() {
     }, {});
 
     const allMistakes = Object.values(groupedMistakes);
+    const totalSalah = allMistakes.reduce((sum, m) => sum + (m.count || 0), 0);
     const filtered = filterType === 'all'
         ? allMistakes
         : allMistakes.filter(m => {
@@ -139,8 +140,12 @@ export default function HistoryPage() {
                                 <div className={`text-[9px] font-black uppercase tracking-widest ${subTextColor}`}>Akurasi</div>
                             </div>
                             <div className={`px-4 py-2 rounded-2xl border ${cardBg} ${borderStyle} text-center min-w-[80px]`}>
+                                <div className="text-2xl font-black text-red-600">{totalSalah}</div>
+                                <div className={`text-[9px] font-black uppercase tracking-widest ${subTextColor}`}>Total Salah</div>
+                            </div>
+                            <div className={`px-4 py-2 rounded-2xl border ${cardBg} ${borderStyle} text-center min-w-[80px]`}>
                                 <div className="text-2xl font-black text-red-600">{allMistakes.length}</div>
-                                <div className={`text-[9px] font-black uppercase tracking-widest ${subTextColor}`}>Jenis Salah</div>
+                                <div className={`text-[9px] font-black uppercase tracking-widest ${subTextColor}`}>Materi Salah</div>
                             </div>
                         </div>
                     </div>
