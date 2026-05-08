@@ -109,9 +109,9 @@ function BunpoContent() {
             )}
 
             <div className="flex justify-center items-center gap-6 mt-8">
-                {page > 1 && <Link href={`?page=${page - 1}`} className="bg-white dark:bg-card border-2 border-gray-100 dark:border-gray-800 text-gray-500 dark:text-gray-400 hover:text-red-600 dark:hover:text-red-400 px-6 py-3 rounded-2xl font-black text-sm transition-all shadow-sm active:scale-95">\u2190 Prev</Link>}
+                {page > 1 && <Link href={`?page=${page - 1}`} className="bg-white dark:bg-card border-2 border-gray-100 dark:border-gray-800 text-gray-500 dark:text-gray-400 hover:text-red-600 dark:hover:text-red-400 px-6 py-3 rounded-2xl font-black text-sm transition-all shadow-sm active:scale-95">← Prev</Link>}
                 <span className="w-10 h-10 rounded-xl bg-red-600 text-white flex items-center justify-center font-black text-sm shadow-lg shadow-red-200 dark:shadow-red-900/40 transition-colors">{page}</span>
-                {hasMore && <Link href={`?page=${page + 1}`} className="bg-red-600 text-white border-2 border-red-600 hover:bg-red-700 px-6 py-3 rounded-2xl font-black text-sm transition-all shadow-xl shadow-red-200 dark:shadow-red-900/40 active:scale-95">Next \u2192</Link>}
+                {hasMore && <Link href={`?page=${page + 1}${level ? `&level=${level}` : ''}`} className="group flex items-center gap-2 bg-red-600 dark:bg-red-600 text-white border-2 border-red-600 dark:border-red-600 hover:bg-red-700 dark:hover:bg-red-700 hover:border-red-700 dark:hover:border-red-700 px-6 py-3 rounded-2xl transition-all shadow-xl shadow-red-200 dark:shadow-red-900/40 font-black text-sm active:scale-95">Next →</Link>}
             </div>
         </>
     );

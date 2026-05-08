@@ -58,9 +58,6 @@ export default function KanjiDetailUI({ kanji, onClose }) {
                                 <span className="bg-red-600 text-white text-xs font-black px-4 py-1.5 rounded-full shadow-lg shadow-red-500/10">
                                     JLPT N{kanji.jlpt_level}
                                 </span>
-                                <span className={`${theme === 'dark' ? 'bg-red-950/20' : 'bg-gray-100'} ${subTextColor} text-[10px] font-black tracking-widest px-3 py-1.5 rounded-full uppercase transition-colors`}>
-                                    ID: {kanji.id?.substring(0, 8)}
-                                </span>
                             </div>
                             
                             <h1 className={`text-4xl md:text-5xl lg:text-7xl font-black mb-4 tracking-tight leading-tight transition-colors ${textColor}`}>
