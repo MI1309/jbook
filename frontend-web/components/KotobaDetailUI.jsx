@@ -74,7 +74,7 @@ export default function KotobaDetailUI({ vocab, onClose }) {
                         <span className={`text-[10px] sm:text-xs font-black uppercase tracking-[0.3em] mb-3 sm:mb-4 block text-center ${subTextColor}`}>Vocabulary</span>
 
                         <div className="mb-6 sm:mb-8 flex justify-center w-full px-2">
-                            <ruby className={`text-3xl sm:text-4xl md:text-5xl font-black tracking-wider transition-colors ${textColor}`} style={{ rubyPosition: 'under' }}>
+                            <ruby className={`text-3xl sm:text-4xl md:text-5xl font-black tracking-wider transition-colors ${textColor}`} style={{ rubyPosition: 'over' }}>
                                 <span className="inline-flex gap-0.5">
                                     {characters.map((char, index) => (
                                         hasKanji(char) ? (
@@ -122,10 +122,10 @@ export default function KotobaDetailUI({ vocab, onClose }) {
                                                 <div className="flex-1">
                                                     <p className={`text-sm font-black leading-snug ${textColor}`}>{detail?.meaning || 'Memuat makna...'}</p>
                                                     <p className={`text-[10px] font-black uppercase tracking-tighter mt-0.5 transition-colors ${subTextColor}`}>
-                                                        {detail?.onyomi?.[0] || detail?.kunyomi?.[0] || 'Reading'} \u2022 Klik untuk detail
+                                                        {detail ? (detail.onyomi?.[0] || detail.kunyomi?.[0] || 'N/A') : 'Sedang memuat...'} • Klik untuk detail
                                                     </p>
                                                 </div>
-                                                <span className="text-xl text-gray-400 group-hover:text-red-400 transition-colors">\u2192</span>
+                                                <span className="text-xl text-gray-400 group-hover:text-red-400 transition-colors">→</span>
                                             </button>
                                         );
                                     })}
