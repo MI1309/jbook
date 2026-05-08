@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useTheme } from '@/context/ThemeContext';
+import { API_URL } from '@/lib/api';
 
 export default function AnnouncementPopup() {
     const { theme } = useTheme();
@@ -12,7 +13,7 @@ export default function AnnouncementPopup() {
     useEffect(() => {
         const fetchAnnouncements = async () => {
             try {
-                const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/api/content/announcements`);
+                const res = await fetch(`${API_URL}/content/announcements`);
                 if (!res.ok) return;
                 const data = await res.json();
                 

@@ -1,7 +1,7 @@
 from ninja import NinjaAPI
 from content.api import router as content_router
 from learning.api import router as learning_router
-from users.api import router as users_router
+from users.api import router as users_router, refresh_router
 from content.admin_api import router as admin_router
 
 api = NinjaAPI(

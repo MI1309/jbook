@@ -7,6 +7,7 @@ from ninja.security import HttpBearer
 from ninja.errors import HttpError
 from pydantic import BaseModel
 import csv
+import json
 from django.http import HttpResponse
 from .models import Kanji, Grammar, Blog, JLPTLevel, Vocab, Particle, Announcement
 from users.api import AuthBearer
