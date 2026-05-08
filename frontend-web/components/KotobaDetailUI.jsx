@@ -73,27 +73,24 @@ export default function KotobaDetailUI({ vocab, onClose }) {
                     <div className={`relative z-10 text-left sm:text-center transition-colors ${textColor}`}>
                         <span className={`text-[10px] sm:text-xs font-black uppercase tracking-[0.3em] mb-3 sm:mb-4 block text-center ${subTextColor}`}>Vocabulary</span>
 
-                        <div className="mb-6 sm:mb-8 flex justify-center w-full px-2">
-                            <ruby className={`text-3xl sm:text-4xl md:text-5xl font-black tracking-wider transition-colors ${textColor}`} style={{ rubyPosition: 'over' }}>
-                                <span className="inline-flex gap-0.5">
-                                    {characters.map((char, index) => (
-                                        hasKanji(char) ? (
-                                            <span 
-                                                key={index} 
-                                                onClick={() => handleKanjiClick(char)}
-                                                className="hover:text-red-600 cursor-pointer transition-all duration-200 border-b-4 border-transparent hover:border-red-500 px-1 rounded-t-xl hover:bg-red-50 dark:hover:bg-red-950/30"
-                                                title={`Lihat detail Kanji: ${char}`}
-                                            >
-                                                {char}
-                                            </span>
-                                        ) : (
-                                            <span key={index} className="px-0.5">{char}</span>
-                                        )
-                                    ))}
-                                </span>
-                                {hasKanji(vocab?.word) && (
-                                    <rt className="text-lg sm:text-xl md:text-2xl text-red-600 dark:text-red-500 font-black leading-none mt-1 sm:mt-2">{vocab?.furigana || vocab?.reading || ''}</rt>
-                                )}
+                        <div className="mb-6 sm:mb-8 flex justify-center w-full px-2 pt-6">
+                            <ruby className={`text-3xl sm:text-4xl md:text-5xl font-black tracking-wider transition-colors ${textColor}`}>
+                                {characters.map((char, index) => (
+                                    hasKanji(char) ? (
+                                        <span 
+                                            key={index} 
+                                            onClick={() => handleKanjiClick(char)}
+                                            className="text-red-600 dark:text-red-500 hover:text-red-700 dark:hover:text-white cursor-pointer transition-all duration-200 border-b-4 border-transparent hover:border-red-600 dark:hover:border-white px-1 rounded-t-xl"
+                                        >
+                                            {char}
+                                        </span>
+                                    ) : (
+                                        <span key={index} className="px-0.5">{char}</span>
+                                    )
+                                ))}
+                                <rt className="text-base sm:text-lg md:text-xl text-gray-900 dark:text-white font-black leading-none">
+                                    {vocab?.furigana || vocab?.reading || ''}
+                                </rt>
                             </ruby>
                         </div>
 

@@ -1,7 +1,7 @@
 import csv
 from django.contrib import admin
 from django.http import HttpResponse
-from .models import Kanji, Vocab, Grammar, Blog
+from .models import Kanji, Vocab, Grammar, Blog, Particle, Announcement
 
 @admin.action(description="Export selected items as CSV")
 def export_as_csv(modeladmin, request, queryset):
@@ -56,3 +56,16 @@ class BlogAdmin(admin.ModelAdmin):
     list_filter = ('is_published',)
     search_fields = ('title', 'content')
     prepopulated_fields = {'slug': ('title',)}
+
+@admin.register(Particle)
+class ParticleAdmin(admin.ModelAdmin):
+    list_display = ('character', 'meaning', 'jlpt_level')
+    list_filter = ('jlpt_level',)
+    search_fields = ('character', 'meaning', 'explanation')
+
+@admin.register(Announcement)
+class AnnouncementAdmin(admin.ModelAdmin):
+    list_display = ('title', 'type', 'is_active', 'show_as_popup', 'created_at')
+    list_filter = ('type', 'is_active', 'show_as_popup')
+    search_fields = ('title', 'content')
+    ordering = ('-created_at',)

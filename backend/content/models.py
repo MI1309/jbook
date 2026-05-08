@@ -110,3 +110,22 @@ class ContentSuggestion(models.Model):
 
     def __str__(self):
         return f"{self.type} suggestion - {self.status}"
+
+class Announcement(models.Model):
+    ANNOUNCEMENT_TYPES = [
+        ('info', 'Informasi (Biru)'),
+        ('warning', 'Peringatan (Kuning)'),
+        ('important', 'Penting (Merah)'),
+        ('success', 'Sukses (Hijau)'),
+    ]
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    title = models.CharField(max_length=255)
+    content = models.TextField(help_text="Isi pengumuman (mendukung teks panjang)")
+    type = models.CharField(max_length=20, choices=ANNOUNCEMENT_TYPES, default='info')
+    is_active = models.BooleanField(default=True)
+    show_as_popup = models.BooleanField(default=False, help_text="Jika dicentang, akan muncul sebagai modal popup, jika tidak hanya sebagai banner")
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"{self.title} ({self.get_type_display()})"

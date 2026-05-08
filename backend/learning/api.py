@@ -4,6 +4,7 @@ from django.db.models import Count
 from django.shortcuts import get_object_or_404
 from django.contrib.auth import get_user_model
 from .models import QuizAttempt, UserProgress
+from .tts_logic import CrosswordGenerator
 from content.models import Kanji, Vocab, Grammar, Particle
 import random
 import uuid
@@ -26,6 +27,11 @@ class QuestionSchema(Schema):
     # Extra fields for context if needed
     reading: Optional[str] = None 
     meaning: Optional[str] = None
+
+class TTSSchema(Schema):
+    grid: List[List[str]]
+    clues: List[dict]
+    size: int
 
 class AnswerSchema(Schema):
     question_id: str
@@ -175,6 +181,42 @@ def generate_quiz(request, limit: int = 10, level: Optional[str] = None, type: s
         })
         
     return questions
+
+@router.get("/tts/generate", response=TTSSchema)
+def generate_tts(request, level: Optional[int] = 5, limit: int = 15):
+    # Fetch random vocab words for the crossword
+    qs = Vocab.objects.filter(jlpt_level=level).order_by('?')[:limit * 2]
+    words_data = []
+    for v in qs:
+        # We need clean words (no brackets for now or handle them)
+        clean_word = v.word.replace('[', '').replace(']', '').replace(' ', '')
+        words_data.append({
+            'id': str(v.id),
+            'word': clean_word,
+            'meaning': v.meaning
+        })
+
+    # Try to generate a good crossword
+    best_grid = None
+    best_clues = []
+    max_words = 0
+
+    # Try a few times to get a dense grid
+    for _ in range(5):
+        random.shuffle(words_data)
+        gen = CrosswordGenerator(words_data, size=15)
+        grid, clues = gen.generate()
+        if len(clues) > max_words:
+            max_words = len(clues)
+            best_grid = grid
+            best_clues = clues
+            if max_words >= limit: break
+
+    return {
+        "grid": best_grid,
+        "clues": best_clues,
+        "size": 15
+    }
 
 @router.post("/practice/submit", auth=JWTAuth())
 def submit_quiz(request, payload: SubmissionSchema):

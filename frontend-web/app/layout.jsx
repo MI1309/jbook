@@ -5,6 +5,7 @@ import { PracticeProvider } from "@/context/PracticeContext";
 import { ThemeProvider } from "@/context/ThemeContext";
 import ClientShell from "@/components/ClientShell";
 import OfflineIndicator from "@/components/OfflineIndicator";
+import AnnouncementPopup from "@/components/AnnouncementPopup";
 
 const geistSans = Geist({
     variable: "--font-geist-sans",
@@ -62,6 +63,7 @@ export default function RootLayout({ children }) {
                                 {children}
                             </ClientShell>
                             <OfflineIndicator />
+                            <AnnouncementPopup />
                         </PracticeProvider>
                     </AuthProvider>
                 </ThemeProvider>

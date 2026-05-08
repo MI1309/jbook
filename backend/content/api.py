@@ -1,12 +1,25 @@
 from ninja import Router, Schema
 from typing import List, Optional
 from pydantic import BaseModel
-from .models import Kanji, Grammar, Blog, ContentSuggestion
+from .models import Kanji, Grammar, Blog, ContentSuggestion, Announcement
 from django.shortcuts import get_object_or_404
+from django.db.models import Q
 from uuid import UUID
 from datetime import datetime
 
 router = Router()
+
+class AnnouncementSchema(Schema):
+    id: UUID
+    title: str
+    content: str
+    type: str
+    show_as_popup: bool
+    created_at: datetime
+
+@router.get("/announcements", response=List[AnnouncementSchema])
+def list_announcements(request):
+    return Announcement.objects.filter(is_active=True).order_by('-created_at')
 
 class BlogSchema(Schema):
     id: UUID
