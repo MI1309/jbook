@@ -400,36 +400,4 @@ def reject_suggestion(request, id: UUID, token: UUID):
     suggestion.save()
     return HttpResponse("Suggestion rejected.")
 
-# Admin Announcement Management (Direct in api.py for stability)
-from users.api import AuthBearer
-from ninja.errors import HttpError
 
-class AdminAuth(AuthBearer):
-    def authenticate(self, request, token):
-        user = super().authenticate(request, token)
-        if user.email == "imronm1309@gmail.com" or user.is_staff:
-            return user
-        raise HttpError(403, "Admin access required")
-
-@router.get("/admin/announcements", auth=AdminAuth(), response=List[AnnouncementSchema])
-def admin_list_announcements(request):
-    return Announcement.objects.all().order_by('-created_at')
-
-@router.post("/admin/announcements", auth=AdminAuth(), response=AnnouncementSchema)
-def admin_create_announcement(request, payload: AnnouncementCreateSchema):
-    announcement = Announcement.objects.create(**payload.dict())
-    return announcement
-
-@router.put("/admin/announcements/{id}", auth=AdminAuth(), response=AnnouncementSchema)
-def admin_update_announcement(request, id: UUID, payload: AnnouncementCreateSchema):
-    announcement = get_object_or_404(Announcement, id=id)
-    for attr, value in payload.dict().items():
-        setattr(announcement, attr, value)
-    announcement.save()
-    return announcement
-
-@router.delete("/admin/announcements/{id}", auth=AdminAuth())
-def admin_delete_announcement(request, id: UUID):
-    announcement = get_object_or_404(Announcement, id=id)
-    announcement.delete()
-    return {"success": True}

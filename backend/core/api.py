@@ -1,7 +1,7 @@
 from ninja import NinjaAPI
 from content.api import router as content_router
 from learning.api import router as learning_router
-from users.api import router as users_router, refresh_router
+from users.api import router as users_router
 from content.admin_api import router as admin_router
 
 api = NinjaAPI(
@@ -10,12 +10,12 @@ api = NinjaAPI(
     docs_url="/docs"
 )
 
+@api.get("/ping")
+def ping(request):
+    return {"message": "pong", "status": "ok"}
+
 api.add_router("/content", content_router)
 api.add_router("/learning", learning_router)
 api.add_router("/auth", users_router)
 api.add_router("/admin", admin_router)
 
-try:
-    api.add_router("/auth/token", refresh_router)
-except Exception:
-    pass
