@@ -124,6 +124,10 @@ class Announcement(models.Model):
     type = models.CharField(max_length=20, choices=ANNOUNCEMENT_TYPES, default='info')
     is_active = models.BooleanField(default=True)
     show_as_popup = models.BooleanField(default=False, help_text="Jika dicentang, akan muncul sebagai modal popup, jika tidak hanya sebagai banner")
+    priority = models.IntegerField(default=0, help_text="Prioritas pengumuman (makin besar makin awal muncul)")
+    show_from = models.DateTimeField(null=True, blank=True, help_text="Mulai ditampilkan pada")
+    show_until = models.DateTimeField(null=True, blank=True, help_text="Selesai ditampilkan pada")
+    deleted_at = models.DateTimeField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

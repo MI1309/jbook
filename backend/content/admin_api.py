@@ -413,18 +413,22 @@ class AnnouncementCreateSchema(BaseModel):
     title: str
     content: str
     type: str
+    priority: int = 0
+    show_from: Optional[datetime] = None
+    show_until: Optional[datetime] = None
     is_active: bool = True
     show_as_popup: bool = False
 
 class AnnouncementSchema(AnnouncementCreateSchema):
     id: UUID
     created_at: datetime
+    updated_at: datetime
     model_config = {"from_attributes": True}
 
 # Announcement CRUD
 @router.get("/announcements", auth=AdminAuth(), response=List[AnnouncementSchema])
 def admin_list_announcements(request):
-    return Announcement.objects.all().order_by('-created_at')
+    return Announcement.objects.filter(deleted_at__isnull=True).order_by('-priority', '-created_at')
 
 @router.post("/announcements", auth=AdminAuth(), response=AnnouncementSchema)
 def admin_create_announcement(request, payload: AnnouncementCreateSchema):
@@ -445,6 +449,8 @@ def admin_update_announcement(request, id: str, payload: AnnouncementCreateSchem
 
 @router.delete("/announcements/{id}", auth=AdminAuth())
 def admin_delete_announcement(request, id: str):
+    from django.utils import timezone
     announcement = get_object_or_404(Announcement, id=id)
-    announcement.delete()
+    announcement.deleted_at = timezone.now()
+    announcement.save()
     return {"success": True}

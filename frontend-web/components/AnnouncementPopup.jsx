@@ -2,10 +2,12 @@
 
 import { useState, useEffect } from 'react';
 import { useTheme } from '@/context/ThemeContext';
+import { useAuth } from '@/context/AuthContext';
 import { API_URL } from '@/lib/api';
 
 export default function AnnouncementPopup() {
     const { theme } = useTheme();
+    const { user } = useAuth();
     const [announcements, setAnnouncements] = useState([]);
     const [currentIndex, setCurrentIndex] = useState(0);
     const [isVisible, setIsVisible] = useState(false);
@@ -14,30 +16,79 @@ export default function AnnouncementPopup() {
         const fetchAnnouncements = async () => {
             try {
                 const res = await fetch(`${API_URL}/content/announcements`);
-                if (!res.ok) return;
+                if (!res.ok) throw new Error('Network response was not ok');
                 const data = await res.json();
                 
+                // Determine storage key
+                let storageKey = 'dismissed_announcements_guest';
+                if (user?.id) {
+                    storageKey = `dismissed_announcements_user_${user.id}`;
+                } else {
+                    // Handle guest session
+                    let sessionId = sessionStorage.getItem('jbook_guest_session');
+                    if (!sessionId) {
+                        sessionId = Math.random().toString(36).substring(2, 15);
+                        sessionStorage.setItem('jbook_guest_session', sessionId);
+                    }
+                    storageKey = `dismissed_announcements_guest_${sessionId}`;
+                }
+
                 // Filter out already dismissed announcements
-                const dismissed = JSON.parse(localStorage.getItem('dismissed_announcements') || '[]');
-                const active = data.filter(a => !dismissed.includes(a.id));
+                const dismissed = JSON.parse(localStorage.getItem(storageKey) || '[]');
+                let active = data.filter(a => !dismissed.includes(a.id));
                 
                 if (active.length > 0) {
+                    // Constraint: Max 1 popup per session
+                    // We check if we already showed a popup this session
+                    const popupShowed = sessionStorage.getItem('popup_showed_this_session');
+                    
+                    if (popupShowed) {
+                        // If already showed a popup, force all to be banners
+                        active = active.map(a => ({ ...a, show_as_popup: false }));
+                    } else {
+                        // Find the first one that wants to be a popup
+                        let firstPopupIdx = active.findIndex(a => a.show_as_popup);
+                        if (firstPopupIdx !== -1) {
+                            // Keep it as popup, but force others to be banners
+                            active = active.map((a, idx) => ({
+                                ...a,
+                                show_as_popup: idx === firstPopupIdx
+                            }));
+                        }
+                    }
+
                     setAnnouncements(active);
                     setIsVisible(true);
                 }
             } catch (err) {
-                console.error('Failed to fetch announcements:', err);
+                // Silently fail to not block rendering
+                console.warn('Announcement fetch failed:', err);
             }
         };
 
         fetchAnnouncements();
-    }, []);
+    }, [user?.id]);
 
     const handleDismiss = () => {
         const current = announcements[currentIndex];
-        const dismissed = JSON.parse(localStorage.getItem('dismissed_announcements') || '[]');
-        localStorage.setItem('dismissed_announcements', JSON.stringify([...dismissed, current.id]));
         
+        // Determine storage key
+        let storageKey = 'dismissed_announcements_guest';
+        if (user?.id) {
+            storageKey = `dismissed_announcements_user_${user.id}`;
+        } else {
+            const sessionId = sessionStorage.getItem('jbook_guest_session');
+            storageKey = `dismissed_announcements_guest_${sessionId}`;
+        }
+
+        const dismissed = JSON.parse(localStorage.getItem(storageKey) || '[]');
+        localStorage.setItem(storageKey, JSON.stringify([...dismissed, current.id]));
+        
+        // If it was a popup, mark that we showed one this session
+        if (current.show_as_popup) {
+            sessionStorage.setItem('popup_showed_this_session', 'true');
+        }
+
         if (currentIndex < announcements.length - 1) {
             setCurrentIndex(prev => prev + 1);
         } else {
@@ -110,3 +161,4 @@ export default function AnnouncementPopup() {
         </div>
     );
 }
+

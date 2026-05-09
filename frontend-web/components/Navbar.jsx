@@ -105,7 +105,7 @@ export default function Navbar() {
                                     { href: '/bunpo', label: 'Tata Bahasa' },
                                     { href: '/kana', label: 'Kana' },
                                     { href: '/kotoba', label: 'Kotoba' },
-                                    { href: '/crossword', label: 'Crossword' },
+                                    { href: '/tts', label: 'TTS' },
                                     ...(!user ? [{ href: '/practice', label: 'Latihan' }] : []),
                                 ].map(({ href, label }) => (
                                     <Link
@@ -267,7 +267,7 @@ export default function Navbar() {
                             { href: '/bunpo', label: 'Tata Bahasa' },
                             { href: '/kana', label: 'Kana' },
                             { href: '/kotoba', label: 'Kotoba' },
-                            { href: '/crossword', label: 'Crossword' },
+                            { href: '/tts', label: 'TTS' },
                             ...(!user ? [{ href: '/practice', label: 'Latihan' }] : []),
                         ].map(({ href, label }, i) => (
                             <Link

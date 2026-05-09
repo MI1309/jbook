@@ -6,6 +6,7 @@ from django.shortcuts import get_object_or_404
 from django.db.models import Q
 from uuid import UUID
 from datetime import datetime
+from django.http import HttpResponse
 
 router = Router()
 
@@ -14,6 +15,9 @@ class AnnouncementSchema(Schema):
     title: str
     content: str
     type: str
+    priority: int
+    show_from: Optional[datetime] = None
+    show_until: Optional[datetime] = None
     is_active: bool
     show_as_popup: bool
     created_at: datetime
@@ -26,8 +30,22 @@ class AnnouncementCreateSchema(Schema):
     show_as_popup: Optional[bool] = False
 
 @router.get("/announcements", response=List[AnnouncementSchema])
-def list_announcements(request):
-    return Announcement.objects.filter(is_active=True).order_by('-created_at')
+def list_announcements(request, response: HttpResponse):
+    from django.utils import timezone
+    from django.db.models import Q
+    
+    now = timezone.now()
+    qs = Announcement.objects.filter(
+        is_active=True,
+        deleted_at__isnull=True
+    ).filter(
+        Q(show_from__isnull=True) | Q(show_from__lte=now)
+    ).filter(
+        Q(show_until__isnull=True) | Q(show_until__gte=now)
+    ).order_by('-priority', '-created_at')
+    
+    response["Cache-Control"] = "public, max-age=300"
+    return qs
 
 class BlogSchema(Schema):
     id: UUID
