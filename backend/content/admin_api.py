@@ -8,6 +8,7 @@ from ninja.errors import HttpError
 from pydantic import BaseModel
 import csv
 import json
+from datetime import datetime
 from django.http import HttpResponse
 from .models import Kanji, Grammar, Blog, JLPTLevel, Vocab, Particle, Announcement
 from users.api import AuthBearer
@@ -417,7 +418,7 @@ class AnnouncementCreateSchema(BaseModel):
 
 class AnnouncementSchema(AnnouncementCreateSchema):
     id: UUID
-    created_at: str
+    created_at: datetime
     model_config = {"from_attributes": True}
 
 # Announcement CRUD

@@ -12,13 +12,18 @@
   "dependencies": {
     "@ducanh2912/next-pwa": "^10.2.9",
     "@react-oauth/google": "^0.13.4",
+    "axios": "^1.16.0",
+    "clsx": "^2.1.1",
     "js-cookie": "^3.0.5",
     "jwt-decode": "^4.0.0",
+    "lucide-react": "^1.14.0",
     "next": "16.1.6",
     "react": "19.2.3",
     "react-dom": "19.2.3",
+    "tailwind-merge": "^3.5.0",
     "use-debounce": "^10.1.0",
-    "wanakana": "^5.3.1"
+    "wanakana": "^5.3.1",
+    "zustand": "^5.0.13"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
