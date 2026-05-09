@@ -26,6 +26,20 @@ const withPWA = withPWAInit({
                     },
                 },
             },
+            // Halaman penting aplikasi — Selalu sedia offline (NetworkFirst)
+            {
+                urlPattern: ({ url }) => 
+                    ['/dashboard', '/practice', '/tts', '/kanji', '/bunpo', '/kana', '/kotoba'].some(path => url.pathname === path || url.pathname.startsWith(path + '/')),
+                handler: "NetworkFirst",
+                options: {
+                    cacheName: "app-core-pages",
+                    networkTimeoutSeconds: 5, // Timeout lebih cepat untuk transisi offline yang mulus
+                    expiration: {
+                        maxEntries: 50,
+                        maxAgeSeconds: 30 * 24 * 60 * 60, // 30 hari
+                    },
+                },
+            },
             // Halaman navigasi umum — NetworkFirst, cache 30 hari
             {
                 urlPattern: ({ url }) => !url.pathname.startsWith("/api/") && !url.pathname.startsWith("/blog"),

@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { API_URL } from '@/lib/api';
 import Link from 'next/link';
 import Cookies from 'js-cookie';
+import { toast } from 'react-toastify';
 
 export default function KanjiForm({ params }) {
     const router = useRouter();
@@ -52,7 +53,7 @@ export default function KanjiForm({ params }) {
                 console.error("Fetch failed:", res.status, res.statusText);
                 const text = await res.text();
                 console.error("Response body:", text);
-                alert(`Gagal memuat Kanji: ${res.status} ${res.statusText}\n${text}`);
+                toast.error(`Gagal memuat Kanji: ${res.status} ${res.statusText}\n${text}`);
                 // router.push('/admin/kanji'); // Don't redirect immediately so user can see error
             }
         } catch (error) {
@@ -93,16 +94,16 @@ export default function KanjiForm({ params }) {
             });
 
             if (res.ok) {
-                alert(isNew ? 'Kanji created!' : 'Kanji updated!');
+                toast.success(isNew ? 'Kanji created!' : 'Kanji updated!');
                 router.push('/admin/kanji');
             } else {
                 const errorData = await res.json();
                 console.error("Failed to save", errorData);
-                alert(`Failed to save: ${JSON.stringify(errorData)}`);
+                toast.error(`Failed to save: ${JSON.stringify(errorData)}`);
             }
         } catch (error) {
             console.error("Save error", error);
-            alert('Error saving data');
+            toast.error('Error saving data');
         }
     };
 

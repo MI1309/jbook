@@ -4,6 +4,10 @@ import Cookies from 'js-cookie';
 import { fetchWithCache } from '@/lib/cache-store';
 import { dbGetAll, dbHasData, dbGet } from '@/lib/offline-db';
 import { hasKanji, extractKanji, getScriptTypes } from '@/lib/utils';
+import { 
+    hiraganaGojuon, hiraganaDakuon, hiraganaYoon, 
+    katakanaGojuon, katakanaDakuon, katakanaYoon 
+} from '@/data/kana';
 
 /**
  * Try to serve from IndexedDB. Returns null if store is empty.
@@ -412,6 +416,18 @@ async function generateOfflineQuestions({ limit, level, type }) {
 
         // Fetch pool for each type
         for (const t of requestedTypes) {
+            if (t === 'kana') {
+                const kanaPool = [
+                    ...hiraganaGojuon, ...hiraganaDakuon, ...hiraganaYoon,
+                    ...katakanaGojuon, ...katakanaDakuon, ...katakanaYoon
+                ].filter(k => k.kana && k.romaji);
+                
+                kanaPool.forEach(item => {
+                    fullPool.push({ item, type: 'kana', originalPool: kanaPool });
+                });
+                continue;
+            }
+
             const storeName = t === 'kanji' ? 'kanji' : (t === 'vocab' || t === 'kotoba' ? 'vocab' : 'grammar');
             let pool = await dbGetAll(storeName);
             
@@ -441,7 +457,9 @@ async function generateOfflineQuestions({ limit, level, type }) {
                 .slice(0, 3);
                 
             let options = [];
-            if (type === 'kanji') {
+            if (type === 'kana') {
+                options = [item.romaji, ...distractors.map(d => d.romaji)];
+            } else if (type === 'kanji') {
                 options = [item.meaning, ...distractors.map(d => d.meaning)];
             } else if (type === 'vocab') {
                 options = [item.meaning, ...distractors.map(d => d.meaning)];
@@ -455,12 +473,12 @@ async function generateOfflineQuestions({ limit, level, type }) {
             })).sort(() => 0.5 - Math.random());
 
             return {
-                id: item.id,
-                character: item.character || item.word || item.title,
+                id: item.id || `kana-${item.kana}`,
+                character: item.kana || item.character || item.word || item.title,
                 type: type, // Correctly use the category's type
                 options: formattedOptions,
-                reading: item.reading || (item.onyomi ? item.onyomi.join(', ') : ''),
-                meaning: item.meaning || item.explanation
+                reading: item.romaji || item.reading || (item.onyomi ? item.onyomi.join(', ') : ''),
+                meaning: item.romaji || item.meaning || item.explanation
             };
         });
     } catch (err) {
@@ -495,21 +513,24 @@ export async function getUserAnalytics() {
     const headers = {};
     if (token) headers['Authorization'] = `Bearer ${token}`;
 
+    const cacheKey = 'user-analytics';
+
     try {
-        const res = await fetch(`${API_URL}/learning/practice/analytics`, {
-            headers,
-            cache: 'no-store',
-        });
+        return await fetchWithCache(cacheKey, async () => {
+            const res = await fetch(`${API_URL}/learning/practice/analytics`, {
+                headers,
+            });
 
-        if (!res.ok) {
-            return {
-                total_attempts: 0,
-                accuracy: 0,
-                wrong_stats: []
-            };
-        }
+            if (!res.ok) {
+                return {
+                    total_attempts: 0,
+                    accuracy: 0,
+                    wrong_stats: []
+                };
+            }
 
-        return res.json();
+            return res.json();
+        }, 24 * 60 * 60 * 1000); // 24 hours cache for analytics
     } catch (error) {
         return handleNetworkError('getUserAnalytics', error, {
             total_attempts: 0,

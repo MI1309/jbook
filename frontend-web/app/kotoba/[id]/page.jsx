@@ -1,7 +1,7 @@
 import { getVocabDetail } from '@/lib/api';
 import Link from 'next/link';
 import { hasKanji } from '@/lib/utils';
-import KotobaDetailUI from '@/components/KotobaDetailUI';
+import KotobaDetailUI from '@/components/kotoba/KotobaDetailUI';
 
 export default async function KotobaDetailPage({ params }) {
     const { id } = await params;

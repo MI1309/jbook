@@ -5,6 +5,7 @@ import { API_URL } from '@/lib/api';
 import { useSearchParams } from 'next/navigation';
 import Cookies from 'js-cookie';
 import Link from 'next/link';
+import { toast } from 'react-toastify';
 
 function ExportContent() {
     const searchParams = useSearchParams();
@@ -40,7 +41,7 @@ function ExportContent() {
                 a.remove();
                 window.URL.revokeObjectURL(url);
             } else {
-                alert("Gagal mengekspor data.");
+                toast.error("Gagal mengekspor data.");
             }
         } catch (error) {
             console.error("Export failed", error);

@@ -2,7 +2,7 @@
 import { getGrammarDetail } from '@/lib/api';
 import Link from 'next/link';
 
-import BunpoDetailUI from '@/components/BunpoDetailUI';
+import BunpoDetailUI from '@/components/bunpo/BunpoDetailUI';
 
 export default async function BunpoDetailPage({ params }) {
     const { id } = await params;

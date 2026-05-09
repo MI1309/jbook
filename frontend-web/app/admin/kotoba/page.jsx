@@ -7,6 +7,8 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import Cookies from 'js-cookie';
 import { cacheGet, cacheSet } from '@/lib/cache-store';
+import { toast } from 'react-toastify';
+import ConfirmationModal from '@/components/ConfirmationModal';
 
 export default function KotobaAdmin() {
     const { user } = useAuth();
@@ -22,6 +24,7 @@ export default function KotobaAdmin() {
 
     const [allVocabs, setAllVocabs] = useState([]);
     const [filteredVocabs, setFilteredVocabs] = useState([]);
+    const [pendingDelete, setPendingDelete] = useState(null);
 
     useEffect(() => { 
         setCurrentPage(1);
@@ -44,7 +47,7 @@ export default function KotobaAdmin() {
                 setLoading(false);
                 return;
             }
-            alert('Tidak ada koneksi internet dan data admin belum tersedia secara offline.');
+            toast.error('Tidak ada koneksi internet dan data admin belum tersedia secara offline.');
             setLoading(false);
             return;
         }
@@ -66,14 +69,14 @@ export default function KotobaAdmin() {
                 const errorData = await res.json().catch(() => ({}));
                 console.error("Fetch failed:", res.status, errorData);
                 if (res.status === 403) {
-                    alert("Admin access denied. Please login with admin account (imronm1309@gmail.com)");
+                    toast.error("Admin access denied. Please login with admin account (imronm1309@gmail.com)");
                 } else if (res.status === 500) {
                     // Try cache as fallback on 500
                     const cached = cacheGet('admin-vocab-all');
                     if (cached) { setAllVocabs(cached); return; }
-                    alert(`Server Error 500. Silakan pastikan server PythonAnywhere sudah diperbarui.`);
+                    toast.error(`Server Error 500. Silakan pastikan server PythonAnywhere sudah diperbarui.`);
                 } else {
-                    alert(`Gagal mengambil data: ${res.status} ${res.statusText}`);
+                    toast.error(`Gagal mengambil data: ${res.status} ${res.statusText}`);
                 }
             }
         } catch (error) {
@@ -84,7 +87,7 @@ export default function KotobaAdmin() {
                 setAllVocabs(cached);
                 return;
             }
-            alert(`Terjadi kesalahan jaringan: ${error.message}`);
+            toast.error(`Terjadi kesalahan jaringan: ${error.message}`);
         } finally {
             setLoading(false);
         }
@@ -126,19 +129,30 @@ export default function KotobaAdmin() {
         });
     };
 
-    const handleDelete = async (e, id) => {
+    const handleDelete = (e, id) => {
         e.stopPropagation();
-        if (!confirm('Are you sure you want to delete this Vocabulary?')) return;
+        setPendingDelete(id);
+    };
+
+    const confirmDelete = async () => {
+        if (!pendingDelete) return;
         try {
             const token = Cookies.get('access_token');
-            const res = await fetch(`${API_URL}/admin/vocab/${id}`, {
+            const res = await fetch(`${API_URL}/admin/vocab/${pendingDelete}`, {
                 method: 'DELETE',
                 headers: { 'Authorization': `Bearer ${token}` }
             });
-            if (res.ok) fetchAllVocabs();
-            else alert('Failed to delete');
+            if (res.ok) {
+                toast.success('Vocabulary deleted successfully');
+                fetchAllVocabs();
+            } else {
+                toast.error('Failed to delete');
+            }
         } catch (error) {
             console.error("Delete error", error);
+            toast.error('Network error while deleting');
+        } finally {
+            setPendingDelete(null);
         }
     };
 
@@ -164,11 +178,11 @@ export default function KotobaAdmin() {
                 a.remove();
                 window.URL.revokeObjectURL(url);
             } else {
-                alert("Gagal mengekspor data.");
+                toast.error("Gagal mengekspor data.");
             }
         } catch (error) {
             console.error("Export failed", error);
-            alert("Terjadi kesalahan saat mengekspor.");
+            toast.error("Terjadi kesalahan saat mengekspor.");
         }
     };
 
@@ -372,6 +386,17 @@ export default function KotobaAdmin() {
                     </div>
                 )}
             </div>
+
+            <ConfirmationModal
+                isOpen={!!pendingDelete}
+                onClose={() => setPendingDelete(null)}
+                onConfirm={confirmDelete}
+                title="Hapus Kotoba?"
+                message="Are you sure you want to delete this Vocabulary? Tindakan ini tidak dapat dibatalkan."
+                confirmText="Hapus"
+                cancelText="Batal"
+                type="danger"
+            />
         </div>
     );
 }

@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { toHiragana, toKatakana } from 'wanakana';
 import { hasKanji } from '@/lib/utils';
 import { notFound } from 'next/navigation';
-import KanjiDetailUI from '@/components/KanjiDetailUI';
+import KanjiDetailUI from '@/components/kanji/KanjiDetailUI';
 
 export async function generateMetadata({ params }) {
     const { id } = await params;

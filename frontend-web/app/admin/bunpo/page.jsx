@@ -8,6 +8,8 @@ import { useRouter } from 'next/navigation';
 import { useDebounce } from 'use-debounce';
 import Cookies from 'js-cookie';
 import { cacheGet, cacheSet } from '@/lib/cache-store';
+import { toast } from 'react-toastify';
+import ConfirmationModal from '@/components/common/ConfirmationModal';
 
 export default function BunpoAdmin() {
     const { user } = useAuth();
@@ -18,6 +20,7 @@ export default function BunpoAdmin() {
     const [search, setSearch] = useState('');
     const [page, setPage] = useState(1);
     const LIMIT = 20;
+    const [pendingDelete, setPendingDelete] = useState(null);
     const router = useRouter();
 
     const [allBunpos, setAllBunpos] = useState([]);
@@ -39,7 +42,7 @@ export default function BunpoAdmin() {
         if (typeof navigator !== 'undefined' && !navigator.onLine) {
             const cached = cacheGet('admin-bunpo-all');
             if (cached) { setAllBunpos(cached); setLoading(false); return; }
-            alert('Tidak ada koneksi internet dan data admin belum tersedia secara offline.');
+            toast.error('Tidak ada koneksi internet dan data admin belum tersedia secara offline.');
             setLoading(false);
             return;
         }
@@ -56,13 +59,13 @@ export default function BunpoAdmin() {
             } else {
                 const cached = cacheGet('admin-bunpo-all');
                 if (cached) { setAllBunpos(cached); return; }
-                alert(`Gagal mengambil data Bunpo: ${res.status} ${res.statusText}`);
+                toast.error(`Gagal mengambil data Bunpo: ${res.status} ${res.statusText}`);
             }
         } catch (error) {
             console.error("Failed to fetch bunpos", error);
             const cached = cacheGet('admin-bunpo-all');
             if (cached) { setAllBunpos(cached); return; }
-            alert(`Terjadi kesalahan jaringan.`);
+            toast.error(`Terjadi kesalahan jaringan.`);
         } finally {
             setLoading(false);
         }
@@ -99,19 +102,30 @@ export default function BunpoAdmin() {
         setBunpos(filtered.slice(offset, offset + LIMIT));
     };
 
-    const handleDelete = async (e, id) => {
+    const handleDelete = (e, id) => {
         e.stopPropagation();
-        if (!confirm('Are you sure you want to delete this Grammar point?')) return;
+        setPendingDelete(id);
+    };
+
+    const confirmDelete = async () => {
+        if (!pendingDelete) return;
         try {
             const token = Cookies.get('access_token');
-            const res = await fetch(`${API_URL}/admin/grammar/${id}`, {
+            const res = await fetch(`${API_URL}/admin/grammar/${pendingDelete}`, {
                 method: 'DELETE',
                 headers: { 'Authorization': `Bearer ${token}` }
             });
-            if (res.ok) fetchAllBunpos();
-            else alert('Failed to delete');
+            if (res.ok) {
+                toast.success('Grammar deleted successfully');
+                fetchAllBunpos();
+            } else {
+                toast.error('Failed to delete');
+            }
         } catch (error) {
             console.error("Delete error", error);
+            toast.error('Network error while deleting');
+        } finally {
+            setPendingDelete(null);
         }
     };
 
@@ -138,11 +152,11 @@ export default function BunpoAdmin() {
                 a.remove();
                 window.URL.revokeObjectURL(url);
             } else {
-                alert("Gagal mengekspor data.");
+                toast.error("Gagal mengekspor data.");
             }
         } catch (error) {
             console.error("Export failed", error);
-            alert("Terjadi kesalahan saat mengekspor.");
+            toast.error("Terjadi kesalahan saat mengekspor.");
         }
     };
 
@@ -297,6 +311,17 @@ export default function BunpoAdmin() {
                     </>
                 )}
             </div>
+
+            <ConfirmationModal
+                isOpen={!!pendingDelete}
+                onClose={() => setPendingDelete(null)}
+                onConfirm={confirmDelete}
+                title="Hapus Bunpo?"
+                message="Are you sure you want to delete this Grammar point? Tindakan ini tidak dapat dibatalkan."
+                confirmText="Hapus"
+                cancelText="Batal"
+                type="danger"
+            />
         </div>
     );
 }

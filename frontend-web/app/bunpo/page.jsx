@@ -2,10 +2,10 @@
 
 import { useState, useEffect, Suspense } from 'react';
 import { getGrammarList } from '@/lib/api';
-import BunpoFilter from '@/components/BunpoFilter';
+import BunpoFilter from '@/components/bunpo/BunpoFilter';
 import Link from 'next/link';
 import { useSearchParams, useRouter } from 'next/navigation';
-import BunpoDetailModal from '@/components/BunpoDetailModal';
+import BunpoDetailModal from '@/components/bunpo/BunpoDetailModal';
 import { useTheme } from '@/context/ThemeContext';
 
 function BunpoContent() {

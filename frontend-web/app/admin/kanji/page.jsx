@@ -8,6 +8,8 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import Cookies from 'js-cookie';
 import { cacheGet, cacheSet } from '@/lib/cache-store';
+import { toast } from 'react-toastify';
+import ConfirmationModal from '@/components/ConfirmationModal';
 
 export default function KanjiAdmin() {
     const { theme } = useTheme();
@@ -17,6 +19,7 @@ export default function KanjiAdmin() {
     const [loading, setLoading] = useState(true);
     const [filterLevel, setFilterLevel] = useState('');
     const [search, setSearch] = useState('');
+    const [pendingDelete, setPendingDelete] = useState(null);
     const router = useRouter();
 
     useEffect(() => { 
@@ -30,7 +33,7 @@ export default function KanjiAdmin() {
         if (typeof navigator !== 'undefined' && !navigator.onLine) {
             const cached = cacheGet('admin-kanji-all');
             if (cached) { setKanjiList(cached); setLoading(false); return; }
-            alert('Tidak ada koneksi internet dan data admin belum tersedia secara offline.');
+            toast.error('Tidak ada koneksi internet dan data admin belum tersedia secara offline.');
             setLoading(false);
             return;
         }
@@ -57,7 +60,7 @@ export default function KanjiAdmin() {
             } else {
                 const cached = cacheGet('admin-kanji-all');
                 if (cached) { setKanjiList(cached); return; }
-                alert(`Gagal mengambil data Kanji: ${res.status} ${res.statusText}`);
+                toast.error(`Gagal mengambil data Kanji: ${res.status} ${res.statusText}`);
             }
         } catch (error) {
             console.error("Failed to fetch", error);
@@ -68,19 +71,30 @@ export default function KanjiAdmin() {
         }
     };
 
-    const handleDelete = async (e, id) => {
+    const handleDelete = (e, id) => {
         e.stopPropagation();
-        if (!window.confirm("Yakin ingin menghapus Kanji ini?")) return;
+        setPendingDelete(id);
+    };
+
+    const confirmDelete = async () => {
+        if (!pendingDelete) return;
         try {
             const token = Cookies.get('access_token');
-            const res = await fetch(`${API_URL}/admin/kanji/${id}`, {
+            const res = await fetch(`${API_URL}/admin/kanji/${pendingDelete}`, {
                 method: 'DELETE',
                 headers: { 'Authorization': `Bearer ${token}` }
             });
-            if (res.ok) fetchKanjis();
-            else alert('Failed to delete');
+            if (res.ok) {
+                toast.success('Kanji deleted successfully');
+                fetchKanjis();
+            } else {
+                toast.error('Failed to delete');
+            }
         } catch (error) {
             console.error("Delete error", error);
+            toast.error('Network error while deleting');
+        } finally {
+            setPendingDelete(null);
         }
     };
 
@@ -106,7 +120,7 @@ export default function KanjiAdmin() {
                 a.remove();
                 window.URL.revokeObjectURL(url);
             } else {
-                alert("Gagal mengekspor data.");
+                toast.error("Gagal mengekspor data.");
             }
         } catch (error) {
             console.error("Export failed", error);
@@ -247,6 +261,17 @@ export default function KanjiAdmin() {
                     </div>
                 )}
             </div>
+
+            <ConfirmationModal
+                isOpen={!!pendingDelete}
+                onClose={() => setPendingDelete(null)}
+                onConfirm={confirmDelete}
+                title="Hapus Kanji?"
+                message="Yakin ingin menghapus Kanji ini? Tindakan ini tidak dapat dibatalkan."
+                confirmText="Hapus"
+                cancelText="Batal"
+                type="danger"
+            />
         </div>
     );
 }

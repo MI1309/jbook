@@ -3,9 +3,11 @@ import "./globals.css";
 import { AuthProvider } from "@/context/AuthContext";
 import { PracticeProvider } from "@/context/PracticeContext";
 import { ThemeProvider } from "@/context/ThemeContext";
-import ClientShell from "@/components/ClientShell";
-import OfflineIndicator from "@/components/OfflineIndicator";
-import AnnouncementPopup from "@/components/AnnouncementPopup";
+import ClientShell from "@/components/common/ClientShell";
+import OfflineIndicator from "@/components/common/OfflineIndicator";
+import AnnouncementPopup from "@/components/common/AnnouncementPopup";
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const geistSans = Geist({
     variable: "--font-geist-sans",
@@ -64,6 +66,18 @@ export default function RootLayout({ children }) {
                             </ClientShell>
                             <OfflineIndicator />
                             <AnnouncementPopup />
+                            <ToastContainer 
+                                position="bottom-right"
+                                autoClose={3000}
+                                hideProgressBar={false}
+                                newestOnTop
+                                closeOnClick
+                                rtl={false}
+                                pauseOnFocusLoss
+                                draggable
+                                pauseOnHover
+                                theme="colored"
+                            />
                         </PracticeProvider>
                     </AuthProvider>
                 </ThemeProvider>

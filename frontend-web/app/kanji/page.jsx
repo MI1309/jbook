@@ -2,10 +2,10 @@
 
 import { useState, useEffect, Suspense } from 'react';
 import { getKanjiList } from '@/lib/api';
-import KanjiFilter from '@/components/KanjiFilter';
+import KanjiFilter from '@/components/kanji/KanjiFilter';
 import Link from 'next/link';
 import { useSearchParams, useRouter } from 'next/navigation';
-import KanjiDetailModal from '@/components/KanjiDetailModal';
+import KanjiDetailModal from '@/components/kanji/KanjiDetailModal';
 
 const levelStyles = {
     1: { border: 'border-red-200 dark:border-red-900/30', badge: 'bg-red-500 text-white border-red-500', glow: 'hover:border-red-400 hover:shadow-red-500/10 dark:hover:shadow-red-500/5', char: 'text-black dark:text-white group-hover:text-red-600 dark:group-hover:text-red-400', bg: 'from-red-50/50 to-white dark:from-red-900/20 dark:to-card' },

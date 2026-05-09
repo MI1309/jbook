@@ -7,9 +7,10 @@ import { useRouter } from 'next/navigation';
 import { getUserAnalytics, exportPracticeData, importPracticeData, resolveContentId } from '@/lib/api';
 import { getGuestAnalytics } from '@/lib/local-analytics';
 import Link from 'next/link';
-import KanjiDetailModal from '@/components/KanjiDetailModal';
-import KotobaDetailModal from '@/components/KotobaDetailModal';
-import BunpoDetailModal from '@/components/BunpoDetailModal';
+import KanjiDetailModal from '@/components/kanji/KanjiDetailModal';
+import KotobaDetailModal from '@/components/kotoba/KotobaDetailModal';
+import BunpoDetailModal from '@/components/bunpo/BunpoDetailModal';
+import { toast } from 'react-toastify';
 
 export default function DashboardPage() {
     const { user, loading } = useAuth();
@@ -48,7 +49,9 @@ export default function DashboardPage() {
             if (id) {
                 setDetailView({ id, type: mistake.type });
             } else {
-                alert(`Detail untuk "${mistake.character}" tidak ditemukan. Jika offline, pastikan kamu sudah mengunduh materi.`);
+                toast.error(`Detail untuk "${mistake.character}" tidak ditemukan.`, {
+                    theme: theme === 'dark' ? 'dark' : 'colored'
+                });
             }
         } catch (err) {
             console.error('[jbook] handleOpenMistake error:', err);
@@ -89,11 +92,11 @@ export default function DashboardPage() {
                 const data = JSON.parse(event.target.result);
                 const result = await importPracticeData(data);
                 if (result.skipped > 0 && result.imported === 0) {
-                    alert(`Semua data sudah ada di database (${result.skipped} data dilewati). Tidak ada data baru yang diimpor.`);
+                    toast.info(`Semua data sudah ada (${result.skipped} data dilewati).`, { theme: theme === 'dark' ? 'dark' : 'colored' });
                 } else if (result.skipped > 0) {
-                    alert(`Berhasil mengimpor ${result.imported} data baru. ${result.skipped} data sudah ada (dilewati).`);
+                    toast.success(`Berhasil mengimpor ${result.imported} data baru.`, { theme: theme === 'dark' ? 'dark' : 'colored' });
                 } else {
-                    alert(`Data berhasil diimpor! (${result.imported} data latihan)`);
+                    toast.success(`Data berhasil diimpor!`, { theme: theme === 'dark' ? 'dark' : 'colored' });
                 }
                 fetchAnalytics(); // Refresh data
             } catch (err) {

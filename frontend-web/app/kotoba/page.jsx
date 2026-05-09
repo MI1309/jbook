@@ -2,10 +2,10 @@
 
 import { useState, useEffect, Suspense } from 'react';
 import { getVocabList } from '@/lib/api';
-import KotobaFilter from '@/components/KotobaFilter';
+import KotobaFilter from '@/components/kotoba/KotobaFilter';
 import Link from 'next/link';
 import { useSearchParams, useRouter } from 'next/navigation';
-import KotobaDetailModal from '@/components/KotobaDetailModal';
+import KotobaDetailModal from '@/components/kotoba/KotobaDetailModal';
 
 import { getScriptTypes } from '@/lib/utils';
 import { useTheme } from '@/context/ThemeContext';

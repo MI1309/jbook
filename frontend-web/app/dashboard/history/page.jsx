@@ -6,9 +6,10 @@ import { useTheme } from '@/context/ThemeContext';
 import { useRouter } from 'next/navigation';
 import { getUserAnalytics, resolveContentId } from '@/lib/api';
 import Link from 'next/link';
-import KanjiDetailModal from '@/components/KanjiDetailModal';
-import KotobaDetailModal from '@/components/KotobaDetailModal';
-import BunpoDetailModal from '@/components/BunpoDetailModal';
+import KanjiDetailModal from '@/components/kanji/KanjiDetailModal';
+import KotobaDetailModal from '@/components/kotoba/KotobaDetailModal';
+import BunpoDetailModal from '@/components/bunpo/BunpoDetailModal';
+import { toast } from 'react-toastify';
 
 export default function HistoryPage() {
     const { user, loading } = useAuth();
@@ -27,7 +28,10 @@ export default function HistoryPage() {
             if (id) {
                 setDetailView({ id, type: mistake.type });
             } else {
-                alert(`Detail untuk "${mistake.character}" tidak ditemukan. Jika offline, pastikan kamu sudah mengunduh materi.`);
+                toast.error(`Detail untuk "${mistake.character}" tidak ditemukan. Jika offline, pastikan kamu sudah mengunduh materi.`, {
+                    position: "bottom-center",
+                    theme: theme === 'dark' ? 'dark' : 'colored'
+                });
             }
         } catch (err) {
             console.error('[jbook] handleOpenMistake error:', err);
@@ -106,7 +110,7 @@ export default function HistoryPage() {
     }
 
     return (
-        <div className={`min-h-screen ${pageBg} transition-colors duration-300`}>
+        <div className={`min-h-screen ${pageBg}`}>
             <div className="container mx-auto px-4 py-12 max-w-4xl">
 
                 {/* Header */}
@@ -254,8 +258,8 @@ export default function HistoryPage() {
                                                     mistake.status === 'Perbaiki' 
                                                         ? 'bg-red-600 text-white' 
                                                         : mistake.status === 'Cukup'
-                                                            ? 'bg-orange-500 text-white'
-                                                            : 'bg-emerald-500 text-white'
+                                                                ? 'bg-orange-500 text-white'
+                                                                : 'bg-emerald-500 text-white'
                                                 }`}>
                                                     {mistake.status}
                                                 </span>

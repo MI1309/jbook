@@ -6,11 +6,12 @@ import { useTheme } from '@/context/ThemeContext';
 import { useAuth } from '@/context/AuthContext';
 import { getUserAnalytics, resolveContentId } from '@/lib/api';
 import { getGuestAnalytics } from '@/lib/local-analytics';
-import PracticeConfig from '@/components/PracticeConfig';
-import PracticeRunner from '@/components/PracticeRunner';
-import KanjiDetailModal from '@/components/KanjiDetailModal';
-import KotobaDetailModal from '@/components/KotobaDetailModal';
-import BunpoDetailModal from '@/components/BunpoDetailModal';
+import PracticeConfig from '@/components/practice/PracticeConfig';
+import PracticeRunner from '@/components/practice/PracticeRunner';
+import KanjiDetailModal from '@/components/kanji/KanjiDetailModal';
+import KotobaDetailModal from '@/components/kotoba/KotobaDetailModal';
+import BunpoDetailModal from '@/components/bunpo/BunpoDetailModal';
+import { toast } from 'react-toastify';
 
 function PracticePageContent() {
     const { theme, mounted } = useTheme();
@@ -50,7 +51,9 @@ function PracticePageContent() {
             if (id) {
                 setDetailView({ id, type: mistake.type });
             } else {
-                alert(`Detail untuk "${mistake.character}" tidak ditemukan. Jika offline, pastikan kamu sudah mengunduh materi.`);
+                toast.error(`Detail untuk "${mistake.character}" tidak ditemukan.`, {
+                    theme: theme === 'dark' ? 'dark' : 'colored'
+                });
             }
         } catch (err) {
             console.error('[jbook] handleOpenMistake error:', err);
