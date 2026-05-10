@@ -271,7 +271,8 @@ function PracticeContent() {
             is_correct: isCorrect,
             answer_given: option.text,
             correct_meaning: currentQ.meaning,
-            correct_answer: currentQ.options.find(o => o.is_correct)?.text
+            correct_answer: currentQ.options.find(o => o.is_correct)?.text,
+            level: currentQ.level
         };
 
         const newResults = [...results, attempt];

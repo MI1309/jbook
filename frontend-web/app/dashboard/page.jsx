@@ -152,6 +152,12 @@ export default function DashboardPage() {
         }
     });
     const topMistakes = Array.from(groupedMap.values()).sort((a, b) => b.count - a.count);
+    
+    // Level analytics
+    const levelStats = analytics?.level_stats || [];
+    const weakestLevel = levelStats.length > 0 && totalExercises > 10
+        ? [...levelStats].filter(l => l.total > 2).sort((a, b) => a.accuracy - b.accuracy)[0]
+        : null;
 
     // Categorize top mistakes simply
     const getMistakeTypeIcon = (type) => {
@@ -259,6 +265,64 @@ export default function DashboardPage() {
                 </div>
             </div>
 
+            {/* Level Accuracy Section */}
+            {levelStats.length > 0 && (
+                <div className="mb-10 animate-in fade-in slide-in-from-bottom-4 duration-700">
+                    <h2 className={`text-xl font-black mb-4 flex items-center gap-2 transition-colors ${!mounted ? 'text-gray-900' : (theme === 'dark' ? 'text-white' : 'text-gray-900')}`}>
+                        <span className="bg-red-600 text-white p-1.5 rounded-xl shadow-sm shadow-red-500/20">
+                            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 002 2h2a2 2 0 002-2z"></path></svg>
+                        </span>
+                        Akurasi per Level JLPT
+                    </h2>
+                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
+                        {levelStats.map(stat => (
+                            <div key={stat.level} className={`p-4 rounded-2xl border-2 transition-all hover:scale-[1.02] ${!mounted ? 'bg-white border-gray-100' : (theme === 'dark' ? 'bg-black/20 border-red-950/20' : 'bg-white border-gray-100')}`}>
+                                <div className="text-[10px] font-black text-gray-500 uppercase tracking-widest mb-1">JLPT N{stat.level}</div>
+                                <div className={`text-3xl font-black mb-1 ${stat.accuracy >= 80 ? 'text-green-500' : stat.accuracy >= 50 ? 'text-yellow-500' : 'text-red-500'}`}>
+                                    {Math.round(stat.accuracy)}%
+                                </div>
+                                <div className="text-[10px] text-gray-400 font-bold uppercase tracking-tight">{stat.total} Soal Dikerjakan</div>
+                                <div className="w-full bg-gray-200 dark:bg-gray-800 rounded-full h-1 mt-3">
+                                    <div 
+                                        className={`h-1 rounded-full ${stat.accuracy >= 80 ? 'bg-green-500' : stat.accuracy >= 50 ? 'bg-yellow-500' : 'bg-red-500'}`}
+                                        style={{ width: `${stat.accuracy}%` }}
+                                    ></div>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            )}
+
+            {/* Level Accuracy Section */}
+            {levelStats.length > 0 && (
+                <div className="mb-10 animate-in fade-in slide-in-from-bottom-4 duration-700">
+                    <h2 className={`text-xl font-black mb-4 flex items-center gap-2 transition-colors ${!mounted ? 'text-gray-900' : (theme === 'dark' ? 'text-white' : 'text-gray-900')}`}>
+                        <span className="bg-red-600 text-white p-1.5 rounded-xl shadow-sm shadow-red-500/20">
+                            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 002 2h2a2 2 0 002-2z"></path></svg>
+                        </span>
+                        Akurasi per Level JLPT
+                    </h2>
+                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
+                        {levelStats.map(stat => (
+                            <div key={stat.level} className={`p-4 rounded-2xl border-2 transition-all hover:scale-[1.02] ${!mounted ? 'bg-white border-gray-100' : (theme === 'dark' ? 'bg-black/20 border-red-950/20' : 'bg-white border-gray-100')}`}>
+                                <div className="text-[10px] font-black text-gray-500 uppercase tracking-widest mb-1">JLPT N{stat.level}</div>
+                                <div className={`text-3xl font-black mb-1 ${stat.accuracy >= 80 ? 'text-green-500' : stat.accuracy >= 50 ? 'text-yellow-500' : 'text-red-500'}`}>
+                                    {Math.round(stat.accuracy)}%
+                                </div>
+                                <div className="text-[10px] text-gray-400 font-bold uppercase tracking-tight">{stat.total} Soal Dikerjakan</div>
+                                <div className="w-full bg-gray-200 dark:bg-gray-800 rounded-full h-1 mt-3">
+                                    <div 
+                                        className={`h-1 rounded-full ${stat.accuracy >= 80 ? 'bg-green-500' : stat.accuracy >= 50 ? 'bg-yellow-500' : 'bg-red-500'}`}
+                                        style={{ width: `${stat.accuracy}%` }}
+                                    ></div>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            )}
+
             {/* Analysis Section */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-10">
 
@@ -322,65 +386,99 @@ export default function DashboardPage() {
                     </div>
                 </div>
 
-                {/* Quick Tips */}
-                <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-                    <div className="border-b border-gray-100 bg-gray-50 px-6 py-4">
-                        <h2 className="text-lg font-bold text-gray-900 flex items-center">
-                            <span className="bg-blue-100 text-blue-600 p-1 rounded mr-2">
-                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path></svg>
-                            </span>
-                            Saran Belajar
-                        </h2>
+            {/* Insights & Recommendations */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
+                <div className="lg:col-span-2 space-y-6">
+                    <h2 className={`text-2xl font-black flex items-center gap-3 transition-colors ${!mounted ? 'text-gray-900' : (theme === 'dark' ? 'text-white' : 'text-gray-900')}`}>
+                        <span className="bg-rose-600 text-white p-2 rounded-2xl shadow-lg shadow-rose-500/20">
+                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                        </span>
+                        Saran Belajar & Insight
+                    </h2>
+                    
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        {/* Insight: Weakest Level */}
+                        <div className={`${!mounted ? 'bg-white' : (theme === 'dark' ? 'bg-[#0a0a0a]/60 border-white/5' : 'bg-white border-gray-100')} p-6 rounded-[2rem] border-2 shadow-sm transition-all hover:shadow-md group`}>
+                            <div className="w-12 h-12 rounded-2xl bg-orange-100 dark:bg-orange-950/30 flex items-center justify-center text-orange-600 mb-4 group-hover:scale-110 transition-transform">
+                                <span className="font-black text-xl">N</span>
+                            </div>
+                            <h3 className={`font-black text-lg mb-2 transition-colors ${!mounted ? 'text-gray-900' : (theme === 'dark' ? 'text-white' : 'text-gray-900')}`}>
+                                {weakestLevel ? `Fokus JLPT N${weakestLevel.level}` : 'Siap Latihan?'}
+                            </h3>
+                            <p className="text-gray-500 text-sm leading-relaxed">
+                                {weakestLevel 
+                                    ? `Akurasi kamu di N${weakestLevel.level} masih ${Math.round(weakestLevel.accuracy)}%. Cobalah fokus pada kosa kata dasar di level ini untuk meningkatkan skor.` 
+                                    : 'Belum ada data yang cukup. Mulailah latihan untuk mendapatkan rekomendasi belajar yang akurat.'}
+                            </p>
+                        </div>
+
+                        {/* Insight: Character/Kana Error */}
+                        <div className={`${!mounted ? 'bg-white' : (theme === 'dark' ? 'bg-[#0a0a0a]/60 border-white/5' : 'bg-white border-gray-100')} p-6 rounded-[2rem] border-2 shadow-sm transition-all hover:shadow-md group`}>
+                            <div className="w-12 h-12 rounded-2xl bg-blue-100 dark:bg-blue-950/30 flex items-center justify-center text-blue-600 mb-4 group-hover:scale-110 transition-transform">
+                                <span className="font-black text-xl">あ</span>
+                            </div>
+                            <h3 className={`font-black text-lg mb-2 transition-colors ${!mounted ? 'text-gray-900' : (theme === 'dark' ? 'text-white' : 'text-gray-900')}`}>
+                                {topMistakes[0] ? `Perbaiki "${topMistakes[0].character}"` : 'Huruf & Kana'}
+                            </h3>
+                            <p className="text-gray-500 text-sm leading-relaxed">
+                                {topMistakes[0] 
+                                    ? `Kamu sering salah pada "${topMistakes[0].character}" (${topMistakes[0].count} kali). ${topMistakes[0].type === 'kanji' ? 'Review radikal dan cara baca onyomi-nya.' : 'Pelajari kembali konteks penggunaan kata ini.'}`
+                                    : 'Latihan rutin akan membantu mengidentifikasi huruf atau kana yang sulit bagi kamu.'}
+                            </p>
+                        </div>
                     </div>
-                    <div className="p-6">
+
+                    {/* Quick Tips List */}
+                    <div className={`${!mounted ? 'bg-white' : (theme === 'dark' ? 'bg-black/20 border-white/5' : 'bg-white border-gray-100')} p-8 rounded-[2.5rem] border-2`}>
+                        <h4 className={`text-sm font-black uppercase tracking-widest mb-6 transition-colors ${!mounted ? 'text-gray-400' : (theme === 'dark' ? 'text-gray-500' : 'text-gray-400')}`}>💡 Tips Cepat</h4>
                         <ul className="space-y-4">
-                            {accuracy < 50 && totalExercises > 20 && (
-                                <li className="flex items-start">
-                                    <div className="flex-shrink-0 w-6 h-6 rounded-full bg-red-100 text-red-600 flex items-center justify-center mr-3 mt-0.5">
-                                        <span className="font-bold text-xs">!</span>
-                                    </div>
-                                    <p className="text-gray-600 text-sm"><span className="font-bold text-gray-900">Kurangi kecepatan.</span> Sepertinya kamu banyak melakukan kesalahan. Cobalah belajar materi per bab terlebih dahulu sebelum melakukan latihan acak.</p>
+                            {accuracy < 70 && (
+                                <li className="flex items-start gap-4">
+                                    <div className="w-2 h-2 rounded-full bg-red-500 mt-2 shrink-0"></div>
+                                    <p className="text-gray-500 text-sm italic">"Cobalah untuk tidak terburu-buru. Membaca soal dengan teliti meningkatkan akurasi hingga 30%."</p>
                                 </li>
                             )}
-
-                            {topMistakes.some(m => m.type === 'kanji') && (
-                                <li className="flex items-start">
-                                    <div className="flex-shrink-0 w-6 h-6 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center mr-3 mt-0.5">
-                                        <span className="font-bold text-xs">K</span>
-                                    </div>
-                                    <p className="text-gray-600 text-sm"><span className="font-bold text-gray-900">Fokus pada Kanji.</span> Kanji <span className="font-medium bg-gray-100 px-1 rounded">{topMistakes.find(m => m.type === 'kanji')?.character}</span> sering salah. Review kembali bentuk radikalnya.</p>
+                            {topMistakes.some(m => m.type === 'particle') && (
+                                <li className="flex items-start gap-4">
+                                    <div className="w-2 h-2 rounded-full bg-pink-500 mt-2 shrink-0"></div>
+                                    <p className="text-gray-500 text-sm italic">"Partikel seperti は dan が sering membingungkan. Gunakan mode latihan khusus partikel untuk membedakannya."</p>
                                 </li>
                             )}
-
-                            {topMistakes.some(m => m.type === 'grammar' || m.type === 'bunpo') && (
-                                <li className="flex items-start">
-                                    <div className="flex-shrink-0 w-6 h-6 rounded-full bg-yellow-100 text-yellow-600 flex items-center justify-center mr-3 mt-0.5">
-                                        <span className="font-bold text-xs">T</span>
-                                    </div>
-                                    <p className="text-gray-600 text-sm"><span className="font-bold text-gray-900">Review Tata Bahasa.</span> Coba perbanyak membaca contoh kalimat untuk memahami konteks tata bahasa yang sering salah.</p>
-                                </li>
-                            )}
-
-                            {totalExercises < 10 && (
-                                <li className="flex items-start">
-                                    <div className="flex-shrink-0 w-6 h-6 rounded-full bg-green-100 text-green-600 flex items-center justify-center mr-3 mt-0.5">
-                                        <span className="font-bold text-xs">✓</span>
-                                    </div>
-                                    <p className="text-gray-600 text-sm"><span className="font-bold text-gray-900">Awal yang baik!</span> Perbanyak latihan agar analisis pemahaman kamu semakin akurat.</p>
-                                </li>
-                            )}
-
-                            {accuracy >= 80 && totalExercises > 20 && (
-                                <li className="flex items-start">
-                                    <div className="flex-shrink-0 w-6 h-6 rounded-full bg-purple-100 text-purple-600 flex items-center justify-center mr-3 mt-0.5">
-                                        <span className="font-bold text-xs">★</span>
-                                    </div>
-                                    <p className="text-gray-600 text-sm"><span className="font-bold text-gray-900">Luar biasa!</span> Tingkat pemahaman kamu sangat bagus. Saatnya mencoba materi JLPT di level yang lebih tinggi.</p>
-                                </li>
-                            )}
+                            <li className="flex items-start gap-4">
+                                <div className="w-2 h-2 rounded-full bg-green-500 mt-2 shrink-0"></div>
+                                <p className="text-gray-500 text-sm italic">"Istirahat sejenak setelah 15 menit belajar membantu otak memproses informasi lebih baik."</p>
+                            </li>
                         </ul>
                     </div>
                 </div>
+
+                {/* Sidebar: Recent Activity / Next Step */}
+                <div className="space-y-6">
+                    <h2 className={`text-2xl font-black transition-colors ${!mounted ? 'text-gray-900' : (theme === 'dark' ? 'text-white' : 'text-gray-900')}`}>Aksi Cepat</h2>
+                    <div className="space-y-4">
+                        <button 
+                            onClick={() => router.push('/practice')}
+                            className="w-full p-6 rounded-[2rem] bg-gradient-to-br from-red-600 to-rose-600 text-white text-left shadow-lg shadow-red-600/20 hover:scale-[1.02] transition-all group overflow-hidden relative"
+                        >
+                            <div className="relative z-10">
+                                <span className="text-[10px] font-black uppercase tracking-widest opacity-80">Rekomendasi</span>
+                                <h4 className="text-xl font-black mt-1">Mulai Latihan N{weakestLevel?.level || 5}</h4>
+                                <p className="text-xs mt-2 opacity-80">Latihan 10 menit untuk meningkatkan akurasi level terlemahmu.</p>
+                            </div>
+                            <div className="absolute right-[-10%] bottom-[-20%] text-white/10 text-8xl font-black select-none group-hover:rotate-12 transition-transform">N</div>
+                        </button>
+                        
+                        <button 
+                            onClick={() => router.push('/tts')}
+                            className={`${!mounted ? 'bg-white' : (theme === 'dark' ? 'bg-[#0a0a0a] border-white/10' : 'bg-white border-gray-100')} w-full p-6 rounded-[2rem] border-2 text-left hover:border-blue-500/50 transition-all group`}
+                        >
+                            <span className={`text-[10px] font-black uppercase tracking-widest transition-colors ${!mounted ? 'text-blue-600' : (theme === 'dark' ? 'text-blue-400' : 'text-blue-600')}`}>Hiburan</span>
+                            <h4 className={`text-xl font-black mt-1 transition-colors ${!mounted ? 'text-gray-900' : (theme === 'dark' ? 'text-white' : 'text-gray-900')}`}>Main TTS Kanji</h4>
+                            <p className="text-xs mt-2 text-gray-500">Bermain sambil belajar kosa kata baru dengan teka-teki silang.</p>
+                        </button>
+                    </div>
+                </div>
+            </div>
 
             </div>
 

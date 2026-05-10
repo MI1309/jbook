@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import { downloadAllForOffline, dbGetStats, dbClearAll, isOfflineDataStale } from '@/lib/offline-download';
+import { downloadAllForOffline, dbGetStats, dbClearAll, isOfflineDataStale, checkOfflineUpdates } from '@/lib/offline-download';
 import ConfirmationModal from '@/components/common/ConfirmationModal';
 
 export default function OfflineDownloadModal({ isOpen, onClose }) {
@@ -10,6 +10,7 @@ export default function OfflineDownloadModal({ isOpen, onClose }) {
     const [stats, setStats] = useState(null);
     const [errorMsg, setErrorMsg] = useState('');
     const [isStale, setIsStale] = useState(false);
+    const [hasNewData, setHasNewData] = useState(false);
     const [showClearConfirm, setShowClearConfirm] = useState(false);
 
     const loadStats = useCallback(async () => {
@@ -18,6 +19,13 @@ export default function OfflineDownloadModal({ isOpen, onClose }) {
             setStats(s);
             const stale = await isOfflineDataStale();
             setIsStale(stale);
+            
+            if (s && s.downloadedAt) {
+                const { hasUpdate } = await checkOfflineUpdates();
+                setHasNewData(hasUpdate);
+            } else {
+                setHasNewData(false);
+            }
         } catch {
             setStats(null);
         }
@@ -50,12 +58,16 @@ export default function OfflineDownloadModal({ isOpen, onClose }) {
         } catch (err) {
             setErrorMsg(err.message || 'Gagal mengunduh data.');
             setStatus('error');
+        } finally {
+            // Re-check after download to clear warning
+            loadStats();
         }
     };
 
     const performClear = async () => {
         await dbClearAll();
         setStats(null);
+        setHasNewData(false);
         setStatus('idle');
     };
 
@@ -190,6 +202,14 @@ export default function OfflineDownloadModal({ isOpen, onClose }) {
                                     <div className="flex items-start gap-2 bg-amber-50 border border-amber-200 rounded-lg px-3 py-2 text-xs text-amber-700">
                                         <span className="flex-shrink-0">⚠️</span>
                                         <span>Data sudah lebih dari 2 bulan. Disarankan untuk <b>perbarui</b> agar tetap akurat.</span>
+                                    </div>
+                                )}
+                                
+                                {/* New data warning */}
+                                {hasNewData && (
+                                    <div className="flex items-start gap-2 bg-blue-50 border border-blue-200 rounded-lg px-3 py-2 text-xs text-blue-700">
+                                        <span className="flex-shrink-0">🆕</span>
+                                        <span>Ada data Kotoba, Kanji, atau Bunpo terbaru! Silakan <b>perbarui</b> data offline kamu.</span>
                                     </div>
                                 )}
 

@@ -27,6 +27,7 @@ class QuestionSchema(Schema):
     # Extra fields for context if needed
     reading: Optional[str] = None 
     meaning: Optional[str] = None
+    level: Optional[int] = None
 
 class TTSSchema(Schema):
     grid: List[List[str]]
@@ -47,12 +48,20 @@ class WrongStatSchema(Schema):
     count: int
     type: str
     status: Optional[str] = None
+    level: Optional[int] = None
+
+class LevelStatSchema(Schema):
+    level: int
+    total: int
+    correct: int
+    accuracy: float
 
 
 class AnalyticsSchema(Schema):
     total_attempts: int
     accuracy: float
     wrong_stats: List[WrongStatSchema]
+    level_stats: List[LevelStatSchema]
 
 class QuizAttemptExportSchema(Schema):
     kanji_id: Optional[uuid.UUID] = None
@@ -100,6 +109,34 @@ def generate_quiz(request, limit: int = 10, level: Optional[str] = None, type: s
         elif t == 'particle':
             Model = Particle
             display_type = 'particle'
+        elif t == 'kana':
+            from utils.kana import ROMAJI_MAP
+            # Select random items from ROMAJI_MAP
+            items = list(ROMAJI_MAP.items())
+            random.shuffle(items)
+            selected = items[:limit]
+            
+            for romaji, kana in selected:
+                # Distractors for Romaji answers
+                all_romaji = [k for k, v in items if k != romaji]
+                distractor_romaji = random.sample(all_romaji, 3)
+                
+                options = [
+                    {"text": romaji, "is_correct": True},
+                    *[{"text": dr, "is_correct": False} for dr in distractor_romaji]
+                ]
+                
+                random.shuffle(options)
+                questions.append({
+                    "id": f"kana_{kana}",
+                    "character": kana,
+                    "type": "kana",
+                    "options": options,
+                    "reading": romaji,
+                    "meaning": f"Karakter Kana: {kana}",
+                    "level": 0
+                })
+            continue
         else:
             continue
 
@@ -177,7 +214,8 @@ def generate_quiz(request, limit: int = 10, level: Optional[str] = None, type: s
             "type": d_type,
             "options": options,
             "reading": reading,
-            "meaning": meaning
+            "meaning": meaning,
+            "level": getattr(item, 'jlpt_level', None)
         })
         
     return questions
@@ -297,7 +335,7 @@ def get_analytics(request):
     from django.db.models import Q
 
     # Kanji stats
-    kanji_stats = qs.filter(kanji__isnull=False).values('kanji__character')\
+    kanji_stats = qs.filter(kanji__isnull=False).values('kanji__character', 'kanji__jlpt_level')\
         .annotate(
             wrong=Count('id', filter=Q(is_correct=False)),
             right=Count('id', filter=Q(is_correct=True))
@@ -310,11 +348,12 @@ def get_analytics(request):
                 "character": item['kanji__character'], 
                 "count": item['wrong'], 
                 "type": "kanji",
-                "status": get_status_label(item['wrong'], item['right'])
+                "status": get_status_label(item['wrong'], item['right']),
+                "level": item['kanji__jlpt_level']
             })
     
     # Vocab stats
-    vocab_stats = qs.filter(vocab__isnull=False).values('vocab__word')\
+    vocab_stats = qs.filter(vocab__isnull=False).values('vocab__word', 'vocab__jlpt_level')\
         .annotate(
             wrong=Count('id', filter=Q(is_correct=False)),
             right=Count('id', filter=Q(is_correct=True))
@@ -326,11 +365,12 @@ def get_analytics(request):
                 "character": item['vocab__word'], 
                 "count": item['wrong'], 
                 "type": "vocab",
-                "status": get_status_label(item['wrong'], item['right'])
+                "status": get_status_label(item['wrong'], item['right']),
+                "level": item['vocab__jlpt_level']
             })
 
     # Grammar stats
-    grammar_stats = qs.filter(grammar__isnull=False).values('grammar__title')\
+    grammar_stats = qs.filter(grammar__isnull=False).values('grammar__title', 'grammar__jlpt_level')\
         .annotate(
             wrong=Count('id', filter=Q(is_correct=False)),
             right=Count('id', filter=Q(is_correct=True))
@@ -342,11 +382,12 @@ def get_analytics(request):
                 "character": item['grammar__title'],
                 "count": item['wrong'],
                 "type": "grammar",
-                "status": get_status_label(item['wrong'], item['right'])
+                "status": get_status_label(item['wrong'], item['right']),
+                "level": item['grammar__jlpt_level']
             })
         
     # Particle stats
-    particle_stats = qs.filter(particle__isnull=False).values('particle__character')\
+    particle_stats = qs.filter(particle__isnull=False).values('particle__character', 'particle__jlpt_level')\
         .annotate(
             wrong=Count('id', filter=Q(is_correct=False)),
             right=Count('id', filter=Q(is_correct=True))
@@ -358,18 +399,38 @@ def get_analytics(request):
                 "character": item['particle__character'],
                 "count": item['wrong'],
                 "type": "particle",
-                "status": get_status_label(item['wrong'], item['right'])
+                "status": get_status_label(item['wrong'], item['right']),
+                "level": item['particle__jlpt_level']
             })
 
         
     # Sort combined stats
     wrong_stats.sort(key=lambda x: x['count'], reverse=True)
+    
+    # Calculate Level Stats
+    level_stats_raw = {}
+    for lvl in range(1, 6):
+        level_qs = qs.filter(
+            Q(kanji__jlpt_level=lvl) | 
+            Q(vocab__jlpt_level=lvl) | 
+            Q(grammar__jlpt_level=lvl) |
+            Q(particle__jlpt_level=lvl)
+        )
+        total = level_qs.count()
+        if total > 0:
+            correct = level_qs.filter(is_correct=True).count()
+            level_stats_raw[lvl] = {
+                "level": lvl,
+                "total": total,
+                "correct": correct,
+                "accuracy": round((correct / total * 100), 1)
+            }
         
     return {
         "total_attempts": total_attempts,
         "accuracy": round(accuracy, 1),
-        "wrong_stats": wrong_stats[:50]
-
+        "wrong_stats": wrong_stats[:50],
+        "level_stats": sorted(level_stats_raw.values(), key=lambda x: x['level'], reverse=True)
     }
 
 @router.post("/practice/reset", auth=JWTAuth())

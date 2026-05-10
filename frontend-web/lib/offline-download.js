@@ -104,6 +104,36 @@ export async function downloadAllForOffline(onProgress = () => {}) {
 export { dbGetStats };
 
 /**
+ * Checks if there are more items in the API than we have offline.
+ * @returns {Promise<{ hasUpdate: boolean }>}
+ */
+export async function checkOfflineUpdates() {
+    if (typeof navigator !== 'undefined' && !navigator.onLine) return { hasUpdate: false };
+
+    try {
+        const stats = await dbGetStats();
+        if (!stats.downloadedAt) return { hasUpdate: false }; // Not downloaded yet
+
+        const [vocabRes, kanjiRes, grammarRes] = await Promise.all([
+            fetch(`${API_URL}/content/vocab?limit=1`).then(res => res.ok ? res.json() : { total: stats.vocab || 0 }).catch(() => ({ total: stats.vocab || 0 })),
+            fetch(`${API_URL}/content/kanji?limit=1`).then(res => res.ok ? res.json() : { total: stats.kanji || 0 }).catch(() => ({ total: stats.kanji || 0 })),
+            fetch(`${API_URL}/content/grammar?limit=1`).then(res => res.ok ? res.json() : { total: stats.grammar || 0 }).catch(() => ({ total: stats.grammar || 0 })),
+        ]);
+
+        const hasUpdate = (
+            ((vocabRes.total || 0) > (stats.vocab || 0)) ||
+            ((kanjiRes.total || 0) > (stats.kanji || 0)) ||
+            ((grammarRes.total || 0) > (stats.grammar || 0))
+        );
+
+        return { hasUpdate };
+    } catch (err) {
+        console.error("[offline-download] Failed to check offline updates", err);
+        return { hasUpdate: false };
+    }
+}
+
+/**
  * Wipe all offline data.
  */
 export { dbClearAll } from './offline-db';

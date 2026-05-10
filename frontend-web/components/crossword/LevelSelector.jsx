@@ -42,24 +42,18 @@ export const LevelSelector = () => {
         <label className="block text-sm font-bold text-gray-400 uppercase tracking-widest mb-3">Pilih Level JLPT</label>
         <div className="grid grid-cols-5 gap-3">
           {levels.map(lvl => {
-            const isComingSoon = ['1', '2', '3'].includes(lvl.id);
             return (
               <button
                 key={lvl.id}
-                disabled={isComingSoon}
                 onClick={() => setSelectedLevel(lvl.id)}
                 className={clsx(
                   "relative flex flex-col items-center p-3 rounded-xl border-2 transition-all",
                   selectedLevel === lvl.id 
                     ? "border-red-500 bg-red-50 dark:bg-red-900/30 text-red-700 dark:text-red-300 shadow-sm" 
-                    : "border-gray-100 dark:border-gray-800 hover:border-red-200 text-gray-600 dark:text-gray-400",
-                  isComingSoon && "opacity-50 grayscale cursor-not-allowed"
+                    : "border-gray-100 dark:border-gray-800 hover:border-red-200 text-gray-600 dark:text-gray-400"
                 )}
               >
                 <span className="font-bold text-lg">{lvl.name}</span>
-                {isComingSoon && (
-                  <span className="absolute -top-2 -right-2 bg-gray-500 text-white text-[8px] px-1 rounded-full font-bold">Soon</span>
-                )}
               </button>
             );
           })}

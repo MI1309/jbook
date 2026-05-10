@@ -80,7 +80,7 @@ export function saveGuestResults(newResults) {
         wrongMap.set(item.character + '|' + item.type, { ...item });
     });
 
-    // Process new results
+    // Update wrong stats
     newResults.forEach(res => {
         const label = res.character || res.word || res.title;
         if (!label) return;
@@ -91,7 +91,8 @@ export function saveGuestResults(newResults) {
                 character: label,
                 count: 0,
                 right_count: 0,
-                type: res.type
+                type: res.type,
+                level: res.level
             });
         }
 
@@ -110,10 +111,9 @@ export function saveGuestResults(newResults) {
         if (wrong >= 4) return "Perbaiki";
         if (wrong === 3) return "Cukup";
         if (wrong === 2) return "Lumayan";
-        return "Lumayan"; // fallback for 1 wrong 0 right
+        return "Lumayan"; 
     };
 
-    // Convert map back to array, filter out items that don't have mistakes anymore (or never did), and sort
     const wrong_stats = Array.from(wrongMap.values())
         .filter(item => item.count > 0)
         .map(item => ({
@@ -121,13 +121,34 @@ export function saveGuestResults(newResults) {
             status: getStatusLabel(item.count, item.right_count)
         }))
         .sort((a, b) => b.count - a.count)
-        .slice(0, 50); // Keep top 50
+        .slice(0, 50);
 
+    // Calculate level stats for guest
+    // We'll store level_raw in the analytics object to keep track of totals
+    const levelRaw = current.level_raw || {};
+    newResults.forEach(res => {
+        if (res.level) {
+            if (!levelRaw[res.level]) {
+                levelRaw[res.level] = { total: 0, correct: 0 };
+            }
+            levelRaw[res.level].total += 1;
+            if (res.is_correct) levelRaw[res.level].correct += 1;
+        }
+    });
+
+    const level_stats = Object.keys(levelRaw).map(lvl => ({
+        level: parseInt(lvl),
+        total: levelRaw[lvl].total,
+        correct: levelRaw[lvl].correct,
+        accuracy: parseFloat(((levelRaw[lvl].correct / levelRaw[lvl].total) * 100).toFixed(1))
+    })).sort((a, b) => b.level - a.level);
 
     const updated = {
         total_attempts: newTotal,
         accuracy: parseFloat(newAccuracy.toFixed(1)),
-        wrong_stats
+        wrong_stats,
+        level_stats,
+        level_raw: levelRaw
     };
 
     localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
