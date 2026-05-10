@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { downloadAllForOffline, dbGetStats, dbClearAll, isOfflineDataStale } from '@/lib/offline-download';
-import ConfirmationModal from '@/components/ConfirmationModal';
+import ConfirmationModal from '@/components/common/ConfirmationModal';
 
 export default function OfflineDownloadModal({ isOpen, onClose }) {
     const [status, setStatus] = useState('idle');

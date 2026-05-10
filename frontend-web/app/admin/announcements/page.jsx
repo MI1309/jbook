@@ -6,7 +6,7 @@ import { useTheme } from '@/context/ThemeContext';
 import { API_URL } from '@/lib/api';
 import Cookies from 'js-cookie';
 import Link from 'next/link';
-import ConfirmationModal from '@/components/ConfirmationModal';
+import ConfirmationModal from '@/components/common/ConfirmationModal';
 
 export default function AdminAnnouncements() {
     const { theme } = useTheme();

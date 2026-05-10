@@ -353,6 +353,81 @@ def get_vocab(request, vocab_id: str):
         vocab.furigana = to_kana(vocab.furigana.lower())
     return vocab
 
+class VocabCreateSchema(Schema):
+    word: str
+    reading: Optional[str] = None
+    furigana: Optional[str] = None
+    meaning: Optional[str] = None
+    word_type: Optional[str] = None
+    jlpt_level: Optional[int] = 5
+    examples: List[dict] = []
+
+class SyncRequestSchema(Schema):
+    data: List[dict]
+
+class TranslateRequestSchema(Schema):
+    text: str
+
+@router.post("/kotoba", response={200: VocabSchema, 400: dict})
+@router.post("/vocab", response={200: VocabSchema, 400: dict})
+def create_vocab(request, payload: VocabCreateSchema):
+    from .models import Vocab
+    try:
+        vocab = Vocab.objects.create(**payload.dict())
+        return 200, vocab
+    except Exception as e:
+        return 400, {"error": str(e)}
+
+@router.put("/kotoba/{vocab_id}", response={200: VocabSchema, 404: dict, 400: dict})
+@router.put("/vocab/{vocab_id}", response={200: VocabSchema, 404: dict, 400: dict})
+def update_vocab(request, vocab_id: str, payload: VocabCreateSchema):
+    from .models import Vocab
+    vocab = get_object_or_404(Vocab, id=vocab_id)
+    try:
+        for attr, value in payload.dict().items():
+            setattr(vocab, attr, value)
+        vocab.save()
+        return 200, vocab
+    except Exception as e:
+        return 400, {"error": str(e)}
+
+@router.delete("/kotoba/{vocab_id}")
+@router.delete("/vocab/{vocab_id}")
+def delete_vocab(request, vocab_id: str):
+    from .models import Vocab
+    vocab = get_object_or_404(Vocab, id=vocab_id)
+    vocab.delete()
+    return {"success": True}
+
+@router.post("/kotoba/sync")
+def sync_kotoba(request, payload: SyncRequestSchema):
+    from utils.kotoba_sync import sync_kotoba_data
+    stats = sync_kotoba_data(payload.data)
+    return stats
+
+@router.post("/kotoba/translate")
+def translate_kotoba(request, payload: TranslateRequestSchema):
+    from utils.kotoba_sync import translate_ja_to_id, generate_furigana
+    meaning = translate_ja_to_id(payload.text)
+    furigana = generate_furigana(payload.text)
+    return {"word": payload.text, "meaning": meaning, "furigana": furigana}
+
+from ninja import File
+from ninja.files import UploadedFile
+
+@router.post("/kotoba/import")
+def import_kotoba(request, file: UploadedFile = File(...)):
+    import json
+    from utils.kotoba_sync import sync_kotoba_data
+    try:
+        data = json.loads(file.read().decode('utf-8'))
+        if not isinstance(data, list):
+            return 400, {"error": "Format JSON harus array/list of objects."}
+        stats = sync_kotoba_data(data)
+        return stats
+    except Exception as e:
+        return 400, {"error": str(e)}
+
 @router.get("/blog", response=List[BlogSchema])
 def list_blog(request):
     return Blog.objects.filter(is_published=True).order_by('-created_at')

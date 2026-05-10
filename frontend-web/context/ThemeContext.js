@@ -5,17 +5,13 @@ import { createContext, useContext, useEffect, useState } from 'react';
 const ThemeContext = createContext();
 
 export function ThemeProvider({ children }) {
-    const [theme, setTheme] = useState('light');
+    const [theme, setTheme] = useState('dark');
     const [mounted, setMounted] = useState(false);
 
     useEffect(() => {
-        // Get initial theme from localStorage or system preference
-        const savedTheme = localStorage.getItem('theme');
-        const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-        const initialTheme = savedTheme || systemTheme;
-        
-        setTheme(initialTheme);
-        document.documentElement.classList.toggle('dark', initialTheme === 'dark');
+        setTheme('dark');
+        document.documentElement.classList.add('dark');
+        localStorage.setItem('theme', 'dark');
         setMounted(true);
 
         // Remove preload class to re-enable transitions after initial render completes
@@ -25,10 +21,10 @@ export function ThemeProvider({ children }) {
     }, []);
 
     const toggleTheme = () => {
-        const newTheme = theme === 'light' ? 'dark' : 'light';
-        setTheme(newTheme);
-        localStorage.setItem('theme', newTheme);
-        document.documentElement.classList.toggle('dark', newTheme === 'dark');
+        // Feature disabled: force dark mode
+        setTheme('dark');
+        localStorage.setItem('theme', 'dark');
+        document.documentElement.classList.add('dark');
     };
 
     return (

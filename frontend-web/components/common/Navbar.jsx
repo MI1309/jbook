@@ -134,28 +134,7 @@ export default function Navbar() {
 
                         {/* Desktop Auth */}
                         <div className="hidden md:flex items-center space-x-2">
-                            {/* Theme Toggle Button */}
-                            <button
-                                onClick={toggleTheme}
-                                className={`p-2 rounded-xl transition-all duration-200 ${
-                                    theme === 'dark' 
-                                        ? 'text-red-400 hover:bg-red-950/30' 
-                                        : 'text-red-600 hover:bg-red-50'
-                                }`}
-                                title={theme === 'dark' ? 'Mode Terang' : 'Mode Gelap'}
-                            >
-                                {mounted && (
-                                    theme === 'dark' ? (
-                                        <svg className="w-5 h-5 shadow-sm" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m12.728 0l-.707-.707M6.343 6.364l-.707-.707M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                        </svg>
-                                    ) : (
-                                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
-                                        </svg>
-                                    )
-                                )}
-                            </button>
+                            {/* Theme toggle disabled (forced dark mode) */}
 
                             {/* Offline Download Button */}
                             <button
@@ -216,24 +195,8 @@ export default function Navbar() {
                             )}
                         </div>
 
-                        {/* Mobile: Theme + Download + Hamburger */}
+                        {/* Mobile: Download + Hamburger */}
                         <div className="flex items-center gap-1 md:hidden">
-                            <button
-                                onClick={toggleTheme}
-                                className="p-2 rounded-md text-gray-500 dark:text-gray-400 hover:text-red-600 dark:hover:text-red-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-200"
-                            >
-                                {mounted && (
-                                    theme === 'dark' ? (
-                                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m12.728 0l-.707-.707M6.343 6.364l-.707-.707M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                        </svg>
-                                    ) : (
-                                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
-                                        </svg>
-                                    )
-                                )}
-                            </button>
 
                             <button
                                 onClick={() => setShowOfflineModal(true)}

@@ -148,8 +148,13 @@ export const useGameStore = create(
     const cell = newGrid.cells[selectedCell.row][selectedCell.col];
     
     if (cell.validationState === 'correct') {
-       moveToNextCell(get, set);
-       return;
+       if (wanakana.toHiragana(fullValue) === wanakana.toHiragana(cell.char)) {
+           moveToNextCell(get, set);
+           return;
+       } else {
+           gameState.score = Math.max(0, gameState.score - 10);
+           cell.validationState = 'empty';
+       }
     }
     
     // Manual mapping for 'n' cases
@@ -228,10 +233,11 @@ export const useGameStore = create(
     const newGrid = { ...grid };
     const cell = newGrid.cells[selectedCell.row][selectedCell.col];
     
-    if (cell.validationState !== 'correct') {
-      cell.userInput = '';
-      cell.validationState = 'empty';
+    if (cell.validationState === 'correct') {
+      gameState.score = Math.max(0, gameState.score - 10);
     }
+    cell.userInput = '';
+    cell.validationState = 'empty';
     
     set({ gameState: { ...gameState, grid: newGrid } });
     
@@ -271,8 +277,6 @@ export const useGameStore = create(
     const completedIds = [...gameState.completedWordIds];
     
     for (const word of grid.words) {
-      if (word.isCompleted) continue;
-      
       let wordComplete = true;
       for (let i = 0; i < word.text.length; i++) {
         const r = word.direction === 'across' ? word.startRow : word.startRow + i;
@@ -289,10 +293,13 @@ export const useGameStore = create(
           completedIds.push(word.id);
           // Bonus streak / completed word logic
         }
-      }
-      
-      if (!wordComplete) {
+      } else {
+        word.isCompleted = false;
         allComplete = false;
+        const idx = completedIds.indexOf(word.id);
+        if (idx !== -1) {
+          completedIds.splice(idx, 1);
+        }
       }
     }
     

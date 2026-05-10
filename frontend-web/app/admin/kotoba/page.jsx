@@ -8,7 +8,7 @@ import { useRouter } from 'next/navigation';
 import Cookies from 'js-cookie';
 import { cacheGet, cacheSet } from '@/lib/cache-store';
 import { toast } from 'react-toastify';
-import ConfirmationModal from '@/components/ConfirmationModal';
+import ConfirmationModal from '@/components/common/ConfirmationModal';
 
 export default function KotobaAdmin() {
     const { user } = useAuth();

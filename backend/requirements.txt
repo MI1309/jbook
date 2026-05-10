@@ -109,3 +109,4 @@ virtualenv==21.1.0
 Werkzeug==3.1.6
 whitenoise==6.11.0
 yarl==1.23.0
+pykakasi
