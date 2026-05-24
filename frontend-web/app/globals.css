@@ -1,38 +1,52 @@
 @import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Kaisei+Tokumin:wght@400;500;700;800&family=Outfit:wght@300;400;500;600;700;800&display=swap');
 
 :root {
-  --background: #ffffff;
-  --foreground: #000000;
-  --card-bg: #fcfcfc;
-  --border-color: #f1f5f9;
-  --brand-red: #dc2626;
-  --brand-red-light: #fef2f2;
+  --background: #f7f5f0; /* Alabaster Washi light */
+  --foreground: #1c1c1f;
+  --card-bg: #ffffff;
+  --border-color: #e5e5db;
+  --brand-red: #c92a2a; /* Soft Crimson */
+  --brand-red-light: #fff5f5;
+  --accent-blue: #0f4c81; /* Indigo Sea Blue */
+  --accent-green: #2d5a27; /* Bamboo Green */
+  --accent-gold: #c69214; /* Tatami Gold */
 }
 
 .dark {
-  --background: #000000;
-  --foreground: #ffffff;
-  --card-bg: #0a0a0a;
-  --border-color: #1a1a1a;
-  --brand-red: #ef4444;
-  --brand-red-light: #2d0606;
+  --background: #0b0b0d; /* Midnight Sumi Ink */
+  --foreground: #f2f2f7;
+  --card-bg: #131317; /* Cozy Washi Card */
+  --border-color: #212127; /* Thin Washi divider */
+  --brand-red: #f43f5e; /* Sakura Soft Red */
+  --brand-red-light: #200d11;
+  --accent-blue: #38bdf8; /* Serene Sea Blue */
+  --accent-green: #34d399; /* Calm Bamboo Green */
+  --accent-gold: #fbbf24; /* Warm Glow Gold */
 }
 
 @theme inline {
   --color-brand: var(--brand-red);
   --color-brand-light: var(--brand-red-light);
-}
-
-.card-texture {
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E");
+  --color-accent-blue: var(--accent-blue);
+  --color-accent-green: var(--accent-green);
+  --color-accent-gold: var(--accent-gold);
+  --font-serif: "Kaisei Tokumin", serif;
+  --font-sans: "Outfit", sans-serif;
 }
 
 body {
   background-color: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: 'Outfit', sans-serif;
   min-height: 100vh;
   position: relative;
+  overflow-x: hidden;
+}
+
+/* Washi Paper texture effect */
+.washi-texture {
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.03'/%3E%3C/svg%3E");
 }
 
 .dark body::before {
@@ -41,25 +55,87 @@ body {
   top: 0;
   left: 0;
   right: 0;
-  height: 40vh;
-  background: radial-gradient(circle at 50% -10%, rgba(255, 255, 255, 0.05) 0%, transparent 70%);
+  height: 50vh;
+  background: radial-gradient(circle at 50% -10%, rgba(56, 189, 248, 0.04) 0%, transparent 80%);
   pointer-events: none;
   z-index: 0;
 }
 
-@keyframes slide-up {
-  0% { transform: translate(-50%, 100%); opacity: 0; }
-  100% { transform: translate(-50%, 0); opacity: 1; }
+/* Japanese Book Page-like styles */
+.book-page-shadow {
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.4), 
+              inset 0 0 40px rgba(0, 0, 0, 0.1);
 }
 
-.animate-slide-up {
-  animation: slide-up 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+.book-binding-divider {
+  position: relative;
+}
+.book-binding-divider::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 10%;
+  right: 10%;
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--border-color) 20%, var(--border-color) 80%, transparent);
 }
 
-.preload * {
-  -webkit-transition: none !important;
-  -moz-transition: none !important;
-  -ms-transition: none !important;
-  -o-transition: none !important;
-  transition: none !important;
+/* Custom modern scrollbar with tatami gold/slate styling */
+::-webkit-scrollbar {
+  width: 8px;
 }
+::-webkit-scrollbar-track {
+  background: var(--background);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-blue);
+}
+
+/* Calligraphy font specific styling */
+.font-japanese {
+  font-family: 'Kaisei Tokumin', serif;
+}
+
+/* Sakura falling animation details */
+@keyframes sakura-fall {
+  0% {
+    transform: translateY(-20px) translateX(0) rotate(0deg);
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.6;
+  }
+  90% {
+    opacity: 0.4;
+  }
+  100% {
+    transform: translateY(105vh) translateX(100px) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+.sakura-petal {
+  position: absolute;
+  background: linear-gradient(135deg, #fbcfe8 0%, #fda4af 100%);
+  border-radius: 99% 0 99% 50% / 99% 0 99% 50%;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0;
+}
+
+/* Subtle transitions */
+.transition-cozy {
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+/* Custom focus states */
+.focus-glow:focus {
+  outline: none;
+  border-color: var(--accent-blue);
+  box-shadow: 0 0 12px rgba(56, 189, 248, 0.2);
+}
+
