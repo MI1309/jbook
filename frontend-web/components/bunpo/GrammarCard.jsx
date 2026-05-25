@@ -4,23 +4,23 @@ import PropTypes from 'prop-types';
 
 export default function GrammarCard({ id, title, structure, level, chapter }) {
     return (
-        <Link href={`/bunpo/${id}`} className="block">
-            <div className="border border-gray-200 rounded-lg p-5 hover:shadow-lg transition-shadow bg-white h-full flex flex-col justify-between">
+        <Link href={`/bunpo/${id}`} className="block h-full">
+            <div className="border border-[var(--border-color)] rounded-[2rem] p-6 hover:-translate-y-1 hover:shadow-xl hover:shadow-accent-green/10 hover:border-accent-green/30 transition-all bg-[var(--card-bg)] h-full flex flex-col justify-between">
                 <div>
-                    <div className="flex justify-between items-start mb-3">
-                        <h2 className="text-xl font-bold text-gray-800">{title}</h2>
+                    <div className="flex justify-between items-start mb-4">
+                        <h2 className="text-xl font-japanese font-black text-foreground">{title}</h2>
                         <div className="flex gap-2">
                             {chapter && (
-                                <span className="bg-green-100 text-green-800 text-xs font-semibold px-2.5 py-0.5 rounded">
+                                <span className="bg-accent-green/10 text-accent-green text-[10px] font-black px-2 py-0.5 rounded-xl border border-accent-green/20 uppercase tracking-widest">
                                     Bab {chapter}
                                 </span>
                             )}
-                            <span className="bg-blue-100 text-blue-800 text-xs font-semibold px-2.5 py-0.5 rounded">N{level}</span>
+                            <span className="bg-[var(--background)] text-gray-500 text-[10px] font-black px-2 py-0.5 rounded-xl border border-[var(--border-color)] uppercase tracking-widest">N{level}</span>
                         </div>
                     </div>
-                    <p className="text-gray-600 font-medium mb-2">{structure}</p>
+                    <p className="text-gray-500 text-sm font-medium mb-2">{structure}</p>
                 </div>
-                <div className="mt-4 text-sm text-blue-500 font-semibold">
+                <div className="mt-4 text-[10px] uppercase tracking-widest font-black text-accent-green hover:underline">
                     Lihat Penjelasan &rarr;
                 </div>
             </div>

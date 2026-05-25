@@ -16,26 +16,25 @@ export default function KanjiCard({ id, character, meaning, onyomi, kunyomi, lev
     };
 
     return (
-        <Link href={`/kanji/${id}`} className="block">
-            <div className="border border-gray-200 rounded-lg p-4 hover:shadow-lg transition-shadow bg-white text-center h-full flex flex-col justify-between">
+        <Link href={`/kanji/${id}`} className="block h-full">
+            <div className="border border-[var(--border-color)] rounded-[2rem] p-6 hover:-translate-y-1 hover:shadow-xl hover:shadow-accent-blue/10 hover:border-accent-blue/30 transition-all bg-[var(--card-bg)] text-center h-full flex flex-col justify-between">
                 <div>
-                    <div className="text-4xl font-bold mb-2 text-gray-800">{character}</div>
-                    <div className="text-sm text-gray-500 mb-2">N{level}</div>
-                    <div className="text-lg font-medium text-gray-700 mb-3 line-clamp-2">{meaning}</div>
+                    <div className="text-5xl font-japanese font-bold mb-4 text-foreground">{character}</div>
+                    <div className="text-[10px] font-black uppercase tracking-widest text-gray-500 mb-4 px-3 py-1 bg-[var(--background)] border border-[var(--border-color)] rounded-xl inline-block">N{level}</div>
+                    <div className="text-sm font-semibold text-foreground mb-4 line-clamp-2">{meaning}</div>
                 </div>
-                <div className="text-xs text-gray-600 space-y-1">
+                <div className="text-xs text-gray-500 space-y-1.5 bg-[var(--background)]/50 p-4 rounded-2xl border border-[var(--border-color)]/50">
                     {onyomi.length > 0 && (
-                        <p><span className="font-bold">On:</span> {formatOnyomi(onyomi).join(', ')}</p>
+                        <p><span className="font-bold text-accent-blue">On:</span> {formatOnyomi(onyomi).join(', ')}</p>
                     )}
                     {kunyomi.length > 0 && (
-                        <p><span className="font-bold">Kun:</span> {formatKunyomi(kunyomi).join(', ')}</p>
+                        <p><span className="font-bold text-accent-blue">Kun:</span> {formatKunyomi(kunyomi).join(', ')}</p>
                     )}
                 </div>
             </div>
         </Link>
     );
 }
-
 KanjiCard.propTypes = {
     id: PropTypes.string.isRequired,
     character: PropTypes.string.isRequired,

@@ -140,12 +140,12 @@ export default function Home() {
 
             {/* Side calligraphy elements - Cozy Japanese aesthetic */}
             <div className="hidden xl:flex flex-col absolute left-8 top-1/4 space-y-8 select-none text-[#212127]/20 dark:text-[#f2f2f7]/5 font-japanese text-3xl font-black tracking-widest pointer-events-none">
-                <span className="writing-vertical">日本語の学習</span>
-                <span className="text-xl">一歩一歩</span>
+                <span className="writing-vertical">日本語辞典</span>
+                <span className="text-xl">辞書</span>
             </div>
             <div className="hidden xl:flex flex-col absolute right-8 top-1/4 space-y-8 select-none text-[#212127]/20 dark:text-[#f2f2f7]/5 font-japanese text-3xl font-black tracking-widest pointer-events-none">
-                <span className="writing-vertical">未来のスキル</span>
-                <span className="text-xl">自己啓発</span>
+                <span className="writing-vertical">練習問題</span>
+                <span className="text-xl">学習</span>
             </div>
 
             {/* Container */}
@@ -154,17 +154,16 @@ export default function Home() {
                 {/* HERO SECTION */}
                 <header className="flex flex-col items-center text-center space-y-6 mb-12">
                     <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-[var(--border-color)] bg-[var(--card-bg)] text-xs font-bold tracking-widest uppercase text-accent-blue shadow-sm">
-                        <Award className="w-4 h-4 text-accent-gold" />
-                        Portal Belajar N4 & Karir Jepang
+                        <Search className="w-4 h-4 text-accent-blue" />
+                        Kamus & Latihan Online
                     </div>
 
-                    <h1 className="text-4xl md:text-6xl font-japanese font-black tracking-tight leading-tight max-w-3xl">
-                        JBook: Portal Belajar Jepang <br/>
-                        <span className="text-accent-blue dark:text-accent-blue drop-shadow-[0_0_15px_rgba(56,189,248,0.15)]">& Skill Masa Depan</span>
+                    <h1 className="text-4xl md:text-6xl font-japanese font-black tracking-tight leading-tight max-w-3xl mt-4">
+                        JBook: <span className="text-accent-blue dark:text-accent-blue drop-shadow-[0_0_15px_rgba(56,189,248,0.15)]">Kamus Jepang</span>
                     </h1>
 
-                    <p className="text-base md:text-lg text-gray-500 dark:text-gray-400 max-w-2xl font-light">
-                        Temukan kenyamanan belajar bahasa Jepang & skill karir Anda, satu halaman pada satu waktu.
+                    <p className="text-base md:text-lg text-gray-500 dark:text-gray-400 max-w-2xl font-light mt-4">
+                        Cari kosakata, kanji, dan tata bahasa, atau mulai latihan interaktif untuk menguji kemampuan Anda.
                     </p>
 
                     {/* SEARCH INTERACTIVE */}
@@ -303,107 +302,20 @@ export default function Home() {
 
 
 
-                {/* DAFTAR ISI - TABLE OF CONTENTS CHAPTERS */}
-                <section className="mb-16">
-                    <div className="text-center mb-8">
-                        <h2 className="text-2xl md:text-3xl font-japanese font-black tracking-widest text-[#212127]/80 dark:text-[#f2f2f7]/90 mb-2">
-                            目次 Daftar Isi
-                        </h2>
-                        <div className="h-0.5 w-16 bg-[var(--border-color)] mx-auto"></div>
-                    </div>
-
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                        
-                        {/* BAB 1: Pelajaran N4 & JLPT */}
-                        <div className="group relative bg-[var(--card-bg)] border border-[var(--border-color)] rounded-[2.5rem] p-6 md:p-8 transition-cozy hover:-translate-y-2 hover:shadow-2xl hover:shadow-accent-blue/5 overflow-hidden flex flex-col justify-between">
-                            <div className="absolute top-0 right-0 translate-x-4 -translate-y-4 text-7xl font-japanese font-black text-gray-100 dark:text-white/[0.02] select-none group-hover:text-accent-blue/[0.04] transition-colors">
-                                一
-                            </div>
-                            
-                            <div>
-                                <div className="text-xs font-black text-accent-blue uppercase tracking-widest mb-3 font-japanese">
-                                    Bab I
-                                </div>
-                                <h3 className="text-xl font-japanese font-black mb-4 group-hover:text-accent-blue transition-colors">
-                                    Pelajaran N4 & JLPT Prep
-                                </h3>
-                                <p className="text-sm text-gray-400 dark:text-gray-500 font-light leading-relaxed mb-6">
-                                    Langkah terstruktur menguasai Kanji dasar, Pola Kalimat (Bunpo), Huruf Kana, dan Kosakata (Kotoba) ujian JLPT N4.
-                                </p>
-                            </div>
-
-                            <div className="space-y-3">
-                                <div className="grid grid-cols-2 gap-2 text-xs font-bold">
-                                    <Link href="/kanji" className="flex items-center justify-between p-2 rounded-xl bg-white/5 border border-transparent hover:border-[var(--border-color)] transition-all">
-                                        <span>漢字 Kanji</span>
-                                        <ArrowRight className="w-3 h-3 text-accent-gold" />
-                                    </Link>
-                                    <Link href="/bunpo" className="flex items-center justify-between p-2 rounded-xl bg-white/5 border border-transparent hover:border-[var(--border-color)] transition-all">
-                                        <span>文法 Bunpo</span>
-                                        <ArrowRight className="w-3 h-3 text-accent-green" />
-                                    </Link>
-                                    <Link href="/kana" className="flex items-center justify-between p-2 rounded-xl bg-white/5 border border-transparent hover:border-[var(--border-color)] transition-all">
-                                        <span>かな Kana</span>
-                                        <ArrowRight className="w-3 h-3 text-brand" />
-                                    </Link>
-                                    <Link href="/kotoba" className="flex items-center justify-between p-2 rounded-xl bg-white/5 border border-transparent hover:border-[var(--border-color)] transition-all">
-                                        <span>語彙 Kotoba</span>
-                                        <ArrowRight className="w-3 h-3 text-accent-blue" />
-                                    </Link>
-                                </div>
-                                <Link 
-                                    href="/practice" 
-                                    className="flex items-center justify-center gap-2 w-full py-3 bg-accent-blue text-white rounded-xl text-xs font-bold hover:bg-accent-blue/90 shadow-lg shadow-accent-blue/10 transition-all"
-                                >
-                                    <span>Mulai Latihan Interaktif</span>
-                                    <ArrowRight className="w-4 h-4" />
-                                </Link>
-                            </div>
-                        </div>
-
-                        {/* BAB 2: Praktik Mensetsu */}
-                        <div className="group relative bg-[var(--card-bg)] border border-[var(--border-color)] rounded-[2.5rem] p-6 md:p-8 transition-cozy hover:-translate-y-2 hover:shadow-2xl hover:shadow-accent-green/5 overflow-hidden flex flex-col justify-between">
-                            <div className="absolute top-0 right-0 translate-x-4 -translate-y-4 text-7xl font-japanese font-black text-gray-100 dark:text-white/[0.02] select-none group-hover:text-accent-green/[0.04] transition-colors">
-                                二
-                            </div>
-                            
-                            <div>
-                                <div className="text-xs font-black text-accent-green uppercase tracking-widest mb-3 font-japanese">
-                                    Bab II
-                                </div>
-                                <h3 className="text-xl font-japanese font-black mb-4 group-hover:text-accent-green transition-colors">
-                                    Praktik Mensetsu
-                                </h3>
-                                <p className="text-sm text-gray-400 dark:text-gray-500 font-light leading-relaxed mb-6">
-                                    Persiapkan diri Anda menghadapi wawancara kerja (*Mensetsu*) di Jepang dengan pertanyaan umum, tip sopan santun Keigo, dan audio contoh pelafalan.
-                                </p>
-                            </div>
-
-                            <div className="space-y-4">
-                                <div className="p-3 bg-accent-green/5 border border-accent-green/10 rounded-2xl">
-                                    <div className="flex items-center gap-2 text-xs font-bold text-accent-green mb-1">
-                                        <CheckCircle className="w-4 h-4" />
-                                        <span>Fitur Simulasi:</span>
-                                    </div>
-                                    <ul className="text-[10px] text-gray-400 dark:text-gray-500 space-y-1 pl-4 list-disc">
-                                        <li>Pelafalan Suara (Speech / TTS)</li>
-                                        <li>Naskah Jepang, Romaji & Terjemahan</li>
-                                        <li>Tata Krama Wawancara (Ojigi)</li>
-                                    </ul>
-                                </div>
-                                <Link 
-                                    href="/mensetsu" 
-                                    className="flex items-center justify-center gap-2 w-full py-3 bg-accent-green text-white rounded-xl text-xs font-bold hover:bg-accent-green/90 shadow-lg shadow-accent-green/10 transition-all mt-auto"
-                                >
-                                    <span>Buka Simulasi Mensetsu</span>
-                                    <ArrowRight className="w-4 h-4" />
-                                </Link>
-                            </div>
-                        </div>
-
-
-
-                    </div>
+                {/* QUICK LINKS */}
+                <section className="mb-16 flex justify-center gap-4 flex-wrap">
+                    <Link href="/kanji" className="px-6 py-3 bg-[var(--card-bg)] border border-[var(--border-color)] rounded-2xl hover:border-accent-blue transition-all font-bold text-sm shadow-sm flex items-center gap-2">
+                        <span className="text-accent-blue">漢字</span> Kanji
+                    </Link>
+                    <Link href="/kotoba" className="px-6 py-3 bg-[var(--card-bg)] border border-[var(--border-color)] rounded-2xl hover:border-accent-blue transition-all font-bold text-sm shadow-sm flex items-center gap-2">
+                        <span className="text-accent-blue">語彙</span> Kotoba
+                    </Link>
+                    <Link href="/bunpo" className="px-6 py-3 bg-[var(--card-bg)] border border-[var(--border-color)] rounded-2xl hover:border-accent-blue transition-all font-bold text-sm shadow-sm flex items-center gap-2">
+                        <span className="text-accent-blue">文法</span> Bunpo
+                    </Link>
+                    <Link href="/practice" className="px-6 py-3 bg-accent-blue text-white rounded-2xl hover:bg-accent-blue/90 transition-all font-bold text-sm shadow-sm flex items-center gap-2">
+                        Latihan <ArrowRight className="w-4 h-4" />
+                    </Link>
                 </section>
 
                 {/* WIDGET KOTOBA HARI INI */}

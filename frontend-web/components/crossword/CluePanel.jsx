@@ -75,13 +75,13 @@ export const CluePanel = () => {
         onClick={() => selectCell(word.startRow, word.startCol)}
         className={twMerge(clsx(
           "flex items-start gap-2 p-2 rounded-lg cursor-pointer transition-colors text-sm",
-          isActive ? "bg-red-100 dark:bg-red-900/40" : "hover:bg-gray-100 dark:hover:bg-gray-800",
+          isActive ? "bg-accent-blue/10" : "hover:bg-[var(--background)]",
           isCompleted ? "opacity-60" : ""
         ))}
       >
         <div className="font-bold min-w-[24px] text-gray-500">{cellNum}.</div>
         <div className={clsx("flex-1", isCompleted && "line-through font-medium")}>
-          <div className="text-gray-900 dark:text-gray-100 font-bold">{word.clue}</div>
+          <div className="text-foreground font-bold">{word.clue}</div>
           <div className="flex items-center gap-2 mt-1">
             {hasKanji && (
               <span 
@@ -97,7 +97,7 @@ export const CluePanel = () => {
                     { icon: "🧧" }
                   );
                 }}
-                className="text-red-600 dark:text-red-400 font-bold bg-red-50 dark:bg-red-900/20 px-1.5 py-0.5 rounded text-[10px] cursor-help"
+                className="text-accent-blue font-bold bg-accent-blue/10 px-1.5 py-0.5 rounded text-[10px] cursor-help"
               >
                 {word.word}
               </span>
@@ -120,16 +120,16 @@ export const CluePanel = () => {
   };
 
   return (
-    <div className="flex flex-col md:flex-row gap-6 w-full max-w-4xl mx-auto p-4 bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 mt-4 lg:mt-0">
+    <div className="flex flex-col md:flex-row gap-6 w-full max-w-4xl mx-auto p-4 bg-[var(--card-bg)] rounded-[1.5rem] shadow-sm border border-[var(--border-color)] mt-4 lg:mt-0">
       <div className="flex-1">
-        <h3 className="text-lg font-bold mb-3 text-red-600 dark:text-red-400 border-b border-gray-200 dark:border-gray-700 pb-2">Across (Mendatar)</h3>
+        <h3 className="text-lg font-bold mb-3 text-accent-blue border-b border-[var(--border-color)] pb-2">Across (Mendatar)</h3>
         <div className="space-y-1 max-h-[200px] md:max-h-[400px] overflow-y-auto pr-2 custom-scrollbar scroll-smooth">
           {acrossWords.map(renderClue)}
         </div>
       </div>
       
       <div className="flex-1">
-        <h3 className="text-lg font-bold mb-3 text-red-600 dark:text-red-400 border-b border-gray-200 dark:border-gray-700 pb-2">Down (Menurun)</h3>
+        <h3 className="text-lg font-bold mb-3 text-accent-blue border-b border-[var(--border-color)] pb-2">Down (Menurun)</h3>
         <div className="space-y-1 max-h-[200px] md:max-h-[400px] overflow-y-auto pr-2 custom-scrollbar scroll-smooth">
           {downWords.map(renderClue)}
         </div>

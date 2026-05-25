@@ -73,14 +73,10 @@ function KotobaContent() {
 
     if (loading) return <div className="py-32 text-center animate-pulse text-gray-400 dark:text-gray-600 font-black transition-colors">🏮 MEMUAT KOTOBA...</div>;
 
-    const textColor = !mounted ? 'text-black' : (theme === 'dark' ? 'text-white' : 'text-black');
-    const subTextColor = !mounted ? 'text-gray-400' : (theme === 'dark' ? 'text-gray-500' : 'text-gray-500');
-    const cardBg = !mounted ? 'bg-white' : (theme === 'dark' ? 'bg-[#0a0a0a]' : 'bg-white');
-
     return (
         <>
             {detailId && <KotobaDetailModal id={detailId} />}
-            <div className={`flex justify-between items-center mb-6 text-[10px] font-black uppercase tracking-[0.2em] transition-colors ${subTextColor}`}>
+            <div className="flex justify-between items-center mb-6 text-[10px] font-black uppercase tracking-[0.2em] transition-colors text-gray-500 dark:text-gray-400">
                 <span>Total: {totalCount} Kata</span>
                 <span>Halaman {page} dari {totalPages}</span>
             </div>
@@ -99,38 +95,34 @@ function KotobaContent() {
                                     router.push(`?${params.toString()}`);
                                 }
                             }}
-                            className={`group flex flex-col p-6 ${cardBg} ${theme === 'dark' ? 'card-texture' : ''} rounded-[2.5rem] border-2 ${theme === 'dark' ? 'border-red-950/20' : 'border-gray-100'} bg-gradient-to-br ${getLevelColor(vocab.jlpt_level)} transition-all duration-300 hover:shadow-2xl hover:shadow-brand/10 dark:hover:shadow-black/60 hover:-translate-y-2 active:scale-95 shadow-sm relative overflow-hidden`}
+                            className="group flex flex-col p-6 bg-[var(--card-bg)] rounded-[2rem] border border-[var(--border-color)] transition-all duration-300 hover:shadow-xl hover:shadow-accent-blue/10 hover:border-accent-blue/30 active:scale-95 relative overflow-hidden h-full justify-between"
                         >
-                            <div className="flex justify-between items-center mb-6 transition-colors">
-                                <span className={`px-3 py-1 rounded-xl text-[9px] font-black border shadow-md uppercase tracking-tighter scale-110 ${
-                                    vocab.jlpt_level === 1 ? 'bg-red-500 text-white border-red-500' :
-                                    vocab.jlpt_level === 2 ? 'bg-orange-500 text-white border-orange-500' :
-                                    vocab.jlpt_level === 3 ? 'bg-yellow-500 text-white border-yellow-500' :
-                                    vocab.jlpt_level === 4 ? 'bg-teal-500 text-white border-teal-500' :
-                                    'bg-green-500 text-white border-green-500'
-                                }`}>N{vocab.jlpt_level}</span>
+                            <div className="flex justify-between items-start mb-4 transition-colors">
+                                <span className="text-[10px] font-black uppercase tracking-widest text-gray-500 px-3 py-1 bg-[var(--background)] border border-[var(--border-color)] rounded-xl inline-block">N{vocab.jlpt_level}</span>
                                 
-                                <div className="flex gap-1">
-                                    {scriptTypes.map(type => (
-                                        <span key={type} className={`text-[7px] font-black px-1.5 py-0.5 rounded-md uppercase tracking-tighter transition-colors ${theme === 'dark' ? 'bg-gray-800 text-gray-300' : 'bg-white border border-gray-200 text-gray-500'}`}>
-                                            {type}
-                                        </span>
-                                    ))}
-                                    {vocab.word_type && <span className={`text-[9px] font-black px-2 py-0.5 rounded-lg border uppercase tracking-widest leading-none transition-colors ${theme === 'dark' ? 'bg-black/20 border-gray-700 text-gray-500' : 'bg-white border-gray-200 text-gray-400'}`}>{vocab.word_type}</span>}
+                                <div className="flex flex-col gap-1 items-end">
+                                    <div className="flex gap-1">
+                                        {scriptTypes.map(type => (
+                                            <span key={type} className="text-[7px] font-black px-1.5 py-0.5 rounded-md uppercase tracking-tighter transition-colors bg-[var(--background)] border border-[var(--border-color)] text-gray-500">
+                                                {type}
+                                            </span>
+                                        ))}
+                                    </div>
+                                    {vocab.word_type && <span className="text-[9px] font-black px-2 py-0.5 rounded-lg border border-[var(--border-color)] bg-[var(--background)]/50 uppercase tracking-widest leading-none transition-colors text-gray-400">{vocab.word_type}</span>}
                                 </div>
                             </div>
 
-                            <div className="text-center mb-6">
-                                <h2 className={`text-3xl font-serif font-black leading-none mb-2 tracking-tighter group-hover:scale-110 group-hover:text-brand transition-all duration-300 ${textColor}`}>
+                            <div className="text-center mb-6 mt-2">
+                                <h2 className="text-4xl font-japanese font-bold leading-none mb-3 tracking-tighter group-hover:text-accent-blue transition-all duration-300 text-foreground">
                                     <HighlightText text={vocab.word} query={search} active={vocab._matchTarget === 'word'} />
                                 </h2>
-                                <p className={`text-[10px] font-bold uppercase tracking-[0.2em] opacity-80 transition-colors group-hover:text-brand/60 ${subTextColor}`}>
+                                <p className="text-[10px] font-bold uppercase tracking-[0.2em] transition-colors group-hover:text-accent-blue/80 text-gray-500">
                                     <HighlightText text={vocab.reading || ''} query={search} active={vocab._matchTarget === 'reading'} />
                                 </p>
                             </div>
                             
-                            <div className="mt-auto min-h-[4rem] flex flex-col items-center justify-center p-3 rounded-2xl bg-white/30 dark:bg-black/20 italic text-center text-sm font-black leading-relaxed transition-colors border border-transparent group-hover:border-brand/10 group-hover:bg-brand-light/20 transition-all">
-                                <p className={`truncate-multiline ${textColor}`}>
+                            <div className="mt-auto min-h-[4rem] flex flex-col items-center justify-center p-4 rounded-2xl bg-[var(--background)]/50 text-center text-sm font-semibold leading-relaxed transition-colors border border-[var(--border-color)]/50 group-hover:border-accent-blue/20 transition-all">
+                                <p className="truncate-multiline text-foreground">
                                     <HighlightText text={vocab.meaning} query={search} active={vocab._matchTarget === 'meaning'} />
                                 </p>
                             </div>

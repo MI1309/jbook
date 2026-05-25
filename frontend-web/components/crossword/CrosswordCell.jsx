@@ -26,7 +26,7 @@ export const CrosswordCell = ({
 
   if (cell.isBlock) {
     return (
-      <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gray-900 dark:bg-black border border-gray-800" />
+      <div className="w-8 h-8 sm:w-10 sm:h-10 bg-[var(--border-color)] border border-[var(--border-color)]" />
     );
   }
 
@@ -62,15 +62,15 @@ export const CrosswordCell = ({
   const baseClasses = "relative w-8 h-8 sm:w-10 sm:h-10 border flex items-center justify-center text-lg sm:text-xl font-medium transition-colors cursor-pointer outline-none";
   
   const stateClasses = {
-    'bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white': 
+    'bg-[var(--card-bg)] border-[var(--border-color)] text-foreground': 
       cell.validationState === 'empty' && !isSelected && !isHighlighted,
-    'bg-red-100 dark:bg-red-900/40 border-red-500 shadow-[0_0_0_2px_rgba(239,68,68,0.5)] z-10': 
+    'bg-accent-blue/10 border-accent-blue shadow-[0_0_0_2px_var(--accent-blue)] z-10 text-accent-blue': 
       isSelected,
-    'bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-800/50': 
+    'bg-[var(--background)] border-[var(--border-color)] text-foreground': 
       !isSelected && isHighlighted,
-    'bg-green-100 dark:bg-green-900 border-green-500 text-green-700 dark:text-green-300': 
+    'bg-accent-green/10 border-accent-green text-accent-green': 
       cell.validationState === 'correct',
-    'bg-red-100 dark:bg-red-900 border-red-500 text-red-700 dark:text-red-300': 
+    'bg-red-500/10 border-red-500 text-red-500': 
       cell.validationState === 'wrong'
   };
 

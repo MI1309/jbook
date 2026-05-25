@@ -8,8 +8,8 @@ export const CrosswordGrid = () => {
 
   if (!gameState.grid) {
     return (
-      <div className="flex items-center justify-center p-8 bg-white dark:bg-gray-800 rounded-xl shadow-lg w-full max-w-md mx-auto min-h-[300px]">
-        <div className="text-gray-500">Pilih level untuk memulai...</div>
+      <div className="flex items-center justify-center p-8 bg-[var(--card-bg)] rounded-[2rem] shadow-sm border border-[var(--border-color)] w-full max-w-md mx-auto min-h-[300px]">
+        <div className="text-gray-500 font-bold uppercase tracking-widest text-xs">Pilih level untuk memulai...</div>
       </div>
     );
   }
@@ -55,28 +55,28 @@ export const CrosswordGrid = () => {
     <div className="w-full flex flex-col items-center">
       {/* Mobile Active Clue Banner */}
       {activeWord && (
-        <div className="lg:hidden w-full bg-blue-50 dark:bg-blue-900/30 border border-blue-200 dark:border-blue-800 p-3 mb-4 rounded-xl shadow-sm animate-in fade-in slide-in-from-top-2">
+        <div className="lg:hidden w-full bg-accent-blue/10 border border-accent-blue/20 p-3 mb-4 rounded-[1.5rem] shadow-sm animate-in fade-in slide-in-from-top-2">
           <div className="flex items-center gap-2 mb-1">
-            <span className="font-bold text-blue-700 dark:text-blue-400 bg-blue-100 dark:bg-blue-900/50 px-2 py-0.5 rounded text-xs">
+            <span className="font-bold text-accent-blue bg-[var(--background)] border border-[var(--border-color)] px-2 py-0.5 rounded text-[10px] uppercase tracking-widest">
               {gameState.selectedDirection === 'across' ? 'Mendatar' : 'Menurun'}
             </span>
-            <span className="text-xs text-gray-500 font-medium">({activeWord.text.length} kotak)</span>
+            <span className="text-[10px] text-gray-500 font-medium">({activeWord.text.length} kotak)</span>
           </div>
-          <div className="font-bold text-gray-900 dark:text-white text-base leading-tight">
+          <div className="font-bold text-foreground text-base leading-tight">
             {activeWord.clue}
           </div>
         </div>
       )}
 
       <div className="w-full text-center mb-3">
-        <p className="inline-flex items-center gap-1.5 text-[11px] sm:text-xs font-bold text-amber-700 dark:text-amber-400 bg-amber-50 dark:bg-amber-900/30 px-3 py-1.5 rounded-full border border-amber-200 dark:border-amber-800/50">
+        <p className="inline-flex items-center gap-1.5 text-[10px] uppercase tracking-widest sm:text-xs font-bold text-accent-green bg-accent-green/10 px-3 py-1.5 rounded-full border border-accent-green/20">
           <span className="text-sm">💡</span> Peringatan: Gunakan Keyboard Jepang (Romaji/Kana) untuk pengalaman terbaik.
         </p>
       </div>
 
       <div className="w-full overflow-x-auto pb-4 px-2 flex justify-center custom-scrollbar">
         <div 
-          className="grid gap-px bg-gray-300 dark:bg-gray-700 p-px rounded-sm shadow-xl shrink-0"
+          className="grid gap-px bg-[var(--border-color)] p-px rounded-sm shadow-xl shrink-0"
           style={{ 
             gridTemplateColumns: `repeat(${gameState.grid.width}, minmax(0, 1fr))`
           }}

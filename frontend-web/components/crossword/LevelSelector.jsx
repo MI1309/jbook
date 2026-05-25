@@ -49,8 +49,8 @@ export const LevelSelector = () => {
                 className={clsx(
                   "relative flex flex-col items-center p-3 rounded-xl border-2 transition-all",
                   selectedLevel === lvl.id
-                    ? "border-accent-blue bg-accent-blue/10 dark:bg-accent-blue/20 text-accent-blue shadow-sm"
-                    : "border-[var(--border-color)] hover:border-accent-blue/40 text-gray-600 dark:text-gray-400"
+                    ? "border-accent-blue bg-accent-blue/10 text-accent-blue shadow-sm"
+                    : "border-[var(--border-color)] hover:border-accent-blue/40 text-gray-500"
                 )}
               >
                 <span className="font-bold text-lg">{lvl.name}</span>
@@ -70,13 +70,13 @@ export const LevelSelector = () => {
               className={clsx(
                 "flex flex-col p-3 rounded-xl border-2 transition-all text-left",
                 selectedMode === m.id
-                  ? "border-accent-green bg-accent-green/10 dark:bg-accent-green/20 shadow-sm"
+                  ? "border-accent-green bg-accent-green/10 shadow-sm"
                   : "border-[var(--border-color)] hover:border-accent-green/40"
               )}
             >
               <span className={clsx(
                 "font-bold text-sm",
-                selectedMode === m.id ? "text-accent-green" : "text-gray-700 dark:text-gray-300"
+                selectedMode === m.id ? "text-accent-green" : "text-gray-500"
               )}>{m.name}</span>
               <span className="text-[10px] text-gray-500">{m.desc}</span>
             </button>
