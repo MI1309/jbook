@@ -301,24 +301,7 @@ export default function Home() {
                     </div>
                 </header>
 
-                {/* PROLOGUE - WEB SUMMARY SUMMARY */}
-                <section className="mb-16">
-                    <div className="relative p-6 md:p-8 bg-[var(--card-bg)] border border-[var(--border-color)] rounded-[2rem] book-page-shadow book-binding-divider max-w-3xl mx-auto overflow-hidden">
-                        {/* Cozy ribbon decoration */}
-                        <div className="absolute top-0 right-8 w-6 h-12 bg-accent-blue/20 dark:bg-accent-blue/30 rounded-b-lg border-x border-b border-accent-blue/30 flex items-end justify-center pb-2 select-none">
-                            <span className="text-[10px] text-accent-blue font-japanese font-bold">頁</span>
-                        </div>
-                        
-                        <div className="space-y-4">
-                            <h3 className="text-xs font-black uppercase text-accent-blue tracking-widest font-japanese border-b border-[var(--border-color)] pb-2 max-w-[120px]">
-                                一. Prologue
-                            </h3>
-                            <p className="text-base font-japanese text-gray-700 dark:text-gray-300 leading-relaxed italic">
-                                &ldquo;JBook adalah sumber belajarmu yang menenangkan untuk menguasai bahasa Jepang tingkat N4, persiapan JLPT, praktik Mensetsu secara mandiri, dan materi pendukung karir. Temukan panduan modern terstruktur yang dikemas dengan sentuhan minimalis Jepang yang damai.&rdquo;
-                            </p>
-                        </div>
-                    </div>
-                </section>
+
 
                 {/* DAFTAR ISI - TABLE OF CONTENTS CHAPTERS */}
                 <section className="mb-16">
@@ -329,7 +312,7 @@ export default function Home() {
                         <div className="h-0.5 w-16 bg-[var(--border-color)] mx-auto"></div>
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                         
                         {/* BAB 1: Pelajaran N4 & JLPT */}
                         <div className="group relative bg-[var(--card-bg)] border border-[var(--border-color)] rounded-[2.5rem] p-6 md:p-8 transition-cozy hover:-translate-y-2 hover:shadow-2xl hover:shadow-accent-blue/5 overflow-hidden flex flex-col justify-between">
@@ -418,37 +401,7 @@ export default function Home() {
                             </div>
                         </div>
 
-                        {/* BAB 3: Tentang Kami */}
-                        <div className="group relative bg-[var(--card-bg)] border border-[var(--border-color)] rounded-[2.5rem] p-6 md:p-8 transition-cozy hover:-translate-y-2 hover:shadow-2xl hover:shadow-accent-gold/5 overflow-hidden flex flex-col justify-between">
-                            <div className="absolute top-0 right-0 translate-x-4 -translate-y-4 text-7xl font-japanese font-black text-gray-100 dark:text-white/[0.02] select-none group-hover:text-accent-gold/[0.04] transition-colors">
-                                三
-                            </div>
-                            
-                            <div>
-                                <div className="text-xs font-black text-accent-gold uppercase tracking-widest mb-3 font-japanese">
-                                    Bab III
-                                </div>
-                                <h3 className="text-xl font-japanese font-black mb-4 group-hover:text-accent-gold transition-colors">
-                                    Tentang JBook
-                                </h3>
-                                <p className="text-sm text-gray-400 dark:text-gray-500 font-light leading-relaxed mb-6">
-                                    Filosofi belajar *Wabi-Sabi* dan visi JBook dalam mendampingi pembelajar mandiri mewujudkan mimpi belajar dan berkarir di Jepang.
-                                </p>
-                            </div>
 
-                            <div className="space-y-4 mt-auto">
-                                <div className="p-3 bg-accent-gold/5 border border-accent-gold/10 rounded-2xl text-center">
-                                    <span className="text-xs italic text-accent-gold font-japanese font-bold">&ldquo;Ichigo Ichie - 一期一会&rdquo;</span>
-                                </div>
-                                <Link 
-                                    href="/about" 
-                                    className="flex items-center justify-center gap-2 w-full py-3 bg-transparent border-2 border-[var(--border-color)] hover:border-accent-gold hover:text-accent-gold rounded-xl text-xs font-bold transition-all"
-                                >
-                                    <span>Pelajari Filosofi Kami</span>
-                                    <ArrowRight className="w-4 h-4" />
-                                </Link>
-                            </div>
-                        </div>
 
                     </div>
                 </section>

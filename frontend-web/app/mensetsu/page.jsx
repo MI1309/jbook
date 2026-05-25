@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { useTheme } from '@/context/ThemeContext';
 import { 
     Volume2, 
     ArrowLeft, 
@@ -12,7 +11,6 @@ import {
 } from 'lucide-react';
 
 export default function MensetsuPage() {
-    const { theme } = useTheme();
     const [selectedQuestionIndex, setSelectedQuestionIndex] = useState(0);
     const [isPlaying, setIsPlaying] = useState(false);
 
@@ -113,7 +111,9 @@ export default function MensetsuPage() {
     const stopSpeech = () => {
         if ('speechSynthesis' in window) {
             window.speechSynthesis.cancel();
-            setIsPlaying(false);
+            setTimeout(() => {
+                setIsPlaying(false);
+            }, 0);
         }
     };
 

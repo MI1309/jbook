@@ -26,6 +26,18 @@
 }
 
 @theme inline {
+  --color-red-50: var(--brand-red-light);
+  --color-red-100: color-mix(in srgb, var(--brand-red) 10%, transparent);
+  --color-red-200: color-mix(in srgb, var(--brand-red) 20%, transparent);
+  --color-red-300: color-mix(in srgb, var(--brand-red) 40%, transparent);
+  --color-red-400: color-mix(in srgb, var(--brand-red) 70%, transparent);
+  --color-red-500: var(--brand-red);
+  --color-red-600: var(--brand-red);
+  --color-red-700: color-mix(in srgb, var(--brand-red) 85%, #0b0b0d);
+  --color-red-800: color-mix(in srgb, var(--brand-red) 70%, #0b0b0d);
+  --color-red-900: color-mix(in srgb, var(--brand-red) 50%, #0b0b0d);
+  --color-red-950: var(--brand-red-light);
+
   --color-brand: var(--brand-red);
   --color-brand-light: var(--brand-red-light);
   --color-accent-blue: var(--accent-blue);
@@ -138,4 +150,37 @@ body {
   border-color: var(--accent-blue);
   box-shadow: 0 0 12px rgba(56, 189, 248, 0.2);
 }
+
+/* Override hardcoded dark bg-colors to match our cozy washi card theme */
+.dark .bg-\[\#0a0a0a\] {
+  background-color: var(--card-bg) !important;
+}
+.dark .dark\:bg-\[\#0a0a0a\] {
+  background-color: var(--background) !important;
+}
+.dark .bg-\[\#0a0a0a\]\/60 {
+  background-color: color-mix(in srgb, var(--card-bg) 60%, transparent) !important;
+}
+.dark .border-red-950\/20 {
+  border-color: var(--border-color) !important;
+}
+.dark .shadow-red-200 {
+  box-shadow: 0 10px 15px -3px rgba(56, 189, 248, 0.15), 0 4px 6px -4px rgba(56, 189, 248, 0.15) !important;
+}
+.dark .shadow-red-900\/40 {
+  box-shadow: 0 10px 15px -3px rgba(56, 189, 248, 0.1), 0 4px 6px -4px rgba(56, 189, 248, 0.1) !important;
+}
+.dark .hover\:bg-red-50\/40:hover {
+  background-color: rgba(56, 189, 248, 0.05) !important;
+}
+.dark .hover\:bg-red-950\/10:hover {
+  background-color: rgba(56, 189, 248, 0.05) !important;
+}
+.dark .hover\:bg-red-950\/20:hover {
+  background-color: rgba(56, 189, 248, 0.08) !important;
+}
+.dark .bg-gray-50 {
+  background-color: var(--background) !important;
+}
+
 

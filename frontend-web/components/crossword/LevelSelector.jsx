@@ -32,10 +32,10 @@ export const LevelSelector = () => {
   if (gameState.grid) return null;
 
   return (
-    <div className="w-full max-w-lg mx-auto bg-white dark:bg-gray-900 p-8 rounded-2xl shadow-xl border border-gray-100 dark:border-gray-800 text-center">
+    <div className="w-full max-w-lg mx-auto bg-[var(--card-bg)] p-8 rounded-2xl shadow-xl border border-[var(--border-color)] text-center">
       <div className="mb-8">
-        <h2 className="text-3xl font-black text-gray-900 dark:text-white mb-2">JBook Crossword</h2>
-        <p className="text-gray-500">Sesuaikan mode permainan Anda</p>
+        <h2 className="text-3xl font-japanese font-black text-[var(--foreground)] mb-2">JBook Crossword</h2>
+        <p className="text-gray-500 dark:text-gray-400">Sesuaikan mode permainan Anda</p>
       </div>
 
       <div className="mb-6">
@@ -48,9 +48,9 @@ export const LevelSelector = () => {
                 onClick={() => setSelectedLevel(lvl.id)}
                 className={clsx(
                   "relative flex flex-col items-center p-3 rounded-xl border-2 transition-all",
-                  selectedLevel === lvl.id 
-                    ? "border-red-500 bg-red-50 dark:bg-red-900/30 text-red-700 dark:text-red-300 shadow-sm" 
-                    : "border-gray-100 dark:border-gray-800 hover:border-red-200 text-gray-600 dark:text-gray-400"
+                  selectedLevel === lvl.id
+                    ? "border-accent-blue bg-accent-blue/10 dark:bg-accent-blue/20 text-accent-blue shadow-sm"
+                    : "border-[var(--border-color)] hover:border-accent-blue/40 text-gray-600 dark:text-gray-400"
                 )}
               >
                 <span className="font-bold text-lg">{lvl.name}</span>
@@ -69,14 +69,14 @@ export const LevelSelector = () => {
               onClick={() => setSelectedMode(m.id)}
               className={clsx(
                 "flex flex-col p-3 rounded-xl border-2 transition-all text-left",
-                selectedMode === m.id 
-                  ? "border-red-500 bg-red-50 dark:bg-red-900/30 shadow-sm" 
-                  : "border-gray-100 dark:border-gray-800 hover:border-red-200"
+                selectedMode === m.id
+                  ? "border-accent-green bg-accent-green/10 dark:bg-accent-green/20 shadow-sm"
+                  : "border-[var(--border-color)] hover:border-accent-green/40"
               )}
             >
               <span className={clsx(
                 "font-bold text-sm",
-                selectedMode === m.id ? "text-red-700 dark:text-red-300" : "text-gray-700 dark:text-gray-300"
+                selectedMode === m.id ? "text-accent-green" : "text-gray-700 dark:text-gray-300"
               )}>{m.name}</span>
               <span className="text-[10px] text-gray-500">{m.desc}</span>
             </button>
@@ -87,7 +87,7 @@ export const LevelSelector = () => {
       <button
         onClick={handleStart}
         disabled={isLoading}
-        className="w-full flex items-center justify-center gap-2 bg-red-600 hover:bg-red-700 text-white py-4 rounded-xl font-bold text-lg transition-transform active:scale-95 disabled:opacity-70 shadow-xl shadow-red-500/20"
+        className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-accent-blue to-accent-green hover:opacity-90 text-white py-4 rounded-xl font-bold text-lg transition-all active:scale-95 disabled:opacity-70 shadow-xl shadow-accent-blue/20"
       >
         {isLoading ? (
           <span className="animate-pulse text-sm">Menyiapkan Grid...</span>

@@ -14,14 +14,15 @@ export default function CrosswordPage() {
   const { gameState } = useGameStore();
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-[#0a0a0a] transition-colors duration-300 font-sans text-gray-900 dark:text-gray-100 selection:bg-red-200">
+    <div className="min-h-screen bg-[var(--background)] transition-colors duration-300 font-sans text-[var(--foreground)] selection:bg-accent-blue/20">
       <Navbar />
       <div className="max-w-6xl mx-auto py-8 px-4">
         <header className="mb-8 text-center">
-          <h1 className="text-4xl md:text-5xl font-black mb-4 tracking-tighter text-gray-900 dark:text-white">
-            Teka-Teki <span className="text-red-600">Silang</span>
+          <h1 className="text-4xl md:text-5xl font-japanese font-black mb-4 tracking-tighter text-[var(--foreground)]">
+            テカ-テキ <span className="text-transparent bg-clip-text bg-gradient-to-r from-accent-blue to-accent-green">Silang</span>
           </h1>
-          <p className="text-gray-600 dark:text-gray-400 font-bold text-lg">Latih kosa kata bahasa Jepang JLPT kamu di sini.</p>
+          <div className="h-1 w-16 bg-gradient-to-r from-accent-blue to-accent-green rounded-full mx-auto mb-3" />
+          <p className="text-gray-500 dark:text-gray-400 font-bold text-lg">Latih kosa kata bahasa Jepang JLPT kamu di sini.</p>
         </header>
 
         {!gameState.grid ? (

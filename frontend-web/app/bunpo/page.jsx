@@ -109,9 +109,9 @@ function BunpoContent() {
             )}
 
             <div className="flex justify-center items-center gap-6 mt-8">
-                {page > 1 && <Link href={`?page=${page - 1}`} className="bg-white dark:bg-card border-2 border-gray-100 dark:border-gray-800 text-gray-500 dark:text-gray-400 hover:text-red-600 dark:hover:text-red-400 px-6 py-3 rounded-2xl font-black text-sm transition-all shadow-sm active:scale-95">← Prev</Link>}
-                <span className="w-10 h-10 rounded-xl bg-red-600 text-white flex items-center justify-center font-black text-sm shadow-lg shadow-red-200 dark:shadow-red-900/40 transition-colors">{page}</span>
-                {hasMore && <Link href={`?page=${page + 1}${level ? `&level=${level}` : ''}`} className="group flex items-center gap-2 bg-red-600 dark:bg-red-600 text-white border-2 border-red-600 dark:border-red-600 hover:bg-red-700 dark:hover:bg-red-700 hover:border-red-700 dark:hover:border-red-700 px-6 py-3 rounded-2xl transition-all shadow-xl shadow-red-200 dark:shadow-red-900/40 font-black text-sm active:scale-95">Next →</Link>}
+                {page > 1 && <Link href={`?page=${page - 1}`} className="bg-white dark:bg-[var(--card-bg)] border-2 border-gray-100 dark:border-[var(--border-color)] text-gray-500 dark:text-gray-400 hover:text-accent-blue dark:hover:text-accent-blue hover:border-accent-blue/20 px-6 py-3 rounded-2xl font-black text-sm transition-all shadow-sm active:scale-95">← Prev</Link>}
+                <span className="w-10 h-10 rounded-xl bg-gradient-to-br from-accent-blue to-accent-green text-white flex items-center justify-center font-black text-sm shadow-lg shadow-accent-blue/20 dark:shadow-accent-blue/10 transition-colors">{page}</span>
+                {hasMore && <Link href={`?page=${page + 1}${level ? `&level=${level}` : ''}`} className="group flex items-center gap-2 bg-gradient-to-r from-accent-blue to-accent-green text-white border-2 border-accent-blue/50 hover:opacity-90 px-6 py-3 rounded-2xl transition-all shadow-xl shadow-accent-blue/20 dark:shadow-accent-blue/10 font-black text-sm active:scale-95">Next →</Link>}
             </div>
         </>
     );
@@ -124,10 +124,11 @@ export default function BunpoPage() {
 
     return (
         <div className="container mx-auto px-6 py-12 max-w-7xl transition-colors duration-300">
-            <header className="mb-12 text-center md:text-left flex flex-col md:flex-row md:items-center justify-between gap-6 border-b border-gray-100 dark:border-gray-800 pb-12 transition-colors">
+            <header className="mb-12 text-center md:text-left flex flex-col md:flex-row md:items-center justify-between gap-6 border-b border-gray-100 dark:border-[var(--border-color)] pb-12 transition-colors">
                 <div>
-                    <h1 className={`text-5xl font-black tracking-tight leading-none transition-colors ${textColor}`}>文法 <span className="text-red-600 dark:text-red-500 ml-2">Bunpo</span></h1>
-                    <p className={`font-black mt-4 tracking-wide uppercase text-xs transition-colors ${subTextColor}`}>Kuasai tata bahasa Jepang dengan mudah</p>
+                    <h1 className={`text-5xl font-japanese font-black tracking-tight leading-none transition-colors ${textColor}`}>文法 <span className="text-transparent bg-clip-text bg-gradient-to-r from-accent-blue to-accent-green ml-2">Bunpo</span></h1>
+                    <div className="h-1 w-16 bg-gradient-to-r from-accent-blue to-accent-green rounded-full mt-3 mb-1" />
+                    <p className={`font-black mt-2 tracking-wide uppercase text-xs transition-colors ${subTextColor}`}>Kuasai tata bahasa Jepang dengan mudah</p>
                 </div>
                 <Suspense fallback={<div className="h-12 w-full md:w-96 bg-gray-50 dark:bg-gray-800 rounded-2xl animate-pulse" />}>
                      <BunpoFilter />

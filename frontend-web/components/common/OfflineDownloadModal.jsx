@@ -89,23 +89,23 @@ export default function OfflineDownloadModal({ isOpen, onClose }) {
             <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4">
                 {/* Backdrop */}
                 <div
-                    className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+                    className="absolute inset-0 bg-black/70 backdrop-blur-sm"
                     onClick={!isDownloading ? onClose : undefined}
                 />
 
                 {/* Modal — centered on all screens */}
                 <div
-                    className="relative w-full max-w-sm bg-white rounded-2xl shadow-2xl flex flex-col"
+                    className="relative w-full max-w-sm bg-[#131317] border border-[#212127] rounded-2xl shadow-2xl flex flex-col overflow-hidden"
                     style={{ maxHeight: '90dvh' }}
                 >
                     {/* Header */}
-                    <div className="bg-gradient-to-r from-red-600 to-red-500 px-5 py-4 text-white flex-shrink-0 rounded-t-2xl">
+                    <div className="bg-gradient-to-r from-accent-blue/15 to-accent-green/15 border-b border-[#212127] px-5 py-4 text-foreground flex-shrink-0">
                         <div className="flex items-center justify-between">
                             <div className="flex items-center gap-2">
                                 <span className="text-xl">📲</span>
                                 <div>
-                                    <h2 className="font-bold text-base leading-tight">Mode Offline</h2>
-                                    <p className="text-red-200 text-xs mt-0.5">
+                                    <h2 className="font-japanese font-black text-base leading-tight">Mode Offline</h2>
+                                    <p className="text-gray-400 text-xs mt-0.5">
                                         Unduh semua data ke perangkat
                                     </p>
                                 </div>
@@ -113,7 +113,7 @@ export default function OfflineDownloadModal({ isOpen, onClose }) {
                             {!isDownloading && (
                                 <button
                                     onClick={onClose}
-                                    className="p-1.5 rounded-lg text-red-200 hover:text-white hover:bg-white/20 transition-colors"
+                                    className="p-1.5 rounded-lg text-gray-400 hover:text-foreground hover:bg-white/5 transition-colors"
                                     aria-label="Tutup"
                                 >
                                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -130,7 +130,7 @@ export default function OfflineDownloadModal({ isOpen, onClose }) {
                         {/* Checking */}
                         {status === 'checking' && (
                             <div className="flex items-center justify-center gap-3 text-gray-500 text-sm py-8">
-                                <div className="w-5 h-5 border-2 border-red-400 border-t-transparent rounded-full animate-spin flex-shrink-0" />
+                                <div className="w-5 h-5 border-2 border-accent-blue border-t-transparent rounded-full animate-spin flex-shrink-0" />
                                 Memeriksa data lokal...
                             </div>
                         )}
@@ -140,14 +140,14 @@ export default function OfflineDownloadModal({ isOpen, onClose }) {
                             <>
                                 {/* Status card */}
                                 {hasData ? (
-                                    <div className="bg-green-50 border border-green-200 rounded-xl p-4">
+                                    <div className="bg-accent-green/5 border border-accent-green/20 rounded-xl p-4">
                                         <div className="flex items-center gap-2 mb-3">
-                                            <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0">
-                                                <svg className="w-3.5 h-3.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <div className="w-6 h-6 bg-accent-green rounded-full flex items-center justify-center flex-shrink-0">
+                                                <svg className="w-3.5 h-3.5 text-[#0b0b0d]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
                                                 </svg>
                                             </div>
-                                            <span className="font-bold text-green-800 text-sm">Data tersimpan di perangkat</span>
+                                            <span className="font-bold text-accent-green text-sm">Data tersimpan di perangkat</span>
                                         </div>
 
                                         {/* Stats grid */}
@@ -157,28 +157,28 @@ export default function OfflineDownloadModal({ isOpen, onClose }) {
                                                 { label: 'Kanji', count: stats.kanji },
                                                 { label: 'Bunpo', count: stats.grammar },
                                             ].map(({ label, count }) => (
-                                                <div key={label} className="bg-white rounded-lg p-2 border border-green-100">
-                                                    <div className="text-lg font-black text-green-700 leading-tight">
+                                                <div key={label} className="bg-white/5 rounded-lg p-2 border border-[#212127]">
+                                                    <div className="text-lg font-japanese font-black text-accent-green leading-tight">
                                                         {count.toLocaleString()}
                                                     </div>
-                                                    <div className="text-xs text-gray-400">{label}</div>
+                                                    <div className="text-[10px] text-gray-400">{label}</div>
                                                 </div>
                                             ))}
                                         </div>
 
                                         {stats.downloadedAt && (
-                                            <p className="text-xs text-green-600 text-center">
+                                            <p className="text-[10px] text-gray-500 text-center">
                                                 Diunduh: {formatDate(stats.downloadedAt)}
                                             </p>
                                         )}
                                     </div>
                                 ) : (
-                                    <div className="bg-gray-50 border border-gray-200 rounded-xl p-4">
+                                    <div className="bg-white/5 border border-[#212127] rounded-xl p-4">
                                         <div className="flex items-center gap-3 mb-3">
-                                            <div className="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center text-xl flex-shrink-0">📱</div>
+                                            <div className="w-10 h-10 bg-white/5 border border-[#212127] rounded-full flex items-center justify-center text-xl flex-shrink-0">📱</div>
                                             <div>
-                                                <div className="font-bold text-gray-800 text-sm">Belum ada data offline</div>
-                                                <div className="text-xs text-gray-500">Unduh agar bisa belajar tanpa internet</div>
+                                                <div className="font-bold text-foreground text-sm">Belum ada data offline</div>
+                                                <div className="text-xs text-gray-400">Unduh agar bisa belajar tanpa internet</div>
                                             </div>
                                         </div>
                                         <div className="grid grid-cols-2 gap-x-3 gap-y-1.5">
@@ -188,7 +188,7 @@ export default function OfflineDownloadModal({ isOpen, onClose }) {
                                                 { icon: '📖', text: 'Pola Tata Bahasa' },
                                                 { icon: '🧪', text: 'Soal Latihan' },
                                             ].map(({ icon, text }) => (
-                                                <div key={text} className="flex items-center gap-2 text-xs text-gray-600">
+                                                <div key={text} className="flex items-center gap-2 text-xs text-gray-400">
                                                     <span className="flex-shrink-0">{icon}</span>
                                                     <span>{text}</span>
                                                 </div>
@@ -197,9 +197,9 @@ export default function OfflineDownloadModal({ isOpen, onClose }) {
                                     </div>
                                 )}
 
-                            {/* Stale warning */}
+                                {/* Stale warning */}
                                 {isStale && (
-                                    <div className="flex items-start gap-2 bg-amber-50 border border-amber-200 rounded-lg px-3 py-2 text-xs text-amber-700">
+                                    <div className="flex items-start gap-2 bg-accent-gold/5 border border-accent-gold/20 rounded-lg px-3 py-2 text-xs text-accent-gold">
                                         <span className="flex-shrink-0">⚠️</span>
                                         <span>Data sudah lebih dari 2 bulan. Disarankan untuk <b>perbarui</b> agar tetap akurat.</span>
                                     </div>
@@ -207,7 +207,7 @@ export default function OfflineDownloadModal({ isOpen, onClose }) {
                                 
                                 {/* New data warning */}
                                 {hasNewData && (
-                                    <div className="flex items-start gap-2 bg-blue-50 border border-blue-200 rounded-lg px-3 py-2 text-xs text-blue-700">
+                                    <div className="flex items-start gap-2 bg-accent-blue/5 border border-accent-blue/20 rounded-lg px-3 py-2 text-xs text-accent-blue">
                                         <span className="flex-shrink-0">🆕</span>
                                         <span>Ada data Kotoba, Kanji, atau Bunpo terbaru! Silakan <b>perbarui</b> data offline kamu.</span>
                                     </div>
@@ -216,7 +216,7 @@ export default function OfflineDownloadModal({ isOpen, onClose }) {
                                 {/* Download button */}
                                 <button
                                     onClick={handleDownload}
-                                    className="w-full bg-red-600 hover:bg-red-700 active:bg-red-800 text-white font-bold py-3.5 rounded-xl shadow-md transition-all active:scale-[0.98]"
+                                    className="w-full bg-accent-blue hover:bg-accent-blue/90 text-white font-bold py-3.5 rounded-xl shadow-md transition-all active:scale-[0.98]"
                                 >
                                     {hasData ? '🔄 Perbarui Data Offline' : '⬇️ Unduh untuk Offline'}
                                 </button>
@@ -224,7 +224,7 @@ export default function OfflineDownloadModal({ isOpen, onClose }) {
                                 {hasData && (
                                     <button
                                         onClick={() => setShowClearConfirm(true)}
-                                        className="w-full text-gray-400 hover:text-red-500 text-sm py-1.5 transition-colors"
+                                        className="w-full text-gray-500 hover:text-rose-500 text-sm py-1.5 transition-colors"
                                     >
                                         Hapus data offline
                                     </button>
@@ -238,20 +238,20 @@ export default function OfflineDownloadModal({ isOpen, onClose }) {
                                 {/* Animated icon */}
                                 <div className="flex flex-col items-center gap-2">
                                     <div className="relative w-16 h-16">
-                                        <div className="absolute inset-0 rounded-full bg-red-100 animate-ping opacity-40" />
+                                        <div className="absolute inset-0 rounded-full bg-accent-blue/10 animate-ping opacity-40" />
                                         <div className="absolute inset-0 flex items-center justify-center text-3xl">⬇️</div>
                                     </div>
-                                    <div className="font-bold text-gray-800 text-base">Mengunduh data...</div>
-                                    <div className="text-sm text-gray-500">
+                                    <div className="font-bold text-foreground text-base">Mengunduh data...</div>
+                                    <div className="text-sm text-gray-400">
                                         {progress.step}/{progress.total} — {progress.label}
                                     </div>
                                 </div>
 
                                 {/* Progress bar */}
                                 <div>
-                                    <div className="h-4 bg-gray-100 rounded-full overflow-hidden">
+                                    <div className="h-4 bg-white/5 rounded-full overflow-hidden">
                                         <div
-                                            className="h-full bg-gradient-to-r from-red-500 to-red-600 rounded-full transition-all duration-500 ease-out flex items-center justify-end pr-2"
+                                            className="h-full bg-gradient-to-r from-accent-blue to-accent-green rounded-full transition-all duration-500 ease-out flex items-center justify-end pr-2"
                                             style={{ width: `${Math.max(progress.percent, 4)}%` }}
                                         >
                                             {progress.percent > 15 && (
@@ -260,11 +260,11 @@ export default function OfflineDownloadModal({ isOpen, onClose }) {
                                         </div>
                                     </div>
                                     {progress.percent <= 15 && (
-                                        <div className="text-center text-xs text-gray-400 mt-1">{progress.percent}%</div>
+                                        <div className="text-center text-xs text-gray-500 mt-1">{progress.percent}%</div>
                                     )}
                                 </div>
 
-                                <p className="text-center text-xs text-amber-600 bg-amber-50 border border-amber-100 rounded-lg py-2 px-3">
+                                <p className="text-center text-xs text-accent-gold bg-accent-gold/5 border border-accent-gold/20 rounded-lg py-2 px-3">
                                     ⚠️ Jangan tutup halaman ini saat mengunduh
                                 </p>
                             </div>
@@ -273,17 +273,17 @@ export default function OfflineDownloadModal({ isOpen, onClose }) {
                         {/* Error */}
                         {status === 'error' && (
                             <div className="space-y-3">
-                                <div className="bg-red-50 border border-red-200 rounded-xl p-4 text-sm text-red-700">
+                                <div className="bg-rose-950/10 border border-rose-950/20 rounded-xl p-4 text-sm text-rose-400">
                                     <div className="font-bold mb-1">⚠️ Gagal mengunduh</div>
-                                    <p className="text-red-600 text-xs">{errorMsg}</p>
+                                    <p className="text-rose-400 text-xs">{errorMsg}</p>
                                 </div>
                                 <button
                                     onClick={handleDownload}
-                                    className="w-full bg-red-600 text-white font-bold py-3.5 rounded-xl transition-all hover:bg-red-700"
+                                    className="w-full bg-accent-blue text-white font-bold py-3.5 rounded-xl transition-all hover:bg-accent-blue/90"
                                 >
                                     Coba lagi
                                 </button>
-                                <button onClick={onClose} className="w-full text-gray-400 text-sm py-1.5">
+                                <button onClick={onClose} className="w-full text-gray-500 text-sm py-1.5">
                                     Batal
                                 </button>
                             </div>

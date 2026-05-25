@@ -116,7 +116,6 @@ export default function Navbar() {
                                     { href: '/kotoba', label: 'Kotoba' },
                                     { href: '/tts', label: 'TTS' },
                                     { href: '/practice', label: 'Latihan' },
-                                    { href: '/mensetsu', label: 'Mensetsu Practice' },
                                     { href: '/about', label: 'Tentang Kami' },
                                 ].map(({ href, label }) => (
                                     <Link
@@ -143,7 +142,7 @@ export default function Navbar() {
                                 onClick={() => setShowOfflineModal(true)}
                                 title={hasOfflineData ? 'Data offline tersedia' : 'Unduh untuk offline'}
                                 className={`relative p-2 rounded-xl transition-all duration-200 ${
-                                    theme === 'dark' ? 'text-red-400 hover:bg-red-950/30' : 'text-red-600 hover:bg-red-50'
+                                    theme === 'dark' ? 'text-accent-blue hover:bg-accent-blue/10' : 'text-accent-blue hover:bg-accent-blue/10'
                                 }`}
                             >
                                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -158,16 +157,16 @@ export default function Navbar() {
                                 user ? (
                                     <div className="flex items-center space-x-2">
                                         {(user.email === 'imronm1309@gmail.com' || user.is_staff) && (
-                                            <Link href="/admin" className="text-red-600 dark:text-red-400 hover:text-red-800 font-bold px-3 py-2 rounded-md text-sm transition-all duration-200 hover:bg-red-50 dark:hover:bg-red-900/20" onClick={(e) => handleNavClick(e, '/admin')}>
+                                            <Link href="/admin" className="text-accent-blue hover:text-accent-blue/80 font-bold px-3 py-2 rounded-md text-sm transition-all duration-200 hover:bg-accent-blue/10" onClick={(e) => handleNavClick(e, '/admin')}>
                                                 Admin
                                             </Link>
                                         )}
                                         <Link href="/dashboard" className={`font-bold px-3 py-2 rounded-md text-sm transition-all duration-200 ${
-                                            theme === 'dark' ? 'text-gray-300 hover:text-red-400 hover:bg-gray-900' : 'text-red-700 hover:bg-red-50'
+                                            theme === 'dark' ? 'text-gray-300 hover:text-accent-blue hover:bg-accent-blue/10' : 'text-accent-blue hover:bg-accent-blue/10'
                                         }`} onClick={(e) => handleNavClick(e, '/dashboard')}>
                                             Dashboard
                                         </Link>
-                                        <span className={`text-sm font-black px-2 ${theme === 'dark' ? 'text-gray-500' : 'text-red-800/40'}`}>|</span>
+                                        <span className={`text-sm font-black px-2 ${theme === 'dark' ? 'text-gray-500' : 'text-gray-300'}`}>|</span>
                                         <button
                                             onClick={() => {
                                                 if (isPracticing) {
@@ -178,7 +177,7 @@ export default function Navbar() {
                                                 toast.info('Kamu telah keluar akun.', { theme: theme === 'dark' ? 'dark' : 'colored' });
                                             }}
                                             className={`px-3 py-2 rounded-md text-sm font-bold transition-all duration-200 ${
-                                                theme === 'dark' ? 'text-gray-400 hover:text-red-400 hover:bg-red-950/20' : 'text-red-600 hover:bg-red-50'
+                                                theme === 'dark' ? 'text-gray-400 hover:text-accent-blue hover:bg-accent-blue/10' : 'text-gray-600 hover:text-accent-blue hover:bg-accent-blue/10'
                                             }`}
                                         >
                                             Keluar
@@ -186,10 +185,10 @@ export default function Navbar() {
                                     </div>
                                 ) : (
                                     <div className="flex items-center space-x-2">
-                                        <Link href="/login" className="text-gray-700 dark:text-gray-200 hover:text-red-600 dark:hover:text-red-400 px-3 py-2 rounded-md text-sm font-medium transition-all duration-200 hover:bg-gray-50 dark:hover:bg-gray-800" onClick={(e) => handleNavClick(e, '/login')}>
+                                        <Link href="/login" className="text-gray-700 dark:text-gray-200 hover:text-accent-blue px-3 py-2 rounded-md text-sm font-medium transition-all duration-200 hover:bg-accent-blue/10" onClick={(e) => handleNavClick(e, '/login')}>
                                             Masuk
                                         </Link>
-                                        <Link href="/register" className="bg-red-600 text-white hover:bg-red-700 px-4 py-2 rounded-md text-sm font-medium shadow-sm transition-all duration-200 hover:shadow-md hover:-translate-y-px" onClick={(e) => handleNavClick(e, '/register')}>
+                                        <Link href="/register" className="bg-gradient-to-r from-accent-blue to-accent-green text-white px-4 py-2 rounded-md text-sm font-medium shadow-sm transition-all duration-200 hover:opacity-90 hover:shadow-md hover:-translate-y-px" onClick={(e) => handleNavClick(e, '/register')}>
                                             Daftar
                                         </Link>
                                     </div>
@@ -203,7 +202,7 @@ export default function Navbar() {
                             <button
                                 onClick={() => setShowOfflineModal(true)}
                                 title={hasOfflineData ? 'Data offline tersedia' : 'Unduh untuk offline'}
-                                className="relative p-2 rounded-md text-gray-500 dark:text-gray-400 hover:text-red-600 dark:hover:text-red-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-200"
+                                className="relative p-2 rounded-md text-accent-blue hover:text-accent-blue hover:bg-accent-blue/10 transition-all duration-200"
                                 aria-label="Mode offline"
                             >
                                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -217,7 +216,7 @@ export default function Navbar() {
 
                             <button
                                 onClick={() => setIsMenuOpen(!isMenuOpen)}
-                                className="p-2 rounded-md text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-red-500"
+                                className="p-2 rounded-md text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-accent-blue/50"
                                 aria-label="Toggle menu"
                             >
                                 {/* Animated hamburger → X */}
@@ -247,7 +246,6 @@ export default function Navbar() {
                             { href: '/kotoba', label: 'Kotoba' },
                             { href: '/tts', label: 'TTS' },
                             { href: '/practice', label: 'Latihan' },
-                            { href: '/mensetsu', label: 'Mensetsu Practice' },
                             { href: '/about', label: 'Tentang Kami' },
                         ].map(({ href, label }, i) => (
                             <Link

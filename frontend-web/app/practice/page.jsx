@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, Suspense } from 'react';
+import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { useTheme } from '@/context/ThemeContext';
 import { useAuth } from '@/context/AuthContext';
@@ -64,17 +65,35 @@ function PracticePageContent() {
         <div className="relative min-h-screen">
             {/* Decorative Background Glows */}
             <div className="fixed inset-0 overflow-hidden pointer-events-none z-[-1]">
-                <div className="absolute top-[-10%] left-[-10%] w-[40vw] h-[40vw] rounded-full bg-red-400/20 dark:bg-red-900/20 blur-[120px] mix-blend-multiply dark:mix-blend-screen animate-pulse duration-10000" />
-                <div className="absolute bottom-[-10%] right-[-10%] w-[50vw] h-[50vw] rounded-full bg-rose-400/20 dark:bg-rose-900/20 blur-[150px] mix-blend-multiply dark:mix-blend-screen animate-pulse duration-7000 delay-1000" />
+                <div className="absolute top-[-10%] left-[-10%] w-[40vw] h-[40vw] rounded-full bg-accent-blue/5 dark:bg-accent-blue/10 blur-[120px] mix-blend-multiply dark:mix-blend-screen animate-pulse duration-10000" />
+                <div className="absolute bottom-[-10%] right-[-10%] w-[50vw] h-[50vw] rounded-full bg-accent-green/5 dark:bg-accent-green/10 blur-[150px] mix-blend-multiply dark:mix-blend-screen animate-pulse duration-7000 delay-1000" />
             </div>
 
             <div className="container mx-auto px-4 py-8 relative z-10">
                 {!isPlaying && (
-                    <div className="mb-10">
-                        <h1 className={`text-5xl md:text-6xl font-black mb-2 tracking-tight transition-colors ${textColor}`}>
-                            Latihan <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-rose-500 drop-shadow-sm">& Analitik</span>
-                        </h1>
-                        <div className="h-1.5 w-24 bg-gradient-to-r from-red-600 to-rose-500 rounded-full mt-4"></div>
+                    <div className="mb-10 flex flex-col md:flex-row md:items-center justify-between gap-6 border-b border-[var(--border-color)] pb-6">
+                        <div>
+                            <h1 className={`text-4xl md:text-6xl font-japanese font-black mb-2 tracking-tight transition-colors ${textColor}`}>
+                                練習 <span className="text-transparent bg-clip-text bg-gradient-to-r from-accent-blue to-accent-green drop-shadow-sm">Latihan & Analitik</span>
+                            </h1>
+                            <div className="h-1.5 w-24 bg-gradient-to-r from-accent-blue to-accent-green rounded-full mt-4"></div>
+                        </div>
+                        
+                        {/* Mensetsu Banner Button */}
+                        <div className="flex-shrink-0 bg-[var(--card-bg)] border border-[var(--border-color)] p-4 rounded-2xl flex items-center gap-4 shadow-sm max-w-sm hover:border-accent-green transition-all duration-300">
+                            <div className="w-10 h-10 rounded-xl bg-accent-green/10 text-accent-green flex items-center justify-center flex-shrink-0">
+                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                                </svg>
+                            </div>
+                            <div>
+                                <h4 className="text-xs font-bold text-foreground">Praktik Mensetsu (Wawancara)</h4>
+                                <p className="text-[10px] text-gray-500 font-light mb-1.5">Latih simulasi interview kerja secara mandiri</p>
+                                <Link href="/mensetsu" className="inline-flex items-center gap-1 text-[10px] font-bold text-accent-green hover:underline">
+                                    Mulai Simulasi Sekarang →
+                                </Link>
+                            </div>
+                        </div>
                     </div>
                 )}
 
