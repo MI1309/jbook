@@ -388,8 +388,6 @@ def get_analytics(request):
         if wrong == 2: return "Lumayan"
         return "Lumayan" # Default for 1 wrong 0 right
 
-    from django.db.models import Q
-
     # Kanji stats
     kanji_stats = qs.filter(kanji__isnull=False).values('kanji__character', 'kanji__jlpt_level')\
         .annotate(
