@@ -353,6 +353,74 @@ def get_vocab(request, vocab_id: str):
         vocab.furigana = to_kana(vocab.furigana.lower())
     return vocab
 
+
+@router.get("/kotoba/{vocab_id}/audio")
+@router.get("/vocab/{vocab_id}/audio")
+def get_vocab_audio(request, vocab_id: str):
+    from .models import Vocab
+    import requests
+    from django.http import StreamingHttpResponse
+    import urllib.parse
+    
+    try:
+        if '-' not in vocab_id and len(vocab_id) == 32:
+            import uuid
+            vocab_id = str(uuid.UUID(vocab_id))
+    except (ValueError, TypeError):
+        pass
+        
+    vocab = get_object_or_404(Vocab, id=vocab_id)
+    text = vocab.word
+    
+    # Remove annotations/examples from text if present
+    if " " in text:
+        text = text.split(" ")[0]
+    if "(" in text:
+        text = text.split("(")[0]
+    if "（" in text:
+        text = text.split("（")[0]
+        
+    # Use reading for accurate furigana pronunciation if available
+    text_to_speak = vocab.reading if vocab.reading else text
+    
+    encoded_text = urllib.parse.quote(text_to_speak)
+    tts_url = f"https://translate.google.com/translate_tts?ie=UTF-8&tl=ja&client=tw-ob&q={encoded_text}"
+    
+    headers = {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+    }
+    
+    req = requests.get(tts_url, headers=headers, stream=True)
+    response = StreamingHttpResponse(
+        req.iter_content(chunk_size=4096),
+        content_type="audio/mpeg"
+    )
+    response["Content-Disposition"] = f'inline; filename="{vocab_id}.mp3"'
+    return response
+
+
+@router.get("/tts")
+def get_arbitrary_tts(request, text: str):
+    import requests
+    from django.http import StreamingHttpResponse
+    import urllib.parse
+    
+    encoded_text = urllib.parse.quote(text)
+    tts_url = f"https://translate.google.com/translate_tts?ie=UTF-8&tl=ja&client=tw-ob&q={encoded_text}"
+    
+    headers = {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+    }
+    
+    req = requests.get(tts_url, headers=headers, stream=True)
+    response = StreamingHttpResponse(
+        req.iter_content(chunk_size=4096),
+        content_type="audio/mpeg"
+    )
+    return response
+
+
+
 class VocabCreateSchema(Schema):
     word: str
     reading: Optional[str] = None

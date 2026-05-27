@@ -7,11 +7,57 @@ import { hasKanji, extractKanji } from '@/lib/utils';
 import { findIdByString } from '@/lib/api';
 import { dbGetAll } from '@/lib/offline-db';
 import { useTheme } from '@/context/ThemeContext';
+import { Volume2 } from 'lucide-react';
 
 export default function KotobaDetailUI({ vocab, onClose }) {
     const router = useRouter();
     const { theme, mounted } = useTheme();
     const [kanjiDetails, setKanjiDetails] = useState([]);
+    const [playing, setPlaying] = useState(false);
+    
+    const playAudio = () => {
+        if (!vocab || playing) return;
+        setPlaying(true);
+        
+        // 1. Try our custom backend API first
+        const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+        const audioUrl = `${baseUrl.endsWith('/') ? baseUrl.slice(0, -1) : baseUrl}/api/content/vocab/${vocab.id}/audio`;
+        
+        const audio = new Audio(audioUrl);
+        audio.onended = () => setPlaying(false);
+        audio.onerror = () => {
+            // Fallback to browser's Web Speech API if API fails
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+                let cleanWord = vocab.word.split(' ')[0].split('(')[0].split('（')[0];
+                let textToSpeak = vocab.reading || cleanWord;
+                const utterance = new SpeechSynthesisUtterance(textToSpeak);
+                utterance.lang = 'ja-JP';
+                utterance.rate = 0.8;
+                utterance.onend = () => setPlaying(false);
+                utterance.onerror = () => setPlaying(false);
+                window.speechSynthesis.speak(utterance);
+            } else {
+                setPlaying(false);
+            }
+        };
+        audio.play().catch((err) => {
+            // Play failed, trigger Speech fallback
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+                let cleanWord = vocab.word.split(' ')[0].split('(')[0].split('（')[0];
+                let textToSpeak = vocab.reading || cleanWord;
+                const utterance = new SpeechSynthesisUtterance(textToSpeak);
+                utterance.lang = 'ja-JP';
+                utterance.rate = 0.8;
+                utterance.onend = () => setPlaying(false);
+                utterance.onerror = () => setPlaying(false);
+                window.speechSynthesis.speak(utterance);
+            } else {
+                setPlaying(false);
+            }
+        });
+    };
     
     if (!vocab) return null;
 
@@ -95,7 +141,7 @@ export default function KotobaDetailUI({ vocab, onClose }) {
                     <div className={`relative z-10 text-left sm:text-center transition-colors ${textColor}`}>
                         <span className={`text-[10px] sm:text-xs font-black uppercase tracking-[0.3em] mb-3 sm:mb-4 block text-center ${subTextColor}`}>Vocabulary</span>
 
-                        <div className="mb-6 sm:mb-8 flex justify-center w-full px-2 pt-6">
+                        <div className="mb-6 sm:mb-8 flex items-center justify-center gap-4 w-full px-2 pt-6 flex-wrap">
                             <ruby className={`text-3xl sm:text-4xl md:text-5xl font-black tracking-wider transition-colors ${textColor}`}>
                                 {characters.map((char, index) => (
                                     hasKanji(char) ? (
@@ -116,6 +162,17 @@ export default function KotobaDetailUI({ vocab, onClose }) {
                                     </rt>
                                 )}
                             </ruby>
+                            <button
+                                onClick={playAudio}
+                                className={`p-3 rounded-2xl transition-all duration-300 ${
+                                    playing 
+                                        ? 'bg-red-600 text-white shadow-lg shadow-red-600/30 scale-95 animate-pulse' 
+                                        : `${theme === 'dark' ? 'bg-red-950/20 text-red-400 hover:bg-red-950/40 hover:text-red-300' : 'bg-red-50 text-red-600 hover:bg-red-100 hover:text-red-700'} hover:scale-110 active:scale-95`
+                                } flex items-center justify-center cursor-pointer shadow-sm`}
+                                title="Putar Suara"
+                            >
+                                <Volume2 className={`w-6 h-6 ${playing ? 'scale-110' : ''}`} />
+                            </button>
                         </div>
 
                         <div className={`${sectionBg} p-5 sm:p-6 md:p-8 rounded-2xl border ${theme === 'dark' ? 'border-red-950/30' : 'border-red-100'} shadow-inner mb-8 text-left transition-colors`}>

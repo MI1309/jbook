@@ -278,7 +278,7 @@ export default function Navbar() {
                                         </Link>
                                     )}
                                     <Link href="/dashboard" className="block px-3 py-2 rounded-md text-sm font-medium text-gray-300 hover:text-accent-blue hover:bg-white/5 transition-all duration-200" onClick={(e) => handleNavClick(e, '/dashboard')}>
-                                        Dashboard Latihan
+                                        Dashboard
                                     </Link>
                                     <button
                                         onClick={() => {

@@ -9,6 +9,7 @@ import KotobaDetailModal from '@/components/kotoba/KotobaDetailModal';
 
 import { getScriptTypes } from '@/lib/utils';
 import { useTheme } from '@/context/ThemeContext';
+import { Volume2 } from 'lucide-react';
 
 function HighlightText({ text, query, active = true }) {
     if (!query || !active) return <span>{text}</span>;
@@ -31,6 +32,7 @@ function KotobaContent() {
     const detailId = searchParams.get('detail');
     const [data, setData] = useState({ items: [], total: 0, pages: 1 });
     const [loading, setLoading] = useState(true);
+    const [playingId, setPlayingId] = useState(null);
 
     const page = parseInt(searchParams.get('page')) || 1;
     const level = searchParams.get('level');
@@ -39,6 +41,50 @@ function KotobaContent() {
     const limit = 30;
 
     const scriptTypes = getScriptTypes(search);
+
+    const playAudioCard = (vocab, e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        
+        if (playingId) return;
+        setPlayingId(vocab.id);
+        
+        const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+        const audioUrl = `${baseUrl.endsWith('/') ? baseUrl.slice(0, -1) : baseUrl}/api/content/vocab/${vocab.id}/audio`;
+        
+        const audio = new Audio(audioUrl);
+        audio.onended = () => setPlayingId(null);
+        audio.onerror = () => {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+                let cleanWord = vocab.word.split(' ')[0].split('(')[0].split('（')[0];
+                let textToSpeak = vocab.reading || cleanWord;
+                const utterance = new SpeechSynthesisUtterance(textToSpeak);
+                utterance.lang = 'ja-JP';
+                utterance.rate = 0.8;
+                utterance.onend = () => setPlayingId(null);
+                utterance.onerror = () => setPlayingId(null);
+                window.speechSynthesis.speak(utterance);
+            } else {
+                setPlayingId(null);
+            }
+        };
+        audio.play().catch(() => {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+                let cleanWord = vocab.word.split(' ')[0].split('(')[0].split('（')[0];
+                let textToSpeak = vocab.reading || cleanWord;
+                const utterance = new SpeechSynthesisUtterance(textToSpeak);
+                utterance.lang = 'ja-JP';
+                utterance.rate = 0.8;
+                utterance.onend = () => setPlayingId(null);
+                utterance.onerror = () => setPlayingId(null);
+                window.speechSynthesis.speak(utterance);
+            } else {
+                setPlayingId(null);
+            }
+        });
+    };
 
     useEffect(() => {
         async function fetchData() {
@@ -98,7 +144,20 @@ function KotobaContent() {
                             className="group flex flex-col p-6 bg-[var(--card-bg)] rounded-[2rem] border border-[var(--border-color)] transition-all duration-300 hover:shadow-xl hover:shadow-accent-blue/10 hover:border-accent-blue/30 active:scale-95 relative overflow-hidden h-full justify-between"
                         >
                             <div className="flex justify-between items-start mb-4 transition-colors">
-                                <span className="text-[10px] font-black uppercase tracking-widest text-gray-500 px-3 py-1 bg-[var(--background)] border border-[var(--border-color)] rounded-xl inline-block">N{vocab.jlpt_level}</span>
+                                <div className="flex items-center gap-2">
+                                    <span className="text-[10px] font-black uppercase tracking-widest text-gray-500 px-3 py-1 bg-[var(--background)] border border-[var(--border-color)] rounded-xl inline-block">N{vocab.jlpt_level}</span>
+                                    <button
+                                        onClick={(e) => playAudioCard(vocab, e)}
+                                        className={`p-1.5 rounded-xl transition-all ${
+                                            playingId === vocab.id 
+                                                ? 'bg-red-500 text-white animate-pulse' 
+                                                : 'bg-[var(--background)] border border-[var(--border-color)] text-gray-500 hover:text-red-600 hover:border-red-500/30'
+                                        }`}
+                                        title="Dengarkan Suara"
+                                    >
+                                        <Volume2 className="w-3.5 h-3.5" />
+                                    </button>
+                                </div>
                                 
                                 <div className="flex flex-col gap-1 items-end">
                                     <div className="flex gap-1">

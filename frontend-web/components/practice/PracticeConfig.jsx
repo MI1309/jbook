@@ -10,6 +10,7 @@ export default function PracticeConfig() {
     const [limit, setLimit] = useState(10);
     const [timer, setTimer] = useState(5); // Default 5 minutes
     const [isUnlimitedTime, setIsUnlimitedTime] = useState(false);
+    const [mode, setMode] = useState('choice'); // 'choice' or 'kakitori'
     
     // Multi-select states
     const [selectedTypes, setSelectedTypes] = useState(['kanji']);
@@ -59,6 +60,7 @@ export default function PracticeConfig() {
             params.append('level', selectedLevels.join(','));
         }
         if (!isUnlimitedTime) params.append('timer', finalTimer);
+        params.append('mode', mode);
         params.append('play', 'true');
         
         router.push(`?${params.toString()}`);
@@ -90,23 +92,83 @@ export default function PracticeConfig() {
                             Materi Latihan
                         </label>
                         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                            {types.map(t => (
-                                <button
-                                    key={t.id}
-                                    onClick={() => toggleType(t.id)}
-                                    className={`flex flex-col items-center justify-center p-4 rounded-2xl border-2 transition-all duration-300 transform hover:scale-[1.03] ${
-                                        selectedTypes.includes(t.id)
-                                            ? 'bg-gradient-to-br from-red-50 to-rose-50 dark:from-red-950/30 dark:to-rose-950/10 border-red-500 shadow-lg shadow-red-500/20'
-                                            : `${cardBg} ${borderStyle} hover:border-red-300 dark:hover:border-red-800 hover:shadow-md`
-                                    }`}
-                                >
-                                    <span className="text-3xl mb-2">{t.icon}</span>
-                                    <span className={`font-bold transition-colors ${selectedTypes.includes(t.id) ? 'text-red-700 dark:text-red-400' : textColor}`}>
-                                        {t.label}
+                            {types.map(t => {
+                                const kakitoriDisabled = mode === 'kakitori' && !['kanji', 'vocab'].includes(t.id);
+                                const isSelected = selectedTypes.includes(t.id);
+                                return (
+                                    <button
+                                        key={t.id}
+                                        onClick={() => !kakitoriDisabled && toggleType(t.id)}
+                                        disabled={kakitoriDisabled}
+                                        title={kakitoriDisabled ? 'Tidak tersedia untuk mode Kakitori' : ''}
+                                        className={`flex flex-col items-center justify-center p-4 rounded-2xl border-2 transition-all duration-300 ${
+                                            kakitoriDisabled
+                                                ? `${cardBg} ${borderStyle} opacity-35 cursor-not-allowed grayscale`
+                                                : isSelected
+                                                    ? 'bg-gradient-to-br from-red-50 to-rose-50 dark:from-red-950/30 dark:to-rose-950/10 border-red-500 shadow-lg shadow-red-500/20 transform hover:scale-[1.03]'
+                                                    : `${cardBg} ${borderStyle} hover:border-red-300 dark:hover:border-red-800 hover:shadow-md transform hover:scale-[1.03]`
+                                        }`}
+                                    >
+                                        <span className="text-3xl mb-2">{kakitoriDisabled ? '🔒' : t.icon}</span>
+                                        <span className={`font-bold transition-colors ${
+                                            kakitoriDisabled ? subTextColor : isSelected ? 'text-red-700 dark:text-red-400' : textColor
+                                        }`}>
+                                            {t.label}
+                                        </span>
+                                        <span className={`text-[10px] mt-1 uppercase font-medium transition-colors ${subTextColor}`}>
+                                            {kakitoriDisabled ? 'Tidak tersedia' : t.sub}
+                                        </span>
+                                    </button>
+                                );
+                            })}
+                        </div>
+                    </div>
+
+                    {/* Mode Latihan Selection */}
+                    <div>
+                        <label className={`block text-sm font-black uppercase tracking-widest mb-4 transition-colors ${subTextColor}`}>
+                            Mode Latihan
+                        </label>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <button
+                                onClick={() => setMode('choice')}
+                                className={`flex items-center gap-4 p-4 rounded-2xl border-2 transition-all duration-300 transform hover:scale-[1.01] ${
+                                    mode === 'choice'
+                                        ? 'bg-gradient-to-br from-red-50 to-rose-50 dark:from-red-950/30 dark:to-rose-950/10 border-red-500 shadow-lg shadow-red-500/20'
+                                        : `${cardBg} ${borderStyle} hover:border-red-300 dark:hover:border-red-800 hover:shadow-md`
+                                }`}
+                            >
+                                <span className="text-3xl">🔠</span>
+                                <div className="text-left">
+                                    <span className={`block font-bold transition-colors ${mode === 'choice' ? 'text-red-700 dark:text-red-400' : textColor}`}>
+                                        Pilihan Ganda
                                     </span>
-                                    <span className={`text-[10px] mt-1 uppercase font-medium transition-colors ${subTextColor}`}>{t.sub}</span>
-                                </button>
-                            ))}
+                                    <span className={`text-[10px] uppercase font-medium transition-colors ${subTextColor}`}>Pilih satu dari empat jawaban</span>
+                                </div>
+                            </button>
+
+                            <button
+                                onClick={() => {
+                                    setMode('kakitori');
+                                    // Keep only kanji & vocab — disable kana, grammar, particle for kakitori
+                                    const kakitoriAllowed = ['kanji', 'vocab'];
+                                    const filtered = selectedTypes.filter(t => kakitoriAllowed.includes(t));
+                                    setSelectedTypes(filtered.length > 0 ? filtered : ['vocab']);
+                                }}
+                                className={`flex items-center gap-4 p-4 rounded-2xl border-2 transition-all duration-300 transform hover:scale-[1.01] ${
+                                    mode === 'kakitori'
+                                        ? 'bg-gradient-to-br from-red-50 to-rose-50 dark:from-red-950/30 dark:to-rose-950/10 border-red-500 shadow-lg shadow-red-500/20'
+                                        : `${cardBg} ${borderStyle} hover:border-red-300 dark:hover:border-red-800 hover:shadow-md`
+                                }`}
+                            >
+                                <span className="text-3xl">🎧</span>
+                                <div className="text-left">
+                                    <span className={`block font-bold transition-colors ${mode === 'kakitori' ? 'text-red-700 dark:text-red-400' : textColor}`}>
+                                        Kakitori (Dikte / Tulis Suara)
+                                    </span>
+                                    <span className={`text-[10px] uppercase font-medium transition-colors ${subTextColor}`}>Dengar audio & tulis dalam Hiragana/Katakana</span>
+                                </div>
+                            </button>
                         </div>
                     </div>
 

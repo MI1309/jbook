@@ -39,6 +39,7 @@ class QuizAttempt(models.Model):
     is_correct = models.BooleanField()
     answer_given = models.CharField(max_length=255, blank=True, null=True)
     timestamp = models.DateTimeField(default=timezone.now)
+    mode = models.CharField(max_length=20, default='choice') 
 
     def __str__(self):
         target = self.kanji or self.vocab or self.grammar or "Unknown"

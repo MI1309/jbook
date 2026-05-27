@@ -39,6 +39,9 @@ class AnswerSchema(Schema):
     type: str # 'kanji', 'vocab', 'grammar'
     is_correct: bool
     answer_given: Optional[str] = None
+    mode: Optional[str] = 'choice'
+
+
 
 class SubmissionSchema(Schema):
     results: List[AnswerSchema]
@@ -56,12 +59,25 @@ class LevelStatSchema(Schema):
     correct: int
     accuracy: float
 
+class KakitoriLevelSchema(Schema):
+    level: int
+    total: int
+    correct: int
+    accuracy: float
+
+class KakitoriStatsSchema(Schema):
+    total_attempts: int     # jumlah sesi (submit)
+    total_questions: int    # total soal kakitori
+    correct: int
+    accuracy: float
+    level_breakdown: List[KakitoriLevelSchema]
 
 class AnalyticsSchema(Schema):
     total_attempts: int
     accuracy: float
     wrong_stats: List[WrongStatSchema]
     level_stats: List[LevelStatSchema]
+    kakitori_stats: KakitoriStatsSchema  # ← tambah ini
 
 class QuizAttemptExportSchema(Schema):
     kanji_id: Optional[uuid.UUID] = None
@@ -267,7 +283,8 @@ def submit_quiz(request, payload: SubmissionSchema):
         attempt_data = {
             "user": user,
             "is_correct": res.is_correct,
-            "answer_given": res.answer_given
+            "answer_given": res.answer_given,
+            "mode": res.mode or 'choice',
         }
         
         filter_kwargs = {"user": user}
@@ -323,6 +340,45 @@ def get_analytics(request):
     total_attempts = qs.count()
     correct_count = qs.filter(is_correct=True).count()
     accuracy = (correct_count / total_attempts * 100) if total_attempts > 0 else 0.0
+
+    # ── Kakitori Stats (BARU) ──
+    kakitori_qs = qs.filter(mode='kakitori')
+    k_total = kakitori_qs.count()
+    k_correct = kakitori_qs.filter(is_correct=True).count()
+    k_sessions = max(1, k_total // 10) if k_total > 0 else 0
+     # Level breakdown kakitori
+    k_level_map = {}
+    for lvl in range(1, 6):
+        lvl_qs = kakitori_qs.filter(
+            Q(kanji__jlpt_level=lvl) |
+            Q(vocab__jlpt_level=lvl) |
+            Q(grammar__jlpt_level=lvl)
+        )
+        total = lvl_qs.count()
+        if total > 0:
+            correct = lvl_qs.filter(is_correct=True).count()
+            k_level_map[lvl] = {
+                "level": lvl,
+                "total": total,
+                "correct": correct,
+                "accuracy": round(correct / total * 100, 1)
+            }
+    
+    kakitori_stats = {
+        "total_attempts": k_sessions,
+        "total_questions": k_total,
+        "correct": k_correct,
+        "accuracy": round(k_correct / k_total * 100, 1) if k_total > 0 else 0.0,
+        "level_breakdown": sorted(k_level_map.values(), key=lambda x: x['level'], reverse=True)
+    }
+    
+    return {
+        "total_attempts": total_attempts,
+        "accuracy": round(accuracy, 1),
+        "wrong_stats": wrong_stats[:50],
+        "level_stats": sorted(level_stats_raw.values(), key=lambda x: x['level'], reverse=True),
+        "kakitori_stats": kakitori_stats  # ← tambah ini
+    }
     
     def get_status_label(wrong, right):
         if wrong <= 0: return None

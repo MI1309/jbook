@@ -488,11 +488,40 @@ async function generateOfflineQuestions({ limit, level, type }) {
 }
 
 
+// getUserAnalytics — tambah fallback kakitori_stats
+export async function getUserAnalytics() {
+    const token = Cookies.get('access_token');
+    const headers = {};
+    if (token) headers['Authorization'] = `Bearer ${token}`;
+
+    const cacheKey = 'user-analytics';
+    const defaultKakitori = {
+        total_attempts: 0, total_questions: 0,
+        correct: 0, accuracy: 0, level_breakdown: []
+    };
+
+    try {
+        return await fetchWithCache(cacheKey, async () => {
+            const res = await fetch(`${API_URL}/learning/practice/analytics`, { headers });
+            if (!res.ok) return { total_attempts: 0, accuracy: 0, wrong_stats: [], 
+                                   level_stats: [], kakitori_stats: defaultKakitori };
+            const data = await res.json();
+            // Fallback jika server belum return kakitori_stats
+            if (!data.kakitori_stats) data.kakitori_stats = defaultKakitori;
+            return data;
+        }, 24 * 60 * 60 * 1000);
+    } catch (error) {
+        return handleNetworkError('getUserAnalytics', error, {
+            total_attempts: 0, accuracy: 0, wrong_stats: [],
+            level_stats: [], kakitori_stats: defaultKakitori
+        });
+    }
+}
+
+// submitPracticeResults — invalidate cache setelah submit
 export async function submitPracticeResults(results) {
     const token = Cookies.get('access_token');
-    const headers = {
-        'Content-Type': 'application/json',
-    };
+    const headers = { 'Content-Type': 'application/json' };
     if (token) headers['Authorization'] = `Bearer ${token}`;
 
     try {
@@ -501,42 +530,19 @@ export async function submitPracticeResults(results) {
             headers,
             body: JSON.stringify({ results }),
         });
-        return handleResponse(res, 'submitPracticeResults');
+        const data = await handleResponse(res, 'submitPracticeResults');
+        
+        // ← PENTING: invalidate cache analytics agar dashboard langsung update
+        // (asumsi fetchWithCache punya fungsi invalidate, atau hapus manual)
+        try {
+            const { cacheStore } = await import('./cache-store');
+            cacheStore.delete('user-analytics');
+        } catch {}
+        
+        return data;
     } catch (error) {
         if (error.status) throw error;
         return handleNetworkError('submitPracticeResults', error);
-    }
-}
-
-export async function getUserAnalytics() {
-    const token = Cookies.get('access_token');
-    const headers = {};
-    if (token) headers['Authorization'] = `Bearer ${token}`;
-
-    const cacheKey = 'user-analytics';
-
-    try {
-        return await fetchWithCache(cacheKey, async () => {
-            const res = await fetch(`${API_URL}/learning/practice/analytics`, {
-                headers,
-            });
-
-            if (!res.ok) {
-                return {
-                    total_attempts: 0,
-                    accuracy: 0,
-                    wrong_stats: []
-                };
-            }
-
-            return res.json();
-        }, 24 * 60 * 60 * 1000); // 24 hours cache for analytics
-    } catch (error) {
-        return handleNetworkError('getUserAnalytics', error, {
-            total_attempts: 0,
-            accuracy: 0,
-            wrong_stats: []
-        });
     }
 }
 
