@@ -726,11 +726,14 @@ export async function exportPracticeData() {
         const char = a.character || a.label || a.word || a.title;
         if (!char) return;
 
-        const key = `${a.type}|${char}`;
+        // Preserve mode separation (choice vs kakitori) in exports/imports
+        const mode = a.mode || 'choice';
+        const key = `${mode}|${a.type}|${char}`;
         if (!attemptMap.has(key)) {
             attemptMap.set(key, {
                 type: a.type,
                 character: char,
+                mode,
                 kanji_id: a.kanji_id,
                 vocab_id: a.vocab_id,
                 grammar_id: a.grammar_id,
@@ -799,12 +802,14 @@ export async function importPracticeData(rawData) {
         
         data.attempts.forEach((a, idx) => {
             const groupDate = a.last_attempt ? new Date(a.last_attempt) : new Date(baseDate.getTime() - (idx * 60000));
+            const mode = a.mode || 'choice';
 
             for (let i = 0; i < (a.wrong_count || 0); i++) {
                 const itemDate = new Date(groupDate.getTime() - (i * 1000));
                 expandedAttempts.push({
                     type: a.type,
                     character: a.character,
+                    mode,
                     kanji_id: a.kanji_id,
                     vocab_id: a.vocab_id,
                     grammar_id: a.grammar_id,
@@ -819,6 +824,7 @@ export async function importPracticeData(rawData) {
                 expandedAttempts.push({
                     type: a.type,
                     character: a.character,
+                    mode,
                     kanji_id: a.kanji_id,
                     vocab_id: a.vocab_id,
                     grammar_id: a.grammar_id,
@@ -835,6 +841,8 @@ export async function importPracticeData(rawData) {
     // 2. Migrate & Repair old/missing data
     if (data.attempts && Array.isArray(data.attempts)) {
         for (const a of data.attempts) {
+            // Ensure mode exists (server uses this to compute kakitori analytics)
+            if (!a.mode) a.mode = 'choice';
             // Repair Tipe missing
             if (!a.type) {
                 if (a.grammar_id) a.type = 'grammar';

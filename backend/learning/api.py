@@ -90,6 +90,7 @@ class QuizAttemptExportSchema(Schema):
     type: Optional[str] = None
     label: Optional[str] = None
     wrong_count: Optional[int] = 0
+    mode: Optional[str] = 'choice'
 
 
 class UserProgressExportSchema(Schema):
@@ -110,6 +111,7 @@ def generate_quiz(request, limit: int = 10, level: Optional[str] = None, type: s
     requested_types = [t.strip().lower() for t in type.split(',')]
     requested_levels = [int(l.strip()) for l in level.split(',') if l.strip().isdigit()] if level else []
 
+    questions = []
     combined_pool = []
     # Fetch items for each type and pool them
     for t in requested_types:
@@ -164,14 +166,16 @@ def generate_quiz(request, limit: int = 10, level: Optional[str] = None, type: s
         for item in items:
             combined_pool.append((item, display_type, items))
 
-    if not combined_pool or len(combined_pool) < 4:
-        return []
+    # Jika hanya mode kana, kita sudah punya questions
+    if not combined_pool:
+        return questions
+    if len(combined_pool) < 4:
+        return questions[:limit]
 
     # Ensure limit doesn't exceed available items
     quiz_limit = min(len(combined_pool), limit)
     selected_samples = random.sample(combined_pool, quiz_limit)
     
-    questions = []
     for item, d_type, same_type_pool in selected_samples:
         # Distractors must come from the same pool to ensure level/type consistency
         possible_distractors = [k for k in same_type_pool if k.id != item.id]
@@ -341,45 +345,6 @@ def get_analytics(request):
     correct_count = qs.filter(is_correct=True).count()
     accuracy = (correct_count / total_attempts * 100) if total_attempts > 0 else 0.0
 
-    # ── Kakitori Stats (BARU) ──
-    kakitori_qs = qs.filter(mode='kakitori')
-    k_total = kakitori_qs.count()
-    k_correct = kakitori_qs.filter(is_correct=True).count()
-    k_sessions = max(1, k_total // 10) if k_total > 0 else 0
-     # Level breakdown kakitori
-    k_level_map = {}
-    for lvl in range(1, 6):
-        lvl_qs = kakitori_qs.filter(
-            Q(kanji__jlpt_level=lvl) |
-            Q(vocab__jlpt_level=lvl) |
-            Q(grammar__jlpt_level=lvl)
-        )
-        total = lvl_qs.count()
-        if total > 0:
-            correct = lvl_qs.filter(is_correct=True).count()
-            k_level_map[lvl] = {
-                "level": lvl,
-                "total": total,
-                "correct": correct,
-                "accuracy": round(correct / total * 100, 1)
-            }
-    
-    kakitori_stats = {
-        "total_attempts": k_sessions,
-        "total_questions": k_total,
-        "correct": k_correct,
-        "accuracy": round(k_correct / k_total * 100, 1) if k_total > 0 else 0.0,
-        "level_breakdown": sorted(k_level_map.values(), key=lambda x: x['level'], reverse=True)
-    }
-    
-    return {
-        "total_attempts": total_attempts,
-        "accuracy": round(accuracy, 1),
-        "wrong_stats": wrong_stats[:50],
-        "level_stats": sorted(level_stats_raw.values(), key=lambda x: x['level'], reverse=True),
-        "kakitori_stats": kakitori_stats  # ← tambah ini
-    }
-    
     def get_status_label(wrong, right):
         if wrong <= 0: return None
         if wrong == 1 and right >= 1: return None
@@ -479,12 +444,48 @@ def get_analytics(request):
                 "correct": correct,
                 "accuracy": round((correct / total * 100), 1)
             }
-        
+
+    # ── Kakitori Stats ──
+    kakitori_qs = qs.filter(mode='kakitori')
+    k_total = kakitori_qs.count()
+    k_correct = kakitori_qs.filter(is_correct=True).count()
+    # Anggap 1 submit ≈ 1 sesi; fallback konservatif jika data lama tidak menyimpan session id
+    k_sessions = 0
+    if k_total > 0:
+        k_sessions = max(1, (k_total + 9) // 10)
+
+    k_level_map = {}
+    for lvl in range(1, 6):
+        lvl_qs = kakitori_qs.filter(
+            Q(kanji__jlpt_level=lvl) |
+            Q(vocab__jlpt_level=lvl) |
+            Q(grammar__jlpt_level=lvl) |
+            Q(particle__jlpt_level=lvl)
+        )
+        total = lvl_qs.count()
+        if total > 0:
+            correct = lvl_qs.filter(is_correct=True).count()
+            k_level_map[lvl] = {
+                "level": lvl,
+                "total": total,
+                "correct": correct,
+                "accuracy": round(correct / total * 100, 1)
+            }
+
+    kakitori_stats = {
+        "total_attempts": k_sessions,
+        "total_questions": k_total,
+        "correct": k_correct,
+        "accuracy": round(k_correct / k_total * 100, 1) if k_total > 0 else 0.0,
+        "level_breakdown": sorted(k_level_map.values(), key=lambda x: x['level'], reverse=True)
+    }
+
     return {
         "total_attempts": total_attempts,
         "accuracy": round(accuracy, 1),
         "wrong_stats": wrong_stats[:50],
-        "level_stats": sorted(level_stats_raw.values(), key=lambda x: x['level'], reverse=True)
+        "level_stats": sorted(level_stats_raw.values(), key=lambda x: x['level'], reverse=True),
+        "kakitori_stats": kakitori_stats
     }
 
 @router.post("/practice/reset", auth=JWTAuth())
@@ -558,7 +559,8 @@ def export_practice_data(request):
             "timestamp": a.timestamp,
             "type": item_type,
             "label": label,
-            "wrong_count": lookup.get(str(target_id), 0) if target_id else 0
+            "wrong_count": lookup.get(str(target_id), 0) if target_id else 0,
+            "mode": a.mode
         })
 
         
@@ -608,7 +610,8 @@ def import_practice_data(request, payload: ExportDataSchema):
                 particle_id=a.particle_id,
                 is_correct=a.is_correct,
                 answer_given=a.answer_given,
-                timestamp=a.timestamp
+                timestamp=a.timestamp,
+                mode=(a.mode or 'choice')
             ))
         else:
             skipped_count += 1
