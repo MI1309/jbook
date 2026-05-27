@@ -1,6 +1,6 @@
 from typing import List, Optional, Union
 from ninja import Router, Schema
-from django.db.models import Count
+from django.db.models import Count, Q
 from django.shortcuts import get_object_or_404
 from django.contrib.auth import get_user_model
 from .models import QuizAttempt, UserProgress
