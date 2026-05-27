@@ -509,7 +509,6 @@ def export_practice_data(request):
     progress = UserProgress.objects.filter(user=user)
     
     # Pre-calculate mistake counts for all items to avoid N+1 queries in loops
-    from django.db.models import Q
     mistake_counts = attempts.filter(is_correct=False).values('kanji_id', 'vocab_id', 'grammar_id', 'particle_id')\
         .annotate(count=Count('id'))
     
