@@ -161,22 +161,22 @@ body {
 .dark .bg-\[\#0a0a0a\]\/60 {
   background-color: color-mix(in srgb, var(--card-bg) 60%, transparent) !important;
 }
-.dark .border-red-950\/20 {
+.dark .border-blue-900\/20 {
   border-color: var(--border-color) !important;
 }
-.dark .shadow-red-200 {
+.dark .shadow-blue-200 {
   box-shadow: 0 10px 15px -3px rgba(56, 189, 248, 0.15), 0 4px 6px -4px rgba(56, 189, 248, 0.15) !important;
 }
-.dark .shadow-red-900\/40 {
+.dark .shadow-blue-900\/40 {
   box-shadow: 0 10px 15px -3px rgba(56, 189, 248, 0.1), 0 4px 6px -4px rgba(56, 189, 248, 0.1) !important;
 }
-.dark .hover\:bg-red-50\/40:hover {
+.dark .hover\:bg-blue-50\/40:hover {
   background-color: rgba(56, 189, 248, 0.05) !important;
 }
-.dark .hover\:bg-red-950\/10:hover {
+.dark .hover\:bg-blue-900\/10:hover {
   background-color: rgba(56, 189, 248, 0.05) !important;
 }
-.dark .hover\:bg-red-950\/20:hover {
+.dark .hover\:bg-blue-900\/20:hover {
   background-color: rgba(56, 189, 248, 0.08) !important;
 }
 .dark .bg-gray-50 {

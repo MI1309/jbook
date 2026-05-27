@@ -115,7 +115,7 @@ export default function Navbar() {
                                     { href: '/kana', label: 'Kana' },
                                     { href: '/kotoba', label: 'Kotoba' },
                                     { href: '/tts', label: 'TTS' },
-                                    { href: '/practice', label: 'Latihan' },
+
                                     { href: '/about', label: 'Tentang Kami' },
                                 ].map(({ href, label }) => (
                                     <Link
@@ -245,7 +245,6 @@ export default function Navbar() {
                             { href: '/kana', label: 'Kana' },
                             { href: '/kotoba', label: 'Kotoba' },
                             { href: '/tts', label: 'TTS' },
-                            { href: '/practice', label: 'Latihan' },
                             { href: '/about', label: 'Tentang Kami' },
                         ].map(({ href, label }, i) => (
                             <Link

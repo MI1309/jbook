@@ -129,15 +129,7 @@ export default function Home() {
 
     return (
         <div className="relative min-h-screen washi-texture bg-background text-foreground transition-colors duration-300 pb-20 overflow-hidden">
-            {/* CSS Sakura Petals Overlay inside Hero */}
-            <div className="absolute inset-0 pointer-events-none z-0">
-                <div className="sakura-petal w-3 h-3" style={{ top: '10%', left: '5%', animation: 'sakura-fall 12s linear infinite', animationDelay: '0s' }}></div>
-                <div className="sakura-petal w-2 h-4" style={{ top: '5%', left: '40%', animation: 'sakura-fall 15s linear infinite', animationDelay: '2s' }}></div>
-                <div className="sakura-petal w-4 h-3" style={{ top: '15%', left: '75%', animation: 'sakura-fall 10s linear infinite', animationDelay: '5s' }}></div>
-                <div className="sakura-petal w-3 h-2" style={{ top: '25%', left: '90%', animation: 'sakura-fall 18s linear infinite', animationDelay: '1s' }}></div>
-                <div className="sakura-petal w-2.5 h-3" style={{ top: '8%', left: '60%', animation: 'sakura-fall 14s linear infinite', animationDelay: '4s' }}></div>
-            </div>
-
+            
             {/* Side calligraphy elements - Cozy Japanese aesthetic */}
             <div className="hidden xl:flex flex-col absolute left-8 top-1/4 space-y-8 select-none text-[#212127]/20 dark:text-[#f2f2f7]/5 font-japanese text-3xl font-black tracking-widest pointer-events-none">
                 <span className="writing-vertical">日本語辞典</span>

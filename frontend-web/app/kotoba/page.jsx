@@ -62,7 +62,7 @@ function KotobaContent() {
 
     const getLevelColor = (level) => {
         switch (level) {
-            case 1: return 'from-rose-50/50 to-white dark:from-rose-900/10 dark:to-card text-rose-600 dark:text-rose-400';
+            case 1: return 'from-blue-50/50 to-white dark:from-blue-900/10 dark:to-card text-blue-600 dark:text-blue-400';
             case 2: return 'from-amber-50/50 to-white dark:from-amber-900/10 dark:to-card text-amber-600 dark:text-amber-400';
             case 3: return 'from-yellow-50/50 to-white dark:from-yellow-900/10 dark:to-card text-yellow-600 dark:text-yellow-400';
             case 4: return 'from-cyan-50/50 to-white dark:from-cyan-900/10 dark:to-card text-cyan-600 dark:text-cyan-400';

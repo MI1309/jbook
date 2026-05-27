@@ -209,7 +209,7 @@ export default function DashboardPage() {
             )}
 
             {error && (
-                <div className="bg-red-50 text-red-700 p-4 rounded-lg mb-4" role="alert">
+                <div className="bg-blue-50 text-blue-700 p-4 rounded-lg mb-4" role="alert">
                     {error}
                 </div>
             )}
@@ -239,27 +239,27 @@ export default function DashboardPage() {
 
                 {/* Overall Accuracy Card */}
                 <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 flex flex-col justify-center items-center">
-                    <div className={`w-12 h-12 rounded-full flex items-center justify-center mb-4 text-xl ${accuracy >= 80 ? 'bg-green-50 text-green-600' : accuracy >= 50 ? 'bg-yellow-50 text-yellow-600' : 'bg-red-50 text-red-600'}`}>
+                    <div className={`w-12 h-12 rounded-full flex items-center justify-center mb-4 text-xl ${accuracy >= 80 ? 'bg-green-50 text-green-600' : accuracy >= 50 ? 'bg-yellow-50 text-yellow-600' : 'bg-blue-50 text-blue-600'}`}>
                         <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
                     </div>
                     <div className="text-3xl font-bold text-gray-900 mb-1">{accuracy}%</div>
-                    <div className={`text-lg font-bold mb-1 ${accuracy === 100 ? 'text-purple-600' : accuracy >= 90 ? 'text-green-600' : accuracy >= 80 ? 'text-blue-600' : accuracy >= 50 ? 'text-yellow-600' : 'text-red-600'}`}>
+                    <div className={`text-lg font-bold mb-1 ${accuracy === 100 ? 'text-purple-600' : accuracy >= 90 ? 'text-green-600' : accuracy >= 80 ? 'text-blue-600' : accuracy >= 50 ? 'text-yellow-600' : 'text-blue-600'}`}>
                         {accuracy === 100 ? 'Sangat Baik' : accuracy >= 90 ? 'Baik' : accuracy >= 80 ? 'Lumayan' : accuracy >= 50 ? 'Cukup Baik' : 'Perbaiki Lagi'}
                     </div>
                     <div className="text-sm font-medium text-gray-500 uppercase tracking-wide">Tingkat Pemahaman</div>
                     <div className="w-full bg-gray-200 rounded-full h-2 mt-3">
                         <div
-                            className={`h-2 rounded-full ${accuracy >= 80 ? 'bg-green-500' : accuracy >= 50 ? 'bg-yellow-500' : 'bg-red-500'}`}
+                            className={`h-2 rounded-full ${accuracy >= 80 ? 'bg-green-500' : accuracy >= 50 ? 'bg-yellow-500' : 'bg-blue-500'}`}
                             style={{ width: `${Math.min(Math.max(accuracy, 0), 100)}%` }}
                         ></div>
                     </div>
                 </div>
 
                 {/* Call to action Card */}
-                <div className="bg-gradient-to-br from-red-50 to-red-100 rounded-xl shadow-sm border border-red-200 p-6 flex flex-col justify-center items-center text-center">
-                    <div className="text-xl font-bold text-red-800 mb-3">Tingkatkan Terus!</div>
-                    <p className="text-sm text-red-600 mb-4">Latihan konsisten adalah kunci menguasai Bahasa Jepang.</p>
-                    <Link href="/practice" className="bg-red-600 text-white px-6 py-2 rounded-lg font-medium hover:bg-red-700 transition-colors shadow-sm">
+                <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl shadow-sm border border-blue-200 p-6 flex flex-col justify-center items-center text-center">
+                    <div className="text-xl font-bold text-blue-800 mb-3">Tingkatkan Terus!</div>
+                    <p className="text-sm text-blue-600 mb-4">Latihan konsisten adalah kunci menguasai Bahasa Jepang.</p>
+                    <Link href="/practice" className="bg-blue-600 text-white px-6 py-2 rounded-lg font-medium hover:bg-blue-700 transition-colors shadow-sm">
                         Mulai Latihan
                     </Link>
                 </div>
@@ -269,22 +269,22 @@ export default function DashboardPage() {
             {levelStats.length > 0 && (
                 <div className="mb-10 animate-in fade-in slide-in-from-bottom-4 duration-700">
                     <h2 className={`text-xl font-black mb-4 flex items-center gap-2 transition-colors ${!mounted ? 'text-gray-900' : (theme === 'dark' ? 'text-white' : 'text-gray-900')}`}>
-                        <span className="bg-red-600 text-white p-1.5 rounded-xl shadow-sm shadow-red-500/20">
+                        <span className="bg-blue-600 text-white p-1.5 rounded-xl shadow-sm shadow-blue-500/20">
                             <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 002 2h2a2 2 0 002-2z"></path></svg>
                         </span>
                         Akurasi per Level JLPT
                     </h2>
                     <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
                         {levelStats.map(stat => (
-                            <div key={stat.level} className={`p-4 rounded-2xl border-2 transition-all hover:scale-[1.02] ${!mounted ? 'bg-white border-gray-100' : (theme === 'dark' ? 'bg-black/20 border-red-950/20' : 'bg-white border-gray-100')}`}>
+                            <div key={stat.level} className={`p-4 rounded-2xl border-2 transition-all hover:scale-[1.02] ${!mounted ? 'bg-white border-gray-100' : (theme === 'dark' ? 'bg-black/20 border-blue-900/20' : 'bg-white border-gray-100')}`}>
                                 <div className="text-[10px] font-black text-gray-500 uppercase tracking-widest mb-1">JLPT N{stat.level}</div>
-                                <div className={`text-3xl font-black mb-1 ${stat.accuracy >= 80 ? 'text-green-500' : stat.accuracy >= 50 ? 'text-yellow-500' : 'text-red-500'}`}>
+                                <div className={`text-3xl font-black mb-1 ${stat.accuracy >= 80 ? 'text-green-500' : stat.accuracy >= 50 ? 'text-yellow-500' : 'text-blue-500'}`}>
                                     {Math.round(stat.accuracy)}%
                                 </div>
                                 <div className="text-[10px] text-gray-400 font-bold uppercase tracking-tight">{stat.total} Soal Dikerjakan</div>
                                 <div className="w-full bg-gray-200 dark:bg-gray-800 rounded-full h-1 mt-3">
                                     <div 
-                                        className={`h-1 rounded-full ${stat.accuracy >= 80 ? 'bg-green-500' : stat.accuracy >= 50 ? 'bg-yellow-500' : 'bg-red-500'}`}
+                                        className={`h-1 rounded-full ${stat.accuracy >= 80 ? 'bg-green-500' : stat.accuracy >= 50 ? 'bg-yellow-500' : 'bg-blue-500'}`}
                                         style={{ width: `${stat.accuracy}%` }}
                                     ></div>
                                 </div>
@@ -298,22 +298,22 @@ export default function DashboardPage() {
             {levelStats.length > 0 && (
                 <div className="mb-10 animate-in fade-in slide-in-from-bottom-4 duration-700">
                     <h2 className={`text-xl font-black mb-4 flex items-center gap-2 transition-colors ${!mounted ? 'text-gray-900' : (theme === 'dark' ? 'text-white' : 'text-gray-900')}`}>
-                        <span className="bg-red-600 text-white p-1.5 rounded-xl shadow-sm shadow-red-500/20">
+                        <span className="bg-blue-600 text-white p-1.5 rounded-xl shadow-sm shadow-blue-500/20">
                             <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 002 2h2a2 2 0 002-2z"></path></svg>
                         </span>
                         Akurasi per Level JLPT
                     </h2>
                     <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
                         {levelStats.map(stat => (
-                            <div key={stat.level} className={`p-4 rounded-2xl border-2 transition-all hover:scale-[1.02] ${!mounted ? 'bg-white border-gray-100' : (theme === 'dark' ? 'bg-black/20 border-red-950/20' : 'bg-white border-gray-100')}`}>
+                            <div key={stat.level} className={`p-4 rounded-2xl border-2 transition-all hover:scale-[1.02] ${!mounted ? 'bg-white border-gray-100' : (theme === 'dark' ? 'bg-black/20 border-blue-900/20' : 'bg-white border-gray-100')}`}>
                                 <div className="text-[10px] font-black text-gray-500 uppercase tracking-widest mb-1">JLPT N{stat.level}</div>
-                                <div className={`text-3xl font-black mb-1 ${stat.accuracy >= 80 ? 'text-green-500' : stat.accuracy >= 50 ? 'text-yellow-500' : 'text-red-500'}`}>
+                                <div className={`text-3xl font-black mb-1 ${stat.accuracy >= 80 ? 'text-green-500' : stat.accuracy >= 50 ? 'text-yellow-500' : 'text-blue-500'}`}>
                                     {Math.round(stat.accuracy)}%
                                 </div>
                                 <div className="text-[10px] text-gray-400 font-bold uppercase tracking-tight">{stat.total} Soal Dikerjakan</div>
                                 <div className="w-full bg-gray-200 dark:bg-gray-800 rounded-full h-1 mt-3">
                                     <div 
-                                        className={`h-1 rounded-full ${stat.accuracy >= 80 ? 'bg-green-500' : stat.accuracy >= 50 ? 'bg-yellow-500' : 'bg-red-500'}`}
+                                        className={`h-1 rounded-full ${stat.accuracy >= 80 ? 'bg-green-500' : stat.accuracy >= 50 ? 'bg-yellow-500' : 'bg-blue-500'}`}
                                         style={{ width: `${stat.accuracy}%` }}
                                     ></div>
                                 </div>
@@ -327,17 +327,17 @@ export default function DashboardPage() {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-10">
 
                 {/* Top Mistakes */}
-                <div className={`rounded-2xl shadow-sm border overflow-hidden transition-colors ${!mounted ? 'bg-white border-gray-100' : (theme === 'dark' ? 'bg-[#0a0a0a] border-red-950/20' : 'bg-white border-gray-100')}`}>
-                    <div className={`border-b px-6 py-4 flex items-center justify-between transition-colors ${!mounted ? 'bg-gray-50 border-gray-100' : (theme === 'dark' ? 'bg-black/40 border-red-950/20' : 'bg-gray-50 border-gray-100')}`}>
+                <div className={`rounded-2xl shadow-sm border overflow-hidden transition-colors ${!mounted ? 'bg-white border-gray-100' : (theme === 'dark' ? 'bg-[#0a0a0a] border-blue-900/20' : 'bg-white border-gray-100')}`}>
+                    <div className={`border-b px-6 py-4 flex items-center justify-between transition-colors ${!mounted ? 'bg-gray-50 border-gray-100' : (theme === 'dark' ? 'bg-black/40 border-blue-900/20' : 'bg-gray-50 border-gray-100')}`}>
                         <h2 className={`text-lg font-black flex items-center gap-2 transition-colors ${!mounted ? 'text-gray-900' : (theme === 'dark' ? 'text-white' : 'text-gray-900')}`}>
-                            <span className="bg-red-600 text-white p-1.5 rounded-xl shadow-sm shadow-red-500/20">
+                            <span className="bg-blue-600 text-white p-1.5 rounded-xl shadow-sm shadow-blue-500/20">
                                 <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
                             </span>
                             Sering Salah
                         </h2>
                         <Link
                             href="/dashboard/history"
-                            className="text-[10px] font-black uppercase tracking-widest text-red-600 hover:text-red-700 flex items-center gap-1 transition-colors"
+                            className="text-[10px] font-black uppercase tracking-widest text-blue-600 hover:text-blue-700 flex items-center gap-1 transition-colors"
                         >
                             Lihat Semua →
                         </Link>
@@ -349,10 +349,10 @@ export default function DashboardPage() {
                                     <button
                                         key={idx}
                                         onClick={() => handleOpenMistake(mistake)}
-                                        className={`w-full flex items-center justify-between group cursor-pointer p-3 rounded-xl border-2 transition-all hover:border-red-500 hover:scale-[1.01] active:scale-[0.99] text-left ${!mounted ? 'bg-white border-gray-100' : (theme === 'dark' ? 'bg-black/20 border-red-950/20 hover:bg-red-950/10' : 'bg-white border-gray-100 hover:bg-red-50/50')}`}
+                                        className={`w-full flex items-center justify-between group cursor-pointer p-3 rounded-xl border-2 transition-all hover:border-blue-500 hover:scale-[1.01] active:scale-[0.99] text-left ${!mounted ? 'bg-white border-gray-100' : (theme === 'dark' ? 'bg-black/20 border-blue-900/20 hover:bg-blue-900/10' : 'bg-white border-gray-100 hover:bg-blue-50/50')}`}
                                     >
                                         <div className="flex items-center gap-3 min-w-0 flex-1 mr-4">
-                                            <div className={`h-10 px-2 min-w-[2.5rem] rounded-xl bg-red-600 text-white flex items-center justify-center font-black shadow-sm shadow-red-500/20 group-hover:rotate-3 transition-transform flex-shrink-0 ${
+                                            <div className={`h-10 px-2 min-w-[2.5rem] rounded-xl bg-blue-600 text-white flex items-center justify-center font-black shadow-sm shadow-blue-500/20 group-hover:rotate-3 transition-transform flex-shrink-0 ${
                                                 (mistake.character?.length || 0) > 4 ? 'text-xs' : (mistake.character?.length || 0) > 2 ? 'text-sm' : 'text-lg'
                                             }`}>
                                                 {mistake.character || '?'}
@@ -366,10 +366,10 @@ export default function DashboardPage() {
                                         </div>
                                         <div className="flex items-center gap-3 flex-shrink-0">
                                             <div className="text-right">
-                                                <div className="font-black text-red-600 text-lg leading-none">{mistake.count}x</div>
+                                                <div className="font-black text-blue-600 text-lg leading-none">{mistake.count}x</div>
                                                 <div className="text-[10px] text-gray-400 font-bold">salah</div>
                                             </div>
-                                            <span className="text-gray-300 group-hover:text-red-500 transition-colors text-lg">→</span>
+                                            <span className="text-gray-300 group-hover:text-blue-500 transition-colors text-lg">→</span>
                                         </div>
                                     </button>
                                 ))}
@@ -390,7 +390,7 @@ export default function DashboardPage() {
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
                 <div className="lg:col-span-2 space-y-6">
                     <h2 className={`text-2xl font-black flex items-center gap-3 transition-colors ${!mounted ? 'text-gray-900' : (theme === 'dark' ? 'text-white' : 'text-gray-900')}`}>
-                        <span className="bg-rose-600 text-white p-2 rounded-2xl shadow-lg shadow-rose-500/20">
+                        <span className="bg-sky-600 text-white p-2 rounded-2xl shadow-lg shadow-sky-500/20">
                             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
                         </span>
                         Saran Belajar & Insight
@@ -434,7 +434,7 @@ export default function DashboardPage() {
                         <ul className="space-y-4">
                             {accuracy < 70 && (
                                 <li className="flex items-start gap-4">
-                                    <div className="w-2 h-2 rounded-full bg-red-500 mt-2 shrink-0"></div>
+                                    <div className="w-2 h-2 rounded-full bg-blue-500 mt-2 shrink-0"></div>
                                     <p className="text-gray-500 text-sm italic">"Cobalah untuk tidak terburu-buru. Membaca soal dengan teliti meningkatkan akurasi hingga 30%."</p>
                                 </li>
                             )}
@@ -458,7 +458,7 @@ export default function DashboardPage() {
                     <div className="space-y-4">
                         <button 
                             onClick={() => router.push('/practice')}
-                            className="w-full p-6 rounded-[2rem] bg-gradient-to-br from-red-600 to-rose-600 text-white text-left shadow-lg shadow-red-600/20 hover:scale-[1.02] transition-all group overflow-hidden relative"
+                            className="w-full p-6 rounded-[2rem] bg-gradient-to-br from-blue-600 to-sky-600 text-white text-left shadow-lg shadow-blue-600/20 hover:scale-[1.02] transition-all group overflow-hidden relative"
                         >
                             <div className="relative z-10">
                                 <span className="text-[10px] font-black uppercase tracking-widest opacity-80">Rekomendasi</span>
@@ -498,13 +498,13 @@ export default function DashboardPage() {
                         <button
                             onClick={handleExport}
                             disabled={isExporting}
-                            className="flex-1 flex items-center justify-center px-4 py-2 bg-white border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 disabled:opacity-50"
+                            className="flex-1 flex items-center justify-center px-4 py-2 bg-white border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50"
                         >
                             <svg className="w-5 h-5 mr-2 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
                             {isExporting ? 'Mengekspor...' : 'Export Data (.json)'}
                         </button>
 
-                        <label className={`flex-1 flex items-center justify-center px-4 py-2 bg-white border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 cursor-pointer focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-red-500 ${isImporting ? 'opacity-50 pointer-events-none' : ''}`}>
+                        <label className={`flex-1 flex items-center justify-center px-4 py-2 bg-white border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 cursor-pointer focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-blue-500 ${isImporting ? 'opacity-50 pointer-events-none' : ''}`}>
                             <svg className="w-5 h-5 mr-2 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
                             {isImporting ? 'Mengimpor...' : 'Import Data (.json)'}
                             <input

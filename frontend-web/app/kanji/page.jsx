@@ -9,7 +9,7 @@ import KanjiDetailModal from '@/components/kanji/KanjiDetailModal';
 
 // JBook-themed level styles using CSS variables
 const levelStyles = {
-    1: { badge: 'bg-rose-500 text-white', accent: 'from-rose-500/10 to-transparent', border: 'hover:border-rose-400/40' },
+    1: { badge: 'bg-blue-500 text-white', accent: 'from-blue-500/10 to-transparent', border: 'hover:border-blue-400/40' },
     2: { badge: 'bg-amber-500 text-white', accent: 'from-amber-500/10 to-transparent', border: 'hover:border-amber-400/40' },
     3: { badge: 'bg-yellow-500 text-white', accent: 'from-yellow-500/10 to-transparent', border: 'hover:border-yellow-400/40' },
     4: { badge: 'bg-cyan-500 text-white', accent: 'from-cyan-500/10 to-transparent', border: 'hover:border-cyan-400/40' },
@@ -170,14 +170,7 @@ export default function KanjiPage() {
 
     return (
         <div className="relative min-h-screen bg-[var(--background)] overflow-hidden transition-colors duration-300">
-            {/* Sakura petals background - same as homepage */}
-            <div className="absolute inset-0 pointer-events-none z-0">
-                <div className="sakura-petal w-3 h-3" style={{ top: '8%', left: '5%', animation: 'sakura-fall 12s linear infinite', animationDelay: '0s' }}></div>
-                <div className="sakura-petal w-2 h-4" style={{ top: '3%', left: '35%', animation: 'sakura-fall 15s linear infinite', animationDelay: '3s' }}></div>
-                <div className="sakura-petal w-4 h-3" style={{ top: '12%', left: '70%', animation: 'sakura-fall 10s linear infinite', animationDelay: '6s' }}></div>
-                <div className="sakura-petal w-3 h-2" style={{ top: '20%', left: '88%', animation: 'sakura-fall 18s linear infinite', animationDelay: '1s' }}></div>
-                <div className="sakura-petal w-2.5 h-3" style={{ top: '6%', left: '55%', animation: 'sakura-fall 14s linear infinite', animationDelay: '4s' }}></div>
-            </div>
+            {/* Sakura petals are now rendered globally via layout.jsx */}
 
             {/* Side calligraphy - same as homepage */}
             <div className="hidden xl:flex flex-col absolute left-8 top-1/4 space-y-8 select-none text-[#212127]/20 dark:text-[#f2f2f7]/5 font-japanese text-3xl font-black tracking-widest pointer-events-none z-0">
