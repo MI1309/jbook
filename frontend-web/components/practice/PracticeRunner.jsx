@@ -441,7 +441,7 @@ function PracticeContent() {
     const subTextColor = !mounted ? 'text-gray-400' : (theme === 'dark' ? 'text-gray-500' : 'text-gray-400');
     const cardBg = !mounted ? 'bg-white' : (theme === 'dark' ? 'bg-[#0a0a0a]' : 'bg-white');
     const inputBg = !mounted ? 'bg-gray-50' : (theme === 'dark' ? 'bg-black/40' : 'bg-gray-50');
-    const borderStyle = !mounted ? 'border-gray-100' : (theme === 'dark' ? 'border-red-950/30' : 'border-gray-100');
+    const borderStyle = !mounted ? 'border-gray-100' : (theme === 'dark' ? 'border-blue-950/30' : 'border-gray-100');
 
     if (error && !finished) {
         return (
@@ -452,7 +452,7 @@ function PracticeContent() {
                 <div className="flex gap-4">
                     <button
                         onClick={() => window.location.reload()}
-                        className="bg-red-600 text-white px-6 py-2 rounded-xl font-bold hover:bg-red-700 transition-all shadow-lg shadow-red-500/20"
+                        className="bg-blue-600 text-white px-6 py-2 rounded-xl font-bold hover:bg-blue-700 transition-all shadow-lg shadow-blue-500/20"
                     >
                         Coba Lagi
                     </button>
@@ -470,7 +470,7 @@ function PracticeContent() {
     if (loading) {
         return (
             <div className="flex flex-col items-center justify-center min-h-[50vh]">
-                <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-red-600 mb-6"></div>
+                <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-blue-600 mb-6"></div>
                 <div className={`text-xl font-black uppercase tracking-[0.2em] animate-pulse transition-colors ${subTextColor}`}>Memuat pertanyaan...</div>
             </div>
         );
@@ -480,14 +480,14 @@ function PracticeContent() {
         return (
             <div className="container mx-auto px-4 py-8 flex flex-col items-center justify-center min-h-[60vh] relative z-10">
                 <div className={`${theme === 'dark' ? 'bg-[#0a0a0a]/80' : 'bg-white/80'} backdrop-blur-2xl rounded-[3rem] shadow-[0_8px_40px_rgb(0,0,0,0.12)] p-4 md:p-8 max-w-md w-full text-center border ${theme === 'dark' ? 'border-white/5' : 'border-white/60'} relative overflow-hidden transition-colors`}>
-                    <div className="absolute top-0 inset-x-0 h-2 bg-red-600"></div>
+                    <div className="absolute top-0 inset-x-0 h-2 bg-blue-600"></div>
 
                     <div className="mb-6">
                         <div className="text-6xl mb-2">🎉</div>
                         <h2 className={`text-3xl font-black mb-1 transition-colors ${textColor}`}>Latihan Selesai!</h2>
                         <p className={`text-sm transition-colors ${subTextColor}`}>Kerja bagus hari ini!</p>
                         {mode === 'kakitori' && (
-                            <div className={`mt-3 text-xs px-3 py-2 rounded-lg font-bold ${theme === 'dark' ? 'bg-purple-950/30 border border-purple-900/40 text-purple-400' : 'bg-purple-50 border border-purple-100 text-purple-700'}`}>
+                            <div className={`mt-3 text-xs px-3 py-2 rounded-lg font-bold ${theme === 'dark' ? 'bg-blue-950/30 border border-blue-900/40 text-blue-300' : 'bg-blue-50 border border-blue-100 text-blue-700'}`}>
                                 🎧 Sesi Kakitori telah dicatat ke statistik dikte kamu.
                             </div>
                         )}
@@ -498,10 +498,10 @@ function PracticeContent() {
                         )}
                     </div>
 
-                    <div className={`${theme === 'dark' ? 'bg-red-950/20 border-red-900/40' : 'bg-red-50 border-red-100'} rounded-2xl p-6 mb-6 border`}>
-                        <div className="text-[10px] text-red-600 dark:text-red-400 font-black uppercase tracking-widest mb-2">Skor Akhir</div>
-                        <div className="text-7xl font-black text-red-600 dark:text-red-500 leading-none mb-2">
-                            {score}<span className="text-3xl text-red-300 dark:text-red-800">/{questions.length}</span>
+                    <div className={`${theme === 'dark' ? 'bg-blue-950/20 border-blue-900/40' : 'bg-blue-50 border-blue-100'} rounded-2xl p-6 mb-6 border`}>
+                        <div className="text-[10px] text-blue-600 dark:text-blue-300 font-black uppercase tracking-widest mb-2">Skor Akhir</div>
+                        <div className="text-7xl font-black text-blue-600 dark:text-blue-400 leading-none mb-2">
+                            {score}<span className="text-3xl text-blue-300 dark:text-blue-900">/{questions.length}</span>
                         </div>
                     </div>
 
@@ -514,12 +514,12 @@ function PracticeContent() {
                                 <div
                                     key={idx}
                                     onClick={() => setDetailView({ id: res.question_id, type: res.type })}
-                                    className={`p-4 rounded-xl border cursor-pointer hover:scale-[1.01] transition-all transform group border-2 ${res.is_correct ? (theme === 'dark' ? 'bg-green-950/20 border-green-900/40' : 'bg-green-50 border-green-100') : (theme === 'dark' ? 'bg-red-950/20 border-red-900/40' : 'bg-red-50 border-red-100')} transition-all break-words whitespace-normal`}
+                                    className={`p-4 rounded-xl border cursor-pointer hover:scale-[1.01] transition-all transform group border-2 ${res.is_correct ? (theme === 'dark' ? 'bg-green-950/20 border-green-900/40' : 'bg-green-50 border-green-100') : (theme === 'dark' ? 'bg-blue-950/20 border-blue-900/40' : 'bg-blue-50 border-blue-100')} transition-all break-words whitespace-normal`}
                                 >
                                     <div className="flex justify-between items-start mb-2">
                                         <div className="flex items-center gap-3">
                                             <span className={`text-2xl font-black ${textColor}`}>{res.character}</span>
-                                            <span className={`text-[9px] px-2 py-0.5 rounded-full font-black uppercase ${res.is_correct ? 'bg-green-500 text-white' : 'bg-red-500 text-white'}`}>
+                                            <span className={`text-[9px] px-2 py-0.5 rounded-full font-black uppercase ${res.is_correct ? 'bg-green-500 text-white' : 'bg-blue-600 text-white'}`}>
                                                 {res.is_correct ? 'Benar' : 'Salah'}
                                             </span>
                                         </div>
@@ -527,7 +527,7 @@ function PracticeContent() {
                                     </div>
                                     <div className="text-sm space-y-1">
                                         <div className={`transition-colors ${textColor}`}>
-                                            Jawaban: <span className={`font-black ${res.is_correct ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}`}>{res.answer_given}</span>
+                                            Jawaban: <span className={`font-black ${res.is_correct ? 'text-green-600 dark:text-green-400' : 'text-blue-700 dark:text-blue-300'}`}>{res.answer_given}</span>
                                         </div>
                                         {!res.is_correct && (
                                             <div className={`transition-colors ${textColor}`}>
@@ -538,7 +538,7 @@ function PracticeContent() {
                                             Arti: {res.correct_meaning}
                                         </div>
                                         <div className="mt-3 pt-2 border-t border-dashed border-gray-200 dark:border-gray-800">
-                                            <span className="text-[10px] font-black text-red-600 dark:text-red-400 uppercase tracking-widest flex items-center gap-1 group-hover:translate-x-1 transition-transform">
+                                            <span className="text-[10px] font-black text-blue-600 dark:text-blue-300 uppercase tracking-widest flex items-center gap-1 group-hover:translate-x-1 transition-transform">
                                                 Pelajari Materi <span className="text-sm">→</span>
                                             </span>
                                         </div>
@@ -591,7 +591,7 @@ function PracticeContent() {
                 <p className={`mb-6 transition-colors ${subTextColor}`}>Coba ubah filter level atau materi latihan.</p>
                 <button
                     onClick={() => router.push('/practice')}
-                    className="text-red-600 font-bold hover:underline"
+                    className="text-blue-600 font-bold hover:underline"
                 >
                     &larr; Kembali
                 </button>
@@ -610,18 +610,18 @@ function PracticeContent() {
                     <span className={`text-xs font-black uppercase tracking-widest transition-colors ${subTextColor}`}>Progress Latihan</span>
                     <div className="flex items-center gap-3">
                         {initialTimer !== null && (
-                            <span className={`font-mono font-black text-lg flex items-center gap-2 ${timeLeft < 30 ? 'text-red-600 animate-pulse' : textColor}`}>
+                            <span className={`font-mono font-black text-lg flex items-center gap-2 ${timeLeft < 30 ? 'text-blue-600 animate-pulse' : textColor}`}>
                                 <span>⏱️</span> {formatTime(timeLeft)}
                             </span>
                         )}
-                        <span className="bg-red-600 text-white px-3 py-1 rounded-xl text-[10px] font-black uppercase tracking-tighter">
+                        <span className="bg-blue-600 text-white px-3 py-1 rounded-xl text-[10px] font-black uppercase tracking-tighter">
                             {currentIndex + 1} / {questions.length}
                         </span>
                     </div>
                 </div>
                 <div className={`h-3 rounded-full overflow-hidden transition-colors shadow-inner ${theme === 'dark' ? 'bg-black/40 border border-white/5' : 'bg-gray-100 border border-gray-200'}`}>
                     <div
-                        className="h-full bg-gradient-to-r from-red-600 to-rose-500 transition-all duration-500 ease-out relative"
+                        className="h-full bg-gradient-to-r from-blue-600 to-sky-500 transition-all duration-500 ease-out relative"
                         style={{ width: `${progressPercent}%` }}
                     >
                         <div className="absolute inset-0 bg-white/20 animate-pulse"></div>
@@ -637,13 +637,13 @@ function PracticeContent() {
                             Kakitori (Latihan Dikte) • N{currentQuestion.level || '5'}
                         </span>
 
-                        <div className="flex flex-col items-center justify-center p-6 bg-red-500/5 rounded-3xl border border-dashed border-red-500/20 max-w-sm mx-auto mb-4 w-full">
+                        <div className="flex flex-col items-center justify-center p-6 bg-blue-500/5 rounded-3xl border border-dashed border-blue-500/20 max-w-sm mx-auto mb-4 w-full">
                             <button
                                 onClick={() => playQuestionAudio(currentQuestion)}
                                 className={`p-6 rounded-[2rem] transition-all duration-300 ${
                                     audioPlaying
-                                        ? 'bg-red-600 text-white animate-pulse shadow-lg shadow-red-500/30'
-                                        : 'bg-[var(--card-bg)] border-2 border-red-500 text-red-500 hover:bg-red-50 hover:text-white shadow-md active:scale-95'
+                                        ? 'bg-blue-600 text-white animate-pulse shadow-lg shadow-blue-500/30'
+                                        : 'bg-[var(--card-bg)] border-2 border-blue-500 text-blue-600 hover:bg-blue-50 hover:text-white shadow-md active:scale-95'
                                 } cursor-pointer`}
                                 title="Putar Ulang Audio"
                             >
@@ -653,7 +653,7 @@ function PracticeContent() {
                                 {audioPlaying ? 'Sedang Memutar Suara...' : 'Klik untuk Putar Ulang'}
                             </span>
                             {currentQuestion.meaning && (
-                                <div className={`mt-4 text-xs font-bold ${theme === 'dark' ? 'text-gray-400 bg-red-950/20' : 'text-gray-500 bg-red-50'} px-4 py-2 rounded-xl`}>
+                                <div className={`mt-4 text-xs font-bold ${theme === 'dark' ? 'text-gray-400 bg-blue-950/20' : 'text-gray-500 bg-blue-50'} px-4 py-2 rounded-xl`}>
                                     Petunjuk Arti: <span className={`font-black ${textColor}`}>{currentQuestion.meaning}</span>
                                 </div>
                             )}
@@ -661,7 +661,7 @@ function PracticeContent() {
 
                         {isAnswered && (
                             <div className="mt-6 animate-fade-in-up">
-                                <div className="text-[10px] font-black uppercase tracking-widest text-red-500 mb-1">Jawaban Yang Benar</div>
+                                <div className="text-[10px] font-black uppercase tracking-widest text-blue-600 mb-1">Jawaban Yang Benar</div>
                                 <div className={`text-4xl font-japanese font-black ${textColor}`}>{currentQuestion.character}</div>
                                 {currentQuestion.reading && (
                                     <div className="text-xl text-brand font-black mt-1">{sanitizeReading(currentQuestion.reading)}</div>
@@ -672,7 +672,7 @@ function PracticeContent() {
                 ) : (
                     <div
                         onClick={() => !isAnswered && setShowReadingManual(!showReadingManual)}
-                        className={`mb-8 relative p-4 flex flex-col items-center group transition-all duration-300 ${!isAnswered ? 'cursor-pointer hover:bg-red-500/5 rounded-3xl' : ''}`}
+                        className={`mb-8 relative p-4 flex flex-col items-center group transition-all duration-300 ${!isAnswered ? 'cursor-pointer hover:bg-blue-500/5 rounded-3xl' : ''}`}
                     >
                         <span className={`text-[10px] font-black uppercase tracking-[0.2em] mb-4 block transition-colors ${subTextColor}`}>
                             {currentQuestion.type === 'kanji' ? 'Kanji' : currentQuestion.type === 'vocab' ? 'Kosakata' : currentQuestion.type === 'kana' ? 'Kana' : 'Tata Bahasa'}
@@ -690,7 +690,7 @@ function PracticeContent() {
                                 {(currentQuestion.type === 'kanji' || currentQuestion.type === 'vocab') &&
                                  currentQuestion.reading &&
                                  hasKanji(currentQuestion.character) && (
-                                    <rt className={`text-sm md:text-xl font-bold transition-all duration-300 ${isAnswered || showReadingManual ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-2 group-hover:opacity-100 group-hover:translate-y-0'} ${theme === 'dark' ? 'text-red-500' : 'text-red-600'}`}>
+                                    <rt className={`text-sm md:text-xl font-bold transition-all duration-300 ${isAnswered || showReadingManual ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-2 group-hover:opacity-100 group-hover:translate-y-0'} ${theme === 'dark' ? 'text-blue-400' : 'text-blue-600'}`}>
                                         {sanitizeReading(currentQuestion.reading)}
                                     </rt>
                                  )}
@@ -718,18 +718,18 @@ function PracticeContent() {
                                     placeholder="Ketik Hiragana / Katakana..."
                                     disabled={isAnswered}
                                     autoFocus
-                                    className={`w-full text-center py-4 px-6 text-xl font-bold border-2 ${borderStyle} rounded-2xl outline-none focus:border-red-500 focus:ring-4 focus:ring-red-500/20 transition-all ${inputBg} ${textColor}`}
+                                    className={`w-full text-center py-4 px-6 text-xl font-bold border-2 ${borderStyle} rounded-2xl outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/20 transition-all ${inputBg} ${textColor}`}
                                 />
                                 <button
                                     onClick={submitTypedAnswer}
                                     disabled={isAnswered || !typedAnswer.trim()}
-                                    className="w-full bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-500 hover:to-rose-500 text-white font-black py-4 rounded-2xl text-lg shadow-lg shadow-red-500/20 hover:shadow-xl active:scale-98 transition-all disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+                                    className="w-full bg-gradient-to-r from-blue-600 to-sky-600 hover:from-blue-500 hover:to-sky-500 text-white font-black py-4 rounded-2xl text-lg shadow-lg shadow-blue-500/20 hover:shadow-xl active:scale-98 transition-all disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
                                 >
                                     Kirim Jawaban (Enter)
                                 </button>
                             </div>
                         ) : (
-                            <div className={`w-full max-w-md mx-auto p-6 rounded-3xl border-2 border-dashed ${results[currentIndex]?.is_correct ? (theme === 'dark' ? 'bg-green-950/20 border-green-900/40 text-green-400' : 'bg-green-50 border-green-200 text-green-800') : (theme === 'dark' ? 'bg-red-950/20 border-red-900/40 text-red-400' : 'bg-red-50 border-red-200 text-red-800')} flex flex-col items-center justify-center transition-all animate-fade-in-up`}>
+                            <div className={`w-full max-w-md mx-auto p-6 rounded-3xl border-2 border-dashed ${results[currentIndex]?.is_correct ? (theme === 'dark' ? 'bg-green-950/20 border-green-900/40 text-green-400' : 'bg-green-50 border-green-200 text-green-800') : (theme === 'dark' ? 'bg-blue-950/20 border-blue-900/40 text-blue-300' : 'bg-blue-50 border-blue-200 text-blue-800')} flex flex-col items-center justify-center transition-all animate-fade-in-up`}>
                                 {results[currentIndex]?.is_correct ? (
                                     <div className="text-center">
                                         <span className="text-5xl block mb-2">🎉</span>
@@ -740,7 +740,7 @@ function PracticeContent() {
                                     <div className="text-center">
                                         <span className="text-5xl block mb-2">😢</span>
                                         <span className="text-lg font-black uppercase tracking-wider">Kurang Tepat</span>
-                                        <p className={`text-sm mt-1 font-bold ${textColor}`}>Ketikan Anda: <span className="font-black text-red-600 dark:text-red-400">{results[currentIndex]?.answer_given || '(kosong)'}</span></p>
+                                        <p className={`text-sm mt-1 font-bold ${textColor}`}>Ketikan Anda: <span className="font-black text-blue-600 dark:text-blue-300">{results[currentIndex]?.answer_given || '(kosong)'}</span></p>
                                         <p className={`text-xs mt-2 ${subTextColor}`}>Jawaban benar: <span className="font-black text-green-600 dark:text-green-400">{results[currentIndex]?.correct_answer}</span></p>
                                     </div>
                                 )}
@@ -768,12 +768,12 @@ function PracticeContent() {
                                     if (option.is_correct) {
                                         btnClass += theme === 'dark' ? "bg-green-900/30 border-green-500 text-green-400 shadow-[0_0_20px_rgba(34,197,94,0.2)] scale-[1.02]" : "bg-green-50 border-green-500 text-green-700 shadow-[0_0_20px_rgba(34,197,94,0.3)] scale-[1.02]";
                                     } else if (selectedOption === option && !option.is_correct) {
-                                        btnClass += theme === 'dark' ? "bg-red-950/40 border-red-500 text-red-400 shadow-lg shadow-red-500/10" : "bg-red-50 border-red-500 text-red-700";
+                                        btnClass += theme === 'dark' ? "bg-blue-950/40 border-blue-500 text-blue-300 shadow-lg shadow-blue-500/10" : "bg-blue-50 border-blue-500 text-blue-700";
                                     } else {
                                         btnClass += theme === 'dark' ? "bg-black/20 border-gray-900 text-gray-600 opacity-40" : "bg-gray-50 border-gray-100 text-gray-300 opacity-60";
                                     }
                                 } else {
-                                    btnClass += `${theme === 'dark' ? 'bg-[#0a0a0a]/50' : 'bg-white/50'} ${borderStyle} ${textColor} hover:border-rose-400 dark:hover:border-rose-700 hover:bg-rose-50 dark:hover:bg-rose-950/30 cursor-pointer hover:shadow-lg transform hover:-translate-y-1 active:scale-95`;
+                                    btnClass += `${theme === 'dark' ? 'bg-[#0a0a0a]/50' : 'bg-white/50'} ${borderStyle} ${textColor} hover:border-sky-400 dark:hover:border-sky-700 hover:bg-sky-50 dark:hover:bg-sky-950/30 cursor-pointer hover:shadow-lg transform hover:-translate-y-1 active:scale-95`;
                                 }
 
                                 return (
@@ -804,7 +804,7 @@ function PracticeContent() {
                             className={`w-full py-4 rounded-xl font-bold text-white shadow-xl transition-all transform hover:scale-[1.02] active:scale-[0.98] relative overflow-hidden group ${
                                 (mode === 'kakitori' ? results[currentIndex]?.is_correct : selectedOption?.is_correct)
                                     ? "bg-gradient-to-r from-green-500 to-emerald-600 shadow-green-500/30"
-                                    : "bg-gradient-to-r from-red-500 to-rose-600 shadow-red-500/30"
+                                    : "bg-gradient-to-r from-blue-500 to-sky-600 shadow-blue-500/30"
                             }`}
                         >
                             <span className="relative z-10">{currentIndex < questions.length - 1 ? "Lanjut (Klik untuk skip)" : "Lihat Hasil"}</span>
@@ -824,7 +824,7 @@ export default function PracticeRunner() {
     return (
         <Suspense fallback={
             <div className="flex flex-col items-center justify-center min-h-[50vh]">
-                <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-red-600 mb-4"></div>
+                <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-blue-600 mb-4"></div>
                 <div className="text-xl text-gray-600 font-medium animate-pulse">Memuat latihan...</div>
             </div>
         }>

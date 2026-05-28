@@ -29,7 +29,7 @@ export default function PracticeConfig() {
         { id: '4', label: 'N4', color: 'bg-blue-100 text-blue-700 border-blue-200' },
         { id: '3', label: 'N3', color: 'bg-yellow-100 text-yellow-700 border-yellow-200' },
         { id: '2', label: 'N2', color: 'bg-orange-100 text-orange-700 border-orange-200' },
-        { id: '1', label: 'N1', color: 'bg-red-100 text-red-700 border-red-200' },
+        { id: '1', label: 'N1', color: 'bg-blue-100 text-blue-700 border-blue-200' },
     ];
 
     const toggleType = (id) => {
@@ -75,13 +75,13 @@ export default function PracticeConfig() {
 
     return (
         <div className={`${glassBg} backdrop-blur-2xl p-6 md:p-10 rounded-[2.5rem] shadow-[0_8px_30px_rgb(0,0,0,0.12)] max-w-3xl mx-auto border ${borderStyle} relative overflow-hidden transition-colors`}>
-            <div className="absolute top-0 right-0 p-4 opacity-5 text-[12rem] font-serif select-none pointer-events-none text-red-900 leading-none">
+            <div className="absolute top-0 right-0 p-4 opacity-5 text-[12rem] font-serif select-none pointer-events-none text-blue-900 leading-none">
                 学
             </div>
 
             <div className="relative z-10">
                 <h2 className={`text-4xl md:text-5xl font-black mb-2 tracking-tight transition-colors ${textColor}`}>
-                    Atur <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-rose-500">Latihanmu</span>
+                    Atur <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-sky-500">Latihanmu</span>
                 </h2>
                 <p className={`mb-10 text-lg transition-colors ${subTextColor}`}>Pilih materi, level, dan target waktu kuis hari ini.</p>
 
@@ -105,13 +105,13 @@ export default function PracticeConfig() {
                                             kakitoriDisabled
                                                 ? `${cardBg} ${borderStyle} opacity-35 cursor-not-allowed grayscale`
                                                 : isSelected
-                                                    ? 'bg-gradient-to-br from-red-50 to-rose-50 dark:from-red-950/30 dark:to-rose-950/10 border-red-500 shadow-lg shadow-red-500/20 transform hover:scale-[1.03]'
-                                                    : `${cardBg} ${borderStyle} hover:border-red-300 dark:hover:border-red-800 hover:shadow-md transform hover:scale-[1.03]`
+                                                    ? 'bg-gradient-to-br from-blue-50 to-sky-50 dark:from-blue-950/30 dark:to-sky-950/10 border-blue-500 shadow-lg shadow-blue-500/20 transform hover:scale-[1.03]'
+                                                    : `${cardBg} ${borderStyle} hover:border-blue-300 dark:hover:border-blue-800 hover:shadow-md transform hover:scale-[1.03]`
                                         }`}
                                     >
                                         <span className="text-3xl mb-2">{kakitoriDisabled ? '🔒' : t.icon}</span>
                                         <span className={`font-bold transition-colors ${
-                                            kakitoriDisabled ? subTextColor : isSelected ? 'text-red-700 dark:text-red-400' : textColor
+                                            kakitoriDisabled ? subTextColor : isSelected ? 'text-blue-700 dark:text-blue-400' : textColor
                                         }`}>
                                             {t.label}
                                         </span>
@@ -134,13 +134,13 @@ export default function PracticeConfig() {
                                 onClick={() => setMode('choice')}
                                 className={`flex items-center gap-4 p-4 rounded-2xl border-2 transition-all duration-300 transform hover:scale-[1.01] ${
                                     mode === 'choice'
-                                        ? 'bg-gradient-to-br from-red-50 to-rose-50 dark:from-red-950/30 dark:to-rose-950/10 border-red-500 shadow-lg shadow-red-500/20'
-                                        : `${cardBg} ${borderStyle} hover:border-red-300 dark:hover:border-red-800 hover:shadow-md`
+                                        ? 'bg-gradient-to-br from-blue-50 to-sky-50 dark:from-blue-950/30 dark:to-sky-950/10 border-blue-500 shadow-lg shadow-blue-500/20'
+                                        : `${cardBg} ${borderStyle} hover:border-blue-300 dark:hover:border-blue-800 hover:shadow-md`
                                 }`}
                             >
                                 <span className="text-3xl">🔠</span>
                                 <div className="text-left">
-                                    <span className={`block font-bold transition-colors ${mode === 'choice' ? 'text-red-700 dark:text-red-400' : textColor}`}>
+                                    <span className={`block font-bold transition-colors ${mode === 'choice' ? 'text-blue-700 dark:text-blue-400' : textColor}`}>
                                         Pilihan Ganda
                                     </span>
                                     <span className={`text-[10px] uppercase font-medium transition-colors ${subTextColor}`}>Pilih satu dari empat jawaban</span>
@@ -157,13 +157,13 @@ export default function PracticeConfig() {
                                 }}
                                 className={`flex items-center gap-4 p-4 rounded-2xl border-2 transition-all duration-300 transform hover:scale-[1.01] ${
                                     mode === 'kakitori'
-                                        ? 'bg-gradient-to-br from-red-50 to-rose-50 dark:from-red-950/30 dark:to-rose-950/10 border-red-500 shadow-lg shadow-red-500/20'
-                                        : `${cardBg} ${borderStyle} hover:border-red-300 dark:hover:border-red-800 hover:shadow-md`
+                                        ? 'bg-gradient-to-br from-blue-50 to-sky-50 dark:from-blue-950/30 dark:to-sky-950/10 border-blue-500 shadow-lg shadow-blue-500/20'
+                                        : `${cardBg} ${borderStyle} hover:border-blue-300 dark:hover:border-blue-800 hover:shadow-md`
                                 }`}
                             >
                                 <span className="text-3xl">🎧</span>
                                 <div className="text-left">
-                                    <span className={`block font-bold transition-colors ${mode === 'kakitori' ? 'text-red-700 dark:text-red-400' : textColor}`}>
+                                    <span className={`block font-bold transition-colors ${mode === 'kakitori' ? 'text-blue-700 dark:text-blue-400' : textColor}`}>
                                         Kakitori (Dikte / Tulis Suara)
                                     </span>
                                     <span className={`text-[10px] uppercase font-medium transition-colors ${subTextColor}`}>Dengar audio & tulis dalam Hiragana/Katakana</span>
@@ -186,8 +186,8 @@ export default function PracticeConfig() {
                                             onClick={() => toggleLevel(l.id)}
                                             className={`w-12 h-12 rounded-xl border-2 font-black transition-all duration-300 transform hover:scale-110 ${
                                                 selectedLevels.includes(l.id)
-                                                    ? 'bg-gradient-to-br from-red-500 to-rose-600 border-transparent text-white shadow-lg shadow-red-500/30 scale-110'
-                                                    : `${cardBg} ${borderStyle} ${subTextColor} hover:border-red-300 dark:hover:border-red-800 hover:text-red-500 dark:hover:text-red-400`
+                                                    ? 'bg-gradient-to-br from-blue-600 to-sky-600 border-transparent text-white shadow-lg shadow-blue-500/30 scale-110'
+                                                    : `${cardBg} ${borderStyle} ${subTextColor} hover:border-blue-300 dark:hover:border-blue-800 hover:text-blue-600 dark:hover:text-blue-400`
                                             }`}
                                         >
                                             {l.label}
@@ -220,7 +220,7 @@ export default function PracticeConfig() {
                                             value={limit}
                                             onChange={(e) => setLimit(e.target.value)}
                                             placeholder="10"
-                                            className={`w-full ${inputBg} border-2 ${borderStyle} rounded-xl px-4 py-3 font-bold transition-all outline-none focus:border-red-500 focus:ring-4 focus:ring-red-500/20 ${textColor}`}
+                                            className={`w-full ${inputBg} border-2 ${borderStyle} rounded-xl px-4 py-3 font-bold transition-all outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/20 ${textColor}`}
                                         />
                                         <span className={`font-bold transition-colors ${subTextColor}`}>Soal</span>
                                     </div>
@@ -237,7 +237,7 @@ export default function PracticeConfig() {
                                                 onChange={(e) => setTimer(e.target.value)}
                                                 disabled={isUnlimitedTime}
                                                 placeholder="5"
-                                                className={`w-full ${inputBg} border-2 ${borderStyle} rounded-xl px-4 py-3 font-bold transition-all outline-none focus:border-red-500 focus:ring-4 focus:ring-red-500/20 ${textColor}`}
+                                                className={`w-full ${inputBg} border-2 ${borderStyle} rounded-xl px-4 py-3 font-bold transition-all outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/20 ${textColor}`}
                                             />
                                             <span className={`font-bold transition-colors ${subTextColor}`}>Menit</span>
                                         </div>
@@ -246,9 +246,9 @@ export default function PracticeConfig() {
                                                 type="checkbox" 
                                                 checked={isUnlimitedTime} 
                                                 onChange={() => setIsUnlimitedTime(!isUnlimitedTime)}
-                                                className="w-4 h-4 text-red-600 rounded focus:ring-red-500 border-gray-300 cursor-pointer"
+                                                className="w-4 h-4 text-blue-600 rounded focus:ring-blue-500 border-gray-300 cursor-pointer"
                                             />
-                                            <span className={`text-sm font-bold transition-colors hover:text-red-500 ${subTextColor}`}>Tanpa Batas Waktu</span>
+                                            <span className={`text-sm font-bold transition-colors hover:text-blue-600 ${subTextColor}`}>Tanpa Batas Waktu</span>
                                         </label>
                                     </div>
                                 </div>
@@ -259,7 +259,7 @@ export default function PracticeConfig() {
 
                 <button
                     onClick={handleStart}
-                    className="w-full mt-12 relative overflow-hidden bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-500 hover:to-rose-500 text-white font-black py-5 rounded-2xl text-xl shadow-[0_0_40px_rgba(225,29,72,0.3)] transition-all transform hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center gap-3 group border border-white/20"
+                    className="w-full mt-12 relative overflow-hidden bg-gradient-to-r from-blue-600 to-sky-600 hover:from-blue-500 hover:to-sky-500 text-white font-black py-5 rounded-2xl text-xl shadow-[0_0_40px_rgba(37,99,235,0.28)] transition-all transform hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center gap-3 group border border-white/20"
                 >
                     <span className="relative z-10">Mulai Kuis Sekarang</span>
                     <span className="text-2xl transition-transform group-hover:translate-x-2 relative z-10">→</span>

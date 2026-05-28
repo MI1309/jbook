@@ -139,9 +139,9 @@ def list_kanji(request,
             if v_tilde:
                 k.word_type = v_tilde.word_type
         
-        # Format onyomi/kunyomi to Katakana/Hiragana
-        k.onyomi = [to_katakana(r.lower()) for r in k.onyomi]
-        k.kunyomi = [to_kana(r.lower()) for r in k.kunyomi]
+        # Format onyomi/kunyomi to Katakana/Hiragana (defensive: data can contain nulls)
+        k.onyomi = [to_katakana(r.lower()) for r in (k.onyomi or []) if isinstance(r, str) and r]
+        k.kunyomi = [to_kana(r.lower()) for r in (k.kunyomi or []) if isinstance(r, str) and r]
 
     return {
         "items": results,
@@ -201,8 +201,8 @@ def get_kanji(request, kanji_id: str):
     
     # Format readings
     from utils.kana import to_kana, to_katakana
-    kanji.onyomi = [to_katakana(r.lower()) for r in kanji.onyomi]
-    kanji.kunyomi = [to_kana(r.lower()) for r in kanji.kunyomi]
+    kanji.onyomi = [to_katakana(r.lower()) for r in (kanji.onyomi or []) if isinstance(r, str) and r]
+    kanji.kunyomi = [to_kana(r.lower()) for r in (kanji.kunyomi or []) if isinstance(r, str) and r]
             
     return kanji
 

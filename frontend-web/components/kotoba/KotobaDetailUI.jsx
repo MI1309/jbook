@@ -117,24 +117,24 @@ export default function KotobaDetailUI({ vocab, onClose }) {
     const textColor = !mounted ? 'text-black' : (theme === 'dark' ? 'text-white' : 'text-black');
     const subTextColor = !mounted ? 'text-gray-400' : (theme === 'dark' ? 'text-gray-500' : 'text-gray-400');
     const cardBg = !mounted ? 'bg-white' : (theme === 'dark' ? 'bg-[#0a0a0a]' : 'bg-white');
-    const sectionBg = !mounted ? 'bg-red-50' : (theme === 'dark' ? 'bg-red-950/10' : 'bg-red-50');
-    const borderStyle = !mounted ? 'border-gray-100' : (theme === 'dark' ? 'border-red-950/20' : 'border-gray-100');
+    const sectionBg = !mounted ? 'bg-blue-50' : (theme === 'dark' ? 'bg-blue-950/10' : 'bg-blue-50');
+    const borderStyle = !mounted ? 'border-gray-100' : (theme === 'dark' ? 'border-blue-950/20' : 'border-gray-100');
 
     return (
         <div className={`${cardBg} min-h-screen py-8 flex flex-col items-center justify-center transition-colors duration-300`}>
             <div className="container mx-auto px-4 w-full max-w-2xl">
                 {onClose ? (
-                    <button onClick={onClose} className={`inline-flex items-center font-black transition-all mb-8 hover:text-red-600 ${subTextColor}`}>
+                    <button onClick={onClose} className={`inline-flex items-center font-black transition-all mb-8 hover:text-blue-600 ${subTextColor}`}>
                         &larr; Kembali ke Daftar
                     </button>
                 ) : (
-                    <Link href="/kotoba" className={`inline-flex items-center font-black transition-all mb-8 hover:text-red-600 ${subTextColor}`}>
+                    <Link href="/kotoba" className={`inline-flex items-center font-black transition-all mb-8 hover:text-blue-600 ${subTextColor}`}>
                         &larr; Kembali ke Daftar
                     </Link>
                 )}
 
-                <div className={`${cardBg} rounded-[2.5rem] shadow-2xl p-6 sm:p-8 md:p-12 text-center border-t-8 border-red-600 relative overflow-hidden w-full transition-all border-b border-x ${borderStyle}`}>
-                    <div className="absolute top-0 right-0 p-3 sm:p-4 opacity-5 text-7xl sm:text-9xl font-serif select-none pointer-events-none text-red-900 leading-none">
+                <div className={`${cardBg} rounded-[2.5rem] shadow-2xl p-6 sm:p-8 md:p-12 text-center border-t-8 border-blue-600 relative overflow-hidden w-full transition-all border-b border-x ${borderStyle}`}>
+                    <div className="absolute top-0 right-0 p-3 sm:p-4 opacity-5 text-7xl sm:text-9xl font-serif select-none pointer-events-none text-blue-900 leading-none">
                         言
                     </div>
 
@@ -148,7 +148,7 @@ export default function KotobaDetailUI({ vocab, onClose }) {
                                         <span 
                                             key={index} 
                                             onClick={() => handleKanjiClick(char)}
-                                            className="text-red-600 dark:text-red-500 hover:text-red-700 dark:hover:text-white cursor-pointer transition-all duration-200 border-b-4 border-transparent hover:border-red-600 dark:hover:border-white px-1 rounded-t-xl"
+                                            className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-white cursor-pointer transition-all duration-200 border-b-4 border-transparent hover:border-blue-600 dark:hover:border-white px-1 rounded-t-xl"
                                         >
                                             {char}
                                         </span>
@@ -166,8 +166,8 @@ export default function KotobaDetailUI({ vocab, onClose }) {
                                 onClick={playAudio}
                                 className={`p-3 rounded-2xl transition-all duration-300 ${
                                     playing 
-                                        ? 'bg-red-600 text-white shadow-lg shadow-red-600/30 scale-95 animate-pulse' 
-                                        : `${theme === 'dark' ? 'bg-red-950/20 text-red-400 hover:bg-red-950/40 hover:text-red-300' : 'bg-red-50 text-red-600 hover:bg-red-100 hover:text-red-700'} hover:scale-110 active:scale-95`
+                                        ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/30 scale-95 animate-pulse' 
+                                        : `${theme === 'dark' ? 'bg-blue-950/20 text-blue-300 hover:bg-blue-950/40 hover:text-blue-200' : 'bg-blue-50 text-blue-700 hover:bg-blue-100 hover:text-blue-800'} hover:scale-110 active:scale-95`
                                 } flex items-center justify-center cursor-pointer shadow-sm`}
                                 title="Putar Suara"
                             >
@@ -175,8 +175,8 @@ export default function KotobaDetailUI({ vocab, onClose }) {
                             </button>
                         </div>
 
-                        <div className={`${sectionBg} p-5 sm:p-6 md:p-8 rounded-2xl border ${theme === 'dark' ? 'border-red-950/30' : 'border-red-100'} shadow-inner mb-8 text-left transition-colors`}>
-                            <h3 className="text-[10px] sm:text-xs font-black text-red-600 dark:text-red-400 uppercase tracking-[0.2em] mb-2 sm:mb-3">Arti / Makna</h3>
+                        <div className={`${sectionBg} p-5 sm:p-6 md:p-8 rounded-2xl border ${theme === 'dark' ? 'border-blue-950/30' : 'border-blue-100'} shadow-inner mb-8 text-left transition-colors`}>
+                            <h3 className="text-[10px] sm:text-xs font-black text-blue-600 dark:text-blue-300 uppercase tracking-[0.2em] mb-2 sm:mb-3">Arti / Makna</h3>
                             <p className={`text-lg sm:text-xl md:text-2xl font-black leading-relaxed tracking-tight ${textColor}`}>{vocab?.meaning || 'Tidak ada arti'}</p>
                         </div>
 
@@ -184,7 +184,7 @@ export default function KotobaDetailUI({ vocab, onClose }) {
                         {uniqueKanjis.length > 0 && (
                             <div className="mb-10 text-left">
                                 <h3 className={`text-[10px] font-black uppercase tracking-widest mb-4 flex items-center gap-2 transition-colors ${subTextColor}`}>
-                                    <span className="w-2 h-2 rounded-full bg-red-600 shadow-lg shadow-red-500/20"></span>
+                                    <span className="w-2 h-2 rounded-full bg-blue-600 shadow-lg shadow-blue-500/20"></span>
                                     Bedah Kanji (Karakter Penyusun)
                                 </h3>
                                 <div className="grid grid-cols-1 gap-3">
@@ -194,16 +194,16 @@ export default function KotobaDetailUI({ vocab, onClose }) {
                                             <button
                                                 key={i}
                                                 onClick={() => handleKanjiClick(char)}
-                                                className={`group flex items-center gap-4 ${theme === 'dark' ? 'bg-red-950/10 hover:bg-red-950/20' : 'bg-gray-50 hover:bg-white'} border ${borderStyle} hover:border-red-600 p-4 rounded-2xl transition-all shadow-sm active:scale-95 text-left`}
+                                                className={`group flex items-center gap-4 ${theme === 'dark' ? 'bg-blue-950/10 hover:bg-blue-950/20' : 'bg-gray-50 hover:bg-white'} border ${borderStyle} hover:border-blue-600 p-4 rounded-2xl transition-all shadow-sm active:scale-95 text-left`}
                                             >
-                                                <span className={`text-4xl font-serif group-hover:text-red-600 transition-colors w-12 text-center ${textColor}`}>{char}</span>
+                                                <span className={`text-4xl font-serif group-hover:text-blue-600 transition-colors w-12 text-center ${textColor}`}>{char}</span>
                                                 <div className="flex-1">
                                                     <p className={`text-sm font-black leading-snug ${textColor}`}>{detail?.meaning || 'Memuat makna...'}</p>
                                                     <p className={`text-[10px] font-black uppercase tracking-tighter mt-0.5 transition-colors ${subTextColor}`}>
                                                         {detail ? (detail.onyomi?.[0] || detail.kunyomi?.[0] || 'N/A') : 'Sedang memuat...'} • Klik untuk detail
                                                     </p>
                                                 </div>
-                                                <span className="text-xl text-gray-400 group-hover:text-red-400 transition-colors">→</span>
+                                                <span className="text-xl text-gray-400 group-hover:text-blue-400 transition-colors">→</span>
                                             </button>
                                         );
                                     })}
@@ -212,11 +212,11 @@ export default function KotobaDetailUI({ vocab, onClose }) {
                         )}
 
                         <div className="flex justify-center gap-4 flex-wrap mt-4">
-                            <span className={`px-4 py-2 ${theme === 'dark' ? 'bg-red-950/20 text-red-400' : 'bg-gray-100 text-gray-600'} rounded-full font-black text-xs uppercase tracking-widest`}>
+                            <span className={`px-4 py-2 ${theme === 'dark' ? 'bg-blue-950/20 text-blue-300' : 'bg-gray-100 text-gray-600'} rounded-full font-black text-xs uppercase tracking-widest`}>
                                 JLPT N{vocab.jlpt_level}
                             </span>
                             {vocab.word_type && (
-                                <span className={`px-4 py-2 ${theme === 'dark' ? 'bg-red-600 text-white' : 'bg-red-50 text-red-600'} rounded-full font-black text-xs uppercase tracking-widest border border-red-100 dark:border-red-900/30 transition-colors shadow-sm`}>
+                                <span className={`px-4 py-2 ${theme === 'dark' ? 'bg-blue-600 text-white' : 'bg-blue-50 text-blue-700'} rounded-full font-black text-xs uppercase tracking-widest border border-blue-100 dark:border-blue-900/30 transition-colors shadow-sm`}>
                                     {vocab.word_type.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase())}
                                 </span>
                             )}
