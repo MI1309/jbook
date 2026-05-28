@@ -297,28 +297,26 @@ export default function DashboardPage() {
             {/* ── Level Accuracy ── */}
             {levelStats.length > 0 ? (
                 <div className="mb-10 animate-in fade-in slide-in-from-bottom-4 duration-700">
-                    <div className={`${levelStats.length <= 3 ? 'flex justify-center' : ''}`}>
-                        <h2 className={`text-xl font-black mb-4 flex items-center gap-2 transition-colors ${textPrimary}`}>
-                            <span className="bg-blue-600 text-white p-1.5 rounded-xl shadow-sm shadow-blue-500/20">
-                                <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 002 2h2a2 2 0 002-2z" />
-                                </svg>
-                            </span>
-                            Akurasi per Level JLPT
-                        </h2>
-                    </div>
-                    <div className={`${levelStats.length <= 3 ? 'flex flex-wrap justify-center gap-4' : 'grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4'}`}>
+                    <h2 className={`text-xl font-black mb-4 flex items-center gap-2 transition-colors ${levelStats.length <= 3 ? 'justify-center' : ''} ${textPrimary}`}>
+                        <span className="bg-blue-600 text-white p-1.5 rounded-xl shadow-sm shadow-blue-500/20">
+                            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 002 2h2a2 2 0 002-2z" />
+                            </svg>
+                        </span>
+                        Akurasi per Level JLPT
+                    </h2>
+                    <div className={`${levelStats.length <= 3 ? 'flex flex-wrap justify-center gap-4' : 'grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4'} items-start`}>
                         {levelStats.map(stat => (
                             <div
                                 key={stat.level}
-                                className={`p-4 rounded-2xl border-2 transition-all hover:scale-[1.03] ${levelStats.length <= 3 ? 'w-48 flex-shrink-0' : 'w-auto'} ${tc('bg-black/20 border-blue-900/20', 'bg-white border-gray-100')}`}
+                                className={`p-4 rounded-2xl border-2 transition-all hover:scale-[1.03] flex flex-col ${levelStats.length <= 3 ? 'w-44' : ''} ${tc('bg-black/20 border-blue-900/20', 'bg-white border-gray-100')}`}
                             >
-                                <div className={`text-[10px] font-black uppercase tracking-widest mb-1 ${textMuted}`}>JLPT N{stat.level}</div>
+                                <div className={`text-[10px] font-black uppercase tracking-widest mb-2 ${textMuted}`}>JLPT N{stat.level}</div>
                                 <div className={`text-3xl font-black mb-1 ${stat.accuracy >= 80 ? 'text-green-500' : stat.accuracy >= 50 ? 'text-yellow-500' : 'text-blue-500'}`}>
                                     {Math.round(stat.accuracy)}%
                                 </div>
-                                <div className={`text-[10px] font-bold uppercase tracking-tight transition-colors ${textMuted}`}>{stat.total} Soal</div>
-                                <div className={`w-full rounded-full h-1 mt-3 ${tc('bg-gray-800', 'bg-gray-100')}`}>
+                                <div className={`text-[10px] font-bold uppercase tracking-tight transition-colors mt-auto pt-2 ${textMuted}`}>{stat.total} Soal</div>
+                                <div className={`w-full rounded-full h-1 mt-2 ${tc('bg-gray-800', 'bg-gray-100')}`}>
                                     <div className={`h-1 rounded-full ${stat.accuracy >= 80 ? 'bg-green-500' : stat.accuracy >= 50 ? 'bg-yellow-500' : 'bg-blue-500'}`} style={{ width: `${stat.accuracy}%` }} />
                                 </div>
                             </div>
