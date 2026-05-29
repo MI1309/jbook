@@ -9,9 +9,11 @@ export async function generateMetadata({ params }) {
     const { id } = await params;
     try {
         const kanji = await getKanjiDetail(id);
+        if (!kanji) return { title: 'Kanji Detail - JBook' };
+        
         return {
             title: `Kanji ${kanji.character} (${kanji.meaning}) - JBook`,
-            description: `Pelajari cara baca Onyomi: ${kanji.onyomi.join(', ')}, Kunyomi: ${kanji.kunyomi.join(', ')} untuk karakter ${kanji.character} (${kanji.meaning}).`,
+            description: `Pelajari cara baca Onyomi: ${kanji.onyomi?.join(', ') || ''}, Kunyomi: ${kanji.kunyomi?.join(', ') || ''} untuk karakter ${kanji.character} (${kanji.meaning}).`,
         };
     } catch (e) {
         return { title: 'Kanji Detail - JBook' };
@@ -21,13 +23,18 @@ export async function generateMetadata({ params }) {
 export default async function KanjiDetailPage({ params }) {
     const { id } = await params;
     
-    let kanji;
+    let kanji = null;
+    let isError = false;
+
     try {
         kanji = await getKanjiDetail(id);
-        if (!kanji) {
-            notFound();
-        }
     } catch (error) {
+        console.error('[jbook-server-error] Backend API hancur atau return 500:', error);
+        isError = true;
+    }
+
+    // ✅ Pemicu notFound() harus di luar blok try-catch agar Next.js tidak bingung
+    if (isError || !kanji) {
         notFound();
     }
 

@@ -37,6 +37,9 @@ class Kanji(models.Model):
     radical = models.CharField(max_length=5, blank=True, null=True, help_text="Radikal utama")
     word_type = models.CharField(max_length=20, choices=WordType.choices, blank=True, null=True, help_text="Tipe kata utama jika ada")
     examples = models.JSONField(default=list, help_text="List of words using this Kanji with Indonesian meanings")
+    
+    # 🌟 TAMBAHAN BARU: Field untuk menyimpan data teks mentah SVG dari KanjiVG
+    svg_data = models.TextField(blank=True, null=True, help_text="Data mentah file SVG dari KanjiVG")
 
     def __str__(self):
         return self.character
