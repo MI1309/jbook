@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 
-export function KanjiStrokeViewer({ svgContent, size = 80 }) {
+export default function KanjiStrokeViewer({ svgContent, size = 80 }) {
     const [animatedSvg, setAnimatedSvg] = useState('');
 
     useEffect(() => {
