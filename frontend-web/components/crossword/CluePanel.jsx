@@ -108,7 +108,7 @@ export const CluePanel = () => {
         {hasKanji && (
           <button 
             onClick={(e) => handleTTS(word, e)}
-            className="p-1 text-gray-400 hover:text-red-500 transition-colors"
+            className="p-1 text-gray-400 hover:text-blue-500 transition-colors"
             title="Dengarkan pengucapan Kanji"
           >
             <Volume2 size={16} />

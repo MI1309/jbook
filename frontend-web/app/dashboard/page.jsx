@@ -305,19 +305,37 @@ export default function DashboardPage() {
                         </span>
                         Akurasi per Level JLPT
                     </h2>
-                    <div className={`${levelStats.length <= 3 ? 'flex flex-wrap justify-center gap-4' : 'grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4'} items-start`}>
+                    <div
+                        className={`${
+                            levelStats.length === 2
+                                ? 'flex flex-wrap justify-center gap-6'
+                                : levelStats.length === 3
+                                    ? 'flex flex-wrap justify-center gap-5'
+                                    : levelStats.length === 4
+                                        ? 'grid grid-cols-2 md:grid-cols-4 gap-5'
+                                        : 'grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4'
+                        } items-start`}
+                    >
                         {levelStats.map(stat => (
                             <div
                                 key={stat.level}
-                                className={`p-4 rounded-2xl border-2 transition-all hover:scale-[1.03] flex flex-col ${levelStats.length <= 3 ? 'w-44' : ''} ${tc('bg-black/20 border-blue-900/20', 'bg-white border-gray-100')}`}
+                                className={`p-6 rounded-3xl border-2 transition-all hover:scale-[1.03] flex flex-col ${
+                                    levelStats.length === 2
+                                        ? 'w-[18rem] sm:w-[20rem]'
+                                        : levelStats.length === 3
+                                            ? 'w-56 sm:w-60'
+                                            : levelStats.length === 4
+                                                ? 'w-full'
+                                                : ''
+                                } ${tc('bg-black/20 border-blue-900/20', 'bg-white border-gray-100')}`}
                             >
-                                <div className={`text-[10px] font-black uppercase tracking-widest mb-2 ${textMuted}`}>JLPT N{stat.level}</div>
-                                <div className={`text-3xl font-black mb-1 ${stat.accuracy >= 80 ? 'text-green-500' : stat.accuracy >= 50 ? 'text-yellow-500' : 'text-blue-500'}`}>
+                                <div className={`text-xs font-black uppercase tracking-widest mb-3 ${textMuted}`}>JLPT N{stat.level}</div>
+                                <div className={`text-4xl font-black mb-2 ${stat.accuracy >= 80 ? 'text-green-500' : stat.accuracy >= 50 ? 'text-yellow-500' : 'text-blue-500'}`}>
                                     {Math.round(stat.accuracy)}%
                                 </div>
-                                <div className={`text-[10px] font-bold uppercase tracking-tight transition-colors mt-auto pt-2 ${textMuted}`}>{stat.total} Soal</div>
-                                <div className={`w-full rounded-full h-1 mt-2 ${tc('bg-gray-800', 'bg-gray-100')}`}>
-                                    <div className={`h-1 rounded-full ${stat.accuracy >= 80 ? 'bg-green-500' : stat.accuracy >= 50 ? 'bg-yellow-500' : 'bg-blue-500'}`} style={{ width: `${stat.accuracy}%` }} />
+                                <div className={`text-xs font-bold uppercase tracking-tight transition-colors mt-auto pt-3 ${textMuted}`}>{stat.total} Soal</div>
+                                <div className={`w-full rounded-full h-2 mt-3 ${tc('bg-gray-800', 'bg-gray-100')}`}>
+                                    <div className={`h-2 rounded-full ${stat.accuracy >= 80 ? 'bg-green-500' : stat.accuracy >= 50 ? 'bg-yellow-500' : 'bg-blue-500'}`} style={{ width: `${stat.accuracy}%` }} />
                                 </div>
                             </div>
                         ))}

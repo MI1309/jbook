@@ -10,6 +10,17 @@ import {
 } from 'lucide-react';
 
 export default function AboutPage() {
+    // Template: isi sendiri daftar resource pengembangan di sini.
+    // Struktur item:
+    // { title: string, url: string, category?: string, description?: string }
+    const devResources = [
+        // {
+        //     title: 'Dokumentasi',
+        //     url: 'https://...',
+        //     category: 'Docs',
+        //     description: 'Referensi utama yang dipakai selama development.',
+        // },
+    ];
 
     return (
         <div className="relative min-h-screen washi-texture bg-background text-foreground transition-colors duration-300 pb-20">
@@ -28,7 +39,13 @@ export default function AboutPage() {
                     </div>
 
                     <h1 className="text-4xl md:text-5xl font-japanese font-black tracking-tight leading-tight">
-                        一期一会 <br/>
+                        <ruby className="font-japanese font-black">
+                            一期一会
+                            <rt className="text-xs md:text-sm font-sans font-black text-gray-400 dark:text-gray-500 tracking-widest select-none">
+                                いちごいちえ
+                            </rt>
+                        </ruby>
+                        <br/>
                         <span className="text-accent-blue font-sans">Satu Pertemuan, Satu Kesempatan</span>
                     </h1>
 
@@ -105,6 +122,67 @@ export default function AboutPage() {
                             </div>
 
                         </div>
+                    </div>
+
+                    {/* Resource Pengembangan */}
+                    <div className="bg-[var(--card-bg)] border border-[var(--border-color)] rounded-[2.5rem] p-6 md:p-8">
+                        <h3 className="text-lg font-japanese font-black mb-2 text-accent-blue">
+                            Resource Pengembangan
+                        </h3>
+                        <p className="text-xs text-gray-400 dark:text-gray-500 font-light leading-relaxed mb-6">
+                            Referensi yang dipakai untuk membangun JBook (library, artikel, tooling, dokumentasi, dll).
+                        </p>
+
+                        {devResources.length > 0 ? (
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                {devResources.map((r) => (
+                                    <a
+                                        key={r.title + r.url}
+                                        href={r.url}
+                                        target="_blank"
+                                        rel="noreferrer"
+                                        className="group bg-white/5 border border-[var(--border-color)] hover:border-accent-blue rounded-2xl p-5 transition-all hover:-translate-y-0.5"
+                                    >
+                                        <div className="flex items-start justify-between gap-3">
+                                            <div className="min-w-0">
+                                                <div className="text-sm font-black text-foreground truncate">
+                                                    {r.title}
+                                                </div>
+                                                {r.description ? (
+                                                    <div className="mt-1 text-xs text-gray-400 dark:text-gray-500 font-light leading-relaxed">
+                                                        {r.description}
+                                                    </div>
+                                                ) : null}
+                                            </div>
+                                            <div className="text-xs font-black text-accent-blue group-hover:translate-x-0.5 transition-transform">
+                                                ↗
+                                            </div>
+                                        </div>
+
+                                        <div className="mt-4 flex items-center justify-between gap-2">
+                                            <div className="text-[10px] font-black uppercase tracking-widest text-gray-400 dark:text-gray-500 truncate">
+                                                {r.url}
+                                            </div>
+                                            {r.category ? (
+                                                <span className="text-[10px] font-black uppercase tracking-widest px-2 py-1 rounded-full bg-accent-blue/10 text-accent-blue border border-accent-blue/20 flex-shrink-0">
+                                                    {r.category}
+                                                </span>
+                                            ) : null}
+                                        </div>
+                                    </a>
+                                ))}
+                            </div>
+                        ) : (
+                            <div className="rounded-2xl border border-dashed border-[var(--border-color)] bg-white/5 p-6 text-center">
+                                <div className="text-3xl mb-2">📚</div>
+                                <div className="text-sm font-black text-foreground mb-1">
+                                    Belum ada resource
+                                </div>
+                                <div className="text-xs text-gray-400 dark:text-gray-500 font-light">
+                                    Tambahkan item di array <span className="font-bold text-foreground">devResources</span> untuk menampilkan daftar resource di sini.
+                                </div>
+                            </div>
+                        )}
                     </div>
 
                     {/* Cozy Call to Action */}

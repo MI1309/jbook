@@ -4,7 +4,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { toHiragana, toKatakana } from 'wanakana';
 import { hasKanji } from '@/lib/utils';
-import { findIdByString } from '@/lib/api';
+import { findIdByString, resolveContentId } from '@/lib/api';
 import { useTheme } from '@/context/ThemeContext';
 
 export default function KanjiDetailUI({ kanji, onClose }) {

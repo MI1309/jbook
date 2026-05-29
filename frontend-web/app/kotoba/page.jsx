@@ -150,8 +150,8 @@ function KotobaContent() {
                                         onClick={(e) => playAudioCard(vocab, e)}
                                         className={`p-1.5 rounded-xl transition-all ${
                                             playingId === vocab.id 
-                                                ? 'bg-red-500 text-white animate-pulse' 
-                                                : 'bg-[var(--background)] border border-[var(--border-color)] text-gray-500 hover:text-red-600 hover:border-red-500/30'
+                                                ? 'bg-blue-600 text-white animate-pulse' 
+                                                : 'bg-[var(--background)] border border-[var(--border-color)] text-gray-500 hover:text-blue-600 hover:border-blue-500/30'
                                         }`}
                                         title="Dengarkan Suara"
                                     >

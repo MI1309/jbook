@@ -242,7 +242,7 @@ export default function MensetsuPage() {
                                         {isPlaying ? (
                                             <button 
                                                 onClick={stopSpeech}
-                                                className="px-3 py-1 bg-rose-600 text-white rounded-lg text-[10px] font-bold hover:bg-rose-700 transition-all"
+                                                className="px-3 py-1 bg-blue-600 text-white rounded-lg text-[10px] font-bold hover:bg-blue-700 transition-all"
                                             >
                                                 Hentikan Suara
                                             </button>
