@@ -1,7 +1,8 @@
 from ninja import Router, Schema
 from typing import List, Optional
 from pydantic import BaseModel
-from .models import Kanji, Grammar, Blog, ContentSuggestion, Announcement
+from ninja.security import HttpBearer
+from .models import Kanji, Grammar, Blog, ContentSuggestion, Announcement, Vocab
 from django.shortcuts import get_object_or_404
 from django.db.models import Q
 from uuid import UUID
@@ -9,6 +10,63 @@ from datetime import datetime
 from django.http import HttpResponse
 
 router = Router()
+
+class AuthBearer(HttpBearer):
+    def authenticate(self, request, token):
+        from ninja_jwt.authentication import JWTAuth
+        from django.contrib.auth import get_user_model
+        User = get_user_model()
+        try:
+            # JWTAuth returns (user, token)
+            auth_result = JWTAuth().authenticate(request, token)
+            if auth_result:
+                user = auth_result[0] if isinstance(auth_result, tuple) else auth_result
+                # Pastikan user adalah objek User dan punya akses staff
+                if user and (getattr(user, 'is_staff', False) or getattr(user, 'is_superuser', False)):
+                    return user
+        except Exception as e:
+            print(f"Auth error: {e}")
+            return None
+        return None
+
+class VocabSchema(Schema):
+    id: UUID
+    word: str
+    reading: str
+    meaning: str
+    word_type: Optional[str] = None
+    jlpt_level: int
+    furigana: Optional[str] = None
+    examples: List[dict] = []
+
+class UpdateVocabSchema(Schema):
+    meaning: Optional[str] = None
+    word_type: Optional[str] = None
+    reading: Optional[str] = None
+    furigana: Optional[str] = None
+
+class UpdateKanjiSchema(Schema):
+    meaning: Optional[str] = None
+    onyomi: Optional[List[str]] = None
+    kunyomi: Optional[List[str]] = None
+    strokes: Optional[int] = None
+    jlpt_level: Optional[int] = None
+
+@router.put("/vocab/{vocab_id}", response=VocabSchema, auth=AuthBearer())
+def update_vocab(request, vocab_id: UUID, data: UpdateVocabSchema):
+    vocab = get_object_or_404(Vocab, id=vocab_id)
+    for attr, value in data.dict(exclude_unset=True).items():
+        setattr(vocab, attr, value)
+    vocab.save()
+    return vocab
+
+@router.put("/kanji/{kanji_id}", response=KanjiSchema, auth=AuthBearer())
+def update_kanji(request, kanji_id: UUID, data: UpdateKanjiSchema):
+    kanji = get_object_or_404(Kanji, id=kanji_id)
+    for attr, value in data.dict(exclude_unset=True).items():
+        setattr(kanji, attr, value)
+    kanji.save()
+    return kanji
 
 class AnnouncementSchema(Schema):
     id: UUID

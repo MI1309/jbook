@@ -7,15 +7,42 @@ import { hasKanji, extractKanji } from '@/lib/utils';
 import { resolveContentId, API_URL } from '@/lib/api';
 import { dbGetAll } from '@/lib/offline-db';
 import { useTheme } from '@/context/ThemeContext';
-import { Volume2 } from 'lucide-react';
+import { Volume2, Edit2, Check, X } from 'lucide-react';
+import { useAuth } from '@/context/AuthContext';
+import Cookies from 'js-cookie';
+import { toast } from 'react-toastify';
 
-export default function KotobaDetailUI({ vocab, onClose }) {
+export default function KotobaDetailUI({ vocab: initialVocab, onClose }) {
     const router = useRouter();
     const { theme, mounted } = useTheme();
+    const { user } = useAuth();
+    const [vocab, setVocab] = useState(initialVocab);
     const [kanjiDetails, setKanjiDetails] = useState([]);
     const [playing, setPlaying] = useState(false);
+    
+    // Edit state
+    const [isEditing, setIsEditing] = useState(false);
+    const [editData, setEditData] = useState({
+        meaning: initialVocab?.meaning || '',
+        reading: initialVocab?.reading || '',
+        furigana: initialVocab?.furigana || '',
+        word_type: initialVocab?.word_type || ''
+    });
+    const [saving, setSaving] = useState(false);
+
+    const isAdmin = user?.is_staff || user?.is_superuser;
 
     // ✅ useEffect HARUS di atas early return
+    useEffect(() => {
+        setVocab(initialVocab);
+        setEditData({
+            meaning: initialVocab?.meaning || '',
+            reading: initialVocab?.reading || '',
+            furigana: initialVocab?.furigana || '',
+            word_type: initialVocab?.word_type || ''
+        });
+    }, [initialVocab]);
+
     useEffect(() => {
         async function fetchKanjiDetails() {
             if (!vocab?.word) return;
@@ -115,6 +142,37 @@ export default function KotobaDetailUI({ vocab, onClose }) {
         }
     };
 
+    const handleSave = async () => {
+        setSaving(true);
+        try {
+            const baseUrl = (process.env.NEXT_PUBLIC_API_URL || 'https://imronm.pythonanywhere.com/api')
+                .replace(/\/$/, '');
+            const token = Cookies.get('access_token');
+
+            const res = await fetch(`${baseUrl}/content/vocab/${vocab.id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify(editData)
+            });
+
+            if (res.ok) {
+                const updated = await res.json();
+                setVocab(updated);
+                setIsEditing(false);
+                toast.success('Berhasil memperbarui Kotoba!');
+            } else {
+                toast.error('Gagal memperbarui data. Pastikan Anda Admin.');
+            }
+        } catch (err) {
+            toast.error('Terjadi kesalahan jaringan.');
+        } finally {
+            setSaving(false);
+        }
+    };
+
     const textColor = !mounted ? 'text-black' : (theme === 'dark' ? 'text-white' : 'text-black');
     const subTextColor = !mounted ? 'text-gray-400' : (theme === 'dark' ? 'text-gray-500' : 'text-gray-400');
     const cardBg = !mounted ? 'bg-white' : (theme === 'dark' ? 'bg-[#0a0a0a]' : 'bg-white');
@@ -135,6 +193,23 @@ export default function KotobaDetailUI({ vocab, onClose }) {
                 )}
 
                 <div className={`${cardBg} rounded-[2.5rem] shadow-2xl p-6 sm:p-8 md:p-12 text-center border-t-8 border-blue-600 relative overflow-hidden w-full transition-all border-b border-x ${borderStyle}`}>
+                    {/* Admin Edit Button */}
+                    {isAdmin && (
+                        <div className="absolute top-6 left-6 z-20">
+                            <button
+                                onClick={() => setIsEditing(!isEditing)}
+                                className={`p-2 rounded-xl transition-all ${
+                                    isEditing 
+                                        ? 'bg-red-500 text-white shadow-lg shadow-red-500/20' 
+                                        : 'bg-blue-600/10 text-blue-600 hover:bg-blue-600 hover:text-white shadow-sm'
+                                }`}
+                                title={isEditing ? "Batal Edit" : "Edit Kotoba (Admin)"}
+                            >
+                                {isEditing ? <X className="w-4 h-4" /> : <Edit2 className="w-4 h-4" />}
+                            </button>
+                        </div>
+                    )}
+
                     <div className="absolute top-0 right-0 p-3 sm:p-4 opacity-5 text-7xl sm:text-9xl font-serif select-none pointer-events-none text-blue-900 leading-none">
                         言
                     </div>
@@ -143,26 +218,46 @@ export default function KotobaDetailUI({ vocab, onClose }) {
                         <span className={`text-[10px] sm:text-xs font-black uppercase tracking-[0.3em] mb-3 sm:mb-4 block text-center ${subTextColor}`}>Vocabulary</span>
 
                         <div className="mb-6 sm:mb-8 flex items-center justify-center gap-4 w-full px-2 pt-6 flex-wrap">
-                            <ruby className={`text-3xl sm:text-4xl md:text-5xl font-black tracking-wider transition-colors ${textColor}`}>
-                                {characters.map((char, index) => (
-                                    hasKanji(char) ? (
-                                        <span
-                                            key={index}
-                                            onClick={() => handleKanjiClick(char)}
-                                            className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-white cursor-pointer transition-all duration-200 border-b-4 border-transparent hover:border-blue-600 dark:hover:border-white px-1 rounded-t-xl"
-                                        >
-                                            {char}
-                                        </span>
-                                    ) : (
-                                        <span key={index} className="px-0.5">{char}</span>
-                                    )
-                                ))}
-                                {hasKanji(vocab.word) && (
-                                    <rt className="text-base sm:text-lg md:text-xl text-gray-900 dark:text-white font-black leading-none">
-                                        {vocab.furigana || vocab.reading || ''}
-                                    </rt>
-                                )}
-                            </ruby>
+                            <div className="flex flex-col items-center">
+                                {isEditing ? (
+                                    <div className="flex flex-col gap-2 mb-4 w-full max-w-xs">
+                                        <input 
+                                            type="text"
+                                            value={editData.reading}
+                                            onChange={(e) => setEditData({...editData, reading: e.target.value})}
+                                            className={`text-center text-sm p-2 rounded-xl border-2 ${borderStyle} ${cardBg} font-black focus:border-blue-500 outline-none`}
+                                            placeholder="Reading (Hiragana/Katakana)"
+                                        />
+                                        <input 
+                                            type="text"
+                                            value={editData.furigana}
+                                            onChange={(e) => setEditData({...editData, furigana: e.target.value})}
+                                            className={`text-center text-xs p-2 rounded-xl border-2 ${borderStyle} ${cardBg} font-bold focus:border-blue-500 outline-none`}
+                                            placeholder="Furigana (Optional)"
+                                        />
+                                    </div>
+                                ) : null}
+                                <ruby className={`text-3xl sm:text-4xl md:text-5xl font-black tracking-wider transition-colors ${textColor}`}>
+                                    {characters.map((char, index) => (
+                                        hasKanji(char) ? (
+                                            <span
+                                                key={index}
+                                                onClick={() => handleKanjiClick(char)}
+                                                className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-white cursor-pointer transition-all duration-200 border-b-4 border-transparent hover:border-blue-600 dark:hover:border-white px-1 rounded-t-xl"
+                                            >
+                                                {char}
+                                            </span>
+                                        ) : (
+                                            <span key={index} className="px-0.5">{char}</span>
+                                        )
+                                    ))}
+                                    {!isEditing && hasKanji(vocab.word) && (
+                                        <rt className="text-base sm:text-lg md:text-xl text-gray-900 dark:text-white font-black leading-none">
+                                            {vocab.furigana || vocab.reading || ''}
+                                        </rt>
+                                    )}
+                                </ruby>
+                            </div>
                             <button
                                 onClick={playAudio}
                                 className={`p-3 rounded-2xl transition-all duration-300 ${
@@ -176,10 +271,36 @@ export default function KotobaDetailUI({ vocab, onClose }) {
                             </button>
                         </div>
 
-                        <div className={`${sectionBg} p-5 sm:p-6 md:p-8 rounded-2xl border ${theme === 'dark' ? 'border-blue-950/30' : 'border-blue-100'} shadow-inner mb-8 text-left transition-colors`}>
+                        <div className={`${sectionBg} p-5 sm:p-6 md:p-8 rounded-2xl border ${theme === 'dark' ? 'border-blue-950/30' : 'border-blue-100'} shadow-inner mb-8 text-left transition-colors relative`}>
                             <h3 className="text-[10px] sm:text-xs font-black text-blue-600 dark:text-blue-300 uppercase tracking-[0.2em] mb-2 sm:mb-3">Arti / Makna</h3>
-                            <p className={`text-lg sm:text-xl md:text-2xl font-black leading-relaxed tracking-tight ${textColor}`}>{vocab.meaning || 'Tidak ada arti'}</p>
+                            {isEditing ? (
+                                <textarea 
+                                    value={editData.meaning}
+                                    onChange={(e) => setEditData({...editData, meaning: e.target.value})}
+                                    className={`w-full text-lg sm:text-xl md:text-2xl font-black leading-relaxed tracking-tight p-4 rounded-xl border-2 ${borderStyle} ${cardBg} focus:border-blue-500 outline-none`}
+                                    rows={2}
+                                />
+                            ) : (
+                                <p className={`text-lg sm:text-xl md:text-2xl font-black leading-relaxed tracking-tight ${textColor}`}>{vocab.meaning || 'Tidak ada arti'}</p>
+                            )}
                         </div>
+
+                        {isEditing && (
+                            <div className="mb-8 flex justify-center">
+                                <button
+                                    onClick={handleSave}
+                                    disabled={saving}
+                                    className="flex items-center gap-2 bg-green-600 text-white px-8 py-3 rounded-2xl font-black shadow-lg shadow-green-600/20 hover:bg-green-700 transition-all active:scale-95 disabled:opacity-50"
+                                >
+                                    {saving ? (
+                                        <span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                                    ) : (
+                                        <Check className="w-5 h-5" />
+                                    )}
+                                    Simpan Perubahan
+                                </button>
+                            </div>
+                        )}
 
                         {uniqueKanjis.length > 0 && (
                             <div className="mb-10 text-left">

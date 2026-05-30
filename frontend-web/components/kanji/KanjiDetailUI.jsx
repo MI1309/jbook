@@ -8,15 +8,52 @@ import { hasKanji } from '@/lib/utils';
 import { resolveContentId } from '@/lib/api';
 import { useTheme } from '@/context/ThemeContext';
 import KanjiStrokeViewer from './KanjiStrokeViewer'; 
+import { useAuth } from '@/context/AuthContext';
+import { Edit2, Check, X } from 'lucide-react';
+import Cookies from 'js-cookie';
+import { toast } from 'react-toastify';
 
-export default function KanjiDetailUI({ kanji, onClose }) {
+export default function KanjiDetailUI({ kanji: initialKanji, onClose }) {
     const router = useRouter();
     const { theme, mounted } = useTheme();
+    const { user } = useAuth();
+    const [kanji, setKanji] = useState(initialKanji);
     const [isStrokeAnimating, setIsStrokeAnimating] = useState(false);
     const [fetchedSvg, setFetchedSvg] = useState(null);
 
+    // Edit state
+    const [isEditing, setIsEditing] = useState(false);
+    const [editData, setEditData] = useState({
+        meaning: initialKanji?.meaning || '',
+        onyomi: initialKanji?.onyomi || [],
+        kunyomi: initialKanji?.kunyomi || [],
+        strokes: initialKanji?.strokes || 0,
+        jlpt_level: initialKanji?.jlpt_level || 5
+    });
+    const [saving, setSaving] = useState(false);
+
+    const isAdmin = user?.is_staff || user?.is_superuser;
+
+    console.log('[jbook-debug] Admin check:', {
+        user: user?.username,
+        is_staff: user?.is_staff,
+        is_superuser: user?.is_superuser,
+        isAdmin
+    });
+
     // Ambil string data SVG dari database backend kamu
     const kanjiSvg = fetchedSvg || kanji?.svg_data || kanji?.kanjivg || '';
+
+    useEffect(() => {
+        setKanji(initialKanji);
+        setEditData({
+            meaning: initialKanji?.meaning || '',
+            onyomi: initialKanji?.onyomi || [],
+            kunyomi: initialKanji?.kunyomi || [],
+            strokes: initialKanji?.strokes || 0,
+            jlpt_level: initialKanji?.jlpt_level || 5
+        });
+    }, [initialKanji]);
 
     // Fallback: Jika data SVG tidak ada, coba ambil langsung dari KanjiVG GitHub
     useEffect(() => {
@@ -62,6 +99,37 @@ export default function KanjiDetailUI({ kanji, onClose }) {
         }
     };
 
+    const handleSave = async () => {
+        setSaving(true);
+        try {
+            const baseUrl = (process.env.NEXT_PUBLIC_API_URL || 'https://imronm.pythonanywhere.com/api')
+                .replace(/\/$/, '');
+            const token = Cookies.get('access_token');
+
+            const res = await fetch(`${baseUrl}/content/kanji/${kanji.id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify(editData)
+            });
+
+            if (res.ok) {
+                const updated = await res.json();
+                setKanji(updated);
+                setIsEditing(false);
+                toast.success('Berhasil memperbarui Kanji!');
+            } else {
+                toast.error('Gagal memperbarui data. Pastikan Anda Admin.');
+            }
+        } catch (err) {
+            toast.error('Terjadi kesalahan jaringan.');
+        } finally {
+            setSaving(false);
+        }
+    };
+
     // Tema & Styling Tokit (dari blueprint aslimu)
     const textColor = !mounted ? 'text-black' : (theme === 'dark' ? 'text-white' : 'text-black');
     const subTextColor = !mounted ? 'text-gray-400' : (theme === 'dark' ? 'text-gray-500' : 'text-gray-400');
@@ -82,11 +150,29 @@ export default function KanjiDetailUI({ kanji, onClose }) {
                         {/* Huge Character Card & Stroke Viewer Integrated */}
                         <div 
                             className="relative group flex flex-col items-center gap-4 cursor-pointer"
-                            onClick={handleHugeKanjiClick}
-                            title={kanjiSvg ? "Klik untuk melihat urutan goresan" : "Data cara tulis tidak tersedia"}
                         >
+                            {/* Admin Edit Button */}
+                            {isAdmin && (
+                                <div className="absolute top-0 -left-12 z-20">
+                                    <button
+                                        onClick={() => setIsEditing(!isEditing)}
+                                        className={`p-3 rounded-2xl transition-all ${
+                                            isEditing 
+                                                ? 'bg-red-500 text-white shadow-lg shadow-red-500/20' 
+                                                : 'bg-blue-600 text-white hover:bg-blue-700 shadow-lg shadow-blue-500/20'
+                                        }`}
+                                        title={isEditing ? "Batal Edit" : "Edit Kanji (Admin)"}
+                                    >
+                                        {isEditing ? <X className="w-5 h-5" /> : <Edit2 className="w-5 h-5" />}
+                                    </button>
+                                </div>
+                            )}
+
                             <div className="absolute inset-x-0 bottom-0 top-12 bg-blue-600 rounded-[3rem] blur-3xl opacity-10 group-hover:opacity-20 transition-opacity"></div>
-                            <div className={`relative ${cardBg} border-4 ${borderStyle} rounded-[3rem] shadow-2xl p-12 w-[280px] h-[280px] lg:w-[360px] lg:h-[360px] flex items-center justify-center select-none overflow-hidden transition-all duration-300 ${textColor}`}>
+                            <div 
+                                onClick={handleHugeKanjiClick}
+                                className={`relative ${cardBg} border-4 ${borderStyle} rounded-[3rem] shadow-2xl p-12 w-[280px] h-[280px] lg:w-[360px] lg:h-[360px] flex items-center justify-center select-none overflow-hidden transition-all duration-300 ${textColor}`}
+                            >
                                 
                                 {isStrokeAnimating && kanjiSvg ? (
                                     <div className="w-full h-full flex items-center justify-center animate-in fade-in zoom-in duration-300">
@@ -104,19 +190,17 @@ export default function KanjiDetailUI({ kanji, onClose }) {
 
                                 {/* Stroking count badge */}
                                 <div className="absolute bottom-6 right-6 bg-blue-600 text-white text-[10px] font-black px-4 py-2 rounded-full shadow-lg z-10">
-                                    {kanji.strokes || 0} STROKES
+                                    {isEditing ? (
+                                        <input 
+                                            type="number"
+                                            value={editData.strokes}
+                                            onChange={(e) => setEditData({...editData, strokes: parseInt(e.target.value)})}
+                                            className="bg-transparent w-8 text-center outline-none border-b border-white/30"
+                                        />
+                                    ) : (
+                                        kanji.strokes || 0
+                                    )} STROKES
                                 </div>
-
-                                {/* Watermark/Overlay for interactivity */}
-                                {!isStrokeAnimating && kanjiSvg && (
-                                    <div className="absolute inset-0 bg-blue-600/5 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                                        <div className="bg-white/90 dark:bg-black/90 px-4 py-2 rounded-2xl shadow-xl transform translate-y-4 group-hover:translate-y-0 transition-transform">
-                                            <span className="text-[10px] font-black text-blue-600 uppercase tracking-widest">
-                                                Lihat Cara Tulis
-                                            </span>
-                                        </div>
-                                    </div>
-                                )}
                             </div>
                             
                             {kanjiSvg ? (
@@ -125,39 +209,57 @@ export default function KanjiDetailUI({ kanji, onClose }) {
                                         {isStrokeAnimating ? 'Klik untuk kembali ke teks' : 'Klik karakter untuk animasi'}
                                     </span>
                                 </div>
-                            ) : (
-                                <div className="flex flex-col items-center gap-2">
-                                    <span className="text-[10px] font-black uppercase tracking-widest text-blue-500/60">
-                                        Urutan goresan belum tersedia
-                                    </span>
-                                    <button 
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            window.location.reload();
-                                        }}
-                                        className="text-[9px] font-bold text-blue-500 hover:underline"
-                                    >
-                                        Coba Refresh Data
-                                    </button>
-                                </div>
-                            )}
+                            ) : null}
                         </div>
 
                         {/* Title & Core Info */}
                         <div className="flex-1 text-center md:text-left py-4">
                              <div className="inline-flex items-center gap-2 mb-6">
                                 <span className="bg-blue-600 text-white text-xs font-black px-4 py-1.5 rounded-full shadow-lg shadow-blue-500/10">
-                                    JLPT N{kanji.jlpt_level}
+                                    {isEditing ? (
+                                        <select 
+                                            value={editData.jlpt_level}
+                                            onChange={(e) => setEditData({...editData, jlpt_level: parseInt(e.target.value)})}
+                                            className="bg-transparent outline-none cursor-pointer"
+                                        >
+                                            {[1,2,3,4,5].map(l => <option key={l} value={l} className="text-black">JLPT N{l}</option>)}
+                                        </select>
+                                    ) : `JLPT N${kanji.jlpt_level}`}
                                 </span>
                              </div>
                             
-                            <h1 className={`text-4xl md:text-5xl lg:text-7xl font-black mb-4 tracking-tight leading-tight transition-colors ${textColor}`}>
-                                {kanji.meaning}
-                            </h1>
-                            
-                            <p className={`${subTextColor} text-lg font-bold max-w-lg transition-colors`}>
-                                Karakter dasar penting untuk level N{kanji.jlpt_level}. Pelajari cara baca dan penggunaannya di bawah.
-                            </p>
+                            {isEditing ? (
+                                <div className="flex flex-col gap-4">
+                                    <textarea 
+                                        value={editData.meaning}
+                                        onChange={(e) => setEditData({...editData, meaning: e.target.value})}
+                                        className={`w-full text-3xl md:text-4xl lg:text-5xl font-black p-4 rounded-2xl border-2 ${borderStyle} ${cardBg} focus:border-blue-500 outline-none ${textColor}`}
+                                        rows={2}
+                                    />
+                                    <button
+                                        onClick={handleSave}
+                                        disabled={saving}
+                                        className="inline-flex items-center justify-center gap-2 bg-green-600 text-white px-8 py-4 rounded-2xl font-black shadow-lg shadow-green-600/20 hover:bg-green-700 transition-all active:scale-95 disabled:opacity-50"
+                                    >
+                                        {saving ? (
+                                            <span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                                        ) : (
+                                            <Check className="w-6 h-6" />
+                                        )}
+                                        Simpan Perubahan
+                                    </button>
+                                </div>
+                            ) : (
+                                <>
+                                    <h1 className={`text-4xl md:text-5xl lg:text-7xl font-black mb-4 tracking-tight leading-tight transition-colors ${textColor}`}>
+                                        {kanji.meaning}
+                                    </h1>
+                                    
+                                    <p className={`${subTextColor} text-lg font-bold max-w-lg transition-colors`}>
+                                        Karakter dasar penting untuk level N{kanji.jlpt_level}. Pelajari cara baca dan penggunaannya di bawah.
+                                    </p>
+                                </>
+                            )}
                         </div>
                     </div>
                 </div>
