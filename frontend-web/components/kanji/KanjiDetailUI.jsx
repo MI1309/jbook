@@ -1,29 +1,46 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { toHiragana, toKatakana } from 'wanakana';
 import { hasKanji } from '@/lib/utils';
-import { findIdByString, resolveContentId } from '@/lib/api';
+import { resolveContentId } from '@/lib/api';
 import { useTheme } from '@/context/ThemeContext';
-import KanjiStrokeViewer from './KanjiStrokeViewer'; // Pastikan file KanjiStrokeViewer.jsx ada di folder yang sama
+import KanjiStrokeViewer from './KanjiStrokeViewer'; 
 
 export default function KanjiDetailUI({ kanji, onClose }) {
     const router = useRouter();
     const { theme, mounted } = useTheme();
+    const [isStrokeAnimating, setIsStrokeAnimating] = useState(false);
+    const [fetchedSvg, setFetchedSvg] = useState(null);
 
     // Ambil string data SVG dari database backend kamu
-    // GANTI SEMENTARA UNTUK TES FRONTEND:
-const kanjiSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="109" height="109" viewBox="0 0 109 109">
-<g id="kvg:StrokePaths_04e43" style="fill:none;stroke:#000;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;">
-<path id="kvg:04e43-s1" d="M33.25,19.25c2.25,1.25,4.54,1.21,6.75,0.75c13.75-2.88,27.25-5.38,36.25-6.75c5-0.76,6.5,1.5,5.25,5.5C75,39,63.25,69.5,39,87.75"/>
-<path id="kvg:04e43-s2" d="M36.75,37c4.75,1.25,12,13.5,19.25,24.5c8.73,13.25,19.46,24.62,28,29c4.25,2.19,6.75,0.75,6-5"/>
-</g>
-<g id="kvg:StrokeNumbers_04e43" style="font-size:8;fill:#808080">
-<text transform="matrix(1 0 0 1 26.5 19.5)">1</text>
-<text transform="matrix(1 0 0 1 31.5 37.5)">2</text>
-</g>
-</svg>`;
+    const kanjiSvg = fetchedSvg || kanji?.svg_data || kanji?.kanjivg || '';
+
+    // Fallback: Jika data SVG tidak ada, coba ambil langsung dari KanjiVG GitHub
+    useEffect(() => {
+        if (!kanjiSvg && kanji?.character) {
+            const unicodeHex = kanji.character.charCodeAt(0).toString(16).padStart(5, '0');
+            const fallbackUrl = `https://raw.githubusercontent.com/KanjiVG/kanjivg/master/kanji/${unicodeHex}.svg`;
+            
+            console.log(`[jbook-debug] SVG data kosong, mencoba fallback ke: ${fallbackUrl}`);
+            
+            fetch(fallbackUrl)
+                .then(res => {
+                    if (res.ok) return res.text();
+                    throw new Error("Failed to fetch from KanjiVG");
+                })
+                .then(svgText => {
+                    console.log(`[jbook-debug] Berhasil mengambil SVG dari fallback!`);
+                    setFetchedSvg(svgText);
+                })
+                .catch(err => {
+                    console.warn(`[jbook-debug] Fallback gagal:`, err.message);
+                });
+        }
+    }, [kanji?.character, kanjiSvg]);
+
     // Handle klik pada contoh kata (Kotoba)
     const handleExampleClick = async (word) => {
         const id = await resolveContentId('vocab', word);
@@ -37,6 +54,12 @@ const kanjiSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="109" height="10
     // Logger untuk mengecek interaksi klik pada kartu kanji besar
     const handleHugeKanjiClick = () => {
         console.log(`[jbook-debug] Kanji "${kanji?.character}" ditekan! Memicu interaksi.`);
+        console.log(`[jbook-debug] kanjiSvg length: ${kanjiSvg?.length || 0}`);
+        if (kanjiSvg) {
+            setIsStrokeAnimating(prev => !prev);
+        } else {
+            console.warn("[jbook-debug] kanjiSvg is empty, cannot animate.");
+        }
     };
 
     // Tema & Styling Tokit (dari blueprint aslimu)
@@ -56,33 +79,69 @@ const kanjiSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="109" height="10
                     </button>
 
                     <div className="flex flex-col md:flex-row items-center md:items-start gap-12 lg:gap-20">
-                        {/* Huge Character Card */}
+                        {/* Huge Character Card & Stroke Viewer Integrated */}
                         <div 
                             className="relative group flex flex-col items-center gap-4 cursor-pointer"
                             onClick={handleHugeKanjiClick}
+                            title={kanjiSvg ? "Klik untuk melihat urutan goresan" : "Data cara tulis tidak tersedia"}
                         >
                             <div className="absolute inset-x-0 bottom-0 top-12 bg-blue-600 rounded-[3rem] blur-3xl opacity-10 group-hover:opacity-20 transition-opacity"></div>
-                            <div className={`relative ${cardBg} border-4 ${borderStyle} rounded-[3rem] shadow-2xl p-12 w-[240px] h-[240px] lg:w-[320px] lg:h-[320px] flex items-center justify-center select-none overflow-hidden transition-colors duration-300 ${textColor}`}>
-                                <span className="text-[120px] lg:text-[160px] font-serif leading-none group-hover:scale-110 transition-transform duration-500">
-                                    {kanji.character}
-                                </span>
+                            <div className={`relative ${cardBg} border-4 ${borderStyle} rounded-[3rem] shadow-2xl p-12 w-[280px] h-[280px] lg:w-[360px] lg:h-[360px] flex items-center justify-center select-none overflow-hidden transition-all duration-300 ${textColor}`}>
+                                
+                                {isStrokeAnimating && kanjiSvg ? (
+                                    <div className="w-full h-full flex items-center justify-center animate-in fade-in zoom-in duration-300">
+                                        <KanjiStrokeViewer 
+                                            svgContent={kanjiSvg} 
+                                            size={mounted && window.innerWidth < 1024 ? 220 : 280} 
+                                            isAnimating={true} 
+                                        />
+                                    </div>
+                                ) : (
+                                    <span className="text-[140px] lg:text-[180px] font-serif leading-none group-hover:scale-110 transition-transform duration-500">
+                                        {kanji.character}
+                                    </span>
+                                )}
+
                                 {/* Stroking count badge */}
-                                <div className="absolute bottom-6 right-6 bg-blue-600 text-white text-[10px] font-black px-3 py-1.5 rounded-full shadow-lg">
+                                <div className="absolute bottom-6 right-6 bg-blue-600 text-white text-[10px] font-black px-4 py-2 rounded-full shadow-lg z-10">
                                     {kanji.strokes || 0} STROKES
                                 </div>
-                            </div>
-                        </div>
 
-                        {/* ================= VISUALISASI KANJIVG STROKE VIEWER ================= */}
-                        {kanjiSvg && (
-                            <div className="flex flex-col items-center gap-2">
-                                <KanjiStrokeViewer svgContent={kanjiSvg} size={180} />
-                                <span className="text-[10px] font-black uppercase tracking-widest text-blue-600 dark:text-blue-400">
-                                    Urutan Goresan
-                                </span>
+                                {/* Watermark/Overlay for interactivity */}
+                                {!isStrokeAnimating && kanjiSvg && (
+                                    <div className="absolute inset-0 bg-blue-600/5 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                                        <div className="bg-white/90 dark:bg-black/90 px-4 py-2 rounded-2xl shadow-xl transform translate-y-4 group-hover:translate-y-0 transition-transform">
+                                            <span className="text-[10px] font-black text-blue-600 uppercase tracking-widest">
+                                                Lihat Cara Tulis
+                                            </span>
+                                        </div>
+                                    </div>
+                                )}
                             </div>
-                        )}
-                        {/* =========================================================================== */}
+                            
+                            {kanjiSvg ? (
+                                <div className="flex flex-col items-center gap-1">
+                                    <span className="text-[10px] font-black uppercase tracking-widest text-gray-400 group-hover:text-blue-600 transition-colors">
+                                        {isStrokeAnimating ? 'Klik untuk kembali ke teks' : 'Klik karakter untuk animasi'}
+                                    </span>
+                                </div>
+                            ) : (
+                                <div className="flex flex-col items-center gap-2">
+                                    <span className="text-[10px] font-black uppercase tracking-widest text-blue-500/60">
+                                        Urutan goresan belum tersedia
+                                    </span>
+                                    <button 
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            window.location.reload();
+                                        }}
+                                        className="text-[9px] font-bold text-blue-500 hover:underline"
+                                    >
+                                        Coba Refresh Data
+                                    </button>
+                                </div>
+                            )}
+                        </div>
 
                         {/* Title & Core Info */}
                         <div className="flex-1 text-center md:text-left py-4">

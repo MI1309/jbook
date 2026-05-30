@@ -93,7 +93,7 @@ export default function PracticeConfig() {
                         </label>
                         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                             {types.map(t => {
-                                const kakitoriDisabled = mode === 'kakitori' && !['kanji', 'vocab'].includes(t.id);
+                                const kakitoriDisabled = mode === 'kakitori' && !['vocab'].includes(t.id);
                                 const isSelected = selectedTypes.includes(t.id);
                                 return (
                                     <button
@@ -150,8 +150,8 @@ export default function PracticeConfig() {
                             <button
                                 onClick={() => {
                                     setMode('kakitori');
-                                    // Keep only kanji & vocab — disable kana, grammar, particle for kakitori
-                                    const kakitoriAllowed = ['kanji', 'vocab'];
+                                    // Keep only vocab — disable kanji, kana, grammar, particle for kakitori
+                                    const kakitoriAllowed = ['vocab'];
                                     const filtered = selectedTypes.filter(t => kakitoriAllowed.includes(t));
                                     setSelectedTypes(filtered.length > 0 ? filtered : ['vocab']);
                                 }}

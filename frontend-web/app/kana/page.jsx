@@ -6,6 +6,7 @@ import {
     hiraganaGojuon, hiraganaDakuon, hiraganaYoon,
     katakanaGojuon, katakanaDakuon, katakanaYoon
 } from '@/data/kana';
+import KanaStrokeCard from '@/components/kanji/KanaStrokeCard';
 
 export default function KanaPage() {
     const { theme, mounted } = useTheme();
@@ -21,33 +22,14 @@ export default function KanaPage() {
         return (
             <div className={`grid ${cols} gap-2 sm:gap-3 md:gap-4 w-full max-w-4xl mx-auto`}>
                 {data.map((item, index) => (
-                    <div
+                    <KanaStrokeCard 
                         key={index}
-                        className={`
-                            flex flex-col items-center justify-center p-2 sm:p-4 rounded-2xl border transition-all duration-300
-                            ${item.kana
-                                ? isDark
-                                    ? 'bg-[#131317] border-[#212127] hover:border-accent-blue/50 hover:shadow-lg hover:shadow-accent-blue/5 hover:-translate-y-1'
-                                    : 'bg-white shadow-sm hover:shadow-md hover:border-accent-blue/40 border-gray-100 hover:-translate-y-1'
-                                : 'bg-transparent border-transparent'}
-                            min-h-[60px] sm:min-h-[80px] md:min-h-[100px]
-                        `}
-                    >
-                        {item.kana && (
-                            <>
-                                <span className={`text-2xl sm:text-4xl md:text-5xl font-japanese leading-none mb-1 sm:mb-2 transition-colors ${textColor}`}>
-                                    {item.kana}
-                                </span>
-                                <span className={`text-[10px] sm:text-xs font-bold tracking-wider uppercase transition-colors ${
-                                    activeTab === 'hiragana'
-                                        ? 'text-accent-blue'
-                                        : 'text-accent-green'
-                                }`}>
-                                    {item.romaji}
-                                </span>
-                            </>
-                        )}
-                    </div>
+                        char={item.kana}
+                        romaji={item.romaji}
+                        isDark={isDark}
+                        textColor={textColor}
+                        activeTab={activeTab}
+                    />
                 ))}
             </div>
         );
@@ -70,7 +52,7 @@ export default function KanaPage() {
                 </h1>
                 <div className="h-1 w-20 bg-gradient-to-r from-accent-blue to-accent-green rounded-full mx-auto mb-4" />
                 <p className={`text-sm md:text-base max-w-2xl mx-auto transition-colors ${subTextColor}`}>
-                    Tabel referensi lengkap huruf Jepang dasar. Gunakan tombol di bawah untuk menukar tampilan antara Hiragana dan Katakana.
+                    Tabel referensi lengkap huruf Jepang dasar. Klik pada huruf untuk melihat animasi cara tulisnya.
                 </p>
             </div>
 

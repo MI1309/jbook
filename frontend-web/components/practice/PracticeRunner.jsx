@@ -492,7 +492,7 @@ function PracticeContent() {
                             </div>
                         )}
                         {pendingSyncs > 0 && (
-                            <div className="mt-3 bg-brand/10 border border-brand/20 text-brand text-xs px-3 py-2 rounded-lg font-bold">
+                            <div className="mt-3 bg-blue-600/10 border border-blue-600/20 text-blue-600 dark:text-blue-400 text-xs px-3 py-2 rounded-lg font-bold">
                                 ⏳ {pendingSyncs} sesi latihan menunggu sinkronisasi ke server.
                             </div>
                         )}
@@ -664,7 +664,7 @@ function PracticeContent() {
                                 <div className="text-[10px] font-black uppercase tracking-widest text-blue-600 mb-1">Jawaban Yang Benar</div>
                                 <div className={`text-4xl font-japanese font-black ${textColor}`}>{currentQuestion.character}</div>
                                 {currentQuestion.reading && (
-                                    <div className="text-xl text-brand font-black mt-1">{sanitizeReading(currentQuestion.reading)}</div>
+                                    <div className="text-xl text-blue-600 dark:text-blue-400 font-black mt-1">{sanitizeReading(currentQuestion.reading)}</div>
                                 )}
                             </div>
                         )}
@@ -752,7 +752,7 @@ function PracticeContent() {
                         {isAnswered && (currentQuestion.reading || currentQuestion.meaning) && (
                             <div className="mb-6 animate-fade-in-up">
                                 {currentQuestion.reading && hasKanji(currentQuestion.character) && (
-                                    <div className="text-2xl text-brand font-serif font-black mb-1 break-words">{sanitizeReading(currentQuestion.reading)}</div>
+                                    <div className="text-2xl text-blue-600 dark:text-blue-400 font-serif font-black mb-1 break-words">{sanitizeReading(currentQuestion.reading)}</div>
                                 )}
                                 {currentQuestion.meaning && (
                                     <div className={`text-lg font-black italic transition-colors ${textColor}`}>{currentQuestion.meaning}</div>

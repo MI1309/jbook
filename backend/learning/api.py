@@ -65,12 +65,21 @@ class KakitoriLevelSchema(Schema):
     correct: int
     accuracy: float
 
+class KakitoriAttemptDetailSchema(Schema):
+    id: uuid.UUID
+    character: str
+    reading: str
+    answer_given: Optional[str]
+    is_correct: bool
+    timestamp: datetime
+
 class KakitoriStatsSchema(Schema):
     total_attempts: int     # jumlah sesi (submit)
     total_questions: int    # total soal kakitori
     correct: int
     accuracy: float
     level_breakdown: List[KakitoriLevelSchema]
+    recent_details: List[KakitoriAttemptDetailSchema] = [] # ← tambah ini
 
 class AnalyticsSchema(Schema):
     total_attempts: int
@@ -472,12 +481,35 @@ def get_analytics(request):
                 "accuracy": round(correct / total * 100, 1)
             }
 
+    # Fetch recent kakitori details for the new history feature
+    recent_k_attempts = kakitori_qs.order_by('-timestamp')[:50]
+    recent_details = []
+    for att in recent_k_attempts:
+        char = ""
+        reading = ""
+        if att.kanji:
+            char = att.kanji.character
+            reading = att.kanji.onyomi[0] if att.kanji.onyomi else (att.kanji.kunyomi[0] if att.kanji.kunyomi else "")
+        elif att.vocab:
+            char = att.vocab.word
+            reading = att.vocab.reading
+        
+        recent_details.append({
+            "id": att.id,
+            "character": char,
+            "reading": reading,
+            "answer_given": att.answer_given,
+            "is_correct": att.is_correct,
+            "timestamp": att.timestamp
+        })
+
     kakitori_stats = {
         "total_attempts": k_sessions,
         "total_questions": k_total,
         "correct": k_correct,
         "accuracy": round(k_correct / k_total * 100, 1) if k_total > 0 else 0.0,
-        "level_breakdown": sorted(k_level_map.values(), key=lambda x: x['level'], reverse=True)
+        "level_breakdown": sorted(k_level_map.values(), key=lambda x: x['level'], reverse=True),
+        "recent_details": recent_details
     }
 
     return {

@@ -67,6 +67,7 @@ class KanjiSchema(Schema):
     jlpt_level: int
     word_type: Optional[str] = None
     examples: List[dict] = []
+    svg_data: Optional[str] = None
 
 class GrammarSchema(Schema):
     id: UUID

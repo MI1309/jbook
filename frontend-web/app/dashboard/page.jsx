@@ -11,6 +11,8 @@ import KanjiDetailModal from '@/components/kanji/KanjiDetailModal';
 import KotobaDetailModal from '@/components/kotoba/KotobaDetailModal';
 import BunpoDetailModal from '@/components/bunpo/BunpoDetailModal';
 import { toast } from 'react-toastify';
+import { diffStrings } from '@/lib/utils';
+import * as wanakana from 'wanakana';
 
 export default function DashboardPage() {
     const { user, loading } = useAuth();
@@ -246,13 +248,13 @@ export default function DashboardPage() {
             )}
 
             {actionError && (
-                <div className="bg-amber-50 border border-amber-200 text-amber-800 p-4 rounded-lg mb-4 flex items-start gap-3" role="alert">
+                <div className="bg-blue-50 border border-blue-200 text-blue-800 p-4 rounded-lg mb-4 flex items-start gap-3" role="alert">
                     <span className="text-xl">⚠️</span>
                     <div>
                         <div className="font-bold">Terjadi Kendala</div>
                         <div className="text-sm">{actionError}</div>
                     </div>
-                    <button onClick={() => setActionError(null)} className="ml-auto text-amber-500 hover:text-amber-700">&times;</button>
+                    <button onClick={() => setActionError(null)} className="ml-auto text-blue-500 hover:text-blue-700">&times;</button>
                 </div>
             )}
 
@@ -270,16 +272,16 @@ export default function DashboardPage() {
 
                 {/* Overall Accuracy */}
                 <div className={`rounded-2xl border-2 p-6 flex flex-col justify-center items-center transition-colors ${cardBase}`}>
-                    <div className={`w-12 h-12 rounded-2xl flex items-center justify-center mb-4 ${accuracy >= 80 ? 'bg-green-500/10 text-green-500' : accuracy >= 50 ? 'bg-yellow-500/10 text-yellow-500' : 'bg-blue-600/10 text-blue-600'}`}>
+                    <div className={`w-12 h-12 rounded-2xl flex items-center justify-center mb-4 ${accuracy >= 80 ? 'bg-green-500/10 text-green-500' : accuracy >= 50 ? 'bg-blue-500/10 text-blue-500' : 'bg-blue-600/10 text-blue-600'}`}>
                         <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" /></svg>
                     </div>
-                    <div className={`text-4xl font-black mb-1 ${accuracy >= 80 ? 'text-green-500' : accuracy >= 50 ? 'text-yellow-500' : 'text-blue-500'}`}>{accuracy}%</div>
-                    <div className={`text-sm font-black mb-2 ${accuracy === 100 ? 'text-purple-500' : accuracy >= 90 ? 'text-green-500' : accuracy >= 80 ? 'text-blue-500' : accuracy >= 50 ? 'text-yellow-500' : 'text-blue-500'}`}>
+                    <div className={`text-4xl font-black mb-1 ${accuracy >= 80 ? 'text-green-500' : accuracy >= 50 ? 'text-blue-500' : 'text-blue-500'}`}>{accuracy}%</div>
+                    <div className={`text-sm font-black mb-2 ${accuracy === 100 ? 'text-blue-500' : accuracy >= 90 ? 'text-green-500' : accuracy >= 80 ? 'text-blue-500' : accuracy >= 50 ? 'text-blue-500' : 'text-blue-500'}`}>
                         {accuracy === 100 ? 'Sangat Baik' : accuracy >= 90 ? 'Baik Sekali' : accuracy >= 80 ? 'Baik' : accuracy >= 50 ? 'Cukup Baik' : 'Perbaiki Lagi'}
                     </div>
                     <div className={`text-xs font-black uppercase tracking-widest mb-3 transition-colors ${textMuted}`}>Akurasi</div>
                     <div className={`w-full rounded-full h-2 ${tc('bg-gray-800', 'bg-gray-100')}`}>
-                        <div className={`h-2 rounded-full transition-all duration-700 ${accuracy >= 80 ? 'bg-green-500' : accuracy >= 50 ? 'bg-yellow-500' : 'bg-blue-500'}`} style={{ width: `${Math.min(Math.max(accuracy, 0), 100)}%` }} />
+                        <div className={`h-2 rounded-full transition-all duration-700 ${accuracy >= 80 ? 'bg-green-500' : accuracy >= 50 ? 'bg-blue-500' : 'bg-blue-500'}`} style={{ width: `${Math.min(Math.max(accuracy, 0), 100)}%` }} />
                     </div>
                 </div>
 
@@ -359,14 +361,14 @@ export default function DashboardPage() {
             {hasKakitoriData ? (
                 <div className="mb-10 animate-in fade-in slide-in-from-bottom-4 duration-700">
                     <h2 className={`text-xl font-black mb-4 flex items-center gap-2 transition-colors ${textPrimary}`}>
-                        <span className="bg-purple-600 text-white p-1.5 rounded-xl shadow-sm shadow-purple-500/20">
+                        <span className="bg-blue-600 text-white p-1.5 rounded-xl shadow-sm shadow-blue-500/20">
                             <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15.536a5 5 0 001.414 1.414m0 0a9 9 0 01-1.414-1.414m11.314-11.314a9 9 0 00-12.728 0" />
                             </svg>
                         </span>
                         Analisis Kakitori (Latihan Dikte)
                         {!user && (
-                            <span className={`text-[10px] font-black px-2 py-0.5 rounded-full ml-2 ${tc('bg-purple-900/40 text-purple-400', 'bg-purple-100 text-purple-700')}`}>
+                            <span className={`text-[10px] font-black px-2 py-0.5 rounded-full ml-2 ${tc('bg-blue-900/40 text-blue-400', 'bg-blue-100 text-blue-700')}`}>
                                 Mode Tamu
                             </span>
                         )}
@@ -374,14 +376,14 @@ export default function DashboardPage() {
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         {/* Card 1: Statistik Umum */}
-                        <div className={`rounded-2xl border-2 p-6 transition-colors ${tc('bg-[#0a0a0a] border-purple-900/20', 'bg-white border-gray-100')}`}>
+                        <div className={`rounded-2xl border-2 p-6 transition-colors ${tc('bg-[#0a0a0a] border-blue-900/20', 'bg-white border-gray-100')}`}>
                             <div className="flex items-center gap-3 mb-4">
-                                <div className="w-10 h-10 rounded-xl bg-purple-600/10 flex items-center justify-center">
+                                <div className="w-10 h-10 rounded-xl bg-blue-600/10 flex items-center justify-center">
                                     <span className="text-xl">🎧</span>
                                 </div>
                                 <div>
                                     <div className={`font-black text-sm transition-colors ${textPrimary}`}>Total Latihan Dikte</div>
-                                    <div className="text-2xl font-black text-purple-600">
+                                    <div className="text-2xl font-black text-blue-600">
                                         {kakitoriStats.total_attempts || 0} sesi
                                     </div>
                                 </div>
@@ -395,7 +397,7 @@ export default function DashboardPage() {
                                 </div>
                                 <div>
                                     <div className={`text-[10px] font-black uppercase tracking-widest transition-colors ${textMuted}`}>Akurasi</div>
-                                    <div className={`text-2xl font-black ${(kakitoriStats.accuracy || 0) >= 70 ? 'text-green-500' : (kakitoriStats.accuracy || 0) >= 40 ? 'text-yellow-500' : 'text-purple-500'}`}>
+                                    <div className={`text-2xl font-black ${(kakitoriStats.accuracy || 0) >= 70 ? 'text-green-500' : (kakitoriStats.accuracy || 0) >= 40 ? 'text-blue-500' : 'text-blue-500'}`}>
                                         {Math.round(kakitoriStats.accuracy || 0)}%
                                     </div>
                                 </div>
@@ -403,7 +405,7 @@ export default function DashboardPage() {
                             {/* Progress bar akurasi kakitori */}
                             <div className={`w-full rounded-full h-2 mt-4 ${tc('bg-gray-800', 'bg-gray-100')}`}>
                                 <div
-                                    className={`h-2 rounded-full transition-all duration-700 ${(kakitoriStats.accuracy || 0) >= 70 ? 'bg-green-500' : (kakitoriStats.accuracy || 0) >= 40 ? 'bg-yellow-500' : 'bg-purple-500'}`}
+                                    className={`h-2 rounded-full transition-all duration-700 ${(kakitoriStats.accuracy || 0) >= 70 ? 'bg-green-500' : (kakitoriStats.accuracy || 0) >= 40 ? 'bg-blue-500' : 'bg-blue-500'}`}
                                     style={{ width: `${Math.min(kakitoriStats.accuracy || 0, 100)}%` }}
                                 />
                             </div>
@@ -413,28 +415,28 @@ export default function DashboardPage() {
                         </div>
 
                         {/* Card 2: Tips Kakitori */}
-                        <div className={`rounded-2xl border-2 p-6 transition-colors ${tc('bg-[#0a0a0a] border-purple-900/20', 'bg-white border-gray-100')}`}>
+                        <div className={`rounded-2xl border-2 p-6 transition-colors ${tc('bg-[#0a0a0a] border-blue-900/20', 'bg-white border-gray-100')}`}>
                             <div className="flex items-center gap-3 mb-4">
-                                <div className="w-10 h-10 rounded-xl bg-purple-600/10 flex items-center justify-center">
+                                <div className="w-10 h-10 rounded-xl bg-blue-600/10 flex items-center justify-center">
                                     <span className="text-xl">💡</span>
                                 </div>
                                 <div className={`font-black transition-colors ${textPrimary}`}>Tips Meningkatkan Dikte</div>
                             </div>
                             <ul className="space-y-2 text-sm">
                                 <li className="flex items-start gap-2">
-                                    <span className="text-purple-500 mt-0.5">•</span>
+                                    <span className="text-blue-500 mt-0.5">•</span>
                                     <span className={`transition-colors ${textSecondary}`}>Dengarkan audio beberapa kali sebelum menjawab</span>
                                 </li>
                                 <li className="flex items-start gap-2">
-                                    <span className="text-purple-500 mt-0.5">•</span>
+                                    <span className="text-blue-500 mt-0.5">•</span>
                                     <span className={`transition-colors ${textSecondary}`}>Perhatikan panjang pendek bunyi (つ vs っ, う vs お)</span>
                                 </li>
                                 <li className="flex items-start gap-2">
-                                    <span className="text-purple-500 mt-0.5">•</span>
+                                    <span className="text-blue-500 mt-0.5">•</span>
                                     <span className={`transition-colors ${textSecondary}`}>Latihan menulis sambil mendengar memperkuat memori</span>
                                 </li>
                                 <li className="flex items-start gap-2">
-                                    <span className="text-purple-500 mt-0.5">•</span>
+                                    <span className="text-blue-500 mt-0.5">•</span>
                                     <span className={`transition-colors ${textSecondary}`}>Ulangi sesi dengan level lebih rendah jika akurasi di bawah 50%</span>
                                 </li>
                             </ul>
@@ -443,7 +445,7 @@ export default function DashboardPage() {
 
                     {/* Card 3: Detail per Level (jika ada data breakdown) */}
                     {kakitoriStats.level_breakdown && kakitoriStats.level_breakdown.length > 0 && (
-                        <div className={`mt-6 rounded-2xl border-2 p-6 transition-colors ${tc('bg-[#0a0a0a] border-purple-900/20', 'bg-white border-gray-100')}`}>
+                        <div className={`mt-6 rounded-2xl border-2 p-6 transition-colors ${tc('bg-[#0a0a0a] border-blue-900/20', 'bg-white border-gray-100')}`}>
                             <h3 className={`font-black text-sm mb-4 flex items-center gap-2 transition-colors ${tc('text-gray-300', 'text-gray-700')}`}>
                                 <span>📊</span> Akurasi Dikte per Level
                             </h3>
@@ -454,13 +456,13 @@ export default function DashboardPage() {
                                             <span className={`font-black transition-colors ${textSecondary}`}>
                                                 JLPT N{level.level}
                                             </span>
-                                            <span className={`font-black ${level.accuracy >= 70 ? 'text-green-500' : level.accuracy >= 40 ? 'text-yellow-500' : 'text-purple-500'}`}>
+                                            <span className={`font-black ${level.accuracy >= 70 ? 'text-green-500' : level.accuracy >= 40 ? 'text-blue-500' : 'text-blue-500'}`}>
                                                 {Math.round(level.accuracy)}% ({level.correct}/{level.total})
                                             </span>
                                         </div>
                                         <div className={`w-full rounded-full h-2 ${tc('bg-gray-800', 'bg-gray-100')}`}>
                                             <div
-                                                className={`h-2 rounded-full transition-all duration-700 ${level.accuracy >= 70 ? 'bg-green-500' : level.accuracy >= 40 ? 'bg-yellow-500' : 'bg-purple-500'}`}
+                                                className={`h-2 rounded-full transition-all duration-700 ${level.accuracy >= 70 ? 'bg-green-500' : level.accuracy >= 40 ? 'bg-blue-500' : 'bg-blue-500'}`}
                                                 style={{ width: `${level.accuracy}%` }}
                                             />
                                         </div>
@@ -469,12 +471,75 @@ export default function DashboardPage() {
                             </div>
                         </div>
                     )}
+
+                    {/* New Section: Recent Kakitori Detailed History */}
+                    {kakitoriStats.recent_details && kakitoriStats.recent_details.length > 0 && (
+                        <div className={`mt-6 rounded-2xl border-2 p-6 transition-colors ${tc('bg-[#0a0a0a] border-blue-900/20', 'bg-white border-gray-100')}`}>
+                            <h3 className={`font-black text-sm mb-4 flex items-center gap-2 transition-colors ${tc('text-gray-300', 'text-gray-700')}`}>
+                                <span>📜</span> Histori Kesalahan Karakter (Kakitori)
+                            </h3>
+                            <div className="space-y-4">
+                                {kakitoriStats.recent_details.filter(d => !d.is_correct).slice(0, 10).map((detail, idx) => {
+                                    const correctReading = wanakana.toHiragana(detail.reading || '');
+                                    const userReading = wanakana.toHiragana(detail.answer_given || '');
+                                    const diffs = diffStrings(correctReading, userReading);
+
+                                    return (
+                                        <div key={idx} className={`p-4 rounded-xl border ${tc('bg-black/20 border-white/5', 'bg-gray-50 border-gray-100')}`}>
+                                            <div className="flex justify-between items-start mb-2">
+                                                <div className="flex items-center gap-2">
+                                                    <span className={`text-xl font-black ${textPrimary}`}>{detail.character}</span>
+                                                    <span className={`text-[10px] font-black px-2 py-0.5 rounded-full ${tc('bg-blue-900/40 text-blue-400', 'bg-blue-100 text-blue-600')}`}>
+                                                        {new Date(detail.timestamp).toLocaleDateString('id-ID', { day: 'numeric', month: 'short' })}
+                                                    </span>
+                                                </div>
+                                                <div className="text-[10px] font-black text-red-500 uppercase tracking-widest">
+                                                    Salah
+                                                </div>
+                                            </div>
+                                            
+                                            <div className="flex flex-col gap-2">
+                                                <div className="flex items-center gap-2 flex-wrap">
+                                                    <span className={`text-[10px] font-black uppercase tracking-widest ${textMuted}`}>Analisis:</span>
+                                                    <div className="flex items-center gap-0.5 text-lg font-japanese tracking-tighter">
+                                                        {diffs.map((d, dIdx) => (
+                                                            <span 
+                                                                key={dIdx} 
+                                                                className={`px-0.5 rounded ${
+                                                                    d.status === 'correct' ? 'text-green-500' : 
+                                                                    d.status === 'wrong' ? 'bg-red-500/20 text-red-600 border-b-2 border-red-500' :
+                                                                    d.status === 'missing' ? 'bg-blue-500/10 text-blue-400 border-b-2 border-dashed border-blue-400' :
+                                                                    'bg-orange-500/20 text-orange-600'
+                                                                }`}
+                                                                title={d.status === 'wrong' ? `Harusnya: ${d.char}, Kamu tulis: ${d.userChar}` : ''}
+                                                            >
+                                                                {d.char || d.userChar}
+                                                            </span>
+                                                        ))}
+                                                    </div>
+                                                </div>
+                                                <div className="text-[10px] transition-colors flex gap-2">
+                                                    <span className={textMuted}>Jawaban kamu:</span>
+                                                    <span className="font-bold text-red-500">{detail.answer_given || '(kosong)'}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    );
+                                })}
+                                {kakitoriStats.recent_details.filter(d => !d.is_correct).length === 0 && (
+                                    <div className={`text-center py-4 text-xs font-bold ${textMuted}`}>
+                                        Belum ada kesalahan detail yang tercatat.
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                    )}
                 </div>
             ) : (
                 /* Jika belum ada data kakitori: tampilkan CTA kakitori */
-                <div className={`mb-10 rounded-2xl border-2 p-8 flex flex-col md:flex-row items-center justify-between gap-6 transition-colors ${tc('bg-[#0a0a0a] border-purple-900/20', 'bg-white border-gray-100')}`}>
+                <div className={`mb-10 rounded-2xl border-2 p-8 flex flex-col md:flex-row items-center justify-between gap-6 transition-colors ${tc('bg-[#0a0a0a] border-blue-900/20', 'bg-white border-gray-100')}`}>
                     <div className="flex items-center gap-4">
-                        <div className="w-14 h-14 bg-purple-600/10 rounded-2xl flex items-center justify-center text-2xl flex-shrink-0">🎧</div>
+                        <div className="w-14 h-14 bg-blue-600/10 rounded-2xl flex items-center justify-center text-2xl flex-shrink-0">🎧</div>
                         <div>
                             <h3 className={`font-black text-lg transition-colors ${textPrimary}`}>Belum Ada Data Kakitori</h3>
                             <p className={`text-sm transition-colors ${textSecondary}`}>
@@ -484,7 +549,7 @@ export default function DashboardPage() {
                     </div>
                     <Link
                         href="/practice?mode=kakitori"
-                        className="flex-shrink-0 bg-purple-600 text-white px-6 py-3 rounded-2xl font-black text-sm hover:bg-purple-700 hover:scale-[1.03] transition-all shadow-lg shadow-purple-500/20"
+                        className="flex-shrink-0 bg-blue-600 text-white px-6 py-3 rounded-2xl font-black text-sm hover:bg-blue-700 hover:scale-[1.03] transition-all shadow-lg shadow-blue-500/20"
                     >
                         Coba Kakitori →
                     </Link>
@@ -652,8 +717,8 @@ export default function DashboardPage() {
 
                         {/* Insight Kakitori jika ada data */}
                         {hasKakitoriData && (
-                            <div className={`p-6 rounded-[2rem] border-2 shadow-sm transition-all hover:shadow-md group sm:col-span-2 ${tc('bg-[#0a0a0a]/60 border-purple-900/20', 'bg-white border-purple-100')}`}>
-                                <div className="w-12 h-12 rounded-2xl bg-purple-100 dark:bg-purple-950/30 flex items-center justify-center text-purple-600 mb-4 group-hover:scale-110 transition-transform">
+                            <div className={`p-6 rounded-[2rem] border-2 shadow-sm transition-all hover:shadow-md group sm:col-span-2 ${tc('bg-[#0a0a0a]/60 border-blue-900/20', 'bg-white border-blue-100')}`}>
+                                <div className="w-12 h-12 rounded-2xl bg-blue-100 dark:bg-blue-950/30 flex items-center justify-center text-blue-600 mb-4 group-hover:scale-110 transition-transform">
                                     <span className="text-xl">🎧</span>
                                 </div>
                                 <h3 className={`font-black text-lg mb-2 transition-colors ${textPrimary}`}>
@@ -700,7 +765,7 @@ export default function DashboardPage() {
                             )}
                             {hasKakitoriData && (kakitoriStats.accuracy || 0) < 60 && (
                                 <li className="flex items-start gap-4">
-                                    <div className="w-2 h-2 rounded-full bg-purple-500 mt-2 shrink-0" />
+                                    <div className="w-2 h-2 rounded-full bg-blue-500 mt-2 shrink-0" />
                                     <p className={`text-sm italic transition-colors ${textSecondary}`}>"Untuk Kakitori, coba putar audio minimal 2–3 kali sambil memvisualisasikan tulisan kana-nya di kepala."</p>
                                 </li>
                             )}
@@ -731,7 +796,7 @@ export default function DashboardPage() {
                         {/* CTA Kakitori di sidebar */}
                         <button
                             onClick={() => router.push('/practice?mode=kakitori')}
-                            className="w-full p-6 rounded-[2rem] bg-gradient-to-br from-purple-600 to-purple-500 text-white text-left shadow-lg shadow-purple-600/20 hover:scale-[1.02] transition-all group overflow-hidden relative"
+                            className="w-full p-6 rounded-[2rem] bg-gradient-to-br from-blue-600 to-sky-500 text-white text-left shadow-lg shadow-blue-600/20 hover:scale-[1.02] transition-all group overflow-hidden relative"
                         >
                             <div className="relative z-10">
                                 <span className="text-[10px] font-black uppercase tracking-widest opacity-80">Latihan Dikte</span>

@@ -15,7 +15,8 @@ const defaultData = () => ({
         total_questions: 0,  // total soal kakitori yang dijawab
         correct: 0,          // total jawaban benar kakitori
         accuracy: 0,         // persentase akurasi kakitori
-        level_breakdown: []  // akurasi per level JLPT
+        level_breakdown: [], // akurasi per level JLPT
+        recent_details: []   // histori detail (kakitori)
     }
 });
 
@@ -144,6 +145,18 @@ export function saveGuestResults(newResults) {
 
             ks.level_breakdown = Array.from(lvlMap.values())
                 .sort((a, b) => b.level - a.level);
+
+            // Update recent_details
+            const newDetails = kakitoriResults.map(r => ({
+                id: r.question_id,
+                character: r.character,
+                reading: r.correct_answer?.split(' ')[0] || r.character, // Simple extraction
+                answer_given: r.answer_given,
+                is_correct: r.is_correct,
+                timestamp: new Date().toISOString()
+            }));
+
+            ks.recent_details = [...newDetails, ...(ks.recent_details || [])].slice(0, 50);
 
             current.kakitori_stats = ks;
         }

@@ -150,6 +150,7 @@ class KanjiCreateSchema(BaseModel):
     radical: Optional[str] = None
     word_type: Optional[str] = None
     examples: List[dict] = []
+    svg_data: Optional[str] = None
 
 class KanjiSchema(KanjiCreateSchema):
     id: UUID

@@ -6,8 +6,8 @@
   --foreground: #1c1c1f;
   --card-bg: #ffffff;
   --border-color: #e5e5db;
-  --brand-red: #c92a2a; /* Soft Crimson */
-  --brand-red-light: #fff5f5;
+  --brand-red: #0f4c81; /* Blue instead of Crimson */
+  --brand-red-light: #f0f7ff;
   --accent-blue: #0f4c81; /* Indigo Sea Blue */
   --accent-green: #2d5a27; /* Bamboo Green */
   --accent-gold: #c69214; /* Tatami Gold */
@@ -18,8 +18,8 @@
   --foreground: #f2f2f7;
   --card-bg: #131317; /* Cozy Washi Card */
   --border-color: #212127; /* Thin Washi divider */
-  --brand-red: #f43f5e; /* Sakura Soft Red */
-  --brand-red-light: #200d11;
+  --brand-red: #38bdf8; /* Blue instead of Sakura Red */
+  --brand-red-light: #0d1a2b;
   --accent-blue: #38bdf8; /* Serene Sea Blue */
   --accent-green: #34d399; /* Calm Bamboo Green */
   --accent-gold: #fbbf24; /* Warm Glow Gold */
