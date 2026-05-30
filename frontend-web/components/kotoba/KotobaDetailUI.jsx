@@ -143,6 +143,12 @@ export default function KotobaDetailUI({ vocab: initialVocab, onClose }) {
     };
 
     const handleSave = async () => {
+        // Safeguard: Prevent saving error messages or extremely long HTML-like strings
+        if (editData.meaning.includes('Error 500') || editData.meaning.includes('<!DOCTYPE html>')) {
+            toast.error('Format arti tidak valid. Harap periksa kembali.');
+            return;
+        }
+
         setSaving(true);
         try {
             const baseUrl = (process.env.NEXT_PUBLIC_API_URL || 'https://imronm.pythonanywhere.com/api')

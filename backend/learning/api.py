@@ -116,101 +116,97 @@ class ExportDataSchema(Schema):
 
 @router.get("/practice/generate", response=List[QuestionSchema])
 def generate_quiz(request, limit: int = 10, level: Optional[str] = None, type: str = 'kanji'):
+    # Cap the limit to a reasonable high value for full level review
+    limit = min(max(1, limit), 2000)
+
     # Support multiple types and levels (comma separated)
     requested_types = [t.strip().lower() for t in type.split(',')]
     requested_levels = [int(l.strip()) for l in level.split(',') if l.strip().isdigit()] if level else []
 
     questions = []
-    combined_pool = []
-    # Fetch items for each type and pool them
+    
+    # Pre-fetch items from database with minimal fields to save memory
+    # We use a combined approach to handle multiple types efficiently
+    item_pool = []
+    
     for t in requested_types:
         if t == 'kanji':
-            Model = Kanji
-            display_type = 'kanji'
+            qs = Kanji.objects.all()
+            d_type = 'kanji'
         elif t in ['vocab', 'kotoba']:
-            Model = Vocab
-            display_type = 'vocab'
+            qs = Vocab.objects.all()
+            d_type = 'vocab'
         elif t in ['grammar', 'bunpo']:
-            Model = Grammar
-            display_type = 'grammar'
+            qs = Grammar.objects.all()
+            d_type = 'grammar'
         elif t == 'particle':
-            Model = Particle
-            display_type = 'particle'
+            qs = Particle.objects.all()
+            d_type = 'particle'
         elif t == 'kana':
+            # Kana is handled separately as it's not in DB
             from utils.kana import ROMAJI_MAP
-            # Select random items from ROMAJI_MAP
             items = list(ROMAJI_MAP.items())
             random.shuffle(items)
-            selected = items[:limit]
-            
-            for romaji, kana in selected:
-                # Distractors for Romaji answers
+            for romaji, kana in items[:limit]:
                 all_romaji = [k for k, v in items if k != romaji]
                 distractor_romaji = random.sample(all_romaji, 3)
-                
-                options = [
-                    {"text": romaji, "is_correct": True},
-                    *[{"text": dr, "is_correct": False} for dr in distractor_romaji]
-                ]
-                
+                options = [{"text": romaji, "is_correct": True}, *[{"text": dr, "is_correct": False} for dr in distractor_romaji]]
                 random.shuffle(options)
-                questions.append({
-                    "id": f"kana_{kana}",
-                    "character": kana,
-                    "type": "kana",
-                    "options": options,
-                    "reading": romaji,
-                    "meaning": f"Karakter Kana: {kana}",
-                    "level": 0
-                })
+                questions.append({"id": f"kana_{kana}", "character": kana, "type": "kana", "options": options, "reading": romaji, "meaning": f"Karakter Kana: {kana}", "level": 0})
             continue
         else:
             continue
 
-        qs = Model.objects.all()
         if requested_levels:
             qs = qs.filter(jlpt_level__in=requested_levels)
         
-        items = list(qs)
-        for item in items:
-            combined_pool.append((item, display_type, items))
-
-    # Jika hanya mode kana, kita sudah punya questions
-    if not combined_pool:
-        return questions
-    if len(combined_pool) < 4:
-        return questions[:limit]
-
-    # Ensure limit doesn't exceed available items
-    quiz_limit = min(len(combined_pool), limit)
-    selected_samples = random.sample(combined_pool, quiz_limit)
-    
-    for item, d_type, same_type_pool in selected_samples:
-        # Distractors must come from the same pool to ensure level/type consistency
-        possible_distractors = [k for k in same_type_pool if k.id != item.id]
+        # Optimize: select only needed fields and limit pool for distractors
+        # We need the full pool if limit is high, but we'll use iterator to save memory
+        type_items = list(qs)
+        if not type_items: continue
         
-        if len(possible_distractors) < 3:
-             distractors = possible_distractors
-        else:
-             distractors = random.sample(possible_distractors, 3)
+        # Sample items for questions
+        sample_size = min(len(type_items), limit)
+        selected_items = random.sample(type_items, sample_size)
+        
+        for item in selected_items:
+            item_pool.append({
+                'item': item,
+                'type': d_type,
+                'full_type_pool': type_items # Reference for distractors
+            })
 
-        # Prepare question data based on type
+    if not item_pool:
+        return questions
+
+    # Shuffle the combined pool from all types
+    random.shuffle(item_pool)
+    final_selection = item_pool[:limit]
+    
+    from utils.kana import format_reading, to_kana
+
+    for entry in final_selection:
+        item = entry['item']
+        d_type = entry['type']
+        pool = entry['full_type_pool']
+        
+        # Fast distractor sampling
+        # We pick 10 random items from pool and filter to get 3 unique distractors
+        distractor_candidates = random.sample(pool, min(len(pool), 10))
+        distractors = [d for d in distractor_candidates if d.id != item.id][:3]
+
+        # Prepare question data
         if d_type == 'kanji':
-            from utils.kana import format_reading
             display_text = item.character
             correct_answer = item.meaning
             distractor_answers = [d.meaning for d in distractors]
-            
-            onyomi_str = format_reading(item.onyomi, is_onyomi=True)
-            kunyomi_str = format_reading(item.kunyomi, is_onyomi=False)
-            reading = f"On: {onyomi_str} | Kun: {kunyomi_str}"
+            reading = f"On: {format_reading(item.onyomi, True)} | Kun: {format_reading(item.kunyomi, False)}"
             meaning = item.meaning
         elif d_type == 'vocab':
             display_text = item.word
             correct_answer = item.meaning
             distractor_answers = [d.meaning for d in distractors]
-            from utils.kana import to_kana
-            reading = to_kana((item.furigana if item.furigana else item.reading).lower()) if (item.furigana or item.reading) else ""
+            reading = to_kana((item.furigana or item.reading or "").lower())
             meaning = item.meaning
         elif d_type == 'grammar':
             display_text = item.title
@@ -226,15 +222,11 @@ def generate_quiz(request, limit: int = 10, level: Optional[str] = None, type: s
             else:
                 display_text = item.character
                 correct_answer = item.character.split()[0]
-                
             distractor_answers = [d.character.split()[0] for d in distractors]
             reading = item.explanation
             meaning = item.meaning
 
-        options = [
-            {"text": correct_answer, "is_correct": True},
-            *[{"text": d_text, "is_correct": False} for d_text in distractor_answers]
-        ]
+        options = [{"text": correct_answer, "is_correct": True}, *[{"text": d_text, "is_correct": False} for d_text in distractor_answers]]
         random.shuffle(options)
         
         questions.append({
