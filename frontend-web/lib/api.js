@@ -215,7 +215,7 @@ export async function getKanjiList({ level, search, radical, limit = 50, page = 
         console.info(`[jbook-api] Online: Mencoba mengambil Kanji dari API...`);
         try {
             const data = await fetchWithCache(cacheKey, async () => {
-                const res = await fetch(`${API_URL}/content/kanji?${queryParams.toString()}`);
+                const res = await fetch(`${API_URL}/content/kanji?${queryParams.toString()}`, { cache: 'no-store' });
                 return handleResponse(res, 'getKanjiList');
             });
 
@@ -306,7 +306,7 @@ export async function getGrammarList({ level, search, chapter, limit = 50, page 
     if (typeof window === 'undefined' || (typeof navigator !== 'undefined' && navigator.onLine)) {
         try {
             return await fetchWithCache(cacheKey, async () => {
-                const res = await fetch(`${API_URL}/content/grammar?${queryParams.toString()}`);
+                const res = await fetch(`${API_URL}/content/grammar?${queryParams.toString()}`, { cache: 'no-store' });
                 const data = await handleResponse(res, 'getGrammarList');
                 if (Array.isArray(data)) return { items: data, total: data.length, pages: 1, page: 1 };
                 return data;
@@ -578,7 +578,7 @@ export async function getVocabList({ level, search, word_type, limit = 50, page 
     if (typeof window === 'undefined' || (typeof navigator !== 'undefined' && navigator.onLine)) {
         try {
             return await fetchWithCache(cacheKey, async () => {
-                const res = await fetch(`${API_URL}/content/vocab?${queryParams.toString()}`);
+                const res = await fetch(`${API_URL}/content/vocab?${queryParams.toString()}`, { cache: 'no-store' });
                 const data = await handleResponse(res, 'getVocabList');
                 if (Array.isArray(data)) return { items: data, total: data.length, pages: 1, page: 1 };
                 return data;
