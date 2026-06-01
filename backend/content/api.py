@@ -165,14 +165,16 @@ def list_kanji(request,
         
     if search:
         # Search in character, meaning, onyomi, kunyomi
-        # For JSON fields (onyomi, kunyomi), we can use contains if it's a list of strings
-        # or just reliable text search on character and meaning
         from django.db.models import Q
+        from utils.kana import to_romaji
+        search_romaji = to_romaji(search)
         qs = qs.filter(
             Q(character__icontains=search) | 
             Q(meaning__icontains=search) |
             Q(onyomi__icontains=search) |  # Simple text matching in JSON array string representation
-            Q(kunyomi__icontains=search)
+            Q(kunyomi__icontains=search) |
+            Q(onyomi__icontains=search_romaji) |
+            Q(kunyomi__icontains=search_romaji)
         )
         
     # Order by level and strokes for consistency
@@ -362,13 +364,16 @@ def list_vocab(request,
         qs = qs.filter(word_type=word_type)
 
     if search:
+        from utils.kana import to_kana, to_romaji
         search_kana = to_kana(search)
+        search_romaji = to_romaji(search)
         qs = qs.filter(
             Q(word__icontains=search) | 
             Q(reading__icontains=search) | 
             Q(meaning__icontains=search) |
-            Q(word__icontains=search_kana) | # If word is simple kana
-            Q(reading__icontains=search_kana) # Determine if input was romaji, searching in kana reading
+            Q(word__icontains=search_kana) | 
+            Q(reading__icontains=search_kana) |
+            Q(reading__icontains=search_romaji)
         )
         
     total = qs.count()

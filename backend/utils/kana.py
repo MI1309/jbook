@@ -105,3 +105,60 @@ def format_reading(reading_list: list, is_onyomi: bool = True) -> str:
     else:
         # Convert romaji (usually lowercase) to Hiragana
         return ", ".join([to_kana(r.lower()) for r in reading_list])
+
+# Reverse map for Hiragana to Romaji conversion
+KANA_TO_ROMAJI = {}
+for romaji, kana in ROMAJI_MAP.items():
+    if kana not in KANA_TO_ROMAJI or len(romaji) < len(KANA_TO_ROMAJI[kana]):
+        KANA_TO_ROMAJI[kana] = romaji
+
+# Sort keys by length descending to match compound kana first
+KANA_KEYS_SORTED = sorted(KANA_TO_ROMAJI.keys(), key=len, reverse=True)
+
+def to_romaji(text: str) -> str:
+    if not text:
+        return ""
+    
+    # First, convert Katakana to Hiragana to make it uniform
+    hiragana_text = ""
+    for char in text:
+        code = ord(char)
+        if 0x30A1 <= code <= 0x30F6: # Katakana range
+            hiragana_text += chr(code - 0x60)
+        else:
+            hiragana_text += char
+            
+    res = ""
+    i = 0
+    n = len(hiragana_text)
+    
+    while i < n:
+        # Handle sokuon (small tsu: っ) -> doubles the next consonant
+        if hiragana_text[i] == 'っ' and i + 1 < n:
+            next_kana = None
+            for k in KANA_KEYS_SORTED:
+                if hiragana_text[i+1:].startswith(k):
+                    next_kana = k
+                    break
+            if next_kana:
+                next_romaji = KANA_TO_ROMAJI[next_kana]
+                res += next_romaji[0] # add the first letter (consonant)
+                i += 1
+                continue
+            else:
+                res += "t"
+                i += 1
+                continue
+                
+        matched = False
+        for k in KANA_KEYS_SORTED:
+            if hiragana_text[i:].startswith(k):
+                res += KANA_TO_ROMAJI[k]
+                i += len(k)
+                matched = True
+                break
+        if not matched:
+            res += hiragana_text[i]
+            i += 1
+            
+    return res
