@@ -19,8 +19,12 @@ const levelStyles = {
 import { getScriptTypes } from '@/lib/utils';
 
 function HighlightText({ text, query, active = true }) {
-    if (!query || !active) return <span>{text}</span>;
-    const parts = text.split(new RegExp(`(${query})`, 'gi'));
+    if (text === null || text === undefined) return null;
+    const textStr = String(text);
+    if (!query || !active) return <span>{textStr}</span>;
+    // Escape special regex characters in query to prevent crash
+    const escapedQuery = query.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+    const parts = textStr.split(new RegExp(`(${escapedQuery})`, 'gi'));
     return (
         <span>
             {parts.map((part, i) =>

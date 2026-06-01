@@ -52,6 +52,18 @@ class UpdateKanjiSchema(Schema):
     strokes: Optional[int] = None
     jlpt_level: Optional[int] = None
 
+class KanjiSchema(Schema):
+    id: UUID
+    character: str
+    meaning: str
+    onyomi: List[str]
+    kunyomi: List[str]
+    strokes: int
+    jlpt_level: int
+    word_type: Optional[str] = None
+    examples: List[dict] = []
+    svg_data: Optional[str] = None
+
 @router.put("/vocab/{vocab_id}", response=VocabSchema, auth=AuthBearer())
 def update_vocab(request, vocab_id: UUID, data: UpdateVocabSchema):
     vocab = get_object_or_404(Vocab, id=vocab_id)
@@ -114,18 +126,6 @@ class BlogSchema(Schema):
     is_published: bool
     created_at: datetime
     updated_at: datetime
-
-class KanjiSchema(Schema):
-    id: UUID
-    character: str
-    meaning: str
-    onyomi: List[str]
-    kunyomi: List[str]
-    strokes: int
-    jlpt_level: int
-    word_type: Optional[str] = None
-    examples: List[dict] = []
-    svg_data: Optional[str] = None
 
 class GrammarSchema(Schema):
     id: UUID
