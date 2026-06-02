@@ -1,0 +1,431 @@
+[
+  {
+    "book": 2, "chapter": 26, "question_type": "doukai", "jlpt_level": 4,
+    "question_jp": "頭が痛いんですが、早く帰ってもいいですか。",
+    "shown_translation": "Karena kepala saya sakit, bolehkah saya pulang cepat?",
+    "is_translation_correct": true,
+    "correct_answer": "Benar",
+    "options": ["Benar", "Salah"],
+    "explanation": "「〜んですが」digunakan sebagai pengantar alasan (kepala sakit) untuk meminta izin pulang."
+  },
+  {
+    "book": 2, "chapter": 26, "question_type": "fill_blank", "jlpt_level": 4,
+    "question_jp": "日本語の先生を紹介して___いただけませんか。",
+    "question_id": "Maukah Anda memperkenalkan guru bahasa Jepang kepada saya?",
+    "correct_answer": "て",
+    "options": ["て", "た", "ない", "ます"],
+    "explanation": "Pola 「〜ていただけませんか」adalah permohonan sopan untuk meminta seseorang melakukan sesuatu."
+  },
+  {
+    "book": 2, "chapter": 27, "question_type": "doukai", "jlpt_level": 4,
+    "question_jp": "私は日本語の新聞が読めます。",
+    "shown_translation": "Saya tidak bisa membaca koran bahasa Jepang.",
+    "is_translation_correct": false,
+    "correct_answer": "Salah",
+    "options": ["Benar", "Salah"],
+    "explanation": "「読めます」adalah bentuk potensial (bisa membaca). Terjemahan harusnya 'Saya BISA membaca koran bahasa Jepang'."
+  },
+  {
+    "book": 2, "chapter": 27, "question_type": "choice", "jlpt_level": 4,
+    "question_jp": "この部屋から海___見えます。",
+    "question_id": "Dari kamar ini laut terlihat.",
+    "correct_answer": "が",
+    "options": ["が", "を", "に", "で"],
+    "explanation": "Kata kerja potensial spontan 「見えます」menggunakan partikel 「が」untuk menandai objek yang terlihat."
+  },
+  {
+    "book": 2, "chapter": 28, "question_type": "doukai", "jlpt_level": 4,
+    "question_jp": "音楽を聞きながら勉強します。",
+    "shown_translation": "Saya belajar sambil mendengarkan musik.",
+    "is_translation_correct": true,
+    "correct_answer": "Benar",
+    "options": ["Benar", "Salah"],
+    "explanation": "Pola 「Verb-masu stem + ながら」artinya 'sambil melakukan Verb'. Di sini: mendengarkan musik sambil belajar."
+  },
+  {
+    "book": 2, "chapter": 28, "question_type": "fill_blank", "jlpt_level": 4,
+    "question_jp": "暇なときは、いつもテレビを___います。",
+    "question_id": "Saat senggang, saya selalu menonton TV.",
+    "correct_answer": "見て",
+    "options": ["見て", "見ながら", "見てから", "見"],
+    "explanation": "Pola 「〜ています」di sini menyatakan kebiasaan/rutinitas saat waktu luang."
+  },
+  {
+    "book": 2, "chapter": 29, "question_type": "doukai", "jlpt_level": 4,
+    "question_jp": "窓が開いています。",
+    "shown_translation": "Jendela sedang dibuka oleh seseorang.",
+    "is_translation_correct": false,
+    "correct_answer": "Salah",
+    "options": ["Benar", "Salah"],
+    "explanation": "「開いています」menyatakan keadaan jendela yang terbuka (intransitif), bukan tindakan seseorang membuka jendela."
+  },
+  {
+    "book": 2, "chapter": 29, "question_type": "context_match", "jlpt_level": 4,
+    "question_jp": "",
+    "question_id": "Saya terlanjur kehilangan paspor.",
+    "correct_answer": "パスポートをなくしてしまいました。",
+    "options": [
+      "パスポートをなくしてしまいました。",
+      "パスポートをなくしています。",
+      "パスポートをなくしました。",
+      "パスポートをなくすそうです。"
+    ],
+    "explanation": "Pola 「〜てしまいました」menyatakan penyesalan atas suatu kejadian yang terlanjur terjadi."
+  },
+  {
+    "book": 2, "chapter": 30, "question_type": "doukai", "jlpt_level": 4,
+    "question_jp": "机の上に本が置いてあります。",
+    "shown_translation": "Di atas meja diletakkan buku (dalam keadaan sengaja ditaruh).",
+    "is_translation_correct": true,
+    "correct_answer": "Benar",
+    "options": ["Benar", "Salah"],
+    "explanation": "Pola 「〜てあります」menunjukkan keadaan hasil dari suatu tindakan yang sengaja dilakukan untuk tujuan tertentu."
+  },
+  {
+    "book": 2, "chapter": 30, "question_type": "fill_blank", "jlpt_level": 4,
+    "question_jp": "旅行の前に、切符を買って___。",
+    "question_id": "Sebelum melakukan perjalanan, saya akan membeli tiket terlebih dahulu.",
+    "correct_answer": "おきます",
+    "options": ["おきます", "あります", "しまいます", "いきます"],
+    "explanation": "Pola 「〜ておきます」berarti melakukan persiapan terlebih dahulu untuk masa depan."
+  },
+  {
+    "book": 2, "chapter": 31, "question_type": "doukai", "jlpt_level": 4,
+    "question_jp": "明日買い物に行こうと思っています。",
+    "shown_translation": "Saya berpikir untuk pergi berbelanja besok.",
+    "is_translation_correct": true,
+    "correct_answer": "Benar",
+    "options": ["Benar", "Salah"],
+    "explanation": "Pola 「Maksud (Volitional) + と思っています」menyatakan niat/rencana yang sudah dipikirkan sejak beberapa waktu lalu."
+  },
+  {
+    "book": 2, "chapter": 31, "question_type": "choice", "jlpt_level": 4,
+    "question_jp": "週末はうちでゆっくり休み___。",
+    "question_id": "Akhir pekan ini saya berniat santai dan beristirahat di rumah (bentuk maksud).",
+    "correct_answer": "おう",
+    "options": ["おう", "ます", "て", "なさい"],
+    "explanation": "Bentuk volitional (maksud) dari 「休みます」adalah 「休もう」."
+  },
+  {
+    "book": 2, "chapter": 32, "question_type": "doukai", "jlpt_level": 4,
+    "question_jp": "タバコは吸わないほうがいいです。",
+    "shown_translation": "Sebaiknya merokok saja.",
+    "is_translation_correct": false,
+    "correct_answer": "Salah",
+    "options": ["Benar", "Salah"],
+    "explanation": "「吸わないほうがいいです」berarti 'sebaiknya TIDAK merokok'. Terjemahan yang diberikan terbalik."
+  },
+  {
+    "book": 2, "chapter": 32, "question_type": "fill_blank", "jlpt_level": 4,
+    "question_jp": "明日は雨が降る___もしれません。",
+    "question_id": "Besok mungkin saja turun hujan.",
+    "correct_answer": "かも",
+    "options": ["かも", "でしょう", "はず", "そう"],
+    "explanation": "Pola 「〜かもしれません」berarti 'mungkin saja/ada kemungkinan bahwa...'."
+  },
+  {
+    "book": 2, "chapter": 33, "question_type": "doukai", "jlpt_level": 4,
+    "question_jp": "そこに「止まれ」と書いてあります。",
+    "shown_translation": "Di sana tertulis 'Berhenti'.",
+    "is_translation_correct": true,
+    "correct_answer": "Benar",
+    "options": ["Benar", "Salah"],
+    "explanation": "「止まれ」adalah bentuk perintah dari「止まります」. 「〜と書いてあります」= tertulis bahwa ~."
+  },
+  {
+    "book": 2, "chapter": 33, "question_type": "context_match", "jlpt_level": 4,
+    "question_jp": "",
+    "question_id": "Tolong jangan masuk (bentuk larangan keras).",
+    "correct_answer": "入るな。",
+    "options": [
+      "入るな。",
+      "入りなさい。",
+      "入ってください。",
+      "入ってもいいです。"
+    ],
+    "explanation": "Bentuk larangan keras (prohibitive) dibentuk dengan menambahkan 「な」setelah bentuk kamus (Plain dictionary form)."
+  },
+  {
+    "book": 2, "chapter": 34, "question_type": "doukai", "jlpt_level": 4,
+    "question_jp": "説明書の通りに組み立てました。",
+    "shown_translation": "Saya merakitnya setelah membaca buku petunjuk.",
+    "is_translation_correct": false,
+    "correct_answer": "Salah",
+    "options": ["Benar", "Salah"],
+    "explanation": "「〜の通りに」artinya 'sesuai dengan'. Jadi artinya 'merakit SESUAI DENGAN buku petunjuk', bukan setelah membaca."
+  },
+  {
+    "book": 2, "chapter": 34, "question_type": "fill_blank", "jlpt_level": 4,
+    "question_jp": "晩ご飯を___あとで、お風呂に入ります。",
+    "question_id": "Setelah makan malam, saya akan mandi.",
+    "correct_answer": "食べた",
+    "options": ["食べた", "食べて", "食べる", "食べ"],
+    "explanation": "Pola 「Verb-ta + あとで」menyatakan urutan tindakan setelah melakukan kata kerja tersebut."
+  },
+  {
+    "book": 2, "chapter": 35, "question_type": "doukai", "jlpt_level": 4,
+    "question_jp": "安ければ、買いたいです。",
+    "shown_translation": "Kalau murah, saya ingin membelinya.",
+    "is_translation_correct": true,
+    "correct_answer": "Benar",
+    "options": ["Benar", "Salah"],
+    "explanation": "「安ければ」adalah bentuk syarat (ba-form) dari adjektiva-i 「安い」(murah)."
+  },
+  {
+    "book": 2, "chapter": 35, "question_type": "choice", "jlpt_level": 4,
+    "question_jp": "明日天気が___、ハイキングに行きます。",
+    "question_id": "Jika besok cuaca bagus, kita pergi hiking.",
+    "correct_answer": "よければ",
+    "options": ["よければ", "いいなら", "いいだったら", "よくて"],
+    "explanation": "Bentuk syarat (ba-form) dari adjektiva-i 「いい」(bagus) adalah 「よければ」."
+  },
+  {
+    "book": 2, "chapter": 36, "question_type": "doukai", "jlpt_level": 4,
+    "question_jp": "日本語が話せるようになりました。",
+    "shown_translation": "Saya dulu bisa berbahasa Jepang.",
+    "is_translation_correct": false,
+    "correct_answer": "Salah",
+    "options": ["Benar", "Salah"],
+    "explanation": "「〜ようになります」menyatakan perubahan kemampuan dari tidak bisa menjadi bisa. Terjemahan yang tepat: 'Saya telah MENJADI BISA berbahasa Jepang'."
+  },
+  {
+    "book": 2, "chapter": 36, "question_type": "fill_blank", "jlpt_level": 4,
+    "question_jp": "健康のために、毎日野菜を食べる___しています。",
+    "question_id": "Demi kesehatan, saya berusaha/membiasakan makan sayur setiap hari.",
+    "correct_answer": "ように",
+    "options": ["ように", "ことに", "ために", "ので"],
+    "explanation": "Pola 「〜ようにしています」artinya berusaha atau membiasakan diri melakukan sesuatu secara konsisten."
+  },
+  {
+    "book": 2, "chapter": 37, "question_type": "doukai", "jlpt_level": 4,
+    "question_jp": "私は犬に手をかまれました。",
+    "shown_translation": "Saya menggigit tangan anjing.",
+    "is_translation_correct": false,
+    "correct_answer": "Salah",
+    "options": ["Benar", "Salah"],
+    "explanation": "Ini adalah kalimat pasif. 「かまれました」= digigit. Terjemahan yang tepat: 'Tangan saya digigit oleh anjing'."
+  },
+  {
+    "book": 2, "chapter": 37, "question_type": "context_match", "jlpt_level": 4,
+    "question_jp": "",
+    "question_id": "Candi ini dibangun pada abad ke-8.",
+    "correct_answer": "この寺は８世紀に建てられました。",
+    "options": [
+      "この寺は８世紀に建てられました。",
+      "この寺は８世紀に建てました。",
+      "この寺は８世紀に建っていました。",
+      "この寺は８世紀に建ててあります。"
+    ],
+    "explanation": "Pola pasif 「建てられました」digunakan untuk menyatakan objek umum yang dibangun/didirikan."
+  },
+  {
+    "book": 2, "chapter": 38, "question_type": "doukai", "jlpt_level": 4,
+    "question_jp": "私はテニスをするのが好きです。",
+    "shown_translation": "Saya suka bermain tenis.",
+    "is_translation_correct": true,
+    "correct_answer": "Benar",
+    "options": ["Benar", "Salah"],
+    "explanation": "Partikel 「の」di sini berfungsi untuk menominalkan kata kerja 「テニスをする」(bermain tenis) agar bisa diikuti predikat suka (好き)."
+  },
+  {
+    "book": 2, "chapter": 38, "question_type": "fill_blank", "jlpt_level": 4,
+    "question_jp": "財布を忘れた___に気がつきました。",
+    "question_id": "Saya menyadari bahwa dompet saya ketinggalan.",
+    "correct_answer": "の",
+    "options": ["の", "こと", "もの", "ところ"],
+    "explanation": "Menggunakan nominalisasi 「の」untuk menghubungkan anak kalimat dengan frasa 「に気がつきました」(menyadari)."
+  },
+  {
+    "book": 2, "chapter": 39, "question_type": "doukai", "jlpt_level": 4,
+    "question_jp": "ニュースを聞いて、びっくりしました。",
+    "shown_translation": "Saya terkejut setelah mendengarkan berita.",
+    "is_translation_correct": true,
+    "correct_answer": "Benar",
+    "options": ["Benar", "Salah"],
+    "explanation": "Bentuk sambung-te 「聞いて」di sini berfungsi untuk menyatakan alasan/sebab dari reaksi emosi (びっくりしました)."
+  },
+  {
+    "book": 2, "chapter": 39, "question_type": "fill_blank", "jlpt_level": 4,
+    "question_jp": "地震___ビルが倒れました。",
+    "question_id": "Gedung roboh karena gempa bumi.",
+    "correct_answer": "で",
+    "options": ["で", "が", "を", "に"],
+    "explanation": "Partikel 「で」di sini berfungsi menyatakan sebab/alasan terjadinya bencana alam atau kecelakaan."
+  },
+  {
+    "book": 2, "chapter": 40, "question_type": "doukai", "jlpt_level": 4,
+    "question_jp": "彼が来るかどうか分かりません。",
+    "shown_translation": "Saya tidak tahu kapan dia akan datang.",
+    "is_translation_correct": false,
+    "correct_answer": "Salah",
+    "options": ["Benar", "Salah"],
+    "explanation": "「〜かどうか」artinya 'apakah... atau tidak'. Jadi artinya 'Saya tidak tahu APAKAH dia akan datang ATAU TIDAK', bukan menanyakan waktu 'kapan'."
+  },
+  {
+    "book": 2, "chapter": 40, "question_type": "context_match", "jlpt_level": 4,
+    "question_jp": "",
+    "question_id": "Tolong periksa apakah ukuran sepatunya pas.",
+    "correct_answer": "靴のサイズが合うかどうか調べてください。",
+    "options": [
+      "靴のサイズが合うかどうか調べてください。",
+      "靴のサイズを合わせて調べてください。",
+      "靴のサイズが合うのを調べてください。",
+      "靴のサイズが合うから調べてください。"
+    ],
+    "explanation": "Pola 「〜かどうか調べてください」artinya 'tolong selidiki/periksa apakah ~ atau tidak'."
+  },
+  {
+    "book": 2, "chapter": 41, "question_type": "doukai", "jlpt_level": 4,
+    "question_jp": "先生に漢字を教えていただきました。",
+    "shown_translation": "Guru mengajari saya kanji (saya menerima pengajaran dari guru).",
+    "is_translation_correct": true,
+    "correct_answer": "Benar",
+    "options": ["Benar", "Salah"],
+    "explanation": "Pola 「〜ていただきました」adalah bentuk keigo rendah hati untuk menyatakan menerima suatu tindakan bantuan/kebaikan dari atasan."
+  },
+  {
+    "book": 2, "chapter": 41, "question_type": "fill_blank", "jlpt_level": 4,
+    "question_jp": "社長が私に新しいカメラを___ました。",
+    "question_id": "Direktur memberikan kamera baru kepada saya.",
+    "correct_answer": "ください",
+    "options": ["ください", "さしあげ", "いただき", "やり"],
+    "explanation": "Pola keigo 「くださいます」digunakan ketika atasan memberikan benda/kebaikan kepada pembicara (atau keluarga pembicara)."
+  },
+  {
+    "book": 2, "chapter": 42, "question_type": "doukai", "jlpt_level": 4,
+    "question_jp": "家を買うために貯金しています。",
+    "shown_translation": "Saya menabung untuk membeli rumah.",
+    "is_translation_correct": true,
+    "correct_answer": "Benar",
+    "options": ["Benar", "Salah"],
+    "explanation": "Pola 「Verb-dictionary + ために」menunjukkan tujuan atau maksud kuat tindakan utama."
+  },
+  {
+    "book": 2, "chapter": 42, "question_type": "choice", "jlpt_level": 4,
+    "question_jp": "このハサミは花を切る___使います。",
+    "question_id": "Gunting ini digunakan untuk memotong bunga.",
+    "correct_answer": "のに",
+    "options": ["のに", "ために", "ので", "から"],
+    "explanation": "Pola 「Verb-dictionary + のに」diikuti kata kerja seperti 「使います」(digunakan) atau 「役に立ちます」(berguna) untuk menunjukkan kegunaan."
+  },
+  {
+    "book": 2, "chapter": 43, "question_type": "doukai", "jlpt_level": 4,
+    "question_jp": "雨が降りそうです。",
+    "shown_translation": "Hujan kelihatannya akan turun.",
+    "is_translation_correct": true,
+    "correct_answer": "Benar",
+    "options": ["Benar", "Salah"],
+    "explanation": "Pola 「Verb-masu stem + そうです」menyatakan dugaan berdasarkan pengamatan mata (kelihatannya akan ~)."
+  },
+  {
+    "book": 2, "chapter": 43, "question_type": "fill_blank", "jlpt_level": 4,
+    "question_jp": "ちょっとタバコを買って___ます。",
+    "question_id": "Saya pergi sebentar untuk membeli rokok (lalu kembali lagi).",
+    "correct_answer": "き",
+    "options": ["き", "いき", "置き", "しまい"],
+    "explanation": "Pola 「〜てきます」di sini berarti pergi melakukan suatu kegiatan lalu kembali ke tempat semula."
+  },
+  {
+    "book": 2, "chapter": 44, "question_type": "doukai", "jlpt_level": 4,
+    "question_jp": "昨日お酒を飲みすぎました。",
+    "shown_translation": "Kemarin saya tidak banyak minum sake.",
+    "is_translation_correct": false,
+    "correct_answer": "Salah",
+    "options": ["Benar", "Salah"],
+    "explanation": "Pola 「Verb-masu stem + すぎます」artinya 'terlalu banyak/berlebihan'. Terjemahan yang tepat: 'Kemarin saya minum sake berlebihan/terlalu banyak'."
+  },
+  {
+    "book": 2, "chapter": 44, "question_type": "choice", "jlpt_level": 4,
+    "question_jp": "このペンはとても書き___です。",
+    "question_id": "Pulpen ini sangat mudah untuk ditulis.",
+    "correct_answer": "やすい",
+    "options": ["やすい", "にくい", "がたい", "やすいそう"],
+    "explanation": "Pola 「Verb-masu stem + やすい」artinya 'mudah dilakukan'."
+  },
+  {
+    "book": 2, "chapter": 45, "question_type": "doukai", "jlpt_level": 4,
+    "question_jp": "火事の場合には、エレベーターを使わないでください。",
+    "shown_translation": "Jika terjadi kebakaran, harap jangan menggunakan lift.",
+    "is_translation_correct": true,
+    "correct_answer": "Benar",
+    "options": ["Benar", "Salah"],
+    "explanation": "Pola 「Nomina + の場合には」berarti 'dalam kasus/situasi ~'."
+  },
+  {
+    "book": 2, "chapter": 45, "question_type": "fill_blank", "jlpt_level": 4,
+    "question_jp": "一生懸命練習した___、試合に負けました。",
+    "question_id": "Padahal sudah berlatih sekuat tenaga, saya kalah dalam pertandingan.",
+    "correct_answer": "のに",
+    "options": ["のに", "から", "ので", "ため"],
+    "explanation": "Pola 「〜のに」digunakan untuk menyatakan pertentangan dengan nuansa kekecewaan atau keheranan (padahal/meskipun)."
+  },
+  {
+    "book": 2, "chapter": 46, "question_type": "doukai", "jlpt_level": 4,
+    "question_jp": "今から出かけるところです。",
+    "shown_translation": "Saya baru saja keluar/pergi.",
+    "is_translation_correct": false,
+    "correct_answer": "Salah",
+    "options": ["Benar", "Salah"],
+    "explanation": "Pola 「Verb-dictionary + ところです」artinya 'baru akan melakukan'. Terjemahan tepat: 'Sekarang saya baru mau berangkat/pergi'."
+  },
+  {
+    "book": 2, "chapter": 46, "question_type": "fill_blank", "jlpt_level": 4,
+    "question_jp": "たった今バスが出た___です。",
+    "question_id": "Bus baru saja berangkat beberapa detik yang lalu.",
+    "correct_answer": "ばかり",
+    "options": ["ばかり", "ところ", "予定", "はず"],
+    "explanation": "Pola 「Verb-ta + ばかりです」menyatakan bahwa aksi tersebut baru saja selesai dilakukan (dirasakan sangat baru oleh pembicara)."
+  },
+  {
+    "book": 2, "chapter": 47, "question_type": "doukai", "jlpt_level": 4,
+    "question_jp": "天気予報によると、明日は晴れるそうです。",
+    "shown_translation": "Berdasarkan ramalan cuaca, katanya besok akan cerah.",
+    "is_translation_correct": true,
+    "correct_answer": "Benar",
+    "options": ["Benar", "Salah"],
+    "explanation": "Pola 「Plain form + そうです」menyatakan informasi kabar angin/hearsay (katanya) dengan sumber ditandai 「〜によると」."
+  },
+  {
+    "book": 2, "chapter": 47, "question_type": "choice", "jlpt_level": 4,
+    "question_jp": "外は暗いです。雨が降っている___です。",
+    "question_id": "Di luar gelap. Kelihatannya/sepertinya sedang turun hujan.",
+    "correct_answer": "よう",
+    "options": ["よう", "そう", "ばかり", "ところ"],
+    "explanation": "Pola 「〜ようです」menyatakan perkiraan objektif berdasarkan tanda-tanda yang diamati (sepertinya/kelihatannya)."
+  },
+  {
+    "book": 2, "chapter": 48, "question_type": "doukai", "jlpt_level": 4,
+    "question_jp": "部長は私をアメリカへ出張させました。",
+    "shown_translation": "Saya menugaskan kepala bagian dinas ke Amerika.",
+    "is_translation_correct": false,
+    "correct_answer": "Salah",
+    "options": ["Benar", "Salah"],
+    "explanation": "Ini adalah kalimat kausatif (menyuruh/membuat). Terjemahan tepat: 'Kepala bagian menugaskan (menyuruh/membuat) SAYA dinas ke Amerika'."
+  },
+  {
+    "book": 2, "chapter": 48, "question_type": "fill_blank", "jlpt_level": 4,
+    "question_jp": "子供に好きなことを___あげたいです。",
+    "question_id": "Saya ingin membiarkan anak saya melakukan apa yang dia sukai.",
+    "correct_answer": "させて",
+    "options": ["させて", "させられて", "して", "され"],
+    "explanation": "Pola Kausatif + てあげます (〜させてあげます) menyatakan membiarkan atau mengizinkan seseorang melakukan sesuatu."
+  },
+  {
+    "book": 2, "chapter": 49, "question_type": "doukai", "jlpt_level": 4,
+    "question_jp": "先生はもうお帰りになりました。",
+    "shown_translation": "Guru sudah pulang.",
+    "is_translation_correct": true,
+    "correct_answer": "Benar",
+    "options": ["Benar", "Salah"],
+    "explanation": "Pola 「お + Verb-masu stem + になります」adalah salah satu bentuk Keigo Penghormatan (Sonkeigo) untuk tindakan subjek yang dihormati."
+  },
+  {
+    "book": 2, "chapter": 50, "question_type": "doukai", "jlpt_level": 4,
+    "question_jp": "私はアメリカから参りました。",
+    "shown_translation": "Saya datang dari Amerika (bentuk merendah).",
+    "is_translation_correct": true,
+    "correct_answer": "Benar",
+    "options": ["Benar", "Salah"],
+    "explanation": "Kata 「参ります」(mairimasu) adalah bentuk Humble (Kenjougo) dari kata kerja datang/pergi (きます/いきます)."
+  }
+]

@@ -1,0 +1,519 @@
+[
+  {
+    "book": 1, "chapter": 1, "question_type": "doukai", "jlpt_level": 5,
+    "question_jp": "私はマイクミラーです。",
+    "shown_translation": "Saya adalah Mike Miller.",
+    "is_translation_correct": true,
+    "correct_answer": "Benar",
+    "options": ["Benar", "Salah"],
+    "explanation": "「私は〜です」= Saya adalah〜. Terjemahan tepat."
+  },
+  {
+    "book": 1, "chapter": 1, "question_type": "doukai", "jlpt_level": 5,
+    "question_jp": "あなたは先生ですか。",
+    "shown_translation": "Apakah kamu seorang dokter?",
+    "is_translation_correct": false,
+    "correct_answer": "Salah",
+    "options": ["Benar", "Salah"],
+    "explanation": "「先生」artinya guru, bukan dokter (dokter = お医者さん)."
+  },
+  {
+    "book": 1, "chapter": 1, "question_type": "choice", "jlpt_level": 5,
+    "question_jp": "___はがくせいです。",
+    "question_id": "___adalah mahasiswa.",
+    "correct_answer": "わたし",
+    "options": ["わたし", "あなた", "かれ", "せんせい"],
+    "explanation": "「わたし」= saya. Kalimat dasar 「わたしはがくせいです」."
+  },
+  {
+    "book": 1, "chapter": 2, "question_type": "doukai", "jlpt_level": 5,
+    "question_jp": "これはだれのほんですか。",
+    "shown_translation": "Ini buku siapa?",
+    "is_translation_correct": true,
+    "correct_answer": "Benar",
+    "options": ["Benar", "Salah"],
+    "explanation": "「だれの」= punya siapa / milik siapa."
+  },
+  {
+    "book": 1, "chapter": 2, "question_type": "fill_blank", "jlpt_level": 5,
+    "question_jp": "これはわたし___かばんです。",
+    "question_id": "Ini adalah tas saya.",
+    "correct_answer": "の",
+    "options": ["の", "は", "が", "を"],
+    "explanation": "「の」menunjukkan kepemilikan: 「わたしのかばん」= tas saya."
+  },
+  {
+    "book": 1, "chapter": 2, "question_type": "context_match", "jlpt_level": 5,
+    "question_jp": "",
+    "question_id": "Ini bukan buku saya.",
+    "correct_answer": "これはわたしのほんじゃありません。",
+    "options": [
+      "これはわたしのほんじゃありません。",
+      "これはわたしのほんです。",
+      "これはあなたのほんですか。",
+      "それはほんです。"
+    ],
+    "explanation": "「〜じゃありません」= bukan〜 (bentuk negatif dari「〜です」)."
+  },
+  {
+    "book": 1, "chapter": 3, "question_type": "fill_blank", "jlpt_level": 5,
+    "question_jp": "トイレは___ですか。",
+    "question_id": "Di mana toilet?",
+    "correct_answer": "どこ",
+    "options": ["どこ", "なに", "だれ", "いつ"],
+    "explanation": "「どこ」= di mana. Digunakan untuk menanyakan lokasi."
+  },
+  {
+    "book": 1, "chapter": 3, "question_type": "doukai", "jlpt_level": 5,
+    "question_jp": "ここはじむしょです。",
+    "shown_translation": "Di sini adalah kantor.",
+    "is_translation_correct": true,
+    "correct_answer": "Benar",
+    "options": ["Benar", "Salah"],
+    "explanation": "「ここ」= di sini,「じむしょ」= kantor."
+  },
+  {
+    "book": 1, "chapter": 3, "question_type": "context_match", "jlpt_level": 5,
+    "question_jp": "",
+    "question_id": "Itu (di sana, jauh) adalah taman.",
+    "correct_answer": "あそこはこうえんです。",
+    "options": [
+      "あそこはこうえんです。",
+      "ここはこうえんです。",
+      "そこはこうえんです。",
+      "あそこはびょういんです。"
+    ],
+    "explanation": "「あそこ」= di sana (jauh dari pembicara dan lawan bicara)."
+  },
+  {
+    "book": 1, "chapter": 4, "question_type": "fill_blank", "jlpt_level": 5,
+    "question_jp": "いまなんじ___か。",
+    "question_id": "Sekarang jam berapa?",
+    "correct_answer": "です",
+    "options": ["です", "が", "は", "を"],
+    "explanation": "「いまなんじですか」= Sekarang jam berapa?"
+  },
+  {
+    "book": 1, "chapter": 4, "question_type": "doukai", "jlpt_level": 5,
+    "question_jp": "ぎんこうはくじからごじまでです。",
+    "shown_translation": "Bank buka dari jam 9 sampai jam 5.",
+    "is_translation_correct": true,
+    "correct_answer": "Benar",
+    "options": ["Benar", "Salah"],
+    "explanation": "「〜から〜まで」= dari〜sampai〜."
+  },
+  {
+    "book": 1, "chapter": 4, "question_type": "doukai", "jlpt_level": 5,
+    "question_jp": "きょうはにちようびです。",
+    "shown_translation": "Hari ini adalah hari Senin.",
+    "is_translation_correct": false,
+    "correct_answer": "Salah",
+    "options": ["Benar", "Salah"],
+    "explanation": "「にちようび」= hari Minggu, bukan hari Senin (hari Senin = げつようび)."
+  },
+  {
+    "book": 1, "chapter": 5, "question_type": "fill_blank", "jlpt_level": 5,
+    "question_jp": "きょうとへ___ます。",
+    "question_id": "Saya pergi ke Kyoto.",
+    "correct_answer": "いき",
+    "options": ["いき", "たべ", "のみ", "き"],
+    "explanation": "「いきます」= pergi. 「〜へいきます」= pergi ke〜."
+  },
+  {
+    "book": 1, "chapter": 5, "question_type": "doukai", "jlpt_level": 5,
+    "question_jp": "でんしゃできました。",
+    "shown_translation": "Saya datang dengan kereta.",
+    "is_translation_correct": true,
+    "correct_answer": "Benar",
+    "options": ["Benar", "Salah"],
+    "explanation": "「で」menunjukkan alat/cara. 「でんしゃで」= dengan kereta."
+  },
+  {
+    "book": 1, "chapter": 5, "question_type": "context_match", "jlpt_level": 5,
+    "question_jp": "",
+    "question_id": "Saya pulang ke rumah kemarin.",
+    "correct_answer": "きのううちへかえりました。",
+    "options": [
+      "きのううちへかえりました。",
+      "あしたうちへかえります。",
+      "まいにちうちへかえりません。",
+      "きのうがっこうへいきました。"
+    ],
+    "explanation": "「かえりました」= sudah pulang (lampau). 「きのう」= kemarin."
+  },
+  {
+    "book": 1, "chapter": 6, "question_type": "doukai", "jlpt_level": 5,
+    "question_jp": "いっしょにたべませんか。",
+    "shown_translation": "Mari makan bersama.",
+    "is_translation_correct": false,
+    "correct_answer": "Salah",
+    "options": ["Benar", "Salah"],
+    "explanation": "「〜ませんか」= ajakan dengan nuansa tanya (Maukah kita〜?), bukan perintah 'Mari'. Terjemahan lebih tepat: 'Maukah makan bersama?'"
+  },
+  {
+    "book": 1, "chapter": 6, "question_type": "fill_blank", "jlpt_level": 5,
+    "question_jp": "すこし___ませんか。",
+    "question_id": "Maukah kita berjalan sedikit?",
+    "correct_answer": "ある き",
+    "options": ["ある き", "のみ", "たべ", "やす み"],
+    "explanation": "「あるきます」= berjalan. 「あるきませんか」= Maukah berjalan?"
+  },
+  {
+    "book": 1, "chapter": 7, "question_type": "fill_blank", "jlpt_level": 5,
+    "question_jp": "はし___たべます。",
+    "question_id": "Makan menggunakan sumpit.",
+    "correct_answer": "で",
+    "options": ["で", "に", "へ", "が"],
+    "explanation": "「で」= dengan/menggunakan (alat). 「はしで」= dengan sumpit."
+  },
+  {
+    "book": 1, "chapter": 7, "question_type": "doukai", "jlpt_level": 5,
+    "question_jp": "だれとえいがをみましたか。",
+    "shown_translation": "Dengan siapa kamu menonton film?",
+    "is_translation_correct": true,
+    "correct_answer": "Benar",
+    "options": ["Benar", "Salah"],
+    "explanation": "「だれと」= dengan siapa. 「みました」= menonton (lampau)."
+  },
+  {
+    "book": 1, "chapter": 7, "question_type": "context_match", "jlpt_level": 5,
+    "question_jp": "",
+    "question_id": "Saya membeli tiket di loket.",
+    "correct_answer": "まどぐちできっぷをかいました。",
+    "options": [
+      "まどぐちできっぷをかいました。",
+      "まどぐちにきっぷがあります。",
+      "えきでまどぐちをみました。",
+      "きっぷをまどぐちにいきます。"
+    ],
+    "explanation": "「で」(alat/tempat tindakan) + 「〜をかいました」= membeli〜."
+  },
+  {
+    "book": 1, "chapter": 8, "question_type": "doukai", "jlpt_level": 5,
+    "question_jp": "ふじさんはたかいです。",
+    "shown_translation": "Gunung Fuji tinggi.",
+    "is_translation_correct": true,
+    "correct_answer": "Benar",
+    "options": ["Benar", "Salah"],
+    "explanation": "「たかい」= tinggi. Adjektiva-i. 「ふじさん」= Gunung Fuji."
+  },
+  {
+    "book": 1, "chapter": 8, "question_type": "fill_blank", "jlpt_level": 5,
+    "question_jp": "このまちはとても___です。",
+    "question_id": "Kota ini sangat indah/cantik.",
+    "correct_answer": "きれい",
+    "options": ["きれい", "たかい", "ちいさい", "からい"],
+    "explanation": "「きれい」= indah/cantik. Adjektiva-na."
+  },
+  {
+    "book": 1, "chapter": 9, "question_type": "fill_blank", "jlpt_level": 5,
+    "question_jp": "つくえのうえに___があります。",
+    "question_id": "Di atas meja ada buku.",
+    "correct_answer": "ほん",
+    "options": ["ほん", "ねこ", "とり", "いぬ"],
+    "explanation": "「ほん」= buku. 「があります」dipakai untuk benda mati."
+  },
+  {
+    "book": 1, "chapter": 9, "question_type": "doukai", "jlpt_level": 5,
+    "question_jp": "きょうしつにがくせいがいます。",
+    "shown_translation": "Di kelas ada mahasiswa.",
+    "is_translation_correct": true,
+    "correct_answer": "Benar",
+    "options": ["Benar", "Salah"],
+    "explanation": "「います」= ada (untuk makhluk hidup). 「がくせい」= mahasiswa."
+  },
+  {
+    "book": 1, "chapter": 9, "question_type": "context_match", "jlpt_level": 5,
+    "question_jp": "",
+    "question_id": "Tidak ada kucing di ruangan ini.",
+    "correct_answer": "このへやにねこはいません。",
+    "options": [
+      "このへやにねこはいません。",
+      "このへやにねこがいます。",
+      "ねこはこのへやのそとにいます。",
+      "このへやにいぬがいます。"
+    ],
+    "explanation": "「いません」= tidak ada (negatif dari います untuk makhluk hidup)."
+  },
+  {
+    "book": 1, "chapter": 10, "question_type": "fill_blank", "jlpt_level": 5,
+    "question_jp": "ぎんこうはゆうびんきょく___となりです。",
+    "question_id": "Bank ada di sebelah kantor pos.",
+    "correct_answer": "の",
+    "options": ["の", "が", "で", "に"],
+    "explanation": "「〜のとなり」= di sebelah〜. 「の」menghubungkan nomina."
+  },
+  {
+    "book": 1, "chapter": 10, "question_type": "doukai", "jlpt_level": 5,
+    "question_jp": "デパートのみぎにえきがあります。",
+    "shown_translation": "Di kiri department store ada stasiun.",
+    "is_translation_correct": false,
+    "correct_answer": "Salah",
+    "options": ["Benar", "Salah"],
+    "explanation": "「みぎ」= kanan (bukan kiri). Kiri = ひだり."
+  },
+  {
+    "book": 1, "chapter": 11, "question_type": "fill_blank", "jlpt_level": 5,
+    "question_jp": "りんごを___つください。",
+    "question_id": "Tolong berikan 3 apel.",
+    "correct_answer": "みっ",
+    "options": ["みっ", "ふた", "いち", "よっ"],
+    "explanation": "「みっつ」= tiga buah (counter benda umum Jepang asli)."
+  },
+  {
+    "book": 1, "chapter": 11, "question_type": "doukai", "jlpt_level": 5,
+    "question_jp": "コーヒーをにさんぼんのみました。",
+    "shown_translation": "Saya minum 2-3 cangkir kopi.",
+    "is_translation_correct": true,
+    "correct_answer": "Benar",
+    "options": ["Benar", "Salah"],
+    "explanation": "「〜ほん」= counter untuk benda panjang/silinder (botol, gelas). 「にさんぼん」= 2-3 gelas/botol."
+  },
+  {
+    "book": 1, "chapter": 12, "question_type": "doukai", "jlpt_level": 5,
+    "question_jp": "きのうのてんきはよかったです。",
+    "shown_translation": "Cuaca kemarin bagus.",
+    "is_translation_correct": true,
+    "correct_answer": "Benar",
+    "options": ["Benar", "Salah"],
+    "explanation": "「よかった」= bentuk lampau dari「いい」(bagus). 「てんき」= cuaca."
+  },
+  {
+    "book": 1, "chapter": 12, "question_type": "fill_blank", "jlpt_level": 5,
+    "question_jp": "このえいがはあまりおもしろく___。",
+    "question_id": "Film ini tidak terlalu menarik.",
+    "correct_answer": "ありません",
+    "options": ["ありません", "ありました", "ないです", "です"],
+    "explanation": "「おもしろくありません」= bentuk negatif adjektiva-i (tidak menarik)."
+  },
+  {
+    "book": 1, "chapter": 13, "question_type": "fill_blank", "jlpt_level": 5,
+    "question_jp": "にほんへ___たいです。",
+    "question_id": "Saya ingin pergi ke Jepang.",
+    "correct_answer": "いき",
+    "options": ["いき", "き", "かえり", "たべ"],
+    "explanation": "「〜たいです」= ingin melakukan〜. Bentuk: Verb-masu stem + たいです."
+  },
+  {
+    "book": 1, "chapter": 13, "question_type": "doukai", "jlpt_level": 5,
+    "question_jp": "なにがたべたいですか。",
+    "shown_translation": "Apa yang ingin kamu beli?",
+    "is_translation_correct": false,
+    "correct_answer": "Salah",
+    "options": ["Benar", "Salah"],
+    "explanation": "「たべたい」= ingin makan. Soal menanyakan yang ingin dimakan, bukan dibeli (「かいたい」= ingin membeli)."
+  },
+  {
+    "book": 1, "chapter": 13, "question_type": "context_match", "jlpt_level": 5,
+    "question_jp": "",
+    "question_id": "Saya ingin melihat bunga sakura.",
+    "correct_answer": "さくらをみたいです。",
+    "options": [
+      "さくらをみたいです。",
+      "さくらをみました。",
+      "さくらをみてください。",
+      "さくらをみています。"
+    ],
+    "explanation": "「みたいです」= ingin melihat. Verb「みます」→ masu-stem「み」+ たいです."
+  },
+  {
+    "book": 1, "chapter": 14, "question_type": "fill_blank", "jlpt_level": 5,
+    "question_jp": "いましごとをし___います。",
+    "question_id": "Sekarang sedang bekerja.",
+    "correct_answer": "て",
+    "options": ["て", "で", "が", "に"],
+    "explanation": "「〜ています」= sedang melakukan〜. Bentuk te dari します = して."
+  },
+  {
+    "book": 1, "chapter": 14, "question_type": "doukai", "jlpt_level": 5,
+    "question_jp": "やまださんはけっこんしています。",
+    "shown_translation": "Tuan Yamada sedang menikah.",
+    "is_translation_correct": false,
+    "correct_answer": "Salah",
+    "options": ["Benar", "Salah"],
+    "explanation": "「けっこんしています」= sudah menikah (keadaan), bukan 'sedang menikah' sebagai proses."
+  },
+  {
+    "book": 1, "chapter": 15, "question_type": "fill_blank", "jlpt_level": 5,
+    "question_jp": "ここでたばこをすっても___ですか。",
+    "question_id": "Bolehkah merokok di sini?",
+    "correct_answer": "いい",
+    "options": ["いい", "よかった", "だめ", "いけない"],
+    "explanation": "「〜てもいいですか」= Bolehkah〜? Jawaban izin: 「いいです」= boleh."
+  },
+  {
+    "book": 1, "chapter": 15, "question_type": "doukai", "jlpt_level": 5,
+    "question_jp": "じしょをつかってもいいですか。",
+    "shown_translation": "Bolehkah saya menggunakan kamus?",
+    "is_translation_correct": true,
+    "correct_answer": "Benar",
+    "options": ["Benar", "Salah"],
+    "explanation": "「つかってもいいですか」= Bolehkah menggunakan〜?"
+  },
+  {
+    "book": 1, "chapter": 15, "question_type": "context_match", "jlpt_level": 5,
+    "question_jp": "",
+    "question_id": "Tolong jangan merokok di sini.",
+    "correct_answer": "ここでたばこをすわないでください。",
+    "options": [
+      "ここでたばこをすわないでください。",
+      "ここでたばこをすってもいいですか。",
+      "ここでたばこをすっています。",
+      "たばこをすいたいです。"
+    ],
+    "explanation": "「〜ないでください」= Tolong jangan〜. Negatif te-form: すわ+ないで."
+  },
+  {
+    "book": 1, "chapter": 16, "question_type": "fill_blank", "jlpt_level": 5,
+    "question_jp": "てをあらって___たべます。",
+    "question_id": "Setelah mencuci tangan, saya makan.",
+    "correct_answer": "から",
+    "options": ["から", "まで", "ので", "けど"],
+    "explanation": "「〜てから〜」= setelah melakukan〜, melakukan〜."
+  },
+  {
+    "book": 1, "chapter": 16, "question_type": "doukai", "jlpt_level": 5,
+    "question_jp": "しゅくだいをしてからあそびます。",
+    "shown_translation": "Setelah bermain, saya mengerjakan PR.",
+    "is_translation_correct": false,
+    "correct_answer": "Salah",
+    "options": ["Benar", "Salah"],
+    "explanation": "「してから」= setelah mengerjakan. Urutan benar: PR dulu, baru bermain."
+  },
+  {
+    "book": 1, "chapter": 17, "question_type": "fill_blank", "jlpt_level": 5,
+    "question_jp": "ここでしゃしんをとら___でください。",
+    "question_id": "Tolong jangan ambil foto di sini.",
+    "correct_answer": "ない",
+    "options": ["ない", "なく", "ず", "ません"],
+    "explanation": "「〜ないでください」= tolong jangan〜. Negatif plain form: とら+ない."
+  },
+  {
+    "book": 1, "chapter": 17, "question_type": "doukai", "jlpt_level": 5,
+    "question_jp": "このくすりをのまなければなりません。",
+    "shown_translation": "Saya harus minum obat ini.",
+    "is_translation_correct": true,
+    "correct_answer": "Benar",
+    "options": ["Benar", "Salah"],
+    "explanation": "「〜なければなりません」= harus melakukan〜."
+  },
+  {
+    "book": 1, "chapter": 18, "question_type": "fill_blank", "jlpt_level": 5,
+    "question_jp": "にほんごをはなす___ができます。",
+    "question_id": "Saya bisa berbicara bahasa Jepang.",
+    "correct_answer": "こと",
+    "options": ["こと", "もの", "ところ", "とき"],
+    "explanation": "「〜ことができます」= bisa melakukan〜. Nominalisasi kata kerja."
+  },
+  {
+    "book": 1, "chapter": 18, "question_type": "context_match", "jlpt_level": 5,
+    "question_jp": "",
+    "question_id": "Saya bisa membaca kanji.",
+    "correct_answer": "かんじをよむことができます。",
+    "options": [
+      "かんじをよむことができます。",
+      "かんじをよみたいです。",
+      "かんじをよみます。",
+      "かんじをよんでいます。"
+    ],
+    "explanation": "「〜ことができます」= bisa melakukan〜."
+  },
+  {
+    "book": 1, "chapter": 19, "question_type": "doukai", "jlpt_level": 5,
+    "question_jp": "にほんへいったことがあります。",
+    "shown_translation": "Saya pernah pergi ke Jepang.",
+    "is_translation_correct": true,
+    "correct_answer": "Benar",
+    "options": ["Benar", "Salah"],
+    "explanation": "「〜たことがあります」= pernah melakukan〜 (pengalaman)."
+  },
+  {
+    "book": 1, "chapter": 19, "question_type": "fill_blank", "jlpt_level": 5,
+    "question_jp": "ふじさんにのぼった___があります。",
+    "question_id": "Saya pernah mendaki Gunung Fuji.",
+    "correct_answer": "こと",
+    "options": ["こと", "もの", "ため", "まで"],
+    "explanation": "「〜たことがあります」= pernah〜. Memerlukan「こと」untuk nominalisasi."
+  },
+  {
+    "book": 1, "chapter": 20, "question_type": "doukai", "jlpt_level": 5,
+    "question_jp": "あしたパーティーにいく？",
+    "shown_translation": "Apakah kamu pergi ke pesta besok?",
+    "is_translation_correct": true,
+    "correct_answer": "Benar",
+    "options": ["Benar", "Salah"],
+    "explanation": "「いく？」= bentuk kasual/biasa dari「いきますか」. Digunakan antar teman."
+  },
+  {
+    "book": 1, "chapter": 20, "question_type": "fill_blank", "jlpt_level": 5,
+    "question_jp": "かれはまいにちべんきょうする___おもいます。",
+    "question_id": "Saya pikir dia belajar setiap hari.",
+    "correct_answer": "と",
+    "options": ["と", "が", "は", "か"],
+    "explanation": "「〜とおもいます」= saya pikir〜. 「と」menghubungkan klausa pikiran."
+  },
+  {
+    "book": 1, "chapter": 21, "question_type": "doukai", "jlpt_level": 5,
+    "question_jp": "あしたはあめだとおもいます。",
+    "shown_translation": "Saya pikir besok akan hujan.",
+    "is_translation_correct": true,
+    "correct_answer": "Benar",
+    "options": ["Benar", "Salah"],
+    "explanation": "「〜だとおもいます」= saya pikir〜 (untuk nomina/adjektiva-na)."
+  },
+  {
+    "book": 1, "chapter": 22, "question_type": "fill_blank", "jlpt_level": 5,
+    "question_jp": "これはわたしがとった___です。",
+    "question_id": "Ini adalah foto yang saya ambil.",
+    "correct_answer": "しゃしん",
+    "options": ["しゃしん", "ほん", "かばん", "てがみ"],
+    "explanation": "「わたしがとったしゃしん」= foto yang saya ambil. Modifikasi nomina (anak kalimat + nomina)."
+  },
+  {
+    "book": 1, "chapter": 23, "question_type": "fill_blank", "jlpt_level": 5,
+    "question_jp": "こどものとき、よくうみへいき___。",
+    "question_id": "Waktu kecil, saya sering pergi ke laut.",
+    "correct_answer": "ました",
+    "options": ["ました", "ます", "ません", "たい"],
+    "explanation": "「〜とき」= saat/waktu〜. Kalimat bercerita masa lalu memakai lampau「〜ました」."
+  },
+  {
+    "book": 1, "chapter": 23, "question_type": "doukai", "jlpt_level": 5,
+    "question_jp": "わかいときにたくさんりょこうをしたいです。",
+    "shown_translation": "Saat masih muda, saya ingin banyak berwisata.",
+    "is_translation_correct": true,
+    "correct_answer": "Benar",
+    "options": ["Benar", "Salah"],
+    "explanation": "「わかいとき」= saat masih muda. 「りょこうをしたい」= ingin berwisata."
+  },
+  {
+    "book": 1, "chapter": 24, "question_type": "fill_blank", "jlpt_level": 5,
+    "question_jp": "やまださんはわたしにほんをくれ___。",
+    "question_id": "Tuan Yamada memberi saya buku.",
+    "correct_answer": "ました",
+    "options": ["ました", "ます", "てあげました", "ていただきました"],
+    "explanation": "「くれました」= memberi (kepada saya). Orang lain → saya."
+  },
+  {
+    "book": 1, "chapter": 25, "question_type": "doukai", "jlpt_level": 5,
+    "question_jp": "やすかったら、かいます。",
+    "shown_translation": "Kalau murah, saya akan membelinya.",
+    "is_translation_correct": true,
+    "correct_answer": "Benar",
+    "options": ["Benar", "Salah"],
+    "explanation": "「〜たら」= kalau/jika〜 (pengandaian). 「やすかったら」= kalau murah."
+  },
+  {
+    "book": 1, "chapter": 25, "question_type": "context_match", "jlpt_level": 5,
+    "question_jp": "",
+    "question_id": "Kalau hari ini libur, saya akan pergi ke pantai.",
+    "correct_answer": "きょうやすみだったら、うみへいきます。",
+    "options": [
+      "きょうやすみだったら、うみへいきます。",
+      "きょうやすみだから、うみへいきます。",
+      "きょうやすみでも、うみへいきます。",
+      "きょうやすみなら、うみへいきません。"
+    ],
+    "explanation": "「〜だったら」= kalau〜 (bentuk ta + ら dari nomina/adjektiva-na)."
+  }
+]

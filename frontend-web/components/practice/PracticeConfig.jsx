@@ -10,11 +10,19 @@ export default function PracticeConfig() {
     const [limit, setLimit] = useState(10);
     const [timer, setTimer] = useState(5); // Default 5 minutes
     const [isUnlimitedTime, setIsUnlimitedTime] = useState(false);
-    const [mode, setMode] = useState('choice'); // 'choice' or 'kakitori'
     
-    // Multi-select states
+    // Source: 'jlpt' or 'minna'
+    const [source, setSource] = useState('jlpt');
+    
+    // JLPT states
+    const [mode, setMode] = useState('choice'); // 'choice' or 'kakitori' or minna modes
     const [selectedTypes, setSelectedTypes] = useState(['kanji']);
     const [selectedLevels, setSelectedLevels] = useState(['5', '4']); // Default N5 & N4
+
+    // Minna states
+    const [selectedBook, setSelectedBook] = useState('1'); // '1', '2', or 'both'
+    const [chapterStart, setChapterStart] = useState(1);
+    const [chapterEnd, setChapterEnd] = useState(25);
 
     const types = [
         { id: 'kana', label: 'Kana', icon: 'あ', sub: 'Hiragana & Katakana' },
@@ -55,12 +63,31 @@ export default function PracticeConfig() {
 
         const params = new URLSearchParams();
         params.append('limit', finalLimit);
-        params.append('type', selectedTypes.join(','));
-        if (selectedLevels.length > 0) {
-            params.append('level', selectedLevels.join(','));
+        
+        if (source === 'minna') {
+            params.append('source', 'minna');
+            params.append('book', selectedBook === 'both' ? '1,2' : selectedBook);
+            
+            // Validate chapter range
+            const start = Math.min(Math.max(1, parseInt(chapterStart) || 1), 50);
+            const end = Math.min(Math.max(1, parseInt(chapterEnd) || 25), 50);
+            const minCh = Math.min(start, end);
+            const maxCh = Math.max(start, end);
+            const chapters = [];
+            for (let i = minCh; i <= maxCh; i++) {
+                chapters.push(i);
+            }
+            params.append('chapter', chapters.join(','));
+            params.append('mode', mode);
+        } else {
+            params.append('type', selectedTypes.join(','));
+            if (selectedLevels.length > 0) {
+                params.append('level', selectedLevels.join(','));
+            }
+            params.append('mode', mode);
         }
+        
         if (!isUnlimitedTime) params.append('timer', finalTimer);
-        params.append('mode', mode);
         params.append('play', 'true');
         
         router.push(`?${params.toString()}`);
@@ -86,95 +113,311 @@ export default function PracticeConfig() {
                 <p className={`mb-10 text-lg transition-colors ${subTextColor}`}>Pilih materi, level, dan target waktu kuis hari ini.</p>
 
                 <div className="space-y-10">
-                    {/* Materi Selection */}
+                    {/* Sumber Soal Selection */}
                     <div>
                         <label className={`block text-sm font-black uppercase tracking-widest mb-4 transition-colors ${subTextColor}`}>
-                            Materi Latihan
+                            Sumber Soal
                         </label>
-                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                            {types.map(t => {
-                                const kakitoriDisabled = mode === 'kakitori' && !['vocab'].includes(t.id);
-                                const isSelected = selectedTypes.includes(t.id);
-                                return (
-                                    <button
-                                        key={t.id}
-                                        onClick={() => !kakitoriDisabled && toggleType(t.id)}
-                                        disabled={kakitoriDisabled}
-                                        title={kakitoriDisabled ? 'Tidak tersedia untuk mode Kakitori' : ''}
-                                        className={`flex flex-col items-center justify-center p-4 rounded-2xl border-2 transition-all duration-300 ${
-                                            kakitoriDisabled
-                                                ? `${cardBg} ${borderStyle} opacity-35 cursor-not-allowed grayscale`
-                                                : isSelected
-                                                    ? 'bg-gradient-to-br from-blue-50 to-sky-50 dark:from-blue-950/30 dark:to-sky-950/10 border-blue-500 shadow-lg shadow-blue-500/20 transform hover:scale-[1.03]'
-                                                    : `${cardBg} ${borderStyle} hover:border-blue-300 dark:hover:border-blue-800 hover:shadow-md transform hover:scale-[1.03]`
-                                        }`}
-                                    >
-                                        <span className="text-3xl mb-2">{kakitoriDisabled ? '🔒' : t.icon}</span>
-                                        <span className={`font-bold transition-colors ${
-                                            kakitoriDisabled ? subTextColor : isSelected ? 'text-blue-700 dark:text-blue-400' : textColor
-                                        }`}>
-                                            {t.label}
-                                        </span>
-                                        <span className={`text-[10px] mt-1 uppercase font-medium transition-colors ${subTextColor}`}>
-                                            {kakitoriDisabled ? 'Tidak tersedia' : t.sub}
-                                        </span>
-                                    </button>
-                                );
-                            })}
-                        </div>
-                    </div>
-
-                    {/* Mode Latihan Selection */}
-                    <div>
-                        <label className={`block text-sm font-black uppercase tracking-widest mb-4 transition-colors ${subTextColor}`}>
-                            Mode Latihan
-                        </label>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div className="grid grid-cols-2 gap-4">
                             <button
-                                onClick={() => setMode('choice')}
-                                className={`flex items-center gap-4 p-4 rounded-2xl border-2 transition-all duration-300 transform hover:scale-[1.01] ${
-                                    mode === 'choice'
+                                onClick={() => {
+                                    setSource('jlpt');
+                                    setMode('choice');
+                                }}
+                                className={`flex flex-col items-center justify-center p-5 rounded-2xl border-2 transition-all duration-300 transform hover:scale-[1.02] ${
+                                    source === 'jlpt'
                                         ? 'bg-gradient-to-br from-blue-50 to-sky-50 dark:from-blue-950/30 dark:to-sky-950/10 border-blue-500 shadow-lg shadow-blue-500/20'
-                                        : `${cardBg} ${borderStyle} hover:border-blue-300 dark:hover:border-blue-800 hover:shadow-md`
+                                        : `${cardBg} ${borderStyle} hover:border-blue-300 dark:hover:border-blue-800`
                                 }`}
                             >
-                                <span className="text-3xl">🔠</span>
-                                <div className="text-left">
-                                    <span className={`block font-bold transition-colors ${mode === 'choice' ? 'text-blue-700 dark:text-blue-400' : textColor}`}>
-                                        Pilihan Ganda
-                                    </span>
-                                    <span className={`text-[10px] uppercase font-medium transition-colors ${subTextColor}`}>Pilih satu dari empat jawaban</span>
-                                </div>
+                                <span className="text-3xl mb-2">📚</span>
+                                <span className={`font-black transition-colors ${source === 'jlpt' ? 'text-blue-700 dark:text-blue-400' : textColor}`}>
+                                    JLPT Level
+                                </span>
+                                <span className={`text-[10px] mt-1 uppercase font-medium transition-colors ${subTextColor}`}>
+                                    Materi N5 s.d N1
+                                </span>
                             </button>
 
                             <button
                                 onClick={() => {
-                                    setMode('kakitori');
-                                    // Keep only vocab — disable kanji, kana, grammar, particle for kakitori
-                                    const kakitoriAllowed = ['vocab'];
-                                    const filtered = selectedTypes.filter(t => kakitoriAllowed.includes(t));
-                                    setSelectedTypes(filtered.length > 0 ? filtered : ['vocab']);
+                                    setSource('minna');
+                                    setMode('choice');
                                 }}
-                                className={`flex items-center gap-4 p-4 rounded-2xl border-2 transition-all duration-300 transform hover:scale-[1.01] ${
-                                    mode === 'kakitori'
+                                className={`flex flex-col items-center justify-center p-5 rounded-2xl border-2 transition-all duration-300 transform hover:scale-[1.02] ${
+                                    source === 'minna'
                                         ? 'bg-gradient-to-br from-blue-50 to-sky-50 dark:from-blue-950/30 dark:to-sky-950/10 border-blue-500 shadow-lg shadow-blue-500/20'
-                                        : `${cardBg} ${borderStyle} hover:border-blue-300 dark:hover:border-blue-800 hover:shadow-md`
+                                        : `${cardBg} ${borderStyle} hover:border-blue-300 dark:hover:border-blue-800`
                                 }`}
                             >
-                                <span className="text-3xl">🎧</span>
-                                <div className="text-left">
-                                    <span className={`block font-bold transition-colors ${mode === 'kakitori' ? 'text-blue-700 dark:text-blue-400' : textColor}`}>
-                                        Kakitori (Dikte / Tulis Suara)
-                                    </span>
-                                    <span className={`text-[10px] uppercase font-medium transition-colors ${subTextColor}`}>Dengar audio & tulis dalam Hiragana/Katakana</span>
-                                </div>
+                                <span className="text-3xl mb-2">🇯🇵</span>
+                                <span className={`font-black transition-colors ${source === 'minna' ? 'text-blue-700 dark:text-blue-400' : textColor}`}>
+                                    Minna no Nihongo
+                                </span>
+                                <span className={`text-[10px] mt-1 uppercase font-medium transition-colors ${subTextColor}`}>
+                                    Soal Buku 1 & 2 per Bab
+                                </span>
                             </button>
                         </div>
                     </div>
 
-                    <div className={`grid grid-cols-1 ${selectedTypes.length === 1 && selectedTypes[0] === 'kana' ? 'md:grid-cols-1' : 'md:grid-cols-2'} gap-10`}>
-                        {/* JLPT Levels - Hide if only Kana selected */}
-                        {!(selectedTypes.length === 1 && selectedTypes[0] === 'kana') && (
+                    {/* JLPT Specific Fields */}
+                    {source === 'jlpt' && (
+                        <>
+                            {/* Materi Selection */}
+                            <div>
+                                <label className={`block text-sm font-black uppercase tracking-widest mb-4 transition-colors ${subTextColor}`}>
+                                    Materi Latihan
+                                </label>
+                                <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+                                    {types.map(t => {
+                                        const kakitoriDisabled = mode === 'kakitori' && !['vocab'].includes(t.id);
+                                        const isSelected = selectedTypes.includes(t.id);
+                                        return (
+                                            <button
+                                                key={t.id}
+                                                onClick={() => !kakitoriDisabled && toggleType(t.id)}
+                                                disabled={kakitoriDisabled}
+                                                title={kakitoriDisabled ? 'Tidak tersedia untuk mode Kakitori' : ''}
+                                                className={`flex flex-col items-center justify-center p-4 rounded-2xl border-2 transition-all duration-300 ${
+                                                    kakitoriDisabled
+                                                        ? `${cardBg} ${borderStyle} opacity-35 cursor-not-allowed grayscale`
+                                                        : isSelected
+                                                            ? 'bg-gradient-to-br from-blue-50 to-sky-50 dark:from-blue-950/30 dark:to-sky-950/10 border-blue-500 shadow-lg shadow-blue-500/20 transform hover:scale-[1.03]'
+                                                            : `${cardBg} ${borderStyle} hover:border-blue-300 dark:hover:border-blue-800 hover:shadow-md transform hover:scale-[1.03]`
+                                                }`}
+                                            >
+                                                <span className="text-3xl mb-2">{kakitoriDisabled ? '🔒' : t.icon}</span>
+                                                <span className={`font-bold transition-colors ${
+                                                    kakitoriDisabled ? subTextColor : isSelected ? 'text-blue-700 dark:text-blue-400' : textColor
+                                                }`}>
+                                                    {t.label}
+                                                </span>
+                                                <span className={`text-[10px] mt-1 uppercase font-medium transition-colors ${subTextColor}`}>
+                                                    {kakitoriDisabled ? 'Tidak tersedia' : t.sub}
+                                                </span>
+                                            </button>
+                                        );
+                                    })}
+                                </div>
+                            </div>
+
+                            {/* Mode Latihan Selection */}
+                            <div>
+                                <label className={`block text-sm font-black uppercase tracking-widest mb-4 transition-colors ${subTextColor}`}>
+                                    Mode Latihan
+                                </label>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <button
+                                        onClick={() => setMode('choice')}
+                                        className={`flex items-center gap-4 p-4 rounded-2xl border-2 transition-all duration-300 transform hover:scale-[1.01] ${
+                                            mode === 'choice'
+                                                ? 'bg-gradient-to-br from-blue-50 to-sky-50 dark:from-blue-950/30 dark:to-sky-950/10 border-blue-500 shadow-lg shadow-blue-500/20'
+                                                : `${cardBg} ${borderStyle} hover:border-blue-300 dark:hover:border-blue-800 hover:shadow-md`
+                                        }`}
+                                    >
+                                        <span className="text-3xl">🔠</span>
+                                        <div className="text-left">
+                                            <span className={`block font-bold transition-colors ${mode === 'choice' ? 'text-blue-700 dark:text-blue-400' : textColor}`}>
+                                                Pilihan Ganda
+                                            </span>
+                                            <span className={`text-[10px] uppercase font-medium transition-colors ${subTextColor}`}>Pilih satu dari empat jawaban</span>
+                                        </div>
+                                    </button>
+
+                                    <button
+                                        onClick={() => {
+                                            setMode('kakitori');
+                                            const kakitoriAllowed = ['vocab'];
+                                            const filtered = selectedTypes.filter(t => kakitoriAllowed.includes(t));
+                                            setSelectedTypes(filtered.length > 0 ? filtered : ['vocab']);
+                                        }}
+                                        className={`flex items-center gap-4 p-4 rounded-2xl border-2 transition-all duration-300 transform hover:scale-[1.01] ${
+                                            mode === 'kakitori'
+                                                ? 'bg-gradient-to-br from-blue-50 to-sky-50 dark:from-blue-950/30 dark:to-sky-950/10 border-blue-500 shadow-lg shadow-blue-500/20'
+                                                : `${cardBg} ${borderStyle} hover:border-blue-300 dark:hover:border-blue-800 hover:shadow-md`
+                                        }`}
+                                    >
+                                        <span className="text-3xl">🎧</span>
+                                        <div className="text-left">
+                                            <span className={`block font-bold transition-colors ${mode === 'kakitori' ? 'text-blue-700 dark:text-blue-400' : textColor}`}>
+                                                Kakitori (Dikte / Tulis Suara)
+                                            </span>
+                                            <span className={`text-[10px] uppercase font-medium transition-colors ${subTextColor}`}>Dengar audio & tulis dalam Kana</span>
+                                        </div>
+                                    </button>
+                                </div>
+                            </div>
+                        </>
+                    )}
+
+                    {/* Minna Specific Fields */}
+                    {source === 'minna' && (
+                        <>
+                            {/* Pilihan Buku */}
+                            <div>
+                                <label className={`block text-sm font-black uppercase tracking-widest mb-4 transition-colors ${subTextColor}`}>
+                                    Pilih Buku Minna
+                                </label>
+                                <div className="grid grid-cols-3 gap-4">
+                                    <button
+                                        onClick={() => {
+                                            setSelectedBook('1');
+                                            setChapterStart(1);
+                                            setChapterEnd(25);
+                                        }}
+                                        className={`p-4 rounded-2xl border-2 font-black transition-all duration-300 transform hover:scale-[1.02] ${
+                                            selectedBook === '1'
+                                                ? 'bg-gradient-to-br from-blue-50 to-sky-50 dark:from-blue-950/30 dark:to-sky-950/10 border-blue-500 shadow-md'
+                                                : `${cardBg} ${borderStyle} ${textColor}`
+                                        }`}
+                                    >
+                                        Minna 1 (Bab 1-25)
+                                    </button>
+                                    <button
+                                        onClick={() => {
+                                            setSelectedBook('2');
+                                            setChapterStart(26);
+                                            setChapterEnd(50);
+                                        }}
+                                        className={`p-4 rounded-2xl border-2 font-black transition-all duration-300 transform hover:scale-[1.02] ${
+                                            selectedBook === '2'
+                                                ? 'bg-gradient-to-br from-blue-50 to-sky-50 dark:from-blue-950/30 dark:to-sky-950/10 border-blue-500 shadow-md'
+                                                : `${cardBg} ${borderStyle} ${textColor}`
+                                        }`}
+                                    >
+                                        Minna 2 (Bab 26-50)
+                                    </button>
+                                    <button
+                                        onClick={() => {
+                                            setSelectedBook('both');
+                                            setChapterStart(1);
+                                            setChapterEnd(50);
+                                        }}
+                                        className={`p-4 rounded-2xl border-2 font-black transition-all duration-300 transform hover:scale-[1.02] ${
+                                            selectedBook === 'both'
+                                                ? 'bg-gradient-to-br from-blue-50 to-sky-50 dark:from-blue-950/30 dark:to-sky-950/10 border-blue-500 shadow-md'
+                                                : `${cardBg} ${borderStyle} ${textColor}`
+                                        }`}
+                                    >
+                                        Keduanya (Bab 1-50)
+                                    </button>
+                                </div>
+                            </div>
+
+                            {/* Range Bab */}
+                            <div>
+                                <label className={`block text-sm font-black uppercase tracking-widest mb-4 transition-colors ${subTextColor}`}>
+                                    Rentang Bab (Chapter)
+                                </label>
+                                <div className="flex items-center gap-4">
+                                    <div className="flex-1">
+                                        <span className={`block text-xs font-bold mb-1 ${subTextColor}`}>Mulai Bab</span>
+                                        <input
+                                            type="number"
+                                            value={chapterStart}
+                                            onChange={(e) => setChapterStart(Math.max(1, parseInt(e.target.value) || 1))}
+                                            className={`w-full ${inputBg} border-2 ${borderStyle} rounded-xl px-4 py-3 font-bold transition-all outline-none focus:border-blue-500 ${textColor}`}
+                                            min="1"
+                                            max="50"
+                                        />
+                                    </div>
+                                    <span className={`text-xl font-bold mt-5 ${textColor}`}>s/d</span>
+                                    <div className="flex-1">
+                                        <span className={`block text-xs font-bold mb-1 ${subTextColor}`}>Hingga Bab</span>
+                                        <input
+                                            type="number"
+                                            value={chapterEnd}
+                                            onChange={(e) => setChapterEnd(Math.max(1, parseInt(e.target.value) || 1))}
+                                            className={`w-full ${inputBg} border-2 ${borderStyle} rounded-xl px-4 py-3 font-bold transition-all outline-none focus:border-blue-500 ${textColor}`}
+                                            min="1"
+                                            max="50"
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Mode Latihan Minna */}
+                            <div>
+                                <label className={`block text-sm font-black uppercase tracking-widest mb-4 transition-colors ${subTextColor}`}>
+                                    Tipe / Mode Latihan Minna
+                                </label>
+                                <div className="grid grid-cols-2 gap-4">
+                                    <button
+                                        onClick={() => setMode('choice')}
+                                        className={`flex items-center gap-4 p-4 rounded-2xl border-2 transition-all duration-300 transform hover:scale-[1.01] ${
+                                            mode === 'choice'
+                                                ? 'bg-gradient-to-br from-blue-50 to-sky-50 dark:from-blue-950/30 dark:to-sky-950/10 border-blue-500 shadow-md'
+                                                : `${cardBg} ${borderStyle} hover:border-blue-300 dark:hover:border-blue-800`
+                                        }`}
+                                    >
+                                        <span className="text-3xl">🔠</span>
+                                        <div className="text-left">
+                                            <span className={`block font-bold transition-colors ${mode === 'choice' ? 'text-blue-700 dark:text-blue-400' : textColor}`}>
+                                                Pilihan Ganda
+                                            </span>
+                                            <span className={`text-[10px] uppercase font-medium transition-colors ${subTextColor}`}>Pilihan Ganda Kalimat</span>
+                                        </div>
+                                    </button>
+
+                                    <button
+                                        onClick={() => setMode('doukai')}
+                                        className={`flex items-center gap-4 p-4 rounded-2xl border-2 transition-all duration-300 transform hover:scale-[1.01] ${
+                                            mode === 'doukai'
+                                                ? 'bg-gradient-to-br from-blue-50 to-sky-50 dark:from-blue-950/30 dark:to-sky-950/10 border-blue-500 shadow-md'
+                                                : `${cardBg} ${borderStyle} hover:border-blue-300 dark:hover:border-blue-800`
+                                        }`}
+                                    >
+                                        <span className="text-3xl">✅</span>
+                                        <div className="text-left">
+                                            <span className={`block font-bold transition-colors ${mode === 'doukai' ? 'text-blue-700 dark:text-blue-400' : textColor}`}>
+                                                Doukai (Benar/Salah)
+                                            </span>
+                                            <span className={`text-[10px] uppercase font-medium transition-colors ${subTextColor}`}>Cek kebenaran terjemahan</span>
+                                        </div>
+                                    </button>
+
+                                    <button
+                                        onClick={() => setMode('fill_blank')}
+                                        className={`flex items-center gap-4 p-4 rounded-2xl border-2 transition-all duration-300 transform hover:scale-[1.01] ${
+                                            mode === 'fill_blank'
+                                                ? 'bg-gradient-to-br from-blue-50 to-sky-50 dark:from-blue-950/30 dark:to-sky-950/10 border-blue-500 shadow-md'
+                                                : `${cardBg} ${borderStyle} hover:border-blue-300 dark:hover:border-blue-800`
+                                        }`}
+                                    >
+                                        <span className="text-3xl">📝</span>
+                                        <div className="text-left">
+                                            <span className={`block font-bold transition-colors ${mode === 'fill_blank' ? 'text-blue-700 dark:text-blue-400' : textColor}`}>
+                                                Isi Kosong (Fill Blank)
+                                            </span>
+                                            <span className={`text-[10px] uppercase font-medium transition-colors ${subTextColor}`}>Isi partikel/kosakata rumpang</span>
+                                        </div>
+                                    </button>
+
+                                    <button
+                                        onClick={() => setMode('context_match')}
+                                        className={`flex items-center gap-4 p-4 rounded-2xl border-2 transition-all duration-300 transform hover:scale-[1.01] ${
+                                            mode === 'context_match'
+                                                ? 'bg-gradient-to-br from-blue-50 to-sky-50 dark:from-blue-950/30 dark:to-sky-950/10 border-blue-500 shadow-md'
+                                                : `${cardBg} ${borderStyle} hover:border-blue-300 dark:hover:border-blue-800`
+                                        }`}
+                                    >
+                                        <span className="text-3xl">🔄</span>
+                                        <div className="text-left">
+                                            <span className={`block font-bold transition-colors ${mode === 'context_match' ? 'text-blue-700 dark:text-blue-400' : textColor}`}>
+                                                Context Match
+                                            </span>
+                                            <span className={`text-[10px] uppercase font-medium transition-colors ${subTextColor}`}>Cocokkan kalimat dengan arti</span>
+                                        </div>
+                                    </button>
+                                </div>
+                            </div>
+                        </>
+                    )}
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+                        {/* JLPT Levels - Hide if not JLPT source */}
+                        {source === 'jlpt' && (
                             <div>
                                 <label className={`block text-sm font-black uppercase tracking-widest mb-4 transition-colors ${subTextColor}`}>
                                     JLPT Level
@@ -208,7 +451,7 @@ export default function PracticeConfig() {
                         )}
 
                         {/* Limits and Time */}
-                        <div className="space-y-6">
+                        <div className={`space-y-6 ${source === 'minna' ? 'col-span-2' : ''}`}>
                             <div className="flex items-center justify-between gap-4">
                                 <div className="flex-1">
                                     <label className={`block text-sm font-black uppercase tracking-widest mb-2 transition-colors ${subTextColor}`}>
@@ -261,7 +504,7 @@ export default function PracticeConfig() {
                     onClick={handleStart}
                     className="w-full mt-12 relative overflow-hidden bg-gradient-to-r from-blue-600 to-sky-600 hover:from-blue-500 hover:to-sky-500 text-white font-black py-5 rounded-2xl text-xl shadow-[0_0_40px_rgba(37,99,235,0.28)] transition-all transform hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center gap-3 group border border-white/20"
                 >
-                    <span className="relative z-10">Mulai Kuis Sekarang</span>
+                    <span className="relative z-10">Mulai Latihan Sekarang</span>
                     <span className="text-2xl transition-transform group-hover:translate-x-2 relative z-10">→</span>
                     <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out z-0"></div>
                 </button>

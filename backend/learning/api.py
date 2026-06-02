@@ -5,7 +5,7 @@ from django.shortcuts import get_object_or_404
 from django.contrib.auth import get_user_model
 from .models import QuizAttempt, UserProgress
 from .tts_logic import CrosswordGenerator
-from content.models import Kanji, Vocab, Grammar, Particle
+from content.models import Kanji, Vocab, Grammar, Particle, MinnaQuestion
 import random
 import uuid
 from datetime import datetime, timedelta
@@ -28,6 +28,21 @@ class QuestionSchema(Schema):
     reading: Optional[str] = None 
     meaning: Optional[str] = None
     level: Optional[int] = None
+
+class MinnaQuestionSchema(Schema):
+    id: str
+    character: str
+    type: str
+    options: List[OptionSchema]
+    reading: Optional[str] = None
+    meaning: Optional[str] = None
+    level: Optional[int] = None
+    question_type: str
+    explanation: Optional[str] = None
+    book: Optional[int] = None
+    chapter: Optional[int] = None
+    shown_translation: Optional[str] = None
+    is_translation_correct: Optional[bool] = None
 
 class TTSSchema(Schema):
     grid: List[List[str]]
@@ -93,6 +108,7 @@ class QuizAttemptExportSchema(Schema):
     vocab_id: Optional[uuid.UUID] = None
     grammar_id: Optional[uuid.UUID] = None
     particle_id: Optional[uuid.UUID] = None
+    minna_question_id: Optional[uuid.UUID] = None
     is_correct: bool
     answer_given: Optional[str] = None
     timestamp: datetime
@@ -241,6 +257,65 @@ def generate_quiz(request, limit: int = 10, level: Optional[str] = None, type: s
         
     return questions
 
+@router.get("/practice/minna/generate", response=List[MinnaQuestionSchema])
+def generate_minna_quiz(request, book: Optional[str] = None, chapter: Optional[str] = None, type: Optional[str] = None, limit: int = 10, level: Optional[str] = None):
+    limit = min(max(1, limit), 50)
+    qs = MinnaQuestion.objects.all()
+    if book:
+        books = [int(b.strip()) for b in book.split(',') if b.strip().isdigit()]
+        if books:
+            qs = qs.filter(book__in=books)
+    if chapter:
+        chapters = [int(c.strip()) for c in chapter.split(',') if c.strip().isdigit()]
+        if chapters:
+            qs = qs.filter(chapter__in=chapters)
+    if type:
+        types = [t.strip().lower() for t in type.split(',') if t.strip()]
+        if types:
+            qs = qs.filter(question_type__in=types)
+    if level:
+        levels = [int(l.strip()) for l in level.split(',') if l.strip().isdigit()]
+        if levels:
+            qs = qs.filter(jlpt_level__in=levels)
+            
+    questions_list = list(qs.order_by('?')[:limit])
+    
+    questions_data = []
+    for q in questions_list:
+        options = []
+        for opt in q.options:
+            options.append({
+                "text": opt,
+                "is_correct": opt == q.correct_answer
+            })
+        if q.correct_answer and not any(o["text"] == q.correct_answer for o in options):
+            options.append({
+                "text": q.correct_answer,
+                "is_correct": True
+            })
+        random.shuffle(options)
+        
+        display_char = q.question_jp
+        if q.question_type == 'context_match' and not display_char:
+            display_char = q.question_id
+
+        questions_data.append({
+            "id": str(q.id),
+            "character": display_char,
+            "type": "minna",
+            "options": options,
+            "reading": q.question_id,
+            "meaning": q.shown_translation or q.correct_answer,
+            "level": q.jlpt_level,
+            "question_type": q.question_type,
+            "explanation": q.explanation,
+            "book": q.book,
+            "chapter": q.chapter,
+            "shown_translation": q.shown_translation,
+            "is_translation_correct": q.is_translation_correct
+        })
+    return questions_data
+
 @router.get("/tts/generate", response=TTSSchema)
 def generate_tts(request, level: Optional[int] = 5, limit: int = 15):
     # Fetch random vocab words for the crossword
@@ -302,10 +377,12 @@ def submit_quiz(request, payload: SubmissionSchema):
         elif res.type in ['grammar', 'bunpo']:
             attempt_data["grammar_id"] = res.question_id
             filter_kwargs["grammar_id"] = res.question_id
-
         elif res.type == 'particle':
             attempt_data["particle_id"] = res.question_id
             filter_kwargs["particle_id"] = res.question_id
+        elif res.type == 'minna':
+            attempt_data["minna_question_id"] = res.question_id
+            filter_kwargs["minna_question_id"] = res.question_id
             
         if res.is_correct:
             # Get past attempts for this specific question
@@ -423,6 +500,22 @@ def get_analytics(request):
                 "level": item['particle__jlpt_level']
             })
 
+    # Minna question stats
+    minna_stats = qs.filter(minna_question__isnull=False).values('minna_question__question_jp', 'minna_question__jlpt_level')\
+        .annotate(
+            wrong=Count('id', filter=Q(is_correct=False)),
+            right=Count('id', filter=Q(is_correct=True))
+        ).order_by('-wrong')[:30]
+
+    for item in minna_stats:
+        if item['wrong'] > 0:
+            wrong_stats.append({
+                "character": item['minna_question__question_jp'][:30],
+                "count": item['wrong'],
+                "type": "minna",
+                "status": get_status_label(item['wrong'], item['right']),
+                "level": item['minna_question__jlpt_level']
+            })
         
     # Sort combined stats
     wrong_stats.sort(key=lambda x: x['count'], reverse=True)
@@ -434,7 +527,8 @@ def get_analytics(request):
             Q(kanji__jlpt_level=lvl) | 
             Q(vocab__jlpt_level=lvl) | 
             Q(grammar__jlpt_level=lvl) |
-            Q(particle__jlpt_level=lvl)
+            Q(particle__jlpt_level=lvl) |
+            Q(minna_question__jlpt_level=lvl)
         )
         total = level_qs.count()
         if total > 0:
@@ -533,21 +627,22 @@ def export_practice_data(request):
     progress = UserProgress.objects.filter(user=user)
     
     # Pre-calculate mistake counts for all items to avoid N+1 queries in loops
-    mistake_counts = attempts.filter(is_correct=False).values('kanji_id', 'vocab_id', 'grammar_id', 'particle_id')\
+    mistake_counts = attempts.filter(is_correct=False).values('kanji_id', 'vocab_id', 'grammar_id', 'particle_id', 'minna_question_id')\
         .annotate(count=Count('id'))
     
     # Create a lookup map
     lookup = {}
     for entry in mistake_counts:
-        key = entry['kanji_id'] or entry['vocab_id'] or entry['grammar_id'] or entry['particle_id']
+        key = entry['kanji_id'] or entry['vocab_id'] or entry['grammar_id'] or entry['particle_id'] or entry['minna_question_id']
         if key: lookup[str(key)] = entry['count']
 
     # Fetch all related labels at once to avoid N+1 in the loop
-    from content.models import Kanji, Vocab, Grammar, Particle
+    from content.models import Kanji, Vocab, Grammar, Particle, MinnaQuestion
     kanji_map = {str(k.id): k.character for k in Kanji.objects.filter(id__in=attempts.values_list('kanji_id', flat=True).distinct()) if k.id}
     vocab_map = {str(v.id): v.word for v in Vocab.objects.filter(id__in=attempts.values_list('vocab_id', flat=True).distinct()) if v.id}
     grammar_map = {str(g.id): g.title for g in Grammar.objects.filter(id__in=attempts.values_list('grammar_id', flat=True).distinct()) if g.id}
     p_map = {str(p.id): p.character for p in Particle.objects.filter(id__in=attempts.values_list('particle_id', flat=True).distinct()) if p.id}
+    minna_map = {str(m.id): m.question_jp[:30] for m in MinnaQuestion.objects.filter(id__in=attempts.values_list('minna_question_id', flat=True).distinct()) if m.id}
 
     export_attempts = []
     for a in attempts:
@@ -571,12 +666,17 @@ def export_practice_data(request):
             target_id = a.particle_id
             item_type = 'particle'
             label = p_map.get(str(a.particle_id))
+        elif a.minna_question_id:
+            target_id = a.minna_question_id
+            item_type = 'minna'
+            label = minna_map.get(str(a.minna_question_id))
 
         export_attempts.append({
             "kanji_id": a.kanji_id,
             "vocab_id": a.vocab_id,
             "grammar_id": a.grammar_id,
             "particle_id": a.particle_id,
+            "minna_question_id": a.minna_question_id,
             "is_correct": a.is_correct,
             "answer_given": a.answer_given,
             "timestamp": a.timestamp,
@@ -619,6 +719,7 @@ def import_practice_data(request, payload: ExportDataSchema):
             vocab_id=a.vocab_id,
             grammar_id=a.grammar_id,
             particle_id=a.particle_id,
+            minna_question_id=a.minna_question_id,
             is_correct=a.is_correct,
             timestamp__gte=a.timestamp - timedelta(seconds=1),
             timestamp__lte=a.timestamp + timedelta(seconds=1)
@@ -631,6 +732,7 @@ def import_practice_data(request, payload: ExportDataSchema):
                 vocab_id=a.vocab_id,
                 grammar_id=a.grammar_id,
                 particle_id=a.particle_id,
+                minna_question_id=a.minna_question_id,
                 is_correct=a.is_correct,
                 answer_given=a.answer_given,
                 timestamp=a.timestamp,

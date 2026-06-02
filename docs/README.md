@@ -67,6 +67,31 @@ Manajemen pengguna dan token.
 
 ---
 
+## 4. Minna Practice API (`/learning`)
+
+Digunakan untuk kuis latihan terstruktur berbasis buku Minna no Nihongo 1 & 2.
+
+*   `GET /learning/practice/minna/generate`
+    *   **Deskripsi**: Membuat kuis terstruktur berdasarkan buku Minna no Nihongo.
+    *   **Query Params**:
+        *   `book`: Nomor buku Minna (misal: `1`, `2`, atau `1,2`).
+        *   `chapter`: Nomor bab (bisa range atau koma separated, misal `1,2,3,4,5`).
+        *   `type`: Jenis kuis (`choice`, `doukai`, `fill_blank`, `context_match`).
+        *   `limit`: Batas jumlah kuis (default: 10, maks: 50).
+        *   `level`: Tingkat JLPT jika relevan.
+    *   **Response (per soal)**:
+        *   `id` (str): UUID soal.
+        *   `character` (str): Soal bahasa Jepang (atau arti bahasa Indonesia untuk context_match).
+        *   `type` (str): Selalu `"minna"`.
+        *   `question_type` (str): Jenis kuis (`doukai`, `fill_blank`, dst).
+        *   `shown_translation` (str): Terjemahan khusus untuk kuis Doukai.
+        *   `is_translation_correct` (bool): Kunci jawaban untuk kuis Doukai.
+        *   `correct_answer` (str): Teks jawaban yang benar.
+        *   `options` (array of objects): Pilihan jawaban dengan properti `text` dan `is_correct`.
+        *   `explanation` (str): Penjelasan setelah soal dijawab.
+
+---
+
 ## Format Response Umum
 Semua list endpoint menggunakan format paginasi berikut:
 

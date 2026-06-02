@@ -6,7 +6,7 @@ import { useAuth } from '@/context/AuthContext';
 import { usePractice } from '@/context/PracticeContext';
 import { useTheme } from '@/context/ThemeContext';
 import { saveGuestResults } from '@/lib/local-analytics';
-import { submitPracticeResults, getPracticeQuestions } from '@/lib/api';
+import { submitPracticeResults, getPracticeQuestions, getMinnaQuestions } from '@/lib/api';
 import { enqueueResults, syncPendingResults, pendingCount } from '@/lib/offline-queue';
 import KanjiDetailModal from '@/components/kanji/KanjiDetailModal';
 import KotobaDetailModal from '@/components/kotoba/KotobaDetailModal';
@@ -44,6 +44,9 @@ function PracticeContent() {
     const level = searchParams.get('level') || null;
     const type = searchParams.get('type') || 'kanji';
     const mode = searchParams.get('mode') || 'choice';
+    const source = searchParams.get('source') || 'jlpt';
+    const book = searchParams.get('book') || null;
+    const chapter = searchParams.get('chapter') || null;
     const initialTimer = searchParams.get('timer') ? parseInt(searchParams.get('timer')) * 60 : null;
     const [timeLeft, setTimeLeft] = useState(initialTimer);
 
@@ -71,7 +74,7 @@ function PracticeContent() {
         setAudioPlaying(val);
     };
 
-    const playLocalSpeech = (currentQ) => {
+    const playLocalSpeech = useCallback((currentQ) => {
         if ('speechSynthesis' in window) {
             window.speechSynthesis.cancel();
 
@@ -92,7 +95,7 @@ function PracticeContent() {
         } else {
             setAudioPlayingState(false);
         }
-    };
+    }, []);
 
     const playQuestionAudio = useCallback((currentQ) => {
         if (!currentQ || audioPlayingRef.current) return;
@@ -116,7 +119,7 @@ function PracticeContent() {
         } else {
             playLocalSpeech(currentQ);
         }
-    }, []);
+    }, [playLocalSpeech]);
 
     // Autoplay audio on question change in Kakitori mode
     useEffect(() => {
@@ -218,7 +221,12 @@ function PracticeContent() {
     useEffect(() => {
         async function loadQuestions() {
             try {
-                const data = await getPracticeQuestions({ limit, level, type });
+                let data;
+                if (source === 'minna') {
+                    data = await getMinnaQuestions({ limit, book, chapter, type: mode });
+                } else {
+                    data = await getPracticeQuestions({ limit, level, type });
+                }
                 setQuestions(data);
             } catch (error) {
                 console.error('Failed to load questions:', error);
@@ -259,7 +267,7 @@ function PracticeContent() {
         }
 
         loadQuestions();
-    }, [limit, level, type]);
+    }, [limit, level, type, source, book, chapter, mode]);
 
     // Save session state
     useEffect(() => {
@@ -439,7 +447,7 @@ function PracticeContent() {
 
     const textColor = !mounted ? 'text-black' : (theme === 'dark' ? 'text-white' : 'text-black');
     const subTextColor = !mounted ? 'text-gray-400' : (theme === 'dark' ? 'text-gray-500' : 'text-gray-400');
-    const cardBg = !mounted ? 'bg-white' : (theme === 'dark' ? 'bg-[#0a0a0a]' : 'bg-white');
+
     const inputBg = !mounted ? 'bg-gray-50' : (theme === 'dark' ? 'bg-black/40' : 'bg-gray-50');
     const borderStyle = !mounted ? 'border-gray-100' : (theme === 'dark' ? 'border-blue-950/30' : 'border-gray-100');
 
@@ -669,33 +677,70 @@ function PracticeContent() {
                             </div>
                         )}
                     </div>
+                ) : mode === 'doukai' ? (
+                    <div className="mb-8 relative p-4 flex flex-col items-center group transition-all duration-300">
+                        <span className={`text-[10px] font-black uppercase tracking-[0.2em] mb-4 block transition-colors ${subTextColor}`}>
+                            Minna Doukai (Pemahaman) • Bab {currentQuestion.chapter}
+                        </span>
+                        
+                        <div className={`w-full max-w-lg mb-6 p-6 rounded-3xl border-2 ${theme === 'dark' ? 'bg-black/30 border-white/5' : 'bg-gray-50 border-gray-100'} transition-all`}>
+                            <span className={`block text-xs font-black uppercase tracking-wider mb-2 ${subTextColor} text-left`}>Kalimat Jepang:</span>
+                            <div className={`text-2xl font-black font-japanese mb-4 leading-relaxed text-left ${textColor}`}>
+                                {currentQuestion.character}
+                            </div>
+                            
+                            <hr className={`my-4 border-dashed ${theme === 'dark' ? 'border-gray-800' : 'border-gray-200'}`} />
+                            
+                            <span className={`block text-xs font-black uppercase tracking-wider mb-2 ${subTextColor} text-left`}>Terjemahan Yang Diberikan:</span>
+                            <div className={`text-xl font-bold italic text-left ${textColor}`}>
+                                &quot;{currentQuestion.shown_translation}&quot;
+                            </div>
+                        </div>
+
+                        <div className={`text-sm font-black uppercase tracking-wider ${textColor}`}>
+                            Apakah terjemahan di atas BENAR (sesuai)?
+                        </div>
+                    </div>
                 ) : (
                     <div
                         onClick={() => !isAnswered && setShowReadingManual(!showReadingManual)}
                         className={`mb-8 relative p-4 flex flex-col items-center group transition-all duration-300 ${!isAnswered ? 'cursor-pointer hover:bg-blue-500/5 rounded-3xl' : ''}`}
                     >
                         <span className={`text-[10px] font-black uppercase tracking-[0.2em] mb-4 block transition-colors ${subTextColor}`}>
-                            {currentQuestion.type === 'kanji' ? 'Kanji' : currentQuestion.type === 'vocab' ? 'Kosakata' : currentQuestion.type === 'kana' ? 'Kana' : 'Tata Bahasa'}
+                            {source === 'minna' 
+                                ? `Minna ${mode === 'fill_blank' ? 'Isi Kosong' : mode === 'context_match' ? 'Context Match' : 'Latihan'} • Bab ${currentQuestion.chapter}`
+                                : (currentQuestion.type === 'kanji' ? 'Kanji' : currentQuestion.type === 'vocab' ? 'Kosakata' : currentQuestion.type === 'kana' ? 'Kana' : 'Tata Bahasa')
+                            }
                         </span>
-                        <div className={`${
-                            (currentQuestion.character?.length || 0) > 50 ? 'text-sm md:text-lg' :
-                            (currentQuestion.character?.length || 0) > 20 ? 'text-base md:text-xl' :
-                            (currentQuestion.character?.length || 0) > 10 ? 'text-lg md:text-2xl' :
-                            (currentQuestion.character?.length || 0) > 5 ? 'text-xl md:text-3xl' :
-                            currentQuestion.type === 'grammar' || currentQuestion.type === 'particle' ? 'text-2xl md:text-4xl' :
-                            'text-4xl md:text-[6rem]'
-                        } leading-tight font-black select-none pb-2 break-words transition-colors ${textColor}`}>
-                            <ruby className="transition-colors">
-                                {currentQuestion.character}
-                                {(currentQuestion.type === 'kanji' || currentQuestion.type === 'vocab') &&
-                                 currentQuestion.reading &&
-                                 hasKanji(currentQuestion.character) && (
-                                    <rt className={`text-sm md:text-xl font-bold transition-all duration-300 ${isAnswered || showReadingManual ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-2 group-hover:opacity-100 group-hover:translate-y-0'} ${theme === 'dark' ? 'text-blue-400' : 'text-blue-600'}`}>
-                                        {sanitizeReading(currentQuestion.reading)}
-                                    </rt>
-                                 )}
-                            </ruby>
-                        </div>
+
+                        {mode === 'context_match' ? (
+                            <div className="flex flex-col items-center">
+                                <span className={`text-xs font-black uppercase tracking-widest ${subTextColor} mb-2`}>Cocokkan arti berikut:</span>
+                                <div className={`text-xl md:text-3xl font-black ${textColor} leading-tight mb-2 px-4`}>
+                                    &quot;{currentQuestion.character}&quot;
+                                </div>
+                            </div>
+                        ) : (
+                            <div className={`${
+                                (currentQuestion.character?.length || 0) > 50 ? 'text-sm md:text-lg' :
+                                (currentQuestion.character?.length || 0) > 20 ? 'text-base md:text-xl' :
+                                (currentQuestion.character?.length || 0) > 10 ? 'text-lg md:text-2xl' :
+                                (currentQuestion.character?.length || 0) > 5 ? 'text-xl md:text-3xl' :
+                                currentQuestion.type === 'grammar' || currentQuestion.type === 'particle' ? 'text-2xl md:text-4xl' :
+                                'text-4xl md:text-[6rem]'
+                            } leading-tight font-black select-none pb-2 break-words transition-colors ${textColor}`}>
+                                <ruby className="transition-colors">
+                                    {currentQuestion.character}
+                                    {(currentQuestion.type === 'kanji' || currentQuestion.type === 'vocab') &&
+                                     currentQuestion.reading &&
+                                     hasKanji(currentQuestion.character) && (
+                                        <rt className={`text-sm md:text-xl font-bold transition-all duration-300 ${isAnswered || showReadingManual ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-2 group-hover:opacity-100 group-hover:translate-y-0'} ${theme === 'dark' ? 'text-blue-400' : 'text-blue-600'}`}>
+                                            {sanitizeReading(currentQuestion.reading)}
+                                        </rt>
+                                     )}
+                                </ruby>
+                            </div>
+                        )}
                         {!isAnswered && (currentQuestion.type === 'kanji' || currentQuestion.type === 'vocab') &&
                          currentQuestion.reading && hasKanji(currentQuestion.character) && (
                             <div className={`text-[9px] mt-4 font-black uppercase tracking-[0.2em] transition-all duration-500 ${showReadingManual ? 'opacity-0' : 'opacity-40 animate-pulse'}`}>
@@ -749,7 +794,7 @@ function PracticeContent() {
                     </div>
                 ) : (
                     <>
-                        {isAnswered && (currentQuestion.reading || currentQuestion.meaning) && (
+                        {isAnswered && (currentQuestion.reading || currentQuestion.meaning) && mode !== 'doukai' && (
                             <div className="mb-6 animate-fade-in-up">
                                 {currentQuestion.reading && hasKanji(currentQuestion.character) && (
                                     <div className="text-2xl text-blue-600 dark:text-blue-400 font-serif font-black mb-1 break-words">{sanitizeReading(currentQuestion.reading)}</div>
@@ -760,37 +805,89 @@ function PracticeContent() {
                             </div>
                         )}
 
-                        <div className="grid gap-3 grid-cols-1 md:grid-cols-2">
-                            {currentQuestion.options.map((option, idx) => {
-                                let btnClass = "p-4 text-base md:text-lg font-black border-2 rounded-2xl transition-all duration-300 relative break-words ";
+                        {isAnswered && currentQuestion.explanation && (
+                            <div className={`mb-6 p-5 rounded-[2rem] border-2 text-left text-sm transition-all duration-300 animate-fade-in-up ${
+                                theme === 'dark' ? 'bg-blue-950/20 border-blue-900/40 text-blue-200' : 'bg-blue-50 border-blue-100 text-blue-800'
+                            }`}>
+                                <strong className="block mb-1 text-xs uppercase tracking-widest font-black">💡 Penjelasan:</strong>
+                                {currentQuestion.explanation}
+                            </div>
+                        )}
 
-                                if (isAnswered) {
-                                    if (option.is_correct) {
-                                        btnClass += theme === 'dark' ? "bg-green-900/30 border-green-500 text-green-400 shadow-[0_0_20px_rgba(34,197,94,0.2)] scale-[1.02]" : "bg-green-50 border-green-500 text-green-700 shadow-[0_0_20px_rgba(34,197,94,0.3)] scale-[1.02]";
-                                    } else if (selectedOption === option && !option.is_correct) {
-                                        btnClass += theme === 'dark' ? "bg-blue-950/40 border-blue-500 text-blue-300 shadow-lg shadow-blue-500/10" : "bg-blue-50 border-blue-500 text-blue-700";
+                        {mode === 'doukai' ? (
+                            <div className="grid gap-4 grid-cols-2 max-w-md mx-auto w-full">
+                                {['Benar', 'Salah'].map((typeLabel, idx) => {
+                                    const opt = currentQuestion.options.find(o => o.text === typeLabel) || { text: typeLabel, is_correct: typeLabel === 'Benar' ? currentQuestion.is_translation_correct : !currentQuestion.is_translation_correct };
+                                    const isCorrectOpt = opt.is_correct;
+                                    
+                                    let btnClass = "p-5 text-lg font-black border-2 rounded-2xl transition-all duration-300 relative transform hover:scale-[1.02] active:scale-[0.98] ";
+                                    
+                                    if (isAnswered) {
+                                        if (isCorrectOpt) {
+                                            btnClass += theme === 'dark' ? "bg-green-900/30 border-green-500 text-green-400 shadow-[0_0_20px_rgba(34,197,94,0.2)] scale-[1.02]" : "bg-green-50 border-green-500 text-green-700 shadow-[0_0_20px_rgba(34,197,94,0.3)] scale-[1.02]";
+                                        } else if (selectedOption === opt && !isCorrectOpt) {
+                                            btnClass += theme === 'dark' ? "bg-blue-950/40 border-blue-500 text-blue-300 shadow-lg shadow-blue-500/10" : "bg-blue-50 border-blue-500 text-blue-700";
+                                        } else {
+                                            btnClass += theme === 'dark' ? "bg-black/20 border-gray-900 text-gray-600 opacity-40" : "bg-gray-50 border-gray-100 text-gray-300 opacity-60";
+                                        }
                                     } else {
-                                        btnClass += theme === 'dark' ? "bg-black/20 border-gray-900 text-gray-600 opacity-40" : "bg-gray-50 border-gray-100 text-gray-300 opacity-60";
+                                        if (typeLabel === 'Benar') {
+                                            btnClass += theme === 'dark' ? "bg-[#0a0a0a]/50 border-green-900/40 text-green-400 hover:border-green-500 hover:bg-green-950/20" : "bg-white/50 border-green-200 text-green-700 hover:border-green-500 hover:bg-green-50";
+                                        } else {
+                                            btnClass += theme === 'dark' ? "bg-[#0a0a0a]/50 border-blue-900/40 text-blue-400 hover:border-blue-500 hover:bg-blue-950/20" : "bg-white/50 border-blue-200 text-blue-700 hover:border-blue-500 hover:bg-blue-50";
+                                        }
+                                        btnClass += " cursor-pointer hover:shadow-lg";
                                     }
-                                } else {
-                                    btnClass += `${theme === 'dark' ? 'bg-[#0a0a0a]/50' : 'bg-white/50'} ${borderStyle} ${textColor} hover:border-sky-400 dark:hover:border-sky-700 hover:bg-sky-50 dark:hover:bg-sky-950/30 cursor-pointer hover:shadow-lg transform hover:-translate-y-1 active:scale-95`;
-                                }
 
-                                return (
-                                    <button
-                                        key={idx}
-                                        disabled={isAnswered}
-                                        onClick={() => handleOptionSelect(option)}
-                                        className={btnClass}
-                                    >
-                                        <span className="relative z-10">{option.text}</span>
-                                        {isAnswered && option.is_correct && (
-                                            <span className="absolute right-3 top-1/2 -translate-y-1/2 text-green-500 text-xl">✓</span>
-                                        )}
-                                    </button>
-                                );
-                            })}
-                        </div>
+                                    return (
+                                        <button
+                                            key={idx}
+                                            disabled={isAnswered}
+                                            onClick={() => handleOptionSelect(opt)}
+                                            className={btnClass}
+                                        >
+                                            <span className="text-3xl block mb-2">{typeLabel === 'Benar' ? '✅' : '❌'}</span>
+                                            <span className="relative z-10">{typeLabel}</span>
+                                            {isAnswered && isCorrectOpt && (
+                                                <span className="absolute right-3 top-1/2 -translate-y-1/2 text-green-500 text-xl">✓</span>
+                                            )}
+                                        </button>
+                                    );
+                                })}
+                            </div>
+                        ) : (
+                            <div className="grid gap-3 grid-cols-1 md:grid-cols-2">
+                                {currentQuestion.options.map((option, idx) => {
+                                    let btnClass = "p-4 text-base md:text-lg font-black border-2 rounded-2xl transition-all duration-300 relative break-words ";
+
+                                    if (isAnswered) {
+                                        if (option.is_correct) {
+                                            btnClass += theme === 'dark' ? "bg-green-900/30 border-green-500 text-green-400 shadow-[0_0_20px_rgba(34,197,94,0.2)] scale-[1.02]" : "bg-green-50 border-green-500 text-green-700 shadow-[0_0_20px_rgba(34,197,94,0.3)] scale-[1.02]";
+                                        } else if (selectedOption === option && !option.is_correct) {
+                                            btnClass += theme === 'dark' ? "bg-blue-950/40 border-blue-500 text-blue-300 shadow-lg shadow-blue-500/10" : "bg-blue-50 border-blue-500 text-blue-700";
+                                        } else {
+                                            btnClass += theme === 'dark' ? "bg-black/20 border-gray-900 text-gray-600 opacity-40" : "bg-gray-50 border-gray-100 text-gray-300 opacity-60";
+                                        }
+                                    } else {
+                                        btnClass += `${theme === 'dark' ? 'bg-[#0a0a0a]/50' : 'bg-white/50'} ${borderStyle} ${textColor} hover:border-sky-400 dark:hover:border-sky-700 hover:bg-sky-50 dark:hover:bg-sky-950/30 cursor-pointer hover:shadow-lg transform hover:-translate-y-1 active:scale-95`;
+                                    }
+
+                                    return (
+                                        <button
+                                            key={idx}
+                                            disabled={isAnswered}
+                                            onClick={() => handleOptionSelect(option)}
+                                            className={btnClass}
+                                        >
+                                            <span className="relative z-10">{option.text}</span>
+                                            {isAnswered && option.is_correct && (
+                                                <span className="absolute right-3 top-1/2 -translate-y-1/2 text-green-500 text-xl">✓</span>
+                                            )}
+                                        </button>
+                                    );
+                                })}
+                            </div>
+                        )}
                     </>
                 )}
             </div>

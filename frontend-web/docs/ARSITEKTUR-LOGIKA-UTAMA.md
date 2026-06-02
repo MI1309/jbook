@@ -498,7 +498,23 @@ Sistem memberikan label otomatis pada daftar kesalahan untuk membantu user menen
 
 **File:** `components/PracticeRunner.jsx`
 
-### Alur Lengkap Kuis
+### 13.1 Tipe Soal yang Didukung
+
+| Tipe | Mode Param | Sumber Data | UI |
+|------|-----------|-------------|-----|
+| Pilihan Ganda | `choice` | API `/practice/generate` atau `/minna/generate` | 4 opsi, pilih 1 |
+| Kakitori | `kakitori` | API `/practice/generate` | Input ketik |
+| Doukai | `doukai` | API `/minna/generate` | 2 tombol Benar/Salah (Benar/Salah) |
+| Fill in the Blank | `fill_blank` | API `/minna/generate` | 4 opsi kata/partikel |
+| Context Match | `context_match` | API `/minna/generate` | 4 kalimat JP |
+
+### 13.2 Alur Soal Minna (Doukai / Fill Blank / Context Match)
+Sumber data kuis Minna dilayani secara terpisah dari latihan standar JLPT melalui endpoint `/minna/generate` dengan query params pendukung:
+- `book` (1, 2, atau 1,2)
+- `chapter` (range bab yang dipilih, e.g., 1-25)
+- `type` (mode soal)
+
+### 13.3 Alur Lengkap Kuis
 
 #### 1. Inisialisasi Soal
 

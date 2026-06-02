@@ -35,6 +35,7 @@ class QuizAttempt(models.Model):
     vocab = models.ForeignKey('content.Vocab', on_delete=models.CASCADE, null=True, blank=True)
     grammar = models.ForeignKey('content.Grammar', on_delete=models.CASCADE, null=True, blank=True)
     particle = models.ForeignKey('content.Particle', on_delete=models.CASCADE, null=True, blank=True)
+    minna_question = models.ForeignKey('content.MinnaQuestion', on_delete=models.CASCADE, null=True, blank=True)
     
     is_correct = models.BooleanField()
     answer_given = models.CharField(max_length=255, blank=True, null=True)

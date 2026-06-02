@@ -136,3 +136,66 @@ class Announcement(models.Model):
 
     def __str__(self):
         return f"{self.title} ({self.get_type_display()})"
+
+class QuestionType(models.TextChoices):
+    DOUKAI        = 'doukai',         'Doukai (Benar/Salah)'
+    FILL_BLANK    = 'fill_blank',     'Fill in the Blank'
+    CONTEXT_MATCH = 'context_match',  'Context Match'
+    CHOICE        = 'choice',         'Multiple Choice'
+
+class MinnaQuestion(models.Model):
+    """
+    Bank soal latihan khusus buku Minna no Nihongo.
+    Mendukung empat tipe soal:
+      - doukai       : Tampilkan kalimat + terjemahan → user pilih Benar/Salah
+      - fill_blank   : Kalimat dengan ____ → pilih kata yang tepat
+      - context_match: Tampilkan arti Indonesia → pilih kalimat Jepang yang benar
+      - choice       : Pilihan ganda standar
+    """
+    id             = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    book           = models.IntegerField(choices=[(1, 'Minna no Nihongo 1'), (2, 'Minna no Nihongo 2')],
+                                         help_text="Nomor buku Minna no Nihongo (1 atau 2)")
+    chapter        = models.IntegerField(help_text="Nomor bab dalam buku")
+    question_type  = models.CharField(max_length=20, choices=QuestionType.choices,
+                                       help_text="Tipe soal latihan")
+
+    # Teks soal
+    question_jp    = models.TextField(help_text="Kalimat/soal dalam bahasa Jepang")
+    question_id    = models.TextField(blank=True, help_text="Konteks soal dalam Bahasa Indonesia (opsional)")
+
+    # Khusus Doukai: terjemahan yang "ditampilkan" ke user (bisa sengaja salah)
+    shown_translation      = models.TextField(blank=True,
+                                               help_text="Terjemahan yang ditampilkan (khusus tipe doukai)")
+    is_translation_correct = models.BooleanField(null=True, blank=True,
+                                                  help_text="Apakah shown_translation itu benar? (kunci jawaban doukai)")
+
+    # Jawaban dan pilihan
+    correct_answer = models.CharField(max_length=512, help_text="Jawaban yang benar")
+    options        = models.JSONField(default=list,
+                                       help_text="Daftar pilihan jawaban (list of string)")
+
+    # Penjelasan setelah menjawab
+    explanation    = models.TextField(blank=True,
+                                       help_text="Penjelasan singkat setelah user menjawab")
+
+    # Relasi ke konten yang relevan
+    grammar = models.ForeignKey('Grammar', null=True, blank=True, on_delete=models.SET_NULL,
+                                 related_name='minna_questions',
+                                 help_text="Pola tata bahasa yang terkait")
+    vocab   = models.ForeignKey('Vocab', null=True, blank=True, on_delete=models.SET_NULL,
+                                 related_name='minna_questions',
+                                 help_text="Kosakata yang terkait")
+
+    jlpt_level = models.IntegerField(choices=JLPTLevel.choices, default=JLPTLevel.N5,
+                                      help_text="Level JLPT yang sesuai")
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['book', 'chapter', 'question_type']
+        indexes  = [
+            models.Index(fields=['book', 'chapter']),
+            models.Index(fields=['question_type', 'jlpt_level']),
+        ]
+
+    def __str__(self):
+        return f"[Minna {self.book} Bab {self.chapter}] {self.get_question_type_display()} — {self.question_jp[:50]}"

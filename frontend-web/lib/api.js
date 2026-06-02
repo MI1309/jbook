@@ -368,6 +368,29 @@ export async function getGrammarDetail(id) {
     return handleNetworkError('getGrammarDetail', new Error('Offline'), null);
 }
 
+export async function getMinnaQuestions({ limit = 10, book = null, chapter = null, type = 'choice' } = {}) {
+    const params = new URLSearchParams();
+    if (limit) params.append('limit', limit);
+    if (book) params.append('book', book);
+    if (chapter) params.append('chapter', chapter);
+    if (type) params.append('type', type);
+
+    const cacheKey = `minna-questions-${params.toString()}`;
+
+    if (typeof window === 'undefined' || (typeof navigator !== 'undefined' && navigator.onLine)) {
+        try {
+            return await fetchWithCache(cacheKey, async () => {
+                const res = await fetch(`${API_URL}/learning/practice/minna/generate?${params.toString()}`);
+                return handleResponse(res, 'getMinnaQuestions');
+            }, 60 * 1000); // 1 minute cache for flexibility
+        } catch (error) {
+            console.error('[jbook-api] getMinnaQuestions API failed:', error.message);
+            throw error;
+        }
+    }
+    throw new Error('Offline mode tidak didukung untuk latihan Minna Book saat ini.');
+}
+
 export async function getPracticeQuestions({ limit = 10, level = null, type = 'kanji' } = {}) {
     const params = new URLSearchParams();
     if (limit) params.append('limit', limit);

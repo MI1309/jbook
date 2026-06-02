@@ -1,7 +1,7 @@
 import csv
 from django.contrib import admin
 from django.http import HttpResponse
-from .models import Kanji, Vocab, Grammar, Blog, Particle, Announcement
+from .models import Kanji, Vocab, Grammar, Blog, Particle, Announcement, MinnaQuestion
 
 @admin.action(description="Export selected items as CSV")
 def export_as_csv(modeladmin, request, queryset):
@@ -69,3 +69,16 @@ class AnnouncementAdmin(admin.ModelAdmin):
     list_filter = ('type', 'is_active', 'show_as_popup')
     search_fields = ('title', 'content')
     ordering = ('-created_at',)
+
+@admin.register(MinnaQuestion)
+class MinnaQuestionAdmin(admin.ModelAdmin):
+    list_display  = ('book', 'chapter', 'question_type', 'jlpt_level', 'question_jp_short', 'correct_answer')
+    list_filter   = ('book', 'question_type', 'jlpt_level')
+    search_fields = ('question_jp', 'question_id', 'shown_translation', 'correct_answer', 'explanation')
+    ordering      = ('book', 'chapter', 'question_type')
+    raw_id_fields = ('grammar', 'vocab')
+    actions       = [export_as_csv]
+
+    @admin.display(description='Kalimat Soal')
+    def question_jp_short(self, obj):
+        return obj.question_jp[:60] + ('…' if len(obj.question_jp) > 60 else '')
