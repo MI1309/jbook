@@ -5,7 +5,7 @@ from django.shortcuts import get_object_or_404
 from django.contrib.auth import get_user_model
 from .models import QuizAttempt, UserProgress
 from .tts_logic import CrosswordGenerator
-from content.models import Kanji, Vocab, Grammar, Particle, MinnaQuestion
+from content.models import Kanji, Vocab, Grammar, Particle, MinnaQuestion, DoukaiPassage, DoukaiQuestion
 import random
 import uuid
 from datetime import datetime, timedelta
@@ -125,6 +125,27 @@ class UserProgressExportSchema(Schema):
     srs_stage: int
     next_review: Optional[datetime] = None
     last_reviewed: Optional[datetime] = None
+
+class DoukaiQuestionSchema(Schema):
+    id: uuid.UUID
+    question_text: str
+    is_correct: bool
+    explanation: str
+    order: int
+
+class DoukaiPassageSchema(Schema):
+    id: uuid.UUID
+    title: str
+    text_jp: str
+    text_id: Optional[str] = None
+    book: Optional[int] = None
+    chapter: Optional[int] = None
+    jlpt_level: Optional[int] = None
+    created_at: datetime
+    question_count: int
+
+class DoukaiPassageDetailSchema(DoukaiPassageSchema):
+    questions: List[DoukaiQuestionSchema]
 
 class ExportDataSchema(Schema):
     attempts: List[QuizAttemptExportSchema]
@@ -351,6 +372,29 @@ def generate_tts(request, level: Optional[int] = 5, limit: int = 15):
         "clues": best_clues,
         "size": 15
     }
+
+# ─── Doukai Endpoints ────────────────────────────────────────────────────────
+
+@router.get("/doukai/count")
+def get_doukai_count(request):
+    """Cek apakah ada passage doukai tersedia (untuk disable UI)"""
+    return {"count": DoukaiPassage.objects.count()}
+
+@router.get("/doukai/passages", response=List[DoukaiPassageSchema])
+def list_doukai_passages(request, book: Optional[int] = None, chapter: Optional[int] = None):
+    """List semua passage doukai (read-only)"""
+    qs = DoukaiPassage.objects.all()
+    if book:
+        qs = qs.filter(book=book)
+    if chapter:
+        qs = qs.filter(chapter=chapter)
+    return qs
+
+@router.get("/doukai/passages/{id}", response=DoukaiPassageDetailSchema)
+def get_doukai_passage(request, id: uuid.UUID):
+    """Detail passage beserta daftar soalnya"""
+    passage = get_object_or_404(DoukaiPassage, id=id)
+    return passage
 
 @router.post("/practice/submit", auth=JWTAuth())
 def submit_quiz(request, payload: SubmissionSchema):

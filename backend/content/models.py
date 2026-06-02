@@ -199,3 +199,70 @@ class MinnaQuestion(models.Model):
 
     def __str__(self):
         return f"[Minna {self.book} Bab {self.chapter}] {self.get_question_type_display()} — {self.question_jp[:50]}"
+
+
+# ─── Doukai / Dokkai: Reading Comprehension ───────────────────────────────────
+
+class DoukaiPassage(models.Model):
+    """
+    Teks cerita (passage) untuk latihan membaca (読解 / Doukai).
+    Hanya bisa ditambahkan oleh admin lewat Django Admin.
+    Setiap passage memiliki beberapa soal Benar/Salah (DoukaiQuestion).
+    """
+    id          = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    title       = models.CharField(max_length=300, help_text="Judul cerita (bahasa Indonesia)")
+    text_jp     = models.TextField(help_text="Teks cerita dalam bahasa Jepang")
+    text_id     = models.TextField(blank=True, help_text="Terjemahan Indonesia (opsional)")
+    book        = models.IntegerField(
+                    null=True, blank=True,
+                    choices=[(1, 'Minna no Nihongo 1'), (2, 'Minna no Nihongo 2')],
+                    help_text="Dari buku Minna no Nihongo berapa? (opsional)")
+    chapter     = models.IntegerField(null=True, blank=True, help_text="Nomor bab dalam buku (opsional)")
+    jlpt_level  = models.IntegerField(
+                    choices=JLPTLevel.choices, null=True, blank=True,
+                    help_text="Level JLPT yang sesuai (opsional)")
+    created_at  = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['book', 'chapter', 'created_at']
+        indexes  = [
+            models.Index(fields=['book', 'chapter']),
+        ]
+        verbose_name        = 'Doukai Passage'
+        verbose_name_plural = 'Doukai Passages'
+
+    def __str__(self):
+        bab = f"Bab {self.chapter}" if self.chapter else "Tanpa Bab"
+        buku = f"Minna {self.book}" if self.book else "Umum"
+        return f"[{buku} — {bab}] {self.title}"
+
+    @property
+    def question_count(self):
+        return self.questions.count()
+
+
+class DoukaiQuestion(models.Model):
+    """
+    Soal Benar/Salah untuk satu passage Doukai.
+    is_correct = True  → pernyataan ini BENAR berdasarkan isi cerita.
+    is_correct = False → pernyataan ini SALAH berdasarkan isi cerita.
+    """
+    id            = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    passage       = models.ForeignKey(
+                        DoukaiPassage, related_name='questions',
+                        on_delete=models.CASCADE,
+                        help_text="Passage cerita yang terkait dengan soal ini")
+    question_text = models.TextField(help_text="Pernyataan tentang isi cerita (bisa JP atau ID)")
+    is_correct    = models.BooleanField(
+                        help_text="True = pernyataan ini BENAR sesuai isi cerita")
+    explanation   = models.TextField(blank=True, help_text="Penjelasan singkat setelah user menjawab")
+    order         = models.IntegerField(default=0, help_text="Urutan tampil soal")
+
+    class Meta:
+        ordering = ['order', 'id']
+        verbose_name        = 'Doukai Question'
+        verbose_name_plural = 'Doukai Questions'
+
+    def __str__(self):
+        status = "✓ Benar" if self.is_correct else "✗ Salah"
+        return f"[{status}] {self.question_text[:80]}"

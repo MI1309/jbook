@@ -1,7 +1,7 @@
 import csv
 from django.contrib import admin
 from django.http import HttpResponse
-from .models import Kanji, Vocab, Grammar, Blog, Particle, Announcement, MinnaQuestion
+from .models import Kanji, Vocab, Grammar, Blog, Particle, Announcement, MinnaQuestion, DoukaiPassage, DoukaiQuestion
 
 @admin.action(description="Export selected items as CSV")
 def export_as_csv(modeladmin, request, queryset):
@@ -24,6 +24,25 @@ def export_as_csv(modeladmin, request, queryset):
         writer.writerow(row)
 
     return response
+
+class DoukaiQuestionInline(admin.TabularInline):
+    model = DoukaiQuestion
+    extra = 3
+
+@admin.register(DoukaiPassage)
+class DoukaiPassageAdmin(admin.ModelAdmin):
+    list_display = ('title', 'book', 'chapter', 'jlpt_level', 'question_count')
+    list_filter = ('book', 'chapter', 'jlpt_level')
+    search_fields = ('title', 'text_jp', 'text_id')
+    inlines = [DoukaiQuestionInline]
+    actions = [export_as_csv]
+
+@admin.register(DoukaiQuestion)
+class DoukaiQuestionAdmin(admin.ModelAdmin):
+    list_display = ('question_text', 'passage', 'is_correct', 'order')
+    list_filter = ('is_correct', 'passage__book', 'passage__chapter')
+    search_fields = ('question_text', 'explanation')
+    raw_id_fields = ('passage',)
 
 
 @admin.register(Kanji)

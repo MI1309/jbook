@@ -719,6 +719,62 @@ export async function getBlogDetailBySlug(slug) {
     }
 }
 
+export async function getCrossword() {
+    try {
+        const res = await fetch(`${API_URL}/learning/tts/generate`, { cache: 'no-store' });
+        return handleResponse(res, 'getCrossword');
+    } catch (error) {
+        return handleNetworkError('getCrossword', error);
+    }
+}
+
+/**
+ * ─── Doukai / Dokkai (Reading Comprehension) API ────────────────────────────
+ */
+
+/**
+ * Mendapatkan daftar teks cerita Doukai
+ */
+export async function getDoukaiPassages({ book, chapter } = {}) {
+    const queryParams = new URLSearchParams();
+    if (book) queryParams.append('book', book);
+    if (chapter) queryParams.append('chapter', chapter);
+
+    try {
+        const res = await fetch(`${API_URL}/learning/doukai/passages?${queryParams.toString()}`, { cache: 'no-store' });
+        return handleResponse(res, 'getDoukaiPassages');
+    } catch (error) {
+        return handleNetworkError('getDoukaiPassages', error, []);
+    }
+}
+
+/**
+ * Mendapatkan detail satu passage Doukai beserta soal-soalnya
+ */
+export async function getDoukaiPassage(id) {
+    if (!id) return null;
+    try {
+        const res = await fetch(`${API_URL}/learning/doukai/passages/${id}`, { cache: 'no-store' });
+        return handleResponse(res, 'getDoukaiPassage');
+    } catch (error) {
+        return handleNetworkError('getDoukaiPassage', error, null);
+    }
+}
+
+/**
+ * Mengecek jumlah total passage yang tersedia
+ */
+export async function getDoukaiCount() {
+    try {
+        const res = await fetch(`${API_URL}/learning/doukai/count`, { cache: 'no-store' });
+        const data = await handleResponse(res, 'getDoukaiCount');
+        return data.count || 0;
+    } catch (error) {
+        console.warn('[getDoukaiCount] Failed to fetch count:', error.message);
+        return 0;
+    }
+}
+
 export async function suggestContent(payload) {
     try {
         const res = await fetch(`${API_URL}/content/suggest`, {

@@ -76,7 +76,7 @@ Digunakan untuk kuis latihan terstruktur berbasis buku Minna no Nihongo 1 & 2.
     *   **Query Params**:
         *   `book`: Nomor buku Minna (misal: `1`, `2`, atau `1,2`).
         *   `chapter`: Nomor bab (bisa range atau koma separated, misal `1,2,3,4,5`).
-        *   `type`: Jenis kuis (`choice`, `doukai`, `fill_blank`, `context_match`).
+        *   `type`: Jenis kuis (`choice`, `fill_blank`, `context_match`).
         *   `limit`: Batas jumlah kuis (default: 10, maks: 50).
         *   `level`: Tingkat JLPT jika relevan.
     *   **Response (per soal)**:
@@ -89,6 +89,20 @@ Digunakan untuk kuis latihan terstruktur berbasis buku Minna no Nihongo 1 & 2.
         *   `correct_answer` (str): Teks jawaban yang benar.
         *   `options` (array of objects): Pilihan jawaban dengan properti `text` dan `is_correct`.
         *   `explanation` (str): Penjelasan setelah soal dijawab.
+
+---
+
+## 5. Doukai API (`/learning/doukai`)
+
+Modul latihan pemahaman bacaan (Reading Comprehension).
+
+*   `GET /learning/doukai/count`
+    *   **Deskripsi**: Mengecek jumlah total teks cerita yang tersedia.
+*   `GET /learning/doukai/passages`
+    *   **Deskripsi**: Mengambil daftar teks cerita.
+    *   **Query Params**: `book`, `chapter`.
+*   `GET /learning/doukai/passages/{uuid}`
+    *   **Deskripsi**: Detail cerita beserta daftar soal Benar/Salah (Maru/Batsu).
 
 ---
 

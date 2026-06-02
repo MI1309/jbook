@@ -1,8 +1,9 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useTheme } from '@/context/ThemeContext';
+import { getDoukaiCount } from '@/lib/api';
 
 export default function PracticeConfig() {
     const { theme, mounted } = useTheme();
@@ -23,6 +24,13 @@ export default function PracticeConfig() {
     const [selectedBook, setSelectedBook] = useState('1'); // '1', '2', or 'both'
     const [chapterStart, setChapterStart] = useState(1);
     const [chapterEnd, setChapterEnd] = useState(25);
+
+    // Doukai state
+    const [doukaiCount, setDoukaiCount] = useState(0);
+
+    useEffect(() => {
+        getDoukaiCount().then(setDoukaiCount);
+    }, []);
 
     const types = [
         { id: 'kana', label: 'Kana', icon: 'あ', sub: 'Hiragana & Katakana' },
@@ -118,7 +126,7 @@ export default function PracticeConfig() {
                         <label className={`block text-sm font-black uppercase tracking-widest mb-4 transition-colors ${subTextColor}`}>
                             Sumber Soal
                         </label>
-                        <div className="grid grid-cols-2 gap-4">
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                             <button
                                 onClick={() => {
                                     setSource('jlpt');
@@ -156,6 +164,28 @@ export default function PracticeConfig() {
                                 </span>
                                 <span className={`text-[10px] mt-1 uppercase font-medium transition-colors ${subTextColor}`}>
                                     Soal Buku 1 & 2 per Bab
+                                </span>
+                            </button>
+
+                            <button
+                                onClick={() => {
+                                    if (doukaiCount > 0) {
+                                        router.push('/doukai');
+                                    }
+                                }}
+                                disabled={doukaiCount === 0}
+                                className={`flex flex-col items-center justify-center p-5 rounded-2xl border-2 transition-all duration-300 transform ${
+                                    doukaiCount === 0 
+                                        ? 'opacity-50 cursor-not-allowed grayscale' 
+                                        : 'hover:scale-[1.02] hover:border-blue-300 dark:hover:border-blue-800'
+                                } ${cardBg} ${borderStyle}`}
+                            >
+                                <span className="text-3xl mb-2">{doukaiCount === 0 ? '🔒' : '📖'}</span>
+                                <span className={`font-black transition-colors ${textColor}`}>
+                                    Doukai (読解)
+                                </span>
+                                <span className={`text-[10px] mt-1 uppercase font-medium transition-colors ${subTextColor}`}>
+                                    {doukaiCount === 0 ? 'Segera Hadir' : 'Latihan Pemahaman Bacaan'}
                                 </span>
                             </button>
                         </div>
