@@ -14,14 +14,16 @@ import { Volume2 } from 'lucide-react';
 function HighlightText({ text, query, active = true }) {
     if (text === null || text === undefined) return null;
     const textStr = String(text);
-    if (!query || !active) return <span>{textStr}</span>;
+    const trimmedQuery = String(query || '').trim();
+    if (!trimmedQuery || !active) return <span>{textStr}</span>;
     // Escape special regex characters in query to prevent crash
-    const escapedQuery = query.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+    const escapedQuery = trimmedQuery.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+    if (!escapedQuery) return <span>{textStr}</span>;
     const parts = textStr.split(new RegExp(`(${escapedQuery})`, 'gi'));
     return (
         <span>
             {parts.map((part, i) => 
-                part.toLowerCase() === query.toLowerCase() ? 
+                part.toLowerCase() === trimmedQuery.toLowerCase() ? 
                 <mark key={i} className="bg-yellow-200 dark:bg-yellow-900/50 text-gray-900 dark:text-yellow-200 rounded-px px-0.5 no-underline">{part}</mark> : 
                 part
             )}
@@ -193,10 +195,10 @@ function KotobaContent() {
                     ))}
                 </div>
             ) : (
-                <div className={`text-center py-32 rounded-[3rem] border-4 border-dashed max-w-2xl mx-auto shadow-inner transition-colors ${cardBg} ${theme === 'dark' ? 'border-red-950/20' : 'border-gray-100'}`}>
+                <div className="text-center py-32 rounded-[3rem] border-4 border-dashed max-w-2xl mx-auto shadow-inner transition-colors bg-[var(--card-bg)] border-[var(--border-color)]">
                     <div className="text-7xl mb-6 grayscale opacity-20 dark:opacity-40 transition-opacity">🪐</div>
-                    <h2 className={`text-2xl font-black mb-2 transition-colors ${textColor}`}>Kosakata Tidak Ditemukan</h2>
-                    <p className={`font-bold mb-8 uppercase text-[10px] tracking-widest transition-colors ${subTextColor}`}>Coba kata kunci lain atau ubah filter level.</p>
+                    <h2 className="text-2xl font-black mb-2 transition-colors text-[var(--foreground)]">Kosakata Tidak Ditemukan</h2>
+                    <p className="font-bold mb-8 uppercase text-[10px] tracking-widest text-gray-500 dark:text-gray-400">Coba kata kunci lain atau ubah filter level.</p>
                 </div>
             )}
 

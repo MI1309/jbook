@@ -1,0 +1,3566 @@
+[
+  {
+    "word": "～ごろ",
+    "reading": "~goro",
+    "meaning": "sekitar~, kira-kira",
+    "word_type": "adverb"
+  },
+  {
+    "word": "～すぎ",
+    "reading": "~sugi",
+    "meaning": "terlalu (banyak)~",
+    "word_type": "adverb"
+  },
+  {
+    "word": "～ずつ",
+    "reading": "~ zutsu",
+    "meaning": "~per~",
+    "word_type": "adverb"
+  },
+  {
+    "word": "～たち",
+    "reading": "~tachi",
+    "meaning": "para~, dkk",
+    "word_type": "adverb"
+  },
+  {
+    "word": "～中",
+    "reading": "~chuu/~juu",
+    "meaning": "dalam~(kurun waktu)",
+    "word_type": "adverb"
+  },
+  {
+    "word": "～中",
+    "reading": "~chuu/juu",
+    "meaning": "sedang",
+    "word_type": "adverb"
+  },
+  {
+    "word": "～個",
+    "reading": "~ko",
+    "meaning": "~buah,~butir",
+    "word_type": "adverb"
+  },
+  {
+    "word": "～側",
+    "reading": "~gawa",
+    "meaning": "bagian~",
+    "word_type": "adverb"
+  },
+  {
+    "word": "～冊",
+    "reading": "~satsu",
+    "meaning": "~buah (buku, kamus)",
+    "word_type": "adverb"
+  },
+  {
+    "word": "～台",
+    "reading": "~dai",
+    "meaning": "~unit",
+    "word_type": "adverb"
+  },
+  {
+    "word": "～回",
+    "reading": "~kai",
+    "meaning": "~kali",
+    "word_type": "adverb"
+  },
+  {
+    "word": "～屋",
+    "reading": "~ya",
+    "meaning": "toko",
+    "word_type": "adverb"
+  },
+  {
+    "word": "～時",
+    "reading": "~ji",
+    "meaning": "jam",
+    "word_type": "adverb"
+  },
+  {
+    "word": "～杯",
+    "reading": "~hai/~pai",
+    "meaning": "~gelas",
+    "word_type": "adverb"
+  },
+  {
+    "word": "～歳",
+    "reading": "~sai",
+    "meaning": "~tahun (umur)",
+    "word_type": "adverb"
+  },
+  {
+    "word": "～階",
+    "reading": "~kai",
+    "meaning": "lantai~",
+    "word_type": "adverb"
+  },
+  {
+    "word": "３万円",
+    "reading": "San man en",
+    "meaning": "tiga puluh ribu yen",
+    "word_type": "noun"
+  },
+  {
+    "word": "あさって",
+    "reading": "asatte",
+    "meaning": "besok lusa",
+    "word_type": "adverb"
+  },
+  {
+    "word": "あちら",
+    "reading": "achira",
+    "meaning": "disana ( jauh ) sopan",
+    "word_type": "adverb"
+  },
+  {
+    "word": "あっち",
+    "reading": "acchi",
+    "meaning": "disana ( jauh ) informal",
+    "word_type": "adverb"
+  },
+  {
+    "word": "あなた",
+    "reading": "anata",
+    "meaning": "kamu, anda",
+    "word_type": "noun"
+  },
+  {
+    "word": "アパート",
+    "reading": "apaato",
+    "meaning": "apartment",
+    "word_type": "noun"
+  },
+  {
+    "word": "あまり",
+    "reading": "amari",
+    "meaning": "tidak begitu",
+    "word_type": "adverb"
+  },
+  {
+    "word": "ある",
+    "reading": "aru",
+    "meaning": "ada ( benda mati )",
+    "word_type": "godan"
+  },
+  {
+    "word": "あれ",
+    "reading": "are",
+    "meaning": "itu ( jauh )",
+    "word_type": "adverb"
+  },
+  {
+    "word": "いい",
+    "reading": "ii",
+    "meaning": "bagus",
+    "word_type": "i_adj"
+  },
+  {
+    "word": "いくつ",
+    "reading": "ikutsu",
+    "meaning": "berapa",
+    "word_type": "adverb"
+  },
+  {
+    "word": "いくら",
+    "reading": "ikura",
+    "meaning": "berapa harganya",
+    "word_type": "adverb"
+  },
+  {
+    "word": "椅子",
+    "reading": "isu",
+    "meaning": "kursi",
+    "word_type": "noun"
+  },
+  {
+    "word": "いつ",
+    "reading": "itsu",
+    "meaning": "kapan",
+    "word_type": "adverb"
+  },
+  {
+    "word": "いつか",
+    "reading": "itsuka",
+    "meaning": "suatu saat",
+    "word_type": "adverb"
+  },
+  {
+    "word": "いつも",
+    "reading": "itsumo",
+    "meaning": "selalu",
+    "word_type": "adverb"
+  },
+  {
+    "word": "いる",
+    "reading": "iru",
+    "meaning": "ada ( orang )",
+    "word_type": "godan"
+  },
+  {
+    "word": "色々",
+    "reading": "iroiro",
+    "meaning": "bermacam-macam",
+    "word_type": "i_adj"
+  },
+  {
+    "word": "内",
+    "reading": "uchi",
+    "meaning": "dalam",
+    "word_type": "noun"
+  },
+  {
+    "word": "うるさい",
+    "reading": "urusai",
+    "meaning": "berisik",
+    "word_type": "i_adj"
+  },
+  {
+    "word": "ええ",
+    "reading": "ee",
+    "meaning": "ya",
+    "word_type": "adverb"
+  },
+  {
+    "word": "美味しい",
+    "reading": "oishii",
+    "meaning": "enak",
+    "word_type": "i_adj"
+  },
+  {
+    "word": "お菓子",
+    "reading": "okashi",
+    "meaning": "cemilan",
+    "word_type": "i_adj"
+  },
+  {
+    "word": "起きる",
+    "reading": "okiru",
+    "meaning": "bangun",
+    "word_type": "godan"
+  },
+  {
+    "word": "一昨日",
+    "reading": "ototoi",
+    "meaning": "2 hari yang lalu",
+    "word_type": "adverb"
+  },
+  {
+    "word": "一昨年",
+    "reading": "ototoshi",
+    "meaning": "2 tahun yang lalu",
+    "word_type": "adverb"
+  },
+  {
+    "word": "面白い",
+    "reading": "omoshiroi",
+    "meaning": "menarik",
+    "word_type": "i_adj"
+  },
+  {
+    "word": "お兄さん",
+    "reading": "oniisan",
+    "meaning": "kakak laki-laki ( orang lain )",
+    "word_type": "noun"
+  },
+  {
+    "word": "お回り",
+    "reading": "omawari",
+    "meaning": "sekitar",
+    "word_type": "adverb"
+  },
+  {
+    "word": "お姉さん",
+    "reading": "oneesan",
+    "meaning": "kakak perempuan ( orang lain )",
+    "word_type": "noun"
+  },
+  {
+    "word": "お弁当",
+    "reading": "obentou",
+    "meaning": "bekal makanan",
+    "word_type": "noun"
+  },
+  {
+    "word": "お手洗い",
+    "reading": "otearai",
+    "meaning": "toilet, kamar kecil",
+    "word_type": "noun"
+  },
+  {
+    "word": "お母さん",
+    "reading": "okaasan",
+    "meaning": "ibu ( orang lain )",
+    "word_type": "noun"
+  },
+  {
+    "word": "お父さん",
+    "reading": "otousan",
+    "meaning": "ayah ( orang lain )",
+    "word_type": "noun"
+  },
+  {
+    "word": "お皿",
+    "reading": "osara",
+    "meaning": "piring",
+    "word_type": "noun"
+  },
+  {
+    "word": "お茶",
+    "reading": "ocha",
+    "meaning": "teh hijau",
+    "word_type": "noun"
+  },
+  {
+    "word": "お酒",
+    "reading": "osake",
+    "meaning": "arak Jepang",
+    "word_type": "noun"
+  },
+  {
+    "word": "お金",
+    "reading": "okane",
+    "meaning": "uang",
+    "word_type": "noun"
+  },
+  {
+    "word": "お風呂",
+    "reading": "ofuro",
+    "meaning": "ofuro ( bak mandi )",
+    "word_type": "noun"
+  },
+  {
+    "word": "かける",
+    "reading": "kakeru",
+    "meaning": "memakai ( kacamata )",
+    "word_type": "godan"
+  },
+  {
+    "word": "傘",
+    "reading": "kasa",
+    "meaning": "payung",
+    "word_type": "noun"
+  },
+  {
+    "word": "ガスストーブ",
+    "reading": "Gasu sutoobu",
+    "meaning": "Kompor gas",
+    "word_type": "noun"
+  },
+  {
+    "word": "カタカナ",
+    "reading": "katakana",
+    "meaning": "huruf katakana",
+    "word_type": "noun"
+  },
+  {
+    "word": "カップ",
+    "reading": "kappu",
+    "meaning": "gelas",
+    "word_type": "noun"
+  },
+  {
+    "word": "かばん",
+    "reading": "kaban",
+    "meaning": "tas",
+    "word_type": "noun"
+  },
+  {
+    "word": "かびん",
+    "reading": "kabin",
+    "meaning": "vas bunga",
+    "word_type": "noun"
+  },
+  {
+    "word": "かぶる",
+    "reading": "kaburu",
+    "meaning": "memakai topi",
+    "word_type": "godan"
+  },
+  {
+    "word": "カメラ",
+    "reading": "kamera",
+    "meaning": "kamera",
+    "word_type": "noun"
+  },
+  {
+    "word": "カレンダー",
+    "reading": "karendaa",
+    "meaning": "kalender",
+    "word_type": "noun"
+  },
+  {
+    "word": "可愛い",
+    "reading": "kawaii",
+    "meaning": "lucu, imut",
+    "word_type": "i_adj"
+  },
+  {
+    "word": "ギター",
+    "reading": "gitaa",
+    "meaning": "gitar",
+    "word_type": "noun"
+  },
+  {
+    "word": "汚い",
+    "reading": "kitanai",
+    "meaning": "kotor, jorok",
+    "word_type": "i_adj"
+  },
+  {
+    "word": "切手",
+    "reading": "kitte",
+    "meaning": "perangko",
+    "word_type": "noun"
+  },
+  {
+    "word": "昨日",
+    "reading": "kinou",
+    "meaning": "kemarin",
+    "word_type": "adverb"
+  },
+  {
+    "word": "嫌い",
+    "reading": "kirai",
+    "meaning": "tidak suka, benci",
+    "word_type": "i_adj"
+  },
+  {
+    "word": "きれい",
+    "reading": "kirei",
+    "meaning": "cantik, indah",
+    "word_type": "i_adj"
+  },
+  {
+    "word": "キロ",
+    "reading": "kiro",
+    "meaning": "kilo",
+    "word_type": "noun"
+  },
+  {
+    "word": "ぐらい",
+    "reading": "gurai",
+    "meaning": "kira-kira",
+    "word_type": "adverb"
+  },
+  {
+    "word": "クラス",
+    "reading": "kurasu",
+    "meaning": "kelas",
+    "word_type": "noun"
+  },
+  {
+    "word": "グラム",
+    "reading": "guramu",
+    "meaning": "gram",
+    "word_type": "noun"
+  },
+  {
+    "word": "ヶ月",
+    "reading": "kagetsu",
+    "meaning": "~bulan",
+    "word_type": "adverb"
+  },
+  {
+    "word": "コーヒー",
+    "reading": "koohii",
+    "meaning": "kopi",
+    "word_type": "noun"
+  },
+  {
+    "word": "午後",
+    "reading": "gogo",
+    "meaning": "siang (.p.m)",
+    "word_type": "adverb"
+  },
+  {
+    "word": "こちら",
+    "reading": "kochira",
+    "meaning": "di sini",
+    "word_type": "adverb"
+  },
+  {
+    "word": "こっち",
+    "reading": "kocchi",
+    "meaning": "di sini ( informal )",
+    "word_type": "adverb"
+  },
+  {
+    "word": "こっちきて",
+    "reading": "Kocchi kite",
+    "meaning": "Datang sini!",
+    "word_type": "adverb"
+  },
+  {
+    "word": "コップ",
+    "reading": "koppu",
+    "meaning": "cangkir",
+    "word_type": "noun"
+  },
+  {
+    "word": "コピーする",
+    "reading": "kopii suru",
+    "meaning": "menyalin, memfotokopi",
+    "word_type": "godan"
+  },
+  {
+    "word": "こんな",
+    "reading": "konna",
+    "meaning": "~yang seperti ini, ~segini",
+    "word_type": "adverb"
+  },
+  {
+    "word": "ご飯",
+    "reading": "gohan",
+    "meaning": "nasi",
+    "word_type": "noun"
+  },
+  {
+    "word": "しかし",
+    "reading": "shikashi",
+    "meaning": "tapi",
+    "word_type": "adverb"
+  },
+  {
+    "word": "醤油",
+    "reading": "shouyu",
+    "meaning": "kecap asin",
+    "word_type": "noun"
+  },
+  {
+    "word": "すぐ",
+    "reading": "sugu",
+    "meaning": "segera",
+    "word_type": "adverb"
+  },
+  {
+    "word": "少し",
+    "reading": "sukoshi",
+    "meaning": "sedikit",
+    "word_type": "i_adj"
+  },
+  {
+    "word": "ストーブ",
+    "reading": "sutobu",
+    "meaning": "kompor",
+    "word_type": "noun"
+  },
+  {
+    "word": "スプーン",
+    "reading": "supuun",
+    "meaning": "sendok",
+    "word_type": "noun"
+  },
+  {
+    "word": "スポーツ",
+    "reading": "supootsu",
+    "meaning": "Olah raga",
+    "word_type": "noun"
+  },
+  {
+    "word": "スリッパ",
+    "reading": "surippa",
+    "meaning": "Sandal dalam rumah",
+    "word_type": "noun"
+  },
+  {
+    "word": "そして",
+    "reading": "soshite",
+    "meaning": "dan, lalu",
+    "word_type": "adverb"
+  },
+  {
+    "word": "そっち",
+    "reading": "socchi",
+    "meaning": "disana ( jauh ) informal",
+    "word_type": "adverb"
+  },
+  {
+    "word": "そば",
+    "reading": "soba",
+    "meaning": "samping",
+    "word_type": "adverb"
+  },
+  {
+    "word": "それから",
+    "reading": "sore kara",
+    "meaning": "lalu, setelah itu",
+    "word_type": "adverb"
+  },
+  {
+    "word": "タイ",
+    "reading": "tai",
+    "meaning": "Thailand",
+    "word_type": "noun"
+  },
+  {
+    "word": "台所",
+    "reading": "dai dokoro",
+    "meaning": "dapur",
+    "word_type": "noun"
+  },
+  {
+    "word": "たくさん",
+    "reading": "takusan",
+    "meaning": "banyak",
+    "word_type": "i_adj"
+  },
+  {
+    "word": "だけ",
+    "reading": "dake",
+    "meaning": "hanya",
+    "word_type": "adverb"
+  },
+  {
+    "word": "タバコ",
+    "reading": "tabako",
+    "meaning": "rokok",
+    "word_type": "noun"
+  },
+  {
+    "word": "多分",
+    "reading": "tabun",
+    "meaning": "mungkin",
+    "word_type": "adverb"
+  },
+  {
+    "word": "だれ",
+    "reading": "dare",
+    "meaning": "siapa",
+    "word_type": "adverb"
+  },
+  {
+    "word": "だれか",
+    "reading": "dare ka",
+    "meaning": "seseorang",
+    "word_type": "noun"
+  },
+  {
+    "word": "ちょうど",
+    "reading": "choudo",
+    "meaning": "pas, tepat",
+    "word_type": "adverb"
+  },
+  {
+    "word": "つまらない",
+    "reading": "tsumaranai",
+    "meaning": "Membosankan",
+    "word_type": "i_adj"
+  },
+  {
+    "word": "テーブル",
+    "reading": "teeburu",
+    "meaning": "meja",
+    "word_type": "noun"
+  },
+  {
+    "word": "テスト",
+    "reading": "tesuto",
+    "meaning": "tes, ujian",
+    "word_type": "noun"
+  },
+  {
+    "word": "デパート",
+    "reading": "depaato",
+    "meaning": "toserba",
+    "word_type": "noun"
+  },
+  {
+    "word": "でも",
+    "reading": "demo",
+    "meaning": "tapi",
+    "word_type": "adverb"
+  },
+  {
+    "word": "どうして",
+    "reading": "doushite",
+    "meaning": "mengapa, kenapa",
+    "word_type": "adverb"
+  },
+  {
+    "word": "どうぞ",
+    "reading": "douzo",
+    "meaning": "silahkan",
+    "word_type": "adverb"
+  },
+  {
+    "word": "どうも",
+    "reading": "doumo",
+    "meaning": "terima kasih",
+    "word_type": "adverb"
+  },
+  {
+    "word": "所",
+    "reading": "tokoro",
+    "meaning": "tempat",
+    "word_type": "godan"
+  },
+  {
+    "word": "どなた",
+    "reading": "donata",
+    "meaning": "siapa ( bentuk sopan )",
+    "word_type": "adverb"
+  },
+  {
+    "word": "どれ",
+    "reading": "dore",
+    "meaning": "yang mana",
+    "word_type": "adverb"
+  },
+  {
+    "word": "どんな",
+    "reading": "donna",
+    "meaning": "yang bagaimana",
+    "word_type": "adverb"
+  },
+  {
+    "word": "ない",
+    "reading": "nai",
+    "meaning": "tidak punya, tidak ada",
+    "word_type": "adverb"
+  },
+  {
+    "word": "ナイフ",
+    "reading": "naifu",
+    "meaning": "pisau",
+    "word_type": "noun"
+  },
+  {
+    "word": "泣く",
+    "reading": "naku",
+    "meaning": "menangis",
+    "word_type": "godan"
+  },
+  {
+    "word": "なぜ",
+    "reading": "naze",
+    "meaning": "mengapa",
+    "word_type": "adverb"
+  },
+  {
+    "word": "など",
+    "reading": "nado",
+    "meaning": "dan lain-lain",
+    "word_type": "adverb"
+  },
+  {
+    "word": "なる",
+    "reading": "naru",
+    "meaning": "menjadi",
+    "word_type": "godan"
+  },
+  {
+    "word": "ネクタイ",
+    "reading": "nekutai",
+    "meaning": "dasi",
+    "word_type": "noun"
+  },
+  {
+    "word": "パーティー",
+    "reading": "paatii",
+    "meaning": "pesta",
+    "word_type": "noun"
+  },
+  {
+    "word": "プール",
+    "reading": "puuru",
+    "meaning": "Kolam renang",
+    "word_type": "noun"
+  },
+  {
+    "word": "フォーク",
+    "reading": "fooku",
+    "meaning": "garpu",
+    "word_type": "noun"
+  },
+  {
+    "word": "ページ",
+    "reading": "peeji",
+    "meaning": "Halaman",
+    "word_type": "noun"
+  },
+  {
+    "word": "ベッド",
+    "reading": "beddo",
+    "meaning": "Kasur",
+    "word_type": "noun"
+  },
+  {
+    "word": "ペット",
+    "reading": "petto",
+    "meaning": "hewan peliharaan",
+    "word_type": "noun"
+  },
+  {
+    "word": "帽子",
+    "reading": "boushi",
+    "meaning": "Topi",
+    "word_type": "noun"
+  },
+  {
+    "word": "ほしい",
+    "reading": "hoshii",
+    "meaning": "Ingin",
+    "word_type": "i_adj"
+  },
+  {
+    "word": "ポスト",
+    "reading": "posuto",
+    "meaning": "kotak pos",
+    "word_type": "noun"
+  },
+  {
+    "word": "ボタン",
+    "reading": "botan",
+    "meaning": "Tombol",
+    "word_type": "noun"
+  },
+  {
+    "word": "ホテル",
+    "reading": "hoteru",
+    "meaning": "Hotel",
+    "word_type": "noun"
+  },
+  {
+    "word": "まずい",
+    "reading": "mazui",
+    "meaning": "Tidak enak",
+    "word_type": "i_adj"
+  },
+  {
+    "word": "また",
+    "reading": "mata",
+    "meaning": "lagi",
+    "word_type": "adverb"
+  },
+  {
+    "word": "まだ",
+    "reading": "mada",
+    "meaning": "Belum, masih",
+    "word_type": "adverb"
+  },
+  {
+    "word": "まっすぐ",
+    "reading": "massugu",
+    "meaning": "Lurus",
+    "word_type": "adverb"
+  },
+  {
+    "word": "メートル",
+    "reading": "meetoru",
+    "meaning": "Meter",
+    "word_type": "noun"
+  },
+  {
+    "word": "もしもし",
+    "reading": "moshimoshi",
+    "meaning": "Halo ( saat telpon )",
+    "word_type": "adverb"
+  },
+  {
+    "word": "やる",
+    "reading": "yaru",
+    "meaning": "Melakukan, mengerjakan",
+    "word_type": "godan"
+  },
+  {
+    "word": "一人ずつ",
+    "reading": "Hitorizutsu",
+    "meaning": "satu orang per satu orang",
+    "word_type": "adverb"
+  },
+  {
+    "word": "一日",
+    "reading": "ichinichi",
+    "meaning": "satu hari",
+    "word_type": "adverb"
+  },
+  {
+    "word": "一番",
+    "reading": "ichiban",
+    "meaning": "paling , no 1",
+    "word_type": "adverb"
+  },
+  {
+    "word": "万",
+    "reading": "man",
+    "meaning": "sepuluh ribu",
+    "word_type": "noun"
+  },
+  {
+    "word": "丈夫",
+    "reading": "joubu",
+    "meaning": "Kokoh, kuat, sehat",
+    "word_type": "i_adj"
+  },
+  {
+    "word": "上げる",
+    "reading": "ageru",
+    "meaning": "menaikan",
+    "word_type": "godan"
+  },
+  {
+    "word": "上手",
+    "reading": "jouzu",
+    "meaning": "terampil, mahir",
+    "word_type": "i_adj"
+  },
+  {
+    "word": "上着",
+    "reading": "uwagi",
+    "meaning": "baju , Jas",
+    "word_type": "noun"
+  },
+  {
+    "word": "下手",
+    "reading": "heta",
+    "meaning": "tidak pandai",
+    "word_type": "i_adj"
+  },
+  {
+    "word": "並ぶ",
+    "reading": "narabu",
+    "meaning": "berbaris, berjajar",
+    "word_type": "godan"
+  },
+  {
+    "word": "並べる",
+    "reading": "naraberu",
+    "meaning": "menjajarkan",
+    "word_type": "godan"
+  },
+  {
+    "word": "中",
+    "reading": "naka",
+    "meaning": "dalam",
+    "word_type": "adverb"
+  },
+  {
+    "word": "丸い",
+    "reading": "marui",
+    "meaning": "Bulat, bundar",
+    "word_type": "i_adj"
+  },
+  {
+    "word": "乗る",
+    "reading": "noru",
+    "meaning": "naik ( kendaraan )",
+    "word_type": "godan"
+  },
+  {
+    "word": "交差点",
+    "reading": "kousaten",
+    "meaning": "persimpangan",
+    "word_type": "noun"
+  },
+  {
+    "word": "交番",
+    "reading": "kouban",
+    "meaning": "pos polisi",
+    "word_type": "noun"
+  },
+  {
+    "word": "今",
+    "reading": "ima",
+    "meaning": "sekarang",
+    "word_type": "noun"
+  },
+  {
+    "word": "今年",
+    "reading": "kotoshi",
+    "meaning": "tahun ini",
+    "word_type": "noun"
+  },
+  {
+    "word": "今日",
+    "reading": "kyou",
+    "meaning": "hari ini",
+    "word_type": "noun"
+  },
+  {
+    "word": "今晩",
+    "reading": "konban",
+    "meaning": "malam ini",
+    "word_type": "noun"
+  },
+  {
+    "word": "今月",
+    "reading": "kongetsu",
+    "meaning": "bulan ini",
+    "word_type": "noun"
+  },
+  {
+    "word": "今朝",
+    "reading": "kesa",
+    "meaning": "tadi pagi",
+    "word_type": "noun"
+  },
+  {
+    "word": "今週",
+    "reading": "konshuu",
+    "meaning": "minggu ini",
+    "word_type": "noun"
+  },
+  {
+    "word": "仕事",
+    "reading": "shigoto",
+    "meaning": "pekerjaan",
+    "word_type": "noun"
+  },
+  {
+    "word": "他",
+    "reading": "hoka",
+    "meaning": "yang lain",
+    "word_type": "noun"
+  },
+  {
+    "word": "休み",
+    "reading": "yasumi",
+    "meaning": "Libur",
+    "word_type": "noun"
+  },
+  {
+    "word": "休む",
+    "reading": "yasumu",
+    "meaning": "beristirahat",
+    "word_type": "godan"
+  },
+  {
+    "word": "会う",
+    "reading": "au",
+    "meaning": "bertemu",
+    "word_type": "godan"
+  },
+  {
+    "word": "会社",
+    "reading": "kaisha",
+    "meaning": "perusahaan",
+    "word_type": "noun"
+  },
+  {
+    "word": "低い",
+    "reading": "hikui",
+    "meaning": "Rendah / pendek",
+    "word_type": "i_adj"
+  },
+  {
+    "word": "低い山",
+    "reading": "Hikui yama",
+    "meaning": "Gunung rendah",
+    "word_type": "noun"
+  },
+  {
+    "word": "住む",
+    "reading": "sumu",
+    "meaning": "tinggal, bermukim",
+    "word_type": "godan"
+  },
+  {
+    "word": "体",
+    "reading": "karada",
+    "meaning": "badan, tubuh",
+    "word_type": "noun"
+  },
+  {
+    "word": "作る",
+    "reading": "tsukuru",
+    "meaning": "membuat",
+    "word_type": "godan"
+  },
+  {
+    "word": "作文",
+    "reading": "sakubun",
+    "meaning": "karangan",
+    "word_type": "noun"
+  },
+  {
+    "word": "使う",
+    "reading": "tsukau",
+    "meaning": "memakai",
+    "word_type": "godan"
+  },
+  {
+    "word": "便利",
+    "reading": "benri",
+    "meaning": "Praktis, mudah",
+    "word_type": "i_adj"
+  },
+  {
+    "word": "借りる",
+    "reading": "kariru",
+    "meaning": "meminjam",
+    "word_type": "godan"
+  },
+  {
+    "word": "元気",
+    "reading": "genki",
+    "meaning": "sehat",
+    "word_type": "i_adj"
+  },
+  {
+    "word": "兄",
+    "reading": "ani",
+    "meaning": "kakak laki-laki saya",
+    "word_type": "noun"
+  },
+  {
+    "word": "兄弟",
+    "reading": "kyoudai",
+    "meaning": "saudara, adik kakak",
+    "word_type": "noun"
+  },
+  {
+    "word": "先月",
+    "reading": "sengetsu",
+    "meaning": "bulan lalu",
+    "word_type": "noun"
+  },
+  {
+    "word": "先週",
+    "reading": "senshuu",
+    "meaning": "minggu lalu",
+    "word_type": "noun"
+  },
+  {
+    "word": "入り口",
+    "reading": "iriguchi",
+    "meaning": "pintu masuk",
+    "word_type": "noun"
+  },
+  {
+    "word": "入れる",
+    "reading": "ireru",
+    "meaning": "memasukan",
+    "word_type": "godan"
+  },
+  {
+    "word": "全部",
+    "reading": "zenbu",
+    "meaning": "semua",
+    "word_type": "adverb"
+  },
+  {
+    "word": "八百屋",
+    "reading": "yaoya",
+    "meaning": "Toko sayuran",
+    "word_type": "noun"
+  },
+  {
+    "word": "公園",
+    "reading": "kouen",
+    "meaning": "taman",
+    "word_type": "noun"
+  },
+  {
+    "word": "円",
+    "reading": "en",
+    "meaning": "yen",
+    "word_type": "noun"
+  },
+  {
+    "word": "再来年",
+    "reading": "sarainen",
+    "meaning": "2 tahun yang akan datang",
+    "word_type": "noun"
+  },
+  {
+    "word": "冬",
+    "reading": "fuyu",
+    "meaning": "Musim dingin",
+    "word_type": "noun"
+  },
+  {
+    "word": "冷たい",
+    "reading": "tsumetai",
+    "meaning": "Dingin",
+    "word_type": "i_adj"
+  },
+  {
+    "word": "出かける",
+    "reading": "dekakeru",
+    "meaning": "keluar, bepergian",
+    "word_type": "godan"
+  },
+  {
+    "word": "出す",
+    "reading": "dasu",
+    "meaning": "mengeluarkan",
+    "word_type": "godan"
+  },
+  {
+    "word": "出る",
+    "reading": "deru",
+    "meaning": "keluar",
+    "word_type": "godan"
+  },
+  {
+    "word": "出口",
+    "reading": "deguchi",
+    "meaning": "pintu keluar",
+    "word_type": "noun"
+  },
+  {
+    "word": "切符",
+    "reading": "kippu",
+    "meaning": "tiket",
+    "word_type": "noun"
+  },
+  {
+    "word": "初めて",
+    "reading": "Hajimete",
+    "meaning": "pertama kali",
+    "word_type": "adverb"
+  },
+  {
+    "word": "勉強する",
+    "reading": "benkyou suru",
+    "meaning": "belajar",
+    "word_type": "godan"
+  },
+  {
+    "word": "医者",
+    "reading": "isha",
+    "meaning": "dokter",
+    "word_type": "noun"
+  },
+  {
+    "word": "午前",
+    "reading": "gozen",
+    "meaning": "pagi (a.m.)",
+    "word_type": "noun"
+  },
+  {
+    "word": "半",
+    "reading": "han",
+    "meaning": "Setengah",
+    "word_type": "noun"
+  },
+  {
+    "word": "半分",
+    "reading": "hanbun",
+    "meaning": "Setengah",
+    "word_type": "noun"
+  },
+  {
+    "word": "南",
+    "reading": "minami",
+    "meaning": "Selatan",
+    "word_type": "noun"
+  },
+  {
+    "word": "南口",
+    "reading": "Minamiguchi",
+    "meaning": "Pintu Selatan",
+    "word_type": "noun"
+  },
+  {
+    "word": "危ない",
+    "reading": "abunai",
+    "meaning": "bahaya",
+    "word_type": "i_adj"
+  },
+  {
+    "word": "卵",
+    "reading": "tamago",
+    "meaning": "telur",
+    "word_type": "noun"
+  },
+  {
+    "word": "厚い",
+    "reading": "atsui",
+    "meaning": "tebal",
+    "word_type": "i_adj"
+  },
+  {
+    "word": "去年",
+    "reading": "kyonen",
+    "meaning": "tahun lalu",
+    "word_type": "noun"
+  },
+  {
+    "word": "友達",
+    "reading": "tomodachi",
+    "meaning": "teman",
+    "word_type": "noun"
+  },
+  {
+    "word": "取る",
+    "reading": "toru",
+    "meaning": "mengambil / mendapatkan/ meraih",
+    "word_type": "godan"
+  },
+  {
+    "word": "古い",
+    "reading": "furui",
+    "meaning": "Tua, usang",
+    "word_type": "i_adj"
+  },
+  {
+    "word": "右",
+    "reading": "migi",
+    "meaning": "Kanan",
+    "word_type": "noun"
+  },
+  {
+    "word": "同じ",
+    "reading": "onaji",
+    "meaning": "sama",
+    "word_type": "adverb"
+  },
+  {
+    "word": "向こう",
+    "reading": "mukou",
+    "meaning": "Seberang",
+    "word_type": "noun"
+  },
+  {
+    "word": "吸う",
+    "reading": "suu",
+    "meaning": "mengisap",
+    "word_type": "godan"
+  },
+  {
+    "word": "咲く",
+    "reading": "saku",
+    "meaning": "mekar",
+    "word_type": "godan"
+  },
+  {
+    "word": "問題",
+    "reading": "mondai",
+    "meaning": "Masalah",
+    "word_type": "noun"
+  },
+  {
+    "word": "喫茶店",
+    "reading": "kissaten",
+    "meaning": "cafe",
+    "word_type": "noun"
+  },
+  {
+    "word": "困る",
+    "reading": "komaru",
+    "meaning": "khawatir, susah",
+    "word_type": "godan"
+  },
+  {
+    "word": "図書館",
+    "reading": "toshokan",
+    "meaning": "perpustakaan",
+    "word_type": "noun"
+  },
+  {
+    "word": "国",
+    "reading": "kuni",
+    "meaning": "negara",
+    "word_type": "noun"
+  },
+  {
+    "word": "地図",
+    "reading": "chizu",
+    "meaning": "peta",
+    "word_type": "noun"
+  },
+  {
+    "word": "塩",
+    "reading": "shio",
+    "meaning": "Garam",
+    "word_type": "noun"
+  },
+  {
+    "word": "声",
+    "reading": "koe",
+    "meaning": "suara",
+    "word_type": "noun"
+  },
+  {
+    "word": "売る",
+    "reading": "uru",
+    "meaning": "menjual",
+    "word_type": "godan"
+  },
+  {
+    "word": "夏",
+    "reading": "natsu",
+    "meaning": "musim panas",
+    "word_type": "noun"
+  },
+  {
+    "word": "夕べ",
+    "reading": "yuube",
+    "meaning": "Tadi malam",
+    "word_type": "noun"
+  },
+  {
+    "word": "夕方",
+    "reading": "yuugata",
+    "meaning": "Sore",
+    "word_type": "noun"
+  },
+  {
+    "word": "夕飯",
+    "reading": "yuuhan",
+    "meaning": "Makan malam",
+    "word_type": "noun"
+  },
+  {
+    "word": "外",
+    "reading": "soto",
+    "meaning": "luar",
+    "word_type": "noun"
+  },
+  {
+    "word": "外国",
+    "reading": "gaikoku",
+    "meaning": "luar negeri",
+    "word_type": "noun"
+  },
+  {
+    "word": "外国人",
+    "reading": "gaikokujin",
+    "meaning": "orang asing",
+    "word_type": "noun"
+  },
+  {
+    "word": "多い",
+    "reading": "ooi",
+    "meaning": "banyak",
+    "word_type": "i_adj"
+  },
+  {
+    "word": "大きい",
+    "reading": "ookii",
+    "meaning": "besar",
+    "word_type": "i_adj"
+  },
+  {
+    "word": "大きな",
+    "reading": "ookina",
+    "meaning": "yang besar",
+    "word_type": "i_adj"
+  },
+  {
+    "word": "大丈夫",
+    "reading": "daijoubu",
+    "meaning": "tidak apa-apa",
+    "word_type": "i_adj"
+  },
+  {
+    "word": "大人",
+    "reading": "otona",
+    "meaning": "dewasa",
+    "word_type": "noun"
+  },
+  {
+    "word": "大使館",
+    "reading": "taishikan",
+    "meaning": "kedutaan",
+    "word_type": "noun"
+  },
+  {
+    "word": "大切",
+    "reading": "taisetsu",
+    "meaning": "penting",
+    "word_type": "i_adj"
+  },
+  {
+    "word": "大勢",
+    "reading": "oozei",
+    "meaning": "banyak",
+    "word_type": "i_adj"
+  },
+  {
+    "word": "大変",
+    "reading": "taihen",
+    "meaning": "berat, susah",
+    "word_type": "i_adj"
+  },
+  {
+    "word": "大好き",
+    "reading": "daisuki",
+    "meaning": "sangat suka",
+    "word_type": "i_adj"
+  },
+  {
+    "word": "天気",
+    "reading": "tenki",
+    "meaning": "cuaca",
+    "word_type": "noun"
+  },
+  {
+    "word": "太い",
+    "reading": "futoi",
+    "meaning": "Gendut, gemuk",
+    "word_type": "i_adj"
+  },
+  {
+    "word": "太い足",
+    "reading": "Futoi ashi",
+    "meaning": "Kaki besar, gemuk",
+    "word_type": "noun"
+  },
+  {
+    "word": "奥さん",
+    "reading": "okusan",
+    "meaning": "istri anda",
+    "word_type": "noun"
+  },
+  {
+    "word": "女",
+    "reading": "onna",
+    "meaning": "perempuan",
+    "word_type": "noun"
+  },
+  {
+    "word": "女の子",
+    "reading": "onna no ko",
+    "meaning": "anak perempuan",
+    "word_type": "noun"
+  },
+  {
+    "word": "好き",
+    "reading": "suki",
+    "meaning": "suka",
+    "word_type": "i_adj"
+  },
+  {
+    "word": "妹",
+    "reading": "imouto",
+    "meaning": "adik perempuan",
+    "word_type": "noun"
+  },
+  {
+    "word": "姉",
+    "reading": "ane",
+    "meaning": "kakak perempuan saya",
+    "word_type": "noun"
+  },
+  {
+    "word": "始まる",
+    "reading": "Hajimaru",
+    "meaning": "Dimulai",
+    "word_type": "godan"
+  },
+  {
+    "word": "嫌",
+    "reading": "iya",
+    "meaning": "tidak mau, tidak suka",
+    "word_type": "i_adj"
+  },
+  {
+    "word": "子供",
+    "reading": "kodomo",
+    "meaning": "anak kecil",
+    "word_type": "noun"
+  },
+  {
+    "word": "学校",
+    "reading": "gakkou",
+    "meaning": "sekolah",
+    "word_type": "noun"
+  },
+  {
+    "word": "学生",
+    "reading": "gakusei",
+    "meaning": "murid",
+    "word_type": "noun"
+  },
+  {
+    "word": "安い",
+    "reading": "yasui",
+    "meaning": "Murah",
+    "word_type": "i_adj"
+  },
+  {
+    "word": "家",
+    "reading": "ie",
+    "meaning": "rumah",
+    "word_type": "noun"
+  },
+  {
+    "word": "家庭",
+    "reading": "katei",
+    "meaning": "rumah tangga",
+    "word_type": "noun"
+  },
+  {
+    "word": "家族",
+    "reading": "kazoku",
+    "meaning": "keluarga",
+    "word_type": "noun"
+  },
+  {
+    "word": "宿題",
+    "reading": "shukudai",
+    "meaning": "PR (pekerjaan rumah)",
+    "word_type": "noun"
+  },
+  {
+    "word": "寒い",
+    "reading": "samui",
+    "meaning": "dingin",
+    "word_type": "i_adj"
+  },
+  {
+    "word": "封筒",
+    "reading": "fuutou",
+    "meaning": "Amplop",
+    "word_type": "noun"
+  },
+  {
+    "word": "小さい",
+    "reading": "chiisai",
+    "meaning": "kecil",
+    "word_type": "i_adj"
+  },
+  {
+    "word": "小さな",
+    "reading": "chiisana",
+    "meaning": "kecil",
+    "word_type": "i_adj"
+  },
+  {
+    "word": "少ない",
+    "reading": "sukunai",
+    "meaning": "sedikit",
+    "word_type": "i_adj"
+  },
+  {
+    "word": "川",
+    "reading": "kawa",
+    "meaning": "sungai",
+    "word_type": "noun"
+  },
+  {
+    "word": "帰る",
+    "reading": "kaeru",
+    "meaning": "pulang",
+    "word_type": "godan"
+  },
+  {
+    "word": "広い",
+    "reading": "hiroi",
+    "meaning": "Lebar, luas",
+    "word_type": "i_adj"
+  },
+  {
+    "word": "広い庭",
+    "reading": "Hiroi niwa",
+    "meaning": "Halaman rumah yang luas",
+    "word_type": "noun"
+  },
+  {
+    "word": "店",
+    "reading": "mise",
+    "meaning": "toko",
+    "word_type": "noun"
+  },
+  {
+    "word": "度",
+    "reading": "do",
+    "meaning": "derajat",
+    "word_type": "noun"
+  },
+  {
+    "word": "座る",
+    "reading": "suwaru",
+    "meaning": "duduk",
+    "word_type": "godan"
+  },
+  {
+    "word": "庭",
+    "reading": "niwa",
+    "meaning": "halaman ( rumah )",
+    "word_type": "noun"
+  },
+  {
+    "word": "建物",
+    "reading": "tatemono",
+    "meaning": "bangunan",
+    "word_type": "noun"
+  },
+  {
+    "word": "弟",
+    "reading": "otouto",
+    "meaning": "adik laki-laki ( sendiri )",
+    "word_type": "noun"
+  },
+  {
+    "word": "強い",
+    "reading": "tsuyoi",
+    "meaning": "kuat",
+    "word_type": "i_adj"
+  },
+  {
+    "word": "弾く",
+    "reading": "hiku",
+    "meaning": "memetik (alat musik)",
+    "word_type": "godan"
+  },
+  {
+    "word": "待つ",
+    "reading": "matsu",
+    "meaning": "menunggu",
+    "word_type": "godan"
+  },
+  {
+    "word": "後ろ",
+    "reading": "ushiro",
+    "meaning": "belakang",
+    "word_type": "noun"
+  },
+  {
+    "word": "忙しい",
+    "reading": "isogashii",
+    "meaning": "sibuk",
+    "word_type": "i_adj"
+  },
+  {
+    "word": "意味",
+    "reading": "imi",
+    "meaning": "arti",
+    "word_type": "noun"
+  },
+  {
+    "word": "戸",
+    "reading": "to",
+    "meaning": "pintu",
+    "word_type": "noun"
+  },
+  {
+    "word": "手",
+    "reading": "te",
+    "meaning": "tangan",
+    "word_type": "noun"
+  },
+  {
+    "word": "手紙",
+    "reading": "tegami",
+    "meaning": "surat",
+    "word_type": "noun"
+  },
+  {
+    "word": "押す",
+    "reading": "osu",
+    "meaning": "mendorong",
+    "word_type": "godan"
+  },
+  {
+    "word": "授業",
+    "reading": "jugyou",
+    "meaning": "pelajaran",
+    "word_type": "noun"
+  },
+  {
+    "word": "撮る",
+    "reading": "Toru",
+    "meaning": "mengambil (foto)",
+    "word_type": "godan"
+  },
+  {
+    "word": "教える",
+    "reading": "oshieru",
+    "meaning": "mengajarkan",
+    "word_type": "godan"
+  },
+  {
+    "word": "教室",
+    "reading": "kyoushistu",
+    "meaning": "kelas",
+    "word_type": "noun"
+  },
+  {
+    "word": "散歩する",
+    "reading": "sanpo suru",
+    "meaning": "jalan-jalan santai",
+    "word_type": "godan"
+  },
+  {
+    "word": "文章",
+    "reading": "bunshou",
+    "meaning": "Kalimat",
+    "word_type": "noun"
+  },
+  {
+    "word": "新しい",
+    "reading": "atarashii",
+    "meaning": "baru",
+    "word_type": "i_adj"
+  },
+  {
+    "word": "方",
+    "reading": "Hou",
+    "meaning": "yang ~, arah",
+    "word_type": "adverb"
+  },
+  {
+    "word": "方",
+    "reading": "kata",
+    "meaning": "Orang (bentuk sopan)",
+    "word_type": "adverb"
+  },
+  {
+    "word": "日本語",
+    "reading": "nihongo",
+    "meaning": "bahasa Jepang",
+    "word_type": "noun"
+  },
+  {
+    "word": "早い",
+    "reading": "hayai",
+    "meaning": "Cepat",
+    "word_type": "i_adj"
+  },
+  {
+    "word": "早く走る",
+    "reading": "Hayaku hashiru",
+    "meaning": "Berlari/melaju dengan cepat",
+    "word_type": "godan"
+  },
+  {
+    "word": "明るい",
+    "reading": "akarui",
+    "meaning": "terang",
+    "word_type": "i_adj"
+  },
+  {
+    "word": "明日",
+    "reading": "ashita",
+    "meaning": "besok",
+    "word_type": "noun"
+  },
+  {
+    "word": "映画",
+    "reading": "eiga",
+    "meaning": "film, sinema",
+    "word_type": "noun"
+  },
+  {
+    "word": "映画館",
+    "reading": "eigakan",
+    "meaning": "bioskop",
+    "word_type": "noun"
+  },
+  {
+    "word": "春",
+    "reading": "haru",
+    "meaning": "Musim semi",
+    "word_type": "noun"
+  },
+  {
+    "word": "昼",
+    "reading": "hiru",
+    "meaning": "Siang",
+    "word_type": "noun"
+  },
+  {
+    "word": "昼ご飯",
+    "reading": "hiru gohan",
+    "meaning": "Makan siang",
+    "word_type": "noun"
+  },
+  {
+    "word": "時計",
+    "reading": "tokei",
+    "meaning": "jam",
+    "word_type": "noun"
+  },
+  {
+    "word": "時間",
+    "reading": "jikan",
+    "meaning": "waktu",
+    "word_type": "noun"
+  },
+  {
+    "word": "晴れ",
+    "reading": "hare",
+    "meaning": "cerah",
+    "word_type": "noun"
+  },
+  {
+    "word": "晴れる",
+    "reading": "hareru",
+    "meaning": "cerah",
+    "word_type": "godan"
+  },
+  {
+    "word": "暑い",
+    "reading": "atsui",
+    "meaning": "panas ( suhu )",
+    "word_type": "i_adj"
+  },
+  {
+    "word": "暖かい",
+    "reading": "atatakai",
+    "meaning": "hangat",
+    "word_type": "i_adj"
+  },
+  {
+    "word": "暗い",
+    "reading": "kurai",
+    "meaning": "gelap",
+    "word_type": "i_adj"
+  },
+  {
+    "word": "曇り",
+    "reading": "kumori",
+    "meaning": "berawan, mendung",
+    "word_type": "i_adj"
+  },
+  {
+    "word": "書く",
+    "reading": "kaku",
+    "meaning": "menulis",
+    "word_type": "godan"
+  },
+  {
+    "word": "月",
+    "reading": "tsuki",
+    "meaning": "bulan (dilangit)",
+    "word_type": "noun"
+  },
+  {
+    "word": "月曜日",
+    "reading": "getsuyoubi",
+    "meaning": "hari senin",
+    "word_type": "noun"
+  },
+  {
+    "word": "有名",
+    "reading": "yuumei",
+    "meaning": "Terkenal",
+    "word_type": "i_adj"
+  },
+  {
+    "word": "朝ご飯",
+    "reading": "Asa gohan",
+    "meaning": "Sarapan pagi",
+    "word_type": "noun"
+  },
+  {
+    "word": "木",
+    "reading": "ki",
+    "meaning": "pohon",
+    "word_type": "noun"
+  },
+  {
+    "word": "本当",
+    "reading": "hontou",
+    "meaning": "Benar",
+    "word_type": "adverb"
+  },
+  {
+    "word": "机",
+    "reading": "tsukue",
+    "meaning": "meja",
+    "word_type": "noun"
+  },
+  {
+    "word": "来る",
+    "reading": "kuru",
+    "meaning": "datang",
+    "word_type": "godan"
+  },
+  {
+    "word": "果物",
+    "reading": "kudamono",
+    "meaning": "buah-buahan",
+    "word_type": "noun"
+  },
+  {
+    "word": "楽しい",
+    "reading": "tanoshii",
+    "meaning": "menyenangkan",
+    "word_type": "i_adj"
+  },
+  {
+    "word": "次",
+    "reading": "tsugi",
+    "meaning": "selanjutnya",
+    "word_type": "adverb"
+  },
+  {
+    "word": "歌",
+    "reading": "uta",
+    "meaning": "lagu",
+    "word_type": "noun"
+  },
+  {
+    "word": "歌う",
+    "reading": "utau",
+    "meaning": "bernanyi",
+    "word_type": "godan"
+  },
+  {
+    "word": "歩く",
+    "reading": "aruku",
+    "meaning": "berjalan",
+    "word_type": "godan"
+  },
+  {
+    "word": "死ぬ",
+    "reading": "shinu",
+    "meaning": "mati",
+    "word_type": "godan"
+  },
+  {
+    "word": "水",
+    "reading": "mizu",
+    "meaning": "Air",
+    "word_type": "noun"
+  },
+  {
+    "word": "池",
+    "reading": "ike",
+    "meaning": "kolam",
+    "word_type": "noun"
+  },
+  {
+    "word": "泳ぐ",
+    "reading": "oyogu",
+    "meaning": "berenang",
+    "word_type": "godan"
+  },
+  {
+    "word": "洗う",
+    "reading": "ara u",
+    "meaning": "mencuci",
+    "word_type": "godan"
+  },
+  {
+    "word": "洗濯",
+    "reading": "sentaku",
+    "meaning": "mencuci",
+    "word_type": "noun"
+  },
+  {
+    "word": "海",
+    "reading": "umi",
+    "meaning": "laut",
+    "word_type": "noun"
+  },
+  {
+    "word": "消える",
+    "reading": "kieru",
+    "meaning": "padam",
+    "word_type": "godan"
+  },
+  {
+    "word": "消す",
+    "reading": "kesu",
+    "meaning": "mematikan",
+    "word_type": "godan"
+  },
+  {
+    "word": "涼しい",
+    "reading": "suzushii",
+    "meaning": "sejuk",
+    "word_type": "i_adj"
+  },
+  {
+    "word": "漢字",
+    "reading": "kanji",
+    "meaning": "kanji (huruf Cina)",
+    "word_type": "noun"
+  },
+  {
+    "word": "灰皿",
+    "reading": "Haizara",
+    "meaning": "Asbak",
+    "word_type": "noun"
+  },
+  {
+    "word": "父",
+    "reading": "chichi",
+    "meaning": "ayah",
+    "word_type": "noun"
+  },
+  {
+    "word": "牛乳",
+    "reading": "gyuunyuu",
+    "meaning": "susu sapi",
+    "word_type": "noun"
+  },
+  {
+    "word": "牛肉",
+    "reading": "gyuuniku",
+    "meaning": "daging sapi",
+    "word_type": "noun"
+  },
+  {
+    "word": "物",
+    "reading": "mono",
+    "meaning": "Barang",
+    "word_type": "noun"
+  },
+  {
+    "word": "犬",
+    "reading": "inu",
+    "meaning": "anjing",
+    "word_type": "noun"
+  },
+  {
+    "word": "狭い",
+    "reading": "semai",
+    "meaning": "sempit",
+    "word_type": "i_adj"
+  },
+  {
+    "word": "玄関",
+    "reading": "genkan",
+    "meaning": "pintu masuk (tempat melepas sepatu)",
+    "word_type": "noun"
+  },
+  {
+    "word": "甘い",
+    "reading": "amai",
+    "meaning": "manis",
+    "word_type": "i_adj"
+  },
+  {
+    "word": "生まれる",
+    "reading": "umareru",
+    "meaning": "lahir",
+    "word_type": "godan"
+  },
+  {
+    "word": "生徒",
+    "reading": "seito",
+    "meaning": "siswa",
+    "word_type": "noun"
+  },
+  {
+    "word": "男",
+    "reading": "otoko",
+    "meaning": "laki-laki",
+    "word_type": "noun"
+  },
+  {
+    "word": "男の子",
+    "reading": "otoko no ko",
+    "meaning": "anak laki-laki",
+    "word_type": "noun"
+  },
+  {
+    "word": "町",
+    "reading": "machi",
+    "meaning": "Kota",
+    "word_type": "noun"
+  },
+  {
+    "word": "番号",
+    "reading": "bangou",
+    "meaning": "Nomor",
+    "word_type": "noun"
+  },
+  {
+    "word": "疲れる",
+    "reading": "Tsukareru",
+    "meaning": "lelah",
+    "word_type": "godan"
+  },
+  {
+    "word": "病気",
+    "reading": "byouki",
+    "meaning": "Penyakit, sakit",
+    "word_type": "noun"
+  },
+  {
+    "word": "病院",
+    "reading": "byouin",
+    "meaning": "Rumah sakit",
+    "word_type": "noun"
+  },
+  {
+    "word": "痛い",
+    "reading": "itai",
+    "meaning": "sakit",
+    "word_type": "i_adj"
+  },
+  {
+    "word": "登る",
+    "reading": "noboru",
+    "meaning": "naik, mendaki",
+    "word_type": "godan"
+  },
+  {
+    "word": "白い",
+    "reading": "shiroi",
+    "meaning": "putih",
+    "word_type": "i_adj"
+  },
+  {
+    "word": "着く",
+    "reading": "tsuku",
+    "meaning": "tiba, sampai",
+    "word_type": "godan"
+  },
+  {
+    "word": "着る",
+    "reading": "kiru",
+    "meaning": "memakai (baju)",
+    "word_type": "godan"
+  },
+  {
+    "word": "知る",
+    "reading": "shiru",
+    "meaning": "tahu, mengetahui",
+    "word_type": "godan"
+  },
+  {
+    "word": "短い",
+    "reading": "mijikai",
+    "meaning": "Pendek",
+    "word_type": "i_adj"
+  },
+  {
+    "word": "短い髪",
+    "reading": "Mijikai kami",
+    "meaning": "Rambut pendek",
+    "word_type": "noun"
+  },
+  {
+    "word": "石けん",
+    "reading": "sekken",
+    "meaning": "sabun",
+    "word_type": "noun"
+  },
+  {
+    "word": "砂糖",
+    "reading": "satou",
+    "meaning": "gula",
+    "word_type": "noun"
+  },
+  {
+    "word": "秋",
+    "reading": "aki",
+    "meaning": "musim gugur",
+    "word_type": "noun"
+  },
+  {
+    "word": "空",
+    "reading": "sora",
+    "meaning": "langit",
+    "word_type": "noun"
+  },
+  {
+    "word": "窓",
+    "reading": "mado",
+    "meaning": "Jendela",
+    "word_type": "noun"
+  },
+  {
+    "word": "答える",
+    "reading": "kotaeru",
+    "meaning": "menjawab",
+    "word_type": "godan"
+  },
+  {
+    "word": "紅茶",
+    "reading": "koucha",
+    "meaning": "teh hitam",
+    "word_type": "noun"
+  },
+  {
+    "word": "紙",
+    "reading": "kami",
+    "meaning": "kertas",
+    "word_type": "noun"
+  },
+  {
+    "word": "紙コップ",
+    "reading": "Kami koppu",
+    "meaning": "Cangkir kertas",
+    "word_type": "noun"
+  },
+  {
+    "word": "細い",
+    "reading": "hosoi",
+    "meaning": "kecil, receh, tipis,kurus",
+    "word_type": "i_adj"
+  },
+  {
+    "word": "細かいお金",
+    "reading": "Komakai okane",
+    "meaning": "Uang kecil / receh",
+    "word_type": "noun"
+  },
+  {
+    "word": "終わる",
+    "reading": "owaru",
+    "meaning": "selesai",
+    "word_type": "godan"
+  },
+  {
+    "word": "結婚",
+    "reading": "kekkon",
+    "meaning": "menikah",
+    "word_type": "noun"
+  },
+  {
+    "word": "絵",
+    "reading": "e",
+    "meaning": "gambar, lukisan",
+    "word_type": "noun"
+  },
+  {
+    "word": "緑",
+    "reading": "midori",
+    "meaning": "hijau",
+    "word_type": "noun"
+  },
+  {
+    "word": "縦",
+    "reading": "tate",
+    "meaning": "vertikal, berdiri",
+    "word_type": "noun"
+  },
+  {
+    "word": "置く",
+    "reading": "oku",
+    "meaning": "menaruh",
+    "word_type": "godan"
+  },
+  {
+    "word": "習う",
+    "reading": "narau",
+    "meaning": "mempelajari",
+    "word_type": "godan"
+  },
+  {
+    "word": "聞く",
+    "reading": "kiku",
+    "meaning": "mendengar",
+    "word_type": "godan"
+  },
+  {
+    "word": "肉",
+    "reading": "niku",
+    "meaning": "daging",
+    "word_type": "noun"
+  },
+  {
+    "word": "肩",
+    "reading": "kata",
+    "meaning": "pundak",
+    "word_type": "noun"
+  },
+  {
+    "word": "背",
+    "reading": "se",
+    "meaning": "pundak",
+    "word_type": "noun"
+  },
+  {
+    "word": "背広",
+    "reading": "sebiro",
+    "meaning": "jas",
+    "word_type": "noun"
+  },
+  {
+    "word": "脱ぐ",
+    "reading": "nugu",
+    "meaning": "melepas (baju, sepatu)",
+    "word_type": "godan"
+  },
+  {
+    "word": "自分",
+    "reading": "jibun",
+    "meaning": "saya sendiri",
+    "word_type": "noun"
+  },
+  {
+    "word": "自動車",
+    "reading": "jidousha",
+    "meaning": "mobil",
+    "word_type": "noun"
+  },
+  {
+    "word": "自転車",
+    "reading": "jitensha",
+    "meaning": "sepeda",
+    "word_type": "noun"
+  },
+  {
+    "word": "色",
+    "reading": "iro",
+    "meaning": "warna",
+    "word_type": "noun"
+  },
+  {
+    "word": "英語",
+    "reading": "eigo",
+    "meaning": "bahasa inggris",
+    "word_type": "noun"
+  },
+  {
+    "word": "茶碗",
+    "reading": "chawan",
+    "meaning": "Cangkir",
+    "word_type": "noun"
+  },
+  {
+    "word": "茶色",
+    "reading": "chairo",
+    "meaning": "coklat",
+    "word_type": "noun"
+  },
+  {
+    "word": "薬",
+    "reading": "kusuri",
+    "meaning": "obat",
+    "word_type": "noun"
+  },
+  {
+    "word": "行く",
+    "reading": "iku",
+    "meaning": "pergi",
+    "word_type": "godan"
+  },
+  {
+    "word": "西",
+    "reading": "nishi",
+    "meaning": "barat",
+    "word_type": "noun"
+  },
+  {
+    "word": "要る",
+    "reading": "iru",
+    "meaning": "perlu",
+    "word_type": "godan"
+  },
+  {
+    "word": "見せる",
+    "reading": "miseru",
+    "meaning": "Memperlihatkan",
+    "word_type": "godan"
+  },
+  {
+    "word": "見る",
+    "reading": "miru",
+    "meaning": "melihat, menonton",
+    "word_type": "godan"
+  },
+  {
+    "word": "覚える",
+    "reading": "oboeru",
+    "meaning": "menghafal",
+    "word_type": "godan"
+  },
+  {
+    "word": "言う",
+    "reading": "iu",
+    "meaning": "berkata",
+    "word_type": "godan"
+  },
+  {
+    "word": "言葉",
+    "reading": "kotoba",
+    "meaning": "kosakata",
+    "word_type": "noun"
+  },
+  {
+    "word": "話",
+    "reading": "hanashi",
+    "meaning": "Cerita, pembicaraan",
+    "word_type": "noun"
+  },
+  {
+    "word": "話す",
+    "reading": "hanasu",
+    "meaning": "Berbicara",
+    "word_type": "godan"
+  },
+  {
+    "word": "誕生日",
+    "reading": "tanjoubi",
+    "meaning": "ulang tahun",
+    "word_type": "noun"
+  },
+  {
+    "word": "豚肉",
+    "reading": "butaniku",
+    "meaning": "Daging babi",
+    "word_type": "noun"
+  },
+  {
+    "word": "買い物",
+    "reading": "kaimono",
+    "meaning": "belanja",
+    "word_type": "noun"
+  },
+  {
+    "word": "買う",
+    "reading": "kau",
+    "meaning": "membeli",
+    "word_type": "godan"
+  },
+  {
+    "word": "貸す",
+    "reading": "kasu",
+    "meaning": "meminjamkan",
+    "word_type": "godan"
+  },
+  {
+    "word": "貼る",
+    "reading": "haru",
+    "meaning": "Menempel",
+    "word_type": "godan"
+  },
+  {
+    "word": "質問",
+    "reading": "shitsumon",
+    "meaning": "pertanyaan",
+    "word_type": "noun"
+  },
+  {
+    "word": "赤い",
+    "reading": "akai",
+    "meaning": "merah",
+    "word_type": "i_adj"
+  },
+  {
+    "word": "走る",
+    "reading": "hashiru",
+    "meaning": "Berlari",
+    "word_type": "godan"
+  },
+  {
+    "word": "車",
+    "reading": "kuruma",
+    "meaning": "mobil",
+    "word_type": "noun"
+  },
+  {
+    "word": "軽い",
+    "reading": "karui",
+    "meaning": "ringan",
+    "word_type": "i_adj"
+  },
+  {
+    "word": "辞書",
+    "reading": "jisho",
+    "meaning": "kamus",
+    "word_type": "noun"
+  },
+  {
+    "word": "近い",
+    "reading": "chikai",
+    "meaning": "dekat",
+    "word_type": "i_adj"
+  },
+  {
+    "word": "近く",
+    "reading": "chikaku",
+    "meaning": "dekat",
+    "word_type": "godan"
+  },
+  {
+    "word": "返す",
+    "reading": "kaesu",
+    "meaning": "mengembalikan",
+    "word_type": "godan"
+  },
+  {
+    "word": "速い",
+    "reading": "hayai",
+    "meaning": "Cepat (kendaraan)",
+    "word_type": "i_adj"
+  },
+  {
+    "word": "遅い",
+    "reading": "osoi",
+    "meaning": "lambat",
+    "word_type": "i_adj"
+  },
+  {
+    "word": "遊ぶ",
+    "reading": "asobu",
+    "meaning": "main",
+    "word_type": "godan"
+  },
+  {
+    "word": "道",
+    "reading": "michi",
+    "meaning": "Jalan",
+    "word_type": "noun"
+  },
+  {
+    "word": "違う",
+    "reading": "chigau",
+    "meaning": "berbeda, salah",
+    "word_type": "godan"
+  },
+  {
+    "word": "遠い",
+    "reading": "tooi",
+    "meaning": "jauh",
+    "word_type": "i_adj"
+  },
+  {
+    "word": "郵便局",
+    "reading": "yuubinkyoku",
+    "meaning": "Kantor pos",
+    "word_type": "noun"
+  },
+  {
+    "word": "都合",
+    "reading": "tsugou",
+    "meaning": "kondisi, keadaan",
+    "word_type": "noun"
+  },
+  {
+    "word": "重い",
+    "reading": "omoi",
+    "meaning": "berat",
+    "word_type": "i_adj"
+  },
+  {
+    "word": "野菜",
+    "reading": "yasai",
+    "meaning": "Sayuran",
+    "word_type": "noun"
+  },
+  {
+    "word": "鉛筆",
+    "reading": "enpitsu",
+    "meaning": "pensil",
+    "word_type": "noun"
+  },
+  {
+    "word": "銀行",
+    "reading": "ginkou",
+    "meaning": "bank",
+    "word_type": "noun"
+  },
+  {
+    "word": "長い",
+    "reading": "nagai",
+    "meaning": "panjang",
+    "word_type": "i_adj"
+  },
+  {
+    "word": "門",
+    "reading": "mon",
+    "meaning": "Gerbang",
+    "word_type": "noun"
+  },
+  {
+    "word": "閉まる",
+    "reading": "shimaru",
+    "meaning": "tertutup",
+    "word_type": "godan"
+  },
+  {
+    "word": "閉める",
+    "reading": "shimeru",
+    "meaning": "menutup",
+    "word_type": "godan"
+  },
+  {
+    "word": "開ける",
+    "reading": "akeru",
+    "meaning": "membuka",
+    "word_type": "godan"
+  },
+  {
+    "word": "降る",
+    "reading": "furu",
+    "meaning": "Turun",
+    "word_type": "godan"
+  },
+  {
+    "word": "階段",
+    "reading": "kaidan",
+    "meaning": "tangga",
+    "word_type": "noun"
+  },
+  {
+    "word": "隣",
+    "reading": "tonari",
+    "meaning": "sebelah",
+    "word_type": "noun"
+  },
+  {
+    "word": "雑誌",
+    "reading": "zasshi",
+    "meaning": "majalah",
+    "word_type": "noun"
+  },
+  {
+    "word": "難しい",
+    "reading": "muzukashii",
+    "meaning": "Sulit",
+    "word_type": "i_adj"
+  },
+  {
+    "word": "雨",
+    "reading": "ame",
+    "meaning": "hujan",
+    "word_type": "noun"
+  },
+  {
+    "word": "雪",
+    "reading": "yuki",
+    "meaning": "Salju",
+    "word_type": "noun"
+  },
+  {
+    "word": "電気",
+    "reading": "denki",
+    "meaning": "listrik",
+    "word_type": "noun"
+  },
+  {
+    "word": "電話",
+    "reading": "Denwa",
+    "meaning": "telpon",
+    "word_type": "noun"
+  },
+  {
+    "word": "電話番号",
+    "reading": "Denwa bangou",
+    "meaning": "Nomor telepon",
+    "word_type": "noun"
+  },
+  {
+    "word": "青い",
+    "reading": "aoi",
+    "meaning": "biru",
+    "word_type": "i_adj"
+  },
+  {
+    "word": "静か",
+    "reading": "shizuka",
+    "meaning": "tenang, sunyi",
+    "word_type": "i_adj"
+  },
+  {
+    "word": "靴",
+    "reading": "kutsu",
+    "meaning": "sepatu",
+    "word_type": "noun"
+  },
+  {
+    "word": "靴下",
+    "reading": "kutsushita",
+    "meaning": "kaos kaki",
+    "word_type": "noun"
+  },
+  {
+    "word": "靴屋",
+    "reading": "Kutsuya",
+    "meaning": "Toko sepatu",
+    "word_type": "noun"
+  },
+  {
+    "word": "音楽",
+    "reading": "ongaku",
+    "meaning": "musik",
+    "word_type": "noun"
+  },
+  {
+    "word": "頼む",
+    "reading": "tanomu",
+    "meaning": "meminta",
+    "word_type": "godan"
+  },
+  {
+    "word": "顔",
+    "reading": "kao",
+    "meaning": "wajah",
+    "word_type": "noun"
+  },
+  {
+    "word": "風",
+    "reading": "kaze",
+    "meaning": "angin",
+    "word_type": "noun"
+  },
+  {
+    "word": "風呂",
+    "reading": "furo",
+    "meaning": "Mandi",
+    "word_type": "noun"
+  },
+  {
+    "word": "風邪",
+    "reading": "kaze",
+    "meaning": "masuk angin",
+    "word_type": "noun"
+  },
+  {
+    "word": "飛ぶ",
+    "reading": "tobu",
+    "meaning": "terbang",
+    "word_type": "godan"
+  },
+  {
+    "word": "飛行機",
+    "reading": "hikouki",
+    "meaning": "Pesawat terbang",
+    "word_type": "noun"
+  },
+  {
+    "word": "食べすぎ",
+    "reading": "Tabesugi",
+    "meaning": "Terlalu banyak makan",
+    "word_type": "adverb"
+  },
+  {
+    "word": "食べる",
+    "reading": "taberu",
+    "meaning": "makan",
+    "word_type": "godan"
+  },
+  {
+    "word": "食べ物",
+    "reading": "tabemono",
+    "meaning": "makanan",
+    "word_type": "noun"
+  },
+  {
+    "word": "食堂",
+    "reading": "shokudou",
+    "meaning": "kantin",
+    "word_type": "noun"
+  },
+  {
+    "word": "飲み物",
+    "reading": "nomimono",
+    "meaning": "minuman",
+    "word_type": "noun"
+  },
+  {
+    "word": "飲む",
+    "reading": "nomu",
+    "meaning": "minum",
+    "word_type": "godan"
+  },
+  {
+    "word": "飴",
+    "reading": "ame",
+    "meaning": "permen",
+    "word_type": "noun"
+  },
+  {
+    "word": "駅",
+    "reading": "eki",
+    "meaning": "stasiun",
+    "word_type": "noun"
+  },
+  {
+    "word": "高い",
+    "reading": "takai",
+    "meaning": "tinggi, mahal",
+    "word_type": "i_adj"
+  },
+  {
+    "word": "魚",
+    "reading": "sakana",
+    "meaning": "ikan",
+    "word_type": "noun"
+  },
+  {
+    "word": "鳥",
+    "reading": "tori",
+    "meaning": "burung",
+    "word_type": "noun"
+  },
+  {
+    "word": "鶏肉",
+    "reading": "toriniku",
+    "meaning": "daging ayam",
+    "word_type": "noun"
+  },
+  {
+    "word": "黄色",
+    "reading": "kiiro",
+    "meaning": "warna kuning",
+    "word_type": "noun"
+  },
+  {
+    "word": "黒い",
+    "reading": "kuroi",
+    "meaning": "hitam",
+    "word_type": "i_adj"
+  },
+  {
+    "word": "鼻",
+    "reading": "hana",
+    "meaning": "Hidung",
+    "word_type": "noun"
+  },
+  {
+    "word": "決める",
+    "reading": "kimeru",
+    "meaning": "menentukan",
+    "word_type": "godan"
+  },
+  {
+    "word": "止まる",
+    "reading": "tomaru",
+    "meaning": "berhenti",
+    "word_type": "godan"
+  },
+  {
+    "word": "参る",
+    "reading": "mairu",
+    "meaning": "pergi sembahyang",
+    "word_type": "godan"
+  },
+  {
+    "word": "これから",
+    "reading": "korekara",
+    "meaning": "mulai dari sekarang",
+    "word_type": "i_adj"
+  },
+  {
+    "word": "ショッピング",
+    "reading": "shoppingu",
+    "meaning": "belanja",
+    "word_type": "noun"
+  },
+  {
+    "word": "手すり",
+    "reading": "tesuri",
+    "meaning": "pegangan, batang",
+    "word_type": "noun"
+  },
+  {
+    "word": "高等学校",
+    "reading": "koutou gakkou",
+    "meaning": "SMA",
+    "word_type": "noun"
+  },
+  {
+    "word": "僕",
+    "reading": "boku",
+    "meaning": "saya ( informal untuk laki-laki)",
+    "word_type": "noun"
+  },
+  {
+    "word": "用意する",
+    "reading": "youi suru",
+    "meaning": "mempersiapkan",
+    "word_type": "godan"
+  },
+  {
+    "word": "指輪",
+    "reading": "yubiwa",
+    "meaning": "cincin",
+    "word_type": "noun"
+  },
+  {
+    "word": "すごく",
+    "reading": "sugoku",
+    "meaning": "sangat",
+    "word_type": "i_adj"
+  },
+  {
+    "word": "まず",
+    "reading": "mazu",
+    "meaning": "pertama-tama",
+    "word_type": "adverb"
+  },
+  {
+    "word": "プロ",
+    "reading": "puro",
+    "meaning": "profesional",
+    "word_type": "noun"
+  },
+  {
+    "word": "店員",
+    "reading": "ten'in",
+    "meaning": "petugas, pelayan",
+    "word_type": "noun"
+  },
+  {
+    "word": "かまいません",
+    "reading": "kamaimasen",
+    "meaning": "tidak apa-apa, boleh",
+    "word_type": "godan"
+  },
+  {
+    "word": "それほど～ない",
+    "reading": "sorehodo~nai",
+    "meaning": "tidak ~ lebih dari itu",
+    "word_type": "godan"
+  },
+  {
+    "word": "大学",
+    "reading": "daigaku",
+    "meaning": "universitas",
+    "word_type": "noun"
+  },
+  {
+    "word": "受ける",
+    "reading": "ukeru",
+    "meaning": "menerima",
+    "word_type": "godan"
+  },
+  {
+    "word": "ぬれる",
+    "reading": "nureru",
+    "meaning": "basah",
+    "word_type": "godan"
+  },
+  {
+    "word": "動物",
+    "reading": "doubutsu",
+    "meaning": "binatang",
+    "word_type": "noun"
+  },
+  {
+    "word": "頭",
+    "reading": "atama",
+    "meaning": "kepala",
+    "word_type": "noun"
+  },
+  {
+    "word": "準備する",
+    "reading": "junbi suru",
+    "meaning": "mempersiapkan",
+    "word_type": "godan"
+  },
+  {
+    "word": "スカート",
+    "reading": "sukaato",
+    "meaning": "rok",
+    "word_type": "noun"
+  },
+  {
+    "word": "どんどん",
+    "reading": "dondon",
+    "meaning": "semakin",
+    "word_type": "noun"
+  },
+  {
+    "word": "すっかり",
+    "reading": "sukkari",
+    "meaning": "benar-benar",
+    "word_type": "noun"
+  },
+  {
+    "word": "大会",
+    "reading": "taikai",
+    "meaning": "acara, pesta",
+    "word_type": "noun"
+  },
+  {
+    "word": "近所",
+    "reading": "kinjo",
+    "meaning": "tetangga",
+    "word_type": "noun"
+  },
+  {
+    "word": "急ぐ",
+    "reading": "isogu",
+    "meaning": "buru-buru, menyegerakan",
+    "word_type": "godan"
+  },
+  {
+    "word": "インターネット",
+    "reading": "intaanetto",
+    "meaning": "internet",
+    "word_type": "noun"
+  },
+  {
+    "word": "口",
+    "reading": "kuchi",
+    "meaning": "mulut",
+    "word_type": "noun"
+  },
+  {
+    "word": "骨",
+    "reading": "hone",
+    "meaning": "tulang",
+    "word_type": "noun"
+  },
+  {
+    "word": "品物",
+    "reading": "shinamono",
+    "meaning": "barang",
+    "word_type": "noun"
+  },
+  {
+    "word": "増える",
+    "reading": "fueru",
+    "meaning": "bertambah",
+    "word_type": "godan"
+  },
+  {
+    "word": "新幹線",
+    "reading": "shinkansen",
+    "meaning": "kereta peluru, shinkansen",
+    "word_type": "noun"
+  },
+  {
+    "word": "予習する",
+    "reading": "yoshuu suru",
+    "meaning": "mempersiapkan sebelum belajar",
+    "word_type": "godan"
+  },
+  {
+    "word": "恥ずかしい",
+    "reading": "hazukashii",
+    "meaning": "malu",
+    "word_type": "i_adj"
+  },
+  {
+    "word": "始める",
+    "reading": "hajimeru",
+    "meaning": "memulai",
+    "word_type": "godan"
+  },
+  {
+    "word": "心配する",
+    "reading": "shinpaisuru",
+    "meaning": "khawatir",
+    "word_type": "godan"
+  },
+  {
+    "word": "飾る",
+    "reading": "kazaru",
+    "meaning": "memajang",
+    "word_type": "godan"
+  },
+  {
+    "word": "会話",
+    "reading": "kaiwa",
+    "meaning": "percakapan",
+    "word_type": "noun"
+  },
+  {
+    "word": "わけ",
+    "reading": "wake",
+    "meaning": "alasan",
+    "word_type": "noun"
+  },
+  {
+    "word": "フランス",
+    "reading": "furansu",
+    "meaning": "prancis",
+    "word_type": "noun"
+  },
+  {
+    "word": "オーストラリア",
+    "reading": "oosutoraria",
+    "meaning": "Australia",
+    "word_type": "noun"
+  },
+  {
+    "word": "ほめる",
+    "reading": "homeru",
+    "meaning": "memuji",
+    "word_type": "godan"
+  },
+  {
+    "word": "田舎",
+    "reading": "inaka",
+    "meaning": "pedesaan",
+    "word_type": "noun"
+  },
+  {
+    "word": "神社",
+    "reading": "jinja",
+    "meaning": "sebuah kuil",
+    "word_type": "noun"
+  },
+  {
+    "word": "くださる",
+    "reading": "kudasaru",
+    "meaning": "mendapat (dari~)",
+    "word_type": "godan"
+  },
+  {
+    "word": "釣る",
+    "reading": "tsuru",
+    "meaning": "memancing",
+    "word_type": "godan"
+  },
+  {
+    "word": "足す",
+    "reading": "tasu",
+    "meaning": "menambahkan",
+    "word_type": "godan"
+  },
+  {
+    "word": "地震",
+    "reading": "jishin",
+    "meaning": "gempa bumi",
+    "word_type": "noun"
+  },
+  {
+    "word": "届ける",
+    "reading": "todokeru",
+    "meaning": "menyampaikan, mengirim",
+    "word_type": "godan"
+  },
+  {
+    "word": "相談する",
+    "reading": "soudan suru",
+    "meaning": "konsultasi",
+    "word_type": "godan"
+  },
+  {
+    "word": "中学生",
+    "reading": "chuugakusei",
+    "meaning": "siswa sekolah menengah",
+    "word_type": "noun"
+  },
+  {
+    "word": "太る",
+    "reading": "futoru",
+    "meaning": "menjadi gemuk",
+    "word_type": "godan"
+  },
+  {
+    "word": "予約する",
+    "reading": "yoyaku suru",
+    "meaning": "memesan",
+    "word_type": "godan"
+  },
+  {
+    "word": "やわらかい",
+    "reading": "yawarakai",
+    "meaning": "lembut, empuk",
+    "word_type": "i_adj"
+  },
+  {
+    "word": "熱",
+    "reading": "netsu",
+    "meaning": "panas,demam",
+    "word_type": "noun"
+  },
+  {
+    "word": "歯",
+    "reading": "ha",
+    "meaning": "gigi",
+    "word_type": "noun"
+  },
+  {
+    "word": "セール",
+    "reading": "seeru",
+    "meaning": "dijual",
+    "word_type": "noun"
+  },
+  {
+    "word": "無くす",
+    "reading": "nakusu",
+    "meaning": "menghilangkan",
+    "word_type": "adverb"
+  },
+  {
+    "word": "ダイエット",
+    "reading": "dietto",
+    "meaning": "diet",
+    "word_type": "noun"
+  },
+  {
+    "word": "指",
+    "reading": "yubi",
+    "meaning": "jari",
+    "word_type": "noun"
+  },
+  {
+    "word": "続く",
+    "reading": "tsuzuku",
+    "meaning": "berlanjut",
+    "word_type": "godan"
+  },
+  {
+    "word": "場所",
+    "reading": "basho",
+    "meaning": "tempat",
+    "word_type": "noun"
+  },
+  {
+    "word": "心",
+    "reading": "kokoro",
+    "meaning": "hati",
+    "word_type": "noun"
+  },
+  {
+    "word": "ドレス",
+    "reading": "doresu",
+    "meaning": "gaun",
+    "word_type": "noun"
+  },
+  {
+    "word": "下げる",
+    "reading": "sageru",
+    "meaning": "menurunkan",
+    "word_type": "godan"
+  },
+  {
+    "word": "裏",
+    "reading": "ura",
+    "meaning": "bagian belakang",
+    "word_type": "noun"
+  },
+  {
+    "word": "ヨーロッパ",
+    "reading": "youroppa",
+    "meaning": "Eropa",
+    "word_type": "noun"
+  },
+  {
+    "word": "講義",
+    "reading": "kougi",
+    "meaning": "perkuliahan",
+    "word_type": "noun"
+  },
+  {
+    "word": "半額",
+    "reading": "hangaku",
+    "meaning": "setengah harga",
+    "word_type": "noun"
+  },
+  {
+    "word": "市",
+    "reading": "~shi",
+    "meaning": "kota",
+    "word_type": "noun"
+  },
+  {
+    "word": "娘",
+    "reading": "musume",
+    "meaning": "seorang gadis",
+    "word_type": "noun"
+  },
+  {
+    "word": "幼稚園",
+    "reading": "youchien",
+    "meaning": "Taman kanak-kanak",
+    "word_type": "noun"
+  },
+  {
+    "word": "片付ける",
+    "reading": "katazukeru",
+    "meaning": "merapihkan",
+    "word_type": "godan"
+  },
+  {
+    "word": "空く",
+    "reading": "aku",
+    "meaning": "kosong",
+    "word_type": "godan"
+  },
+  {
+    "word": "素晴らしい",
+    "reading": "subarashii",
+    "meaning": "menakjubkan",
+    "word_type": "i_adj"
+  },
+  {
+    "word": "復習する",
+    "reading": "fukushuu suru",
+    "meaning": "mengulang (pelajaran)",
+    "word_type": "godan"
+  },
+  {
+    "word": "普通",
+    "reading": "futsuu",
+    "meaning": "biasa",
+    "word_type": "noun"
+  },
+  {
+    "word": "出発する",
+    "reading": "shupatsu suru",
+    "meaning": "berangkat",
+    "word_type": "godan"
+  },
+  {
+    "word": "運ぶ",
+    "reading": "hakobu",
+    "meaning": "mengangkut",
+    "word_type": "godan"
+  },
+  {
+    "word": "咳",
+    "reading": "seki",
+    "meaning": "batuk",
+    "word_type": "noun"
+  },
+  {
+    "word": "南東",
+    "reading": "nantou",
+    "meaning": "tenggara",
+    "word_type": "noun"
+  },
+  {
+    "word": "帰り",
+    "reading": "kaeri",
+    "meaning": "pulang",
+    "word_type": "noun"
+  },
+  {
+    "word": "治る",
+    "reading": "naoru",
+    "meaning": "menjadi sembuh",
+    "word_type": "godan"
+  },
+  {
+    "word": "伝える",
+    "reading": "tsutaeru",
+    "meaning": "menyampaikan",
+    "word_type": "godan"
+  },
+  {
+    "word": "決まる",
+    "reading": "kimaru",
+    "meaning": "ditentukan, diputuskan",
+    "word_type": "godan"
+  },
+  {
+    "word": "乗り物",
+    "reading": "norimono",
+    "meaning": "kendaraan",
+    "word_type": "noun"
+  },
+  {
+    "word": "なるべく",
+    "reading": "narubeku",
+    "meaning": "sedapat mungkin",
+    "word_type": "adverb"
+  },
+  {
+    "word": "ひげ",
+    "reading": "hige",
+    "meaning": "janggut",
+    "word_type": "noun"
+  },
+  {
+    "word": "表",
+    "reading": "omote",
+    "meaning": "bagian depan, muka",
+    "word_type": "noun"
+  },
+  {
+    "word": "地方",
+    "reading": "chihou",
+    "meaning": "wilayah, pedesaan",
+    "word_type": "noun"
+  },
+  {
+    "word": "アルバイト",
+    "reading": "arubaito",
+    "meaning": "pekerjaan, paruh waktu",
+    "word_type": "noun"
+  },
+  {
+    "word": "棚",
+    "reading": "tana",
+    "meaning": "rak",
+    "word_type": "noun"
+  },
+  {
+    "word": "変",
+    "reading": "hen",
+    "meaning": "aneh",
+    "word_type": "i_adj"
+  },
+  {
+    "word": "客",
+    "reading": "kyaku",
+    "meaning": "pelanggan",
+    "word_type": "noun"
+  },
+  {
+    "word": "消防車",
+    "reading": "shoubousha",
+    "meaning": "mobil pemadam kebakaran",
+    "word_type": "noun"
+  },
+  {
+    "word": "習慣",
+    "reading": "shuukan",
+    "meaning": "kebiasaan",
+    "word_type": "noun"
+  },
+  {
+    "word": "縮む",
+    "reading": "chijimu",
+    "meaning": "mengkerut",
+    "word_type": "godan"
+  },
+  {
+    "word": "県",
+    "reading": "ken",
+    "meaning": "prefektur",
+    "word_type": "noun"
+  },
+  {
+    "word": "腰",
+    "reading": "koshi",
+    "meaning": "pinggang",
+    "word_type": "noun"
+  },
+  {
+    "word": "集まる",
+    "reading": "atsumaru",
+    "meaning": "berkumpul",
+    "word_type": "godan"
+  },
+  {
+    "word": "たしか",
+    "reading": "tashika",
+    "meaning": "pastinya,memang",
+    "word_type": "adverb"
+  },
+  {
+    "word": "スパゲッティ",
+    "reading": "supagetti",
+    "meaning": "spageti",
+    "word_type": "noun"
+  },
+  {
+    "word": "退院する",
+    "reading": "taiin suru",
+    "meaning": "keluar dari rumah sakit",
+    "word_type": "godan"
+  },
+  {
+    "word": "かむ",
+    "reading": "kamu",
+    "meaning": "menggigit",
+    "word_type": "godan"
+  },
+  {
+    "word": "韓国",
+    "reading": "kankoku",
+    "meaning": "Korea",
+    "word_type": "noun"
+  },
+  {
+    "word": "落ちる",
+    "reading": "ochiru",
+    "meaning": "jatuh",
+    "word_type": "godan"
+  },
+  {
+    "word": "おっしゃる",
+    "reading": "ossharu",
+    "meaning": "mengatakan ( hormat )",
+    "word_type": "godan"
+  },
+  {
+    "word": "小鳥",
+    "reading": "kotori",
+    "meaning": "seekor burung",
+    "word_type": "noun"
+  },
+  {
+    "word": "ああ",
+    "reading": "aa",
+    "meaning": "ah, oh",
+    "word_type": "other"
+  },
+  {
+    "word": "青",
+    "reading": "ao",
+    "meaning": "biru",
+    "word_type": "noun"
+  }
+]

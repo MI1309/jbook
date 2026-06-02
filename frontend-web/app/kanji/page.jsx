@@ -21,14 +21,16 @@ import { getScriptTypes } from '@/lib/utils';
 function HighlightText({ text, query, active = true }) {
     if (text === null || text === undefined) return null;
     const textStr = String(text);
-    if (!query || !active) return <span>{textStr}</span>;
+    const trimmedQuery = String(query || '').trim();
+    if (!trimmedQuery || !active) return <span>{textStr}</span>;
     // Escape special regex characters in query to prevent crash
-    const escapedQuery = query.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+    const escapedQuery = trimmedQuery.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+    if (!escapedQuery) return <span>{textStr}</span>;
     const parts = textStr.split(new RegExp(`(${escapedQuery})`, 'gi'));
     return (
         <span>
             {parts.map((part, i) =>
-                part.toLowerCase() === query.toLowerCase() ?
+                part.toLowerCase() === trimmedQuery.toLowerCase() ?
                 <mark key={i} className="bg-accent-gold/30 dark:bg-accent-gold/20 text-gray-900 dark:text-accent-gold rounded px-0.5 no-underline">{part}</mark> :
                 part
             )}

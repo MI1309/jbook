@@ -219,9 +219,11 @@ export async function getKanjiList({ level, search, radical, limit = 50, page = 
                 return handleResponse(res, 'getKanjiList');
             });
 
+            const responseData = { ...data };
+
             // Merge with local results if search is active
             if (search && localSmartResults) {
-                const apiItems = data.items || [];
+                const apiItems = [...(responseData.items || [])];
                 // Merge all local results that aren't in the API response
                 const localItems = localSmartResults.items || [];
                 
@@ -231,11 +233,11 @@ export async function getKanjiList({ level, search, radical, limit = 50, page = 
                     }
                 });
                 
-                data.items = apiItems;
-                data.total = apiItems.length;
+                responseData.items = apiItems;
+                responseData.total = apiItems.length;
             }
 
-            return data;
+            return responseData;
         } catch (error) {
             console.warn(`[jbook-api] API Gagal, mencoba fallback ke Database Lokal...`, error.message);
             if (localSmartResults) return localSmartResults;
@@ -574,18 +576,53 @@ export async function getVocabList({ level, search, word_type, limit = 50, page 
     // Prioritas Baru: API Pertama (Online) > Database Lokal (Offline/Gagal)
     const cacheKey = `vocab-list-${queryParams.toString()}`;
     
+    // Check local smart matches first (Parallel or Fallback)
+    let localSmartResults = null;
+    if (typeof window !== 'undefined') {
+        localSmartResults = await serveFromDb('vocab', { level, search, word_type, page: 1, limit: 200 });
+    }
+    
     // 1. Jika Online: Ambil dari API
     if (typeof window === 'undefined' || (typeof navigator !== 'undefined' && navigator.onLine)) {
         try {
-            return await fetchWithCache(cacheKey, async () => {
+            const data = await fetchWithCache(cacheKey, async () => {
                 const res = await fetch(`${API_URL}/content/vocab?${queryParams.toString()}`, { cache: 'no-store' });
-                const data = await handleResponse(res, 'getVocabList');
-                if (Array.isArray(data)) return { items: data, total: data.length, pages: 1, page: 1 };
-                return data;
+                const resData = await handleResponse(res, 'getVocabList');
+                if (Array.isArray(resData)) return { items: resData, total: resData.length, pages: 1, page: 1 };
+                return resData;
             });
+
+            const responseData = { ...data };
+
+            // Merge with local results if search is active (for _matchTarget highlighting)
+            if (search && localSmartResults) {
+                const apiItems = [...(responseData.items || [])];
+                const localItems = localSmartResults.items || [];
+                
+                // First, enrich API items with local _matchTarget if they match
+                apiItems.forEach((ai, index) => {
+                    const li = localItems.find(item => item.id === ai.id || item.word === ai.word);
+                    if (li && li._matchTarget) {
+                        apiItems[index] = { ...ai, _matchTarget: li._matchTarget };
+                    }
+                });
+
+                // Then, merge local items that aren't in API response
+                localItems.forEach(si => {
+                    if (!apiItems.find(ai => ai.id === si.id || ai.word === si.word)) {
+                        apiItems.push(si);
+                    }
+                });
+                
+                responseData.items = apiItems;
+                responseData.total = apiItems.length;
+            }
+
+            return responseData;
         } catch (error) {
             // Jika API Gagal (misal: timeout), coba fallback ke Offline
             if (typeof window !== 'undefined') {
+                if (localSmartResults) return localSmartResults;
                 const offline = await serveFromDb('vocab', { level, search, word_type, page, limit });
                 if (offline && offline.items.length > 0) return offline;
             }
@@ -595,6 +632,7 @@ export async function getVocabList({ level, search, word_type, limit = 50, page 
 
     // 2. Jika Benar-benar Offline: Ambil dari Database Lokal
     if (typeof window !== 'undefined') {
+        if (localSmartResults) return localSmartResults;
         const offline = await serveFromDb('vocab', { level, search, word_type, page, limit });
         if (offline && offline.items.length > 0) return offline;
     }
