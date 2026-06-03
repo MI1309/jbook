@@ -677,30 +677,6 @@ function PracticeContent() {
                             </div>
                         )}
                     </div>
-                ) : mode === 'doukai' ? (
-                    <div className="mb-8 relative p-4 flex flex-col items-center group transition-all duration-300">
-                        <span className={`text-[10px] font-black uppercase tracking-[0.2em] mb-4 block transition-colors ${subTextColor}`}>
-                            Minna Doukai (Pemahaman) • Bab {currentQuestion.chapter}
-                        </span>
-                        
-                        <div className={`w-full max-w-lg mb-6 p-6 rounded-3xl border-2 ${theme === 'dark' ? 'bg-black/30 border-white/5' : 'bg-gray-50 border-gray-100'} transition-all`}>
-                            <span className={`block text-xs font-black uppercase tracking-wider mb-2 ${subTextColor} text-left`}>Kalimat Jepang:</span>
-                            <div className={`text-2xl font-black font-japanese mb-4 leading-relaxed text-left ${textColor}`}>
-                                {currentQuestion.character}
-                            </div>
-                            
-                            <hr className={`my-4 border-dashed ${theme === 'dark' ? 'border-gray-800' : 'border-gray-200'}`} />
-                            
-                            <span className={`block text-xs font-black uppercase tracking-wider mb-2 ${subTextColor} text-left`}>Terjemahan Yang Diberikan:</span>
-                            <div className={`text-xl font-bold italic text-left ${textColor}`}>
-                                &quot;{currentQuestion.shown_translation}&quot;
-                            </div>
-                        </div>
-
-                        <div className={`text-sm font-black uppercase tracking-wider ${textColor}`}>
-                            Apakah terjemahan di atas BENAR (sesuai)?
-                        </div>
-                    </div>
                 ) : (
                     <div
                         onClick={() => !isAnswered && setShowReadingManual(!showReadingManual)}
@@ -794,7 +770,7 @@ function PracticeContent() {
                     </div>
                 ) : (
                     <>
-                        {isAnswered && (currentQuestion.reading || currentQuestion.meaning) && mode !== 'doukai' && (
+                        {isAnswered && (currentQuestion.reading || currentQuestion.meaning) && (
                             <div className="mb-6 animate-fade-in-up">
                                 {currentQuestion.reading && hasKanji(currentQuestion.character) && (
                                     <div className="text-2xl text-blue-600 dark:text-blue-400 font-serif font-black mb-1 break-words">{sanitizeReading(currentQuestion.reading)}</div>
@@ -814,50 +790,8 @@ function PracticeContent() {
                             </div>
                         )}
 
-                        {mode === 'doukai' ? (
-                            <div className="grid gap-4 grid-cols-2 max-w-md mx-auto w-full">
-                                {['Benar', 'Salah'].map((typeLabel, idx) => {
-                                    const opt = currentQuestion.options.find(o => o.text === typeLabel) || { text: typeLabel, is_correct: typeLabel === 'Benar' ? currentQuestion.is_translation_correct : !currentQuestion.is_translation_correct };
-                                    const isCorrectOpt = opt.is_correct;
-                                    
-                                    let btnClass = "p-5 text-lg font-black border-2 rounded-2xl transition-all duration-300 relative transform hover:scale-[1.02] active:scale-[0.98] ";
-                                    
-                                    if (isAnswered) {
-                                        if (isCorrectOpt) {
-                                            btnClass += theme === 'dark' ? "bg-green-900/30 border-green-500 text-green-400 shadow-[0_0_20px_rgba(34,197,94,0.2)] scale-[1.02]" : "bg-green-50 border-green-500 text-green-700 shadow-[0_0_20px_rgba(34,197,94,0.3)] scale-[1.02]";
-                                        } else if (selectedOption === opt && !isCorrectOpt) {
-                                            btnClass += theme === 'dark' ? "bg-blue-950/40 border-blue-500 text-blue-300 shadow-lg shadow-blue-500/10" : "bg-blue-50 border-blue-500 text-blue-700";
-                                        } else {
-                                            btnClass += theme === 'dark' ? "bg-black/20 border-gray-900 text-gray-600 opacity-40" : "bg-gray-50 border-gray-100 text-gray-300 opacity-60";
-                                        }
-                                    } else {
-                                        if (typeLabel === 'Benar') {
-                                            btnClass += theme === 'dark' ? "bg-[#0a0a0a]/50 border-green-900/40 text-green-400 hover:border-green-500 hover:bg-green-950/20" : "bg-white/50 border-green-200 text-green-700 hover:border-green-500 hover:bg-green-50";
-                                        } else {
-                                            btnClass += theme === 'dark' ? "bg-[#0a0a0a]/50 border-blue-900/40 text-blue-400 hover:border-blue-500 hover:bg-blue-950/20" : "bg-white/50 border-blue-200 text-blue-700 hover:border-blue-500 hover:bg-blue-50";
-                                        }
-                                        btnClass += " cursor-pointer hover:shadow-lg";
-                                    }
-
-                                    return (
-                                        <button
-                                            key={idx}
-                                            disabled={isAnswered}
-                                            onClick={() => handleOptionSelect(opt)}
-                                            className={btnClass}
-                                        >
-                                            <span className="text-3xl block mb-2">{typeLabel === 'Benar' ? '✅' : '❌'}</span>
-                                            <span className="relative z-10">{typeLabel}</span>
-                                            {isAnswered && isCorrectOpt && (
-                                                <span className="absolute right-3 top-1/2 -translate-y-1/2 text-green-500 text-xl">✓</span>
-                                            )}
-                                        </button>
-                                    );
-                                })}
-                            </div>
-                        ) : (
-                            <div className="grid gap-3 grid-cols-1 md:grid-cols-2">
-                                {currentQuestion.options.map((option, idx) => {
+                        <div className="grid gap-3 grid-cols-1 md:grid-cols-2">
+                            {currentQuestion.options.map((option, idx) => {
                                     let btnClass = "p-4 text-base md:text-lg font-black border-2 rounded-2xl transition-all duration-300 relative break-words ";
 
                                     if (isAnswered) {
@@ -887,7 +821,6 @@ function PracticeContent() {
                                     );
                                 })}
                             </div>
-                        )}
                     </>
                 )}
             </div>

@@ -41,8 +41,6 @@ class MinnaQuestionSchema(Schema):
     explanation: Optional[str] = None
     book: Optional[int] = None
     chapter: Optional[int] = None
-    shown_translation: Optional[str] = None
-    is_translation_correct: Optional[bool] = None
 
 class TTSSchema(Schema):
     grid: List[List[str]]
@@ -326,14 +324,12 @@ def generate_minna_quiz(request, book: Optional[str] = None, chapter: Optional[s
             "type": "minna",
             "options": options,
             "reading": q.question_id,
-            "meaning": q.shown_translation or q.correct_answer,
+            "meaning": q.correct_answer,
             "level": q.jlpt_level,
             "question_type": q.question_type,
             "explanation": q.explanation,
             "book": q.book,
             "chapter": q.chapter,
-            "shown_translation": q.shown_translation,
-            "is_translation_correct": q.is_translation_correct
         })
     return questions_data
 

@@ -391,23 +391,6 @@ export default function PracticeConfig() {
                                     </button>
 
                                     <button
-                                        onClick={() => setMode('doukai')}
-                                        className={`flex items-center gap-4 p-4 rounded-2xl border-2 transition-all duration-300 transform hover:scale-[1.01] ${
-                                            mode === 'doukai'
-                                                ? 'bg-gradient-to-br from-blue-50 to-sky-50 dark:from-blue-950/30 dark:to-sky-950/10 border-blue-500 shadow-md'
-                                                : `${cardBg} ${borderStyle} hover:border-blue-300 dark:hover:border-blue-800`
-                                        }`}
-                                    >
-                                        <span className="text-3xl">✅</span>
-                                        <div className="text-left">
-                                            <span className={`block font-bold transition-colors ${mode === 'doukai' ? 'text-blue-700 dark:text-blue-400' : textColor}`}>
-                                                Doukai (Benar/Salah)
-                                            </span>
-                                            <span className={`text-[10px] uppercase font-medium transition-colors ${subTextColor}`}>Cek kebenaran terjemahan</span>
-                                        </div>
-                                    </button>
-
-                                    <button
                                         onClick={() => setMode('fill_blank')}
                                         className={`flex items-center gap-4 p-4 rounded-2xl border-2 transition-all duration-300 transform hover:scale-[1.01] ${
                                             mode === 'fill_blank'

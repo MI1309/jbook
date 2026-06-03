@@ -138,7 +138,6 @@ class Announcement(models.Model):
         return f"{self.title} ({self.get_type_display()})"
 
 class QuestionType(models.TextChoices):
-    DOUKAI        = 'doukai',         'Doukai (Benar/Salah)'
     FILL_BLANK    = 'fill_blank',     'Fill in the Blank'
     CONTEXT_MATCH = 'context_match',  'Context Match'
     CHOICE        = 'choice',         'Multiple Choice'
@@ -146,8 +145,7 @@ class QuestionType(models.TextChoices):
 class MinnaQuestion(models.Model):
     """
     Bank soal latihan khusus buku Minna no Nihongo.
-    Mendukung empat tipe soal:
-      - doukai       : Tampilkan kalimat + terjemahan → user pilih Benar/Salah
+    Mendukung tiga tipe soal:
       - fill_blank   : Kalimat dengan ____ → pilih kata yang tepat
       - context_match: Tampilkan arti Indonesia → pilih kalimat Jepang yang benar
       - choice       : Pilihan ganda standar
@@ -162,12 +160,6 @@ class MinnaQuestion(models.Model):
     # Teks soal
     question_jp    = models.TextField(help_text="Kalimat/soal dalam bahasa Jepang")
     question_id    = models.TextField(blank=True, help_text="Konteks soal dalam Bahasa Indonesia (opsional)")
-
-    # Khusus Doukai: terjemahan yang "ditampilkan" ke user (bisa sengaja salah)
-    shown_translation      = models.TextField(blank=True,
-                                               help_text="Terjemahan yang ditampilkan (khusus tipe doukai)")
-    is_translation_correct = models.BooleanField(null=True, blank=True,
-                                                  help_text="Apakah shown_translation itu benar? (kunci jawaban doukai)")
 
     # Jawaban dan pilihan
     correct_answer = models.CharField(max_length=512, help_text="Jawaban yang benar")
