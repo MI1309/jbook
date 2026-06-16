@@ -220,17 +220,17 @@ export default function KotobaDetailUI({ vocab: initialVocab, onClose }) {
                 <div className={`${cardBg} rounded-[2.5rem] shadow-2xl p-6 sm:p-8 md:p-12 text-center border-t-8 border-blue-600 relative overflow-hidden w-full transition-all border-b border-x ${borderStyle}`}>
                     {/* Admin Edit Button */}
                     {isAdmin && (
-                        <div className="absolute top-6 left-6 z-20">
+                        <div className="absolute top-4 right-4 sm:top-6 sm:right-6 z-30">
                             <button
-                                onClick={() => setIsEditing(!isEditing)}
-                                className={`p-2 rounded-xl transition-all ${
+                                onClick={(e) => { e.stopPropagation(); setIsEditing(!isEditing); }}
+                                className={`p-2 sm:p-3 rounded-xl transition-all ${
                                     isEditing 
                                         ? 'bg-red-500 text-white shadow-lg shadow-red-500/20' 
                                         : 'bg-blue-600/10 text-blue-600 hover:bg-blue-600 hover:text-white shadow-sm'
                                 }`}
                                 title={isEditing ? "Batal Edit" : "Edit Kotoba (Admin)"}
                             >
-                                {isEditing ? <X className="w-4 h-4" /> : <Edit2 className="w-4 h-4" />}
+                                {isEditing ? <X className="w-4 h-4 sm:w-5 sm:h-5" /> : <Edit2 className="w-4 h-4 sm:w-5 sm:h-5" />}
                             </button>
                         </div>
                     )}

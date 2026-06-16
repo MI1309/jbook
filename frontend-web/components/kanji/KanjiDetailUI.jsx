@@ -159,9 +159,9 @@ export default function KanjiDetailUI({ kanji: initialKanji, onClose }) {
                         >
                             {/* Admin Edit Button */}
                             {isAdmin && (
-                                <div className="absolute top-0 -left-12 z-20">
+                                <div className="absolute -top-4 right-0 sm:-right-4 md:top-0 md:right-auto md:-left-16 z-30">
                                     <button
-                                        onClick={() => setIsEditing(!isEditing)}
+                                        onClick={(e) => { e.stopPropagation(); setIsEditing(!isEditing); }}
                                         className={`p-3 rounded-2xl transition-all ${
                                             isEditing 
                                                 ? 'bg-red-500 text-white shadow-lg shadow-red-500/20' 
