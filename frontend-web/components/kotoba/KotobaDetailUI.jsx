@@ -9,8 +9,27 @@ import { dbGetAll } from '@/lib/offline-db';
 import { useTheme } from '@/context/ThemeContext';
 import { Volume2, Edit2, Check, X } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
-import Cookies from 'js-cookie';
 import { toast } from 'react-toastify';
+import Cookies from 'js-cookie';
+const WORD_TYPES = [
+    { value: '', label: '-- Tanpa Tipe --' },
+    { value: 'noun', label: 'Noun (Kata Benda)' },
+    { value: 'godan', label: 'Godan Verb (Golongan 1)' },
+    { value: 'ichidan', label: 'Ichidan Verb (Golongan 2)' },
+    { value: 'suru', label: 'Suru Verb (Golongan 3)' },
+    { value: 'intransitive', label: 'Intransitive Verb' },
+    { value: 'transitive', label: 'Transitive Verb' },
+    { value: 'i_adj', label: 'I-Adjective (い形)' },
+    { value: 'na_adj', label: 'Na-Adjective (な形)' },
+    { value: 'adverb', label: 'Adverb (Kata Keterangan)' },
+    { value: 'particle', label: 'Particle (Partikel)' },
+    { value: 'suffix', label: 'Suffix (Akhiran)' },
+    { value: 'conjunction', label: 'Conjunction (Kata Sambung)' },
+    { value: 'interjection', label: 'Interjection (Kata Seru)' },
+    { value: 'pronoun', label: 'Pronoun (Kata Ganti)' },
+    { value: 'counter', label: 'Counter (Kata Bantu Bilangan)' },
+    { value: 'other', label: 'Lain-lain' },
+];
 
 export default function KotobaDetailUI({ vocab: initialVocab, onClose }) {
     const router = useRouter();
@@ -241,6 +260,15 @@ export default function KotobaDetailUI({ vocab: initialVocab, onClose }) {
                                             className={`text-center text-xs p-2 rounded-xl border-2 ${borderStyle} ${cardBg} font-bold focus:border-blue-500 outline-none`}
                                             placeholder="Furigana (Optional)"
                                         />
+                                        <select
+                                            value={editData.word_type || ''}
+                                            onChange={(e) => setEditData({...editData, word_type: e.target.value})}
+                                            className={`text-center text-xs p-2 rounded-xl border-2 ${borderStyle} ${cardBg} font-bold focus:border-blue-500 outline-none`}
+                                        >
+                                            {WORD_TYPES.map(({ value, label }) => (
+                                                <option key={value} value={value}>{label}</option>
+                                            ))}
+                                        </select>
                                     </div>
                                 ) : null}
                                 <ruby className={`text-3xl sm:text-4xl md:text-5xl font-black tracking-wider transition-colors ${textColor}`}>
