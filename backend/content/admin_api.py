@@ -455,3 +455,135 @@ def admin_delete_announcement(request, id: str):
     announcement.deleted_at = timezone.now()
     announcement.save()
     return {"success": True}
+
+# Custom Module Schemas
+from .models import CustomModule, CustomQuestion, CustomModuleType, CustomQuestionType
+
+class CustomQuestionCreateSchema(BaseModel):
+    question_type: str = 'choice'
+    question_text: str
+    options: List[str] = []
+    correct_answer: str
+    explanation: Optional[str] = ""
+    order: int = 0
+
+class CustomQuestionSchema(CustomQuestionCreateSchema):
+    id: UUID
+    model_config = {"from_attributes": True}
+
+class CustomModuleCreateSchema(BaseModel):
+    title: str
+    description: Optional[str] = ""
+    module_type: str = 'general'
+    passage: Optional[str] = ""
+    audio_url: Optional[str] = ""
+    is_published: bool = False
+
+class CustomModuleSchema(CustomModuleCreateSchema):
+    id: UUID
+    created_at: datetime
+    updated_at: datetime
+    model_config = {"from_attributes": True}
+
+# Custom Module CRUD
+@router.get("/custom-modules", auth=AdminAuth(), response=List[CustomModuleSchema])
+def admin_list_custom_modules(request):
+    return CustomModule.objects.all().order_by('-created_at')
+
+@router.post("/custom-modules", auth=AdminAuth(), response=CustomModuleSchema)
+def admin_create_custom_module(request, payload: CustomModuleCreateSchema):
+    module = CustomModule.objects.create(**payload.dict())
+    return module
+
+@router.get("/custom-modules/{id}", auth=AdminAuth(), response=CustomModuleSchema)
+def admin_get_custom_module(request, id: str):
+    return get_object_or_404(CustomModule, id=id)
+
+@router.put("/custom-modules/{id}", auth=AdminAuth(), response=CustomModuleSchema)
+def admin_update_custom_module(request, id: str, payload: CustomModuleCreateSchema):
+    module = get_object_or_404(CustomModule, id=id)
+    for attr, value in payload.dict().items():
+        setattr(module, attr, value)
+    module.save()
+    return module
+
+@router.delete("/custom-modules/{id}", auth=AdminAuth())
+def admin_delete_custom_module(request, id: str):
+    module = get_object_or_404(CustomModule, id=id)
+    module.delete()
+    return {"success": True}
+
+# Custom Question CRUD
+@router.get("/custom-modules/{module_id}/questions", auth=AdminAuth(), response=List[CustomQuestionSchema])
+def admin_list_custom_questions(request, module_id: str):
+    return CustomQuestion.objects.filter(module_id=module_id).order_by('order', 'id')
+
+@router.post("/custom-modules/{module_id}/questions", auth=AdminAuth(), response=CustomQuestionSchema)
+def admin_create_custom_question(request, module_id: str, payload: CustomQuestionCreateSchema):
+    module = get_object_or_404(CustomModule, id=module_id)
+    question = CustomQuestion.objects.create(module=module, **payload.dict())
+    return question
+
+@router.delete("/custom-questions/{id}", auth=AdminAuth())
+def admin_delete_custom_question(request, id: str):
+    question = get_object_or_404(CustomQuestion, id=id)
+    question.delete()
+    return {"success": True}
+
+# Upload Excel Endpoint
+from ninja import File
+from ninja.files import UploadedFile
+import pandas as pd
+
+@router.post("/custom-modules/{module_id}/upload-excel", auth=AdminAuth())
+def admin_upload_custom_module_excel(request, module_id: str, file: UploadedFile = File(...)):
+    module = get_object_or_404(CustomModule, id=module_id)
+    try:
+        df = pd.read_excel(file.read())
+        # Expected columns: question_type, question, option_a, option_b, option_c, option_d, correct_answer, explanation
+        
+        # Delete existing questions if needed, or append. Let's append but start order from max
+        max_order = CustomQuestion.objects.filter(module=module).count()
+        
+        questions_to_create = []
+        for index, row in df.iterrows():
+            q_type = row.get('question_type', 'choice')
+            if pd.isna(q_type):
+                q_type = 'choice'
+            else:
+                q_type = str(q_type).lower().strip()
+                
+            question_text = str(row.get('question', ''))
+            if pd.isna(row.get('question')) or not question_text:
+                continue
+                
+            correct_answer = str(row.get('correct_answer', ''))
+            if pd.isna(row.get('correct_answer')):
+                correct_answer = ''
+                
+            explanation = str(row.get('explanation', ''))
+            if pd.isna(row.get('explanation')):
+                explanation = ''
+                
+            options = []
+            if q_type == 'choice':
+                for opt_col in ['option_a', 'option_b', 'option_c', 'option_d']:
+                    opt_val = row.get(opt_col)
+                    if not pd.isna(opt_val):
+                        options.append(str(opt_val))
+            
+            max_order += 1
+            questions_to_create.append(CustomQuestion(
+                module=module,
+                question_type=q_type,
+                question_text=question_text,
+                options=options,
+                correct_answer=correct_answer,
+                explanation=explanation,
+                order=max_order
+            ))
+            
+        CustomQuestion.objects.bulk_create(questions_to_create)
+        return {"success": True, "count": len(questions_to_create)}
+    except Exception as e:
+        raise HttpError(400, f"Error processing Excel: {str(e)}")

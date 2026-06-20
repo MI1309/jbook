@@ -258,3 +258,44 @@ class DoukaiQuestion(models.Model):
     def __str__(self):
         status = "✓ Benar" if self.is_correct else "✗ Salah"
         return f"[{status}] {self.question_text[:80]}"
+# ─── Modul Latihan Kustom ───────────────────────────────────
+
+class CustomModuleType(models.TextChoices):
+    GENERAL = 'general', 'Umum'
+    DOKKAI = 'dokkai', 'Dokkai (Reading)'
+    CHOUKAI = 'choukai', 'Choukai (Listening)'
+
+class CustomModule(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    title = models.CharField(max_length=255)
+    description = models.TextField(blank=True)
+    module_type = models.CharField(max_length=20, choices=CustomModuleType.choices, default=CustomModuleType.GENERAL)
+    passage = models.TextField(blank=True, help_text="Teks bacaan untuk Dokkai")
+    audio_url = models.CharField(max_length=512, blank=True, help_text="URL Audio untuk Choukai")
+    is_published = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"[{self.get_module_type_display()}] {self.title}"
+
+class CustomQuestionType(models.TextChoices):
+    CHOICE = 'choice', 'Pilihan Ganda'
+    TRUE_FALSE = 'true_false', 'Benar/Salah (Maru/Batsu)'
+    FILL_BLANK = 'fill_blank', 'Isian Singkat'
+
+class CustomQuestion(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    module = models.ForeignKey(CustomModule, related_name='questions', on_delete=models.CASCADE)
+    question_type = models.CharField(max_length=20, choices=CustomQuestionType.choices, default=CustomQuestionType.CHOICE)
+    question_text = models.TextField()
+    options = models.JSONField(default=list, blank=True, help_text="Daftar pilihan jika tipe soal adalah Pilihan Ganda")
+    correct_answer = models.CharField(max_length=512, help_text="Jawaban benar (Teks atau 'True'/'False')")
+    explanation = models.TextField(blank=True)
+    order = models.IntegerField(default=0)
+
+    class Meta:
+        ordering = ['order', 'id']
+
+    def __str__(self):
+        return self.question_text[:50]

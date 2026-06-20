@@ -40,3 +40,4 @@ gunicorn==25.1.0
 # Libraries that might be useful for specific features, but check if needed:
 # beautifulsoup4==4.1
 
+openpyxl==3.1.2

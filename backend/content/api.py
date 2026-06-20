@@ -626,3 +626,69 @@ def reject_suggestion(request, id: UUID, token: UUID):
     return HttpResponse("Suggestion rejected.")
 
 
+
+# Custom Module Public API
+from .models import CustomModule, CustomQuestion
+
+class CustomQuestionPublicSchema(Schema):
+    id: UUID
+    question_type: str
+    question_text: str
+    options: List[str]
+    order: int
+    # Note: correct_answer and explanation are NOT included here to prevent cheating!
+    # They will be validated in a separate endpoint or when submitting.
+    
+class CustomModulePublicSchema(Schema):
+    id: UUID
+    title: str
+    description: str
+    module_type: str
+    passage: str
+    audio_url: str
+
+@router.get("/custom-modules", response=List[CustomModulePublicSchema])
+def public_list_custom_modules(request):
+    return CustomModule.objects.filter(is_published=True).order_by('-created_at')
+
+@router.get("/custom-modules/{id}", response=CustomModulePublicSchema)
+def public_get_custom_module(request, id: str):
+    return get_object_or_404(CustomModule, id=id, is_published=True)
+
+@router.get("/custom-modules/{id}/questions", response=List[CustomQuestionPublicSchema])
+def public_get_custom_questions(request, id: str):
+    module = get_object_or_404(CustomModule, id=id, is_published=True)
+    return CustomQuestion.objects.filter(module=module).order_by('order', 'id')
+
+class SubmitAnswerSchema(Schema):
+    answers: dict  # question_id -> user_answer
+
+@router.post("/custom-modules/{id}/submit")
+def public_submit_custom_module(request, id: str, payload: SubmitAnswerSchema):
+    module = get_object_or_404(CustomModule, id=id, is_published=True)
+    questions = CustomQuestion.objects.filter(module=module)
+    
+    results = {}
+    score = 0
+    total = len(questions)
+    
+    for q in questions:
+        user_answer = payload.answers.get(str(q.id))
+        is_correct = False
+        
+        if user_answer and str(user_answer).strip().lower() == str(q.correct_answer).strip().lower():
+            is_correct = True
+            score += 1
+            
+        results[str(q.id)] = {
+            "is_correct": is_correct,
+            "correct_answer": q.correct_answer,
+            "user_answer": user_answer,
+            "explanation": q.explanation
+        }
+        
+    return {
+        "score": score,
+        "total": total,
+        "results": results
+    }

@@ -1,5 +1,5 @@
-const API_BASE = 'https://imronm.pythonanywhere.com/api';
-
+const base_url = process.env.NEXT_PUBLIC_API_URL || 'https://imronm.pythonanywhere.com/api';
+const API_BASE = base_url.endsWith('/') ? base_url.slice(0, -1) : base_url;
 class JBookAPI {
   constructor() {
     this.token = null;
@@ -98,6 +98,90 @@ class JBookAPI {
   
   getAnalytics() {
     return this.request('/learning/practice/analytics');
+  }
+
+  // Custom Modules
+  getCustomModules() {
+    return this.request('/content/custom-modules');
+  }
+
+  getCustomModule(id) {
+    return this.request(`/content/custom-modules/${id}`);
+  }
+
+  getCustomModuleQuestions(id) {
+    return this.request(`/content/custom-modules/${id}/questions`);
+  }
+
+  submitCustomModuleAnswers(id, answers) {
+    return this.request(`/content/custom-modules/${id}/submit`, {
+      method: 'POST',
+      body: JSON.stringify({ answers })
+    });
+  }
+
+  // Admin Custom Modules
+  adminGetCustomModules() {
+    return this.request('/admin/custom-modules');
+  }
+
+  adminCreateCustomModule(data) {
+    return this.request('/admin/custom-modules', {
+      method: 'POST',
+      body: JSON.stringify(data)
+    });
+  }
+
+  adminUpdateCustomModule(id, data) {
+    return this.request(`/admin/custom-modules/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(data)
+    });
+  }
+
+  adminDeleteCustomModule(id) {
+    return this.request(`/admin/custom-modules/${id}`, {
+      method: 'DELETE'
+    });
+  }
+
+  adminGetCustomModuleQuestions(id) {
+    return this.request(`/admin/custom-modules/${id}/questions`);
+  }
+
+  adminDeleteCustomModuleQuestion(id) {
+    return this.request(`/admin/custom-questions/${id}`, {
+      method: 'DELETE'
+    });
+  }
+
+  async adminUploadCustomModuleExcel(id, file) {
+    const url = `${API_BASE}/admin/custom-modules/${id}/upload-excel`;
+    const formData = new FormData();
+    formData.append('file', file);
+    
+    const token = this.getToken();
+    const headers = {};
+    if (token) {
+      headers['Authorization'] = `Bearer ${token}`;
+    }
+    
+    try {
+      const response = await fetch(url, {
+        method: 'POST',
+        headers,
+        body: formData
+      });
+      
+      if (!response.ok) {
+        throw new Error(await response.text());
+      }
+      
+      return response.json();
+    } catch (e) {
+      console.error('API request error:', e);
+      throw e;
+    }
   }
 }
 
