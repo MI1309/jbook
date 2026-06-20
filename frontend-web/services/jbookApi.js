@@ -128,6 +128,10 @@ class JBookAPI {
     return this.request('/admin/custom-modules');
   }
 
+  adminGetCustomModule(id) {
+    return this.request(`/admin/custom-modules/${id}`);
+  }
+
   adminCreateCustomModule(data) {
     return this.request('/admin/custom-modules', {
       method: 'POST',
@@ -150,6 +154,13 @@ class JBookAPI {
 
   adminGetCustomModuleQuestions(id) {
     return this.request(`/admin/custom-modules/${id}/questions`);
+  }
+
+  adminCreateCustomModuleQuestion(id, data) {
+    return this.request(`/admin/custom-modules/${id}/questions`, {
+      method: 'POST',
+      body: JSON.stringify(data)
+    });
   }
 
   adminDeleteCustomModuleQuestion(id) {
