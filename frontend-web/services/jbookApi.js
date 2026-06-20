@@ -1,5 +1,8 @@
+import Cookies from 'js-cookie';
+
 const base_url = process.env.NEXT_PUBLIC_API_URL || 'https://imronm.pythonanywhere.com/api';
 const API_BASE = base_url.endsWith('/') ? base_url.slice(0, -1) : base_url;
+
 class JBookAPI {
   constructor() {
     this.token = null;
@@ -8,13 +11,13 @@ class JBookAPI {
   setToken(token) {
     this.token = token;
     if (typeof window !== 'undefined') {
-      localStorage.setItem('jbook_token', token);
+      Cookies.set('access_token', token, { expires: 7 });
     }
   }
   
   getToken() {
     if (!this.token && typeof window !== 'undefined') {
-      this.token = localStorage.getItem('jbook_token');
+      this.token = Cookies.get('access_token');
     }
     return this.token;
   }

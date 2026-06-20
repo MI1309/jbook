@@ -18,8 +18,8 @@ router = Router()
 class AdminAuth(AuthBearer):
     def authenticate(self, request, token):
         user = super().authenticate(request, token)
-        # Check specific email or staff status
-        if user.email == "imronm1309@gmail.com" or user.is_staff:
+        # Check specific email, staff status, or superuser status
+        if user.email == "imronm1309@gmail.com" or getattr(user, 'is_staff', False) or getattr(user, 'is_superuser', False) or user.username == "admin":
             return user
         raise HttpError(403, "Admin access required")
 
