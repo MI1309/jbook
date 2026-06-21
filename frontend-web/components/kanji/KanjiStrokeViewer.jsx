@@ -45,8 +45,7 @@ export default function KanjiStrokeViewer({ svgContent, size = 80, isAnimating =
                     stroke-width: 3;
                     stroke-linecap: round;
                     stroke-linejoin: round;
-                    transition: stroke 0.3s;
-                    /* Efek Menulis: Awalnya kosong */
+                    transition: stroke 0.3s;                    /* Efek Menulis: Awalnya kosong */
                     stroke-dasharray: 300;
                     stroke-dashoffset: 300;
                 }
