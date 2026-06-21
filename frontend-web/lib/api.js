@@ -882,12 +882,17 @@ export async function exportPracticeData() {
     const rawProgress = rawData.progress || [];
     const progMap = new Map();
     rawProgress.forEach(p => {
-        const key = `${p.content_type}|${p.content_id}`;
-        if (!progMap.has(key) || (p.updated_at > progMap.get(key).updated_at)) {
-            progMap.set(key, { ...p });
+        // Handle both formats: server (content_type_app/model) and guest/old (content_type)
+        const type = p.content_type || `${p.content_type_app}.${p.content_type_model}`;
+        const id = p.object_id || p.content_id;
+        const key = `${type}|${id}`;
+        
+        const ts = p.updated_at || p.last_reviewed || p.timestamp || 0;
+        if (!progMap.has(key) || (ts > (progMap.get(key)._ts || 0))) {
+            progMap.set(key, { ...p, _ts: ts });
         }
     });
-    const cleanedProgress = Array.from(progMap.values());
+    const cleanedProgress = Array.from(progMap.values()).map(({ _ts, ...p }) => p);
 
     return {
         total_attempts: rawData.total_attempts || 0,
@@ -1002,7 +1007,32 @@ export async function importPracticeData(rawData) {
 
     if (data.progress && Array.isArray(data.progress)) {
         data.progress.forEach(p => {
-            if (p.content_type === 'bunpo') p.content_type = 'grammar';
+            // Normalisasi tipe lama
+            if (p.content_type === 'bunpo' || p.content_type_model === 'bunpo') {
+                p.content_type = 'grammar';
+                p.content_type_model = 'grammar';
+            }
+            if (p.content_type === 'kotoba' || p.content_type_model === 'kotoba') {
+                p.content_type = 'vocab';
+                p.content_type_model = 'vocab';
+            }
+
+            // Map p.content_type ke app/model (untuk data dari file lama/guest)
+            if (p.content_type && !p.content_type_app) {
+                const parts = p.content_type.split('.');
+                if (parts.length === 2) {
+                    p.content_type_app = parts[0];
+                    p.content_type_model = parts[1];
+                } else {
+                    p.content_type_app = (p.content_type === 'quizattempt' || p.content_type === 'userprogress') ? 'learning' : 'content';
+                    p.content_type_model = p.content_type;
+                }
+            }
+            
+            // Map content_id ke object_id
+            if (p.content_id && !p.object_id) {
+                p.object_id = p.content_id;
+            }
         });
     }
 
