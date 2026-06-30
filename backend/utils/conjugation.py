@@ -29,6 +29,13 @@ def conjugate_verb(word: str, reading: str, word_type: str) -> list:
     # Clean inputs
     word = word.strip()
     reading = reading.strip()
+
+    # If word_type is explicitly specified and is not a verb type, do not conjugate
+    if word_type:
+        word_type_lower = word_type.lower()
+        verb_types = ['godan', 'ichidan', 'suru', 'intransitive', 'transitive', 'verb']
+        if not any(vt in word_type_lower for vt in verb_types):
+            return None
     
     # 1. Determine the verb group
     is_suru = False
