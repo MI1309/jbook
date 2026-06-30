@@ -368,6 +368,29 @@ export default function KotobaDetailUI({ vocab: initialVocab, onClose }) {
                             </div>
                         )}
 
+                        {vocab.conjugations && vocab.conjugations.length > 0 && (
+                            <div className="mb-10 text-left">
+                                <h3 className={`text-[10px] font-black uppercase tracking-widest mb-4 flex items-center gap-2 transition-colors ${subTextColor}`}>
+                                    <span className="w-2 h-2 rounded-full bg-blue-600 shadow-lg shadow-blue-500/20"></span>
+                                    Perubahan Bentuk Kata Kerja (9 Bentuk N5 & N4)
+                                </h3>
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                    {vocab.conjugations.map((conj, idx) => (
+                                        <div 
+                                            key={idx}
+                                            className={`p-4 rounded-2xl border ${borderStyle} ${theme === 'dark' ? 'bg-blue-950/5' : 'bg-blue-50/30'} flex flex-col justify-between`}
+                                        >
+                                            <span className="text-[10px] font-black text-blue-600 dark:text-blue-300 uppercase tracking-widest mb-1">{conj.form}</span>
+                                            <div className="flex justify-between items-baseline gap-2">
+                                                <span className={`text-xl font-black ${textColor}`}>{conj.kanji}</span>
+                                                <span className={`text-xs font-bold ${subTextColor}`}>{conj.kana}</span>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+
                         <div className="flex justify-center gap-4 flex-wrap mt-4">
                             <span className={`px-4 py-2 ${theme === 'dark' ? 'bg-blue-950/20 text-blue-300' : 'bg-gray-100 text-gray-600'} rounded-full font-black text-xs uppercase tracking-widest`}>
                                 JLPT N{vocab.jlpt_level}

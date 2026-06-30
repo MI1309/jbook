@@ -707,7 +707,7 @@ function PracticeContent() {
                             } leading-tight font-black select-none pb-2 break-words transition-colors ${textColor}`}>
                                 <ruby className="transition-colors">
                                     {currentQuestion.character}
-                                    {(currentQuestion.type === 'kanji' || currentQuestion.type === 'vocab') &&
+                                    {currentQuestion.type === 'vocab' &&
                                      currentQuestion.reading &&
                                      hasKanji(currentQuestion.character) && (
                                         <rt className={`text-sm md:text-xl font-bold transition-all duration-300 ${isAnswered || showReadingManual ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-2 group-hover:opacity-100 group-hover:translate-y-0'} ${theme === 'dark' ? 'text-blue-400' : 'text-blue-600'}`}>
@@ -717,7 +717,7 @@ function PracticeContent() {
                                 </ruby>
                             </div>
                         )}
-                        {!isAnswered && (currentQuestion.type === 'kanji' || currentQuestion.type === 'vocab') &&
+                        {!isAnswered && currentQuestion.type === 'vocab' &&
                          currentQuestion.reading && hasKanji(currentQuestion.character) && (
                             <div className={`text-[9px] mt-4 font-black uppercase tracking-[0.2em] transition-all duration-500 ${showReadingManual ? 'opacity-0' : 'opacity-40 animate-pulse'}`}>
                                 {showReadingManual ? '' : 'Klik untuk bantuan bacaan'}
@@ -772,7 +772,7 @@ function PracticeContent() {
                     <>
                         {isAnswered && (currentQuestion.reading || currentQuestion.meaning) && (
                             <div className="mb-6 animate-fade-in-up">
-                                {currentQuestion.reading && hasKanji(currentQuestion.character) && (
+                                {currentQuestion.reading && currentQuestion.type !== 'kanji' && hasKanji(currentQuestion.character) && (
                                     <div className="text-2xl text-blue-600 dark:text-blue-400 font-serif font-black mb-1 break-words">{sanitizeReading(currentQuestion.reading)}</div>
                                 )}
                                 {currentQuestion.meaning && (

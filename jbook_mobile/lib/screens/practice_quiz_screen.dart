@@ -229,8 +229,10 @@ class _PracticeQuizScreenState extends State<PracticeQuizScreen> {
                   ),
                   if (_isAnswered && (question.reading != null || question.meaning != null)) ...[
                     const SizedBox(height: 16),
-                    Text(question.reading ?? '', style: const TextStyle(fontSize: 20, color: Colors.grey)),
-                    const SizedBox(height: 8),
+                    if (question.type != 'kanji' && question.reading != null && question.reading!.isNotEmpty) ...[
+                      Text(question.reading ?? '', style: const TextStyle(fontSize: 20, color: Colors.grey)),
+                      const SizedBox(height: 8),
+                    ],
                     Text(question.meaning ?? '', style: const TextStyle(fontSize: 18)),
                   ],
                 ],

@@ -38,6 +38,7 @@ class VocabSchema(Schema):
     jlpt_level: int
     furigana: Optional[str] = None
     examples: List[dict] = []
+    conjugations: Optional[List[dict]] = None
 
 class UpdateVocabSchema(Schema):
     meaning: Optional[str] = None
@@ -325,6 +326,7 @@ class VocabSchema(Schema):
     word_type: Optional[str] = None
     jlpt_level: int
     examples: List[dict] = []
+    conjugations: Optional[List[dict]] = None
 
 @router.get("/random-kotoba", response=VocabSchema)
 def get_random_kotoba(request):
@@ -415,6 +417,13 @@ def get_vocab(request, vocab_id: str):
         vocab.reading = to_kana(vocab.reading.lower())
     if vocab.furigana:
         vocab.furigana = to_kana(vocab.furigana.lower())
+    
+    # Populate conjugations dynamically if it's an N4/N5 verb
+    vocab.conjugations = None
+    if vocab.jlpt_level in [4, 5]:
+        from utils.conjugation import conjugate_verb
+        vocab.conjugations = conjugate_verb(vocab.word, vocab.reading, vocab.word_type)
+
     return vocab
 
 
