@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { hasKanji, extractKanji } from '@/lib/utils';
@@ -11,6 +11,7 @@ import { Volume2, Edit2, Check, X } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import { toast } from 'react-toastify';
 import Cookies from 'js-cookie';
+import { conjugateVerbComplete } from '@/utils/conjugation';
 const WORD_TYPES = [
     { value: '', label: '-- Tanpa Tipe --' },
     { value: 'noun', label: 'Noun (Kata Benda)' },
@@ -121,6 +122,17 @@ export default function KotobaDetailUI({ vocab: initialVocab, onClose }) {
 
     const characters = (vocab.word || '').split('');
     const uniqueKanjis = extractKanji(vocab.word || '');
+
+    // Calculate conjugations
+    const conjugationData = useMemo(() => {
+        // First try backend's complete conjugations
+        if (vocab?.conjugations_complete) {
+            return vocab.conjugations_complete;
+        }
+        // Fallback to calculating locally
+        if (!vocab?.word || !vocab?.reading) return null;
+        return conjugateVerbComplete(vocab.word, vocab.reading, vocab.word_type);
+    }, [vocab?.word, vocab?.reading, vocab?.word_type, vocab?.conjugations_complete]);
 
     const playAudio = () => {
         if (playing) return;
@@ -368,7 +380,51 @@ export default function KotobaDetailUI({ vocab: initialVocab, onClose }) {
                             </div>
                         )}
 
-                        {vocab.conjugations && vocab.conjugations.length > 0 && (
+                        {conjugationData && conjugationData.forms && conjugationData.forms.length > 0 && (
+                            <div className="mb-10 text-left">
+                                <h3 className={`text-[10px] font-black uppercase tracking-widest mb-4 flex items-center gap-2 transition-colors ${subTextColor}`}>
+                                    <span className="w-2 h-2 rounded-full bg-blue-600 shadow-lg shadow-blue-500/20"></span>
+                                    Perubahan Bentuk Kata Kerja (9 Bentuk)
+                                </h3>
+                                <div className="grid grid-cols-1 gap-4">
+                                    {conjugationData.forms.map((formGroup, groupIdx) => (
+                                        <div key={groupIdx} className={`p-5 rounded-2xl border ${borderStyle} ${theme === 'dark' ? 'bg-blue-950/5' : 'bg-blue-50/30'}`}>
+                                            <h4 className="text-xs font-black text-blue-600 dark:text-blue-300 uppercase tracking-widest mb-3">
+                                                {formGroup.name}
+                                            </h4>
+                                            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                                                {Object.entries(formGroup.variants).map(([key, val]) => {
+                                                    if (!val) return null;
+                                                    const labelMap = {
+                                                        'default': 'Standar',
+                                                        'formal': 'Sopan',
+                                                        'negative': 'Negatif',
+                                                        'past': 'Lampau',
+                                                        'formal_negative': 'Sopan+Negatif',
+                                                        'formal_past': 'Sopan+Lampau',
+                                                        'negative_past': 'Negatif+Lampau',
+                                                        'formal_negative_past': 'Sopan+Negatif+Lampau',
+                                                    };
+                                                    return (
+                                                        <div key={key} className={`p-2 rounded-xl border ${theme === 'dark' ? 'border-blue-900/20 bg-black/10' : 'border-blue-100 bg-white'}`}>
+                                                            <span className="text-[9px] font-black uppercase tracking-wider block mb-1 text-gray-500 dark:text-gray-400">
+                                                                {labelMap[key] || key}
+                                                            </span>
+                                                            <div className="flex justify-between items-baseline gap-1">
+                                                                <span className={`text-sm font-black ${textColor}`}>{val.kanji}</span>
+                                                                <span className={`text-[10px] font-bold ${subTextColor}`}>{val.kana}</span>
+                                                            </div>
+                                                        </div>
+                                                    );
+                                                })}
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+                        {/* Fallback to old format for backwards compatibility */}
+                        {(!conjugationData || !conjugationData.forms) && vocab.conjugations && vocab.conjugations.length > 0 && (
                             <div className="mb-10 text-left">
                                 <h3 className={`text-[10px] font-black uppercase tracking-widest mb-4 flex items-center gap-2 transition-colors ${subTextColor}`}>
                                     <span className="w-2 h-2 rounded-full bg-blue-600 shadow-lg shadow-blue-500/20"></span>

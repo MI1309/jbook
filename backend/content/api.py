@@ -327,6 +327,7 @@ class VocabSchema(Schema):
     jlpt_level: int
     examples: List[dict] = []
     conjugations: Optional[List[dict]] = None
+    conjugations_complete: Optional[dict] = None
 
 @router.get("/random-kotoba", response=VocabSchema)
 def get_random_kotoba(request):
@@ -418,11 +419,27 @@ def get_vocab(request, vocab_id: str):
     if vocab.furigana:
         vocab.furigana = to_kana(vocab.furigana.lower())
     
-    # Populate conjugations dynamically if it's an N4/N5 verb
+    # Populate conjugations dynamically if it's a verb
     vocab.conjugations = None
-    if vocab.jlpt_level in [4, 5]:
-        from utils.conjugation import conjugate_verb
+    vocab.conjugations_complete = None
+    # Check if it's a verb type
+    is_verb = vocab.word_type and (
+        'godan' in vocab.word_type.lower() or 
+        'ichidan' in vocab.word_type.lower() or 
+        'suru' in vocab.word_type.lower() or 
+        'verb' in vocab.word_type.lower()
+    )
+    # Also check heuristically even without explicit word_type
+    if not is_verb:
+        from utils.conjugation import conjugate_verb_complete
+        # Quick test conjugation to see if it's a valid verb
+        test_conj = conjugate_verb_complete(vocab.word, vocab.reading, vocab.word_type)
+        is_verb = test_conj is not None
+        
+    if is_verb:
+        from utils.conjugation import conjugate_verb, conjugate_verb_complete
         vocab.conjugations = conjugate_verb(vocab.word, vocab.reading, vocab.word_type)
+        vocab.conjugations_complete = conjugate_verb_complete(vocab.word, vocab.reading, vocab.word_type)
 
     return vocab
 
