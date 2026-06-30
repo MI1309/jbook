@@ -123,6 +123,11 @@ export default function KotobaDetailUI({ vocab: initialVocab, onClose }) {
     const characters = (vocab.word || '').split('');
     const uniqueKanjis = extractKanji(vocab.word || '');
 
+    // Conjugation toggles
+    const [isFormal, setIsFormal] = useState(false);
+    const [isNegative, setIsNegative] = useState(false);
+    const [isPast, setIsPast] = useState(false);
+
     // Calculate conjugations
     const conjugationData = useMemo(() => {
         // First try backend's complete conjugations
@@ -133,6 +138,29 @@ export default function KotobaDetailUI({ vocab: initialVocab, onClose }) {
         if (!vocab?.word || !vocab?.reading) return null;
         return conjugateVerbComplete(vocab.word, vocab.reading, vocab.word_type);
     }, [vocab?.word, vocab?.reading, vocab?.word_type, vocab?.conjugations_complete]);
+
+    // Determine which variant to show based on toggles
+    const getActiveVariantKey = useMemo(() => {
+        let key = '';
+        if (isFormal) key += 'formal_';
+        if (isNegative) key += 'negative_';
+        if (isPast) key += 'past_';
+        // Remove trailing underscore
+        key = key.slice(0, -1);
+        // Default to plain present
+        if (key === '') return 'default';
+        // Handle special cases for formal negative, formal past, etc.
+        const validKeys = {
+            'formal': 'formal',
+            'negative': 'negative',
+            'past': 'past',
+            'formal_negative': 'formal_negative',
+            'formal_past': 'formal_past',
+            'negative_past': 'negative_past',
+            'formal_negative_past': 'formal_negative_past'
+        };
+        return validKeys[key] || 'default';
+    }, [isFormal, isNegative, isPast]);
 
     const playAudio = () => {
         if (playing) return;
@@ -386,40 +414,56 @@ export default function KotobaDetailUI({ vocab: initialVocab, onClose }) {
                                     <span className="w-2 h-2 rounded-full bg-blue-600 shadow-lg shadow-blue-500/20"></span>
                                     Perubahan Bentuk Kata Kerja (9 Bentuk)
                                 </h3>
-                                <div className="grid grid-cols-1 gap-4">
-                                    {conjugationData.forms.map((formGroup, groupIdx) => (
-                                        <div key={groupIdx} className={`p-5 rounded-2xl border ${borderStyle} ${theme === 'dark' ? 'bg-blue-950/5' : 'bg-blue-50/30'}`}>
-                                            <h4 className="text-xs font-black text-blue-600 dark:text-blue-300 uppercase tracking-widest mb-3">
-                                                {formGroup.name}
-                                            </h4>
-                                            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-                                                {Object.entries(formGroup.variants).map(([key, val]) => {
-                                                    if (!val) return null;
-                                                    const labelMap = {
-                                                        'default': 'Standar',
-                                                        'formal': 'Sopan',
-                                                        'negative': 'Negatif',
-                                                        'past': 'Lampau',
-                                                        'formal_negative': 'Sopan+Negatif',
-                                                        'formal_past': 'Sopan+Lampau',
-                                                        'negative_past': 'Negatif+Lampau',
-                                                        'formal_negative_past': 'Sopan+Negatif+Lampau',
-                                                    };
-                                                    return (
-                                                        <div key={key} className={`p-2 rounded-xl border ${theme === 'dark' ? 'border-blue-900/20 bg-black/10' : 'border-blue-100 bg-white'}`}>
-                                                            <span className="text-[9px] font-black uppercase tracking-wider block mb-1 text-gray-500 dark:text-gray-400">
-                                                                {labelMap[key] || key}
-                                                            </span>
-                                                            <div className="flex justify-between items-baseline gap-1">
-                                                                <span className={`text-sm font-black ${textColor}`}>{val.kanji}</span>
-                                                                <span className={`text-[10px] font-bold ${subTextColor}`}>{val.kana}</span>
-                                                            </div>
-                                                        </div>
-                                                    );
-                                                })}
+                                {/* Toggle Buttons */}
+                                <div className="flex flex-wrap gap-2 mb-4">
+                                    <button
+                                        onClick={() => setIsFormal(!isFormal)}
+                                        className={`px-4 py-2 rounded-full font-black text-xs uppercase tracking-widest transition-all border ${
+                                            isFormal
+                                                ? 'bg-blue-600 text-white border-blue-600 shadow-lg shadow-blue-500/20'
+                                                : `${theme === 'dark' ? 'bg-blue-950/10 text-blue-300 border-blue-900/30' : 'bg-gray-100 text-gray-600 border-gray-200'} hover:border-blue-500`
+                                        }`}
+                                    >
+                                        Sopan
+                                    </button>
+                                    <button
+                                        onClick={() => setIsNegative(!isNegative)}
+                                        className={`px-4 py-2 rounded-full font-black text-xs uppercase tracking-widest transition-all border ${
+                                            isNegative
+                                                ? 'bg-red-600 text-white border-red-600 shadow-lg shadow-red-500/20'
+                                                : `${theme === 'dark' ? 'bg-red-950/10 text-red-300 border-red-900/30' : 'bg-gray-100 text-gray-600 border-gray-200'} hover:border-red-500`
+                                        }`}
+                                    >
+                                        Negatif
+                                    </button>
+                                    <button
+                                        onClick={() => setIsPast(!isPast)}
+                                        className={`px-4 py-2 rounded-full font-black text-xs uppercase tracking-widest transition-all border ${
+                                            isPast
+                                                ? 'bg-yellow-600 text-white border-yellow-600 shadow-lg shadow-yellow-500/20'
+                                                : `${theme === 'dark' ? 'bg-yellow-950/10 text-yellow-300 border-yellow-900/30' : 'bg-gray-100 text-gray-600 border-gray-200'} hover:border-yellow-500`
+                                        }`}
+                                    >
+                                        Lampau
+                                    </button>
+                                </div>
+                                {/* Display Forms */}
+                                <div className="grid grid-cols-1 gap-3">
+                                    {conjugationData.forms.map((formGroup, groupIdx) => {
+                                        const activeVariant = formGroup.variants[getActiveVariantKey];
+                                        if (!activeVariant) return null;
+                                        return (
+                                            <div key={groupIdx} className={`p-4 rounded-2xl border ${borderStyle} ${theme === 'dark' ? 'bg-blue-950/5' : 'bg-blue-50/30'} flex items-center justify-between`}>
+                                                <h4 className="text-xs font-black text-blue-600 dark:text-blue-300 uppercase tracking-widest">
+                                                    {formGroup.name}
+                                                </h4>
+                                                <div className="text-right">
+                                                    <span className={`text-lg font-black ${textColor}`}>{activeVariant.kanji}</span>
+                                                    <span className={`text-xs font-bold ${subTextColor} ml-2`}>{activeVariant.kana}</span>
+                                                </div>
                                             </div>
-                                        </div>
-                                    ))}
+                                        );
+                                    })}
                                 </div>
                             </div>
                         )}
