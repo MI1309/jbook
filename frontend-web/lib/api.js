@@ -502,8 +502,11 @@ async function generateOfflineQuestions({ limit, level, type }) {
                 character: item.kana || item.character || item.word || item.title,
                 type: type, // Correctly use the category's type
                 options: formattedOptions,
-                reading: item.romaji || item.reading || (item.onyomi ? item.onyomi.join(', ') : ''),
-                meaning: item.romaji || item.meaning || item.explanation
+                reading: type === 'kanji' && (item.onyomi || item.kunyomi)
+                    ? `On: ${item.onyomi?.length ? item.onyomi.join(', ') : '-'} | Kun: ${item.kunyomi?.length ? item.kunyomi.join(', ') : '-'}`
+                    : (item.romaji || item.reading || (item.onyomi ? item.onyomi.join(', ') : '')),
+                meaning: item.romaji || item.meaning || item.explanation,
+                word_type: item.word_type
             };
         });
     } catch (err) {

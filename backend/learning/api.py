@@ -28,6 +28,7 @@ class QuestionSchema(Schema):
     reading: Optional[str] = None 
     meaning: Optional[str] = None
     level: Optional[int] = None
+    word_type: Optional[str] = None
 
 class MinnaQuestionSchema(Schema):
     id: str
@@ -271,7 +272,8 @@ def generate_quiz(request, limit: int = 10, level: Optional[str] = None, type: s
             "options": options,
             "reading": reading,
             "meaning": meaning,
-            "level": getattr(item, 'jlpt_level', None)
+            "level": getattr(item, 'jlpt_level', None),
+            "word_type": getattr(item, 'word_type', None)
         })
         
     return questions

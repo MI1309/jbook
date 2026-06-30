@@ -15,6 +15,7 @@ import { hasKanji } from '@/lib/utils';
 import * as wanakana from 'wanakana';
 import { toast } from 'react-toastify';
 import { Volume2 } from 'lucide-react';
+import { conjugateVerb } from '@/utils/conjugation';
 
 /**
  * Sanitizes reading text to ensure it's Japanese Kana.
@@ -63,6 +64,7 @@ function PracticeContent() {
     const [error, setError] = useState(null);
     const [detailView, setDetailView] = useState(null);
     const [showReadingManual, setShowReadingManual] = useState(false);
+    const [showKanjiReadings, setShowKanjiReadings] = useState(false);
     const [audioPlaying, setAudioPlaying] = useState(false);
     const audioPlayingRef = useRef(false);
     const lastAutoplayedIndex = useRef(-1);
@@ -366,7 +368,7 @@ function PracticeContent() {
         const newResults = [...results, attempt];
         setResults(newResults);
 
-        const delay = 2500;
+        const delay = 1000;
         nextTimeoutRef.current = setTimeout(() => {
             if (currentIndex < questions.length - 1) {
                 setCurrentIndex(prev => prev + 1);
@@ -374,6 +376,7 @@ function PracticeContent() {
                 setTypedAnswer('');
                 setIsAnswered(false);
                 setShowReadingManual(false);
+                setShowKanjiReadings(false);
             } else {
                 handleFinish(newResults);
             }
@@ -398,6 +401,7 @@ function PracticeContent() {
             setTypedAnswer('');
             setIsAnswered(false);
             setShowReadingManual(false);
+            setShowKanjiReadings(false);
         } else {
             handleFinish();
         }
@@ -432,13 +436,14 @@ function PracticeContent() {
         const newResults = [...results, attempt];
         setResults(newResults);
 
-        const delay = 2500;
+        const delay = 1000;
         nextTimeoutRef.current = setTimeout(() => {
             if (currentIndex < questions.length - 1) {
                 setCurrentIndex(prev => prev + 1);
                 setSelectedOption(null);
                 setIsAnswered(false);
                 setShowReadingManual(false);
+                setShowKanjiReadings(false);
             } else {
                 handleFinish(newResults);
             }
@@ -679,7 +684,15 @@ function PracticeContent() {
                     </div>
                 ) : (
                     <div
-                        onClick={() => !isAnswered && setShowReadingManual(!showReadingManual)}
+                        onClick={() => {
+                            if (!isAnswered) {
+                                if (currentQuestion.type === 'kanji') {
+                                    setShowKanjiReadings(!showKanjiReadings);
+                                } else {
+                                    setShowReadingManual(!showReadingManual);
+                                }
+                            }
+                        }}
                         className={`mb-8 relative p-4 flex flex-col items-center group transition-all duration-300 ${!isAnswered ? 'cursor-pointer hover:bg-blue-500/5 rounded-3xl' : ''}`}
                     >
                         <span className={`text-[10px] font-black uppercase tracking-[0.2em] mb-4 block transition-colors ${subTextColor}`}>
@@ -715,6 +728,45 @@ function PracticeContent() {
                                         </rt>
                                      )}
                                 </ruby>
+                            </div>
+                        )}
+
+                        {/* Onyomi & Kunyomi popup for Kanji questions */}
+                        {currentQuestion.type === 'kanji' && currentQuestion.reading && (
+                         (showKanjiReadings && !isAnswered) || (isAnswered && !(mode === 'kakitori' ? results[currentIndex]?.is_correct : selectedOption?.is_correct))
+                        ) && (
+                            <div className={`mt-2 mb-2 px-5 py-3 rounded-2xl border-2 border-dashed transition-all duration-300 animate-fade-in-up ${
+                                theme === 'dark' ? 'bg-blue-950/30 border-blue-800/40' : 'bg-blue-50/80 border-blue-200'
+                            }`}>
+                                {(() => {
+                                    const readingStr = currentQuestion.reading;
+                                    const onMatch = readingStr.match(/On:\s*(.+?)(?:\s*\||$)/);
+                                    const kunMatch = readingStr.match(/Kun:\s*(.+?)$/);
+                                    const onReading = onMatch ? onMatch[1].trim() : null;
+                                    const kunReading = kunMatch ? kunMatch[1].trim() : null;
+                                    return (
+                                        <div className="flex flex-col sm:flex-row items-center gap-3 sm:gap-6">
+                                            {onReading && onReading !== '-' && (
+                                                <div className="flex items-center gap-2">
+                                                    <span className={`text-[10px] font-black uppercase tracking-widest ${theme === 'dark' ? 'text-red-400' : 'text-red-500'}`}>On</span>
+                                                    <span className={`text-lg md:text-xl font-bold font-japanese ${theme === 'dark' ? 'text-red-300' : 'text-red-600'}`}>{onReading}</span>
+                                                </div>
+                                            )}
+                                            {kunReading && kunReading !== '-' && (
+                                                <div className="flex items-center gap-2">
+                                                    <span className={`text-[10px] font-black uppercase tracking-widest ${theme === 'dark' ? 'text-sky-400' : 'text-sky-600'}`}>Kun</span>
+                                                    <span className={`text-lg md:text-xl font-bold font-japanese ${theme === 'dark' ? 'text-sky-300' : 'text-sky-600'}`}>{kunReading}</span>
+                                                </div>
+                                            )}
+                                        </div>
+                                    );
+                                })()}
+                            </div>
+                        )}
+
+                        {!isAnswered && currentQuestion.type === 'kanji' && (
+                            <div className={`text-[9px] mt-2 font-black uppercase tracking-[0.2em] transition-all duration-500 ${showKanjiReadings ? 'opacity-0' : 'opacity-40 animate-pulse'}`}>
+                                {showKanjiReadings ? '' : 'Klik untuk lihat cara baca'}
                             </div>
                         )}
                         {!isAnswered && currentQuestion.type === 'vocab' &&
@@ -776,7 +828,9 @@ function PracticeContent() {
                                     <div className="text-2xl text-blue-600 dark:text-blue-400 font-serif font-black mb-1 break-words">{sanitizeReading(currentQuestion.reading)}</div>
                                 )}
                                 {currentQuestion.meaning && (
-                                    <div className={`text-lg font-black italic transition-colors ${textColor}`}>{currentQuestion.meaning}</div>
+                                    <div className={`text-base font-bold italic transition-colors px-4 py-2 rounded-xl ${theme === 'dark' ? 'text-gray-300 bg-white/5' : 'text-gray-700 bg-gray-50'}`}>
+                                        💡 {currentQuestion.meaning}
+                                    </div>
                                 )}
                             </div>
                         )}
@@ -813,7 +867,12 @@ function PracticeContent() {
                                             onClick={() => handleOptionSelect(option)}
                                             className={btnClass}
                                         >
-                                            <span className="relative z-10">{option.text}</span>
+                                            <span className="relative z-10">
+                                                {option.text}
+                                                {isAnswered && option.is_correct && currentQuestion.type === 'kanji' && currentQuestion.meaning && (
+                                                    <span className={`block text-xs mt-1 font-bold not-italic ${theme === 'dark' ? 'text-green-300/70' : 'text-green-600/70'}`}>({currentQuestion.meaning})</span>
+                                                )}
+                                            </span>
                                             {isAnswered && option.is_correct && (
                                                 <span className="absolute right-3 top-1/2 -translate-y-1/2 text-green-500 text-xl">✓</span>
                                             )}
@@ -823,6 +882,34 @@ function PracticeContent() {
                             </div>
                     </>
                 )}
+
+                {/* Verb conjugations (9 forms) */}
+                {isAnswered && (currentQuestion.type === 'vocab' || currentQuestion.type === 'kotoba') && (() => {
+                    const conjs = conjugateVerb(currentQuestion.character, currentQuestion.reading, currentQuestion.word_type);
+                    if (!conjs || conjs.length === 0) return null;
+                    return (
+                        <div className="mt-6 mb-2 text-left border-t border-dashed border-gray-200 dark:border-gray-800 pt-4 animate-fade-in-up">
+                            <h4 className={`text-[10px] font-black uppercase tracking-widest mb-3 flex items-center gap-2 transition-colors ${subTextColor}`}>
+                                <span className="w-1.5 h-1.5 rounded-full bg-blue-500 shadow-md shadow-blue-500/20"></span>
+                                Perubahan Kata Kerja (9 Bentuk)
+                            </h4>
+                            <div className="grid grid-cols-2 gap-2 text-xs">
+                                {conjs.map((conj, idx) => (
+                                    <div 
+                                        key={idx}
+                                        className={`p-2 px-3 rounded-xl border ${borderStyle} ${theme === 'dark' ? 'bg-blue-950/20 border-blue-900/20' : 'bg-blue-50/50'} flex flex-col justify-between`}
+                                    >
+                                        <span className="text-[8px] font-black text-blue-600 dark:text-blue-400 uppercase tracking-widest mb-0.5">{conj.form}</span>
+                                        <div className="flex justify-between items-baseline gap-1.5">
+                                            <span className={`font-black font-japanese text-sm ${textColor}`}>{conj.kanji}</span>
+                                            <span className={`text-[10px] font-bold ${subTextColor}`}>{conj.kana}</span>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    );
+                })()}
             </div>
 
             {/* Next Button / Feedback */}
@@ -841,7 +928,7 @@ function PracticeContent() {
                             <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out z-0"></div>
                         </button>
                         {!(mode === 'kakitori' ? results[currentIndex]?.is_correct : selectedOption?.is_correct) && (
-                            <p className={`text-center text-[10px] font-black uppercase tracking-widest mt-4 transition-colors ${subTextColor}`}>Otomatis lanjut dalam 2,5 detik...</p>
+                            <p className={`text-center text-[10px] font-black uppercase tracking-widest mt-4 transition-colors ${subTextColor}`}>Otomatis lanjut dalam 1 detik...</p>
                         )}
                     </div>
                 )}
