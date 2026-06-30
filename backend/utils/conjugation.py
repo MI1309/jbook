@@ -1,5 +1,351 @@
 from utils.kana import to_kana
 
+def deconjugate_verb(input_str: str) -> list:
+    """
+    Tries to deconjugate a Japanese verb form back to possible dictionary forms.
+    Returns list of candidate kana strings (since we don't know kanji).
+    """
+    input_str = to_kana(input_str.strip())
+    candidates = set()
+
+    # First, check if it's already a dictionary form (ends with u-row kana)
+    if len(input_str) > 0 and input_str[-1] in ['う', 'く', 'ぐ', 'す', 'つ', 'む', 'ぶ', 'ぬ', 'る']:
+        candidates.add(input_str)
+        # Special check for suru verbs that might end with する
+        if input_str.endswith('する'):
+            candidates.add(input_str)
+
+    # Helper function to add ichidan candidates
+    def try_ichidan(base):
+        if base:
+            candidates.add(base + 'る')
+
+    # Helper function to add godan candidates with a-row endings
+    def try_godan(base):
+        for ending in ['う', 'く', 'ぐ', 'す', 'つ', 'む', 'ぶ', 'ぬ', 'る']:
+            candidates.add(base + ending)
+
+    # --- Deconjugate from known patterns ---
+    # 1. Masu-form (polite present, ends with ます / ません / ました / ませんでした)
+    if input_str.endswith('ます'):
+        stem = input_str[:-2]
+        # Could be ichidan (stem+ru)
+        try_ichidan(stem)
+        # Could be godan: i-stem + ます → base = stem, add u-row endings
+        try_godan(stem)
+        # Check for kuru: stem=き → くる
+        if stem == 'き':
+            candidates.add('くる')
+        # Check for suru: stem=し → する
+        if stem == 'し':
+            candidates.add('する')
+
+    if input_str.endswith('ません'):
+        stem = input_str[:-3]
+        try_ichidan(stem)
+        try_godan(stem)
+        if stem == 'き':
+            candidates.add('くる')
+        if stem == 'し':
+            candidates.add('する')
+
+    if input_str.endswith('ました'):
+        stem = input_str[:-3]
+        try_ichidan(stem)
+        try_godan(stem)
+        if stem == 'き':
+            candidates.add('くる')
+        if stem == 'し':
+            candidates.add('する')
+
+    if input_str.endswith('ませんでした'):
+        stem = input_str[:-6]
+        try_ichidan(stem)
+        try_godan(stem)
+        if stem == 'き':
+            candidates.add('くる')
+        if stem == 'し':
+            candidates.add('する')
+
+    # 2. Te-form (て / で)
+    if len(input_str) >= 2:
+        te_ending = input_str[-1]
+        if te_ending in ['て', 'で']:
+            # Remove te/de first
+            te_stem = input_str[:-1]
+            # Ichidan te-form = stem + て → stem + ru
+            try_ichidan(te_stem)
+            # Kuru special te-form: きて → くる
+            if input_str == 'きて':
+                candidates.add('くる')
+            # Suru special te-form: して → する
+            if input_str == 'して':
+                candidates.add('する')
+            # Godan te-form patterns:
+            # Check for small tsu (って → godan ending with u/tsu/ru)
+            if te_stem and te_stem[-1] == 'っ':
+                base = te_stem[:-1]
+                for end in ['う', 'つ', 'る']:
+                    candidates.add(base + end)
+            # Check for んで → godan ending with mu/bu/nu
+            elif te_stem and te_stem[-1] == 'ん':
+                base = te_stem[:-1]
+                for end in ['む', 'ぶ', 'ぬ']:
+                    candidates.add(base + end)
+            # Check for i-te / i-de (ku/gu ending)
+            elif len(input_str) >=2 and input_str[-2] in ['い', 'き', 'ぎ']:
+                base = te_stem
+                candidates.add(base + 'く')
+                candidates.add(base + 'ぐ')
+            # Check for shi-te (su ending)
+            elif te_stem and te_stem[-1] == 'し':
+                base = te_stem[:-1]
+                candidates.add(base + 'す')
+            # Check for e-row + te (imperative for godan, but also te-form?)
+            else:
+                try_godan(te_stem)
+
+    # 3. Ta-form (past tense: た / だ)
+    if len(input_str) >=2:
+        ta_ending = input_str[-1]
+        if ta_ending in ['た', 'だ']:
+            ta_stem = input_str[:-1]
+            try_ichidan(ta_stem)
+            if input_str == 'きた':
+                candidates.add('くる')
+            if input_str == 'した':
+                candidates.add('する')
+            if ta_stem and ta_stem[-1] == 'っ':
+                base = ta_stem[:-1]
+                for end in ['う', 'つ', 'る']:
+                    candidates.add(base + end)
+            elif ta_stem and ta_stem[-1] == 'ん':
+                base = ta_stem[:-1]
+                for end in ['む', 'ぶ', 'ぬ']:
+                    candidates.add(base + end)
+            elif len(input_str)>=2 and input_str[-2] in ['い', 'き', 'ぎ']:
+                base = ta_stem
+                candidates.add(base + 'く')
+                candidates.add(base + 'ぐ')
+            elif ta_stem and ta_stem[-1] == 'し':
+                base = ta_stem[:-1]
+                candidates.add(base + 'す')
+            else:
+                try_godan(ta_stem)
+
+    # 4. Nai-form (negative informal: ない)
+    if input_str.endswith('ない'):
+        nai_stem = input_str[:-2]
+        # Ichidan nai = stem + ない
+        try_ichidan(nai_stem)
+        # Kuru special: こない → くる
+        if input_str == 'こない':
+            candidates.add('くる')
+        # Suru special: しない → する
+        if input_str == 'しない':
+            candidates.add('する')
+        # Godan nai: a-stem + ない
+        if nai_stem and len(nai_stem) >0:
+            a_char = nai_stem[-1]
+            # Map a-row to u-row for godan
+            godan_end_map = {
+                'わ': 'う',
+                'た': 'つ',
+                'ら': 'る',
+                'ま': 'む',
+                'ば': 'ぶ',
+                'な': 'ぬ',
+                'か': 'く',
+                'が': 'ぐ',
+                'さ': 'す'
+            }
+            if a_char in godan_end_map:
+                base = nai_stem[:-1]
+                candidates.add(base + godan_end_map[a_char])
+            else:
+                try_godan(nai_stem)
+
+    # 5. Nakatta-form (negative past informal: なかった)
+    if input_str.endswith('なかった'):
+        nakatta_stem = input_str[:-5]
+        try_ichidan(nakatta_stem)
+        if input_str == 'こなかった':
+            candidates.add('くる')
+        if input_str == 'しなかった':
+            candidates.add('する')
+        if nakatta_stem and len(nakatta_stem) >0:
+            a_char = nakatta_stem[-1]
+            godan_end_map = {
+                'わ': 'う',
+                'た': 'つ',
+                'ら': 'る',
+                'ま': 'む',
+                'ば': 'ぶ',
+                'な': 'ぬ',
+                'か': 'く',
+                'が': 'ぐ',
+                'さ': 'す'
+            }
+            if a_char in godan_end_map:
+                base = nakatta_stem[:-1]
+                candidates.add(base + godan_end_map[a_char])
+            else:
+                try_godan(nakatta_stem)
+
+    # 6. Volitional (おう / よう / ましょう)
+    if input_str.endswith('よう') or input_str.endswith('おう') or input_str.endswith('う') and len(input_str)>=2:
+        if input_str.endswith('ましょう'):
+            stem = input_str[:-4]
+            try_ichidan(stem)
+            try_godan(stem)
+            if stem == 'き':
+                candidates.add('くる')
+            if stem == 'し':
+                candidates.add('する')
+        else:
+            # Regular volitional
+            vol_stem = input_str[:-1]
+            last_char = input_str[-1]
+            if last_char == 'う':
+                if input_str.endswith('こよう'):
+                    candidates.add('くる')
+                if input_str.endswith('しよう'):
+                    candidates.add('する')
+                # Ichidan volitional: stem + よう
+                try_ichidan(vol_stem)
+                # Godan volitional: o-stem + う
+                if len(vol_stem)>=1:
+                    o_char = vol_stem[-1]
+                    godan_end_map_o = {
+                        'お': 'う',
+                        'と': 'つ',
+                        'ろ': 'る',
+                        'も': 'む',
+                        'ぼ': 'ぶ',
+                        'の': 'ぬ',
+                        'こ': 'く',
+                        'ご': 'ぐ',
+                        'そ': 'す'
+                    }
+                    if o_char in godan_end_map_o:
+                        base = vol_stem[:-1]
+                        candidates.add(base + godan_end_map_o[o_char])
+                    else:
+                        try_godan(vol_stem)
+
+    # 7. Imperative (command form: e-row, ろ, こい, しろ, なさい)
+    if input_str.endswith('なさい'):
+        stem = input_str[:-3]
+        try_ichidan(stem)
+        try_godan(stem)
+        if stem == 'き':
+            candidates.add('くる')
+        if stem == 'し':
+            candidates.add('する')
+    else:
+        # Short imperatives
+        if input_str == 'こい':
+            candidates.add('くる')
+        if input_str == 'しろ':
+            candidates.add('する')
+        if len(input_str)>=1:
+            last_char = input_str[-1]
+            # Ichidan imperative ends with ろ
+            if last_char == 'ろ':
+                try_ichidan(input_str[:-1])
+            # Godan imperative ends with e-row kana
+            e_row_chars = ['え', 'け', 'げ', 'せ', 'て', 'ね', 'べ', 'め', 'れ']
+            if last_char in e_row_chars:
+                godan_end_map_e = {
+                    'え': 'う',
+                    'て': 'つ',
+                    'れ': 'る',
+                    'め': 'む',
+                    'べ': 'ぶ',
+                    'ね': 'ぬ',
+                    'け': 'く',
+                    'げ': 'ぐ',
+                    'せ': 'す'
+                }
+                if last_char in godan_end_map_e:
+                    base = input_str[:-1]
+                    candidates.add(base + godan_end_map_e[last_char])
+                else:
+                    try_godan(input_str[:-1])
+
+    # 8. Potential (える / られる / できる)
+    if input_str.endswith('られる'):
+        # Could be ichidan potential or passive/causative
+        stem = input_str[:-3]
+        try_ichidan(stem)
+        if stem == 'こら':
+            candidates.add('くる')
+    if input_str.endswith('できる'):
+        # Suru potential
+        stem = input_str[:-4]
+        candidates.add(stem + 'する')
+    if len(input_str)>=2 and input_str[-1] == 'る' and input_str[-2] in ['え', 'け', 'げ', 'せ', 'て', 'ね', 'べ', 'め', 'れ']:
+        # Godan potential (e-stem + ru)
+        godan_end_map_e = {
+            'え': 'う',
+            'て': 'つ',
+            'れ': 'る',
+            'め': 'む',
+            'べ': 'ぶ',
+            'ね': 'ぬ',
+            'け': 'く',
+            'げ': 'ぐ',
+            'せ': 'す'
+        }
+        base = input_str[:-2]
+        if input_str[-2] in godan_end_map_e:
+            candidates.add(base + godan_end_map_e[input_str[-2]])
+        else:
+            try_godan(base)
+
+    # 9. Passive/Causative (れる / られる / させる / こさせる)
+    if input_str.endswith('させる'):
+        stem = input_str[:-3]
+        candidates.add(stem + 'する')
+        # Also check for godan causative: a-stem + せる
+        if stem and len(stem)>=1:
+            a_char = stem[-1]
+            godan_end_map = {
+                'わ': 'う',
+                'た': 'つ',
+                'ら': 'る',
+                'ま': 'む',
+                'ば': 'ぶ',
+                'な': 'ぬ',
+                'か': 'く',
+                'が': 'ぐ',
+                'さ': 'す'
+            }
+            if a_char in godan_end_map:
+                base = stem[:-1]
+                candidates.add(base + godan_end_map[a_char])
+    if input_str.endswith('れる') and not input_str.endswith('られる'):
+        # Godan passive/causative: a-stem + れる
+        stem = input_str[:-2]
+        if stem and len(stem)>=1:
+            a_char = stem[-1]
+            godan_end_map = {
+                'わ': 'う',
+                'た': 'つ',
+                'ら': 'る',
+                'ま': 'む',
+                'ば': 'ぶ',
+                'な': 'ぬ',
+                'か': 'く',
+                'が': 'ぐ',
+                'さ': 'す'
+            }
+            if a_char in godan_end_map:
+                base = stem[:-1]
+                candidates.add(base + godan_end_map[a_char])
+
+    return sorted(list(candidates))
+
 GODAN_MAP = {
     'う': ('わ', 'い', 'え', 'お', 'って', 'った'),
     'つ': ('た', 'ち', 'て', 'と', 'って', 'った'),

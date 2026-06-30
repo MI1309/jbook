@@ -357,6 +357,7 @@ def list_vocab(request,
     from .models import Vocab
     from django.db.models import Q
     from utils.kana import to_kana
+    from utils.conjugation import deconjugate_verb
     
     qs = Vocab.objects.all().order_by('word')
     
@@ -370,14 +371,26 @@ def list_vocab(request,
         from utils.kana import to_kana, to_romaji
         search_kana = to_kana(search)
         search_romaji = to_romaji(search)
-        qs = qs.filter(
-            Q(word__icontains=search) | 
-            Q(reading__icontains=search) | 
-            Q(meaning__icontains=search) |
-            Q(word__icontains=search_kana) | 
-            Q(reading__icontains=search_kana) |
-            Q(reading__icontains=search_romaji)
-        )
+        
+        # --- Deconjugate search term to find dictionary forms ---
+        deconj_candidates = deconjugate_verb(search)
+        
+        # Build Q object for search
+        search_q = Q()
+        
+        # 1. Original search terms
+        search_q |= Q(word__icontains=search)
+        search_q |= Q(reading__icontains=search)
+        search_q |= Q(meaning__icontains=search)
+        search_q |= Q(word__icontains=search_kana)
+        search_q |= Q(reading__icontains=search_kana)
+        search_q |= Q(reading__icontains=search_romaji)
+        
+        # 2. Add deconjugated candidate searches
+        for candidate in deconj_candidates:
+            search_q |= Q(reading__icontains=candidate)
+        
+        qs = qs.filter(search_q)
         
     total = qs.count()
     pages = (total + limit - 1) // limit
