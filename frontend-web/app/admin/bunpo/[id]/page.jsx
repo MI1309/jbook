@@ -50,8 +50,7 @@ export default function BunpoForm({ params }) {
             } else {
                 console.error("Fetch failed:", res.status, res.statusText);
                 const text = await res.text();
-                toast.error(`Failed to load Grammar: ${res.status} ${res.statusText}\n${text}`);
-                router.push('/admin/bunpo');
+                toast.error(`Gagal memuat Grammar: ${res.status} ${res.statusText}\n${text}`);
             }
         } catch (error) {
             console.error("Fetch error", error);
@@ -90,7 +89,6 @@ export default function BunpoForm({ params }) {
             const url = isNew
                 ? `${API_URL}/admin/grammar`
                 : `${API_URL}/admin/grammar/${id}`;
-
             const method = isNew ? 'POST' : 'PUT';
 
             const res = await fetch(url, {
@@ -116,37 +114,50 @@ export default function BunpoForm({ params }) {
         }
     };
 
-    if (loading) return <div className="p-8 text-center text-gray-500">Loading...</div>;
+    if (loading) return (
+        <div className="p-12 text-center">
+            <div className="w-10 h-10 border-4 border-red-600/20 border-t-red-600 rounded-full animate-spin mx-auto"></div>
+            <p className="mt-4 text-xs font-bold uppercase tracking-widest text-neutral-500">
+                Memuat...
+            </p>
+        </div>
+    );
 
     return (
-        <div className="max-w-4xl mx-auto">
-            <div className="flex justify-between items-center mb-6">
+        <div className="max-w-4xl mx-auto space-y-6">
+            {/* Header */}
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div className="flex items-center gap-4">
-                    <Link href="/admin/bunpo" className="text-gray-500 hover:text-gray-700">
-                        &larr; Back
+                    <Link href="/admin/bunpo" className="p-2 rounded-xl text-neutral-400 hover:text-white hover:bg-white/5">
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                        </svg>
                     </Link>
-                    <h1 className="text-2xl font-bold text-gray-800">{isNew ? 'Add New Grammar' : 'Edit Grammar'}</h1>
+                    <h1 className="text-3xl font-black tracking-tight text-white">
+                        {isNew ? 'Tambah Bunpo Baru' : 'Edit Bunpo'}
+                    </h1>
                 </div>
             </div>
 
-            <div className="bg-white p-6 rounded-lg shadow border border-gray-200">
-                <form onSubmit={handleSubmit} className="space-y-6">
+            {/* Form */}
+            <div className="rounded-[2rem] border overflow-hidden bg-neutral-900/30 border-white/5">
+                <form onSubmit={handleSubmit} className="p-8 space-y-6">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div>
-                            <label className="block text-sm font-bold text-gray-700 mb-1">Title</label>
+                        <div className="space-y-2 col-span-full md:col-span-1">
+                            <label className="text-[10px] font-black uppercase tracking-widest opacity-50">Judul</label>
                             <input
                                 type="text"
-                                className="block w-full border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500 text-lg p-2 border"
+                                className="w-full p-4 rounded-xl border-2 outline-none transition-all bg-white/5 border-white/5 focus:border-red-600 text-white"
                                 value={formData.title}
                                 onChange={(e) => setFormData({ ...formData, title: e.target.value })}
                                 required
                             />
                         </div>
-                        <div>
-                            <label className="block text-sm font-bold text-gray-700 mb-1">Structure</label>
+                        <div className="space-y-2 col-span-full md:col-span-1">
+                            <label className="text-[10px] font-black uppercase tracking-widest opacity-50">Struktur</label>
                             <input
                                 type="text"
-                                className="block w-full border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500 text-lg p-2 border"
+                                className="w-full p-4 rounded-xl border-2 outline-none transition-all bg-white/5 border-white/5 focus:border-red-600 text-white"
                                 value={formData.structure}
                                 onChange={(e) => setFormData({ ...formData, structure: e.target.value })}
                                 required
@@ -154,23 +165,23 @@ export default function BunpoForm({ params }) {
                         </div>
                     </div>
 
-                    <div>
-                        <label className="block text-sm font-bold text-gray-700 mb-1">Explanation</label>
+                    <div className="space-y-2">
+                        <label className="text-[10px] font-black uppercase tracking-widest opacity-50">Penjelasan</label>
                         <textarea
-                            rows="4"
-                            className="block w-full border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500 p-2 border"
+                            rows="6"
+                            className="w-full p-4 rounded-xl border-2 outline-none transition-all bg-white/5 border-white/5 focus:border-red-600 text-white"
                             value={formData.explanation}
                             onChange={(e) => setFormData({ ...formData, explanation: e.target.value })}
                             required
-                        ></textarea>
+                        />
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div>
-                            <label className="block text-sm font-bold text-gray-700 mb-1">Chapter</label>
+                        <div className="space-y-2">
+                            <label className="text-[10px] font-black uppercase tracking-widest opacity-50">Bab</label>
                             <input
                                 type="number"
-                                className="block w-full border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500 p-2 border"
+                                className="w-full p-4 rounded-xl border-2 outline-none transition-all bg-white/5 border-white/5 focus:border-red-600 text-white"
                                 value={formData.chapter}
                                 onChange={(e) => {
                                     const val = parseInt(e.target.value);
@@ -182,68 +193,81 @@ export default function BunpoForm({ params }) {
                                 min={1}
                             />
                         </div>
-                        <div>
-                            <label className="block text-sm font-bold text-gray-700 mb-1">JLPT Level (1-5)</label>
+                        <div className="space-y-2">
+                            <label className="text-[10px] font-black uppercase tracking-widest opacity-50">Level JLPT (1-5)</label>
                             <select
-                                className="block w-full border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500 p-2 border"
+                                className="w-full p-4 rounded-xl border-2 outline-none transition-all bg-neutral-800 border-white/5 text-white"
                                 value={formData.jlpt_level}
                                 onChange={(e) => setFormData({ ...formData, jlpt_level: e.target.value })}
                             >
-                                {[5, 4, 3, 2, 1].map(l => <option key={l} value={l}>N{l}</option>)}
+                                {[5,4,3,2,1].map(l => <option key={l} value={l}>N{l}</option>)}
                             </select>
                         </div>
                     </div>
 
                     {/* Sentences */}
-                    <div className="border-t pt-6">
-                        <h3 className="text-lg font-medium text-gray-900 mb-4">Example Sentences</h3>
+                    <div className="border-t border-gray-100 dark:border-white/5 pt-6 space-y-4">
+                        <h3 className="text-sm font-black text-neutral-500 uppercase tracking-widest opacity-50">Contoh Kalimat</h3>
                         {formData.sentences.map((sent, idx) => (
-                            <div key={idx} className="mb-3 p-3 bg-gray-50 rounded border flex justify-between items-start">
-                                <div>
-                                    <p className="font-bold text-gray-800">{sent.jp}</p>
-                                    <p className="text-sm text-gray-600">{sent.id}</p>
+                            <div key={idx} className="p-4 rounded-xl flex items-start justify-between bg-white/5">
+                                <div className="space-y-1 flex-1">
+                                    <p className="font-black text-white">{sent.jp}</p>
+                                    <p className="text-sm font-bold text-neutral-400">{sent.id}</p>
                                 </div>
                                 <button
                                     type="button"
                                     onClick={() => removeSentence(idx)}
-                                    className="text-red-600 hover:text-red-800 text-sm font-medium"
+                                    className="p-2 rounded-lg transition-colors text-red-400 hover:bg-red-500/10"
                                 >
-                                    Remove
+                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                    </svg>
                                 </button>
                             </div>
                         ))}
-                        <div className="bg-gray-50 p-4 rounded border border-dashed border-gray-300 mt-4">
-                            <h4 className="text-sm font-medium text-gray-700 mb-2">Add New Sentence</h4>
+
+                        <div className="p-4 rounded-xl border-2 border-dashed border-white/5">
+                            <h4 className="text-xs font-black uppercase tracking-widest opacity-50 mb-3">Tambah Kalimat Baru</h4>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-3">
                                 <input
-                                    type="text" placeholder="Japanese Sentence"
-                                    className="border p-2 rounded text-sm w-full"
+                                    type="text"
+                                    placeholder="Kalimat Bahasa Jepang"
+                                    className="p-3 rounded-lg border text-sm bg-white/5 border-white/5 text-white"
                                     value={newSentence.jp}
                                     onChange={(e) => setNewSentence({ ...newSentence, jp: e.target.value })}
                                 />
                                 <input
-                                    type="text" placeholder="Indonesian Translation"
-                                    className="border p-2 rounded text-sm w-full"
+                                    type="text"
+                                    placeholder="Terjemahan Bahasa Indonesia"
+                                    className="p-3 rounded-lg border text-sm bg-white/5 border-white/5 text-white"
                                     value={newSentence.id}
                                     onChange={(e) => setNewSentence({ ...newSentence, id: e.target.value })}
                                 />
                             </div>
                             <button
                                 type="button"
-                                onClick={handleAddSentence}
-                                className="bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded text-sm font-medium w-full"
+                                onClick={() => {
+                                    if (newSentence.jp && newSentence.id) {
+                                        setFormData({
+                                            ...formData,
+                                            sentences: [...formData.sentences, newSentence]
+                                        });
+                                        setNewSentence({ jp: '', id: '' });
+                                    }
+                                }}
+                                className="w-full px-6 py-3 rounded-xl font-bold transition-colors bg-white/5 text-white hover:bg-white/10"
                             >
-                                Add Sentence
+                                Tambah Kalimat
                             </button>
                         </div>
                     </div>
 
-                    <div className="flex justify-end pt-6 border-t border-gray-100">
-                        <Link href="/admin/bunpo" className="bg-gray-200 text-gray-700 px-6 py-3 rounded-lg hover:bg-gray-300 font-bold mr-4">
-                            Cancel
+                    <div className="flex flex-col md:flex-row md:justify-end gap-4 pt-6 border-t border-gray-100 dark:border-white/5">
+                        <Link href="/admin/bunpo" className="flex-1 md:flex-none px-6 py-3 rounded-xl font-bold text-center transition-all bg-white/5 text-white hover:bg-white/10">
+                            Batal
                         </Link>
-                        <button type="submit" className="bg-red-600 text-white px-8 py-3 rounded-lg hover:bg-red-700 font-bold shadow-lg shadow-red-200">
-                            {isNew ? 'Create Grammar' : 'Update Grammar'}
+                        <button type="submit" className="flex-1 md:flex-none bg-red-600 text-white px-8 py-3 rounded-xl font-black shadow-lg shadow-red-500/20 hover:bg-red-700 transition-all active:scale-95">
+                            {isNew ? 'Buat Bunpo' : 'Update Bunpo'}
                         </button>
                     </div>
                 </form>

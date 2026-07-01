@@ -1,12 +1,10 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useTheme } from '@/context/ThemeContext';
 import { jbookApi } from '@/services/jbookApi';
 import Link from 'next/link';
 
 export default function AdminCustomModulesPage() {
-    const { theme } = useTheme();
     const [modules, setModules] = useState([]);
     const [loading, setLoading] = useState(true);
     const [isCreating, setIsCreating] = useState(false);
@@ -66,7 +64,7 @@ export default function AdminCustomModulesPage() {
     return (
         <div className="space-y-6">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-                <h1 className={`text-xl md:text-2xl font-bold ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>Modul Latihan Kustom</h1>
+                <h1 className="text-xl md:text-2xl font-bold text-white">Modul Latihan Kustom</h1>
                 <button 
                     onClick={() => setIsCreating(true)}
                     className="w-full sm:w-auto px-4 py-2.5 md:py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 font-medium text-sm text-center"
@@ -76,7 +74,7 @@ export default function AdminCustomModulesPage() {
             </div>
 
             {isCreating && (
-                <form onSubmit={handleCreate} className={`p-4 md:p-6 rounded-xl border ${theme === 'dark' ? 'bg-[#0a0a0a] border-neutral-800' : 'bg-white border-gray-200'} space-y-4`}>
+                <form onSubmit={handleCreate} className="p-4 md:p-6 rounded-xl border bg-[#0a0a0a] border-neutral-800 space-y-4">
                     <h2 className="text-lg md:text-xl font-semibold">Buat Modul Baru</h2>
                     <div>
                         <label className="block text-sm font-medium mb-1">Judul Modul</label>
@@ -115,7 +113,7 @@ export default function AdminCustomModulesPage() {
 
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                 {modules.map(module => (
-                    <div key={module.id} className={`p-4 md:p-5 rounded-xl border ${theme === 'dark' ? 'bg-[#0a0a0a] border-neutral-800' : 'bg-white border-gray-200'} flex flex-col h-full`}>
+                    <div key={module.id} className="p-4 md:p-5 rounded-xl border bg-[#0a0a0a] border-neutral-800 flex flex-col h-full">
                         <div className="flex justify-between items-start mb-2 gap-2">
                             <h3 className="font-bold text-lg line-clamp-2 leading-tight">{module.title}</h3>
                             <span className={`text-[10px] px-2 py-1 rounded-full uppercase font-bold whitespace-nowrap shrink-0 ${module.is_published ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'}`}>

@@ -160,154 +160,234 @@ export default function BunpoAdmin() {
         }
     };
 
+    const levelColor = (level) => {
+        const colors = {
+            5: 'bg-blue-900/30 text-blue-400',
+            4: 'bg-teal-900/30 text-teal-400',
+            3: 'bg-indigo-900/30 text-indigo-400',
+            2: 'bg-purple-900/30 text-purple-400',
+            1: 'bg-red-900/30 text-red-400'
+        };
+        return colors[level] || ('bg-neutral-800 text-neutral-400');
+    };
+
     return (
-        <div>
-            <div className="flex justify-between items-center mb-6">
-                <h1 className="text-2xl font-bold text-gray-800">Bunpo Management</h1>
-                <Link href="/admin/bunpo/new" className="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 font-medium no-underline text-sm">
-                    + New Grammar
+        <div className="space-y-6">
+            {/* Header */}
+            <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+                <div>
+                    <h1 className="text-3xl font-black tracking-tight text-white">
+                        Bunpo <span className="text-red-600">Management</span>
+                    </h1>
+                    <p className="mt-1 text-xs font-bold uppercase tracking-[0.2em] text-neutral-500">
+                        Kelola tata bahasa Jepang
+                    </p>
+                </div>
+                <Link href="/admin/bunpo/new" className="inline-flex items-center gap-2 bg-red-600 text-white px-6 py-3 rounded-2xl hover:bg-red-700 font-black text-sm shadow-lg shadow-red-500/20 transition-all active:scale-95">
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                    </svg>
+                    Tambah Bunpo Baru
                 </Link>
             </div>
 
-            <div className="bg-white shadow rounded-lg overflow-hidden">
-                {/* Filters */}
-                <div className="p-4 border-b border-gray-200 bg-gray-50 flex flex-col md:flex-row md:justify-between md:items-center gap-3">
-                    <h3 className="font-bold text-gray-700">Grammar List</h3>
-                    <div className="flex flex-wrap gap-2">
+            {/* Filters & Search */}
+            <div className="p-6 rounded-3xl border bg-neutral-900/30 border-white/5">
+                <div className="flex flex-col md:flex-row gap-4 items-stretch md:items-center justify-between">
+                    <div className="flex flex-1 flex-col md:flex-row gap-3">
                         <input
-                            type="text"
-                            placeholder="Search title, structure..."
-                            className="border border-gray-300 rounded-md text-sm p-2 flex-1 min-w-0 md:w-64"
+                            type="text" placeholder="Cari judul, struktur..."
+                            className="flex-1 px-4 py-3 rounded-2xl border text-sm font-bold focus:outline-none focus:ring-2 focus:ring-red-500/30 bg-neutral-800 border-white/10 text-white placeholder-neutral-600"
                             value={search}
                             onChange={(e) => setSearch(e.target.value)}
                         />
                         <select
-                            className="border border-gray-300 rounded-md text-sm p-2"
+                            className="flex-1 md:w-32 px-4 py-3 rounded-2xl border text-sm font-bold focus:outline-none focus:ring-2 focus:ring-red-500/30 bg-neutral-800 border-white/10 text-white"
                             value={filterLevel}
                             onChange={(e) => setFilterLevel(e.target.value)}
                         >
-                            <option value="">All Level</option>
+                            <option value="">Semua Level</option>
                             {[5, 4, 3, 2, 1].map(l => <option key={l} value={l}>N{l}</option>)}
                         </select>
                         <input
                             type="number" min="1"
-                            className="border border-gray-300 rounded-md text-sm p-2 w-20"
+                            className="px-4 py-3 rounded-2xl border text-sm font-bold focus:outline-none focus:ring-2 focus:ring-red-500/30 bg-neutral-800 border-white/10 text-white placeholder-neutral-600"
                             value={filterChapter}
                             onChange={(e) => {
                                 const val = parseInt(e.target.value);
                                 if (e.target.value === '' || (!isNaN(val) && val >= 1)) setFilterChapter(e.target.value);
                             }}
-                            placeholder="Ch"
+                            placeholder="Bab"
                         />
-                        <button 
-                            onClick={handleExport}
-                            className="bg-emerald-600 text-white px-3 py-2 rounded-md hover:bg-emerald-700 text-xs font-bold transition-all shadow-sm flex items-center gap-1"
-                        >
-                            <span>📥</span> Export
-                        </button>
                     </div>
+                    <button 
+                        onClick={handleExport}
+                        className="inline-flex items-center justify-center gap-2 bg-emerald-600 text-white px-6 py-3 rounded-2xl hover:bg-emerald-700 font-black text-sm shadow-lg shadow-emerald-500/20 transition-all active:scale-95">
+                        <span>📥</span> Export CSV
+                    </button>
                 </div>
+            </div>
 
+            {/* Content */}
+            <div className="rounded-3xl border overflow-hidden bg-neutral-900/30 border-white/5">
                 {loading ? (
-                    <div className="p-8 text-center text-gray-500">Loading...</div>
+                    <div className="p-12 text-center">
+                        <div className="w-10 h-10 border-4 border-red-600/20 border-t-red-600 rounded-full animate-spin mx-auto"></div>
+                        <p className="mt-4 text-xs font-bold uppercase tracking-widest text-neutral-500">
+                            Memuat...
+                        </p>
+                    </div>
+                ) : bunpos.length === 0 ? (
+                    <div className="p-12 text-center">
+                        <div className="text-4xl mb-4">📚</div>
+                        <p className="text-sm font-bold text-neutral-500">
+                            Tidak ada Bunpo ditemukan
+                        </p>
+                    </div>
                 ) : (
                     <>
                         {/* Desktop Table */}
-                        <table className="hidden md:table min-w-full divide-y divide-gray-200">
-                            <thead className="bg-gray-50">
-                                <tr>
-                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Title</th>
-                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Structure</th>
-                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Level</th>
-                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Chapter</th>
-                                    <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody className="bg-white divide-y divide-gray-200">
-                                {bunpos.map((b) => (
-                                    <tr key={b.id} className="hover:bg-gray-50">
-                                        <td className="px-6 py-4 whitespace-nowrap font-medium text-gray-900">{b.title}</td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 truncate max-w-xs">{b.structure}</td>
-                                        <td className="px-6 py-4 whitespace-nowrap">
-                                            <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">N{b.jlpt_level}</span>
-                                        </td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Ch {b.chapter}</td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                            <Link href={`/bunpo/${b.id}`} target="_blank" className="text-emerald-600 hover:text-emerald-900 mr-4">Lihat</Link>
-                                            <Link href={`/admin/bunpo/${b.id}`} className="text-indigo-600 hover:text-indigo-900 mr-4">Edit</Link>
-                                            <button onClick={(e) => handleDelete(e, b.id)} className="text-red-600 hover:text-red-900">Delete</button>
-                                        </td>
+                        <div className="hidden md:block overflow-x-auto">
+                            <table className="min-w-full divide-y">
+                                <thead className={'bg-neutral-800/50'}>
+                                    <tr>
+                                        <th className="px-6 py-4 text-left text-xs font-black text-neutral-500 uppercase tracking-widest">Judul</th>
+                                        <th className="px-6 py-4 text-left text-xs font-black text-neutral-500 uppercase tracking-widest">Struktur</th>
+                                        <th className="px-6 py-4 text-left text-xs font-black text-neutral-500 uppercase tracking-widest">Level</th>
+                                        <th className="px-6 py-4 text-left text-xs font-black text-neutral-500 uppercase tracking-widest">Bab</th>
+                                        <th className="px-6 py-4 text-right text-xs font-black text-neutral-500 uppercase tracking-widest">Aksi</th>
                                     </tr>
-                                ))}
-                                {bunpos.length === 0 && (
-                                    <tr><td colSpan="5" className="px-6 py-4 text-center text-gray-500">No Grammar points found.</td></tr>
-                                )}
-                            </tbody>
-                        </table>
+                                </thead>
+                                <tbody className="divide-y divide-white/5">
+                                    {bunpos.map((b) => (
+                                        <tr key={b.id} className="hover:bg-white/5 transition-colors">
+                                            <td className="px-6 py-4 whitespace-nowrap text-lg font-black text-gray-900 dark:text-white">{b.title}</td>
+                                            <td className="px-6 py-4 text-sm font-bold text-gray-600 dark:text-neutral-400 truncate max-w-xs">{b.structure}</td>
+                                            <td className="px-6 py-4 whitespace-nowrap">
+                                                <span className={`px-3 py-1 inline-flex text-xs font-black rounded-full ${levelColor(b.jlpt_level)}`}>
+                                                    N{b.jlpt_level}
+                                                </span>
+                                            </td>
+                                            <td className="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-600 dark:text-neutral-400">Bab {b.chapter}</td>
+                                            <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                                <div className="flex items-center justify-end gap-2">
+                                                    <Link
+                                                        href={`/bunpo/${b.id}`} target="_blank"
+                                                        className="p-2 rounded-xl transition-colors text-emerald-400 hover:bg-emerald-500/10"
+                                                        title="Lihat"
+                                                    >
+                                                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.478 0-8.268-2.943-9.542-7z" />
+                                                        </svg>
+                                                    </Link>
+                                                    <Link
+                                                        href={`/admin/bunpo/${b.id}`}
+                                                        className="p-2 rounded-xl transition-colors text-indigo-400 hover:bg-indigo-500/10"
+                                                        title="Edit"
+                                                    >
+                                                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                                        </svg>
+                                                    </Link>
+                                                    <button
+                                                        onClick={(e) => handleDelete(e, b.id)}
+                                                        className="p-2 rounded-xl transition-colors text-red-400 hover:bg-red-500/10"
+                                                        title="Hapus"
+                                                    >
+                                                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                                        </svg>
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
 
                         {/* Mobile Cards */}
-                        <div className="md:hidden divide-y divide-gray-100">
-                            {bunpos.length === 0 && <div className="p-6 text-center text-gray-500">No Grammar points found.</div>}
+                        <div className="md:hidden divide-y">
                             {bunpos.map((b) => (
-                                <div key={b.id} className="flex items-center">
-                                    {/* Tap area → public detail page */}
+                                <div key={b.id} className="divide-white/5">
                                     <div
-                                        className="flex items-center gap-3 flex-1 min-w-0 px-4 py-3 active:bg-gray-50 transition-colors cursor-pointer"
+                                        className="flex items-center gap-4 px-5 py-4 active:bg-black/5 dark:active:bg-white/5 transition-colors cursor-pointer"
                                         onClick={() => router.push(`/bunpo/${b.id}`)}
                                     >
-                                        <div className="flex-shrink-0 w-10 h-10 rounded-lg bg-blue-50 flex items-center justify-center">
-                                            <span className="text-xs font-bold text-blue-700">N{b.jlpt_level}</span>
-                                        </div>
                                         <div className="flex-1 min-w-0">
-                                            <div className="font-semibold text-gray-900 text-sm truncate">{b.title}</div>
-                                            <div className="text-xs text-gray-400 truncate">{b.structure}</div>
-                                            <div className="text-xs text-gray-400">Ch {b.chapter}</div>
+                                            <div className="font-black text-lg text-white">{b.title}</div>
+                                            <div className="text-sm font-bold text-gray-600 dark:text-neutral-400">{b.structure}</div>
+                                            <div className="flex items-center gap-2 mt-1">
+                                                <span className={`inline-flex px-3 py-1 text-xs font-black rounded-full ${levelColor(b.jlpt_level)}`}>N{b.jlpt_level}</span>
+                                                <span className="text-xs font-bold text-neutral-500">Bab {b.chapter}</span>
+                                            </div>
                                         </div>
-                                        <svg className="w-4 h-4 text-gray-300 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <svg className="w-5 h-5 text-neutral-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                                         </svg>
                                     </div>
-
-                                    {/* Right side: edit + delete */}
-                                    <div className="flex items-center gap-1 px-3 border-l border-gray-100 flex-shrink-0">
-                                        <Link
-                                            href={`/admin/bunpo/${b.id}`}
-                                            className="p-2 rounded-lg text-indigo-500 active:bg-indigo-50 transition-colors"
-                                            title="Edit"
-                                            onClick={(e) => e.stopPropagation()}
-                                        >
-                                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                                            </svg>
-                                        </Link>
-                                        <button
-                                            onClick={(e) => handleDelete(e, b.id)}
-                                            className="p-2 rounded-lg text-red-400 active:bg-red-50 transition-colors"
-                                            title="Delete"
-                                        >
-                                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                                            </svg>
-                                        </button>
+                                    <div className="flex items-center justify-between px-5 py-3 bg-neutral-900/30">
+                                        <div className="flex items-center gap-2">
+                                            <Link
+                                                href={`/admin/bunpo/${b.id}`}
+                                                className="p-2 rounded-xl transition-colors text-indigo-400 hover:bg-indigo-500/10"
+                                                onClick={(e) => e.stopPropagation()}
+                                            >
+                                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                                </svg>
+                                            </Link>
+                                            <button
+                                                onClick={(e) => handleDelete(e, b.id)}
+                                                className="p-2 rounded-xl transition-colors text-red-400 hover:bg-red-500/10"
+                                            >
+                                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                                </svg>
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
                             ))}
                         </div>
 
                         {/* Pagination */}
-                        <div className="px-4 py-3 border-t border-gray-200 flex items-center justify-between">
-                            <div className="text-sm text-gray-500">Page {page}</div>
-                            <div className="flex gap-2">
-                                <button onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page === 1}
-                                    className={`px-3 py-1 rounded border text-sm ${page === 1 ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-white text-gray-700 hover:bg-gray-50'}`}>
-                                    Previous
-                                </button>
-                                <button onClick={() => setPage(p => p + 1)} disabled={bunpos.length < LIMIT}
-                                    className={`px-3 py-1 rounded border text-sm ${bunpos.length < LIMIT ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-white text-gray-700 hover:bg-gray-50'}`}>
-                                    Next
-                                </button>
+                        {!loading && (
+                            <div className="px-6 py-5 border-t bg-neutral-900/50 border-white/5">
+                                <div className="flex items-center justify-between gap-4">
+                                    <div className="text-xs font-bold text-neutral-500">Halaman <span className="text-gray-900 dark:text-white">{page}</span> dari <span className="text-gray-900 dark:text-white">{Math.max(1, Math.ceil(allBunpos.length / LIMIT))}</span>
+                                    </div>
+                                    <div className="flex items-center gap-2">
+                                        <button
+                                            onClick={() => setPage(p => Math.max(1, p - 1))}
+                                            disabled={page === 1}
+                                            className={`p-2 rounded-xl border text-sm font-bold transition-all ${
+                                                page === 1 ? 'opacity-30 cursor-not-allowed' : `bg-neutral-800 border-white/10 text-white hover:bg-neutral-700 active:scale-95`
+                                            }`}
+                                        >
+                                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                                            </svg>
+                                        </button>
+                                        <span className="px-4 py-2 rounded-xl border text-sm font-black bg-red-600/20 border-red-500/30 text-red-400">
+                                            {page}
+                                        </span>
+                                        <button
+                                            onClick={() => setPage(p => p + 1)}
+                                            disabled={bunpos.length < LIMIT}
+                                            className={`p-2 rounded-xl border text-sm font-bold transition-all ${
+                                                bunpos.length < LIMIT ? 'opacity-30 cursor-not-allowed' : `bg-neutral-800 border-white/10 text-white hover:bg-neutral-700 active:scale-95`
+                                            }`}
+                                        >
+                                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                                            </svg>
+                                        </button>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
+                        )}
                     </>
                 )}
             </div>

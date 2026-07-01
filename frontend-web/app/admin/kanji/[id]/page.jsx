@@ -54,7 +54,6 @@ export default function KanjiForm({ params }) {
                 const text = await res.text();
                 console.error("Response body:", text);
                 toast.error(`Gagal memuat Kanji: ${res.status} ${res.statusText}\n${text}`);
-                // router.push('/admin/kanji'); // Don't redirect immediately so user can see error
             }
         } catch (error) {
             console.error("Fetch error", error);
@@ -107,96 +106,109 @@ export default function KanjiForm({ params }) {
         }
     };
 
-    if (loading) return <div className="p-8 text-center text-gray-500">Loading...</div>;
+    if (loading) return (
+        <div className="p-12 text-center">
+            <div className="w-10 h-10 border-4 border-red-600/20 border-t-red-600 rounded-full animate-spin mx-auto"></div>
+            <p className="mt-4 text-xs font-bold uppercase tracking-widest text-neutral-500">
+                Memuat...
+            </p>
+        </div>
+    );
 
     return (
-        <div className="max-w-4xl mx-auto">
-            <div className="flex justify-between items-center mb-6">
+        <div className="max-w-4xl mx-auto space-y-6">
+            {/* Header */}
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div className="flex items-center gap-4">
-                    <Link href="/admin/kanji" className="text-gray-500 hover:text-gray-700">
-                        &larr; Back
+                    <Link href="/admin/kanji" className="p-2 rounded-xl text-neutral-400 hover:text-white hover:bg-white/5">
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                        </svg>
                     </Link>
-                    <h1 className="text-2xl font-bold text-gray-800">{isNew ? 'Add New Kanji' : 'Edit Kanji'}</h1>
+                    <h1 className="text-3xl font-black tracking-tight text-white">
+                        {isNew ? 'Tambah Kanji Baru' : 'Edit Kanji'}
+                    </h1>
                 </div>
             </div>
 
-            <div className="bg-white p-6 rounded-lg shadow border border-gray-200">
-                <form onSubmit={handleSubmit} className="space-y-6">
+            {/* Form */}
+            <div className="rounded-[2rem] border overflow-hidden bg-neutral-900/30 border-white/5">
+                <form onSubmit={handleSubmit} className="p-8 space-y-6">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div>
-                            <label className="block text-sm font-bold text-gray-700 mb-1">Character</label>
+                        <div className="space-y-2">
+                            <label className="text-[10px] font-black uppercase tracking-widest opacity-50">Karakter</label>
                             <input
                                 type="text"
-                                className="block w-full border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500 text-lg p-2 border"
+                                className="w-full p-4 rounded-xl border-2 outline-none transition-all bg-white/5 border-white/5 focus:border-red-600 text-white"
                                 value={formData.character}
                                 onChange={(e) => setFormData({ ...formData, character: e.target.value })}
                                 required
                                 maxLength={1}
                             />
                         </div>
-                        <div>
-                            <label className="block text-sm font-bold text-gray-700 mb-1">Meaning (Indonesia)</label>
+                        <div className="space-y-2">
+                            <label className="text-[10px] font-black uppercase tracking-widest opacity-50">Arti (Indonesia)</label>
                             <input
                                 type="text"
-                                className="block w-full border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500 text-lg p-2 border"
+                                className="w-full p-4 rounded-xl border-2 outline-none transition-all bg-white/5 border-white/5 focus:border-red-600 text-white"
                                 value={formData.meaning}
                                 onChange={(e) => setFormData({ ...formData, meaning: e.target.value })}
                                 required
                             />
                         </div>
-                        <div>
-                            <label className="block text-sm font-bold text-gray-700 mb-1">Onyomi (comma separated)</label>
+                        <div className="space-y-2">
+                            <label className="text-[10px] font-black uppercase tracking-widest opacity-50">Onyomi (pisahkan dengan koma)</label>
                             <input
                                 type="text"
-                                className="block w-full border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500 p-2 border"
+                                className="w-full p-4 rounded-xl border-2 outline-none transition-all bg-white/5 border-white/5 focus:border-red-600 text-white"
                                 value={formData.onyomi}
                                 onChange={(e) => setFormData({ ...formData, onyomi: e.target.value })}
                                 placeholder="e.g. NICHI, JITSU"
                             />
                         </div>
-                        <div>
-                            <label className="block text-sm font-bold text-gray-700 mb-1">Kunyomi (comma separated)</label>
+                        <div className="space-y-2">
+                            <label className="text-[10px] font-black uppercase tracking-widest opacity-50">Kunyomi (pisahkan dengan koma)</label>
                             <input
                                 type="text"
-                                className="block w-full border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500 p-2 border"
+                                className="w-full p-4 rounded-xl border-2 outline-none transition-all bg-white/5 border-white/5 focus:border-red-600 text-white"
                                 value={formData.kunyomi}
                                 onChange={(e) => setFormData({ ...formData, kunyomi: e.target.value })}
                                 placeholder="e.g. hi, bi"
                             />
                         </div>
-                        <div>
-                            <label className="block text-sm font-bold text-gray-700 mb-1">Strokes</label>
+                        <div className="space-y-2">
+                            <label className="text-[10px] font-black uppercase tracking-widest opacity-50">Strokes</label>
                             <input
                                 type="number"
-                                className="block w-full border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500 p-2 border"
+                                className="w-full p-4 rounded-xl border-2 outline-none transition-all bg-white/5 border-white/5 focus:border-red-600 text-white"
                                 value={formData.strokes}
                                 onChange={(e) => setFormData({ ...formData, strokes: e.target.value })}
                                 min={1}
                             />
                         </div>
-                        <div>
-                            <label className="block text-sm font-bold text-gray-700 mb-1">JLPT Level</label>
+                        <div className="space-y-2">
+                            <label className="text-[10px] font-black uppercase tracking-widest opacity-50">Level JLPT</label>
                             <select
-                                className="block w-full border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500 p-2 border"
+                                className="w-full p-4 rounded-xl border-2 outline-none transition-all bg-neutral-800 border-white/5 text-white"
                                 value={formData.jlpt_level}
                                 onChange={(e) => setFormData({ ...formData, jlpt_level: e.target.value })}
                             >
                                 {[5, 4, 3, 2, 1].map(l => <option key={l} value={l}>N{l}</option>)}
                             </select>
                         </div>
-                        <div>
-                            <label className="block text-sm font-bold text-gray-700 mb-1">Radical (Optional)</label>
+                        <div className="space-y-2">
+                            <label className="text-[10px] font-black uppercase tracking-widest opacity-50">Radikal (Opsional)</label>
                             <input
                                 type="text"
-                                className="block w-full border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500 p-2 border"
+                                className="w-full p-4 rounded-xl border-2 outline-none transition-all bg-white/5 border-white/5 focus:border-red-600 text-white"
                                 value={formData.radical}
                                 onChange={(e) => setFormData({ ...formData, radical: e.target.value })}
                             />
                         </div>
-                        <div>
-                            <label className="block text-sm font-bold text-gray-700 mb-1">Word Type (Tipe Kata)</label>
+                        <div className="space-y-2">
+                            <label className="text-[10px] font-black uppercase tracking-widest opacity-50">Tipe Kata</label>
                             <select
-                                className="block w-full border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500 p-2 border bg-white"
+                                className="w-full p-4 rounded-xl border-2 outline-none transition-all bg-neutral-800 border-white/5 text-white"
                                 value={formData.word_type}
                                 onChange={(e) => setFormData({ ...formData, word_type: e.target.value })}
                             >
@@ -219,12 +231,12 @@ export default function KanjiForm({ params }) {
                         </div>
                     </div>
 
-                    <div className="flex justify-end pt-6 border-t border-gray-100">
-                        <Link href="/admin/kanji" className="bg-gray-200 text-gray-700 px-6 py-3 rounded-lg hover:bg-gray-300 font-bold mr-4">
-                            Cancel
+                    <div className="flex flex-col md:flex-row md:justify-end gap-4 pt-6 border-t border-gray-100 dark:border-white/5">
+                        <Link href="/admin/kanji" className="flex-1 md:flex-none px-6 py-3 rounded-xl font-bold text-center transition-all bg-white/5 text-white hover:bg-white/10">
+                            Batal
                         </Link>
-                        <button type="submit" className="bg-red-600 text-white px-8 py-3 rounded-lg hover:bg-red-700 font-bold shadow-lg shadow-red-200">
-                            {isNew ? 'Create Kanji' : 'Update Kanji'}
+                        <button type="submit" className="flex-1 md:flex-none bg-red-600 text-white px-8 py-3 rounded-xl font-black shadow-lg shadow-red-500/20 hover:bg-red-700 transition-all active:scale-95">
+                            {isNew ? 'Buat Kanji' : 'Update Kanji'}
                         </button>
                     </div>
                 </form>

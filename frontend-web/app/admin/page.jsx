@@ -2,24 +2,19 @@
 
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/context/AuthContext';
-import { useTheme } from '@/context/ThemeContext';
 import { API_URL } from '@/lib/api';
 import { useRouter } from 'next/navigation';
 import Cookies from 'js-cookie';
 import Link from 'next/link';
 
 export default function AdminDashboard() {
-    const { theme } = useTheme();
-    const [mounted, setMounted] = useState(false);
     const [isSearching, setIsSearching] = useState(false);
     const [stats, setStats] = useState({ kanji_count: 0, bunpo_count: 0, blog_count: 0 });
     const [searchQuery, setSearchQuery] = useState('');
     const [searchResults, setSearchResults] = useState([]);
     const router = useRouter();
     const { user } = useAuth();
-
     useEffect(() => {
-        setMounted(true);
         fetchStats();
     }, []);
 
@@ -72,17 +67,15 @@ export default function AdminDashboard() {
         router.push(`/admin/export?type=${type}`);
     };
 
-    if (!mounted) return null;
-
     return (
         <div className="max-w-7xl mx-auto space-y-10 pb-20">
             {/* Header Section */}
             <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-8">
                 <div className="animate-in fade-in slide-in-from-left-6 duration-700">
-                    <h2 className={`text-6xl font-black tracking-tighter ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>
+                    <h2 className="text-6xl font-black tracking-tighter text-white">
                         Admin <span className="text-red-600">Panel</span>
                     </h2>
-                    <p className={`mt-4 text-sm font-bold uppercase tracking-[0.2em] flex items-center gap-2 ${theme === 'dark' ? 'text-neutral-500' : 'text-gray-400'}`}>
+                    <p className="mt-4 text-sm font-bold uppercase tracking-[0.2em] flex items-center gap-2 text-neutral-500">
                         <span className="w-12 h-[2px] bg-red-600"></span>
                         Otoritas: <span className="text-red-600">{user?.username}</span>
                     </p>
@@ -99,11 +92,7 @@ export default function AdminDashboard() {
                         <Link 
                             key={item.id}
                             href={item.href || '#'}
-                            className={`px-5 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all active:scale-95 border flex items-center gap-3 ${
-                                theme === 'dark' 
-                                ? 'bg-white/5 border-white/5 text-neutral-400 hover:text-white hover:border-white/20' 
-                                : 'bg-white border-gray-100 text-gray-600 hover:border-red-200 hover:text-red-600 shadow-sm'
-                            }`}
+                            className="px-5 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all active:scale-95 border flex items-center gap-3 bg-white/5 border-white/5 text-neutral-400 hover:text-white hover:border-white/20"
                         >
                             <span className="text-lg">{item.icon}</span>
                             {item.label}
@@ -139,9 +128,7 @@ export default function AdminDashboard() {
             </div>
 
             {/* Search Engine - Glassmorphism UI */}
-            <div className={`backdrop-blur-xl border p-1 rounded-[3rem] transition-all duration-500 ${
-                theme === 'dark' ? 'bg-white/5 border-white/5 shadow-2xl' : 'bg-white border-gray-100 shadow-xl shadow-gray-200/50'
-            }`}>
+            <div className="backdrop-blur-xl border p-1 rounded-[3rem] transition-all duration-500 bg-white/5 border-white/5 shadow-2xl">
                 <div className="p-8 md:p-12">
                     <div className="flex items-center gap-4 mb-10 ml-2">
                         <div className="w-12 h-12 bg-red-600 rounded-2xl flex items-center justify-center shadow-lg shadow-red-500/20">
@@ -150,7 +137,7 @@ export default function AdminDashboard() {
                             </svg>
                         </div>
                         <div>
-                            <h3 className={`text-2xl font-black tracking-tight ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>OmniSearch Engine</h3>
+                            <h3 className="text-2xl font-black tracking-tight text-white">OmniSearch Engine</h3>
                             <p className="text-[10px] font-bold text-neutral-500 uppercase tracking-widest">Global Database Query</p>
                         </div>
                     </div>
@@ -158,11 +145,7 @@ export default function AdminDashboard() {
                     <div className="relative group">
                         <input
                             type="text"
-                            className={`w-full p-8 pl-16 rounded-3xl transition-all text-2xl font-bold outline-none ring-0 ${
-                                theme === 'dark' 
-                                ? 'bg-neutral-900/50 text-white placeholder-neutral-700 focus:bg-neutral-900 focus:ring-2 focus:ring-red-600/50' 
-                                : 'bg-gray-50 text-gray-800 placeholder:text-gray-300 focus:bg-white focus:ring-4 focus:ring-red-500/10 border-2 border-transparent focus:border-red-500'
-                            }`}
+                            className="w-full p-8 pl-16 rounded-3xl transition-all text-2xl font-bold outline-none ring-0 bg-neutral-900/50 text-white placeholder-neutral-700 focus:bg-neutral-900 focus:ring-2 focus:ring-red-600/50"
                             placeholder="Ketik Kanji, Bunpo, atau konten Blog..."
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
@@ -190,11 +173,7 @@ export default function AdminDashboard() {
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 {searchResults.map((result) => (
                                     <Link href={`/admin/${result.type}/${result.id}`} key={result.id} className="group">
-                                        <div className={`p-6 rounded-[2rem] border transition-all active:scale-[0.98] ${
-                                            theme === 'dark'
-                                            ? 'bg-white/5 border-white/5 hover:border-white/20 hover:bg-white/10'
-                                            : 'bg-white border-gray-100 hover:border-red-100 hover:shadow-xl hover:shadow-red-500/5'
-                                        }`}>
+                                        <div className="p-6 rounded-[2rem] border transition-all active:scale-[0.98] bg-white/5 border-white/5 hover:border-white/20 hover:bg-white/10">
                                             <div className="flex justify-between items-start">
                                                 <div className="flex items-center gap-5">
                                                     <div className={`w-14 h-14 rounded-2xl flex items-center justify-center text-xl font-black shadow-lg ${
@@ -205,7 +184,7 @@ export default function AdminDashboard() {
                                                         {result.title[0]}
                                                     </div>
                                                     <div>
-                                                        <h5 className={`text-xl font-black group-hover:text-red-500 transition-colors ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>{result.title}</h5>
+                                                        <h5 className="text-xl font-black group-hover:text-red-500 transition-colors text-white">{result.title}</h5>
                                                         <p className="text-xs font-bold text-neutral-500 uppercase tracking-widest mt-1">{result.type}</p>
                                                     </div>
                                                 </div>

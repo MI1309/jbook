@@ -2,14 +2,12 @@
 
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/context/AuthContext';
-import { useTheme } from '@/context/ThemeContext';
 import { API_URL } from '@/lib/api';
 import Cookies from 'js-cookie';
 import Link from 'next/link';
 import ConfirmationModal from '@/components/common/ConfirmationModal';
 
 export default function AdminAnnouncements() {
-    const { theme } = useTheme();
     const [announcements, setAnnouncements] = useState([]);
     const [loading, setLoading] = useState(true);
     const [showModal, setShowModal] = useState(false);
@@ -130,8 +128,8 @@ export default function AdminAnnouncements() {
         setShowModal(true);
     };
 
-    const textColor = theme === 'dark' ? 'text-white' : 'text-gray-900';
-    const subTextColor = theme === 'dark' ? 'text-neutral-500' : 'text-gray-400';
+    const textColor = 'text-white';
+    const subTextColor = 'text-neutral-500';
 
     return (
         <div className="max-w-6xl mx-auto py-10 px-4 space-y-8">
@@ -167,9 +165,7 @@ export default function AdminAnnouncements() {
                     {announcements.map((ann) => (
                         <div 
                             key={ann.id}
-                            className={`p-6 rounded-3xl border transition-all flex flex-col md:flex-row md:items-center justify-between gap-6 ${
-                                theme === 'dark' ? 'bg-white/5 border-white/5' : 'bg-white border-gray-100 shadow-sm'
-                            }`}
+                            className="p-6 rounded-3xl border transition-all flex flex-col md:flex-row md:items-center justify-between gap-6 bg-white/5 border-white/5"
                         >
                             <div className="flex gap-4 flex-1">
                                 <div className={`w-12 h-12 rounded-2xl flex items-center justify-center text-xl shrink-0 ${
@@ -204,9 +200,7 @@ export default function AdminAnnouncements() {
                             <div className="flex items-center gap-2">
                                 <button 
                                     onClick={() => openEdit(ann)}
-                                    className={`px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${
-                                        theme === 'dark' ? 'bg-white/5 hover:bg-white/10 text-white' : 'bg-gray-100 hover:bg-gray-200 text-gray-700'
-                                    }`}
+                                    className="px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all bg-white/5 hover:bg-white/10 text-white"
                                 >
                                     Edit
                                 </button>
@@ -228,9 +222,7 @@ export default function AdminAnnouncements() {
             {/* Create/Edit Modal */}
             {showModal && (
                 <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-black/60 backdrop-blur-md animate-in fade-in duration-300">
-                    <div className={`w-full max-w-2xl rounded-[2.5rem] shadow-2xl overflow-hidden transform animate-in zoom-in duration-300 ${
-                        theme === 'dark' ? 'bg-neutral-900 border border-white/10' : 'bg-white'
-                    }`}>
+                    <div className="w-full max-w-2xl rounded-[2.5rem] shadow-2xl overflow-hidden transform animate-in zoom-in duration-300 bg-neutral-900 border border-white/10">
                         <div className="p-8 border-b border-gray-100 dark:border-white/5 flex justify-between items-center">
                             <h2 className={`text-2xl font-black tracking-tight ${textColor}`}>
                                 {editing ? 'Edit Pengumuman' : 'Buat Pengumuman'}
@@ -247,9 +239,7 @@ export default function AdminAnnouncements() {
                                         type="text" 
                                         value={formData.title}
                                         onChange={(e) => setFormData({...formData, title: e.target.value})}
-                                        className={`w-full p-4 rounded-xl border-2 outline-none transition-all ${
-                                            theme === 'dark' ? 'bg-white/5 border-white/5 focus:border-red-600' : 'bg-gray-50 border-transparent focus:border-red-600 focus:bg-white'
-                                        } ${textColor}`}
+                                        className={`w-full p-4 rounded-xl border-2 outline-none transition-all  bg-white/5 border-white/5 focus:border-red-600 ${textColor}`}
                                     />
                                 </div>
 
@@ -260,9 +250,7 @@ export default function AdminAnnouncements() {
                                         rows="3"
                                         value={formData.content}
                                         onChange={(e) => setFormData({...formData, content: e.target.value})}
-                                        className={`w-full p-4 rounded-xl border-2 outline-none transition-all ${
-                                            theme === 'dark' ? 'bg-white/5 border-white/5 focus:border-red-600' : 'bg-gray-50 border-transparent focus:border-red-600 focus:bg-white'
-                                        } ${textColor}`}
+                                        className={`w-full p-4 rounded-xl border-2 outline-none transition-all  bg-white/5 border-white/5 focus:border-red-600 ${textColor}`}
                                     />
                                 </div>
 
@@ -271,9 +259,7 @@ export default function AdminAnnouncements() {
                                     <select 
                                         value={formData.type}
                                         onChange={(e) => setFormData({...formData, type: e.target.value})}
-                                        className={`w-full p-4 rounded-xl border-2 outline-none transition-all ${
-                                            theme === 'dark' ? 'bg-neutral-800 border-white/5' : 'bg-gray-50 border-transparent'
-                                        } ${textColor}`}
+                                        className={`w-full p-4 rounded-xl border-2 outline-none transition-all  bg-neutral-800 border-white/5 ${textColor}`}
                                     >
                                         <option value="info">Info (Biru)</option>
                                         <option value="warning">Peringatan (Kuning)</option>
@@ -288,9 +274,7 @@ export default function AdminAnnouncements() {
                                         type="number" 
                                         value={formData.priority}
                                         onChange={(e) => setFormData({...formData, priority: parseInt(e.target.value)})}
-                                        className={`w-full p-4 rounded-xl border-2 outline-none transition-all ${
-                                            theme === 'dark' ? 'bg-white/5 border-white/5 focus:border-red-600' : 'bg-gray-50 border-transparent focus:border-red-600 focus:bg-white'
-                                        } ${textColor}`}
+                                        className={`w-full p-4 rounded-xl border-2 outline-none transition-all  bg-white/5 border-white/5 focus:border-red-600 ${textColor}`}
                                     />
                                 </div>
 
@@ -300,9 +284,7 @@ export default function AdminAnnouncements() {
                                         type="datetime-local" 
                                         value={formData.show_from}
                                         onChange={(e) => setFormData({...formData, show_from: e.target.value})}
-                                        className={`w-full p-4 rounded-xl border-2 outline-none transition-all ${
-                                            theme === 'dark' ? 'bg-white/5 border-white/5 focus:border-red-600' : 'bg-gray-50 border-transparent focus:border-red-600 focus:bg-white'
-                                        } ${textColor}`}
+                                        className={`w-full p-4 rounded-xl border-2 outline-none transition-all  bg-white/5 border-white/5 focus:border-red-600 ${textColor}`}
                                     />
                                 </div>
 
@@ -312,9 +294,7 @@ export default function AdminAnnouncements() {
                                         type="datetime-local" 
                                         value={formData.show_until}
                                         onChange={(e) => setFormData({...formData, show_until: e.target.value})}
-                                        className={`w-full p-4 rounded-xl border-2 outline-none transition-all ${
-                                            theme === 'dark' ? 'bg-white/5 border-white/5 focus:border-red-600' : 'bg-gray-50 border-transparent focus:border-red-600 focus:bg-white'
-                                        } ${textColor}`}
+                                        className={`w-full p-4 rounded-xl border-2 outline-none transition-all  bg-white/5 border-white/5 focus:border-red-600 ${textColor}`}
                                     />
                                 </div>
 

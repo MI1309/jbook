@@ -18,12 +18,10 @@ export default function KotobaAdmin() {
     const [search, setSearch] = useState('');
     const [level, setLevel] = useState('');
     const [currentPage, setCurrentPage] = useState(1);
-    const [debugInfo, setDebugInfo] = useState(null);
     const [serverLevel, setServerLevel] = useState(null);
     const router = useRouter();
 
     const [allVocabs, setAllVocabs] = useState([]);
-    const [filteredVocabs, setFilteredVocabs] = useState([]);
     const [pendingDelete, setPendingDelete] = useState(null);
 
     useEffect(() => { 
@@ -187,34 +185,46 @@ export default function KotobaAdmin() {
     };
 
     const levelColor = (level) => {
-        const colors = { 5: 'bg-green-100 text-green-700', 4: 'bg-teal-100 text-teal-700', 3: 'bg-blue-100 text-blue-700', 2: 'bg-purple-100 text-purple-700', 1: 'bg-red-100 text-red-700' };
-        return colors[level] || 'bg-gray-100 text-gray-700';
+        const colors = {
+            5: 'bg-green-900/30 text-green-400',
+            4: 'bg-teal-900/30 text-teal-400',
+            3: 'bg-blue-900/30 text-blue-400',
+            2: 'bg-purple-900/30 text-purple-400',
+            1: 'bg-red-900/30 text-red-400'
+        };
+        return colors[level] || ('bg-neutral-800 text-neutral-400');
     };
 
     return (
-        <div>
-            <div className="flex justify-between items-center mb-6">
-                <h1 className="text-2xl font-bold text-gray-800">Kotoba Management</h1>
-                <Link href="/admin/kotoba/new" className="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 font-medium no-underline text-sm">
-                    + New Kotoba
+        <div className="space-y-6">
+            {/* Header */}
+            <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+                <div>
+                    <h1 className="text-3xl font-black tracking-tight text-white">
+                        Kotoba <span className="text-red-600">Management</span>
+                    </h1>
+                    <p className="mt-1 text-xs font-bold uppercase tracking-[0.2em] text-neutral-500">
+                        Kelola kosakata Bahasa Jepang
+                    </p>
+                </div>
+                <Link href="/admin/kotoba/new" className="inline-flex items-center gap-2 bg-red-600 text-white px-6 py-3 rounded-2xl hover:bg-red-700 font-black text-sm shadow-lg shadow-red-500/20 transition-all active:scale-95">
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                    </svg>
+                    Tambah Kotoba
                 </Link>
             </div>
 
-            {/* DEBUG INFO */}
-            <div className="text-[10px] text-gray-400 mb-2 font-mono break-all opacity-50">
-                Fetching: {debugInfo || '...'} | Server Level: {serverLevel === null ? 'All' : `N${serverLevel}`}
-            </div>
-
-            <div className="bg-white shadow rounded-lg overflow-hidden">
-                <div className="p-4 border-b border-gray-200 bg-gray-50 flex flex-wrap gap-4 justify-between items-center">
-                    <h3 className="font-bold text-gray-700">Vocabulary List</h3>
-                    <div className="flex gap-2 items-center">
+            {/* Filters & Search */}
+            <div className="p-6 rounded-3xl border bg-neutral-900/30 border-white/5">
+                <div className="flex flex-col md:flex-row gap-4 items-stretch md:items-center justify-between">
+                    <div className="flex flex-1 flex-col md:flex-row gap-3">
                         <select
-                            className="border border-gray-300 rounded-md text-sm p-2 bg-white"
+                            className="flex-1 px-4 py-3 rounded-2xl border text-sm font-bold focus:outline-none focus:ring-2 focus:ring-red-500/30 bg-neutral-800 border-white/10 text-white"
                             value={level}
                             onChange={(e) => setLevel(e.target.value)}
                         >
-                            <option value="">All Levels</option>
+                            <option value="">Semua Level</option>
                             <option value="5">N5</option>
                             <option value="4">N4</option>
                             <option value="3">N3</option>
@@ -222,165 +232,168 @@ export default function KotobaAdmin() {
                             <option value="1">N1</option>
                         </select>
                         <input
-                            type="text" placeholder="Search..."
-                            className="border border-gray-300 rounded-md text-sm p-2 w-32 md:w-48"
+                            type="text" placeholder="Cari kata, bacaan, atau arti..."
+                            className="flex-1 px-4 py-3 rounded-2xl border text-sm font-bold focus:outline-none focus:ring-2 focus:ring-red-500/30 bg-neutral-800 border-white/10 text-white placeholder-neutral-600"
                             value={search}
                             onChange={(e) => setSearch(e.target.value)}
                         />
-                        <button 
-                            onClick={handleExport}
-                            className="bg-emerald-600 text-white px-3 py-2 rounded-md hover:bg-emerald-700 text-xs font-bold transition-all shadow-sm flex items-center gap-1"
-                        >
-                            <span>📥</span> Export
-                        </button>
                     </div>
+                    <button 
+                        onClick={handleExport}
+                        className="inline-flex items-center justify-center gap-2 bg-emerald-600 text-white px-6 py-3 rounded-2xl hover:bg-emerald-700 font-black text-sm shadow-lg shadow-emerald-500/20 transition-all active:scale-95"
+                    >
+                        <span>📥</span> Export CSV
+                    </button>
                 </div>
+            </div>
 
-                <div className="overflow-x-auto">
-                    {loading ? (
-                        <div className="p-8 text-center text-gray-500">Loading...</div>
-                    ) : (
-                        vocabs.length === 0 ? (
-                            <div className="p-8 text-center text-gray-500">No Vocabulary found.</div>
-                        ) : (
-                            <>
-                                {/* Desktop Table */}
-                                <table className="hidden md:table min-w-full divide-y divide-gray-200">
-                                    <thead className="bg-gray-50">
-                                        <tr>
-                                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Word</th>
-                                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Reading</th>
-                                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Meaning</th>
-                                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Level</th>
-                                            <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody className="bg-white divide-y divide-gray-200">
-                                        {vocabs.map((v) => (
-                                            <tr key={v.id} className="hover:bg-gray-50">
-                                                <td className="px-6 py-4 whitespace-nowrap font-medium text-gray-900">{v.word}</td>
-                                                <td className="px-6 py-4 whitespace-nowrap text-gray-600">{v.reading}</td>
-                                                <td className="px-6 py-4 whitespace-wrap max-w-xs text-gray-600 truncate">{v.meaning}</td>
-                                                <td className="px-6 py-4 whitespace-nowrap">
-                                                    <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${levelColor(v.jlpt_level)}`}>N{v.jlpt_level}</span>
-                                                </td>
-                                                <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                                    <Link href={`/kotoba/${v.id}`} target="_blank" className="text-emerald-600 hover:text-emerald-900 mr-4 no-underline">Lihat</Link>
-                                                    <Link href={`/admin/kotoba/${v.id}`} className="text-indigo-600 hover:text-indigo-900 mr-4 no-underline">Edit</Link>
-                                                    <button onClick={(e) => handleDelete(e, v.id)} className="text-red-600 hover:text-red-900">Delete</button>
-                                                </td>
-                                            </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
-
-                                {/* Mobile Cards */}
-                                <div className="md:hidden divide-y divide-gray-100">
+            {/* Content */}
+            <div className="rounded-3xl border overflow-hidden bg-neutral-900/30 border-white/5">
+                {loading ? (
+                    <div className="p-12 text-center">
+                        <div className="w-10 h-10 border-4 border-red-600/20 border-t-red-600 rounded-full animate-spin mx-auto"></div>
+                        <p className="mt-4 text-xs font-black uppercase tracking-widest text-neutral-500">
+                            Memuat...
+                        </p>
+                    </div>
+                ) : vocabs.length === 0 ? (
+                    <div className="p-12 text-center">
+                        <div className="text-4xl mb-4">📖</div>
+                        <p className="text-sm font-bold text-neutral-500">
+                            Tidak ada Kotoba ditemukan
+                        </p>
+                    </div>
+                ) : (
+                    <>
+                        {/* Desktop Table */}
+                        <div className="hidden md:block overflow-x-auto">
+                            <table className="min-w-full divide-y">
+                                <thead className={'bg-neutral-800/50'}>
+                                    <tr>
+                                        <th className="px-6 py-4 text-left text-xs font-black uppercase tracking-widest text-neutral-500">Kata</th>
+                                        <th className="px-6 py-4 text-left text-xs font-black uppercase tracking-widest text-neutral-500">Bacaan</th>
+                                        <th className="px-6 py-4 text-left text-xs font-black uppercase tracking-widest text-neutral-500">Arti</th>
+                                        <th className="px-6 py-4 text-left text-xs font-black uppercase tracking-widest text-neutral-500">Level</th>
+                                        <th className="px-6 py-4 text-right text-xs font-black uppercase tracking-widest text-neutral-500">Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody className="divide-y divide-white/5">
                                     {vocabs.map((v) => (
-                                        <div key={v.id} className="flex items-center">
-                                            {/* Tap area → public detail page */}
-                                            <div
-                                                className="flex items-center gap-3 flex-1 min-w-0 px-4 py-3 active:bg-gray-50 transition-colors cursor-pointer"
-                                                onClick={() => router.push(`/kotoba/${v.id}`)}
-                                            >
-                                                <div className="flex-shrink-0 w-12 text-center">
-                                                    <div className="text-lg font-bold text-gray-800 leading-tight">{v.word}</div>
-                                                    <div className="text-xs text-gray-400 truncate">{v.reading}</div>
+                                        <tr key={v.id} className="hover:bg-white/5 transition-colors">
+                                            <td className="px-6 py-4 whitespace-nowrap text-lg font-black text-gray-900 dark:text-white">{v.word}</td>
+                                            <td className="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-600 dark:text-neutral-400">{v.reading}</td>
+                                            <td className="px-6 py-4 text-sm font-bold text-gray-600 dark:text-neutral-400 max-w-md truncate">{v.meaning}</td>
+                                            <td className="px-6 py-4 whitespace-nowrap">
+                                                <span className={`px-3 py-1 inline-flex text-xs font-black rounded-full ${levelColor(v.jlpt_level)}`}>
+                                                    N{v.jlpt_level}
+                                                </span>
+                                            </td>
+                                            <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                                <div className="flex items-center justify-end gap-2">
+                                                    <Link href={`/kotoba/${v.id}`} target="_blank" className="p-2 rounded-xl transition-colors text-emerald-400 hover:bg-emerald-500/10">
+                                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                                        </svg>
+                                                    </Link>
+                                                    <Link href={`/admin/kotoba/${v.id}`} className="p-2 rounded-xl transition-colors text-indigo-400 hover:bg-indigo-500/10">
+                                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                                        </svg>
+                                                    </Link>
+                                                    <button onClick={(e) => handleDelete(e, v.id)} className="p-2 rounded-xl transition-colors text-red-400 hover:bg-red-500/10">
+                                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                                        </svg>
+                                                    </button>
                                                 </div>
-                                                <div className="flex-1 min-w-0">
-                                                    <div className="text-sm text-gray-700 truncate">{v.meaning}</div>
-                                                    <span className={`inline-flex mt-0.5 px-1.5 py-0.5 text-xs font-semibold rounded-full ${levelColor(v.jlpt_level)}`}>
-                                                        N{v.jlpt_level}
-                                                    </span>
-                                                </div>
-                                                <svg className="w-4 h-4 text-gray-300 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                                                </svg>
-                                            </div>
-
-                                            {/* Right side: edit + delete */}
-                                            <div className="flex items-center gap-1 px-3 border-l border-gray-100 flex-shrink-0">
-                                                <Link
-                                                    href={`/admin/kotoba/${v.id}`}
-                                                    className="p-2 rounded-lg text-indigo-500 active:bg-indigo-50 transition-colors"
-                                                    title="Edit"
-                                                    onClick={(e) => e.stopPropagation()}
-                                                >
-                                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                                                    </svg>
-                                                </Link>
-                                                <button
-                                                    onClick={(e) => handleDelete(e, v.id)}
-                                                    className="p-2 rounded-lg text-red-400 active:bg-red-50 transition-colors"
-                                                    title="Delete"
-                                                >
-                                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                                                    </svg>
-                                                </button>
-                                            </div>
-                                        </div>
+                                            </td>
+                                        </tr>
                                     ))}
+                                </tbody>
+                            </table>
+                        </div>
+
+                        {/* Mobile Cards */}
+                        <div className="md:hidden divide-y">
+                            {vocabs.map((v) => (
+                                <div key={v.id} className="divide-white/5">
+                                    <div
+                                        className="flex items-center gap-4 px-5 py-4 active:bg-black/5 dark:active:bg-white/5 transition-colors cursor-pointer"
+                                        onClick={() => router.push(`/kotoba/${v.id}`)}
+                                    >
+                                        <div className="flex-1 min-w-0">
+                                            <div className="text-xl font-black text-gray-900 dark:text-white">{v.word}</div>
+                                            <div className="text-sm font-bold text-gray-600 dark:text-neutral-400">{v.reading}</div>
+                                            <div className="mt-1 text-sm font-bold text-gray-700 dark:text-neutral-300 truncate">{v.meaning}</div>
+                                            <span className={`inline-flex mt-2 px-2.5 py-1 text-xs font-black rounded-full ${levelColor(v.jlpt_level)}`}>
+                                                N{v.jlpt_level}
+                                            </span>
+                                        </div>
+                                        <svg className="w-5 h-5 text-neutral-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                                        </svg>
+                                    </div>
+                                    <div className="flex items-center justify-between px-5 py-3 bg-neutral-900/30">
+                                        <div className="flex items-center gap-2">
+                                            <Link href={`/admin/kotoba/${v.id}`} className="p-2 rounded-xl transition-colors text-indigo-400 hover:bg-indigo-500/10" onClick={(e) => e.stopPropagation()}>
+                                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                                </svg>
+                                            </Link>
+                                            <button
+                                                onClick={(e) => handleDelete(e, v.id)}
+                                                className="p-2 rounded-xl transition-colors text-red-400 hover:bg-red-500/10"
+                                            >
+                                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                                </svg>
+                                            </button>
+                                        </div>
+                                    </div>
                                 </div>
-                            </>
-                        )
-                    )}
-                </div>
+                            ))}
+                        </div>
+                    </>
+                )}
 
                 {/* Pagination Controls */}
                 {!loading && pagination.pages > 1 && (
-                    <div className="px-4 py-3 bg-gray-50 border-t border-gray-200 flex items-center justify-between sm:px-6">
-                        <div className="flex-1 flex justify-between sm:hidden">
-                            <button
-                                onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
-                                disabled={currentPage === 1}
-                                className={`relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 ${currentPage === 1 ? 'opacity-50 cursor-not-allowed' : ''}`}
-                            >
-                                Previous
-                            </button>
-                            <button
-                                onClick={() => setCurrentPage(p => Math.min(pagination.pages, p + 1))}
-                                disabled={currentPage === pagination.pages}
-                                className={`ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 ${currentPage === pagination.pages ? 'opacity-50 cursor-not-allowed' : ''}`}
-                            >
-                                Next
-                            </button>
-                        </div>
-                        <div className="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
-                            <div>
-                                <p className="text-sm text-gray-700">
-                                    Showing page <span className="font-medium">{pagination.page}</span> of <span className="font-medium">{pagination.pages}</span> (<span className="font-medium">{pagination.total}</span> total results)
-                                </p>
+                    <div className="px-6 py-5 border-t bg-neutral-900/50 border-white/5">
+                        <div className="flex items-center justify-between gap-4">
+                            <div className="text-xs font-bold text-neutral-500">
+                                Halaman <span className="text-gray-900 dark:text-white">{pagination.page}</span> dari <span className="text-gray-900 dark:text-white">{pagination.pages}</span> ({pagination.total} hasil)
                             </div>
-                            <div>
-                                <nav className="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
-                                    <button
-                                        onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
-                                        disabled={currentPage === 1}
-                                        className={`relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 ${currentPage === 1 ? 'opacity-50 cursor-not-allowed' : ''}`}
-                                    >
-                                        <span className="sr-only">Previous</span>
-                                        <svg className="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                                            <path fillRule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clipRule="evenodd" />
-                                        </svg>
-                                    </button>
-                                    
-                                    <span className="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700">
-                                        {currentPage}
-                                    </span>
-
-                                    <button
-                                        onClick={() => setCurrentPage(p => Math.min(pagination.pages, p + 1))}
-                                        disabled={currentPage === pagination.pages}
-                                        className={`relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 ${currentPage === pagination.pages ? 'opacity-50 cursor-not-allowed' : ''}`}
-                                    >
-                                        <span className="sr-only">Next</span>
-                                        <svg className="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                                            <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd" />
-                                        </svg>
-                                    </button>
-                                </nav>
+                            <div className="flex items-center gap-2">
+                                <button
+                                    onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                                    disabled={currentPage === 1}
+                                    className={`p-2 rounded-xl border text-sm font-bold transition-all ${
+                                        currentPage === 1 
+                                            ? 'opacity-30 cursor-not-allowed' 
+                                            : `bg-neutral-800 border-white/10 text-white hover:bg-neutral-700 active:scale-95`
+                                    }`}
+                                >
+                                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                                    </svg>
+                                </button>
+                                <span className="px-4 py-2 rounded-xl border text-sm font-black bg-red-600/20 border-red-500/30 text-red-400">
+                                    {currentPage}
+                                </span>
+                                <button
+                                    onClick={() => setCurrentPage(p => Math.min(pagination.pages, p + 1))}
+                                    disabled={currentPage === pagination.pages}
+                                    className={`p-2 rounded-xl border text-sm font-bold transition-all ${
+                                        currentPage === pagination.pages 
+                                            ? 'opacity-30 cursor-not-allowed' 
+                                            : `bg-neutral-800 border-white/10 text-white hover:bg-neutral-700 active:scale-95`
+                                    }`}
+                                >
+                                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                                    </svg>
+                                </button>
                             </div>
                         </div>
                     </div>

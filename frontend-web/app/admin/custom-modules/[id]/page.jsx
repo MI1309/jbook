@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import { useTheme } from '@/context/ThemeContext';
 import { jbookApi } from '@/services/jbookApi';
 import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
@@ -9,7 +8,6 @@ import { useParams, useRouter } from 'next/navigation';
 export default function AdminCustomModuleDetailPage() {
     const { id } = useParams();
     const router = useRouter();
-    const { theme } = useTheme();
     
     const [moduleData, setModuleData] = useState(null);
     const [questions, setQuestions] = useState([]);
@@ -170,7 +168,7 @@ export default function AdminCustomModuleDetailPage() {
 
             {/* Edit Module Modal */}
             {showEditModule && (
-                <form onSubmit={handleUpdateModule} className={`p-4 md:p-6 rounded-xl border ${theme === 'dark' ? 'bg-neutral-900 border-neutral-800' : 'bg-gray-50 border-gray-200'} space-y-4`}>
+                <form onSubmit={handleUpdateModule} className="p-4 md:p-6 rounded-xl border bg-neutral-900 border-neutral-800 space-y-4">
                     <h3 className="font-bold text-lg">Edit Informasi Modul</h3>
                     
                     <div>
@@ -210,7 +208,7 @@ export default function AdminCustomModuleDetailPage() {
             )}
 
             {/* Actions */}
-            <div className={`p-4 md:p-6 rounded-xl border ${theme === 'dark' ? 'bg-[#0a0a0a] border-neutral-800' : 'bg-white border-gray-200'} flex flex-col md:flex-row gap-4 md:items-center justify-between`}>
+            <div className="p-4 md:p-6 rounded-xl border bg-[#0a0a0a] border-neutral-800 flex flex-col md:flex-row gap-4 md:items-center justify-between">
                 <div className="flex flex-col sm:flex-row sm:items-center gap-3 md:gap-4 w-full md:w-auto">
                     <button 
                         onClick={handleTogglePublish}
@@ -267,7 +265,7 @@ export default function AdminCustomModuleDetailPage() {
                 </div>
 
                 {showAddModal && (
-                    <form onSubmit={handleCreateQuestion} className={`p-6 rounded-xl border ${theme === 'dark' ? 'bg-neutral-900 border-neutral-800' : 'bg-gray-50 border-gray-200'} space-y-4`}>
+                    <form onSubmit={handleCreateQuestion} className="p-6 rounded-xl border bg-neutral-900 border-neutral-800 space-y-4">
                         <h3 className="font-bold text-lg">Buat Soal Baru</h3>
                         
                         <div>
@@ -341,7 +339,7 @@ export default function AdminCustomModuleDetailPage() {
                 ) : (
                     <div className="grid gap-4">
                         {questions.map((q, idx) => (
-                            <div key={q.id} className={`p-4 md:p-5 rounded-xl border ${theme === 'dark' ? 'bg-[#0a0a0a] border-neutral-800' : 'bg-white border-gray-200'}`}>
+                            <div key={q.id} className="p-4 md:p-5 rounded-xl border bg-[#0a0a0a] border-neutral-800">
                                 <div className="flex flex-col sm:flex-row justify-between items-start mb-2 gap-3">
                                     <div className="flex gap-3">
                                         <span className="font-bold opacity-50 mt-1">{idx + 1}.</span>
