@@ -1,5 +1,18 @@
 from utils.kana import to_kana
 
+# Mapping from i-row kana to u-row for godan verb deconjugation
+I_TO_U_GODAN_MAP = {
+    'い': 'う',  # Like かいます → かう
+    'き': 'く',  # Like ききます → きく, いきます → いく
+    'ぎ': 'ぐ',  # Like およぎます → およぐ
+    'し': 'す',  # Like はなします → はなす
+    'ち': 'つ',  # Like まちます → まつ
+    'に': 'ぬ',  # Like しにます → しぬ
+    'み': 'む',  # Like よみます → よむ
+    'び': 'ぶ',  # Like あそびます → あそぶ
+    'り': 'る',  # Like かえります → かえる
+}
+
 def deconjugate_verb(input_str: str) -> list:
     """
     Tries to deconjugate a Japanese verb form back to possible dictionary forms.
@@ -20,7 +33,17 @@ def deconjugate_verb(input_str: str) -> list:
         if base:
             candidates.add(base + 'る')
 
-    # Helper function to add godan candidates with a-row endings
+    # Helper function to properly deconjugate godan i-stem to dictionary form
+    def try_godan_from_istem(base):
+        if base and len(base) > 0:
+            last_char = base[-1]
+            if last_char in I_TO_U_GODAN_MAP:
+                candidates.add(base[:-1] + I_TO_U_GODAN_MAP[last_char])
+            # Also add all possibilities in case of ambiguity
+            for ending in ['う', 'く', 'ぐ', 'す', 'つ', 'む', 'ぶ', 'ぬ', 'る']:
+                candidates.add(base + ending)
+
+    # Helper function to add godan candidates with all a-row endings
     def try_godan(base):
         for ending in ['う', 'く', 'ぐ', 'す', 'つ', 'む', 'ぶ', 'ぬ', 'る']:
             candidates.add(base + ending)
@@ -31,8 +54,8 @@ def deconjugate_verb(input_str: str) -> list:
         stem = input_str[:-2]
         # Could be ichidan (stem+ru)
         try_ichidan(stem)
-        # Could be godan: i-stem + ます → base = stem, add u-row endings
-        try_godan(stem)
+        # Could be godan: i-stem + ます → use proper i-to-u mapping
+        try_godan_from_istem(stem)
         # Check for kuru: stem=き → くる
         if stem == 'き':
             candidates.add('くる')
@@ -43,7 +66,7 @@ def deconjugate_verb(input_str: str) -> list:
     if input_str.endswith('ません'):
         stem = input_str[:-3]
         try_ichidan(stem)
-        try_godan(stem)
+        try_godan_from_istem(stem)
         if stem == 'き':
             candidates.add('くる')
         if stem == 'し':
@@ -52,7 +75,7 @@ def deconjugate_verb(input_str: str) -> list:
     if input_str.endswith('ました'):
         stem = input_str[:-3]
         try_ichidan(stem)
-        try_godan(stem)
+        try_godan_from_istem(stem)
         if stem == 'き':
             candidates.add('くる')
         if stem == 'し':
@@ -61,7 +84,7 @@ def deconjugate_verb(input_str: str) -> list:
     if input_str.endswith('ませんでした'):
         stem = input_str[:-6]
         try_ichidan(stem)
-        try_godan(stem)
+        try_godan_from_istem(stem)
         if stem == 'き':
             candidates.add('くる')
         if stem == 'し':
