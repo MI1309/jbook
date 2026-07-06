@@ -9,6 +9,7 @@ from content.models import Kanji, Vocab, Grammar, Particle, MinnaQuestion, Douka
 import random
 import uuid
 from datetime import datetime, timedelta
+from pydantic import Field
 
 from ninja_jwt.authentication import JWTAuth
 User = get_user_model()
@@ -16,19 +17,19 @@ User = get_user_model()
 router = Router()
 
 class OptionSchema(Schema):
-    text: str
+    text: str = Field(..., max_length=1000)
     is_correct: bool
 
 class QuestionSchema(Schema):
     id: str  # Generic ID (can be kanji_id, vocab_id, etc)
-    character: str  # Display text (Kanji char, Vocab word, Grammar title)
-    type: str       # 'kanji', 'vocab', 'grammar'
+    character: str = Field(..., max_length=255)  # Display text (Kanji char, Vocab word, Grammar title)
+    type: str = Field(..., max_length=100)       # 'kanji', 'vocab', 'grammar'
     options: List[OptionSchema]
     # Extra fields for context if needed
-    reading: Optional[str] = None 
-    meaning: Optional[str] = None
-    level: Optional[int] = None
-    word_type: Optional[str] = None
+    reading: Optional[str] = Field(None, max_length=255) 
+    meaning: Optional[str] = Field(None, max_length=1000)
+    level: Optional[int] = Field(None, ge=1, le=5)
+    word_type: Optional[str] = Field(None, max_length=100)
 
 class MinnaQuestionSchema(Schema):
     id: str

@@ -2,7 +2,7 @@ from ninja import Router
 from ninja_jwt.tokens import RefreshToken
 from django.contrib.auth import authenticate, get_user_model
 from django.db import IntegrityError
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, EmailStr, Field, field_validator
 from typing import Optional
 from google.oauth2 import id_token
 from google.auth.transport import requests
@@ -17,6 +17,7 @@ from django.template.loader import render_to_string
 from django.core.cache import cache
 import random
 import string
+from core.decorators import rate_limit
 
 router = Router()
 User = get_user_model()
@@ -27,40 +28,39 @@ class AuthBearer(JWTAuth):
 # Schemas
 class UserSchema(BaseModel):
     id: int
-    username: str
-    email: str
-    level_target: int
+    username: str = Field(..., min_length=3, max_length=150)
+    email: EmailStr
+    level_target: int = Field(..., ge=1, le=5)
     is_staff: bool = False
-
     
     model_config = {"from_attributes": True}
 
 class RegisterSchema(BaseModel):
-    username: str
+    username: str = Field(..., min_length=3, max_length=150, pattern=r"^[\w.@+-]+$")
     email: EmailStr
-    password: str
-    level_target: int = 5
+    password: str = Field(..., min_length=8)
+    level_target: int = Field(default=5, ge=1, le=5)
 
 class LoginSchema(BaseModel):
-    identifier: str
-    password: str
+    identifier: str = Field(..., min_length=1, max_length=255)
+    password: str = Field(..., min_length=1)
 
 
 class GoogleAuthSchema(BaseModel):
-    token: str
+    token: str = Field(..., min_length=1)
 
 class PasswordResetRequestSchema(BaseModel):
     email: EmailStr
 
 class PasswordResetConfirmSchema(BaseModel):
-    uid: str
-    token: str
-    new_password: str
+    uid: str = Field(..., min_length=1)
+    token: str = Field(..., min_length=1)
+    new_password: str = Field(..., min_length=8)
 
 class PasswordResetOtpConfirmSchema(BaseModel):
     email: EmailStr
-    otp: str
-    new_password: str
+    otp: str = Field(..., min_length=6, max_length=6)
+    new_password: str = Field(..., min_length=8)
 
 class AuthResponse(BaseModel):
     access: str
@@ -75,6 +75,7 @@ def get_tokens_for_user(user):
     }
 
 @router.post("/register", response=AuthResponse)
+@rate_limit(key='ip', rate='10/h')  # Max 10 registrasi per IP per jam
 def register(request, data: RegisterSchema):
     if User.objects.filter(email=data.email).exists():
         raise HttpError(400, "Email already registered")
@@ -95,6 +96,7 @@ def register(request, data: RegisterSchema):
     return {**tokens, "user": user}
 
 @router.post("/login", response=AuthResponse)
+@rate_limit(key='ip', rate='30/m')  # Max 30 login per IP per menit
 def login(request, data: LoginSchema):
     # Authenticate using email or username
     from django.db.models import Q
@@ -110,6 +112,7 @@ def login(request, data: LoginSchema):
     return {**tokens, "user": user}
 
 @router.post("/google", response=AuthResponse)
+@rate_limit(key='ip', rate='20/h')  # Max 20 google auth per IP per jam
 def google_auth(request, data: GoogleAuthSchema):
     try:
         # Verify handle (we skip checking strict client_id for now to allow dev flexibility)
@@ -149,6 +152,7 @@ def google_auth(request, data: GoogleAuthSchema):
         raise HttpError(400, f"Google auth failed: {str(e)}")
 
 @router.get("/me", response=UserSchema, auth=JWTAuth())
+@rate_limit(key='user', rate='120/m')  # Max 120 req per user per menit
 def me(request):
     return request.auth
 
@@ -156,6 +160,7 @@ def _generate_otp(length: int = 6) -> str:
     return ''.join(random.choices(string.digits, k=length))
 
 @router.post("/password-reset")
+@rate_limit(key='ip', rate='5/h')  # Max 5 password reset request per IP per jam
 def password_reset_request(request, data: PasswordResetRequestSchema):
     user = User.objects.filter(email=data.email).first()
     if user:
@@ -202,6 +207,7 @@ def password_reset_request(request, data: PasswordResetRequestSchema):
     return {"message": "If an account with that email exists, a reset link has been sent to your email."}
 
 @router.post("/password-reset-otp")
+@rate_limit(key='ip', rate='10/m')  # Max 10 otp confirm per IP per menit
 def password_reset_otp_confirm(request, data: PasswordResetOtpConfirmSchema):
     stored_otp = cache.get(f"otp_reset_{data.email}")
     if stored_otp is None or stored_otp != data.otp.strip():
@@ -215,6 +221,7 @@ def password_reset_otp_confirm(request, data: PasswordResetOtpConfirmSchema):
     return {"message": "Password has been reset successfully."}
 
 @router.post("/password-reset-confirm")
+@rate_limit(key='ip', rate='10/m')  # Max 10 reset confirm per IP per menit
 def password_reset_confirm(request, data: PasswordResetConfirmSchema):
     try:
         uid = force_str(urlsafe_base64_decode(data.uid))

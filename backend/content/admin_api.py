@@ -5,7 +5,7 @@ from django.shortcuts import get_object_or_404
 from ninja import Router, Schema
 from ninja.security import HttpBearer
 from ninja.errors import HttpError
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 import csv
 import json
 from datetime import datetime
@@ -26,9 +26,9 @@ class AdminAuth(AuthBearer):
 # Schemas
 class BlogSchema(BaseModel):
     id: UUID
-    title: str
-    slug: str
-    content: str
+    title: str = Field(..., max_length=255)
+    slug: str = Field(..., max_length=255, pattern=r"^[a-zA-Z0-9-]+$")
+    content: str = Field(..., max_length=100000)
     tags: List[str]
     is_published: bool
     created_at: str
@@ -36,18 +36,18 @@ class BlogSchema(BaseModel):
     model_config = {"from_attributes": True}
 
 class BlogCreateSchema(BaseModel):
-    title: str
-    slug: str
-    content: str
-    tags: List[str] = []
+    title: str = Field(..., max_length=255)
+    slug: str = Field(..., max_length=255, pattern=r"^[a-zA-Z0-9-]+$")
+    content: str = Field(..., max_length=100000)
+    tags: List[str] = Field(default_factory=list)
     is_published: bool = False
 
 class SearchResultSchema(BaseModel):
     id: str
-    type: str # 'kanji', 'bunpo', 'blog'
-    title: str
-    subtitle: Optional[str] = None
-    tags: List[str] = []
+    type: str = Field(..., max_length=100)  # 'kanji', 'bunpo', 'blog'
+    title: str = Field(..., max_length=255)
+    subtitle: Optional[str] = Field(None, max_length=500)
+    tags: List[str] = Field(default_factory=list)
 
 # Admin Dashboard Stats
 @router.get("/stats", auth=AdminAuth(), response=dict)
@@ -141,15 +141,15 @@ def admin_delete_blog(request, id: str):
 
 # Kanji Schemas
 class KanjiCreateSchema(BaseModel):
-    character: str
-    meaning: str
-    onyomi: List[str] = []
-    kunyomi: List[str] = []
-    strokes: int
-    jlpt_level: int
-    radical: Optional[str] = None
-    word_type: Optional[str] = None
-    examples: List[dict] = []
+    character: str = Field(..., min_length=1, max_length=5)
+    meaning: str = Field(..., max_length=500)
+    onyomi: List[str] = Field(default_factory=list)
+    kunyomi: List[str] = Field(default_factory=list)
+    strokes: int = Field(..., ge=1)
+    jlpt_level: int = Field(..., ge=1, le=5)
+    radical: Optional[str] = Field(None, max_length=100)
+    word_type: Optional[str] = Field(None, max_length=100)
+    examples: List[dict] = Field(default_factory=list)
     svg_data: Optional[str] = None
 
 class KanjiSchema(KanjiCreateSchema):
@@ -220,12 +220,12 @@ def admin_export_kanji_csv(request, level: int = None, search: str = None):
 
 # Bunpo Schemas
 class GrammarCreateSchema(BaseModel):
-    title: str
-    structure: str
-    explanation: str
-    chapter: int
-    jlpt_level: int
-    sentences: List[dict] = []
+    title: str = Field(..., max_length=255)
+    structure: str = Field(..., max_length=500)
+    explanation: str = Field(..., max_length=10000)
+    chapter: int = Field(..., ge=1)
+    jlpt_level: int = Field(..., ge=1, le=5)
+    sentences: List[dict] = Field(default_factory=list)
 
 class GrammarSchema(GrammarCreateSchema):
     id: UUID
@@ -296,12 +296,12 @@ def admin_export_grammar_csv(request, level: int = None, chapter: int = None, se
 from .models import Vocab
 
 class VocabCreateSchema(BaseModel):
-    word: str
-    reading: Optional[str] = None
-    meaning: Optional[str] = None
-    word_type: Optional[str] = None
-    jlpt_level: int
-    examples: Optional[List[dict]] = []
+    word: str = Field(..., max_length=255)
+    reading: Optional[str] = Field(None, max_length=255)
+    meaning: Optional[str] = Field(None, max_length=1000)
+    word_type: Optional[str] = Field(None, max_length=100)
+    jlpt_level: int = Field(..., ge=1, le=5)
+    examples: Optional[List[dict]] = Field(default_factory=list)
 
 class VocabSchema(VocabCreateSchema):
     id: UUID
@@ -310,8 +310,8 @@ class VocabSchema(VocabCreateSchema):
 class VocabListResponse(BaseModel):
     items: List[VocabSchema]
     total: int
-    debug_level: Optional[int] = None
-    debug_search: Optional[str] = None
+    debug_level: Optional[int] = Field(None, ge=1, le=5)
+    debug_search: Optional[str] = Field(None, max_length=255)
 
 # Vocab CRUD
 @router.get("/kotoba", auth=AdminAuth(), response=List[VocabSchema])
@@ -411,10 +411,10 @@ def admin_export_particle_csv(request, level: int = None):
 
 # Announcement Schemas
 class AnnouncementCreateSchema(BaseModel):
-    title: str
-    content: str
-    type: str
-    priority: int = 0
+    title: str = Field(..., max_length=255)
+    content: str = Field(..., max_length=10000)
+    type: str = Field(..., max_length=100)
+    priority: int = Field(0, ge=0, le=100)
     show_from: Optional[datetime] = None
     show_until: Optional[datetime] = None
     is_active: bool = True
@@ -460,23 +460,23 @@ def admin_delete_announcement(request, id: str):
 from .models import CustomModule, CustomQuestion, CustomModuleType, CustomQuestionType
 
 class CustomQuestionCreateSchema(BaseModel):
-    question_type: str = 'choice'
-    question_text: str
-    options: List[str] = []
-    correct_answer: str
-    explanation: Optional[str] = ""
-    order: int = 0
+    question_type: str = Field('choice', max_length=100)
+    question_text: str = Field(..., max_length=5000)
+    options: List[str] = Field(default_factory=list)
+    correct_answer: str = Field(..., max_length=1000)
+    explanation: Optional[str] = Field("", max_length=5000)
+    order: int = Field(0, ge=0)
 
 class CustomQuestionSchema(CustomQuestionCreateSchema):
     id: UUID
     model_config = {"from_attributes": True}
 
 class CustomModuleCreateSchema(BaseModel):
-    title: str
-    description: Optional[str] = ""
-    module_type: str = 'general'
-    passage: Optional[str] = ""
-    audio_url: Optional[str] = ""
+    title: str = Field(..., max_length=255)
+    description: Optional[str] = Field("", max_length=10000)
+    module_type: str = Field('general', max_length=100)
+    passage: Optional[str] = Field("", max_length=100000)
+    audio_url: Optional[str] = Field("", max_length=1000)
     is_published: bool = False
 
 class CustomModuleSchema(CustomModuleCreateSchema):

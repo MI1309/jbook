@@ -1,7 +1,8 @@
-from ninja import Router, Schema
+from ninja import Router, Schema, Query
 from typing import List, Optional
-from pydantic import BaseModel
+from pydantic import BaseModel, Field, field_validator
 from ninja.security import HttpBearer
+from core.decorators import rate_limit
 from .models import Kanji, Grammar, Blog, ContentSuggestion, Announcement, Vocab
 from django.shortcuts import get_object_or_404
 from django.db.models import Q
@@ -29,40 +30,46 @@ class AuthBearer(HttpBearer):
             return None
         return None
 
+class ListQuerySchema(Schema):
+    level: Optional[int] = Field(None, ge=1, le=5)
+    search: Optional[str] = Field(None, max_length=255)
+    limit: int = Field(50, ge=1, le=1000)
+    page: int = Field(1, ge=1)
+
 class VocabSchema(Schema):
     id: UUID
-    word: str
-    reading: str
-    meaning: str
-    word_type: Optional[str] = None
-    jlpt_level: int
-    furigana: Optional[str] = None
-    examples: List[dict] = []
+    word: str = Field(..., max_length=255)
+    reading: str = Field(..., max_length=255)
+    meaning: str = Field(..., max_length=1000)
+    word_type: Optional[str] = Field(None, max_length=100)
+    jlpt_level: int = Field(..., ge=1, le=5)
+    furigana: Optional[str] = Field(None, max_length=255)
+    examples: List[dict] = Field(default_factory=list)
     conjugations: Optional[List[dict]] = None
 
 class UpdateVocabSchema(Schema):
-    meaning: Optional[str] = None
-    word_type: Optional[str] = None
-    reading: Optional[str] = None
-    furigana: Optional[str] = None
+    meaning: Optional[str] = Field(None, max_length=1000)
+    word_type: Optional[str] = Field(None, max_length=100)
+    reading: Optional[str] = Field(None, max_length=255)
+    furigana: Optional[str] = Field(None, max_length=255)
 
 class UpdateKanjiSchema(Schema):
-    meaning: Optional[str] = None
-    onyomi: Optional[List[str]] = None
-    kunyomi: Optional[List[str]] = None
-    strokes: Optional[int] = None
-    jlpt_level: Optional[int] = None
+    meaning: Optional[str] = Field(None, max_length=500)
+    onyomi: Optional[List[str]] = Field(default_factory=list)
+    kunyomi: Optional[List[str]] = Field(default_factory=list)
+    strokes: Optional[int] = Field(None, ge=1)
+    jlpt_level: Optional[int] = Field(None, ge=1, le=5)
 
 class KanjiSchema(Schema):
     id: UUID
-    character: str
-    meaning: str
-    onyomi: List[str]
-    kunyomi: List[str]
-    strokes: int
-    jlpt_level: int
-    word_type: Optional[str] = None
-    examples: List[dict] = []
+    character: str = Field(..., min_length=1, max_length=5)
+    meaning: str = Field(..., max_length=500)
+    onyomi: List[str] = Field(default_factory=list)
+    kunyomi: List[str] = Field(default_factory=list)
+    strokes: int = Field(..., ge=1)
+    jlpt_level: int = Field(..., ge=1, le=5)
+    word_type: Optional[str] = Field(None, max_length=100)
+    examples: List[dict] = Field(default_factory=list)
     svg_data: Optional[str] = None
 
 @router.put("/vocab/{vocab_id}", response=VocabSchema, auth=AuthBearer())
@@ -83,10 +90,10 @@ def update_kanji(request, kanji_id: UUID, data: UpdateKanjiSchema):
 
 class AnnouncementSchema(Schema):
     id: UUID
-    title: str
-    content: str
-    type: str
-    priority: int
+    title: str = Field(..., max_length=255)
+    content: str = Field(..., max_length=10000)
+    type: str = Field(..., max_length=100)
+    priority: int = Field(..., ge=0, le=100)
     show_from: Optional[datetime] = None
     show_until: Optional[datetime] = None
     is_active: bool
@@ -94,9 +101,9 @@ class AnnouncementSchema(Schema):
     created_at: datetime
 
 class AnnouncementCreateSchema(Schema):
-    title: str
-    content: str
-    type: str
+    title: str = Field(..., max_length=255)
+    content: str = Field(..., max_length=10000)
+    type: str = Field(..., max_length=100)
     is_active: Optional[bool] = True
     show_as_popup: Optional[bool] = False
 
@@ -120,9 +127,9 @@ def list_announcements(request, response: HttpResponse):
 
 class BlogSchema(Schema):
     id: UUID
-    title: str
-    slug: str
-    content: str
+    title: str = Field(..., max_length=255)
+    slug: str = Field(..., max_length=255, pattern=r"^[a-zA-Z0-9-]+$")
+    content: str = Field(..., max_length=100000)
     tags: List[str]
     is_published: bool
     created_at: datetime
@@ -130,12 +137,12 @@ class BlogSchema(Schema):
 
 class GrammarSchema(Schema):
     id: UUID
-    title: str
-    structure: str
-    explanation: str
-    chapter: int
-    jlpt_level: int
-    sentences: List[dict] = []
+    title: str = Field(..., max_length=255)
+    structure: str = Field(..., max_length=500)
+    explanation: str = Field(..., max_length=10000)
+    chapter: int = Field(..., ge=1)
+    jlpt_level: int = Field(..., ge=1, le=5)
+    sentences: List[dict] = Field(default_factory=list)
 
 class KanjiListResponse(BaseModel):
     items: List[KanjiSchema]
@@ -150,30 +157,28 @@ class GrammarListResponse(BaseModel):
     pages: int
 
 @router.get("/kanji", response=KanjiListResponse)
+@rate_limit(key='ip', rate='200/m')  # Max 200 list requests per IP per minute
 def list_kanji(request, 
-               level: Optional[int] = None, 
-               search: Optional[str] = None,
-               radical: Optional[str] = None,
-               limit: int = 50,
-               page: int = 1):
+               params: ListQuerySchema = Query(...),
+               radical: Optional[str] = Field(None, max_length=100)):
     qs = Kanji.objects.all()
     
-    if level:
-        qs = qs.filter(jlpt_level=level)
+    if params.level:
+        qs = qs.filter(jlpt_level=params.level)
         
     if radical:
         qs = qs.filter(radical=radical)
         
-    if search:
+    if params.search:
         # Search in character, meaning, onyomi, kunyomi
         from django.db.models import Q
         from utils.kana import to_romaji
-        search_romaji = to_romaji(search)
+        search_romaji = to_romaji(params.search)
         qs = qs.filter(
-            Q(character__icontains=search) | 
-            Q(meaning__icontains=search) |
-            Q(onyomi__icontains=search) |  # Simple text matching in JSON array string representation
-            Q(kunyomi__icontains=search) |
+            Q(character__icontains=params.search) | 
+            Q(meaning__icontains=params.search) |
+            Q(onyomi__icontains=params.search) |  # Simple text matching in JSON array string representation
+            Q(kunyomi__icontains=params.search) |
             Q(onyomi__icontains=search_romaji) |
             Q(kunyomi__icontains=search_romaji)
         )
@@ -182,11 +187,11 @@ def list_kanji(request,
     qs = qs.order_by('jlpt_level', 'strokes')
     
     total = qs.count()
-    pages = (total + limit - 1) // limit
-    offset = (page - 1) * limit
+    pages = (total + params.limit - 1) // params.limit
+    offset = (params.page - 1) * params.limit
     
     # Pagination
-    results = list(qs[offset : offset + limit])
+    results = list(qs[offset : offset + params.limit])
     
     from utils.kana import to_kana, to_katakana
     
@@ -208,11 +213,12 @@ def list_kanji(request,
     return {
         "items": results,
         "total": total,
-        "page": page,
+        "page": params.page,
         "pages": pages
     }
 
 @router.get("/kanji/{kanji_id}", response=KanjiSchema)
+@rate_limit(key='ip', rate='300/m')  # Max 300 get kanji per IP per minute
 def get_kanji(request, kanji_id: str):
     try:
         # Menangani UUID baik dengan atau tanpa strip
@@ -265,48 +271,49 @@ def get_kanji(request, kanji_id: str):
     from utils.kana import to_kana, to_katakana
     kanji.onyomi = [to_katakana(r.lower()) for r in (kanji.onyomi or []) if isinstance(r, str) and r]
     kanji.kunyomi = [to_kana(r.lower()) for r in (kanji.kunyomi or []) if isinstance(r, str) and r]
-            
+        
     return kanji
+
+class GrammarListQuerySchema(ListQuerySchema):
+    chapter: Optional[int] = Field(None, ge=1)
 
 @router.get("/bunpo", response=GrammarListResponse)
 @router.get("/grammar", response=GrammarListResponse)
+@rate_limit(key='ip', rate='200/m')  # Max 200 list grammar per IP per minute
 def list_grammar(request, 
-                 level: Optional[int] = None,
-                 search: Optional[str] = None,
-                 chapter: Optional[int] = None,
-                 limit: int = 50,
-                 page: int = 1):
+                 params: GrammarListQuerySchema = Query(...)):
     qs = Grammar.objects.all()
-    if level:
-        qs = qs.filter(jlpt_level=level)
+    if params.level:
+        qs = qs.filter(jlpt_level=params.level)
 
-    if chapter:
-        qs = qs.filter(chapter=chapter)
+    if params.chapter:
+        qs = qs.filter(chapter=params.chapter)
 
-    if search:
+    if params.search:
         from django.db.models import Q
         qs = qs.filter(
-            Q(title__icontains=search) | 
-            Q(structure__icontains=search) | 
-            Q(explanation__icontains=search)
+            Q(title__icontains=params.search) | 
+            Q(structure__icontains=params.search) | 
+            Q(explanation__icontains=params.search)
         )
     
     # Order by chapter then title
     qs = qs.order_by('chapter', 'title')
     
     total = qs.count()
-    pages = (total + limit - 1) // limit
-    offset = (page - 1) * limit
+    pages = (total + params.limit - 1) // params.limit
+    offset = (params.page - 1) * params.limit
     
     return {
-        "items": list(qs[offset : offset + limit]),
+        "items": list(qs[offset : offset + params.limit]),
         "total": total,
-        "page": page,
+        "page": params.page,
         "pages": pages
     }
 
 @router.get("/bunpo/{grammar_id}", response=GrammarSchema)
 @router.get("/grammar/{grammar_id}", response=GrammarSchema)
+@rate_limit(key='ip', rate='300/m')  # Max 300 get grammar per IP per minute
 def get_grammar(request, grammar_id: str):
     try:
         if '-' not in grammar_id and len(grammar_id) == 32:
@@ -338,22 +345,21 @@ def get_random_kotoba(request):
         return 404, {"message": "No vocabulary found"}
     return vocab
 
+class VocabListQuerySchema(ListQuerySchema):
+    word_type: Optional[str] = Field(None, max_length=100)
+
 class VocabListResponse(BaseModel):
     items: List[VocabSchema]
     total: int
     page: int
     pages: int
-    debug_level: Optional[int] = None
-    debug_search: Optional[str] = None
+    debug_level: Optional[int] = Field(None, ge=1, le=5)
+    debug_search: Optional[str] = Field(None, max_length=255)
 
 @router.get("/kotoba", response=VocabListResponse)
 @router.get("/vocab", response=VocabListResponse)
 def list_vocab(request, 
-               level: Optional[int] = None,
-               search: Optional[str] = None,
-               word_type: Optional[str] = None,
-               limit: int = 50,
-               page: int = 1):
+               params: VocabListQuerySchema = Query(...)):
     from .models import Vocab
     from django.db.models import Q
     from utils.kana import to_kana
@@ -361,27 +367,27 @@ def list_vocab(request,
     
     qs = Vocab.objects.all().order_by('word')
     
-    if level is not None:
-        qs = qs.filter(jlpt_level=level)
+    if params.level is not None:
+        qs = qs.filter(jlpt_level=params.level)
         
-    if word_type:
-        qs = qs.filter(word_type=word_type)
+    if params.word_type:
+        qs = qs.filter(word_type=params.word_type)
 
-    if search:
+    if params.search:
         from utils.kana import to_kana, to_romaji
-        search_kana = to_kana(search)
-        search_romaji = to_romaji(search)
+        search_kana = to_kana(params.search)
+        search_romaji = to_romaji(params.search)
         
         # --- Deconjugate search term to find dictionary forms ---
-        deconj_candidates = deconjugate_verb(search)
+        deconj_candidates = deconjugate_verb(params.search)
         
         # Build Q object for search
         search_q = Q()
         
         # 1. Original search terms
-        search_q |= Q(word__icontains=search)
-        search_q |= Q(reading__icontains=search)
-        search_q |= Q(meaning__icontains=search)
+        search_q |= Q(word__icontains=params.search)
+        search_q |= Q(reading__icontains=params.search)
+        search_q |= Q(meaning__icontains=params.search)
         search_q |= Q(word__icontains=search_kana)
         search_q |= Q(reading__icontains=search_kana)
         search_q |= Q(reading__icontains=search_romaji)
@@ -393,10 +399,10 @@ def list_vocab(request,
         qs = qs.filter(search_q)
         
     total = qs.count()
-    pages = (total + limit - 1) // limit
-    offset = (page - 1) * limit
+    pages = (total + params.limit - 1) // params.limit
+    offset = (params.page - 1) * params.limit
     
-    items = list(qs[offset : offset + limit])
+    items = list(qs[offset : offset + params.limit])
     from utils.kana import to_kana
     for v in items:
         if v.reading:
@@ -407,10 +413,10 @@ def list_vocab(request,
     return {
         "items": items,
         "total": total,
-        "page": page,
+        "page": params.page,
         "pages": pages,
-        "debug_level": level,
-        "debug_search": search
+        "debug_level": params.level,
+        "debug_search": params.search
     }
 
 
@@ -525,19 +531,19 @@ def get_arbitrary_tts(request, text: str):
 
 
 class VocabCreateSchema(Schema):
-    word: str
-    reading: Optional[str] = None
-    furigana: Optional[str] = None
-    meaning: Optional[str] = None
-    word_type: Optional[str] = None
-    jlpt_level: Optional[int] = 5
-    examples: List[dict] = []
+    word: str = Field(..., max_length=255)
+    reading: Optional[str] = Field(None, max_length=255)
+    furigana: Optional[str] = Field(None, max_length=255)
+    meaning: Optional[str] = Field(None, max_length=1000)
+    word_type: Optional[str] = Field(None, max_length=100)
+    jlpt_level: Optional[int] = Field(5, ge=1, le=5)
+    examples: List[dict] = Field(default_factory=list)
 
 class SyncRequestSchema(Schema):
     data: List[dict]
 
 class TranslateRequestSchema(Schema):
-    text: str
+    text: str = Field(..., max_length=500)
 
 @router.post("/kotoba", response={200: VocabSchema, 400: dict})
 @router.post("/vocab", response={200: VocabSchema, 400: dict})
@@ -608,7 +614,7 @@ def get_blog(request, slug: str):
     return get_object_or_404(Blog, slug=slug, is_published=True)
 
 class SuggestionSchema(Schema):
-    type: str
+    type: str = Field(..., max_length=100)
     data: dict
 
 @router.post("/suggest")
@@ -671,20 +677,20 @@ from .models import CustomModule, CustomQuestion
 
 class CustomQuestionPublicSchema(Schema):
     id: UUID
-    question_type: str
-    question_text: str
+    question_type: str = Field(..., max_length=100)
+    question_text: str = Field(..., max_length=5000)
     options: List[str]
-    order: int
+    order: int = Field(..., ge=0)
     # Note: correct_answer and explanation are NOT included here to prevent cheating!
     # They will be validated in a separate endpoint or when submitting.
     
 class CustomModulePublicSchema(Schema):
     id: UUID
-    title: str
-    description: str
-    module_type: str
-    passage: str
-    audio_url: str
+    title: str = Field(..., max_length=255)
+    description: str = Field(..., max_length=10000)
+    module_type: str = Field(..., max_length=100)
+    passage: str = Field(..., max_length=100000)
+    audio_url: str = Field(..., max_length=1000)
 
 @router.get("/custom-modules", response=List[CustomModulePublicSchema])
 def public_list_custom_modules(request):

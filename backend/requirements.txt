@@ -5,6 +5,7 @@ django-ninja-extra==0.31.0
 django-ninja-jwt==5.3.1  # Jika Anda menggunakan JWT untuk otentikasi
 dj-database-url==3.1.1   # Untuk konfigurasi database yang mudah
 psycopg2-binary==2.9.11  # Jika Anda menggunakan PostgreSQL
+django-ratelimit==4.1.0  # Rate limiting untuk perlindungan DDoS
 
 # For serving static/media files in production
 whitenoise==6.11.0

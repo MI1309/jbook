@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
 
     "corsheaders",
+    "django_ratelimit",  # Rate limiting untuk perlindungan DDoS
 
     "ninja",
     "ninja_extra",

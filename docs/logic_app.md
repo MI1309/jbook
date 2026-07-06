@@ -407,6 +407,25 @@ class ConjugationTest(TestCase):
 3. **Paginasi yang Konsisten**: Semua endpoint list harus punya pagination yang sama formatnya
 4. **Dokumentasi API**: Aktifkan Swagger/OpenAPI dari Django Ninja untuk dokumentasi otomatis!
 5. **Soft Delete untuk Semua Model**: Seperti yang sudah dilakukan di `Announcement`, gunakan `deleted_at` untuk model lain juga untuk keamanan
+6. **Validasi Input Ketat**: Semua input di API sudah divalidasi menggunakan Pydantic schemas dengan `Field()` validator, max_length, min_length, dan validasi tipe data untuk mencegah injection attack!
+7. **Rate Limiting**: Semua endpoint API sudah memiliki batas permintaan (rate limiting) untuk melindungi dari serangan DDoS dan abuse!
+
+### 🛡️ Security & Validasi Input
+Backend JBook sudah mengimplementasikan:
+1. **Pydantic Schemas**: Semua request body dan response divalidasi dengan Pydantic dengan `Field(..., max_length=255)` dll. untuk string, mencegah SQL injection dan XSS
+2. **Django ORM**: Semua query menggunakan Django ORM yang otomatis escape string untuk mencegah SQL injection
+3. **JWT Authentication**: Semua endpoint sensitif membutuhkan JWT dan admin membutuhkan is_staff/is_superuser
+4. **Input sanitasi**: Semua input punya batas panjang (max_length) untuk setiap field untuk mencegah payload besar dan overflow
+5. **Rate Limiting**: Menggunakan `django-ratelimit` untuk membatasi permintaan per endpoint:
+   - Registrasi: max 10 per IP/jam
+   - Login: max 30 per IP/menit
+   - Google Auth: max 20 per IP/jam
+   - List kanji/grammar/vocab: max 200 per IP/menit
+   - Get kanji/grammar/vocab: max 300 per IP/menit
+   - Password reset request: max 5 per IP/jam
+   - Password reset confirm: max 10 per IP/menit
+   - Dan banyak lagi!
+6. **Rate Limit Decorator**: Ada decorator khusus `@rate_limit` di `core/decorators.py` yang mudah diterapkan ke setiap endpoint!
 
 ---
 
