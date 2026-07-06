@@ -443,22 +443,28 @@ def get_vocab(request, vocab_id: str):
     if vocab.furigana:
         vocab.furigana = to_kana(vocab.furigana.lower())
     
-    # Populate conjugations dynamically if it's a VERB (only via explicit word_type!)
+    # Populate conjugations dynamically ONLY IF IT'S A VERB (STRICT CHECK!)
     vocab.conjugations = None
     vocab.conjugations_complete = None
-    # Only check explicit word_type
-    is_verb = vocab.word_type and (
-        'godan' in vocab.word_type.lower() or 
-        'ichidan' in vocab.word_type.lower() or 
-        'suru' in vocab.word_type.lower() or 
-        'kuru' in vocab.word_type.lower() or 
-        'verb' in vocab.word_type.lower()
-    )
+    
+    # STRICTLY only check explicit word_type: word_type can't be None or empty, and must contain verb keywords
+    if vocab.word_type and vocab.word_type.strip():
+        word_type_lower = vocab.word_type.lower().strip()
+        allowed_verb_types = {'godan', 'ichidan', 'suru', 'kuru', 'verb', 'godan verb', 'ichidan verb', 'suru verb', 'kuru verb'}
         
-    if is_verb:
-        from utils.conjugation import conjugate_verb, conjugate_verb_complete
-        vocab.conjugations = conjugate_verb(vocab.word, vocab.reading, vocab.word_type)
-        vocab.conjugations_complete = conjugate_verb_complete(vocab.word, vocab.reading, vocab.word_type)
+        # Check if either:
+        # 1. word_type is exactly one of the allowed verb types
+        # 2. word_type contains one of the allowed keywords as a whole word or substring
+        is_verb = False
+        for verb_type in allowed_verb_types:
+            if verb_type in word_type_lower:
+                is_verb = True
+                break
+        
+        if is_verb:
+            from utils.conjugation import conjugate_verb, conjugate_verb_complete
+            vocab.conjugations = conjugate_verb(vocab.word, vocab.reading, vocab.word_type)
+            vocab.conjugations_complete = conjugate_verb_complete(vocab.word, vocab.reading, vocab.word_type)
 
     return vocab
 

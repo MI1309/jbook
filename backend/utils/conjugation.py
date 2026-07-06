@@ -521,24 +521,33 @@ def conjugate_verb_complete(word: str, reading: str, word_type: str = None):
     word = word.strip()
     reading = reading.strip()
 
-    # Determine verb type
+    # Determine verb type: ONLY USE EXPLICIT WORD_TYPE FIRST! If word_type is provided, use that, no heuristics!
     is_suru = False
     is_kuru = False
     is_ichidan = False
     is_godan = False
     
-    # Check kuru first
-    if reading == 'くる' or reading.endswith('くる') or word == '来る' or word.endswith('来る'):
-        is_kuru = True
-    elif word_type == 'suru' or word.endswith('する') or reading.endswith('する'):
-        is_suru = True
-    elif word_type == 'ichidan':
-        is_ichidan = True
-    elif word_type == 'godan':
-        is_godan = True
+    # If word_type is provided, ONLY use that, NO heuristics unless word_type is None/empty/unknown
+    if word_type:
+        word_type_lower = word_type.lower().strip()
+        if word_type_lower in {'godan', 'ichidan', 'suru', 'kuru', 'verb', 'godan verb', 'ichidan verb', 'suru verb', 'kuru verb'}:
+            if 'kuru' in word_type_lower:
+                is_kuru = True
+            elif 'suru' in word_type_lower:
+                is_suru = True
+            elif 'ichidan' in word_type_lower:
+                is_ichidan = True
+            elif 'godan' in word_type_lower:
+                is_godan = True
+        else:
+            # If word_type is provided but not a verb type, return None!
+            return None
     else:
-        # Heuristics
-        if word.endswith('する') or reading.endswith('する'):
+        # If NO word_type provided, then use heuristics ONLY IF user might need it, but this is for backward compatibility!
+        # Check kuru first
+        if reading == 'くる' or reading.endswith('くる') or word == '来る' or word.endswith('来る'):
+            is_kuru = True
+        elif word.endswith('する') or reading.endswith('する'):
             is_suru = True
         elif word.endswith('る') and (reading.endswith('いる') or reading.endswith('える')):
             is_ichidan = True
@@ -764,6 +773,18 @@ def conjugate_verb_complete(word: str, reading: str, word_type: str = None):
 
 # Keep the old function for backward compatibility
 def conjugate_verb(word: str, reading: str, word_type: str) -> list:
+    # First check if word_type is verb type (same strict check)
+    if word_type:
+        word_type_lower = word_type.lower().strip()
+        allowed_verb_types = {'godan', 'ichidan', 'suru', 'kuru', 'verb', 'godan verb', 'ichidan verb', 'suru verb', 'kuru verb'}
+        is_verb = False
+        for verb_type in allowed_verb_types:
+            if verb_type in word_type_lower:
+                is_verb = True
+                break
+        if not is_verb:
+            return None
+            
     data = conjugate_verb_complete(word, reading, word_type)
     if not data:
         return None
