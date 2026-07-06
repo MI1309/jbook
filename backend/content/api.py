@@ -360,7 +360,7 @@ class VocabListResponse(BaseModel):
 @router.get("/vocab", response=VocabListResponse)
 def list_vocab(request, 
                params: VocabListQuerySchema = Query(...)):
-    from .models import Vocab
+    from .models import Vocab, WordType
     from django.db.models import Q
     from utils.kana import to_kana
     from utils.conjugation import deconjugate_verb
@@ -392,9 +392,17 @@ def list_vocab(request,
         search_q |= Q(reading__icontains=search_kana)
         search_q |= Q(reading__icontains=search_romaji)
         
-        # 2. Add deconjugated candidate searches: ONLY EXACT MATCH on reading, and only for verbs!
+        # 2. Add deconjugated candidate searches: ONLY EXACT MATCH on reading, and only for EXACT VERB TYPES!
         if deconj_candidates:
-            verb_q = Q(word_type__icontains="godan") | Q(word_type__icontains="ichidan") | Q(word_type__icontains="suru") | Q(word_type__icontains="kuru") | Q(word_type__icontains="verb")
+            # EXACT verb types from WordType enum!
+            verb_types = [
+                WordType.GODAN_VERB,
+                WordType.ICHIDAN_VERB,
+                WordType.SURU_VERB,
+                WordType.INTRANSITIVE_VERB,
+                WordType.TRANSITIVE_VERB,
+            ]
+            verb_q = Q(word_type__in=verb_types)
             deconj_q = Q()
             for candidate in deconj_candidates:
                 # Use EXACT match for reading, not contains!
@@ -429,7 +437,7 @@ def list_vocab(request,
 @router.get("/kotoba/{vocab_id}", response=VocabSchema)
 @router.get("/vocab/{vocab_id}", response=VocabSchema)
 def get_vocab(request, vocab_id: str):
-    from .models import Vocab
+    from .models import Vocab, WordType
     try:
         if '-' not in vocab_id and len(vocab_id) == 32:
             import uuid
@@ -443,28 +451,23 @@ def get_vocab(request, vocab_id: str):
     if vocab.furigana:
         vocab.furigana = to_kana(vocab.furigana.lower())
     
-    # Populate conjugations dynamically ONLY IF IT'S A VERB (STRICT CHECK!)
+    # Populate conjugations dynamically ONLY IF IT'S A VERB (STRICT CHECK using official WordType enum!)
     vocab.conjugations = None
     vocab.conjugations_complete = None
     
-    # STRICTLY only check explicit word_type: word_type can't be None or empty, and must contain verb keywords
-    if vocab.word_type and vocab.word_type.strip():
-        word_type_lower = vocab.word_type.lower().strip()
-        allowed_verb_types = {'godan', 'ichidan', 'suru', 'kuru', 'verb', 'godan verb', 'ichidan verb', 'suru verb', 'kuru verb'}
-        
-        # Check if either:
-        # 1. word_type is exactly one of the allowed verb types
-        # 2. word_type contains one of the allowed keywords as a whole word or substring
-        is_verb = False
-        for verb_type in allowed_verb_types:
-            if verb_type in word_type_lower:
-                is_verb = True
-                break
-        
-        if is_verb:
-            from utils.conjugation import conjugate_verb, conjugate_verb_complete
-            vocab.conjugations = conjugate_verb(vocab.word, vocab.reading, vocab.word_type)
-            vocab.conjugations_complete = conjugate_verb_complete(vocab.word, vocab.reading, vocab.word_type)
+    # ONLY ALLOW EXPLICIT VERB TYPES FROM THE WordType ENUM!
+    verb_types = {
+        WordType.GODAN_VERB,
+        WordType.ICHIDAN_VERB,
+        WordType.SURU_VERB,
+        WordType.INTRANSITIVE_VERB,
+        WordType.TRANSITIVE_VERB,
+    }
+    
+    if vocab.word_type in verb_types:
+        from utils.conjugation import conjugate_verb, conjugate_verb_complete
+        vocab.conjugations = conjugate_verb(vocab.word, vocab.reading, vocab.word_type)
+        vocab.conjugations_complete = conjugate_verb_complete(vocab.word, vocab.reading, vocab.word_type)
 
     return vocab
 
