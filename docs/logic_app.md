@@ -427,6 +427,12 @@ Backend JBook sudah mengimplementasikan:
    - Dan banyak lagi!
 6. **Rate Limit Decorator**: Ada decorator khusus `@rate_limit` di `core/decorators.py` yang mudah diterapkan ke setiap endpoint!
 
+### 📚 Pencarian & Konjugasi Vocab
+Perbaikan di pencarian dan konjugasi vocab:
+1. **Pencarian Verb**: Ketika pencarian kata kerja dalam bentuk masu-form/te-form/dll., pencarian hanya akan menampilkan vocab yang memiliki `word_type` verb (godan/ichidan/suru/kuru/verb), dan mencocokkan **exact match** pada field reading, bukan contains!
+2. **Konjugasi Hanya untuk Verb**: Konjugasi verb hanya akan ditampilkan jika vocab memiliki `word_type` eksplisit yang menunjukkan kata kerja (tidak ada lagi heuristic test)!
+3. **Peningkatan Deconjugation**: Deconjugation verb sekarang menggunakan mapping i-row → u-row yang akurat, sehingga pencarian seperti "ikimasu" akan langsung menemukan "いく" tanpa mencocokkan kata lain yang bukan verb!
+
 ---
 
 ## 6. Kesimpulan

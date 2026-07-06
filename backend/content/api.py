@@ -392,9 +392,14 @@ def list_vocab(request,
         search_q |= Q(reading__icontains=search_kana)
         search_q |= Q(reading__icontains=search_romaji)
         
-        # 2. Add deconjugated candidate searches
-        for candidate in deconj_candidates:
-            search_q |= Q(reading__icontains=candidate)
+        # 2. Add deconjugated candidate searches: ONLY EXACT MATCH on reading, and only for verbs!
+        if deconj_candidates:
+            verb_q = Q(word_type__icontains="godan") | Q(word_type__icontains="ichidan") | Q(word_type__icontains="suru") | Q(word_type__icontains="kuru") | Q(word_type__icontains="verb")
+            deconj_q = Q()
+            for candidate in deconj_candidates:
+                # Use EXACT match for reading, not contains!
+                deconj_q |= Q(reading__iexact=candidate)
+            search_q |= verb_q & deconj_q
         
         qs = qs.filter(search_q)
         
@@ -438,22 +443,17 @@ def get_vocab(request, vocab_id: str):
     if vocab.furigana:
         vocab.furigana = to_kana(vocab.furigana.lower())
     
-    # Populate conjugations dynamically if it's a verb
+    # Populate conjugations dynamically if it's a VERB (only via explicit word_type!)
     vocab.conjugations = None
     vocab.conjugations_complete = None
-    # Check if it's a verb type
+    # Only check explicit word_type
     is_verb = vocab.word_type and (
         'godan' in vocab.word_type.lower() or 
         'ichidan' in vocab.word_type.lower() or 
         'suru' in vocab.word_type.lower() or 
+        'kuru' in vocab.word_type.lower() or 
         'verb' in vocab.word_type.lower()
     )
-    # Also check heuristically even without explicit word_type
-    if not is_verb:
-        from utils.conjugation import conjugate_verb_complete
-        # Quick test conjugation to see if it's a valid verb
-        test_conj = conjugate_verb_complete(vocab.word, vocab.reading, vocab.word_type)
-        is_verb = test_conj is not None
         
     if is_verb:
         from utils.conjugation import conjugate_verb, conjugate_verb_complete
