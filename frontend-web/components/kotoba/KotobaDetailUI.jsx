@@ -12,6 +12,7 @@ import { useAuth } from '@/context/AuthContext';
 import { toast } from 'react-toastify';
 import Cookies from 'js-cookie';
 import { conjugateVerbComplete } from '@/utils/conjugation';
+
 const WORD_TYPES = [
     { value: '', label: '-- Tanpa Tipe --' },
     { value: 'noun', label: 'Noun (Kata Benda)' },
@@ -32,6 +33,10 @@ const WORD_TYPES = [
     { value: 'other', label: 'Lain-lain' },
 ];
 
+// ✅ HANYA tipe kata kerja ini yang boleh menampilkan tabel konjugasi.
+// Kalau word_type kosong / noun / i_adj / na_adj / dll -> section tidak pernah dihitung ataupun dirender.
+const VERB_WORD_TYPES = new Set(['godan', 'ichidan', 'suru', 'intransitive', 'transitive']);
+
 export default function KotobaDetailUI({ vocab: initialVocab, onClose }) {
     const router = useRouter();
     const { theme, mounted } = useTheme();
@@ -39,7 +44,7 @@ export default function KotobaDetailUI({ vocab: initialVocab, onClose }) {
     const [vocab, setVocab] = useState(initialVocab);
     const [kanjiDetails, setKanjiDetails] = useState([]);
     const [playing, setPlaying] = useState(false);
-    
+
     // Edit state
     const [isEditing, setIsEditing] = useState(false);
     const [editData, setEditData] = useState({
@@ -128,8 +133,15 @@ export default function KotobaDetailUI({ vocab: initialVocab, onClose }) {
     const [isNegative, setIsNegative] = useState(false);
     const [isPast, setIsPast] = useState(false);
 
-    // Calculate conjugations
+    // ✅ Apakah kata ini termasuk kata kerja? Dicek SEBELUM apa pun dihitung.
+    const isVerbType = useMemo(() => {
+        return !!vocab?.word_type && VERB_WORD_TYPES.has(vocab.word_type);
+    }, [vocab?.word_type]);
+
+    // Calculate conjugations — HANYA jika word_type benar-benar kata kerja.
     const conjugationData = useMemo(() => {
+        if (!isVerbType) return null;
+
         // First try backend's complete conjugations
         if (vocab?.conjugations_complete) {
             return vocab.conjugations_complete;
@@ -137,7 +149,7 @@ export default function KotobaDetailUI({ vocab: initialVocab, onClose }) {
         // Fallback to calculating locally
         if (!vocab?.word || !vocab?.reading) return null;
         return conjugateVerbComplete(vocab.word, vocab.reading, vocab.word_type);
-    }, [vocab?.word, vocab?.reading, vocab?.word_type, vocab?.conjugations_complete]);
+    }, [isVerbType, vocab?.word, vocab?.reading, vocab?.word_type, vocab?.conjugations_complete]);
 
     // Determine which variant to show based on toggles
     const getActiveVariantKey = useMemo(() => {
@@ -264,8 +276,8 @@ export default function KotobaDetailUI({ vocab: initialVocab, onClose }) {
                             <button
                                 onClick={(e) => { e.stopPropagation(); setIsEditing(!isEditing); }}
                                 className={`p-2 sm:p-3 rounded-xl transition-all ${
-                                    isEditing 
-                                        ? 'bg-red-500 text-white shadow-lg shadow-red-500/20' 
+                                    isEditing
+                                        ? 'bg-red-500 text-white shadow-lg shadow-red-500/20'
                                         : 'bg-blue-600/10 text-blue-600 hover:bg-blue-600 hover:text-white shadow-sm'
                                 }`}
                                 title={isEditing ? "Batal Edit" : "Edit Kotoba (Admin)"}
@@ -286,14 +298,14 @@ export default function KotobaDetailUI({ vocab: initialVocab, onClose }) {
                             <div className="flex flex-col items-center">
                                 {isEditing ? (
                                     <div className="flex flex-col gap-2 mb-4 w-full max-w-xs">
-                                        <input 
+                                        <input
                                             type="text"
                                             value={editData.reading}
                                             onChange={(e) => setEditData({...editData, reading: e.target.value})}
                                             className={`text-center text-sm p-2 rounded-xl border-2 ${borderStyle} ${cardBg} font-black focus:border-blue-500 outline-none`}
                                             placeholder="Reading (Hiragana/Katakana)"
                                         />
-                                        <input 
+                                        <input
                                             type="text"
                                             value={editData.furigana}
                                             onChange={(e) => setEditData({...editData, furigana: e.target.value})}
@@ -348,7 +360,7 @@ export default function KotobaDetailUI({ vocab: initialVocab, onClose }) {
                         <div className={`${sectionBg} p-5 sm:p-6 md:p-8 rounded-2xl border ${theme === 'dark' ? 'border-blue-950/30' : 'border-blue-100'} shadow-inner mb-8 text-left transition-colors relative`}>
                             <h3 className="text-[10px] sm:text-xs font-black text-blue-600 dark:text-blue-300 uppercase tracking-[0.2em] mb-2 sm:mb-3">Arti / Makna</h3>
                             {isEditing ? (
-                                <textarea 
+                                <textarea
                                     value={editData.meaning}
                                     onChange={(e) => setEditData({...editData, meaning: e.target.value})}
                                     className={`w-full text-lg sm:text-xl md:text-2xl font-black leading-relaxed tracking-tight p-4 rounded-xl border-2 ${borderStyle} ${cardBg} focus:border-blue-500 outline-none`}
@@ -408,7 +420,11 @@ export default function KotobaDetailUI({ vocab: initialVocab, onClose }) {
                             </div>
                         )}
 
-                        {conjugationData && conjugationData.forms && conjugationData.forms.length > 0 && (
+                        {/* ✅ Section konjugasi HANYA muncul jika isVerbType true.
+                            Ini gate utama: apapun isi vocab.conjugations_complete atau
+                            hasil hitungan lokal, kalau word_type bukan kata kerja,
+                            React tidak akan pernah sampai ke sini. */}
+                        {isVerbType && conjugationData && conjugationData.forms && conjugationData.forms.length > 0 && (
                             <div className="mb-10 text-left">
                                 <h3 className={`text-[10px] font-black uppercase tracking-widest mb-4 flex items-center gap-2 transition-colors ${subTextColor}`}>
                                     <span className="w-2 h-2 rounded-full bg-blue-600 shadow-lg shadow-blue-500/20"></span>
@@ -467,8 +483,11 @@ export default function KotobaDetailUI({ vocab: initialVocab, onClose }) {
                                 </div>
                             </div>
                         )}
-                        {/* Fallback to old format for backwards compatibility */}
-                        {(!conjugationData || !conjugationData.forms) && vocab.conjugations && vocab.conjugations.length > 0 && (
+                        {/* Fallback ke format lama — HANYA jika kata kerja juga.
+                            Ini sebelumnya bisa nyala untuk noun/adjective jika field
+                            vocab.conjugations lama masih ada di data lama (legacy),
+                            jadi harus di-gate juga dengan isVerbType. */}
+                        {isVerbType && (!conjugationData || !conjugationData.forms) && vocab.conjugations && vocab.conjugations.length > 0 && (
                             <div className="mb-10 text-left">
                                 <h3 className={`text-[10px] font-black uppercase tracking-widest mb-4 flex items-center gap-2 transition-colors ${subTextColor}`}>
                                     <span className="w-2 h-2 rounded-full bg-blue-600 shadow-lg shadow-blue-500/20"></span>
@@ -476,7 +495,7 @@ export default function KotobaDetailUI({ vocab: initialVocab, onClose }) {
                                 </h3>
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                                     {vocab.conjugations.map((conj, idx) => (
-                                        <div 
+                                        <div
                                             key={idx}
                                             className={`p-4 rounded-2xl border ${borderStyle} ${theme === 'dark' ? 'bg-blue-950/5' : 'bg-blue-50/30'} flex flex-col justify-between`}
                                         >
