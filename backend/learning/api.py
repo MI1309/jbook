@@ -26,10 +26,10 @@ class QuestionSchema(Schema):
     type: str = Field(..., max_length=100)       # 'kanji', 'vocab', 'grammar'
     options: List[OptionSchema]
     # Extra fields for context if needed
-    reading: Optional[str] = Field(None, max_length=255) 
-    meaning: Optional[str] = Field(None, max_length=1000)
+    reading: Optional[str] = Field(default=None) 
+    meaning: Optional[str] = Field(default=None)
     level: Optional[int] = Field(None, ge=1, le=5)
-    word_type: Optional[str] = Field(None, max_length=100)
+    word_type: Optional[str] = Field(default=None)
 
 class MinnaQuestionSchema(Schema):
     id: str

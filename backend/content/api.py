@@ -32,7 +32,7 @@ class AuthBearer(HttpBearer):
 
 class ListQuerySchema(Schema):
     level: Optional[int] = Field(None, ge=1, le=5)
-    search: Optional[str] = Field(None, max_length=255)
+    search: Optional[str] = Field(default=None)
     limit: int = Field(50, ge=1, le=1000)
     page: int = Field(1, ge=1)
 
@@ -41,20 +41,20 @@ class VocabSchema(Schema):
     word: str = Field(..., max_length=255)
     reading: str = Field(..., max_length=255)
     meaning: str = Field(..., max_length=1000)
-    word_type: Optional[str] = Field(None, max_length=100)
+    word_type: Optional[str] = Field(default=None)
     jlpt_level: int = Field(..., ge=1, le=5)
-    furigana: Optional[str] = Field(None, max_length=255)
+    furigana: Optional[str] = Field(default=None)
     examples: List[dict] = Field(default_factory=list)
     conjugations: Optional[List[dict]] = None
 
 class UpdateVocabSchema(Schema):
-    meaning: Optional[str] = Field(None, max_length=1000)
-    word_type: Optional[str] = Field(None, max_length=100)
-    reading: Optional[str] = Field(None, max_length=255)
-    furigana: Optional[str] = Field(None, max_length=255)
+    meaning: Optional[str] = Field(default=None)
+    word_type: Optional[str] = Field(default=None)
+    reading: Optional[str] = Field(default=None)
+    furigana: Optional[str] = Field(default=None)
 
 class UpdateKanjiSchema(Schema):
-    meaning: Optional[str] = Field(None, max_length=500)
+    meaning: Optional[str] = Field(default=None)
     onyomi: Optional[List[str]] = Field(default_factory=list)
     kunyomi: Optional[List[str]] = Field(default_factory=list)
     strokes: Optional[int] = Field(None, ge=1)
@@ -68,7 +68,7 @@ class KanjiSchema(Schema):
     kunyomi: List[str] = Field(default_factory=list)
     strokes: int = Field(..., ge=1)
     jlpt_level: int = Field(..., ge=1, le=5)
-    word_type: Optional[str] = Field(None, max_length=100)
+    word_type: Optional[str] = Field(default=None)
     examples: List[dict] = Field(default_factory=list)
     svg_data: Optional[str] = None
 
@@ -160,7 +160,7 @@ class GrammarListResponse(BaseModel):
 @rate_limit(key='ip', rate='200/m')  # Max 200 list requests per IP per minute
 def list_kanji(request, 
                params: ListQuerySchema = Query(...),
-               radical: Optional[str] = Field(None, max_length=100)):
+               radical: Optional[str] = Field(default=None)):
     qs = Kanji.objects.all()
     
     if params.level:
@@ -346,7 +346,7 @@ def get_random_kotoba(request):
     return vocab
 
 class VocabListQuerySchema(ListQuerySchema):
-    word_type: Optional[str] = Field(None, max_length=100)
+    word_type: Optional[str] = Field(default=None)
 
 class VocabListResponse(BaseModel):
     items: List[VocabSchema]
@@ -354,7 +354,7 @@ class VocabListResponse(BaseModel):
     page: int
     pages: int
     debug_level: Optional[int] = Field(None, ge=1, le=5)
-    debug_search: Optional[str] = Field(None, max_length=255)
+    debug_search: Optional[str] = Field(default=None)
 
 @router.get("/kotoba", response=VocabListResponse)
 @router.get("/vocab", response=VocabListResponse)
@@ -541,10 +541,10 @@ def get_arbitrary_tts(request, text: str):
 
 class VocabCreateSchema(Schema):
     word: str = Field(..., max_length=255)
-    reading: Optional[str] = Field(None, max_length=255)
-    furigana: Optional[str] = Field(None, max_length=255)
-    meaning: Optional[str] = Field(None, max_length=1000)
-    word_type: Optional[str] = Field(None, max_length=100)
+    reading: Optional[str] = Field(default=None)
+    furigana: Optional[str] = Field(default=None)
+    meaning: Optional[str] = Field(default=None)
+    word_type: Optional[str] = Field(default=None)
     jlpt_level: Optional[int] = Field(5, ge=1, le=5)
     examples: List[dict] = Field(default_factory=list)
 
