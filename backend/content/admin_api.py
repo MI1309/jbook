@@ -46,7 +46,7 @@ class SearchResultSchema(BaseModel):
     id: str
     type: str = Field(..., max_length=100)  # 'kanji', 'bunpo', 'blog'
     title: str = Field(..., max_length=255)
-    subtitle: Optional[str] = Field(default=None)
+    subtitle: Optional[str] = None
     tags: List[str] = Field(default_factory=list)
 
 # Admin Dashboard Stats
@@ -147,8 +147,8 @@ class KanjiCreateSchema(BaseModel):
     kunyomi: List[str] = Field(default_factory=list)
     strokes: int = Field(..., ge=1)
     jlpt_level: int = Field(..., ge=1, le=5)
-    radical: Optional[str] = Field(default=None)
-    word_type: Optional[str] = Field(default=None)
+    radical: Optional[str] = None
+    word_type: Optional[str] = None
     examples: List[dict] = Field(default_factory=list)
     svg_data: Optional[str] = None
 
@@ -297,9 +297,9 @@ from .models import Vocab
 
 class VocabCreateSchema(BaseModel):
     word: str = Field(..., max_length=255)
-    reading: Optional[str] = Field(default=None)
-    meaning: Optional[str] = Field(default=None)
-    word_type: Optional[str] = Field(default=None)
+    reading: Optional[str] = None
+    meaning: Optional[str] = None
+    word_type: Optional[str] = None
     jlpt_level: int = Field(..., ge=1, le=5)
     examples: Optional[List[dict]] = Field(default_factory=list)
 
@@ -310,8 +310,8 @@ class VocabSchema(VocabCreateSchema):
 class VocabListResponse(BaseModel):
     items: List[VocabSchema]
     total: int
-    debug_level: Optional[int] = Field(None, ge=1, le=5)
-    debug_search: Optional[str] = Field(default=None)
+    debug_level: Optional[int] = None
+    debug_search: Optional[str] = None
 
 # Vocab CRUD
 @router.get("/kotoba", auth=AdminAuth(), response=List[VocabSchema])
