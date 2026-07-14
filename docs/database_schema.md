@@ -110,6 +110,9 @@ Model kustom yang mewarisi `AbstractUser`. Referensi auth: `AUTH_USER_MODEL = "u
 
 ### 2.4 `content_vocab` — Kosakata (Kotoba)
 
+Tabel ini menyimpan daftar kosakata dengan cara baca (hiragana/katakana) dan terjemahannya.  
+> **Catatan Sumber Data:** Data kosakata dalam jumlah besar (puluhan ribu entri) dapat diimpor dari file JMdict/EDICT (`data_proses/data_jsho/edict`) menggunakan script interaktif `backend/scripts/import_jsho_interactive.py`.
+
 | Kolom | Tipe Data | Atribut | Fungsi |
 |-------|-----------|---------|--------|
 | `id` | UUID | **PK** | Identitas unik kosakata |

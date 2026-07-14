@@ -433,9 +433,20 @@ Perbaikan di pencarian dan konjugasi vocab:
 2. **Konjugasi Hanya untuk Verb**: Konjugasi verb hanya akan ditampilkan jika vocab memiliki `word_type` eksplisit yang menunjukkan kata kerja (tidak ada lagi heuristic test)!
 3. **Peningkatan Deconjugation**: Deconjugation verb sekarang menggunakan mapping i-row → u-row yang akurat, sehingga pencarian seperti "ikimasu" akan langsung menemukan "いく" tanpa mencocokkan kata lain yang bukan verb!
 
+## 6. Import Data JSHO Interaktif
+Untuk mengelola data bahasa Jepang yang sangat besar dari JMdict/EDICT, tersedia script interaktif yang berjalan di terminal:
+`backend/scripts/import_jsho_interactive.py`
+
+**Fitur:**
+- Membaca file EDICT (`data_proses/data_jsho/edict`).
+- Menerjemahkan makna bahasa Inggris ke bahasa Indonesia menggunakan `deep-translator`.
+- Meminta review dari user untuk menyetujui terjemahan (tekan Enter) atau mengubahnya (ketik teks baru).
+- Meminta level JLPT.
+- Menyimpan *progress* secara berkala ke `import_progress.json`, sehingga proses bisa dilanjutkan (resume) kapan saja tanpa mengulang dari awal.
+
 ---
 
-## 6. Kesimpulan
+## 7. Kesimpulan
 Kode JBook sudah memiliki dasar yang **sangat bagus**! Logika konjugasi/dekonjugasi adalah fitur kunci yang sangat lengkap dan bermanfaat. Fokus perbaikan selanjutnya adalah pada **optimasi query database**, **keamanan (rate limiting)**, dan **refactoring code duplikasi** untuk membuat kode lebih maintainable dan cepat.
 
 Selamat coding! 🚀
