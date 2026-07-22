@@ -822,7 +822,7 @@ function PracticeContent() {
                     </div>
                 ) : (
                     <>
-                        {isAnswered && (currentQuestion.reading || currentQuestion.meaning) && (
+                        {isAnswered && !selectedOption?.is_correct && (currentQuestion.reading || currentQuestion.meaning) && (
                             <div className="mb-6 animate-fade-in-up">
                                 {currentQuestion.reading && currentQuestion.type !== 'kanji' && hasKanji(currentQuestion.character) && (
                                     <div className="text-2xl text-blue-600 dark:text-blue-400 font-serif font-black mb-1 break-words">{sanitizeReading(currentQuestion.reading)}</div>
@@ -835,7 +835,7 @@ function PracticeContent() {
                             </div>
                         )}
 
-                        {isAnswered && currentQuestion.explanation && (
+                        {isAnswered && !selectedOption?.is_correct && currentQuestion.explanation && (
                             <div className={`mb-6 p-5 rounded-[2rem] border-2 text-left text-sm transition-all duration-300 animate-fade-in-up ${
                                 theme === 'dark' ? 'bg-blue-950/20 border-blue-900/40 text-blue-200' : 'bg-blue-50 border-blue-100 text-blue-800'
                             }`}>

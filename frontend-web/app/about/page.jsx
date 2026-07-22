@@ -1,26 +1,9 @@
 'use client';
 
 import Link from 'next/link';
-import { 
-    ArrowLeft, 
-    Heart, 
-    BookOpen, 
-    Award, 
-    Sparkles 
-} from 'lucide-react';
+import { ArrowLeft } from 'lucide-react';
 
 export default function AboutPage() {
-    // Template: isi sendiri daftar resource pengembangan di sini.
-    // Struktur item:
-    // { title: string, url: string, category?: string, description?: string }
-    const devResources = [
-        // {
-        //     title: 'Dokumentasi',
-        //     url: 'https://...',
-        //     category: 'Docs',
-        //     description: 'Referensi utama yang dipakai selama development.',
-        // },
-    ];
 
     return (
         <div className="relative min-h-screen washi-texture bg-background text-foreground transition-colors duration-300 pb-20">
@@ -32,183 +15,29 @@ export default function AboutPage() {
                     Kembali ke Homepage
                 </Link>
 
-                <div className="text-center space-y-6 mb-12">
-                    <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-[var(--border-color)] bg-[var(--card-bg)] text-xs font-bold tracking-widest uppercase text-accent-gold shadow-sm">
-                        <Sparkles className="w-4 h-4 text-accent-gold" />
-                        Filosofi JBook
-                    </div>
 
-                    <h1 className="text-4xl md:text-5xl font-japanese font-black tracking-tight leading-tight">
-                        <ruby className="font-japanese font-black">
-                            一期一会
-                            <rt className="text-xs md:text-sm font-sans font-black text-gray-400 dark:text-gray-500 tracking-widest select-none">
-                                いちごいちえ
-                            </rt>
-                        </ruby>
-                        <br/>
-                        <span className="text-accent-blue font-sans">Satu Pertemuan, Satu Kesempatan</span>
-                    </h1>
-
-                    <p className="text-sm text-gray-400 dark:text-gray-500 font-light max-w-xl mx-auto italic">
-                        &ldquo;Ichigo Ichie mengajarkan kita untuk menghargai setiap momen pembelajaran. Setiap halaman yang Anda buka adalah kesempatan unik yang tidak akan terulang dengan cara yang persis sama.&rdquo;
-                    </p>
-                </div>
 
                 {/* Main Content */}
                 <div className="space-y-8">
                     
-                    {/* Vision Section */}
+                    {/* About JBook Section */}
                     <div className="bg-[var(--card-bg)] border border-[var(--border-color)] rounded-[2.5rem] p-6 md:p-8 book-page-shadow relative overflow-hidden">
                         <div className="absolute top-0 right-0 p-4 text-8xl font-japanese font-black text-gray-100 dark:text-white/[0.01] select-none pointer-events-none">
-                            和
+                            辞書
                         </div>
                         
-                        <h3 className="text-lg font-japanese font-black mb-4 text-accent-blue">
-                            Mengapa JBook Hadir?
+                        <h3 className="text-2xl font-japanese font-black mb-4 text-accent-blue">
+                            Tentang JBook
                         </h3>
-                        <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed font-light mb-4">
-                            Belajar bahasa Jepang seringkali dirasa menakutkan karena kompleksitas aksara Kanji dan tata bahasa Keigo yang rumit. Terkadang platform pembelajaran komersial terlalu menekan pengguna dengan label &quot;Premium&quot; dan janji instan yang mengurangi kenyamanan belajar.
+                        <p className="text-base md:text-lg text-gray-700 dark:text-gray-300 leading-relaxed font-light mb-4">
+                            JBook adalah kamus elektronik berbahasa Jepang, dengan arti yang sudah diartikan ke bahasa Indonesia, sehingga pembelajarannya semakin mudah. 
                         </p>
-                        <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed font-light">
-                            <strong className="text-foreground">JBook dirancang dengan cara berbeda.</strong> Kami percaya bahwa belajar adalah sebuah perjalanan spiritual dan karir yang menenangkan. Terinspirasi oleh estetika Jepang minimalis, JBook hadir sebagai oase belajar yang bersih, bebas gangguan promosi keras, dan mengutamakan kedalaman konten yang mudah diakses kapan saja, bahkan saat offline.
+                        <p className="text-base md:text-lg text-gray-700 dark:text-gray-300 leading-relaxed font-light">
+                            Disertai dengan teka-teki silang bahasa Jepang dan dashboard latihan untuk menguji kemampuan Anda secara interaktif dan menyenangkan.
                         </p>
                     </div>
 
-                    {/* Misi Utama JBook */}
-                    <div className="bg-[var(--card-bg)] border border-[var(--border-color)] rounded-[2.5rem] p-6 md:p-8">
-                        <h3 className="text-lg font-japanese font-black mb-6 text-accent-green">
-                            Tiga Pilar Pembelajaran JBook
-                        </h3>
 
-                        <div className="space-y-6">
-                            
-                            {/* Pilar 1 */}
-                            <div className="flex gap-4">
-                                <div className="w-10 h-10 rounded-2xl bg-accent-blue/10 text-accent-blue flex items-center justify-center flex-shrink-0">
-                                    <BookOpen className="w-5 h-5" />
-                                </div>
-                                <div className="space-y-1">
-                                    <h4 className="text-sm font-bold text-foreground">Kedalaman Konten N4 & JLPT</h4>
-                                    <p className="text-xs text-gray-400 dark:text-gray-500 font-light leading-relaxed">
-                                        Menyediakan kurikulum terpadu untuk Kanji, Tata Bahasa, Huruf Kana, dan Kosakata tingkat dasar yang disajikan layaknya bab dalam buku fisik digital yang rapi dan mudah dicari.
-                                    </p>
-                                </div>
-                            </div>
-
-                            {/* Pilar 2 */}
-                            <div className="flex gap-4">
-                                <div className="w-10 h-10 rounded-2xl bg-accent-green/10 text-accent-green flex items-center justify-center flex-shrink-0">
-                                    <Award className="w-5 h-5" />
-                                </div>
-                                <div className="space-y-1">
-                                    <h4 className="text-sm font-bold text-foreground">Persiapan Karir Berintegritas</h4>
-                                    <p className="text-xs text-gray-400 dark:text-gray-500 font-light leading-relaxed">
-                                        Melalui modul simulasi Mensetsu, JBook membekali Anda bukan hanya dengan kemampuan bahasa, tetapi juga dengan tata krama profesional (ojigi) yang sangat dihargai di Jepang.
-                                    </p>
-                                </div>
-                            </div>
-
-                            {/* Pilar 3 */}
-                            <div className="flex gap-4">
-                                <div className="w-10 h-10 rounded-2xl bg-accent-gold/10 text-accent-gold flex items-center justify-center flex-shrink-0">
-                                    <Heart className="w-5 h-5" />
-                                </div>
-                                <div className="space-y-1">
-                                    <h4 className="text-sm font-bold text-foreground">Aksesibilitas Tanpa Batas</h4>
-                                    <p className="text-xs text-gray-400 dark:text-gray-500 font-light leading-relaxed">
-                                        Materi yang dapat diunduh untuk diakses secara luring (offline) memastikan proses belajar Anda tetap berjalan lancar di mana saja tanpa hambatan sinyal internet.
-                                    </p>
-                                </div>
-                            </div>
-
-                        </div>
-                    </div>
-
-                    {/* Resource Pengembangan */}
-                    <div className="bg-[var(--card-bg)] border border-[var(--border-color)] rounded-[2.5rem] p-6 md:p-8">
-                        <h3 className="text-lg font-japanese font-black mb-2 text-accent-blue">
-                            Resource Pengembangan
-                        </h3>
-                        <p className="text-xs text-gray-400 dark:text-gray-500 font-light leading-relaxed mb-6">
-                            Referensi yang dipakai untuk membangun JBook (library, artikel, tooling, dokumentasi, dll).
-                        </p>
-
-                        {devResources.length > 0 ? (
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                {devResources.map((r) => (
-                                    <a
-                                        key={r.title + r.url}
-                                        href={r.url}
-                                        target="_blank"
-                                        rel="noreferrer"
-                                        className="group bg-white/5 border border-[var(--border-color)] hover:border-accent-blue rounded-2xl p-5 transition-all hover:-translate-y-0.5"
-                                    >
-                                        <div className="flex items-start justify-between gap-3">
-                                            <div className="min-w-0">
-                                                <div className="text-sm font-black text-foreground truncate">
-                                                    {r.title}
-                                                </div>
-                                                {r.description ? (
-                                                    <div className="mt-1 text-xs text-gray-400 dark:text-gray-500 font-light leading-relaxed">
-                                                        {r.description}
-                                                    </div>
-                                                ) : null}
-                                            </div>
-                                            <div className="text-xs font-black text-accent-blue group-hover:translate-x-0.5 transition-transform">
-                                                ↗
-                                            </div>
-                                        </div>
-
-                                        <div className="mt-4 flex items-center justify-between gap-2">
-                                            <div className="text-[10px] font-black uppercase tracking-widest text-gray-400 dark:text-gray-500 truncate">
-                                                {r.url}
-                                            </div>
-                                            {r.category ? (
-                                                <span className="text-[10px] font-black uppercase tracking-widest px-2 py-1 rounded-full bg-accent-blue/10 text-accent-blue border border-accent-blue/20 flex-shrink-0">
-                                                    {r.category}
-                                                </span>
-                                            ) : null}
-                                        </div>
-                                    </a>
-                                ))}
-                            </div>
-                        ) : (
-                            <div className="rounded-2xl border border-dashed border-[var(--border-color)] bg-white/5 p-6 text-center">
-                                <div className="text-3xl mb-2">📚</div>
-                                <div className="text-sm font-black text-foreground mb-1">
-                                    Belum ada resource
-                                </div>
-                                <div className="text-xs text-gray-400 dark:text-gray-500 font-light">
-                                    Tambahkan item di array <span className="font-bold text-foreground">devResources</span> untuk menampilkan daftar resource di sini.
-                                </div>
-                            </div>
-                        )}
-                    </div>
-
-                    {/* Cozy Call to Action */}
-                    <div className="bg-[var(--card-bg)] border border-[var(--border-color)] rounded-[2.5rem] p-6 md:p-8 text-center border-b-4 border-b-accent-blue max-w-xl mx-auto">
-                        <h4 className="text-base font-japanese font-black mb-2">
-                            Mari Memulai Lembaran Baru Anda
-                        </h4>
-                        <p className="text-xs text-gray-400 dark:text-gray-500 font-light mb-6">
-                            Setiap pencapaian besar selalu diawali dari satu halaman kecil yang dibaca dengan bersungguh-sungguh.
-                        </p>
-                        
-                        <div className="flex flex-col sm:flex-row gap-3 justify-center">
-                            <Link 
-                                href="/practice" 
-                                className="px-5 py-3 bg-accent-blue text-white rounded-xl text-xs font-bold hover:bg-accent-blue/90 shadow-lg shadow-accent-blue/10 transition-all"
-                            >
-                                Mulai Latihan Ujian
-                            </Link>
-                            <Link 
-                                href="/mensetsu" 
-                                className="px-5 py-3 bg-white/5 border border-[var(--border-color)] hover:border-accent-green hover:text-accent-green text-gray-400 hover:text-foreground rounded-xl text-xs font-bold transition-all"
-                            >
-                                Latih Wawancara Kerja
-                            </Link>
-                        </div>
-                    </div>
 
                 </div>
 

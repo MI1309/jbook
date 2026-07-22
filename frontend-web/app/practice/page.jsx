@@ -81,21 +81,7 @@ function PracticePageContent() {
                         
                         {/* Banner Buttons */}
                         <div className="flex gap-4 flex-col xl:flex-row">
-                            {/* Mensetsu Banner Button */}
-                            <div className="flex-shrink-0 bg-[var(--card-bg)] border border-[var(--border-color)] p-4 rounded-2xl flex items-center gap-4 shadow-sm hover:border-accent-green transition-all duration-300">
-                                <div className="w-10 h-10 rounded-xl bg-accent-green/10 text-accent-green flex items-center justify-center flex-shrink-0">
-                                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-                                    </svg>
-                                </div>
-                                <div>
-                                    <h4 className="text-xs font-bold text-foreground">Praktik Mensetsu</h4>
-                                    <p className="text-[10px] text-gray-500 font-light mb-1.5">Latih simulasi interview mandiri</p>
-                                    <Link href="/mensetsu" className="inline-flex items-center gap-1 text-[10px] font-bold text-accent-green hover:underline">
-                                        Mulai Simulasi →
-                                    </Link>
-                                </div>
-                            </div>
+
                             
                             {/* Latihan Kustom Button */}
                             <div className="flex-shrink-0 bg-[var(--card-bg)] border border-[var(--border-color)] p-4 rounded-2xl flex items-center gap-4 shadow-sm hover:border-accent-blue transition-all duration-300">
