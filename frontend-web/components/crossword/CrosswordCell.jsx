@@ -4,6 +4,7 @@ import { twMerge } from 'tailwind-merge';
 
 export const CrosswordCell = ({
   cell,
+  cellSize = 32,
   isSelected,
   isHighlighted,
   onSelect,
@@ -12,12 +13,13 @@ export const CrosswordCell = ({
   onNavigate
 }) => {
   const inputRef = useRef(null);
+  const fontSize = Math.max(12, Math.floor(cellSize * 0.55));
+  const numberSize = Math.max(7, Math.floor(cellSize * 0.22));
 
   useEffect(() => {
     if (isSelected && inputRef.current) {
       const isCrosswordFocused = document.activeElement && document.activeElement.tagName === 'INPUT';
       
-      // Auto-focus if on desktop OR if user is already typing in the grid
       if (window.innerWidth >= 1024 || isCrosswordFocused) {
         inputRef.current.focus();
       }
@@ -26,7 +28,10 @@ export const CrosswordCell = ({
 
   if (cell.isBlock) {
     return (
-      <div className="w-8 h-8 sm:w-10 sm:h-10 bg-[var(--border-color)] border border-[var(--border-color)]" />
+      <div
+        style={{ width: cellSize, height: cellSize }}
+        className="bg-[var(--border-color)] border border-[var(--border-color)]"
+      />
     );
   }
 
@@ -48,7 +53,7 @@ export const CrosswordCell = ({
       onNavigate('right');
     } else if (e.key === 'Space' || e.key === ' ') {
       e.preventDefault();
-      onSelect(); // Toggle direction
+      onSelect();
     }
   };
 
@@ -59,7 +64,7 @@ export const CrosswordCell = ({
     }
   };
 
-  const baseClasses = "relative w-8 h-8 sm:w-10 sm:h-10 border flex items-center justify-center text-lg sm:text-xl font-medium transition-colors cursor-pointer outline-none";
+  const baseClasses = "relative border flex items-center justify-center font-medium transition-colors cursor-pointer outline-none";
   
   const stateClasses = {
     'bg-[var(--card-bg)] border-[var(--border-color)] text-foreground': 
@@ -76,11 +81,15 @@ export const CrosswordCell = ({
 
   return (
     <div 
+      style={{ width: cellSize, height: cellSize }}
       className={twMerge(clsx(baseClasses, stateClasses))}
       onClick={onSelect}
     >
       {cell.number && (
-        <span className="absolute top-0 left-0.5 text-[8px] sm:text-[10px] text-gray-500 leading-none">
+        <span
+          style={{ fontSize: numberSize }}
+          className="absolute top-0 left-0.5 text-gray-500 leading-none"
+        >
           {cell.number}
         </span>
       )}
@@ -96,7 +105,10 @@ export const CrosswordCell = ({
         autoCorrect="off"
         className="w-full h-full absolute inset-0 opacity-0 cursor-pointer text-transparent bg-transparent"
       />
-      <span className="pointer-events-none select-none z-10 font-bold text-xl sm:text-2xl flex items-center justify-center w-full h-full">
+      <span
+        style={{ fontSize }}
+        className="pointer-events-none select-none z-10 font-bold flex items-center justify-center w-full h-full"
+      >
         {cell.userInput || ''}
       </span>
     </div>

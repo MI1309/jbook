@@ -1,10 +1,29 @@
-import React from 'react';
+'use client';
+
+import React, { useState, useEffect, useRef } from 'react';
 import { useGameStore } from '../../stores/gameStore';
 import { CrosswordCell } from './CrosswordCell';
 import * as wanakana from 'wanakana';
 
 export const CrosswordGrid = () => {
   const { gameState, selectCell, inputChar, deleteChar } = useGameStore();
+  const containerRef = useRef(null);
+  const [cellSize, setCellSize] = useState(32);
+
+  useEffect(() => {
+    if (!gameState.grid) return;
+
+    const updateSize = () => {
+      const cols = gameState.grid.width;
+      const containerWidth = containerRef.current?.clientWidth || window.innerWidth - 32;
+      const size = Math.floor(containerWidth / cols) - 1;
+      setCellSize(Math.min(40, Math.max(22, size)));
+    };
+
+    updateSize();
+    window.addEventListener('resize', updateSize);
+    return () => window.removeEventListener('resize', updateSize);
+  }, [gameState.grid]);
 
   if (!gameState.grid) {
     return (
@@ -38,12 +57,10 @@ export const CrosswordGrid = () => {
     }
   };
 
-  // Find active words to highlight the current active word path
   const activeWordIds = gameState.selectedCell 
     ? gameState.grid.cells[gameState.selectedCell.row][gameState.selectedCell.col].wordIds 
     : [];
     
-  // Filter by direction if multiple
   const activeWordId = activeWordIds.find(id => {
     const w = gameState.grid?.words.find(word => word.id === id);
     return w?.direction === gameState.selectedDirection;
@@ -52,8 +69,7 @@ export const CrosswordGrid = () => {
   const activeWord = gameState.grid?.words.find(word => word.id === activeWordId);
 
   return (
-    <div className="w-full flex flex-col items-center">
-      {/* Mobile Active Clue Banner */}
+    <div ref={containerRef} className="w-full max-w-full min-w-0 flex flex-col items-center">
       {activeWord && (
         <div className="lg:hidden w-full bg-accent-blue/10 border border-accent-blue/20 p-3 mb-4 rounded-[1.5rem] shadow-sm animate-in fade-in slide-in-from-top-2">
           <div className="flex items-center gap-2 mb-1">
@@ -68,17 +84,18 @@ export const CrosswordGrid = () => {
         </div>
       )}
 
-      <div className="w-full text-center mb-3">
-        <p className="inline-flex items-center gap-1.5 text-[10px] uppercase tracking-widest sm:text-xs font-bold text-accent-green bg-accent-green/10 px-3 py-1.5 rounded-full border border-accent-green/20">
+      <div className="w-full text-center mb-3 px-1">
+        <p className="inline-flex flex-wrap justify-center items-center gap-1.5 text-[10px] uppercase tracking-widest sm:text-xs font-bold text-accent-green bg-accent-green/10 px-3 py-1.5 rounded-full border border-accent-green/20">
           <span className="text-sm">💡</span> Peringatan: Gunakan Keyboard Jepang (Romaji/Kana) untuk pengalaman terbaik.
         </p>
       </div>
 
-      <div className="w-full overflow-x-auto pb-4 px-2 flex justify-center custom-scrollbar">
+      <div className="w-full max-w-full overflow-hidden flex justify-center">
         <div 
-          className="grid gap-px bg-[var(--border-color)] p-px rounded-sm shadow-xl shrink-0"
+          className="grid gap-px bg-[var(--border-color)] p-px rounded-sm shadow-xl"
           style={{ 
-            gridTemplateColumns: `repeat(${gameState.grid.width}, minmax(0, 1fr))`
+            gridTemplateColumns: `repeat(${gameState.grid.width}, ${cellSize}px)`,
+            gridTemplateRows: `repeat(${gameState.grid.height}, ${cellSize}px)`,
           }}
         >
           {gameState.grid.cells.map((row, rIdx) => 
@@ -90,6 +107,7 @@ export const CrosswordGrid = () => {
               <CrosswordCell
                 key={`${rIdx}-${cIdx}`}
                 cell={cell}
+                cellSize={cellSize}
                 isSelected={isSelected}
                 isHighlighted={isHighlighted}
                 onSelect={() => selectCell(rIdx, cIdx)}

@@ -32,7 +32,7 @@ export const LevelSelector = () => {
   if (gameState.grid) return null;
 
   return (
-    <div className="w-full max-w-lg mx-auto bg-[var(--card-bg)] p-8 rounded-2xl shadow-xl border border-[var(--border-color)] text-center">
+    <div className="w-full bg-[var(--card-bg)] p-4 sm:p-8 md:p-10 rounded-3xl shadow-xl border border-[var(--border-color)] text-center">
       <div className="mb-8">
         <h2 className="text-3xl font-japanese font-black text-[var(--foreground)] mb-2">JBook Crossword</h2>
         <p className="text-gray-500 dark:text-gray-400">Sesuaikan mode permainan Anda</p>
@@ -40,20 +40,20 @@ export const LevelSelector = () => {
 
       <div className="mb-6">
         <label className="block text-sm font-bold text-gray-400 uppercase tracking-widest mb-3">Pilih Level JLPT</label>
-        <div className="grid grid-cols-5 gap-3">
+        <div className="grid grid-cols-5 gap-1.5 sm:gap-3">
           {levels.map(lvl => {
             return (
               <button
                 key={lvl.id}
                 onClick={() => setSelectedLevel(lvl.id)}
                 className={clsx(
-                  "relative flex flex-col items-center p-3 rounded-xl border-2 transition-all",
+                  "relative flex flex-col items-center p-2 sm:p-3 rounded-xl border-2 transition-all",
                   selectedLevel === lvl.id
                     ? "border-accent-blue bg-accent-blue/10 text-accent-blue shadow-sm"
                     : "border-[var(--border-color)] hover:border-accent-blue/40 text-gray-500"
                 )}
               >
-                <span className="font-bold text-lg">{lvl.name}</span>
+                <span className="font-bold text-sm sm:text-lg">{lvl.name}</span>
               </button>
             );
           })}

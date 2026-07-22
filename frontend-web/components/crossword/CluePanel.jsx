@@ -120,7 +120,7 @@ export const CluePanel = () => {
   };
 
   return (
-    <div className="flex flex-col md:flex-row gap-6 w-full max-w-4xl mx-auto p-4 bg-[var(--card-bg)] rounded-[1.5rem] shadow-sm border border-[var(--border-color)] mt-4 lg:mt-0">
+    <div className="flex flex-col md:flex-row gap-4 w-full p-3 sm:p-4 bg-[var(--card-bg)] rounded-[1.5rem] shadow-sm border border-[var(--border-color)] mt-4 lg:mt-0">
       <div className="flex-1">
         <h3 className="text-lg font-bold mb-3 text-accent-blue border-b border-[var(--border-color)] pb-2">Across (Mendatar)</h3>
         <div className="space-y-1 max-h-[200px] md:max-h-[400px] overflow-y-auto pr-2 custom-scrollbar scroll-smooth">

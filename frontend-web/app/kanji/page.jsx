@@ -192,7 +192,7 @@ export default function KanjiPage() {
                 <header className="mb-12 text-center md:text-left flex flex-col md:flex-row md:items-center justify-between gap-6 border-b border-[var(--border-color)] pb-12">
                     <div>
                         <h1 className="text-5xl font-japanese font-black tracking-tight leading-none text-[var(--foreground)]">漢字 <span className="text-transparent bg-clip-text bg-gradient-to-r from-accent-blue to-accent-green ml-2">Kanji</span></h1>
-                        <div className="h-1 w-16 bg-gradient-to-r from-accent-blue to-accent-green rounded-full mt-3 mb-1" />
+                        <div className="h-1 w-16 bg-gradient-to-r from-accent-blue to-accent-green rounded-full mt-3 mb-1 mx-auto md:mx-0" />
                         <p className="font-black mt-2 tracking-wide uppercase text-xs text-gray-500 dark:text-gray-500">Jelajahi karakter Jepang & maknanya</p>
                     </div>
                     <Suspense fallback={<div className="h-12 w-full md:w-96 bg-[var(--card-bg)] rounded-2xl animate-pulse" />}>

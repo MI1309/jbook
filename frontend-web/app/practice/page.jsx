@@ -69,28 +69,26 @@ function PracticePageContent() {
                 <div className="absolute bottom-[-10%] right-[-10%] w-[50vw] h-[50vw] rounded-full bg-accent-green/5 dark:bg-accent-green/10 blur-[150px] mix-blend-multiply dark:mix-blend-screen animate-pulse duration-7000 delay-1000" />
             </div>
 
-            <div className="container mx-auto px-4 py-8 relative z-10">
+            <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 md:px-8 py-4 sm:py-8 relative z-10">
                 {!isPlaying && (
-                    <div className="mb-10 flex flex-col md:flex-row md:items-center justify-between gap-6 border-b border-[var(--border-color)] pb-6">
+                    <div className="mb-8 sm:mb-10 flex flex-col md:flex-row md:items-center justify-between gap-6 border-b border-[var(--border-color)] pb-6 text-center md:text-left">
                         <div>
-                            <h1 className={`text-4xl md:text-6xl font-japanese font-black mb-2 tracking-tight transition-colors ${textColor}`}>
+                            <h1 className={`text-3xl sm:text-4xl md:text-6xl font-japanese font-black mb-2 tracking-tight transition-colors ${textColor}`}>
                                 練習 <span className="text-transparent bg-clip-text bg-gradient-to-r from-accent-blue to-accent-green drop-shadow-sm">Latihan & Analitik</span>
                             </h1>
-                            <div className="h-1.5 w-24 bg-gradient-to-r from-accent-blue to-accent-green rounded-full mt-4"></div>
+                            <div className="h-1.5 w-24 bg-gradient-to-r from-accent-blue to-accent-green rounded-full mt-3 sm:mt-4 mx-auto md:mx-0"></div>
                         </div>
                         
                         {/* Banner Buttons */}
-                        <div className="flex gap-4 flex-col xl:flex-row">
-
-                            
+                        <div className="flex gap-4 flex-col xl:flex-row items-center md:items-start xl:items-center">
                             {/* Latihan Kustom Button */}
-                            <div className="flex-shrink-0 bg-[var(--card-bg)] border border-[var(--border-color)] p-4 rounded-2xl flex items-center gap-4 shadow-sm hover:border-accent-blue transition-all duration-300">
+                            <div className="w-full sm:w-auto flex-shrink-0 bg-[var(--card-bg)] border border-[var(--border-color)] p-4 rounded-2xl flex items-center gap-4 shadow-sm hover:border-accent-blue transition-all duration-300">
                                 <div className="w-10 h-10 rounded-xl bg-accent-blue/10 text-accent-blue flex items-center justify-center flex-shrink-0">
                                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
                                     </svg>
                                 </div>
-                                <div>
+                                <div className="text-left">
                                     <h4 className="text-xs font-bold text-foreground">Latihan Tambahan</h4>
                                     <p className="text-[10px] text-gray-500 font-light mb-1.5">Latihan soal khusus dari admin</p>
                                     <Link href="/practice/custom" className="inline-flex items-center gap-1 text-[10px] font-bold text-accent-blue hover:underline">
@@ -103,9 +101,9 @@ function PracticePageContent() {
                 )}
 
             {/* Configuration Section */}
-            <div className="mb-12">
+            <div className="mb-8 sm:mb-12">
                 {isPlaying ? <PracticeRunner /> : (
-                    <div className="space-y-12">
+                    <div className="space-y-8 sm:space-y-12">
                         <PracticeConfig />
                     </div>
                 )}

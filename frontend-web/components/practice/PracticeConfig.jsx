@@ -109,37 +109,37 @@ export default function PracticeConfig() {
     const borderStyle = !mounted ? 'border-gray-100' : (theme === 'dark' ? 'border-white/5' : 'border-white/60');
 
     return (
-        <div className={`${glassBg} backdrop-blur-2xl p-6 md:p-10 rounded-[2.5rem] shadow-[0_8px_30px_rgb(0,0,0,0.12)] max-w-3xl mx-auto border ${borderStyle} relative overflow-hidden transition-colors`}>
-            <div className="absolute top-0 right-0 p-4 opacity-5 text-[12rem] font-serif select-none pointer-events-none text-blue-900 leading-none">
+        <div className={`${glassBg} backdrop-blur-2xl p-4 sm:p-6 md:p-10 rounded-2xl sm:rounded-[2.5rem] shadow-[0_8px_30px_rgb(0,0,0,0.12)] w-full max-w-7xl mx-auto border ${borderStyle} relative overflow-hidden transition-colors`}>
+            <div className="absolute top-0 right-0 p-4 opacity-5 text-[8rem] sm:text-[12rem] font-serif select-none pointer-events-none text-blue-900 leading-none">
                 学
             </div>
 
             <div className="relative z-10">
-                <h2 className={`text-4xl md:text-5xl font-black mb-2 tracking-tight transition-colors ${textColor}`}>
+                <h2 className={`text-3xl sm:text-4xl md:text-5xl font-black mb-2 tracking-tight transition-colors ${textColor}`}>
                     Atur <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-sky-500">Latihanmu</span>
                 </h2>
-                <p className={`mb-10 text-lg transition-colors ${subTextColor}`}>Pilih materi, level, dan target waktu kuis hari ini.</p>
+                <p className={`mb-6 sm:mb-10 text-sm sm:text-base md:text-lg transition-colors ${subTextColor}`}>Pilih materi, level, dan target waktu kuis hari ini.</p>
 
-                <div className="space-y-10">
+                <div className="space-y-6 sm:space-y-10">
                     {/* Sumber Soal Selection */}
                     <div>
-                        <label className={`block text-sm font-black uppercase tracking-widest mb-4 transition-colors ${subTextColor}`}>
+                        <label className={`block text-xs sm:text-sm font-black uppercase tracking-widest mb-3 sm:mb-4 transition-colors ${subTextColor}`}>
                             Sumber Soal
                         </label>
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
                             <button
                                 onClick={() => {
                                     setSource('jlpt');
                                     setMode('choice');
                                 }}
-                                className={`flex flex-col items-center justify-center p-5 rounded-2xl border-2 transition-all duration-300 transform hover:scale-[1.02] ${
+                                className={`flex flex-col items-center justify-center p-4 sm:p-5 rounded-2xl border-2 transition-all duration-300 transform hover:scale-[1.02] cursor-pointer ${
                                     source === 'jlpt'
                                         ? 'bg-gradient-to-br from-blue-50 to-sky-50 dark:from-blue-950/30 dark:to-sky-950/10 border-blue-500 shadow-lg shadow-blue-500/20'
                                         : `${cardBg} ${borderStyle} hover:border-blue-300 dark:hover:border-blue-800`
                                 }`}
                             >
-                                <span className="text-3xl mb-2">📚</span>
-                                <span className={`font-black transition-colors ${source === 'jlpt' ? 'text-blue-700 dark:text-blue-400' : textColor}`}>
+                                <span className="text-2xl sm:text-3xl mb-1.5 sm:mb-2">📚</span>
+                                <span className={`font-black text-sm sm:text-base transition-colors ${source === 'jlpt' ? 'text-blue-700 dark:text-blue-400' : textColor}`}>
                                     JLPT Level
                                 </span>
                                 <span className={`text-[10px] mt-1 uppercase font-medium transition-colors ${subTextColor}`}>
@@ -152,14 +152,14 @@ export default function PracticeConfig() {
                                     setSource('minna');
                                     setMode('choice');
                                 }}
-                                className={`flex flex-col items-center justify-center p-5 rounded-2xl border-2 transition-all duration-300 transform hover:scale-[1.02] ${
+                                className={`flex flex-col items-center justify-center p-4 sm:p-5 rounded-2xl border-2 transition-all duration-300 transform hover:scale-[1.02] cursor-pointer ${
                                     source === 'minna'
                                         ? 'bg-gradient-to-br from-blue-50 to-sky-50 dark:from-blue-950/30 dark:to-sky-950/10 border-blue-500 shadow-lg shadow-blue-500/20'
                                         : `${cardBg} ${borderStyle} hover:border-blue-300 dark:hover:border-blue-800`
                                 }`}
                             >
-                                <span className="text-3xl mb-2">🇯🇵</span>
-                                <span className={`font-black transition-colors ${source === 'minna' ? 'text-blue-700 dark:text-blue-400' : textColor}`}>
+                                <span className="text-2xl sm:text-3xl mb-1.5 sm:mb-2">🇯🇵</span>
+                                <span className={`font-black text-sm sm:text-base transition-colors ${source === 'minna' ? 'text-blue-700 dark:text-blue-400' : textColor}`}>
                                     Minna no Nihongo
                                 </span>
                                 <span className={`text-[10px] mt-1 uppercase font-medium transition-colors ${subTextColor}`}>
@@ -174,14 +174,14 @@ export default function PracticeConfig() {
                                     }
                                 }}
                                 disabled={doukaiCount === 0}
-                                className={`flex flex-col items-center justify-center p-5 rounded-2xl border-2 transition-all duration-300 transform ${
+                                className={`flex flex-col items-center justify-center p-4 sm:p-5 rounded-2xl border-2 transition-all duration-300 transform ${
                                     doukaiCount === 0 
                                         ? 'opacity-50 cursor-not-allowed grayscale' 
-                                        : 'hover:scale-[1.02] hover:border-blue-300 dark:hover:border-blue-800'
+                                        : 'hover:scale-[1.02] hover:border-blue-300 dark:hover:border-blue-800 cursor-pointer'
                                 } ${cardBg} ${borderStyle}`}
                             >
-                                <span className="text-3xl mb-2">{doukaiCount === 0 ? '🔒' : '📖'}</span>
-                                <span className={`font-black transition-colors ${textColor}`}>
+                                <span className="text-2xl sm:text-3xl mb-1.5 sm:mb-2">{doukaiCount === 0 ? '🔒' : '📖'}</span>
+                                <span className={`font-black text-sm sm:text-base transition-colors ${textColor}`}>
                                     Doukai (読解)
                                 </span>
                                 <span className={`text-[10px] mt-1 uppercase font-medium transition-colors ${subTextColor}`}>
@@ -196,10 +196,10 @@ export default function PracticeConfig() {
                         <>
                             {/* Materi Selection */}
                             <div>
-                                <label className={`block text-sm font-black uppercase tracking-widest mb-4 transition-colors ${subTextColor}`}>
+                                <label className={`block text-xs sm:text-sm font-black uppercase tracking-widest mb-3 sm:mb-4 transition-colors ${subTextColor}`}>
                                     Materi Latihan
                                 </label>
-                                <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+                                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2.5 sm:gap-4">
                                     {types.map(t => {
                                         const kakitoriDisabled = mode === 'kakitori' && !['vocab'].includes(t.id);
                                         const isSelected = selectedTypes.includes(t.id);
@@ -209,21 +209,21 @@ export default function PracticeConfig() {
                                                 onClick={() => !kakitoriDisabled && toggleType(t.id)}
                                                 disabled={kakitoriDisabled}
                                                 title={kakitoriDisabled ? 'Tidak tersedia untuk mode Kakitori' : ''}
-                                                className={`flex flex-col items-center justify-center p-4 rounded-2xl border-2 transition-all duration-300 ${
+                                                className={`flex flex-col items-center justify-center p-3.5 sm:p-4 rounded-2xl border-2 transition-all duration-300 ${
                                                     kakitoriDisabled
                                                         ? `${cardBg} ${borderStyle} opacity-35 cursor-not-allowed grayscale`
                                                         : isSelected
-                                                            ? 'bg-gradient-to-br from-blue-50 to-sky-50 dark:from-blue-950/30 dark:to-sky-950/10 border-blue-500 shadow-lg shadow-blue-500/20 transform hover:scale-[1.03]'
-                                                            : `${cardBg} ${borderStyle} hover:border-blue-300 dark:hover:border-blue-800 hover:shadow-md transform hover:scale-[1.03]`
+                                                            ? 'bg-gradient-to-br from-blue-50 to-sky-50 dark:from-blue-950/30 dark:to-sky-950/10 border-blue-500 shadow-lg shadow-blue-500/20 transform hover:scale-[1.03] cursor-pointer'
+                                                            : `${cardBg} ${borderStyle} hover:border-blue-300 dark:hover:border-blue-800 hover:shadow-md transform hover:scale-[1.03] cursor-pointer`
                                                 }`}
                                             >
-                                                <span className="text-3xl mb-2">{kakitoriDisabled ? '🔒' : t.icon}</span>
-                                                <span className={`font-bold transition-colors ${
+                                                <span className="text-2xl sm:text-3xl mb-1">{kakitoriDisabled ? '🔒' : t.icon}</span>
+                                                <span className={`font-bold text-xs sm:text-sm transition-colors ${
                                                     kakitoriDisabled ? subTextColor : isSelected ? 'text-blue-700 dark:text-blue-400' : textColor
                                                 }`}>
                                                     {t.label}
                                                 </span>
-                                                <span className={`text-[10px] mt-1 uppercase font-medium transition-colors ${subTextColor}`}>
+                                                <span className={`text-[9px] sm:text-[10px] mt-0.5 uppercase font-medium transition-colors ${subTextColor} text-center`}>
                                                     {kakitoriDisabled ? 'Tidak tersedia' : t.sub}
                                                 </span>
                                             </button>
@@ -289,14 +289,14 @@ export default function PracticeConfig() {
                                 <label className={`block text-sm font-black uppercase tracking-widest mb-4 transition-colors ${subTextColor}`}>
                                     Pilih Buku Minna
                                 </label>
-                                <div className="grid grid-cols-3 gap-4">
+                                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 sm:gap-4">
                                     <button
                                         onClick={() => {
                                             setSelectedBook('1');
                                             setChapterStart(1);
                                             setChapterEnd(25);
                                         }}
-                                        className={`p-4 rounded-2xl border-2 font-black transition-all duration-300 transform hover:scale-[1.02] ${
+                                        className={`p-3.5 sm:p-4 rounded-2xl border-2 text-xs sm:text-sm font-black transition-all duration-300 transform hover:scale-[1.02] cursor-pointer ${
                                             selectedBook === '1'
                                                 ? 'bg-gradient-to-br from-blue-50 to-sky-50 dark:from-blue-950/30 dark:to-sky-950/10 border-blue-500 shadow-md'
                                                 : `${cardBg} ${borderStyle} ${textColor}`
@@ -310,7 +310,7 @@ export default function PracticeConfig() {
                                             setChapterStart(26);
                                             setChapterEnd(50);
                                         }}
-                                        className={`p-4 rounded-2xl border-2 font-black transition-all duration-300 transform hover:scale-[1.02] ${
+                                        className={`p-3.5 sm:p-4 rounded-2xl border-2 text-xs sm:text-sm font-black transition-all duration-300 transform hover:scale-[1.02] cursor-pointer ${
                                             selectedBook === '2'
                                                 ? 'bg-gradient-to-br from-blue-50 to-sky-50 dark:from-blue-950/30 dark:to-sky-950/10 border-blue-500 shadow-md'
                                                 : `${cardBg} ${borderStyle} ${textColor}`
@@ -324,7 +324,7 @@ export default function PracticeConfig() {
                                             setChapterStart(1);
                                             setChapterEnd(50);
                                         }}
-                                        className={`p-4 rounded-2xl border-2 font-black transition-all duration-300 transform hover:scale-[1.02] ${
+                                        className={`p-3.5 sm:p-4 rounded-2xl border-2 text-xs sm:text-sm font-black transition-all duration-300 transform hover:scale-[1.02] cursor-pointer ${
                                             selectedBook === 'both'
                                                 ? 'bg-gradient-to-br from-blue-50 to-sky-50 dark:from-blue-950/30 dark:to-sky-950/10 border-blue-500 shadow-md'
                                                 : `${cardBg} ${borderStyle} ${textColor}`

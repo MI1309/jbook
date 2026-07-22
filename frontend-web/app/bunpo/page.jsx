@@ -120,7 +120,7 @@ export default function BunpoPage() {
             <header className="mb-12 text-center md:text-left flex flex-col md:flex-row md:items-center justify-between gap-6 border-b border-gray-100 dark:border-[var(--border-color)] pb-12 transition-colors">
                 <div>
                     <h1 className={`text-5xl font-japanese font-black tracking-tight leading-none transition-colors ${textColor}`}>文法 <span className="text-transparent bg-clip-text bg-gradient-to-r from-accent-blue to-accent-green ml-2">Bunpo</span></h1>
-                    <div className="h-1 w-16 bg-gradient-to-r from-accent-blue to-accent-green rounded-full mt-3 mb-1" />
+                    <div className="h-1 w-16 bg-gradient-to-r from-accent-blue to-accent-green rounded-full mt-3 mb-1 mx-auto md:mx-0" />
                     <p className={`font-black mt-2 tracking-wide uppercase text-xs transition-colors ${subTextColor}`}>Kuasai tata bahasa Jepang dengan mudah</p>
                 </div>
                 <Suspense fallback={<div className="h-12 w-full md:w-96 bg-gray-50 dark:bg-gray-800 rounded-2xl animate-pulse" />}>

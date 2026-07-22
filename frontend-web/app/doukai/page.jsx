@@ -89,7 +89,7 @@ export default function DoukaiPage() {
                     <h1 className={`text-5xl font-japanese font-black tracking-tight leading-none transition-colors ${textColor}`}>
                         読解 <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-sky-500 ml-2">Doukai</span>
                     </h1>
-                    <div className="h-1 w-16 bg-gradient-to-r from-blue-600 to-sky-500 rounded-full mt-3 mb-1" />
+                    <div className="h-1 w-16 bg-gradient-to-r from-blue-600 to-sky-500 rounded-full mt-3 mb-1 mx-auto md:mx-0" />
                     <p className={`font-black mt-2 tracking-wide uppercase text-xs transition-colors ${subTextColor}`}>
                         Latihan Pemahaman Bacaan (Reading Comprehension)
                     </p>

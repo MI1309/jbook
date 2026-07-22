@@ -492,7 +492,7 @@ function PracticeContent() {
     if (finished) {
         return (
             <div className="container mx-auto px-4 py-8 flex flex-col items-center justify-center min-h-[60vh] relative z-10">
-                <div className={`${theme === 'dark' ? 'bg-[#0a0a0a]/80' : 'bg-white/80'} backdrop-blur-2xl rounded-[3rem] shadow-[0_8px_40px_rgb(0,0,0,0.12)] p-4 md:p-8 max-w-md w-full text-center border ${theme === 'dark' ? 'border-white/5' : 'border-white/60'} relative overflow-hidden transition-colors`}>
+                <div className={`${theme === 'dark' ? 'bg-[#0a0a0a]/80' : 'bg-white/80'} backdrop-blur-2xl rounded-[2.5rem] sm:rounded-[3rem] shadow-[0_8px_40px_rgb(0,0,0,0.12)] p-4 sm:p-8 max-w-2xl w-full text-center border ${theme === 'dark' ? 'border-white/5' : 'border-white/60'} relative overflow-hidden transition-colors`}>
                     <div className="absolute top-0 inset-x-0 h-2 bg-blue-600"></div>
 
                     <div className="mb-6">
@@ -616,23 +616,23 @@ function PracticeContent() {
     const progressPercent = ((currentIndex + 1) / questions.length) * 100;
 
     return (
-        <div className="container mx-auto px-4 py-8 max-w-2xl min-h-screen flex flex-col">
+        <div className="w-full max-w-5xl mx-auto px-2 sm:px-4 py-3 sm:py-6 min-h-[calc(100dvh-5rem)] flex flex-col justify-between">
             {/* Header / Progress */}
-            <div className="mb-8">
+            <div className="mb-4 sm:mb-8">
                 <div className="flex justify-between items-end mb-2">
-                    <span className={`text-xs font-black uppercase tracking-widest transition-colors ${subTextColor}`}>Progress Latihan</span>
-                    <div className="flex items-center gap-3">
+                    <span className={`text-[10px] sm:text-xs font-black uppercase tracking-widest transition-colors ${subTextColor}`}>Progress Latihan</span>
+                    <div className="flex items-center gap-2 sm:gap-3">
                         {initialTimer !== null && (
-                            <span className={`font-mono font-black text-lg flex items-center gap-2 ${timeLeft < 30 ? 'text-blue-600 animate-pulse' : textColor}`}>
+                            <span className={`font-mono font-black text-base sm:text-lg flex items-center gap-1.5 sm:gap-2 ${timeLeft < 30 ? 'text-blue-600 animate-pulse' : textColor}`}>
                                 <span>⏱️</span> {formatTime(timeLeft)}
                             </span>
                         )}
-                        <span className="bg-blue-600 text-white px-3 py-1 rounded-xl text-[10px] font-black uppercase tracking-tighter">
+                        <span className="bg-blue-600 text-white px-2.5 py-1 rounded-xl text-[10px] font-black uppercase tracking-tighter">
                             {currentIndex + 1} / {questions.length}
                         </span>
                     </div>
                 </div>
-                <div className={`h-3 rounded-full overflow-hidden transition-colors shadow-inner ${theme === 'dark' ? 'bg-black/40 border border-white/5' : 'bg-gray-100 border border-gray-200'}`}>
+                <div className={`h-2.5 sm:h-3 rounded-full overflow-hidden transition-colors shadow-inner ${theme === 'dark' ? 'bg-black/40 border border-white/5' : 'bg-gray-100 border border-gray-200'}`}>
                     <div
                         className="h-full bg-gradient-to-r from-blue-600 to-sky-500 transition-all duration-500 ease-out relative"
                         style={{ width: `${progressPercent}%` }}
@@ -643,41 +643,41 @@ function PracticeContent() {
             </div>
 
             {/* Question Card */}
-            <div className={`${theme === 'dark' ? 'bg-[#0a0a0a]/70' : 'bg-white/70'} backdrop-blur-2xl rounded-[3rem] shadow-[0_8px_30px_rgb(0,0,0,0.08)] p-4 md:p-8 mb-8 text-center border ${theme === 'dark' ? 'border-white/5' : 'border-white/60'} relative flex-grow flex flex-col justify-center transition-all`}>
+            <div className={`${theme === 'dark' ? 'bg-[#0a0a0a]/70' : 'bg-white/70'} backdrop-blur-2xl rounded-2xl sm:rounded-[3rem] shadow-[0_8px_30px_rgb(0,0,0,0.08)] p-4 sm:p-6 md:p-8 mb-4 sm:mb-8 text-center border ${theme === 'dark' ? 'border-white/5' : 'border-white/60'} relative flex-grow flex flex-col justify-center max-h-[75dvh] overflow-y-auto custom-scrollbar transition-all`}>
                 {mode === 'kakitori' ? (
-                    <div className="mb-8 relative p-4 flex flex-col items-center group transition-all duration-300">
-                        <span className={`text-[10px] font-black uppercase tracking-[0.2em] mb-4 block transition-colors ${subTextColor}`}>
+                    <div className="mb-4 sm:mb-8 relative p-2 sm:p-4 flex flex-col items-center group transition-all duration-300">
+                        <span className={`text-[10px] font-black uppercase tracking-[0.2em] mb-3 sm:mb-4 block transition-colors ${subTextColor}`}>
                             Kakitori (Latihan Dikte) • N{currentQuestion.level || '5'}
                         </span>
 
-                        <div className="flex flex-col items-center justify-center p-6 bg-blue-500/5 rounded-3xl border border-dashed border-blue-500/20 max-w-sm mx-auto mb-4 w-full">
+                        <div className="flex flex-col items-center justify-center p-4 sm:p-6 bg-blue-500/5 rounded-2xl sm:rounded-3xl border border-dashed border-blue-500/20 max-w-sm mx-auto mb-4 w-full">
                             <button
                                 onClick={() => playQuestionAudio(currentQuestion)}
-                                className={`p-6 rounded-[2rem] transition-all duration-300 ${
+                                className={`p-4 sm:p-6 rounded-2xl sm:rounded-[2rem] transition-all duration-300 ${
                                     audioPlaying
                                         ? 'bg-blue-600 text-white animate-pulse shadow-lg shadow-blue-500/30'
                                         : 'bg-[var(--card-bg)] border-2 border-blue-500 text-blue-600 hover:bg-blue-50 hover:text-white shadow-md active:scale-95'
                                 } cursor-pointer`}
                                 title="Putar Ulang Audio"
                             >
-                                <Volume2 className="w-12 h-12" />
+                                <Volume2 className="w-8 h-8 sm:w-12 sm:h-12" />
                             </button>
-                            <span className={`text-xs font-black uppercase tracking-wider mt-4 ${textColor}`}>
+                            <span className={`text-[11px] sm:text-xs font-black uppercase tracking-wider mt-3 sm:mt-4 ${textColor}`}>
                                 {audioPlaying ? 'Sedang Memutar Suara...' : 'Klik untuk Putar Ulang'}
                             </span>
                             {currentQuestion.meaning && (
-                                <div className={`mt-4 text-xs font-bold ${theme === 'dark' ? 'text-gray-400 bg-blue-950/20' : 'text-gray-500 bg-blue-50'} px-4 py-2 rounded-xl`}>
+                                <div className={`mt-3 sm:mt-4 text-xs font-bold ${theme === 'dark' ? 'text-gray-400 bg-blue-950/20' : 'text-gray-500 bg-blue-50'} px-3 sm:px-4 py-2 rounded-xl`}>
                                     Petunjuk Arti: <span className={`font-black ${textColor}`}>{currentQuestion.meaning}</span>
                                 </div>
                             )}
                         </div>
 
                         {isAnswered && (
-                            <div className="mt-6 animate-fade-in-up">
+                            <div className="mt-4 sm:mt-6 animate-fade-in-up">
                                 <div className="text-[10px] font-black uppercase tracking-widest text-blue-600 mb-1">Jawaban Yang Benar</div>
-                                <div className={`text-4xl font-japanese font-black ${textColor}`}>{currentQuestion.character}</div>
+                                <div className={`text-3xl sm:text-4xl font-japanese font-black ${textColor}`}>{currentQuestion.character}</div>
                                 {currentQuestion.reading && (
-                                    <div className="text-xl text-blue-600 dark:text-blue-400 font-black mt-1">{sanitizeReading(currentQuestion.reading)}</div>
+                                    <div className="text-lg sm:text-xl text-blue-600 dark:text-blue-400 font-black mt-1">{sanitizeReading(currentQuestion.reading)}</div>
                                 )}
                             </div>
                         )}
@@ -693,9 +693,9 @@ function PracticeContent() {
                                 }
                             }
                         }}
-                        className={`mb-8 relative p-4 flex flex-col items-center group transition-all duration-300 ${!isAnswered ? 'cursor-pointer hover:bg-blue-500/5 rounded-3xl' : ''}`}
+                        className={`mb-4 sm:mb-8 relative p-2 sm:p-4 flex flex-col items-center group transition-all duration-300 ${!isAnswered ? 'cursor-pointer hover:bg-blue-500/5 rounded-2xl sm:rounded-3xl' : ''}`}
                     >
-                        <span className={`text-[10px] font-black uppercase tracking-[0.2em] mb-4 block transition-colors ${subTextColor}`}>
+                        <span className={`text-[10px] font-black uppercase tracking-[0.2em] mb-3 sm:mb-4 block transition-colors ${subTextColor}`}>
                             {source === 'minna' 
                                 ? `Minna ${mode === 'fill_blank' ? 'Isi Kosong' : mode === 'context_match' ? 'Context Match' : 'Latihan'} • Bab ${currentQuestion.chapter}`
                                 : (currentQuestion.type === 'kanji' ? 'Kanji' : currentQuestion.type === 'vocab' ? 'Kosakata' : currentQuestion.type === 'kana' ? 'Kana' : 'Tata Bahasa')
@@ -705,25 +705,25 @@ function PracticeContent() {
                         {mode === 'context_match' ? (
                             <div className="flex flex-col items-center">
                                 <span className={`text-xs font-black uppercase tracking-widest ${subTextColor} mb-2`}>Cocokkan arti berikut:</span>
-                                <div className={`text-xl md:text-3xl font-black ${textColor} leading-tight mb-2 px-4`}>
+                                <div className={`text-lg sm:text-2xl md:text-3xl font-black ${textColor} leading-tight mb-2 px-2 sm:px-4`}>
                                     &quot;{currentQuestion.character}&quot;
                                 </div>
                             </div>
                         ) : (
                             <div className={`${
-                                (currentQuestion.character?.length || 0) > 50 ? 'text-sm md:text-lg' :
-                                (currentQuestion.character?.length || 0) > 20 ? 'text-base md:text-xl' :
-                                (currentQuestion.character?.length || 0) > 10 ? 'text-lg md:text-2xl' :
-                                (currentQuestion.character?.length || 0) > 5 ? 'text-xl md:text-3xl' :
-                                currentQuestion.type === 'grammar' || currentQuestion.type === 'particle' ? 'text-2xl md:text-4xl' :
-                                'text-4xl md:text-[6rem]'
+                                (currentQuestion.character?.length || 0) > 50 ? 'text-xs sm:text-sm md:text-base' :
+                                (currentQuestion.character?.length || 0) > 20 ? 'text-sm sm:text-base md:text-lg' :
+                                (currentQuestion.character?.length || 0) > 10 ? 'text-base sm:text-lg md:text-xl' :
+                                (currentQuestion.character?.length || 0) > 5 ? 'text-lg sm:text-xl md:text-2xl' :
+                                currentQuestion.type === 'grammar' || currentQuestion.type === 'particle' ? 'text-xl sm:text-3xl md:text-4xl' :
+                                'text-4xl sm:text-6xl md:text-7xl lg:text-[5.5rem]'
                             } leading-tight font-black select-none pb-2 break-words transition-colors ${textColor}`}>
                                 <ruby className="transition-colors">
                                     {currentQuestion.character}
                                     {currentQuestion.type === 'vocab' &&
                                      currentQuestion.reading &&
                                      hasKanji(currentQuestion.character) && (
-                                        <rt className={`text-sm md:text-xl font-bold transition-all duration-300 ${isAnswered || showReadingManual ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-2 group-hover:opacity-100 group-hover:translate-y-0'} ${theme === 'dark' ? 'text-blue-400' : 'text-blue-600'}`}>
+                                        <rt className={`text-xs sm:text-sm md:text-xl font-bold transition-all duration-300 ${isAnswered || showReadingManual ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-2 group-hover:opacity-100 group-hover:translate-y-0'} ${theme === 'dark' ? 'text-blue-400' : 'text-blue-600'}`}>
                                             {sanitizeReading(currentQuestion.reading)}
                                         </rt>
                                      )}
@@ -844,9 +844,9 @@ function PracticeContent() {
                             </div>
                         )}
 
-                        <div className="grid gap-3 grid-cols-1 md:grid-cols-2">
+                        <div className="grid gap-2.5 sm:gap-3 grid-cols-1 sm:grid-cols-2">
                             {currentQuestion.options.map((option, idx) => {
-                                    let btnClass = "p-4 text-base md:text-lg font-black border-2 rounded-2xl transition-all duration-300 relative break-words ";
+                                    let btnClass = "p-3 sm:p-4 text-sm sm:text-base md:text-lg font-black border-2 rounded-xl sm:rounded-2xl transition-all duration-300 relative break-words min-h-[50px] flex items-center justify-center text-center ";
 
                                     if (isAnswered) {
                                         if (option.is_correct) {

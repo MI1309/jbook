@@ -27,22 +27,22 @@ export default function CustomPracticePage() {
     if (loading) return <div className="p-8 text-center min-h-screen">Loading...</div>;
 
     return (
-        <div className={`min-h-screen py-12 ${theme === 'dark' ? 'bg-[#020202] text-neutral-200' : 'bg-gray-50 text-gray-900'}`}>
-            <div className="max-w-5xl mx-auto px-6">
-                <div className="mb-8">
-                    <Link href="/practice" className="text-red-500 hover:underline text-sm font-bold uppercase tracking-widest mb-4 inline-block">
+        <div className={`min-h-screen py-6 sm:py-12 ${theme === 'dark' ? 'bg-[#020202] text-neutral-200' : 'bg-gray-50 text-gray-900'}`}>
+            <div className="max-w-5xl mx-auto px-4 sm:px-6">
+                <div className="mb-6 sm:mb-8">
+                    <Link href="/practice" className="text-red-500 hover:underline text-xs sm:text-sm font-bold uppercase tracking-widest mb-3 inline-block">
                         ← Kembali ke Menu Latihan
                     </Link>
-                    <h1 className="text-4xl font-black tracking-tight mb-2">Latihan Tambahan</h1>
-                    <p className="opacity-70">Modul latihan khusus yang disusun oleh pengajar (Dokkai, Choukai, dll).</p>
+                    <h1 className="text-2xl sm:text-4xl font-black tracking-tight mb-2">Latihan Tambahan</h1>
+                    <p className="text-xs sm:text-base opacity-70">Modul latihan khusus yang disusun oleh pengajar (Dokkai, Choukai, dll).</p>
                 </div>
 
                 {modules.length === 0 ? (
-                    <div className="text-center py-20 opacity-50 border border-dashed rounded-2xl">
+                    <div className="text-center py-16 sm:py-20 opacity-50 border border-dashed rounded-2xl text-sm sm:text-base">
                         Belum ada modul latihan yang tersedia saat ini.
                     </div>
                 ) : (
-                    <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+                    <div className="grid gap-4 sm:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
                         {modules.map(module => (
                             <Link 
                                 href={`/practice/custom/${module.id}`} 
