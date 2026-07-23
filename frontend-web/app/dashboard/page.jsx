@@ -472,68 +472,7 @@ export default function DashboardPage() {
                         </div>
                     )}
 
-                    {/* New Section: Recent Kakitori Detailed History */}
-                    {kakitoriStats.recent_details && kakitoriStats.recent_details.length > 0 && (
-                        <div className={`mt-6 rounded-2xl border-2 p-6 transition-colors ${tc('bg-[#0a0a0a] border-blue-900/20', 'bg-white border-gray-100')}`}>
-                            <h3 className={`font-black text-sm mb-4 flex items-center gap-2 transition-colors ${tc('text-gray-300', 'text-gray-700')}`}>
-                                <span>📜</span> Histori Kesalahan Karakter (Kakitori)
-                            </h3>
-                            <div className="space-y-4">
-                                {kakitoriStats.recent_details.filter(d => !d.is_correct).slice(0, 10).map((detail, idx) => {
-                                    const correctReading = wanakana.toHiragana(detail.reading || '');
-                                    const userReading = wanakana.toHiragana(detail.answer_given || '');
-                                    const diffs = diffStrings(correctReading, userReading);
 
-                                    return (
-                                        <div key={idx} className={`p-4 rounded-xl border ${tc('bg-black/20 border-white/5', 'bg-gray-50 border-gray-100')}`}>
-                                            <div className="flex justify-between items-start mb-2">
-                                                <div className="flex items-center gap-2">
-                                                    <span className={`text-xl font-black ${textPrimary}`}>{detail.character}</span>
-                                                    <span className={`text-[10px] font-black px-2 py-0.5 rounded-full ${tc('bg-blue-900/40 text-blue-400', 'bg-blue-100 text-blue-600')}`}>
-                                                        {new Date(detail.timestamp).toLocaleDateString('id-ID', { day: 'numeric', month: 'short' })}
-                                                    </span>
-                                                </div>
-                                                <div className="text-[10px] font-black text-red-500 uppercase tracking-widest">
-                                                    Salah
-                                                </div>
-                                            </div>
-                                            
-                                            <div className="flex flex-col gap-2">
-                                                <div className="flex items-center gap-2 flex-wrap">
-                                                    <span className={`text-[10px] font-black uppercase tracking-widest ${textMuted}`}>Analisis:</span>
-                                                    <div className="flex items-center gap-0.5 text-lg font-japanese tracking-tighter">
-                                                        {diffs.map((d, dIdx) => (
-                                                            <span 
-                                                                key={dIdx} 
-                                                                className={`px-0.5 rounded ${
-                                                                    d.status === 'correct' ? 'text-green-500' : 
-                                                                    d.status === 'wrong' ? 'bg-red-500/20 text-red-600 border-b-2 border-red-500' :
-                                                                    d.status === 'missing' ? 'bg-blue-500/10 text-blue-400 border-b-2 border-dashed border-blue-400' :
-                                                                    'bg-orange-500/20 text-orange-600'
-                                                                }`}
-                                                                title={d.status === 'wrong' ? `Harusnya: ${d.char}, Kamu tulis: ${d.userChar}` : ''}
-                                                            >
-                                                                {d.char || d.userChar}
-                                                            </span>
-                                                        ))}
-                                                    </div>
-                                                </div>
-                                                <div className="text-[10px] transition-colors flex gap-2">
-                                                    <span className={textMuted}>Jawaban kamu:</span>
-                                                    <span className="font-bold text-red-500">{detail.answer_given || '(kosong)'}</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    );
-                                })}
-                                {kakitoriStats.recent_details.filter(d => !d.is_correct).length === 0 && (
-                                    <div className={`text-center py-4 text-xs font-bold ${textMuted}`}>
-                                        Belum ada kesalahan detail yang tercatat.
-                                    </div>
-                                )}
-                            </div>
-                        </div>
-                    )}
                 </div>
             ) : (
                 /* Jika belum ada data kakitori: tampilkan CTA kakitori */

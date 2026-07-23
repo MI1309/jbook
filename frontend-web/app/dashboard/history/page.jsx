@@ -1,20 +1,21 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { useTheme } from '@/context/ThemeContext';
-import { useRouter } from 'next/navigation';
 import { getUserAnalytics, resolveContentId } from '@/lib/api';
+import { getGuestAnalytics } from '@/lib/local-analytics';
 import Link from 'next/link';
 import KanjiDetailModal from '@/components/kanji/KanjiDetailModal';
 import KotobaDetailModal from '@/components/kotoba/KotobaDetailModal';
 import BunpoDetailModal from '@/components/bunpo/BunpoDetailModal';
 import { toast } from 'react-toastify';
+import { diffStrings } from '@/lib/utils';
+import * as wanakana from 'wanakana';
 
 export default function HistoryPage() {
     const { user, loading } = useAuth();
     const { theme, mounted } = useTheme();
-    const router = useRouter();
     const [analytics, setAnalytics] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
     const [detailView, setDetailView] = useState(null);
@@ -40,17 +41,29 @@ export default function HistoryPage() {
         }
     };
 
+    const fetchAnalytics = useCallback(async () => {
+        setIsLoading(true);
+        try {
+            if (user) {
+                const data = await getUserAnalytics();
+                setAnalytics(data);
+            } else {
+                const data = getGuestAnalytics();
+                setAnalytics(data);
+            }
+        } catch (err) {
+            console.error("Error fetching analytics:", err);
+        } finally {
+            setIsLoading(false);
+        }
+    }, [user]);
+
     useEffect(() => {
         if (!user && !loading) {
-            router.push('/login');
-            return;
+            // Guest bisa akses history page juga
         }
-        if (user) {
-            getUserAnalytics().then(data => {
-                setAnalytics(data);
-            }).catch(console.error).finally(() => setIsLoading(false));
-        }
-    }, [user, loading]);
+        fetchAnalytics();
+    }, [user, loading, fetchAnalytics]);
 
     const textColor = !mounted ? 'text-black' : (theme === 'dark' ? 'text-white' : 'text-black');
     const subTextColor = !mounted ? 'text-gray-400' : (theme === 'dark' ? 'text-gray-500' : 'text-gray-400');
@@ -65,9 +78,19 @@ export default function HistoryPage() {
             case 'kotoba': return 'Kotoba';
             case 'grammar':
             case 'bunpo': return 'Bunpo';
+            case 'kakitori': return 'Kakitori';
             default: return 'Lainnya';
         }
     };
+
+    // Helper theme classes
+    const tc = (dark, light) => !mounted ? light : (theme === 'dark' ? dark : light);
+    const cardBase = tc('bg-[#0a0a0a] border-blue-900/20', 'bg-white border-gray-100');
+
+    // Kakitori stats
+    const kakitoriStats = analytics?.kakitori_stats || null;
+    const hasKakitoriData = kakitoriStats && kakitoriStats.recent_details && kakitoriStats.recent_details.length > 0;
+    const wrongKakitoriDetails = kakitoriStats?.recent_details?.filter(d => !d.is_correct) || [];
 
     const rawMistakes = analytics?.wrong_stats || [];
     
@@ -167,34 +190,8 @@ export default function HistoryPage() {
                     </div>
                 </div>
 
-                {/* Export Action */}
-                {allMistakes.length > 0 && (
-                    <div className="flex justify-end mb-4">
-                        <button
-                            onClick={() => {
-                                const csvLines = ['Karakter/Materi,Tipe,Jumlah Salah,Status'];
-                                sorted.forEach(m => {
-                                    const typeLabel = getMistakeTypeLabel(m.type === 'bunpo' ? 'grammar' : m.type);
-                                    csvLines.push(`"${m.character}","${typeLabel}",${m.count},"${m.status || ''}"`);
-                                });
-                                const blob = new Blob([csvLines.join('\n')], { type: 'text/csv' });
-                                const url = URL.createObjectURL(blob);
-                                const a = document.createElement('a');
-                                a.href = url;
-                                a.download = `histori_kesalahan_${new Date().toISOString().split('T')[0]}.csv`;
-                                a.click();
-                            }}
-                            className={`flex items-center gap-2 text-xs font-bold px-4 py-2 rounded-xl transition-all ${
-                                theme === 'dark' ? 'bg-blue-950/20 text-blue-300 hover:bg-blue-950/40' : 'bg-blue-50 text-blue-700 hover:bg-blue-100'
-                            }`}
-                        >
-                            <span>📥</span> Ekspor Csv Histori
-                        </button>
-                    </div>
-                )}
-
                 {/* Filter & Sort Controls */}
-                {allMistakes.length > 0 && (
+                {true && (
                     <div className={`${cardBg} border ${borderStyle} rounded-2xl p-4 mb-6 flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between transition-colors`}>
                         {/* Type Filter */}
                         <div className="flex gap-2 flex-wrap">
@@ -203,10 +200,14 @@ export default function HistoryPage() {
                                 { id: 'kanji', label: 'Kanji' },
                                 { id: 'vocab', label: 'Kotoba' },
                                 { id: 'grammar', label: 'Bunpo' },
+                                { id: 'kakitori', label: 'Kakitori' },
                             ].map(f => (
                                 <button
                                     key={f.id}
-                                    onClick={() => setFilterType(f.id)}
+                                    onClick={() => {
+                                        setFilterType(f.id);
+                                        setPage(1);
+                                    }}
                                     className={`px-4 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${
                                         filterType === f.id
                                             ? 'bg-blue-600 text-white shadow-md shadow-blue-500/20'
@@ -237,115 +238,192 @@ export default function HistoryPage() {
                     </div>
                 )}
 
-                {/* Mistake List */}
-                {pagedMistakes.length > 0 ? (
-                    <div className="space-y-3">
-                        {pagedMistakes.map((mistake, idx) => {
-                            const absoluteIdx = pageStart + idx;
-                            return (
-                            <button
-                                key={`${mistake.type}-${mistake.character}-${absoluteIdx}`}
-                                onClick={() => handleOpenMistake(mistake)}
-                                className={`w-full flex items-center justify-between group p-3 sm:p-5 rounded-2xl border-2 transition-all hover:border-blue-500 hover:scale-[1.005] cursor-pointer text-left ${!mounted ? 'bg-white border-gray-100' : (theme === 'dark' ? 'bg-[#0a0a0a] border-blue-950/20 hover:bg-blue-950/10' : 'bg-white border-gray-100 hover:bg-blue-50/40')}`}
-                            >
-                                <div className="flex items-center gap-2 sm:gap-5 min-w-0 flex-1 mr-2 sm:mr-4">
-                                    {/* Rank badge - hidden on very small screens to save space */}
-                                    <div className={`hidden xs:flex w-6 h-6 sm:w-7 sm:h-7 rounded-full items-center justify-center text-[9px] sm:text-[10px] font-black flex-shrink-0 ${absoluteIdx === 0 ? 'bg-blue-600 text-white shadow-md shadow-blue-500/20' : absoluteIdx === 1 ? 'bg-orange-500 text-white' : absoluteIdx === 2 ? 'bg-yellow-500 text-white' : (theme === 'dark' ? 'bg-blue-950/20 text-gray-600' : 'bg-gray-100 text-gray-400')}`}>
-                                        {absoluteIdx + 1}
-                                    </div>
-                                    
-                                    {/* Character icon - dynamic width */}
-                                    <div className={`h-10 sm:h-12 px-2 min-w-[2.5rem] sm:min-w-[3rem] rounded-xl sm:rounded-2xl bg-blue-600 text-white flex items-center justify-center font-black flex-shrink-0 shadow-md shadow-blue-500/20 group-hover:rotate-3 transition-transform ${
-                                        (mistake.character?.length || 0) > 4 ? 'text-xs' : (mistake.character?.length || 0) > 2 ? 'text-sm' : 'text-lg'
-                                    }`}>
-                                        {mistake.character || '?'}
-                                    </div>
+                {/* Mistake List (Non-Kakitori) */}
+                {filterType !== 'kakitori' && (
+                    pagedMistakes.length > 0 ? (
+                        <div className="space-y-3">
+                            {pagedMistakes.map((mistake, idx) => {
+                                const absoluteIdx = pageStart + idx;
+                                return (
+                                <button
+                                    key={`${mistake.type}-${mistake.character}-${absoluteIdx}`}
+                                    onClick={() => handleOpenMistake(mistake)}
+                                    className={`w-full flex items-center justify-between group p-3 sm:p-5 rounded-2xl border-2 transition-all hover:border-blue-500 hover:scale-[1.005] cursor-pointer text-left ${!mounted ? 'bg-white border-gray-100' : (theme === 'dark' ? 'bg-[#0a0a0a] border-blue-950/20 hover:bg-blue-950/10' : 'bg-white border-gray-100 hover:bg-blue-50/40')}`}
+                                >
+                                    <div className="flex items-center gap-2 sm:gap-5 min-w-0 flex-1 mr-2 sm:mr-4">
+                                        {/* Rank badge - hidden on very small screens to save space */}
+                                        <div className={`hidden xs:flex w-6 h-6 sm:w-7 sm:h-7 rounded-full items-center justify-center text-[9px] sm:text-[10px] font-black flex-shrink-0 ${absoluteIdx === 0 ? 'bg-blue-600 text-white shadow-md shadow-blue-500/20' : absoluteIdx === 1 ? 'bg-orange-500 text-white' : absoluteIdx === 2 ? 'bg-yellow-500 text-white' : (theme === 'dark' ? 'bg-blue-950/20 text-gray-600' : 'bg-gray-100 text-gray-400')}`}>
+                                            {absoluteIdx + 1}
+                                        </div>
+                                        
+                                        {/* Character icon - dynamic width */}
+                                        <div className={`h-10 sm:h-12 px-2 min-w-[2.5rem] sm:min-w-[3rem] rounded-xl sm:rounded-2xl bg-blue-600 text-white flex items-center justify-center font-black flex-shrink-0 shadow-md shadow-blue-500/20 group-hover:rotate-3 transition-transform ${
+                                            (mistake.character?.length || 0) > 4 ? 'text-xs' : (mistake.character?.length || 0) > 2 ? 'text-sm' : 'text-lg'
+                                        }`}>
+                                            {mistake.character || '?'}
+                                        </div>
 
-                                    <div className="min-w-0 flex-1">
-                                        <h3 className={`font-black text-base sm:text-xl leading-none mb-1 truncate transition-colors ${textColor}`}>{mistake.character}</h3>
-                                        <div className="flex flex-wrap items-center gap-1 sm:gap-2 mt-1 sm:mt-2">
-                                            <span className={`text-[8px] sm:text-[9px] font-black uppercase tracking-widest px-1.5 sm:px-2 py-0.5 rounded-full ${theme === 'dark' ? 'bg-blue-950/20 text-blue-300' : 'bg-blue-50 text-blue-700'}`}>
-                                                {getMistakeTypeLabel(mistake.type)}
-                                            </span>
-                                            {mistake.status && (
-                                                <span className={`text-[8px] sm:text-[9px] font-black uppercase tracking-widest px-1.5 sm:px-2 py-0.5 rounded-full flex items-center gap-1 ${
-                                                    mistake.status === 'Perbaiki' 
-                                                        ? 'bg-blue-600 text-white' 
-                                                        : mistake.status === 'Cukup'
-                                                                ? 'bg-orange-500 text-white'
-                                                                : 'bg-emerald-500 text-white'
-                                                }`}>
-                                                    {mistake.status}
+                                        <div className="min-w-0 flex-1">
+                                            <h3 className={`font-black text-base sm:text-xl leading-none mb-1 truncate transition-colors ${textColor}`}>{mistake.character}</h3>
+                                            <div className="flex flex-wrap items-center gap-1 sm:gap-2 mt-1 sm:mt-2">
+                                                <span className={`text-[8px] sm:text-[9px] font-black uppercase tracking-widest px-1.5 sm:px-2 py-0.5 rounded-full ${theme === 'dark' ? 'bg-blue-950/20 text-blue-300' : 'bg-blue-50 text-blue-700'}`}>
+                                                    {getMistakeTypeLabel(mistake.type)}
                                                 </span>
-                                            )}
+                                                {mistake.status && (
+                                                    <span className={`text-[8px] sm:text-[9px] font-black uppercase tracking-widest px-1.5 sm:px-2 py-0.5 rounded-full flex items-center gap-1 ${
+                                                        mistake.status === 'Perbaiki' 
+                                                            ? 'bg-blue-600 text-white' 
+                                                            : mistake.status === 'Cukup'
+                                                                    ? 'bg-orange-500 text-white'
+                                                                    : 'bg-emerald-500 text-white'
+                                                    }`}>
+                                                        {mistake.status}
+                                                    </span>
+                                                )}
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
 
-                                <div className="flex items-center gap-2 sm:gap-4 flex-shrink-0">
-                                    <div className="flex flex-col items-end">
-                                        <div className="text-lg sm:text-2xl font-black text-blue-600 leading-none">{mistake.count}x</div>
-                                        <div className={`text-[8px] sm:text-[10px] font-black uppercase tracking-widest ${subTextColor}`}>salah</div>
+                                    <div className="flex items-center gap-2 sm:gap-4 flex-shrink-0">
+                                        <div className="flex flex-col items-end">
+                                            <div className="text-lg sm:text-2xl font-black text-blue-600 leading-none">{mistake.count}x</div>
+                                            <div className={`text-[8px] sm:text-[10px] font-black uppercase tracking-widest ${subTextColor}`}>salah</div>
+                                        </div>
+                                        <span className={`text-sm sm:text-xl transition-colors group-hover:text-blue-500 group-hover:translate-x-1 transform transition-transform ${subTextColor}`}>→</span>
                                     </div>
-                                    <span className={`text-sm sm:text-xl transition-colors group-hover:text-blue-500 group-hover:translate-x-1 transform transition-transform ${subTextColor}`}>→</span>
-                                </div>
-                            </button>
-                            );
-                        })}
-                    </div>
-                ) : (
-                    <div className={`${cardBg} border-2 border-dashed ${borderStyle} rounded-3xl py-24 text-center transition-colors`}>
-                        <div className="text-6xl mb-6">🎉</div>
-                        <h2 className={`text-2xl font-black mb-2 transition-colors ${textColor}`}>
-                            {filterType === 'all' ? 'Belum ada kesalahan!' : `Tidak ada kesalahan di ${getMistakeTypeLabel(filterType)}`}
-                        </h2>
-                        <p className={`text-sm font-bold transition-colors ${subTextColor}`}>
-                            {filterType === 'all' ? 'Ayo mulai latihan untuk melihat analisisnya.' : 'Coba filter lain atau mulai latihan baru.'}
-                        </p>
-                        <Link href="/practice" className="inline-block mt-6 bg-blue-600 hover:bg-blue-700 text-white font-black px-8 py-3 rounded-xl transition-all shadow-lg shadow-blue-500/20">
-                            Mulai Latihan
-                        </Link>
-                    </div>
+                                </button>
+                                );
+                            })}
+                        </div>
+                    ) : (
+                        <div className={`${cardBg} border-2 border-dashed ${borderStyle} rounded-3xl py-24 text-center transition-colors`}>
+                            <div className="text-6xl mb-6">🎉</div>
+                            <h2 className={`text-2xl font-black mb-2 transition-colors ${textColor}`}>
+                                {filterType === 'all' ? 'Belum ada kesalahan!' : `Tidak ada kesalahan di ${getMistakeTypeLabel(filterType)}`}
+                            </h2>
+                            <p className={`text-sm font-bold transition-colors ${subTextColor}`}>
+                                {filterType === 'all' ? 'Ayo mulai latihan untuk melihat analisisnya.' : 'Coba filter lain atau mulai latihan baru.'}
+                            </p>
+                            <Link href="/practice" className="inline-block mt-6 bg-blue-600 hover:bg-blue-700 text-white font-black px-8 py-3 rounded-xl transition-all shadow-lg shadow-blue-500/20">
+                                Mulai Latihan
+                            </Link>
+                        </div>
+                    )
                 )}
 
-                {/* Pagination */}
-                {sorted.length > PAGE_SIZE && (
-                    <div className="mt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
-                        <div className={`text-[10px] font-black uppercase tracking-widest ${subTextColor}`}>
-                            Menampilkan {pageStart + 1}–{Math.min(pageStart + PAGE_SIZE, sorted.length)} dari {sorted.length}
-                        </div>
+                {/* Histori Kesalahan Kakitori */}
+                {filterType === 'kakitori' && (
+                    hasKakitoriData ? (
+                        <div className={`rounded-2xl border-2 p-6 transition-colors ${cardBase} border ${borderStyle}`}>
+                            <div className="space-y-4">
+                                {wrongKakitoriDetails.slice(0, 20).map((detail, idx) => {
+                                    const correctReading = wanakana.toHiragana(detail.reading || '');
+                                    const userReading = wanakana.toHiragana(detail.answer_given || '');
+                                    const diffs = diffStrings(correctReading, userReading);
 
-                        <div className="flex items-center gap-2">
-                            <button
-                                onClick={() => setPage(p => Math.max(1, p - 1))}
-                                disabled={currentPage <= 1}
-                                className={`px-4 py-2 rounded-xl text-xs font-black transition-all border ${
-                                    currentPage <= 1
-                                        ? `${theme === 'dark' ? 'bg-blue-950/10 text-gray-600 border-blue-950/20' : 'bg-gray-100 text-gray-400 border-gray-200'} cursor-not-allowed opacity-70`
-                                        : `${theme === 'dark' ? 'bg-blue-950/20 text-blue-200 border-blue-900/30 hover:bg-blue-950/35' : 'bg-white text-blue-700 border-gray-200 hover:bg-blue-50'}`
-                                }`}
-                            >
-                                ← Sebelumnya
-                            </button>
-
-                            <div className={`${theme === 'dark' ? 'bg-[#0a0a0a]' : 'bg-white'} border ${borderStyle} rounded-xl px-4 py-2 text-xs font-black`}>
-                                {currentPage}/{totalPages}
+                                    return (
+                                        <div key={idx} className={`p-4 rounded-xl border ${theme === 'dark' ? 'bg-black/20 border-white/5' : 'bg-gray-50 border-gray-100'}`}>
+                                            <div className="flex justify-between items-start mb-2">
+                                                <div className="flex items-center gap-2">
+                                                    <span className={`text-xl font-black ${textColor}`}>{detail.character}</span>
+                                                    <span className={`text-[10px] font-black px-2 py-0.5 rounded-full ${theme === 'dark' ? 'bg-blue-900/40 text-blue-400' : 'bg-blue-100 text-blue-600'}`}>
+                                                        {new Date(detail.timestamp).toLocaleDateString('id-ID', { day: 'numeric', month: 'short' })}
+                                                    </span>
+                                                </div>
+                                                <div className="text-[10px] font-black text-red-500 uppercase tracking-widest">
+                                                    Salah
+                                                </div>
+                                            </div>
+                                            
+                                            <div className="flex flex-col gap-2">
+                                                <div className="flex items-center gap-2 flex-wrap">
+                                                    <span className={`text-[10px] font-black uppercase tracking-widest ${subTextColor}`}>Analisis:</span>
+                                                    <div className="flex items-center gap-0.5 text-lg font-japanese tracking-tighter">
+                                                        {diffs.map((d, dIdx) => (
+                                                            <span 
+                                                                key={dIdx} 
+                                                                className={`px-0.5 rounded ${
+                                                                    d.status === 'correct' ? 'text-green-500' : 
+                                                                    d.status === 'wrong' ? 'bg-red-500/20 text-red-600 border-b-2 border-red-500' :
+                                                                    d.status === 'missing' ? 'bg-blue-500/10 text-blue-400 border-b-2 border-dashed border-blue-400' :
+                                                                    'bg-orange-500/20 text-orange-600'
+                                                                }`}
+                                                                title={d.status === 'wrong' ? `Harusnya: ${d.char}, Kamu tulis: ${d.userChar}` : ''}
+                                                            >
+                                                                {d.char || d.userChar}
+                                                            </span>
+                                                        ))}
+                                                    </div>
+                                                </div>
+                                                <div className="text-[10px] transition-colors flex gap-2">
+                                                    <span className={subTextColor}>Jawaban kamu:</span>
+                                                    <span className="font-bold text-red-500">{detail.answer_given || '(kosong)'}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    );
+                                })}
+                                {wrongKakitoriDetails.length === 0 && (
+                                    <div className={`text-center py-4 text-xs font-bold ${subTextColor}`}>
+                                        🎉 Bagus! Tidak ada kesalahan kakitori yang tercatat!
+                                    </div>
+                                )}
                             </div>
-
-                            <button
-                                onClick={() => setPage(p => Math.min(totalPages, p + 1))}
-                                disabled={currentPage >= totalPages}
-                                className={`px-4 py-2 rounded-xl text-xs font-black transition-all border ${
-                                    currentPage >= totalPages
-                                        ? `${theme === 'dark' ? 'bg-blue-950/10 text-gray-600 border-blue-950/20' : 'bg-gray-100 text-gray-400 border-gray-200'} cursor-not-allowed opacity-70`
-                                        : `${theme === 'dark' ? 'bg-blue-950/20 text-blue-200 border-blue-900/30 hover:bg-blue-950/35' : 'bg-white text-blue-700 border-gray-200 hover:bg-blue-50'}`
-                                }`}
-                            >
-                                Berikutnya →
-                            </button>
                         </div>
-                    </div>
+                    ) : (
+                        <div className={`${cardBg} border-2 border-dashed ${borderStyle} rounded-3xl py-24 text-center transition-colors`}>
+                            <div className="text-6xl mb-6">📜</div>
+                            <h2 className={`text-2xl font-black mb-2 transition-colors ${textColor}`}>
+                                Belum ada data kakitori!
+                            </h2>
+                            <p className={`text-sm font-bold transition-colors ${subTextColor}`}>
+                                Coba lakukan latihan kakitori terlebih dahulu!
+                            </p>
+                            <Link href="/practice" className="inline-block mt-6 bg-blue-600 hover:bg-blue-700 text-white font-black px-8 py-3 rounded-xl transition-all shadow-lg shadow-blue-500/20">
+                                Mulai Latihan Kakitori
+                            </Link>
+                        </div>
+                    )
                 )}
+
+        {/* Pagination (only when not Kakitori) */}
+        {filterType !== 'kakitori' && sorted.length > PAGE_SIZE && (
+            <div className="mt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+                <div className={`text-[10px] font-black uppercase tracking-widest ${subTextColor}`}>
+                    Menampilkan {pageStart + 1}–{Math.min(pageStart + PAGE_SIZE, sorted.length)} dari {sorted.length}
+                </div>
+
+                <div className="flex items-center gap-2">
+                    <button
+                        onClick={() => setPage(p => Math.max(1, p - 1))}
+                        disabled={currentPage <= 1}
+                        className={`px-4 py-2 rounded-xl text-xs font-black transition-all border ${
+                            currentPage <= 1
+                                ? `${theme === 'dark' ? 'bg-blue-950/10 text-gray-600 border-blue-950/20' : 'bg-gray-100 text-gray-400 border-gray-200'} cursor-not-allowed opacity-70`
+                                : `${theme === 'dark' ? 'bg-blue-950/20 text-blue-200 border-blue-900/30 hover:bg-blue-950/35' : 'bg-white text-blue-700 border-gray-200 hover:bg-blue-50'}`
+                        }`}
+                    >
+                        ← Sebelumnya
+                    </button>
+
+                    <div className={`${theme === 'dark' ? 'bg-[#0a0a0a]' : 'bg-white'} border ${borderStyle} rounded-xl px-4 py-2 text-xs font-black`}>
+                        {currentPage}/{totalPages}
+                    </div>
+
+                    <button
+                        onClick={() => setPage(p => Math.min(totalPages, p + 1))}
+                        disabled={currentPage >= totalPages}
+                        className={`px-4 py-2 rounded-xl text-xs font-black transition-all border ${
+                            currentPage >= totalPages
+                                ? `${theme === 'dark' ? 'bg-blue-950/10 text-gray-600 border-blue-950/20' : 'bg-gray-100 text-gray-400 border-gray-200'} cursor-not-allowed opacity-70`
+                                : `${theme === 'dark' ? 'bg-blue-950/20 text-blue-200 border-blue-900/30 hover:bg-blue-950/35' : 'bg-white text-blue-700 border-gray-200 hover:bg-blue-50'}`
+                        }`}
+                    >
+                        Berikutnya →
+                    </button>
+                </div>
+            </div>
+        )}
 
                 {/* Detail View Overlay */}
                 {detailView && (

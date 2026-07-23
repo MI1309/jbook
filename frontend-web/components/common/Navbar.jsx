@@ -98,12 +98,20 @@ export default function Navbar() {
                         <div className="flex items-center">
                             <Link
                                 href="/"
-                                className={`text-2xl font-japanese font-black tracking-widest transition-all duration-200 ${
+                                className={`flex items-center gap-3 text-2xl font-japanese font-black tracking-widest transition-all duration-200 ${
                                     !mounted ? 'text-accent-blue' : 
                                     theme === 'dark' ? 'text-accent-blue drop-shadow-[0_0_8px_rgba(56,189,248,0.25)]' : 'text-accent-blue'
                                 }`}
                                 onClick={(e) => handleNavClick(e, '/')}
                             >
+                                {/* Logo dari file icon.svg di public */}
+                                <img 
+                                    src="/icon.svg" 
+                                    alt="Logo JBook" 
+                                    width="32" 
+                                    height="32" 
+                                    className="flex-shrink-0 rounded-2xl"
+                                />
                                 JBOOK
                             </Link>
 

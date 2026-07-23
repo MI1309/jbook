@@ -68,6 +68,8 @@ function PracticeContent() {
     const [audioPlaying, setAudioPlaying] = useState(false);
     const audioPlayingRef = useRef(false);
     const lastAutoplayedIndex = useRef(-1);
+    const nextTimeoutRef = useRef(null);
+    const timerIdRef = useRef(null);
 
     const [pendingSyncs, setPendingSyncs] = useState(0);
 
@@ -161,6 +163,18 @@ function PracticeContent() {
     const handleFinish = useCallback(async (finalResultsOverride) => {
         if (submitting || finished) return;
 
+        // Cancel any pending auto-advance timeout
+        if (nextTimeoutRef.current) {
+            clearTimeout(nextTimeoutRef.current);
+            nextTimeoutRef.current = null;
+        }
+        
+        // Cancel timer explicitly
+        if (timerIdRef.current) {
+            clearInterval(timerIdRef.current);
+            timerIdRef.current = null;
+        }
+
         setSubmitting(true);
         setError(null);
         const resultsToSubmit = finalResultsOverride || results;
@@ -209,8 +223,13 @@ function PracticeContent() {
         const timerId = setInterval(() => {
             setTimeLeft((prev) => prev - 1);
         }, 1000);
+        
+        timerIdRef.current = timerId; // Simpan timerId ke ref
 
-        return () => clearInterval(timerId);
+        return () => {
+            clearInterval(timerId);
+            timerIdRef.current = null;
+        };
     }, [timeLeft, initialTimer, finished, loading, handleFinish]);
 
     const formatTime = (seconds) => {
@@ -305,8 +324,6 @@ function PracticeContent() {
     useEffect(() => {
         // Navigation guard handled by Navbar's ConfirmationModal
     }, [finished]);
-
-    const nextTimeoutRef = useRef(null);
 
     const handleTypedAnswerChange = (val) => {
         const kanaVal = wanakana.toKana(val);
