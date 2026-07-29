@@ -104,13 +104,13 @@ export default function Navbar() {
                                 }`}
                                 onClick={(e) => handleNavClick(e, '/')}
                             >
-                                {/* Logo dari file icon.svg di public */}
+                                {/* Logo dari file icon-32.png di public */}
                                 <img 
-                                    src="/icon.svg" 
+                                    src="/icon-192.png" 
                                     alt="Logo JBook" 
-                                    width="32" 
-                                    height="32" 
-                                    className="flex-shrink-0 rounded-2xl"
+                                    width="48" 
+                                    height="48" 
+                                    className="flex-shrink-0 rounded-2xl w-12 h-12 object-cover"
                                 />
                                 JBOOK
                             </Link>

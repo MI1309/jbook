@@ -2,7 +2,7 @@ const sharp = require('sharp');
 const fs = require('fs');
 const path = require('path');
 
-const input = path.join(__dirname, 'public/icon.svg');
+const input = path.join(__dirname, 'public/logo_jbook.jpg');
 const outputDir = path.join(__dirname, 'public');
 
 async function generateIcons() {
