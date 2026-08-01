@@ -13,6 +13,7 @@ import { toast } from 'react-toastify';
 import { diffStrings } from '@/lib/utils';
 import * as wanakana from 'wanakana';
 
+// fungsi untuk menampilkan history page
 export default function HistoryPage() {
     const { user, loading } = useAuth();
     const { theme, mounted } = useTheme();
@@ -24,7 +25,7 @@ export default function HistoryPage() {
     const [page, setPage] = useState(1);
     const PAGE_SIZE = 15;
 
-    // Resolve character → ID (online: from API, offline: from IndexedDB)
+    // fungsi untuk mengembalikan ID dari character → ID (online: from API, offline: from IndexedDB)
     const handleOpenMistake = async (mistake) => {
         try {
             const id = await resolveContentId(mistake.type, mistake.character);
@@ -41,6 +42,7 @@ export default function HistoryPage() {
         }
     };
 
+    // fungsi untuk mengambil analytics dari API atau IndexedDB
     const fetchAnalytics = useCallback(async () => {
         setIsLoading(true);
         try {
@@ -61,8 +63,8 @@ export default function HistoryPage() {
     useEffect(() => {
         if (!user && !loading) {
             // Guest bisa akses history page juga
+            fetchAnalytics();
         }
-        fetchAnalytics();
     }, [user, loading, fetchAnalytics]);
 
     const textColor = !mounted ? 'text-black' : (theme === 'dark' ? 'text-white' : 'text-black');
@@ -71,6 +73,7 @@ export default function HistoryPage() {
     const borderStyle = !mounted ? 'border-gray-100' : (theme === 'dark' ? 'border-blue-950/20' : 'border-gray-100');
     const pageBg = !mounted ? 'bg-gray-50' : (theme === 'dark' ? 'bg-black' : 'bg-gray-50');
 
+    // fungsi untuk mengembalikan label dari tipe salah
     const getMistakeTypeLabel = (type) => {
         switch (type) {
             case 'kanji': return 'Kanji';
@@ -83,18 +86,18 @@ export default function HistoryPage() {
         }
     };
 
-    // Helper theme classes
+    // Helper untuk mengembalikan kelas theme berdasarkan theme dan mounted
     const tc = (dark, light) => !mounted ? light : (theme === 'dark' ? dark : light);
     const cardBase = tc('bg-[#0a0a0a] border-blue-900/20', 'bg-white border-gray-100');
 
-    // Kakitori stats
+    // fungsi untuk mengembalikan kakitori stats dari analytics
     const kakitoriStats = analytics?.kakitori_stats || null;
     const hasKakitoriData = kakitoriStats && kakitoriStats.recent_details && kakitoriStats.recent_details.length > 0;
     const wrongKakitoriDetails = kakitoriStats?.recent_details?.filter(d => !d.is_correct) || [];
 
     const rawMistakes = analytics?.wrong_stats || [];
     
-    // Satukan data yang sama (karakter & tipe sama) agar tidak double
+    // mengelompokkan data yang sama (karakter & tipe sama) agar tidak double
     const groupedMistakes = rawMistakes.reduce((acc, current) => {
         // Konsistensi tipe: pastikan 'bunpo' diperlakukan sebagai 'grammar'
         const type = current.type === 'bunpo' ? 'grammar' : current.type;
@@ -144,6 +147,7 @@ export default function HistoryPage() {
         );
     }
 
+    // render halaman history
     return (
         <div className={`min-h-screen ${pageBg}`}>
             <div className="container mx-auto px-4 py-12 max-w-4xl">
@@ -168,7 +172,7 @@ export default function HistoryPage() {
                             </p>
                         </div>
 
-                        {/* Stats badges */}
+                        {/* badges */}
                         <div className="flex gap-3 flex-wrap">
                             <div className={`px-4 py-2 rounded-2xl border ${cardBg} ${borderStyle} text-center min-w-[80px]`}>
                                 <div className="text-2xl font-black text-blue-600">{analytics?.total_attempts || 0}</div>
@@ -190,10 +194,10 @@ export default function HistoryPage() {
                     </div>
                 </div>
 
-                {/* Filter & Sort Controls */}
+                {/* filter & pengurutan */}
                 {true && (
                     <div className={`${cardBg} border ${borderStyle} rounded-2xl p-4 mb-6 flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between transition-colors`}>
-                        {/* Type Filter */}
+                        {/* filter tipe */}
                         <div className="flex gap-2 flex-wrap">
                             {[
                                 { id: 'all', label: 'Semua' },
