@@ -130,11 +130,11 @@ function FilterContent() {
 
     const initialSearch = searchParams.get('search') || '';
     const initialRadical = searchParams.get('radical') || '';
-    const initialLevel = searchParams.get('level') || '';
+    const initialLevels = searchParams.get('level')?.split(',').filter(Boolean) || [];
 
     const [searchTerm, setSearchTerm] = useState(initialSearch);
     const [selectedRadical, setSelectedRadical] = useState(initialRadical);
-    const [selectedLevel, setSelectedLevel] = useState(initialLevel);
+    const [selectedLevels, setSelectedLevels] = useState(initialLevels);
     const [expandedGroup, setExpandedGroup] = useState(null);
     const [showRadicals, setShowRadicals] = useState(false);
     
@@ -142,7 +142,7 @@ function FilterContent() {
     useEffect(() => {
         setSearchTerm(searchParams.get('search') || '');
         setSelectedRadical(searchParams.get('radical') || '');
-        setSelectedLevel(searchParams.get('level') || '');
+        setSelectedLevels(searchParams.get('level')?.split(',').filter(Boolean) || []);
     }, [searchParams]);
 
     // Debounce search term to avoid too many URL updates
@@ -175,8 +175,8 @@ function FilterContent() {
             params.delete('radical');
         }
 
-        if (selectedLevel) {
-            params.set('level', selectedLevel);
+        if (selectedLevels.length) {
+            params.set('level', selectedLevels.join(','));
         } else {
             params.delete('level');
         }
@@ -187,12 +187,12 @@ function FilterContent() {
         const currentRadical = searchParams.get('radical') || '';
         const currentLevel = searchParams.get('level') || '';
 
-        if (debouncedSearch !== currentSearch || selectedRadical !== currentRadical || selectedLevel !== currentLevel) {
+        if (debouncedSearch !== currentSearch || selectedRadical !== currentRadical || selectedLevels.join(',') !== currentLevel) {
             params.delete('page'); // Reset pagination
             router.push(`/kanji?${params.toString()}`);
         }
 
-    }, [debouncedSearch, selectedRadical, selectedLevel, router, searchParams]);
+    }, [debouncedSearch, selectedRadical, selectedLevels, router, searchParams]);
 
     const handleRadicalClick = (rad) => {
         if (selectedRadical === rad) {
@@ -211,10 +211,11 @@ function FilterContent() {
     };
 
     const handleLevelClick = (level) => {
-        if (selectedLevel === level.toString()) {
-            setSelectedLevel('');
+        const stringLevel = level.toString();
+        if (selectedLevels.includes(stringLevel)) {
+            setSelectedLevels(selectedLevels.filter(l => l !== stringLevel));
         } else {
-            setSelectedLevel(level.toString());
+            setSelectedLevels([...selectedLevels, stringLevel]);
         }
     };
 
@@ -254,7 +255,7 @@ function FilterContent() {
                             <button
                                 key={level}
                                 onClick={() => handleLevelClick(level)}
-                                className={`px-5 py-2.5 rounded-xl border-2 transition-all font-black text-sm ${selectedLevel === level.toString()
+                                className={`px-5 py-2.5 rounded-xl border-2 transition-all font-black text-sm ${selectedLevels.includes(level.toString())
                                         ? 'bg-brand text-white border-brand shadow-lg shadow-brand/20 scale-105'
                                         : `${theme === 'dark' ? 'bg-black/40 text-gray-400 border-red-950 hover:border-red-500' : 'bg-background text-gray-500 border-gray-100 hover:border-brand/40 hover:bg-brand-light/10'}`
                                     }`}
@@ -262,6 +263,14 @@ function FilterContent() {
                                 N{level}
                             </button>
                         ))}
+                        {selectedLevels.length > 1 && (
+                            <button
+                                onClick={() => setSelectedLevels([])}
+                                className="px-4 py-2.5 rounded-xl border-2 border-gray-200 bg-gray-50 text-gray-600 hover:bg-gray-100 transition-all text-sm font-black"
+                            >
+                                Bersihkan
+                            </button>
+                        )}
                     </div>
                 </div>
             </div>

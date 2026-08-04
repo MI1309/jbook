@@ -12,17 +12,17 @@ function FilterContent() {
     const searchParams = useSearchParams();
 
     const initialSearch = searchParams.get('search') || '';
-    const initialLevel = searchParams.get('level') || '';
+    const initialLevels = searchParams.get('level')?.split(',').filter(Boolean) || [];
     const initialType = searchParams.get('word_type') || '';
 
     const [searchTerm, setSearchTerm] = useState(initialSearch);
-    const [level, setLevel] = useState(initialLevel);
+    const [selectedLevels, setSelectedLevels] = useState(initialLevels);
     const [wordType, setWordType] = useState(initialType);
 
     // Sync state with URL changes (e.g. back button)
     useEffect(() => {
         setSearchTerm(searchParams.get('search') || '');
-        setLevel(searchParams.get('level') || '');
+        setSelectedLevels(searchParams.get('level')?.split(',').filter(Boolean) || []);
         setWordType(searchParams.get('word_type') || '');
     }, [searchParams]);
 
@@ -39,8 +39,8 @@ function FilterContent() {
             params.delete('search');
         }
 
-        if (level) {
-            params.set('level', level);
+        if (selectedLevels.length) {
+            params.set('level', selectedLevels.join(','));
         } else {
             params.delete('level');
         }
@@ -56,12 +56,12 @@ function FilterContent() {
         const currentType = searchParams.get('word_type') || '';
 
         // Only push if changed
-        if (debouncedSearch !== currentSearch || level !== currentLevel || wordType !== currentType) {
+        if (debouncedSearch !== currentSearch || selectedLevels.join(',') !== currentLevel || wordType !== currentType) {
             params.delete('page'); // Reset pagination on new search/filter
             router.push(`/kotoba?${params.toString()}`);
         }
 
-    }, [debouncedSearch, level, wordType, router, searchParams]);
+    }, [debouncedSearch, selectedLevels, wordType, router, searchParams]);
 
     const textColor = !mounted ? 'text-black' : (theme === 'dark' ? 'text-white' : 'text-black');
     const subTextColor = !mounted ? 'text-black/50' : (theme === 'dark' ? 'text-white/50' : 'text-black/50');
@@ -97,18 +97,35 @@ function FilterContent() {
                     <label className={`block font-black mb-2 flex items-center gap-2 text-xs uppercase tracking-widest transition-colors ${subTextColor}`}>
                         Level
                     </label>
-                    <select
-                        className={`w-full px-5 py-3 border rounded-2xl focus:outline-none focus:ring-2 focus:ring-brand/40 focus:border-brand transition-all cursor-pointer appearance-none ${inputBg} ${textColor} ${theme === 'dark' ? 'border-red-950' : 'border-gray-100'}`}
-                        value={level}
-                        onChange={(e) => setLevel(e.target.value)}
-                    >
-                        <option value="">Semua Level</option>
-                        <option value="5">N5</option>
-                        <option value="4">N4</option>
-                        <option value="3">N3</option>
-                        <option value="2">N2</option>
-                        <option value="1">N1</option>
-                    </select>
+                    <div className="flex flex-wrap gap-2">
+                        {[5, 4, 3, 2, 1].map((levelItem) => (
+                            <button
+                                key={levelItem}
+                                onClick={() => {
+                                    const stringLevel = levelItem.toString();
+                                    if (selectedLevels.includes(stringLevel)) {
+                                        setSelectedLevels(selectedLevels.filter(l => l !== stringLevel));
+                                    } else {
+                                        setSelectedLevels([...selectedLevels, stringLevel]);
+                                    }
+                                }}
+                                className={`px-4 py-2.5 rounded-xl border-2 transition-all text-sm font-black ${selectedLevels.includes(levelItem.toString())
+                                    ? 'bg-brand text-white border-brand shadow-lg shadow-brand/20 scale-105'
+                                    : `${theme === 'dark' ? 'bg-black/40 text-gray-400 border-red-950 hover:border-red-500' : 'bg-background text-gray-500 border-gray-100 hover:border-brand/40 hover:bg-brand-light/10'}`
+                                }`}
+                            >
+                                N{levelItem}
+                            </button>
+                        ))}
+                        {selectedLevels.length > 1 && (
+                            <button
+                                onClick={() => setSelectedLevels([])}
+                                className="px-4 py-2.5 rounded-xl border-2 border-gray-200 bg-gray-50 text-gray-600 hover:bg-gray-100 transition-all text-sm font-black"
+                            >
+                                Bersihkan
+                            </button>
+                        )}
+                    </div>
                 </div>
 
                 <div className="flex-1">

@@ -31,10 +31,23 @@ class AuthBearer(HttpBearer):
         return None
 
 class ListQuerySchema(Schema):
-    level: Optional[int] = None
+    level: Optional[str] = None
     search: Optional[str] = None
     limit: int = Field(50, ge=1, le=1000)
     page: int = Field(1, ge=1)
+
+
+def parse_levels(value):
+    if value is None:
+        return []
+    if isinstance(value, int):
+        return [value]
+    levels = []
+    for token in str(value).split(','):
+        token = token.strip()
+        if token.isdigit():
+            levels.append(int(token))
+    return levels
 
 class VocabSchema(Schema):
     id: UUID
@@ -164,7 +177,9 @@ def list_kanji(request,
     qs = Kanji.objects.all()
     
     if params.level:
-        qs = qs.filter(jlpt_level=params.level)
+        levels = parse_levels(params.level)
+        if levels:
+            qs = qs.filter(jlpt_level__in=levels)
         
     if radical:
         qs = qs.filter(radical=radical)
@@ -284,7 +299,9 @@ def list_grammar(request,
                  params: GrammarListQuerySchema = Query(...)):
     qs = Grammar.objects.all()
     if params.level:
-        qs = qs.filter(jlpt_level=params.level)
+        levels = parse_levels(params.level)
+        if levels:
+            qs = qs.filter(jlpt_level__in=levels)
 
     if params.chapter:
         qs = qs.filter(chapter=params.chapter)
@@ -367,8 +384,10 @@ def list_vocab(request,
     
     qs = Vocab.objects.all().order_by('word')
     
-    if params.level is not None:
-        qs = qs.filter(jlpt_level=params.level)
+    if params.level:
+        levels = parse_levels(params.level)
+        if levels:
+            qs = qs.filter(jlpt_level__in=levels)
         
     if params.word_type:
         qs = qs.filter(word_type=params.word_type)

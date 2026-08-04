@@ -17,7 +17,12 @@ async function serveFromDb(storeName, { level, search, chapter, word_type, radic
     try {
         let items = await dbGetAll(storeName);
         if (!items || items.length === 0) return null;
-        if (level) items = items.filter(i => String(i.jlpt_level) === String(level));
+        if (level) {
+            const levelValues = String(level).split(',').map(l => l.trim()).filter(Boolean);
+            if (levelValues.length) {
+                items = items.filter(i => levelValues.includes(String(i.jlpt_level)));
+            }
+        }
         if (chapter) items = items.filter(i => String(i.chapter) === String(chapter));
         if (word_type) items = items.filter(i => i.word_type === word_type);
         if (radical) items = items.filter(i => i.radical === radical);

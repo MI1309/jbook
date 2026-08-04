@@ -13,11 +13,11 @@ function FilterContent() {
 
     // Initialize state from URL params
     const initialSearch = searchParams.get('search') || '';
-    const initialLevel = searchParams.get('level') || '';
+    const initialLevels = searchParams.get('level')?.split(',').filter(Boolean) || [];
     const initialChapter = searchParams.get('chapter') || '';
 
     const [searchTerm, setSearchTerm] = useState(initialSearch);
-    const [selectedLevel, setSelectedLevel] = useState(initialLevel);
+    const [selectedLevels, setSelectedLevels] = useState(initialLevels);
     const [selectedChapter, setSelectedChapter] = useState(initialChapter);
 
     // Debounce search term to avoid too many URL updates
@@ -34,8 +34,8 @@ function FilterContent() {
             params.delete('search');
         }
 
-        if (selectedLevel) {
-            params.set('level', selectedLevel);
+        if (selectedLevels.length) {
+            params.set('level', selectedLevels.join(','));
         } else {
             params.delete('level');
         }
@@ -51,18 +51,19 @@ function FilterContent() {
         const currentLevel = searchParams.get('level') || '';
         const currentChapter = searchParams.get('chapter') || '';
 
-        if (debouncedSearch !== currentSearch || selectedLevel !== currentLevel || debouncedChapter !== currentChapter) {
+        if (debouncedSearch !== currentSearch || selectedLevels.join(',') !== currentLevel || debouncedChapter !== currentChapter) {
             params.delete('page'); // Reset pagination
             router.push(`/bunpo?${params.toString()}`);
         }
 
-    }, [debouncedSearch, selectedLevel, debouncedChapter, router, searchParams]);
+    }, [debouncedSearch, selectedLevels, debouncedChapter, router, searchParams]);
 
     const handleLevelClick = (level) => {
-        if (selectedLevel === level.toString()) {
-            setSelectedLevel('');
+        const stringLevel = level.toString();
+        if (selectedLevels.includes(stringLevel)) {
+            setSelectedLevels(selectedLevels.filter(l => l !== stringLevel));
         } else {
-            setSelectedLevel(level.toString());
+            setSelectedLevels([...selectedLevels, stringLevel]);
         }
     };
 
@@ -101,7 +102,7 @@ function FilterContent() {
                             <button
                                 key={level}
                                 onClick={() => handleLevelClick(level)}
-                                className={`px-5 py-2.5 rounded-xl border-2 transition-all font-black text-sm ${selectedLevel === level.toString()
+                                className={`px-5 py-2.5 rounded-xl border-2 transition-all font-black text-sm ${selectedLevels.includes(level.toString())
                                     ? 'bg-brand text-white border-brand shadow-lg shadow-brand/20 scale-105'
                                     : `${theme === 'dark' ? 'bg-black/40 text-gray-400 border-red-950 hover:border-red-500' : 'bg-background text-gray-500 border-gray-100 hover:border-brand/40 hover:bg-brand-light/10'}`
                                     }`}
@@ -109,6 +110,14 @@ function FilterContent() {
                                 N{level}
                             </button>
                         ))}
+                        {selectedLevels.length > 1 && (
+                            <button
+                                onClick={() => setSelectedLevels([])}
+                                className="px-4 py-2.5 rounded-xl border-2 border-gray-200 bg-gray-50 text-gray-600 hover:bg-gray-100 transition-all text-sm font-black"
+                            >
+                                Bersihkan
+                            </button>
+                        )}
                     </div>
                 </div>
 
