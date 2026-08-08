@@ -189,7 +189,7 @@ function FilterContent() {
 
         if (debouncedSearch !== currentSearch || selectedRadical !== currentRadical || selectedLevels.join(',') !== currentLevel) {
             params.delete('page'); // Reset pagination
-            router.push(`/kanji?${params.toString()}`);
+            router.push(`/kanji?${params.toString()}`, { scroll: false });
         }
 
     }, [debouncedSearch, selectedRadical, selectedLevels, router, searchParams]);
@@ -263,14 +263,7 @@ function FilterContent() {
                                 N{level}
                             </button>
                         ))}
-                        {selectedLevels.length > 1 && (
-                            <button
-                                onClick={() => setSelectedLevels([])}
-                                className="px-4 py-2.5 rounded-xl border-2 border-gray-200 bg-gray-50 text-gray-600 hover:bg-gray-100 transition-all text-sm font-black"
-                            >
-                                Bersihkan
-                            </button>
-                        )}
+                        
                     </div>
                 </div>
             </div>

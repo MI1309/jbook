@@ -53,7 +53,7 @@ function FilterContent() {
 
         if (debouncedSearch !== currentSearch || selectedLevels.join(',') !== currentLevel || debouncedChapter !== currentChapter) {
             params.delete('page'); // Reset pagination
-            router.push(`/bunpo?${params.toString()}`);
+            router.push(`/bunpo?${params.toString()}`, { scroll: false });
         }
 
     }, [debouncedSearch, selectedLevels, debouncedChapter, router, searchParams]);
@@ -110,14 +110,7 @@ function FilterContent() {
                                 N{level}
                             </button>
                         ))}
-                        {selectedLevels.length > 1 && (
-                            <button
-                                onClick={() => setSelectedLevels([])}
-                                className="px-4 py-2.5 rounded-xl border-2 border-gray-200 bg-gray-50 text-gray-600 hover:bg-gray-100 transition-all text-sm font-black"
-                            >
-                                Bersihkan
-                            </button>
-                        )}
+                        
                     </div>
                 </div>
 
