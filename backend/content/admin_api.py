@@ -227,21 +227,24 @@ class DeleteIdsSchema(BaseModel):
 
 @router.get("/kanji/duplicates", auth=AdminAuth())
 def admin_kanji_duplicates(request):
-    # group by character
-    kanjis = Kanji.objects.all().order_by('character')
-    groups = {}
-    for k in kanjis:
-        groups.setdefault(k.character, []).append(k)
+    try:
+        # group by character
+        kanjis = Kanji.objects.all().order_by('character')
+        groups = {}
+        for k in kanjis:
+            groups.setdefault(k.character, []).append(k)
 
-    result = []
-    for char, items in groups.items():
-        if len(items) > 1:
-            result.append({
-                "character": char,
-                "count": len(items),
-                "items": [{"id": str(i.id), "meaning": i.meaning, "jlpt_level": i.jlpt_level} for i in items]
-            })
-    return result
+        result = []
+        for char, items in groups.items():
+            if len(items) > 1:
+                result.append({
+                    "character": char,
+                    "count": len(items),
+                    "items": [{"id": str(i.id), "meaning": i.meaning, "jlpt_level": i.jlpt_level} for i in items]
+                })
+        return result
+    except Exception as e:
+        raise HttpError(500, f"Kanji duplicates error: {str(e)}")
 
 
 @router.post("/kanji/duplicates/delete", auth=AdminAuth())
@@ -418,21 +421,24 @@ def admin_get_vocab(request, id: str):
 # Duplicate endpoints for Vocab/Kotoba
 @router.get("/kotoba/duplicates", auth=AdminAuth())
 def admin_kotoba_duplicates(request):
-    vocabs = Vocab.objects.all().order_by('word')
-    groups = {}
-    for v in vocabs:
-        key = f"{(v.word or '').strip().lower()}||{(v.meaning or '').strip().lower()}"
-        groups.setdefault(key, []).append(v)
+    try:
+        vocabs = Vocab.objects.all().order_by('word')
+        groups = {}
+        for v in vocabs:
+            key = f"{(v.word or '').strip().lower()}||{(v.meaning or '').strip().lower()}"
+            groups.setdefault(key, []).append(v)
 
-    result = []
-    for key, items in groups.items():
-        if len(items) > 1:
-            result.append({
-                "key": key,
-                "count": len(items),
-                "items": [{"id": str(i.id), "word": i.word, "meaning": i.meaning, "jlpt_level": i.jlpt_level} for i in items]
-            })
-    return result
+        result = []
+        for key, items in groups.items():
+            if len(items) > 1:
+                result.append({
+                    "key": key,
+                    "count": len(items),
+                    "items": [{"id": str(i.id), "word": i.word, "meaning": i.meaning, "jlpt_level": i.jlpt_level} for i in items]
+                })
+        return result
+    except Exception as e:
+        raise HttpError(500, f"Kotoba duplicates error: {str(e)}")
 
 
 @router.post("/kotoba/duplicates/delete", auth=AdminAuth())

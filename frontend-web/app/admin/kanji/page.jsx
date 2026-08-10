@@ -400,7 +400,10 @@ export default function KanjiAdmin() {
                     try {
                         const token = Cookies.get('access_token');
                         const res = await fetch(`${API_URL}/admin/kanji/duplicates`, { headers: { 'Authorization': `Bearer ${token}` } });
-                        if (!res.ok) { throw new Error(`Status ${res.status}`); }
+                        if (!res.ok) {
+                            const text = await res.text().catch(() => res.statusText);
+                            throw new Error(text || `Status ${res.status}`);
+                        }
                         const data = await res.json();
                         toast.info(`Found ${data.length} duplicate groups (console)`);
                         console.log('kanji-duplicates', data);
@@ -415,7 +418,7 @@ export default function KanjiAdmin() {
                         URL.revokeObjectURL(url);
                     } catch (e) {
                         console.error(e);
-                        toast.error('Failed to fetch duplicates');
+                        toast.error(e?.message || 'Failed to fetch duplicates');
                     } finally { setPreviewingAll(false); }
                 }}
                 disabled={previewingAll}
