@@ -177,6 +177,40 @@ def admin_create_kanji(request, payload: KanjiCreateSchema):
     kanji = Kanji.objects.create(**payload.dict())
     return kanji
 
+@router.get("/kanji/duplicates", auth=AdminAuth())
+def admin_kanji_duplicates(request):
+    try:
+        # group by character
+        kanjis = Kanji.objects.all().order_by('character')
+        groups = {}
+        for k in kanjis:
+            groups.setdefault(k.character, []).append(k)
+
+        result = []
+        for char, items in groups.items():
+            if len(items) > 1:
+                result.append({
+                    "character": char,
+                    "count": len(items),
+                    "items": [{"id": str(i.id), "meaning": i.meaning, "jlpt_level": i.jlpt_level} for i in items]
+                })
+        return result
+    except Exception as e:
+        print(f"DEBUG: Kanji duplicates error: {e}")
+        raise HttpError(500, f"Kanji duplicates error: {str(e)}")
+
+
+@router.post("/kanji/duplicates/delete", auth=AdminAuth())
+def admin_kanji_duplicates_delete(request, payload: DeleteIdsSchema):
+    ids = payload.ids
+    if not ids:
+        raise HttpError(400, "No ids provided")
+    with transaction.atomic():
+        objs = Kanji.objects.filter(id__in=ids)
+        count = objs.count()
+        objs.delete()
+    return {"deleted": count}
+
 @router.get("/kanji/{id}", auth=AdminAuth(), response=KanjiSchema)
 def admin_get_kanji(request, id: str):
     kanji = get_object_or_404(Kanji, id=id)
@@ -409,14 +443,40 @@ def admin_export_vocab_csv(request, level: int = None, search: str = None):
         writer.writerow([obj.word, to_kana(obj.reading.lower()), obj.meaning, obj.jlpt_level])
     return response
 
-@router.get("/kotoba/{id}", auth=AdminAuth(), response=VocabSchema)
-@router.get("/vocab/{id}", auth=AdminAuth(), response=VocabSchema)
-def admin_get_vocab(request, id: str):
-    vocab = get_object_or_404(Vocab, id=id)
-    from utils.kana import to_kana
-    vocab.reading = to_kana(vocab.reading.lower())
-    return vocab
+# Duplicate endpoints for Vocab/Kotoba
+@router.get("/kotoba/duplicates", auth=AdminAuth())
+def admin_kotoba_duplicates(request):
+    try:
+        vocabs = Vocab.objects.all().order_by('word')
+        groups = {}
+        for v in vocabs:
+            key = f"{(v.word or '').strip().lower()}||{(v.meaning or '').strip().lower()}"
+            groups.setdefault(key, []).append(v)
 
+        result = []
+        for key, items in groups.items():
+            if len(items) > 1:
+                result.append({
+                    "key": key,
+                    "count": len(items),
+                    "items": [{"id": str(i.id), "word": i.word, "meaning": i.meaning, "jlpt_level": i.jlpt_level} for i in items]
+                })
+        return result
+    except Exception as e:
+        print(f"DEBUG: Kotoba duplicates error: {e}")
+        raise HttpError(500, f"Kotoba duplicates error: {str(e)}")
+
+
+@router.post("/kotoba/duplicates/delete", auth=AdminAuth())
+def admin_kotoba_duplicates_delete(request, payload: DeleteIdsSchema):
+    ids = payload.ids
+    if not ids:
+        raise HttpError(400, "No ids provided")
+    with transaction.atomic():
+        objs = Vocab.objects.filter(id__in=ids)
+        count = objs.count()
+        objs.delete()
+    return {"deleted": count}
 
 # Duplicate endpoints for Vocab/Kotoba
 @router.get("/kotoba/duplicates", auth=AdminAuth())
@@ -438,6 +498,7 @@ def admin_kotoba_duplicates(request):
                 })
         return result
     except Exception as e:
+        print(f"DEBUG: Kotoba duplicates error: {e}")
         raise HttpError(500, f"Kotoba duplicates error: {str(e)}")
 
 
@@ -451,6 +512,14 @@ def admin_kotoba_duplicates_delete(request, payload: DeleteIdsSchema):
         count = objs.count()
         objs.delete()
     return {"deleted": count}
+
+@router.get("/kotoba/{id}", auth=AdminAuth(), response=VocabSchema)
+@router.get("/vocab/{id}", auth=AdminAuth(), response=VocabSchema)
+def admin_get_vocab(request, id: str):
+    vocab = get_object_or_404(Vocab, id=id)
+    from utils.kana import to_kana
+    vocab.reading = to_kana(vocab.reading.lower())
+    return vocab
 
 @router.put("/kotoba/{id}", auth=AdminAuth(), response=VocabSchema)
 @router.put("/vocab/{id}", auth=AdminAuth(), response=VocabSchema)
