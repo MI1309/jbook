@@ -157,6 +157,9 @@ class KanjiSchema(KanjiCreateSchema):
     id: UUID
     model_config = {"from_attributes": True}
 
+class DeleteIdsSchema(BaseModel):
+    ids: List[UUID]
+
 # Kanji CRUD
 @router.get("/kanji", auth=AdminAuth(), response=List[KanjiSchema])
 def admin_list_kanjis(request, level: int = None):
@@ -252,11 +255,6 @@ def admin_export_kanji_csv(request, level: int = None, search: str = None):
         kunyomi_str = format_reading(obj.kunyomi, is_onyomi=False)
         writer.writerow([obj.character, obj.meaning, onyomi_str, kunyomi_str, obj.strokes, obj.jlpt_level, obj.radical])
     return response
-
-
-# Duplicate endpoints for Kanji
-class DeleteIdsSchema(BaseModel):
-    ids: List[UUID]
 
 
 @router.get("/kanji/duplicates", auth=AdminAuth())
