@@ -478,41 +478,6 @@ def admin_kotoba_duplicates_delete(request, payload: DeleteIdsSchema):
         objs.delete()
     return {"deleted": count}
 
-# Duplicate endpoints for Vocab/Kotoba
-@router.get("/kotoba/duplicates", auth=AdminAuth())
-def admin_kotoba_duplicates(request):
-    try:
-        vocabs = Vocab.objects.all().order_by('word')
-        groups = {}
-        for v in vocabs:
-            key = f"{(v.word or '').strip().lower()}||{(v.meaning or '').strip().lower()}"
-            groups.setdefault(key, []).append(v)
-
-        result = []
-        for key, items in groups.items():
-            if len(items) > 1:
-                result.append({
-                    "key": key,
-                    "count": len(items),
-                    "items": [{"id": str(i.id), "word": i.word, "meaning": i.meaning, "jlpt_level": i.jlpt_level} for i in items]
-                })
-        return result
-    except Exception as e:
-        print(f"DEBUG: Kotoba duplicates error: {e}")
-        raise HttpError(500, f"Kotoba duplicates error: {str(e)}")
-
-
-@router.post("/kotoba/duplicates/delete", auth=AdminAuth())
-def admin_kotoba_duplicates_delete(request, payload: DeleteIdsSchema):
-    ids = payload.ids
-    if not ids:
-        raise HttpError(400, "No ids provided")
-    with transaction.atomic():
-        objs = Vocab.objects.filter(id__in=ids)
-        count = objs.count()
-        objs.delete()
-    return {"deleted": count}
-
 @router.get("/kotoba/{id}", auth=AdminAuth(), response=VocabSchema)
 @router.get("/vocab/{id}", auth=AdminAuth(), response=VocabSchema)
 def admin_get_vocab(request, id: str):
