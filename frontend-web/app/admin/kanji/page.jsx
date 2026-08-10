@@ -13,6 +13,8 @@ import ConfirmationModal from '@/components/common/ConfirmationModal';
 export default function KanjiAdmin() {
     const { user } = useAuth();
     const [kanjiList, setKanjiList] = useState([]);
+    const [duplicates, setDuplicates] = useState([]);
+    const [mounted, setMounted] = useState(false);
     const [loading, setLoading] = useState(true);
     const [filterLevel, setFilterLevel] = useState('');
     const [search, setSearch] = useState('');
@@ -37,7 +39,7 @@ export default function KanjiAdmin() {
 
         try {
             const token = Cookies.get('access_token');
-            let url = `${API_URL}/admin/kanji`;
+            let url = `${API_URL}/admin/kanji?limit=10000`;
 
             const queryParams = new URLSearchParams();
             if (filterLevel && filterLevel !== 'all') queryParams.append('level', filterLevel);
@@ -66,6 +68,17 @@ export default function KanjiAdmin() {
         } finally {
             setLoading(false);
         }
+    };
+
+    const checkDuplicates = () => {
+        const map = {};
+        kanjiList.forEach(k => {
+            const key = k.character;
+            if (!map[key]) map[key] = [];
+            map[key].push(k);
+        });
+        const dups = Object.entries(map).filter(([, arr]) => arr.length > 1).map(([char, arr]) => ({ character: char, items: arr }));
+        setDuplicates(dups);
     };
 
     const handleDelete = (e, id) => {
@@ -174,6 +187,13 @@ export default function KanjiAdmin() {
                             title="Export to CSV"
                         >
                             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg>
+                        </button>
+                        <button
+                            onClick={checkDuplicates}
+                            className="p-4 rounded-2xl transition-all active:scale-95 bg-yellow-500/10 text-yellow-400 border border-yellow-400/20"
+                            title="Check Duplicates"
+                        >
+                            Check Duplicates
                         </button>
                     </div>
                 </div>
@@ -309,6 +329,39 @@ export default function KanjiAdmin() {
                 cancelText="Batal"
                 type="danger"
             />
+            {duplicates.length > 0 && (
+                <div className="p-6 rounded-2xl border mt-6 bg-neutral-900/30 border-white/5">
+                    <h2 className="text-lg font-black">Duplicate Kanji Found ({duplicates.length})</h2>
+                    <div className="mt-4 space-y-3">
+                        {duplicates.map(d => (
+                            <div key={d.character} className="p-3 rounded-lg bg-neutral-800/40 flex items-start justify-between">
+                                <div>
+                                    <div className="text-2xl font-black">{d.character} <span className="text-sm text-neutral-400">({d.items.length})</span></div>
+                                    <div className="text-xs text-neutral-400 mt-1">
+                                        {d.items.map(it => `${it.id} — ${it.meaning}`).join(' • ')}
+                                    </div>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                    <button
+                                        onClick={async () => {
+                                            // delete all but first
+                                            const token = Cookies.get('access_token');
+                                            const toDelete = d.items.slice(1);
+                                            for (const it of toDelete) {
+                                                await fetch(`${API_URL}/admin/kanji/${it.id}`, { method: 'DELETE', headers: { 'Authorization': `Bearer ${token}` } });
+                                            }
+                                            toast.success(`Deleted ${toDelete.length} duplicates for ${d.character}`);
+                                            fetchKanjis();
+                                            setDuplicates([]);
+                                        }}
+                                        className="px-4 py-2 bg-red-600 text-white rounded-2xl"
+                                    >Delete duplicates</button>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            )}
         </div>
     );
 }

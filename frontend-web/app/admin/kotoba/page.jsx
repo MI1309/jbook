@@ -22,6 +22,7 @@ export default function KotobaAdmin() {
     const router = useRouter();
 
     const [allVocabs, setAllVocabs] = useState([]);
+    const [duplicates, setDuplicates] = useState([]);
     const [pendingDelete, setPendingDelete] = useState(null);
 
     useEffect(() => { 
@@ -184,6 +185,17 @@ export default function KotobaAdmin() {
         }
     };
 
+    const checkDuplicates = () => {
+        const map = {};
+        allVocabs.forEach(v => {
+            const key = `${v.word}||${v.meaning}`;
+            if (!map[key]) map[key] = [];
+            map[key].push(v);
+        });
+        const dups = Object.entries(map).filter(([, arr]) => arr.length > 1).map(([k, arr]) => ({ key: k, items: arr }));
+        setDuplicates(dups);
+    };
+
     const levelColor = (level) => {
         const colors = {
             5: 'bg-green-900/30 text-green-400',
@@ -243,6 +255,12 @@ export default function KotobaAdmin() {
                         className="inline-flex items-center justify-center gap-2 bg-emerald-600 text-white px-6 py-3 rounded-2xl hover:bg-emerald-700 font-black text-sm shadow-lg shadow-emerald-500/20 transition-all active:scale-95"
                     >
                         <span>📥</span> Export CSV
+                    </button>
+                    <button
+                        onClick={checkDuplicates}
+                        className="inline-flex items-center justify-center gap-2 ml-3 bg-yellow-500 text-white px-4 py-2 rounded-2xl hover:bg-yellow-600 font-black text-sm shadow transition-all active:scale-95"
+                    >
+                        Check Duplicates
                     </button>
                 </div>
             </div>
@@ -395,6 +413,38 @@ export default function KotobaAdmin() {
                                     </svg>
                                 </button>
                             </div>
+                        </div>
+                    </div>
+                )}
+                {duplicates.length > 0 && (
+                    <div className="p-6 rounded-3xl border mt-6 bg-neutral-900/30 border-white/5">
+                        <h2 className="text-lg font-black">Duplicate Kotoba Found ({duplicates.length})</h2>
+                        <div className="mt-4 space-y-3">
+                            {duplicates.map(d => (
+                                <div key={d.key} className="p-3 rounded-lg bg-neutral-800/40 flex items-start justify-between">
+                                    <div>
+                                        <div className="text-lg font-black">{d.items[0].word} <span className="text-sm text-neutral-400">({d.items.length})</span></div>
+                                        <div className="text-xs text-neutral-400 mt-1">
+                                            {d.items.map(it => `${it.id} — ${it.meaning}`).join(' • ')}
+                                        </div>
+                                    </div>
+                                    <div className="flex items-center gap-2">
+                                        <button
+                                            onClick={async () => {
+                                                const token = Cookies.get('access_token');
+                                                const toDelete = d.items.slice(1);
+                                                for (const it of toDelete) {
+                                                    await fetch(`${API_URL}/admin/vocab/${it.id}`, { method: 'DELETE', headers: { 'Authorization': `Bearer ${token}` } });
+                                                }
+                                                toast.success(`Deleted ${toDelete.length} duplicates for ${d.items[0].word}`);
+                                                fetchAllVocabs();
+                                                setDuplicates([]);
+                                            }}
+                                            className="px-4 py-2 bg-red-600 text-white rounded-2xl"
+                                        >Delete duplicates</button>
+                                    </div>
+                                </div>
+                            ))}
                         </div>
                     </div>
                 )}

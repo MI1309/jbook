@@ -1,6 +1,8 @@
 import csv
 from django.contrib import admin
+from django.db.models import Count
 from django.http import HttpResponse
+from django.urls import path, reverse
 from .models import Kanji, Vocab, Grammar, Blog, Particle, Announcement, MinnaQuestion, DoukaiPassage, DoukaiQuestion
 
 @admin.action(description="Export selected items as CSV")
@@ -51,7 +53,53 @@ class KanjiAdmin(admin.ModelAdmin):
     list_filter = ('jlpt_level',)
     search_fields = ('character', 'meaning')
     ordering = ('jlpt_level', 'character')
-    actions = [export_as_csv]
+    actions = [export_as_csv, 'delete_duplicate_kanji']
+
+    def get_urls(self):
+        urls = super().get_urls()
+        custom_urls = [
+            path('duplicates/', self.admin_site.admin_view(self.duplicate_kanji_view), name='content_kanji_duplicates'),
+        ]
+        return custom_urls + urls
+
+    def delete_duplicate_kanji(self, request, queryset):
+        duplicates = {}
+        deleted_ids = []
+        for obj in queryset.order_by('character', 'id'):
+            if obj.character in duplicates:
+                deleted_ids.append(obj.id)
+            else:
+                duplicates[obj.character] = obj.id
+        if deleted_ids:
+            count = queryset.model.objects.filter(id__in=deleted_ids).delete()[0]
+            self.message_user(request, f"Deleted {count} duplicate Kanji entries and kept the first occurrence per character.")
+        else:
+            self.message_user(request, "No duplicate Kanji entries were found in the selection.")
+    delete_duplicate_kanji.short_description = 'Delete duplicate Kanji entries (keep first per character)'
+
+    def duplicate_kanji_view(self, request):
+        duplicates = Kanji.objects.values('character').annotate(count=Count('id')).filter(count__gt=1).order_by('character')
+        rows = []
+        for dup in duplicates:
+            character = dup['character']
+            items = Kanji.objects.filter(character=character).order_by('id')
+            rows.append((character, dup['count'], [
+                f'<a href="{reverse("admin:content_kanji_change", args=[item.id])}">{item.id}</a> {item.meaning}'
+                for item in items
+            ]))
+
+        html = '<h1>Duplicate Kanji</h1>'
+        if not rows:
+            html += '<p>No duplicate Kanji found.</p>'
+        else:
+            html += '<ul>'
+            for character, count, items in rows:
+                html += f'<li><strong>{character}</strong> ({count})<ul>'
+                for item in items:
+                    html += f'<li>{item}</li>'
+                html += '</ul></li>'
+            html += '</ul>'
+        return HttpResponse(html)
 
 @admin.register(Vocab)
 class VocabAdmin(admin.ModelAdmin):
@@ -59,7 +107,54 @@ class VocabAdmin(admin.ModelAdmin):
     list_filter = ('word_type', 'jlpt_level')
     search_fields = ('word', 'reading', 'meaning')
     ordering = ('jlpt_level', 'word')
-    actions = [export_as_csv]
+    actions = [export_as_csv, 'delete_duplicate_vocab']
+
+    def get_urls(self):
+        urls = super().get_urls()
+        custom_urls = [
+            path('duplicates/', self.admin_site.admin_view(self.duplicate_vocab_view), name='content_vocab_duplicates'),
+        ]
+        return custom_urls + urls
+
+    def delete_duplicate_vocab(self, request, queryset):
+        duplicates = {}
+        deleted_ids = []
+        for obj in queryset.order_by('word', 'meaning', 'id'):
+            key = (obj.word, obj.meaning)
+            if key in duplicates:
+                deleted_ids.append(obj.id)
+            else:
+                duplicates[key] = obj.id
+        if deleted_ids:
+            count = queryset.model.objects.filter(id__in=deleted_ids).delete()[0]
+            self.message_user(request, f"Deleted {count} duplicate Vocab entries and kept the first occurrence per word and meaning.")
+        else:
+            self.message_user(request, "No duplicate Vocab entries were found in the selection.")
+    delete_duplicate_vocab.short_description = 'Delete duplicate Vocab entries (keep first per word+meaning)'
+
+    def duplicate_vocab_view(self, request):
+        duplicates = Vocab.objects.values('word').annotate(count=Count('id')).filter(count__gt=1).order_by('word')
+        rows = []
+        for dup in duplicates:
+            word = dup['word']
+            items = Vocab.objects.filter(word=word).order_by('meaning', 'id')
+            rows.append((word, dup['count'], [
+                f'<a href="{reverse("admin:content_vocab_change", args=[item.id])}">{item.id}</a> {item.meaning}'
+                for item in items
+            ]))
+
+        html = '<h1>Duplicate Vocab</h1>'
+        if not rows:
+            html += '<p>No duplicate Vocab found.</p>'
+        else:
+            html += '<ul>'
+            for word, count, items in rows:
+                html += f'<li><strong>{word}</strong> ({count})<ul>'
+                for item in items:
+                    html += f'<li>{item}</li>'
+                html += '</ul></li>'
+            html += '</ul>'
+        return HttpResponse(html)
 
 @admin.register(Grammar)
 class GrammarAdmin(admin.ModelAdmin):
