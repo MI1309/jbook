@@ -14,7 +14,10 @@ export default function KanjiAdmin() {
     const { user } = useAuth();
     const [kanjiList, setKanjiList] = useState([]);
     const [duplicates, setDuplicates] = useState([]);
+    const [bulkDeleting, setBulkDeleting] = useState(false);
+    const [bulkDeleteProgress, setBulkDeleteProgress] = useState(0);
     const [mounted, setMounted] = useState(false);
+    const [previewingAll, setPreviewingAll] = useState(false);
     const [loading, setLoading] = useState(true);
     const [filterLevel, setFilterLevel] = useState('');
     const [search, setSearch] = useState('');
@@ -79,6 +82,11 @@ export default function KanjiAdmin() {
         });
         const dups = Object.entries(map).filter(([, arr]) => arr.length > 1).map(([char, arr]) => ({ character: char, items: arr }));
         setDuplicates(dups);
+        if (!dups || dups.length === 0) {
+            toast.info('No duplicate kanji found');
+        } else {
+            toast.info(`${dups.length} duplicate groups found`);
+        }
     };
 
     const handleDelete = (e, id) => {
@@ -344,24 +352,115 @@ export default function KanjiAdmin() {
                                 <div className="flex items-center gap-2">
                                     <button
                                         onClick={async () => {
-                                            // delete all but first
                                             const token = Cookies.get('access_token');
-                                            const toDelete = d.items.slice(1);
-                                            for (const it of toDelete) {
-                                                await fetch(`${API_URL}/admin/kanji/${it.id}`, { method: 'DELETE', headers: { 'Authorization': `Bearer ${token}` } });
+                                            const toDelete = d.items.slice(1).map(i => i.id);
+                                            if (toDelete.length === 0) return;
+                                            setBulkDeleting(true);
+                                            setBulkDeleteProgress(0);
+                                            try {
+                                                const res = await fetch(`${API_URL}/admin/kanji/duplicates/delete`, {
+                                                    method: 'POST',
+                                                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                                                    body: JSON.stringify({ ids: toDelete })
+                                                });
+                                                if (res.ok) {
+                                                    const data = await res.json();
+                                                    toast.success(`Deleted ${data.deleted} duplicates for ${d.character}`);
+                                                } else {
+                                                    const err = await res.text().catch(() => res.statusText);
+                                                    toast.error(`Delete failed: ${res.status} ${err}`);
+                                                }
+                                            } catch (e) {
+                                                console.error(e);
+                                                toast.error('Network error during bulk delete');
+                                            } finally {
+                                                setBulkDeleting(false);
+                                                setBulkDeleteProgress(0);
+                                                fetchKanjis();
+                                                setDuplicates([]);
                                             }
-                                            toast.success(`Deleted ${toDelete.length} duplicates for ${d.character}`);
-                                            fetchKanjis();
-                                            setDuplicates([]);
                                         }}
-                                        className="px-4 py-2 bg-red-600 text-white rounded-2xl"
-                                    >Delete duplicates</button>
+                                        disabled={bulkDeleting}
+                                        className={`px-4 py-2 rounded-2xl ${bulkDeleting ? 'bg-neutral-700 text-neutral-300' : 'bg-red-600 text-white'}`}
+                                    >
+                                        {bulkDeleting ? 'Deleting...' : 'Delete duplicates'}
+                                    </button>
                                 </div>
                             </div>
                         ))}
                     </div>
                 </div>
             )}
+        
+        {/* Floating quick controls for duplicates (preview / bulk-delete) */}
+        <div className="fixed right-6 bottom-6 z-50 flex flex-col gap-3">
+            <button
+                onClick={async () => {
+                    setPreviewingAll(true);
+                    try {
+                        const token = Cookies.get('access_token');
+                        const res = await fetch(`${API_URL}/admin/kanji/duplicates`, { headers: { 'Authorization': `Bearer ${token}` } });
+                        if (!res.ok) { throw new Error(`Status ${res.status}`); }
+                        const data = await res.json();
+                        toast.info(`Found ${data.length} duplicate groups (console)`);
+                        console.log('kanji-duplicates', data);
+                        const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+                        const url = URL.createObjectURL(blob);
+                        const a = document.createElement('a');
+                        a.href = url;
+                        a.download = `kanji_duplicates_${new Date().toISOString().slice(0,10)}.json`;
+                        document.body.appendChild(a);
+                        a.click();
+                        a.remove();
+                        URL.revokeObjectURL(url);
+                    } catch (e) {
+                        console.error(e);
+                        toast.error('Failed to fetch duplicates');
+                    } finally { setPreviewingAll(false); }
+                }}
+                disabled={previewingAll}
+                className="px-4 py-2 rounded-full bg-blue-600 text-white shadow-lg"
+                title="Preview duplicate groups and download JSON"
+            >{previewingAll ? 'Loading...' : 'Preview duplicates'}</button>
+
+            <button
+                onClick={async () => {
+                    if (!confirm('This will delete all duplicate items (keeps first in each group). Proceed? Make sure you have a backup.')) return;
+                    try {
+                        const token = Cookies.get('access_token');
+                        const res = await fetch(`${API_URL}/admin/kanji/duplicates` , { headers: { 'Authorization': `Bearer ${token}` } });
+                        if (!res.ok) { throw new Error('Failed to list'); }
+                        const groups = await res.json();
+                        const ids = [];
+                        groups.forEach(g => {
+                            if (g.items && g.items.length > 1) {
+                                g.items.slice(1).forEach(it => ids.push(it.id));
+                            }
+                        });
+                        if (ids.length === 0) { toast.info('No duplicate ids to delete'); return; }
+                        setBulkDeleting(true);
+                        const del = await fetch(`${API_URL}/admin/kanji/duplicates/delete`, {
+                            method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                            body: JSON.stringify({ ids })
+                        });
+                        if (del.ok) {
+                            const out = await del.json();
+                            toast.success(`Deleted ${out.deleted} items`);
+                        } else {
+                            const txt = await del.text().catch(() => del.statusText);
+                            toast.error(`Delete failed: ${del.status} ${txt}`);
+                        }
+                        fetchKanjis();
+                        setDuplicates([]);
+                    } catch (e) {
+                        console.error(e);
+                        toast.error('Bulk-delete failed');
+                    } finally { setBulkDeleting(false); }
+                }}
+                className="px-4 py-2 rounded-full bg-red-600 text-white shadow-lg"
+                title="Delete all duplicate items (dangerous)"
+            >Delete all duplicates</button>
+        </div>
         </div>
     );
 }

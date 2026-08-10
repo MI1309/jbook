@@ -12,6 +12,7 @@ from datetime import datetime
 from django.http import HttpResponse
 from .models import Kanji, Grammar, Blog, JLPTLevel, Vocab, Particle, Announcement
 from users.api import AuthBearer
+from django.db import transaction
 
 router = Router()
 
@@ -218,6 +219,42 @@ def admin_export_kanji_csv(request, level: int = None, search: str = None):
         writer.writerow([obj.character, obj.meaning, onyomi_str, kunyomi_str, obj.strokes, obj.jlpt_level, obj.radical])
     return response
 
+
+# Duplicate endpoints for Kanji
+class DeleteIdsSchema(BaseModel):
+    ids: List[UUID]
+
+
+@router.get("/kanji/duplicates", auth=AdminAuth())
+def admin_kanji_duplicates(request):
+    # group by character
+    kanjis = Kanji.objects.all().order_by('character')
+    groups = {}
+    for k in kanjis:
+        groups.setdefault(k.character, []).append(k)
+
+    result = []
+    for char, items in groups.items():
+        if len(items) > 1:
+            result.append({
+                "character": char,
+                "count": len(items),
+                "items": [{"id": str(i.id), "meaning": i.meaning, "jlpt_level": i.jlpt_level} for i in items]
+            })
+    return result
+
+
+@router.post("/kanji/duplicates/delete", auth=AdminAuth())
+def admin_kanji_duplicates_delete(request, payload: DeleteIdsSchema):
+    ids = payload.ids
+    if not ids:
+        raise HttpError(400, "No ids provided")
+    with transaction.atomic():
+        objs = Kanji.objects.filter(id__in=ids)
+        count = objs.count()
+        objs.delete()
+    return {"deleted": count}
+
 # Bunpo Schemas
 class GrammarCreateSchema(BaseModel):
     title: str = Field(..., max_length=255)
@@ -376,6 +413,38 @@ def admin_get_vocab(request, id: str):
     from utils.kana import to_kana
     vocab.reading = to_kana(vocab.reading.lower())
     return vocab
+
+
+# Duplicate endpoints for Vocab/Kotoba
+@router.get("/kotoba/duplicates", auth=AdminAuth())
+def admin_kotoba_duplicates(request):
+    vocabs = Vocab.objects.all().order_by('word')
+    groups = {}
+    for v in vocabs:
+        key = f"{(v.word or '').strip().lower()}||{(v.meaning or '').strip().lower()}"
+        groups.setdefault(key, []).append(v)
+
+    result = []
+    for key, items in groups.items():
+        if len(items) > 1:
+            result.append({
+                "key": key,
+                "count": len(items),
+                "items": [{"id": str(i.id), "word": i.word, "meaning": i.meaning, "jlpt_level": i.jlpt_level} for i in items]
+            })
+    return result
+
+
+@router.post("/kotoba/duplicates/delete", auth=AdminAuth())
+def admin_kotoba_duplicates_delete(request, payload: DeleteIdsSchema):
+    ids = payload.ids
+    if not ids:
+        raise HttpError(400, "No ids provided")
+    with transaction.atomic():
+        objs = Vocab.objects.filter(id__in=ids)
+        count = objs.count()
+        objs.delete()
+    return {"deleted": count}
 
 @router.put("/kotoba/{id}", auth=AdminAuth(), response=VocabSchema)
 @router.put("/vocab/{id}", auth=AdminAuth(), response=VocabSchema)
