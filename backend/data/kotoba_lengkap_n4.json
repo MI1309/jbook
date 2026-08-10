@@ -1,6 +1,6 @@
 [
   {
-    "id": "d1e2f3a4-b5c6-4d7e-8f9g-0h1i2j3k4l5m",
+    "id": "7cb76e06-6dc7-420f-8445-d5c6e59f8f62",
     "word": "引く",
     "reading": "hiku",
     "furigana": "ひく",
@@ -29,7 +29,7 @@
     }
   },
   {
-    "id": "f5a6b7c8-d9e0-4f1a-2b3c-4d5e6f7g8h9i",
+    "id": "07e350c2-f50a-4e04-933b-d31cfd813da8",
     "word": "弾く",
     "reading": "hiku",
     "furigana": "ひく",
@@ -48,9 +48,7 @@
       "negative": "弾かない",
       "masu_form": "弾きます"
     }
-  }
-]
-[
+  },
   {
     "id": "e4a1c0d0-b5f6-4d2d-8a1b-9c8f7d2e0a1b",
     "word": "吹く",
@@ -73,7 +71,7 @@
     }
   },
   {
-    "id": "a2b3c4d5-e6f7-4g8h-9i0j-k1l2m3n4o5p6",
+    "id": "ed8b83a9-4113-42d7-8ded-d6254b559013",
     "word": "拭く",
     "reading": "fuku",
     "furigana": "ふく",
@@ -94,7 +92,7 @@
     }
   },
   {
-    "id": "b3c4d5e6-f7g8-4h9i-0j1k-l2m3n4o5p6q7",
+    "id": "39c8b576-69dd-4675-a5d2-dd3a79d4d795",
     "word": "会う",
     "reading": "au",
     "furigana": "あう",
@@ -115,7 +113,7 @@
     }
   },
   {
-    "id": "c4d5e6f7-g8h9-4i0j-1k2l-m3n4o5p6q7r8",
+    "id": "e3cda48e-916a-47a7-a6c1-fa5ed10e6bb1",
     "word": "合う",
     "reading": "au",
     "furigana": "あう",
@@ -134,10 +132,7 @@
       "negative": "合わない",
       "masu_form": "合います"
     }
-  }
-]
-
-[
+  },
   {
     "id": "7b8e9f0a-1c2d-4e5f-8a9b-0c1d2e3f4a5b",
     "word": "泣く",
@@ -181,7 +176,7 @@
     }
   },
   {
-    "id": "f5a6b7c8-d9e0-4123-b1c2-d3e4f5g6h7i8",
+    "id": "98d5da41-dbdb-44c9-92f8-24cce3f3b42a",
     "word": "差す",
     "reading": "sasu",
     "furigana": "さす",
@@ -202,7 +197,7 @@
     }
   },
   {
-    "id": "g6b7c8d9-e0f1-4234-c2d3-e4f5g6h7i8j9",
+    "id": "f7f16f1a-5bdf-4873-8801-e3e06cbb2e25",
     "word": "刺す",
     "reading": "sasu",
     "furigana": "さす",
@@ -305,11 +300,9 @@
       "negative": "捜さない",
       "masu_form": "捜します"
     }
-  }
-]
-[
+  },
   {
-    "id": "7d9e0f1a-2b3c-4d5e-6f7g-8h9i0j1k2l3m",
+    "id": "b16fe541-5ca6-468a-a207-c9715ba6d1d2",
     "word": "直る",
     "reading": "naoru",
     "furigana": "なおる",
@@ -330,7 +323,7 @@
     }
   },
   {
-    "id": "8e0f1a2b-3c4d-5e6f-7g8h-9i0j1k2l3m4n",
+    "id": "8c83a117-d328-4c7b-ab3b-17b1f1399157",
     "word": "治る",
     "reading": "naoru",
     "furigana": "なおる",
@@ -351,7 +344,7 @@
     }
   },
   {
-    "id": "9f0a1b2c-4d5e-6f7g-8h9i-0j1k2l3m4n5o",
+    "id": "0af9294a-a4fc-4a5c-9fc4-d593ff1e75ed",
     "word": "飛ぶ",
     "reading": "tobu",
     "furigana": "とぶ",
@@ -372,7 +365,7 @@
     }
   },
   {
-    "id": "0a1b2c3d-5e6f-7g8h-9i0j-1k2l3m4n5o6p",
+    "id": "d031bc9c-e217-4971-b223-c395a683dd11",
     "word": "跳ぶ",
     "reading": "tobu",
     "furigana": "とぶ",
@@ -393,7 +386,7 @@
     }
   },
   {
-    "id": "1b2c3d4e-6f7g-8h9i-0j1k-2l3m4n5o6p7q",
+    "id": "35f1c3a4-971c-4bce-add9-3d945fc37fe5",
     "word": "写す",
     "reading": "utsusu",
     "furigana": "うつす",
@@ -414,7 +407,7 @@
     }
   },
   {
-    "id": "2c3d4e5f-7g8h-9i0j-1k2l-3m4n5o6p7q8r",
+    "id": "71a03c04-3850-4744-92a7-9a82ee01bf7e",
     "word": "移す",
     "reading": "utsusu",
     "furigana": "うつす",
@@ -435,7 +428,7 @@
     }
   },
   {
-    "id": "3d4e5f6g-8h9i-0j1k-2l3m-4n5o6p7q8r9s",
+    "id": "e98a5910-670e-4380-9a92-e755afedf9c7",
     "word": "怒る",
     "reading": "okoru",
     "furigana": "おこる",
@@ -456,7 +449,7 @@
     }
   },
   {
-    "id": "4e5f6g7h-9i0j-1k2l-3m4n-5o6p7q8r9s0t",
+    "id": "d4bfe6bb-f07e-47bd-8592-4a2a0178bae7",
     "word": "起こる",
     "reading": "okoru",
     "furigana": "おこる",
@@ -475,11 +468,9 @@
       "negative": "起こらない",
       "masu_form": "起こります"
     }
-  }
-]
-[
+  },
   {
-    "id": "5f6g7h8i-0j1k-2l3m-4n5o-6p7q8r9s0t1u",
+    "id": "199871ad-2b68-4330-b69a-4cc50d032120",
     "word": "初めて",
     "reading": "hajimete",
     "furigana": "はじめて",
@@ -495,7 +486,7 @@
     "conjugations_complete": null
   },
   {
-    "id": "6g7h8i9j-1k2l-3m4n-5o6p-7q8r9s0t1u2v",
+    "id": "524dae72-560a-4927-9929-7eefe88c28f0",
     "word": "初めは",
     "reading": "hajime wa",
     "furigana": "はじめは",
@@ -511,7 +502,7 @@
     "conjugations_complete": null
   },
   {
-    "id": "7h8i9j0k-2l3m-4n5o-6p7q-8r9s0t1u2v3w",
+    "id": "6791c225-b871-4e6c-8b6c-52f62c0fe99c",
     "word": "始めに",
     "reading": "hajime ni",
     "furigana": "はじめに",
@@ -527,7 +518,7 @@
     "conjugations_complete": null
   },
   {
-    "id": "8i9j0k1l-3m4n-5o6p-7q8r-9s0t1u2v3w4x",
+    "id": "5314d24b-24da-4eff-a498-677713ed40dc",
     "word": "空く",
     "reading": "aku",
     "furigana": "あく",
@@ -548,28 +539,7 @@
     }
   },
   {
-    "id": "9j0k1l2m-4n5o-6p7q-8r9s-0t1u2v3w4x5y",
-    "word": "空く",
-    "reading": "suku",
-    "furigana": "すく",
-    "meaning": "kosong, tidak padat (sepi/tidak ramai)",
-    "word_type": "godan",
-    "jlpt_level": 4,
-    "examples": [
-      {
-        "jp": "平日の道は いつom selalu 空いて います。",
-        "id": "Jalanan pada hari kerja selalu kosong"
-      }
-    ],
-    "conjugations_complete": {
-      "non_past": "空く",
-      "past": "空いた",
-      "negative": "空かない",
-      "masu_form": "空きます"
-    }
-  },
-  {
-    "id": "0k1l2m3n-5o6p-7q8r-9s0t-1u2v3w4x5y6z",
+    "id": "f20ea6e8-d51f-4247-8001-4d3bd06f07b2",
     "word": "吐く",
     "reading": "haku",
     "furigana": "はく",
@@ -590,7 +560,7 @@
     }
   },
   {
-    "id": "1l2m3n4o-6p7q-8r9s-0t1u-2v3w4x5y6z7a",
+    "id": "cb2cdd16-7c12-46ae-9b3d-261ba16ffc55",
     "word": "はく",
     "reading": "haku",
     "furigana": "はく",
@@ -611,7 +581,7 @@
     }
   },
   {
-    "id": "2m3n4o5p-7q8r-9s0t-1u2v-3w4x5y6z7a8b",
+    "id": "c12ab216-2a4e-4426-b70a-01ac4d4a7e00",
     "word": "掃く",
     "reading": "haku",
     "furigana": "はく",
@@ -630,11 +600,9 @@
       "negative": "掃かない",
       "masu_form": "掃きます"
     }
-  }
-]
-[
+  },
   {
-    "id": "5f6g7h8i-9j0k-1l2m-3n4o-5p6q7r8s9t0u",
+    "id": "394dc86c-d524-4eac-96ed-166597a41105",
     "word": "着く",
     "reading": "tsuku",
     "furigana": "つく",
@@ -655,7 +623,7 @@
     }
   },
   {
-    "id": "6g7h8i9j-0k1l-2m3n-4o5p-6q7r8s9t0u1v",
+    "id": "39e18252-3b6c-4dff-9e4e-4ca9eef471bf",
     "word": "届く",
     "reading": "todoku",
     "furigana": "とどく",
@@ -676,7 +644,7 @@
     }
   },
   {
-    "id": "7h8i9j0k-1l2m-3n4o-5p6q-7r8s9t0u1v2w",
+    "id": "558ac374-db64-4e6a-ad3b-a706a29f8d5a",
     "word": "考える",
     "reading": "kangaeru",
     "furigana": "かんがえる",
@@ -697,7 +665,7 @@
     }
   },
   {
-    "id": "8i9j0k1l-2m3n-4o5p-6q7r-8s9t0u1v2w3x",
+    "id": "1ac32c9e-6b56-4bf5-a8b8-7e391da2cfd7",
     "word": "思う",
     "reading": "omou",
     "furigana": "おもう",
@@ -718,7 +686,7 @@
     }
   },
   {
-    "id": "9j0k1l2m-3n4o-5p6q-7r8s-9t0u1v2w3x4y",
+    "id": "d9dd7533-d6b0-4ab3-8507-046bd5fd5123",
     "word": "足りる",
     "reading": "tariru",
     "furigana": "たりる",
@@ -739,7 +707,7 @@
     }
   },
   {
-    "id": "0k1l2m3n-4o5p-6q7r-8s9t-0u1v2w3x4y5z",
+    "id": "1bbb3910-4991-4c72-abf7-9033295eda5a",
     "word": "十分",
     "reading": "jubun",
     "furigana": "じゅうぶん",
@@ -755,7 +723,7 @@
     "conjugations_complete": null
   },
   {
-    "id": "1l2m3n4o-5p6q-7r8s-9t0u-1v2w3x4y5z6a",
+    "id": "601253a6-6937-4b7a-8e65-1097bf898714",
     "word": "働く",
     "reading": "hataraku",
     "furigana": "はたらく",
@@ -776,7 +744,7 @@
     }
   },
   {
-    "id": "2m3n4o5p-6q7r-8s9t-0u1v-2w3x4y5z6a7b",
+    "id": "d6571dcb-84fa-456e-812c-f1a8630d0676",
     "word": "勤める",
     "reading": "tsutomeru",
     "furigana": "つとめる",
@@ -795,11 +763,9 @@
       "negative": "勤めない",
       "masu_form": "勤めます"
     }
-  }
-]
-[
+  },
   {
-    "id": "3b4c5d6e-7f8g-9h0i-1j2k-3l4m5n6o7p8q",
+    "id": "93016386-0ef6-4514-a42b-c36dee4c0143",
     "word": "覚える",
     "reading": "oboeru",
     "furigana": "おぼ",
@@ -824,7 +790,7 @@
     }
   },
   {
-    "id": "4c5d6e7f-8g9h-0i1j-2k3l-4m5n6o7p8q9r",
+    "id": "a35d6c69-703a-4c3f-9be7-decac293d87a",
     "word": "思い出す",
     "reading": "omoidasu",
     "furigana": "おもいだ",
@@ -845,7 +811,7 @@
     }
   },
   {
-    "id": "5d6e7f8g-9h0i-1j2k-3l4m-5n6o7p8q9r0s",
+    "id": "5c6db132-aba6-4ca8-a426-950c0e71549f",
     "word": "借りる",
     "reading": "kariru",
     "furigana": "か",
@@ -870,7 +836,7 @@
     }
   },
   {
-    "id": "6e7f8g9h-0i1j-2k3l-4m5n-6o7p8q9r0s1t",
+    "id": "5af074d8-c329-45fc-9ab5-27e50006d1dd",
     "word": "貸す",
     "reading": "kasu",
     "furigana": "か",
@@ -895,7 +861,7 @@
     }
   },
   {
-    "id": "7f8g9h0i-1j2k-3l4m-5n6o-7p8q9r0s1t2u",
+    "id": "3aad0ed4-a2ec-4ffc-8a3c-ffc0cedd43d0",
     "word": "予約する",
     "reading": "yoyaku suru",
     "furigana": "よやく",
@@ -916,7 +882,7 @@
     }
   },
   {
-    "id": "8g9h0i1j-2k3l-4m5n-6o7p-8q9r0s1t2u3v",
+    "id": "415c0a77-a558-41d3-8df4-9ec8f8517dcb",
     "word": "注⽂する",
     "reading": "chuumon suru",
     "furigana": "ちゅうもん",
@@ -937,7 +903,7 @@
     }
   },
   {
-    "id": "9h0i1j2k-3l4m-5n6o-7p8q-9r0s1t2u3v4w",
+    "id": "f9ad89ad-d5e5-4245-918c-18bce8294fb7",
     "word": "遅れる",
     "reading": "okureru",
     "furigana": "おく",
@@ -958,7 +924,7 @@
     }
   },
   {
-    "id": "0i1j2k3l-4m5n-6o7p-8q9r-0s1t2u3v4w5x",
+    "id": "bd6ee45a-31f9-4bbb-b41e-d4381c1f891e",
     "word": "遅刻する",
     "reading": "chikoku suru",
     "furigana": "ちこk",
@@ -977,11 +943,9 @@
       "negative": "遅刻しない",
       "masu_form": "遅刻します"
     }
-  }
-]
-[
+  },
   {
-    "id": "1b2c3d4e-5f6g-7h8i-9j0k-1l2m3n4o5p6q",
+    "id": "3f919566-150e-4b8e-bf3e-051ea5bbf4e3",
     "word": "連れて行く",
     "reading": "tsurete iku",
     "furigana": "つ　い",
@@ -1002,7 +966,7 @@
     }
   },
   {
-    "id": "2c3d4e5f-6g7h-8i9j-0k1l-2m3n4o5p6q7r",
+    "id": "d3680d22-57ae-49c3-8e0b-1d7e7cd14f04",
     "word": "連れて来る",
     "reading": "tsurete kuru",
     "furigana": "つ　く",
@@ -1023,7 +987,7 @@
     }
   },
   {
-    "id": "3d4e5f6g-7h8i-9j0k-1l2m-3n4o5p6q7r8s",
+    "id": "64c654c2-400d-4974-8334-85beede18e67",
     "word": "誘う",
     "reading": "sasou",
     "furigana": "さそ",
@@ -1048,7 +1012,7 @@
     }
   },
   {
-    "id": "4e5f6g7h-8i9j-0k1l-2m3n-4o5p6q7r8s9t",
+    "id": "fbb7e26d-8279-40cd-a856-bc75d2c67bfc",
     "word": "招待する",
     "reading": "shoutai suru",
     "furigana": "しょうたい",
@@ -1069,7 +1033,7 @@
     }
   },
   {
-    "id": "5f6g7h8i-9j0k-1l2m-3n4o-5p6q7r8s9t0u",
+    "id": "ebebdedd-96d5-4ad9-b5ac-622ebf90875b",
     "word": "見える",
     "reading": "mieru",
     "furigana": "み",
@@ -1090,7 +1054,7 @@
     }
   },
   {
-    "id": "6g7h8i9j-0k1l-2m3n-4o5p-6q7r8s9t0u1v",
+    "id": "3489f6fc-4076-4c76-b850-d9ae8beff601",
     "word": "見せる",
     "reading": "miseru",
     "furigana": "み",
@@ -1111,7 +1075,7 @@
     }
   },
   {
-    "id": "7h8i9j0k-1l2m-3n4o-5p6q-7r8s9t0u1v2w",
+    "id": "4d1b85c8-7863-44e3-85f6-e996387ca999",
     "word": "バックする",
     "reading": "bakku suru",
     "furigana": "",
@@ -1132,7 +1096,7 @@
     }
   },
   {
-    "id": "8i9j0k1l-2m3n-4o5p-6q7r-8s9t0u1v2w3x",
+    "id": "f0e8a122-ea13-4164-8b69-76cab1ad913b",
     "word": "下がる",
     "reading": "sagaru",
     "furigana": "さ",
@@ -1151,11 +1115,9 @@
       "negative": "下がらない",
       "masu_form": "下がります"
     }
-  }
-]
-[
+  },
   {
-    "id": "1b2c3d4e-5f6g-7h8i-9j0k-1l2m3n4o5p6q",
+    "id": "df07fb21-fde6-4d7d-9937-3a428d7fcdc0",
     "word": "つける",
     "reading": "tsukeru",
     "furigana": "つける",
@@ -1192,7 +1154,7 @@
     }
   },
   {
-    "id": "2c3d4e5f-6g7h-8i9j-0k1l-2m3n4o5p6q7r",
+    "id": "0ce8c51b-e84a-4ff3-a259-87f8660874e6",
     "word": "出る",
     "reading": "deru",
     "furigana": "でる",
@@ -1229,7 +1191,7 @@
     }
   },
   {
-    "id": "3d4e5f6g-7h8i-9j0k-1l2m-3n4o5p6q7r8s",
+    "id": "2b0f23ef-d990-4134-b87b-e27d3960c678",
     "word": "消す",
     "reading": "kesu",
     "furigana": "けす",
@@ -1260,9 +1222,7 @@
       "negative": "消さない",
       "masu_form": "消します"
     }
-  }
-]
-[
+  },
   {
     "id": "f5a6e4d0-c4a6-4d0d-9a1b-7a6f8d2c0b9e",
     "word": "かける",
@@ -1297,7 +1257,7 @@
     }
   },
   {
-    "id": "7d9e0f1a-2b3c-4d5e-6f7g-8h9i0j1k2l3m",
+    "id": "171853d1-0709-42d7-a99a-bf6db80f5d70",
     "word": "動く",
     "reading": "ugoku",
     "furigana": "うご",
@@ -1322,7 +1282,7 @@
     }
   },
   {
-    "id": "8e0f1a2b-3c4d-5e6f-7g8h-9i0j1k2l3m4n",
+    "id": "9449e401-6ef3-402b-a131-1ca5b7dc922e",
     "word": "送る",
     "reading": "okuru",
     "furigana": "おく",
@@ -1345,11 +1305,9 @@
       "negative": "送らない",
       "masu_form": "送ります"
     }
-  }
-]
-[
+  },
   {
-    "id": "3d4e5f6g-7h8i-9j0k-1l2m-3n4o5p6q7r8s",
+    "id": "b696715d-b453-431b-a169-e29671920f24",
     "word": "やる",
     "reading": "yaru",
     "furigana": "やる",
@@ -1378,7 +1336,7 @@
     }
   },
   {
-    "id": "4e5f6g7h-8i9j-0k1l-2m3n-4o5p6q7r8s9t",
+    "id": "e125729a-945b-4ddb-8bf8-d3a291281d00",
     "word": "守る",
     "reading": "mamoru",
     "furigana": "まも",
@@ -1407,7 +1365,7 @@
     }
   },
   {
-    "id": "5f6g7h8i-9j0k-1l2m-3n4o-5p6q7r8s9t0u",
+    "id": "1dcf02fd-923e-44dc-bde3-b87d5249af6a",
     "word": "まとめる",
     "reading": "matomeru",
     "furigana": "まとめる",
@@ -1430,11 +1388,9 @@
       "negative": "まとめない",
       "masu_form": "まとめます"
     }
-  }
-]
-[
+  },
   {
-    "id": "1b2c3d4e-5f6g-7h8i-9j0k-1l2m3n4o5p6q",
+    "id": "f69ee009-a535-4b63-b037-c04997b34210",
     "word": "頼む",
     "reading": "tanomu",
     "furigana": "たの",
@@ -1459,7 +1415,7 @@
     }
   },
   {
-    "id": "2c3d4e5f-6g7h-8i9j-0k1l-2m3n4o5p6q7r",
+    "id": "a2ee2679-00fa-47f6-a8c6-13f7eb8dfd80",
     "word": "困る",
     "reading": "komaru",
     "furigana": "こま",
@@ -1484,7 +1440,7 @@
     }
   },
   {
-    "id": "3d4e5f6g-7h8i-9j0k-1l2m-3n4o5p6q7r8s",
+    "id": "ac040354-5c3f-430a-8105-949172ce131f",
     "word": "紹介する",
     "reading": "shoutai suru",
     "furigana": "しょうかい",
@@ -1509,7 +1465,7 @@
     }
   },
   {
-    "id": "4e5f6g7h-8i9j-0k1l-2m3n-4o5p6q7r8s9t",
+    "id": "c1ea0882-592b-4f95-a765-4656c501fa6f",
     "word": "開く",
     "reading": "hiraku",
     "furigana": "ひら",
@@ -1532,11 +1488,9 @@
       "negative": "開かない",
       "masu_form": "開きます"
     }
-  }
-]
-[
+  },
   {
-    "id": "1b2c3d4e-5f6g-7h8i-9j0k-1l2m3n4o5p6q",
+    "id": "85076dbb-d52e-4103-aa25-99b52a45ff18",
     "word": "受ける",
     "reading": "ukeru",
     "furigana": "う",
@@ -1569,7 +1523,7 @@
     }
   },
   {
-    "id": "2c3d4e5f-6g7h-8i9j-0k1l-2m3n4o5p6q7r",
+    "id": "0134e08b-940d-4be5-ab1b-33acd65a1a7f",
     "word": "合格する",
     "reading": "goukaku suru",
     "furigana": "ごうかく",
@@ -1590,7 +1544,7 @@
     }
   },
   {
-    "id": "3d4e5f6g-7h8i-9j0k-1l2m-3n4o5p6q7r8s",
+    "id": "ad236471-bc7a-4c9f-a85c-62dea8beef4a",
     "word": "卒業する",
     "reading": "sotsugyou suru",
     "furigana": "そつぎょう",
@@ -1611,7 +1565,7 @@
     }
   },
   {
-    "id": "4e5f6g7h-8i9j-0k1l-2m3n-4o5p6q7r8s9t",
+    "id": "e1a790b7-63b3-4c5c-89c5-59729363eb70",
     "word": "余る",
     "reading": "amaru",
     "furigana": "あま",
@@ -1632,7 +1586,7 @@
     }
   },
   {
-    "id": "5f6g7h8i-9j0k-1l2m-3n4o-5p6q7r8s9t0u",
+    "id": "7faa4f77-1e72-4e23-89c4-dd4adb41fed8",
     "word": "残る",
     "reading": "nokoru",
     "furigana": "のこ",
@@ -1653,7 +1607,7 @@
     }
   },
   {
-    "id": "6g7h8i9j-0k1l-2m3n-4o5p-6q7r8s9t0u1v",
+    "id": "436dc819-cc9e-42d7-afde-a71fa661c186",
     "word": "予習する",
     "reading": "youshuu suru",
     "furigana": "よしゅう",
@@ -1674,7 +1628,7 @@
     }
   },
   {
-    "id": "7h8i9j0k-1l2m-3n4o-5p6q-7r8s9t0u1v2w",
+    "id": "22438dfa-3e13-47b4-84b8-128a1c80d9cb",
     "word": "復習する",
     "reading": "fukushuu suru",
     "furigana": "ふくしゅう",
@@ -1693,9 +1647,7 @@
       "negative": "復習しない",
       "masu_form": "復習します"
     }
-  }
-]
-[
+  },
   {
     "id": "e4f5a6b7-c8d9-0123-4567-89abcdef0123",
     "word": "洗う",
@@ -1856,24 +1808,282 @@
     }
   },
   {
-    "id": "1a2b3c4d-5e6f-7890-1234-abcdef012345",
-    "word": "出る",
-    "reading": "deru",
-    "furigana": "で",
-    "meaning": "ikut serta (tampil)",
-    "word_type": "ichidan",
+    "id": "1a2b3c4d-5e6f-7890-1234-567890abcdef",
+    "word": "驚く",
+    "reading": "odoroku",
+    "furigana": "おどろ",
+    "meaning": "kaget",
+    "word_type": "godan",
     "jlpt_level": 4,
     "examples": [
       {
-        "jp": "彼は 初めて 全国⼤会の試合に 出ました。",
-        "id": "Dia untuk pertama kalinya tampil dalam pertandingan tingkat nasional"
+        "jp": "試験の結果を 見て 驚きました。",
+        "id": "Saya kaget melihat hasil ujian"
       }
     ],
     "conjugations_complete": {
-      "non_past": "出る",
-      "past": "出た",
-      "negative": "出ない",
-      "masu_form": "出ます"
+      "non_past": "驚く",
+      "past": "驚いた",
+      "negative": "驚かない",
+      "masu_form": "驚きます"
+    }
+  },
+  {
+    "id": "c34bcfd0-431a-442a-9231-6077b4b4de37",
+    "word": "びっくりする",
+    "reading": "bikkuri suru",
+    "furigana": "びっくり",
+    "meaning": "kaget (bisa diucapkan ketika merasa kaget)",
+    "word_type": "suru",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "急に 犬が 出てきて びっくりした。",
+        "id": "Saya terkejut karena tiba-tiba ada anjing muncul"
+      },
+      {
+        "jp": "わあ、びっくりした！",
+        "id": "Wah, kaget saya!"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "びっくりする",
+      "past": "びっくりした",
+      "negative": "びっくりしない",
+      "masu_form": "びっくりします"
+    }
+  },
+  {
+    "id": "83105b01-a44d-46cc-a4b4-274b1df1ac86",
+    "word": "準備する",
+    "reading": "junbi suru",
+    "furigana": "じゅんび",
+    "meaning": "mempersiapkan (makna lebih luas, menyiapkan sesuatu secara umum, seperti kegiatan, acara, rapat, ujian, alat, dsb)",
+    "word_type": "suru",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "試験の準備を しています。",
+        "id": "Saya sedang mempersiapkan ujian"
+      },
+      {
+        "jp": "先生は 授業の準備を しています。",
+        "id": "Guru sedang menyiapkan pelajaran/kelas"
+      },
+      {
+        "jp": "飲み物の準備を してください。",
+        "id": "Tolong siapkan minumannya"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "準備する",
+      "past": "準備した",
+      "negative": "準備しない",
+      "masu_form": "準備します"
+    }
+  },
+  {
+    "id": "683ad1c0-5293-455d-821a-969c83eb32a7",
+    "word": "用意する",
+    "reading": "youi suru",
+    "furigana": "ようい",
+    "meaning": "menyediakan, menyiapkan (fokus pada menyiapkan atau menyediakan benda/hal yang diperlukan)",
+    "word_type": "suru",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "払う ためのお金を 用意しました。",
+        "id": "Saya sudah menyiapkan uang untuk pembayaran"
+      },
+      {
+        "jp": "会議の資料を 用意してください。",
+        "id": "Tolong siapkan dokumen rapat"
+      },
+      {
+        "jp": "お客様のために いすを 用意します。",
+        "id": "Saya menyediakan kursi untuk tamu"
+      },
+      {
+        "jp": "私が 弁当を 用意します。",
+        "id": "Saya yang akan menyiapkan bento nya"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "用意する",
+      "past": "用意した",
+      "negative": "用意しない",
+      "masu_form": "用意します"
+    }
+  },
+  {
+    "id": "afb7ebd4-a424-44dd-bb95-0294383ae6c9",
+    "word": "支度する",
+    "reading": "shitaku suru",
+    "furigana": "したく",
+    "meaning": "mempersiapkan (bersiap untuk aktivitas sehari-hari, seperti sebelum berangkat/makan/tidur, dll)",
+    "word_type": "suru",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "母は 夕食の支度を しています。",
+        "id": "Ibu sedang menyiapkan makan malam"
+      },
+      {
+        "jp": "学校へ行く 支度をして ください。",
+        "id": "Tolong bersiap pergi ke sekolah"
+      },
+      {
+        "jp": "旅行の支度が まだ 終わっていません。",
+        "id": "Persiapan perjalanan masih belum selesai"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "支度する",
+      "past": "支度した",
+      "negative": "支度しない",
+      "masu_form": "支度します"
+    }
+  },
+  {
+    "id": "1643327f-dbca-48f0-b68c-62be6d21c292",
+    "word": "使用する",
+    "reading": "shiyou suru",
+    "furigana": "しよう",
+    "meaning": "menggunakan (menggunakan benda, alat, obat, perangkat, bahan, dll sesuai dengan fungsi & kegunaannya)",
+    "word_type": "suru",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "この部屋は 会議に 使用されています。",
+        "id": "Ruangan ini digunakan untuk rapat"
+      },
+      {
+        "jp": "会社では このソフトを 使用しています。",
+        "id": "Di kantor menggunakan software ini"
+      },
+      {
+        "jp": "説明書を 読んでから 使用してください。",
+        "id": "Tolong gunakan setelah membaca buku petunjuk"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "使用する",
+      "past": "使用した",
+      "negative": "使用しない",
+      "masu_form": "使用します"
+    }
+  },
+  {
+    "id": "a744e904-9e24-4ddb-be19-1968ef08679a",
+    "word": "利用する",
+    "reading": "riyou suru",
+    "furigana": "りよう",
+    "meaning": "memanfaatkan, menggunakan (misal memanfaatkan layanan, fasilitas, sarana, sistem, kesempatan)",
+    "word_type": "suru",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "毎日 バスを 利用しています。",
+        "id": "Saya menggunakan bus setiap hari"
+      },
+      {
+        "jp": "私は この図書館を よく 利用します。",
+        "id": "Saya sering menggunakan perpustakaan ini"
+      },
+      {
+        "jp": "駅の近くの駐車場を 利用しました。",
+        "id": "Saya menggunakan tempat parkir dekat stasiun"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "利用する",
+      "past": "利用した",
+      "negative": "利用しない",
+      "masu_form": "利用します"
+    }
+  },
+  {
+    "id": "fe01c899-be57-4b5e-a815-4ae1a9e18fb2",
+    "word": "発見する",
+    "reading": "hakken suru",
+    "furigana": "はっけん",
+    "meaning": "menciptakan",
+    "word_type": "suru",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "公園で 珍しい鳥を 発見しました。",
+        "id": "Saya menemukan burung yang langka di taman"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "発見する",
+      "past": "発見した",
+      "negative": "発見しない",
+      "masu_form": "発見します"
+    }
+  },
+  {
+    "id": "112408bf-9085-42b7-8c08-5cf5301fdb45",
+    "word": "発明する",
+    "reading": "hatsumei suru",
+    "furigana": "はつめい",
+    "meaning": "menemukan",
+    "word_type": "suru",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "インスタント ラーメンは 1958年に 発明されました。",
+        "id": "Ramen instan ditemukan pada tahun 1958"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "発明する",
+      "past": "発明した",
+      "negative": "発明しない",
+      "masu_form": "発明します"
+    }
+  },
+  {
+    "id": "5e0dd064-f80d-48d9-aaac-d66206ea7ff7",
+    "word": "録音する",
+    "reading": "rokuon suru",
+    "furigana": "ろくおん",
+    "meaning": "merekam (suara)",
+    "word_type": "suru",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "日本語の発音を 録音して、練習しています。",
+        "id": "Saya berlatih dengan merekam pelafalan bahasa Jepang"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "録音する",
+      "past": "録音した",
+      "negative": "録音しない",
+      "masu_form": "録音します"
+    }
+  },
+  {
+    "id": "bd8d3cab-c06d-42c4-ab15-d2be9fbeb978",
+    "word": "録画する",
+    "reading": "rokuga suru",
+    "furigana": "ろくが",
+    "meaning": "merekam (video)",
+    "word_type": "suru",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "会議の様子を 録画して、後で 確認しました。",
+        "id": "Saya merekam jalannya rapat lalu memeriksanya setelah itu"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "録画する",
+      "past": "録画した",
+      "negative": "録画しない",
+      "masu_form": "録画します"
     }
   }
 ]

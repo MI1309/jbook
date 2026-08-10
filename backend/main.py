@@ -44,12 +44,12 @@ def add_kotoba(word, meaning):
     print(f"Furigana: {vocab.furigana}")
     print(f"Arti: {vocab.meaning}")
 
-def sync_kotoba(file_path):
+def sync_kotoba(file_path, skip_existing=False):
     setup_django()
     from utils.kotoba_sync import sync_from_json_file
     
     print(f"Sinkronisasi dari file {file_path}...")
-    stats = sync_from_json_file(file_path)
+    stats = sync_from_json_file(file_path, skip_existing=skip_existing)
     
     if "error" in stats:
         print(f"ERROR: {stats['error']}")
@@ -117,6 +117,7 @@ if __name__ == "__main__":
     # Command: sync
     parser_sync = subparsers.add_parser("sync", help="Sinkronkan data dari file JSON")
     parser_sync.add_argument("--file", default="kotoba.json", help="Path ke file JSON lokal")
+    parser_sync.add_argument("--skip-existing", action="store_true", help="Lewati kata yang sudah ada di database tanpa mengubahnya")
 
     # Command: translate
     parser_translate = subparsers.add_parser("translate", help="Terjemahkan teks")
@@ -133,7 +134,7 @@ if __name__ == "__main__":
     elif args.command == "add":
         add_kotoba(args.word, args.meaning)
     elif args.command == "sync":
-        sync_kotoba(args.file)
+        sync_kotoba(args.file, skip_existing=args.skip_existing)
     elif args.command == "translate":
         translate_kotoba(args.text)
     elif args.command == "export":

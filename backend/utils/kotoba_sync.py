@@ -68,7 +68,7 @@ def process_new_kotoba(word_data: Dict[str, Any]) -> Dict[str, Any]:
             
     return word_data
 
-def sync_kotoba_data(local_data: List[Dict[str, Any]]) -> Dict[str, Any]:
+def sync_kotoba_data(local_data: List[Dict[str, Any]], skip_existing: bool = False) -> Dict[str, Any]:
     """
     Sync a list of dictionary data to the database.
     This function should be called within a Django context.
@@ -114,27 +114,36 @@ def sync_kotoba_data(local_data: List[Dict[str, Any]]) -> Dict[str, Any]:
                 # Try to find by ID
                 vocab = Vocab.objects.filter(id=vocab_id).first()
                 if vocab:
-                    # Update
-                    for k, v in defaults.items():
-                        setattr(vocab, k, v)
-                    if word:
-                        vocab.word = word
-                    vocab.save()
-                    stats["updated"] += 1
+                    if skip_existing and vocab.word == word:
+                        stats['skipped'] += 1
+                    else:
+                        # Update
+                        for k, v in defaults.items():
+                            setattr(vocab, k, v)
+                        if word:
+                            vocab.word = word
+                        vocab.save()
+                        stats["updated"] += 1
                 else:
-                    # Create with ID
-                    vocab = Vocab.objects.create(id=vocab_id, word=word, **defaults)
-                    stats["added"] += 1
+                    if skip_existing and Vocab.objects.filter(word=word).exists():
+                        stats['skipped'] += 1
+                    else:
+                        # Create with ID
+                        vocab = Vocab.objects.create(id=vocab_id, word=word, **defaults)
+                        stats["added"] += 1
             else:
-                # Try to find by Word
-                vocab, created = Vocab.objects.update_or_create(
-                    word=word,
-                    defaults=defaults
-                )
-                if created:
-                    stats["added"] += 1
+                if skip_existing and Vocab.objects.filter(word=word).exists():
+                    stats['skipped'] += 1
                 else:
-                    stats["updated"] += 1
+                    # Try to find by Word
+                    vocab, created = Vocab.objects.update_or_create(
+                        word=word,
+                        defaults=defaults
+                    )
+                    if created:
+                        stats["added"] += 1
+                    else:
+                        stats["updated"] += 1
                     
         except Exception as e:
             logger.error(f"Error syncing item {item.get('word', 'Unknown')}: {str(e)}")
@@ -142,7 +151,7 @@ def sync_kotoba_data(local_data: List[Dict[str, Any]]) -> Dict[str, Any]:
             
     return stats
 
-def sync_from_json_file(file_path: str) -> Dict[str, Any]:
+def sync_from_json_file(file_path: str, skip_existing: bool = False) -> Dict[str, Any]:
     """
     Read from a local JSON file and sync to database.
     """
@@ -157,7 +166,7 @@ def sync_from_json_file(file_path: str) -> Dict[str, Any]:
             else:
                 return {"error": "Format JSON tidak valid. Harus berupa array/list of objects."}
                 
-        return sync_kotoba_data(data)
+        return sync_kotoba_data(data, skip_existing=skip_existing)
     except FileNotFoundError:
         return {"error": f"File {file_path} tidak ditemukan."}
     except json.JSONDecodeError:
