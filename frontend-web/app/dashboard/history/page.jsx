@@ -28,9 +28,20 @@ export default function HistoryPage() {
     // fungsi untuk mengembalikan ID dari character → ID (online: from API, offline: from IndexedDB)
     const handleOpenMistake = async (mistake) => {
         try {
-            const id = await resolveContentId(mistake.type, mistake.character);
+            const targetType = mistake.type === 'kakitori' ? 'vocab' : mistake.type;
+            let id = await resolveContentId(targetType, mistake.character);
+            
+            // Jika bertipe kakitori dan tidak ketemu di vocab, coba cari di kanji apabila panjang karakter = 1
+            if (!id && mistake.type === 'kakitori' && mistake.character?.length === 1) {
+                id = await resolveContentId('kanji', mistake.character);
+                if (id) {
+                    setDetailView({ id, type: 'kanji' });
+                    return;
+                }
+            }
+
             if (id) {
-                setDetailView({ id, type: mistake.type });
+                setDetailView({ id, type: targetType });
             } else {
                 toast.error(`Detail untuk "${mistake.character}" tidak ditemukan. Jika offline, pastikan kamu sudah mengunduh materi.`, {
                     position: "bottom-center",
@@ -61,8 +72,7 @@ export default function HistoryPage() {
     }, [user]);
 
     useEffect(() => {
-        if (!user && !loading) {
-            // Guest bisa akses history page juga
+        if (!loading) {
             fetchAnalytics();
         }
     }, [user, loading, fetchAnalytics]);
@@ -104,14 +114,34 @@ export default function HistoryPage() {
         const key = `${type}-${current.character}`;
         
         if (!acc[key]) {
-            acc[key] = { ...current, type, count: current.count || 0 };
+            acc[key] = { ...current, type, count: current.count || 0, _fromRaw: true };
         } else {
             acc[key].count += (current.count || 0);
-            // Opsional: Jika status terbaru adalah 'Perbaiki', gunakan itu
-            if (current.status === 'Perbaiki') acc[key].status = 'Perbaiki';
         }
         return acc;
     }, {});
+
+    // Masukkan data salah Kakitori ke groupedMistakes agar tampil di "Semua"
+    wrongKakitoriDetails.forEach(d => {
+        const key = `kakitori-${d.character}`;
+        if (!groupedMistakes[key]) {
+            groupedMistakes[key] = {
+                ...d,
+                type: 'kakitori',
+                count: 1,
+            };
+        } else {
+            if (!groupedMistakes[key]._fromRaw) {
+                groupedMistakes[key].count += 1;
+            }
+            // Selalu simpan detail yang paling baru berdasarkan timestamp
+            if (!groupedMistakes[key].timestamp || new Date(d.timestamp) > new Date(groupedMistakes[key].timestamp)) {
+                groupedMistakes[key].timestamp = d.timestamp;
+                groupedMistakes[key].answer_given = d.answer_given;
+                groupedMistakes[key].reading = d.reading;
+            }
+        }
+    });
 
     const allMistakes = Object.values(groupedMistakes);
     const totalSalah = allMistakes.reduce((sum, m) => sum + (m.count || 0), 0);
@@ -149,50 +179,41 @@ export default function HistoryPage() {
 
     // render halaman history
     return (
-        <div className={`min-h-screen ${pageBg}`}>
-            <div className="container mx-auto px-4 py-12 max-w-4xl">
+        <div className="animate-in fade-in duration-500 space-y-6">
 
-                {/* Header */}
-                <div className="mb-10">
-                    <Link
-                        href="/dashboard"
-                        className={`inline-flex items-center gap-2 text-xs font-black uppercase tracking-widest mb-6 hover:text-blue-600 transition-colors ${subTextColor}`}
-                    >
-                        ← Kembali ke Dashboard
-                    </Link>
-                    <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
-                        <div>
-                            <h1 className={`text-4xl font-black tracking-tight transition-colors ${textColor}`}>
-                                Histori <span className="text-blue-600">Kesalahan</span>
-                            </h1>
-                            <p className={`mt-2 font-bold transition-colors ${subTextColor}`}>
-                                {allMistakes.length > 0
-                                    ? `${allMistakes.length} materi yang pernah salah kamu jawab`
-                                    : 'Belum ada riwayat kesalahan'}
-                            </p>
-                        </div>
+            {/* Header */}
+            <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
+                <div>
+                    <h2 className={`text-xl font-black transition-colors ${textColor}`}>
+                        Histori <span className="text-blue-600">Kesalahan</span>
+                    </h2>
+                    <p className={`mt-2 text-xs font-bold transition-colors ${subTextColor}`}>
+                        {allMistakes.length > 0
+                            ? `${allMistakes.length} materi yang pernah salah kamu jawab`
+                            : 'Belum ada riwayat kesalahan'}
+                    </p>
+                </div>
 
-                        {/* badges */}
-                        <div className="flex gap-3 flex-wrap">
-                            <div className={`px-4 py-2 rounded-2xl border ${cardBg} ${borderStyle} text-center min-w-[80px]`}>
-                                <div className="text-2xl font-black text-blue-600">{analytics?.total_attempts || 0}</div>
-                                <div className={`text-[9px] font-black uppercase tracking-widest ${subTextColor}`}>Total Soal</div>
-                            </div>
-                            <div className={`px-4 py-2 rounded-2xl border ${cardBg} ${borderStyle} text-center min-w-[80px]`}>
-                                <div className="text-2xl font-black text-blue-600">{analytics?.accuracy || 0}%</div>
-                                <div className={`text-[9px] font-black uppercase tracking-widest ${subTextColor}`}>Akurasi</div>
-                            </div>
-                            <div className={`px-4 py-2 rounded-2xl border ${cardBg} ${borderStyle} text-center min-w-[80px]`}>
-                                <div className="text-2xl font-black text-blue-600">{totalSalah}</div>
-                                <div className={`text-[9px] font-black uppercase tracking-widest ${subTextColor}`}>Total Salah</div>
-                            </div>
-                            <div className={`px-4 py-2 rounded-2xl border ${cardBg} ${borderStyle} text-center min-w-[80px]`}>
-                                <div className="text-2xl font-black text-blue-600">{allMistakes.length}</div>
-                                <div className={`text-[9px] font-black uppercase tracking-widest ${subTextColor}`}>Materi Salah</div>
-                            </div>
-                        </div>
+                {/* badges */}
+                <div className="flex gap-3 flex-wrap">
+                    <div className={`px-4 py-2 rounded-2xl border ${cardBg} ${borderStyle} text-center min-w-[80px]`}>
+                        <div className="text-2xl font-black text-blue-600">{analytics?.total_attempts || 0}</div>
+                        <div className={`text-[9px] font-black uppercase tracking-widest ${subTextColor}`}>Total Soal</div>
+                    </div>
+                    <div className={`px-4 py-2 rounded-2xl border ${cardBg} ${borderStyle} text-center min-w-[80px]`}>
+                        <div className="text-2xl font-black text-blue-600">{analytics?.accuracy || 0}%</div>
+                        <div className={`text-[9px] font-black uppercase tracking-widest ${subTextColor}`}>Akurasi</div>
+                    </div>
+                    <div className={`px-4 py-2 rounded-2xl border ${cardBg} ${borderStyle} text-center min-w-[80px]`}>
+                        <div className="text-2xl font-black text-blue-600">{totalSalah}</div>
+                        <div className={`text-[9px] font-black uppercase tracking-widest ${subTextColor}`}>Total Salah</div>
+                    </div>
+                    <div className={`px-4 py-2 rounded-2xl border ${cardBg} ${borderStyle} text-center min-w-[80px]`}>
+                        <div className="text-2xl font-black text-blue-600">{allMistakes.length}</div>
+                        <div className={`text-[9px] font-black uppercase tracking-widest ${subTextColor}`}>Materi Salah</div>
                     </div>
                 </div>
+            </div>
 
                 {/* filter & pengurutan */}
                 {true && (
@@ -248,11 +269,101 @@ export default function HistoryPage() {
                         <div className="space-y-3">
                             {pagedMistakes.map((mistake, idx) => {
                                 const absoluteIdx = pageStart + idx;
+
+                                if (mistake.type === 'kakitori') {
+                                    const correctReading = wanakana.toHiragana(mistake.reading || '');
+                                    const userReading = wanakana.toHiragana(mistake.answer_given || '');
+                                    const diffs = diffStrings(correctReading, userReading);
+                                    
+                                    return (
+                                        <div key={`${mistake.type}-${mistake.character}-${absoluteIdx}`} className={`p-4 rounded-xl border ${theme === 'dark' ? 'bg-black/20 border-white/5' : 'bg-gray-50 border-gray-100'}`}>
+                                            <div className="flex justify-between items-start mb-2">
+                                                <div className="flex items-center gap-2">
+                                                    <span className={`text-xl font-black ${textColor}`}>{mistake.character}</span>
+                                                    {mistake.timestamp && (
+                                                        <span className={`text-[10px] font-black px-2 py-0.5 rounded-full ${theme === 'dark' ? 'bg-blue-900/40 text-blue-400' : 'bg-blue-100 text-blue-600'}`}>
+                                                            {new Date(mistake.timestamp).toLocaleDateString('id-ID', { day: 'numeric', month: 'short' })}
+                                                        </span>
+                                                    )}
+                                                    <span className={`text-[8px] sm:text-[9px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full ${theme === 'dark' ? 'bg-blue-950/20 text-blue-300' : 'bg-blue-50 text-blue-700'}`}>
+                                                        Dikte ({mistake.count}x salah)
+                                                    </span>
+                                                </div>
+                                                <div className="flex items-center gap-3">
+                                                    <button 
+                                                        onClick={() => handleOpenMistake(mistake)}
+                                                        className="text-[10px] font-black text-blue-600 hover:text-blue-500 flex items-center gap-1 transition-colors"
+                                                    >
+                                                        Detail →
+                                                    </button>
+                                                    <span className="text-[10px] font-black text-red-500 uppercase tracking-widest">
+                                                        Salah
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            
+                                            <div className="flex flex-col gap-2">
+                                                <div className="flex items-center gap-2 flex-wrap">
+                                                    <span className={`text-[10px] font-black uppercase tracking-widest ${subTextColor}`}>Analisis:</span>
+                                                    <div className="flex items-center gap-0.5 text-lg font-japanese tracking-tighter">
+                                                        {diffs.map((d, dIdx) => (
+                                                            <span 
+                                                                key={dIdx} 
+                                                                className={`px-0.5 rounded ${
+                                                                    d.status === 'correct' ? 'text-green-500' : 
+                                                                    d.status === 'wrong' ? 'bg-red-500/20 text-red-600 border-b-2 border-red-500' :
+                                                                    d.status === 'missing' ? 'bg-blue-500/10 text-blue-400 border-b-2 border-dashed border-blue-400' :
+                                                                    'bg-orange-500/20 text-orange-600'
+                                                                }`}
+                                                                title={d.status === 'wrong' ? `Harusnya: ${d.char}, Kamu tulis: ${d.userChar}` : ''}
+                                                            >
+                                                                {d.char || d.userChar}
+                                                            </span>
+                                                        ))}
+                                                    </div>
+                                                </div>
+                                                <div className="text-[10px] transition-colors flex gap-2">
+                                                    <span className={subTextColor}>Jawaban kamu:</span>
+                                                    <span className="font-bold text-red-500">{mistake.answer_given || '(kosong)'}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    );
+                                }
+
+                                const typeCardStyle = (() => {
+                                    if (mistake.type === 'kanji') {
+                                        return theme === 'dark' ? 'bg-purple-900/20 border-purple-800' : 'bg-purple-50 border-purple-200';
+                                    }
+                                    if (mistake.type === 'vocab' || mistake.type === 'kotoba') {
+                                        return theme === 'dark' ? 'bg-green-900/20 border-green-800' : 'bg-green-50 border-green-200';
+                                    }
+                                    if (mistake.type === 'grammar' || mistake.type === 'bunpo') {
+                                        return theme === 'dark' ? 'bg-yellow-900/20 border-yellow-800' : 'bg-yellow-50 border-yellow-200';
+                                    }
+                                    // default for kakitori and others
+                                    return theme === 'dark' ? 'bg-blue-900/20 border-blue-800' : 'bg-blue-50 border-blue-200';
+                                })();
+
+                                const typeIconBg = (() => {
+                                    if (mistake.type === 'kanji') {
+                                        return theme === 'dark' ? 'bg-purple-900' : 'bg-purple-50';
+                                    }
+                                    if (mistake.type === 'vocab' || mistake.type === 'kotoba') {
+                                        return theme === 'dark' ? 'bg-green-900' : 'bg-green-50';
+                                    }
+                                    if (mistake.type === 'grammar' || mistake.type === 'bunpo') {
+                                        return theme === 'dark' ? 'bg-yellow-900' : 'bg-yellow-50';
+                                    }
+                                    // default for kakitori and others
+                                    return theme === 'dark' ? 'bg-blue-900' : 'bg-blue-50';
+                                })();
+
                                 return (
                                 <button
                                     key={`${mistake.type}-${mistake.character}-${absoluteIdx}`}
                                     onClick={() => handleOpenMistake(mistake)}
-                                    className={`w-full flex items-center justify-between group p-3 sm:p-5 rounded-2xl border-2 transition-all hover:border-blue-500 hover:scale-[1.005] cursor-pointer text-left ${!mounted ? 'bg-white border-gray-100' : (theme === 'dark' ? 'bg-[#0a0a0a] border-blue-950/20 hover:bg-blue-950/10' : 'bg-white border-gray-100 hover:bg-blue-50/40')}`}
+                                    className={`w-full flex items-center justify-between group p-3 sm:p-5 rounded-2xl border-2 transition-all hover:border-blue-500 hover:scale-[1.005] cursor-pointer text-left ${typeCardStyle}`}
                                 >
                                     <div className="flex items-center gap-2 sm:gap-5 min-w-0 flex-1 mr-2 sm:mr-4">
                                         {/* Rank badge - hidden on very small screens to save space */}
@@ -261,7 +372,7 @@ export default function HistoryPage() {
                                         </div>
                                         
                                         {/* Character icon - dynamic width */}
-                                        <div className={`h-10 sm:h-12 px-2 min-w-[2.5rem] sm:min-w-[3rem] rounded-xl sm:rounded-2xl bg-blue-600 text-white flex items-center justify-center font-black flex-shrink-0 shadow-md shadow-blue-500/20 group-hover:rotate-3 transition-transform ${
+                                        <div className={`h-10 sm:h-12 px-2 min-w-[2.5rem] sm:min-w-[3rem] rounded-xl sm:rounded-2xl ${typeIconBg} text-white flex items-center justify-center font-black flex-shrink-0 shadow-md shadow-blue-500/20 group-hover:rotate-3 transition-transform ${
                                             (mistake.character?.length || 0) > 4 ? 'text-xs' : (mistake.character?.length || 0) > 2 ? 'text-sm' : 'text-lg'
                                         }`}>
                                             {mistake.character || '?'}
@@ -273,17 +384,6 @@ export default function HistoryPage() {
                                                 <span className={`text-[8px] sm:text-[9px] font-black uppercase tracking-widest px-1.5 sm:px-2 py-0.5 rounded-full ${theme === 'dark' ? 'bg-blue-950/20 text-blue-300' : 'bg-blue-50 text-blue-700'}`}>
                                                     {getMistakeTypeLabel(mistake.type)}
                                                 </span>
-                                                {mistake.status && (
-                                                    <span className={`text-[8px] sm:text-[9px] font-black uppercase tracking-widest px-1.5 sm:px-2 py-0.5 rounded-full flex items-center gap-1 ${
-                                                        mistake.status === 'Perbaiki' 
-                                                            ? 'bg-blue-600 text-white' 
-                                                            : mistake.status === 'Cukup'
-                                                                    ? 'bg-orange-500 text-white'
-                                                                    : 'bg-emerald-500 text-white'
-                                                    }`}>
-                                                        {mistake.status}
-                                                    </span>
-                                                )}
                                             </div>
                                         </div>
                                     </div>
@@ -443,7 +543,6 @@ export default function HistoryPage() {
                         )}
                     </div>
                 )}
-            </div>
         </div>
     );
 }

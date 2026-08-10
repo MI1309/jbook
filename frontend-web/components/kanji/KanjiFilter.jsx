@@ -200,6 +200,13 @@ function FilterContent() {
         } else {
             setSelectedRadical(rad);
         }
+        setShowRadicals(false);
+    };
+
+    const handleClearRadical = (e) => {
+        e.stopPropagation();
+        setSelectedRadical('');
+        setShowRadicals(false);
     };
 
     const toggleGroup = (strokes) => {
@@ -221,121 +228,217 @@ function FilterContent() {
 
     const textColor = !mounted ? 'text-black' : (theme === 'dark' ? 'text-white' : 'text-black');
     const subTextColor = !mounted ? 'text-black/50' : (theme === 'dark' ? 'text-white/50' : 'text-black/50');
-    const inputBg = !mounted ? 'bg-background' : (theme === 'dark' ? 'bg-black/40' : 'bg-background');
 
     return (
-        <div className={`bg-card card-texture p-6 rounded-3xl border shadow-md mb-8 transition-colors ${theme === 'dark' ? 'border-red-950 shadow-red-950/5' : 'border-gray-100 shadow-red-100/20'}`}>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                <div>
-                    <label className={`block font-black mb-2 uppercase text-xs tracking-widest transition-colors ${subTextColor}`}>Cari Kanji</label>
+        <div className="bg-[var(--card-bg)] p-6 rounded-[2.5rem] border border-[var(--border-color)] shadow-xl shadow-accent-blue/5 transition-all duration-300 w-full relative z-30">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-5 items-start mb-4">
+                {/* Search Kanji */}
+                <div className="sm:col-span-2 lg:col-span-7">
+                    <label className="block font-black mb-2 flex items-center gap-1.5 text-[11px] uppercase tracking-widest text-gray-500 dark:text-gray-400">
+                        <span>🔍</span> Cari Kanji
+                    </label>
                     <div className="relative group">
                         <input
                             type="text"
                             placeholder="Masukan bacaan (romaji/hiragana) atau arti..."
-                            className={`w-full px-5 py-3 border rounded-2xl focus:outline-none focus:ring-2 focus:ring-brand/40 focus:border-brand transition-all group-hover:border-brand/30 ${inputBg} ${textColor} ${theme === 'dark' ? 'border-red-950' : 'border-gray-100'}`}
+                            className="w-full px-4 py-2.5 bg-[var(--background)] text-[var(--foreground)] border border-[var(--border-color)] focus:outline-none focus:ring-2 focus:ring-accent-blue/40 focus:border-accent-blue transition-all group-hover:border-accent-blue/30 rounded-2xl text-sm font-semibold"
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
                         />
                         {searchTerm && (
                             <button
+                                type="button"
                                 onClick={() => setSearchTerm('')}
-                                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                                className="absolute right-3 top-1/2 -translate-y-1/2 w-6 h-6 rounded-full flex items-center justify-center text-xs text-gray-400 hover:text-red-500 hover:bg-gray-200 dark:hover:bg-gray-800 transition-all"
                             >
                                 ✕
                             </button>
                         )}
                     </div>
-                    <p className="text-xs text-gray-500 mt-1">Contoh: "mizu", "みず", "air"</p>
+                    <p className="text-[10px] font-bold text-gray-400 mt-1.5 px-1">Contoh: "mizu", "みず", "air"</p>
                 </div>
 
-                <div>
-                    <label className={`block font-black mb-2 uppercase text-xs tracking-widest transition-colors ${subTextColor}`}>Filter Level JLPT</label>
-                    <div className="flex flex-wrap gap-2">
-                        {[5, 4, 3, 2, 1].map((level) => (
-                            <button
-                                key={level}
-                                onClick={() => handleLevelClick(level)}
-                                className={`px-5 py-2.5 rounded-xl border-2 transition-all font-black text-sm ${selectedLevels.includes(level.toString())
-                                        ? 'bg-brand text-white border-brand shadow-lg shadow-brand/20 scale-105'
-                                        : `${theme === 'dark' ? 'bg-black/40 text-gray-400 border-red-950 hover:border-red-500' : 'bg-background text-gray-500 border-gray-100 hover:border-brand/40 hover:bg-brand-light/10'}`
+                {/* Level Filter: 3-2 Grid */}
+                <div className="sm:col-span-2 lg:col-span-5">
+                    <label className="block font-black mb-2 uppercase text-[11px] tracking-widest text-gray-500 dark:text-gray-400 text-center sm:text-left">
+                        Filter Level JLPT
+                    </label>
+                    <div className="grid grid-cols-6 gap-1.5 w-full">
+                        {[5, 4, 3, 2, 1].map((level) => {
+                            const isSelected = selectedLevels.includes(level.toString());
+                            const spanClass = [5, 4, 3].includes(level) ? 'col-span-2' : 'col-span-3';
+                            return (
+                                <button
+                                    key={level}
+                                    type="button"
+                                    onClick={() => handleLevelClick(level)}
+                                    className={`${spanClass} py-2 rounded-xl border font-black text-xs transition-all duration-200 flex items-center justify-center cursor-pointer ${
+                                        isSelected
+                                            ? 'bg-gradient-to-r from-accent-blue to-accent-green text-white border-transparent shadow-md shadow-accent-blue/20 scale-[1.02]'
+                                            : 'bg-[var(--background)] text-gray-600 dark:text-gray-400 border-[var(--border-color)] hover:border-accent-blue/40 hover:text-accent-blue hover:bg-accent-blue/5'
                                     }`}
-                            >
-                                N{level}
-                            </button>
-                        ))}
-                        
+                                >
+                                    N{level}
+                                </button>
+                            );
+                        })}
                     </div>
                 </div>
             </div>
 
-            <div className="border-t border-gray-100 pt-4">
-                <button
-                    onClick={() => setShowRadicals(!showRadicals)}
-                    className="flex items-center justify-between w-full text-left group"
-                >
-                    <span className={`font-black uppercase text-xs tracking-widest group-hover:text-brand transition-colors ${subTextColor}`}>Filter berdasarkan Radikal</span>
-                    <span className="text-gray-400 text-xs font-black">{showRadicals ? 'SEMBUNYIKAN ▲' : 'TAMPILKAN ▼'}</span>
-                </button>
+            {/* Radicals Dropdown Bar */}
+            <div className="border-t border-[var(--border-color)] pt-4 relative">
+                <div className="flex items-center justify-between w-full">
+                    <button
+                        type="button"
+                        onClick={() => setShowRadicals(!showRadicals)}
+                        className="flex items-center gap-3 text-left group cursor-pointer py-1"
+                    >
+                        <span className="font-black uppercase text-[11px] tracking-widest text-gray-500 dark:text-gray-400 group-hover:text-accent-blue transition-colors flex items-center gap-2">
+                            <span>部首</span> Filter berdasarkan Radikal
+                        </span>
+
+                        {selectedRadical ? (
+                            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-gradient-to-r from-accent-blue/20 to-accent-green/20 border border-accent-blue/30 text-accent-blue font-bold text-xs">
+                                <span className="font-japanese text-sm font-black">{selectedRadical}</span>
+                                <button
+                                    type="button"
+                                    onClick={handleClearRadical}
+                                    className="w-4 h-4 rounded-full flex items-center justify-center bg-accent-blue/20 hover:bg-accent-blue hover:text-white transition-all ml-0.5 text-[10px] font-black"
+                                    title="Hapus Filter Radikal"
+                                >
+                                    ✕
+                                </button>
+                            </div>
+                        ) : (
+                            <span className="text-[10px] font-bold px-2 py-0.5 rounded-lg bg-[var(--background)] border border-[var(--border-color)] text-gray-400">
+                                Semua
+                            </span>
+                        )}
+                    </button>
+
+                    <button
+                        type="button"
+                        onClick={() => setShowRadicals(!showRadicals)}
+                        className="text-gray-400 hover:text-accent-blue text-xs font-black flex items-center gap-1.5 cursor-pointer transition-colors"
+                    >
+                        <span className="text-[10px] tracking-widest uppercase">{showRadicals ? 'Tutup' : 'Pilih Radikal'}</span>
+                        <span className="text-xs transition-transform duration-200">{showRadicals ? '▲' : '▼'}</span>
+                    </button>
+                </div>
 
                 {showRadicals && (
-                    <div className="mt-4 space-y-4 animate-in fade-in slide-in-from-top-2 duration-300">
-                        {RADICALS_BY_STROKES.map((group) => {
-                            const isExpanded = expandedGroup === group.strokes;
-                            const hasSelected = group.radicals.some(r => r.char === selectedRadical);
+                    <>
+                        {/* Transparent click-outside overlay (NO screen blur) */}
+                        <div 
+                            className="fixed inset-0 z-40 bg-transparent" 
+                            onClick={() => setShowRadicals(false)} 
+                        />
 
-                            return (
-                                <div key={group.strokes} className={`border rounded-xl overflow-hidden mb-2 transition-colors ${theme === 'dark' ? 'border-red-950/50' : 'border-gray-100'}`}>
-                                    <button
-                                        onClick={() => toggleGroup(group.strokes)}
-                                        className={`w-full flex items-center justify-between px-4 py-3 transition-colors ${
-                                            isExpanded || hasSelected 
-                                                ? (theme === 'dark' ? 'bg-red-950/20' : 'bg-red-50') 
-                                                : (theme === 'dark' ? 'bg-black/20 hover:bg-black/40' : 'bg-gray-50/50 hover:bg-gray-50')
-                                        }`}
-                                    >
-                                        <div className="flex items-center">
-                                            <span className={`font-black text-xs uppercase tracking-tighter ${hasSelected ? (theme === 'dark' ? 'text-red-400' : 'text-red-700') : subTextColor}`}>
-                                                {group.strokes} Coretan
-                                            </span>
-                                            {hasSelected && <span className="ml-2 w-2 h-2 rounded-full bg-red-500"></span>}
-                                        </div>
-                                        <span className="text-gray-500 text-xs transform transition-transform duration-200">
-                                            {isExpanded ? '▲' : '▼'}
-                                        </span>
-                                    </button>
-
-                                    {isExpanded && (
-                                        <div className="p-4 bg-white border-t border-gray-100">
-                                            <div className="flex flex-wrap gap-2">
-                                                {group.radicals.map((rad, idx) => (
-                                                    <button
-                                                        key={idx}
-                                                        onClick={() => handleRadicalClick(rad.char)}
-                                                        className={`w-9 h-9 flex items-center justify-center text-lg border rounded-xl transition-all ${selectedRadical === rad.char
-                                                            ? 'bg-red-600 border-red-600 text-white font-black shadow-lg shadow-red-500/20 scale-110'
-                                                            : `${theme === 'dark' ? 'border-red-950 text-gray-400 hover:bg-red-950/30' : 'border-gray-100 text-gray-600 hover:bg-red-50 hover:border-red-200'}`
-                                                            }`}
-                                                        title={rad.name}
-                                                    >
-                                                        {rad.char}
-                                                    </button>
-                                                ))}
-                                            </div>
-                                        </div>
-                                    )}
+                        {/* Floating Dropdown that OVERLAYS / MENIMPA Kanji cards below */}
+                        <div className="absolute top-full left-0 right-0 mt-3 z-50 p-6 bg-[var(--card-bg)] border-2 border-[var(--border-color)] shadow-2xl shadow-black/40 dark:shadow-black/70 rounded-[2.5rem] animate-in fade-in zoom-in-95 duration-200 max-h-[65vh] overflow-y-auto">
+                            
+                            {/* Dropdown Header Bar */}
+                            <div className="flex items-center justify-between pb-4 mb-4 border-b border-[var(--border-color)]">
+                                <div className="flex items-center gap-2">
+                                    <span className="w-2.5 h-2.5 rounded-full bg-gradient-to-r from-accent-blue to-accent-green"></span>
+                                    <h3 className="font-black text-xs uppercase tracking-widest text-[var(--foreground)]">
+                                        Pilih Radikal (部首)
+                                    </h3>
                                 </div>
-                            );
-                        })}
 
-                        {selectedRadical && (
-                            <button
-                                onClick={() => setSelectedRadical('')}
-                                className="mt-4 text-sm text-red-600 hover:underline flex items-center"
-                            >
-                                <span className="mr-1">✕</span> Hapus filter radikal
-                            </button>
-                        )}
-                    </div>
+                                <div className="flex items-center gap-2">
+                                    {selectedRadical && (
+                                        <button
+                                            type="button"
+                                            onClick={handleClearRadical}
+                                            className="px-3 py-1 rounded-xl bg-red-500/10 hover:bg-red-500/20 border border-red-500/20 text-red-500 text-xs font-black transition-all flex items-center gap-1.5 cursor-pointer"
+                                        >
+                                            <span className="font-japanese text-sm">{selectedRadical}</span>
+                                            <span>✕ Hapus</span>
+                                        </button>
+                                    )}
+
+                                    <button
+                                        type="button"
+                                        onClick={() => setShowRadicals(false)}
+                                        className="w-7 h-7 rounded-full flex items-center justify-center bg-[var(--background)] border border-[var(--border-color)] text-gray-400 hover:text-red-500 hover:border-red-400 transition-all cursor-pointer text-xs font-black"
+                                        title="Tutup Dropdown"
+                                    >
+                                        ✕
+                                    </button>
+                                </div>
+                            </div>
+
+                            {/* Stroke Groups List */}
+                            <div className="space-y-3">
+                                {RADICALS_BY_STROKES.map((group) => {
+                                    const isExpanded = expandedGroup === group.strokes;
+                                    const hasSelected = group.radicals.some(r => r.char === selectedRadical);
+
+                                    return (
+                                        <div key={group.strokes} className={`border rounded-2xl overflow-hidden transition-all duration-200 ${
+                                            hasSelected 
+                                                ? 'border-accent-blue/50 shadow-sm' 
+                                                : 'border-[var(--border-color)]'
+                                        }`}>
+                                            <button
+                                                type="button"
+                                                onClick={() => toggleGroup(group.strokes)}
+                                                className={`w-full flex items-center justify-between px-5 py-3 transition-all cursor-pointer ${
+                                                    isExpanded || hasSelected 
+                                                        ? (theme === 'dark' ? 'bg-accent-blue/15' : 'bg-blue-50/70') 
+                                                        : (theme === 'dark' ? 'bg-[var(--background)]/60 hover:bg-[var(--background)]' : 'bg-gray-50/70 hover:bg-gray-100/70')
+                                                }`}
+                                            >
+                                                <div className="flex items-center gap-2.5">
+                                                    <span className={`font-black text-xs uppercase tracking-wider ${hasSelected ? 'text-accent-blue' : 'text-[var(--foreground)]'}`}>
+                                                        {group.strokes} Coretan
+                                                    </span>
+                                                    <span className="text-[10px] font-bold text-gray-400 bg-[var(--card-bg)] px-2 py-0.5 rounded-md border border-[var(--border-color)]">
+                                                        {group.radicals.length}
+                                                    </span>
+                                                    {hasSelected && (
+                                                        <span className="text-[10px] font-black text-accent-blue bg-accent-blue/20 px-2 py-0.5 rounded-md uppercase tracking-wider">
+                                                            Terpilih
+                                                        </span>
+                                                    )}
+                                                </div>
+                                                <span className="text-gray-400 text-xs font-black transition-transform duration-200">
+                                                    {isExpanded ? '▲' : '▼'}
+                                                </span>
+                                            </button>
+
+                                            {isExpanded && (
+                                                <div className="p-4 bg-[var(--card-bg)] border-t border-[var(--border-color)]">
+                                                    <div className="grid grid-cols-6 xs:grid-cols-8 sm:grid-cols-10 md:grid-cols-12 gap-2">
+                                                        {group.radicals.map((rad, idx) => {
+                                                            const isSelected = selectedRadical === rad.char;
+                                                            return (
+                                                                <button
+                                                                    key={idx}
+                                                                    type="button"
+                                                                    onClick={() => handleRadicalClick(rad.char)}
+                                                                    className={`h-10 flex items-center justify-center font-japanese text-xl border rounded-xl transition-all duration-200 cursor-pointer relative ${
+                                                                        isSelected
+                                                                            ? 'bg-gradient-to-br from-accent-blue to-accent-green border-transparent text-white font-black shadow-lg shadow-accent-blue/30 scale-110 z-10'
+                                                                            : 'bg-[var(--background)] border-[var(--border-color)] text-[var(--foreground)] hover:border-accent-blue/50 hover:text-accent-blue hover:scale-105 hover:bg-accent-blue/5'
+                                                                    }`}
+                                                                    title={`${rad.char} - ${rad.name}`}
+                                                                >
+                                                                    <span>{rad.char}</span>
+                                                                </button>
+                                                            );
+                                                        })}
+                                                    </div>
+                                                </div>
+                                            )}
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                        </div>
+                    </>
                 )}
             </div>
         </div>
@@ -344,7 +447,7 @@ function FilterContent() {
 
 export default function KanjiFilter() {
     return (
-        <Suspense fallback={<div className="p-6 bg-white rounded-lg shadow-md mb-8 h-48 animate-pulse"></div>}>
+        <Suspense fallback={<div className="bg-[var(--card-bg)] p-6 rounded-[2.5rem] border border-[var(--border-color)] w-full h-48 animate-pulse"></div>}>
             <FilterContent />
         </Suspense>
     );

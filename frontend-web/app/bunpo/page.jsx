@@ -117,15 +117,17 @@ export default function BunpoPage() {
 
     return (
         <div className="container mx-auto px-6 py-12 max-w-7xl transition-colors duration-300">
-            <header className="mb-12 text-center md:text-left flex flex-col md:flex-row md:items-center justify-between gap-6 border-b border-gray-100 dark:border-[var(--border-color)] pb-12 transition-colors">
-                <div>
+            <header className="mb-12 text-center lg:text-left flex flex-col lg:flex-row lg:items-center justify-between gap-8 border-b border-[var(--border-color)] pb-12 transition-colors">
+                <div className="shrink-0 lg:max-w-xs">
                     <h1 className={`text-5xl font-japanese font-black tracking-tight leading-none transition-colors ${textColor}`}>文法 <span className="text-transparent bg-clip-text bg-gradient-to-r from-accent-blue to-accent-green ml-2">Bunpo</span></h1>
-                    <div className="h-1 w-16 bg-gradient-to-r from-accent-blue to-accent-green rounded-full mt-3 mb-1 mx-auto md:mx-0" />
+                    <div className="h-1 w-16 bg-gradient-to-r from-accent-blue to-accent-green rounded-full mt-3 mb-1 mx-auto lg:mx-0" />
                     <p className={`font-black mt-2 tracking-wide uppercase text-xs transition-colors ${subTextColor}`}>Kuasai tata bahasa Jepang dengan mudah</p>
                 </div>
-                <Suspense fallback={<div className="h-12 w-full md:w-96 bg-gray-50 dark:bg-gray-800 rounded-2xl animate-pulse" />}>
-                     <BunpoFilter />
-                </Suspense>
+                <div className="flex-1 w-full">
+                    <Suspense fallback={<div className="h-28 w-full bg-[var(--card-bg)] rounded-[2.5rem] animate-pulse" />}>
+                         <BunpoFilter />
+                    </Suspense>
+                </div>
             </header>
 
             <Suspense fallback={<div className="py-32 text-center animate-pulse">Memuat...</div>}>

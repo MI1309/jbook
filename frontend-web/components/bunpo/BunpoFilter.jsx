@@ -69,25 +69,27 @@ function FilterContent() {
 
     const textColor = !mounted ? 'text-black' : (theme === 'dark' ? 'text-white' : 'text-black');
     const subTextColor = !mounted ? 'text-black/50' : (theme === 'dark' ? 'text-white/50' : 'text-black/50');
-    const inputBg = !mounted ? 'bg-background' : (theme === 'dark' ? 'bg-black/40' : 'bg-background');
 
     return (
-        <div className={`bg-card card-texture p-6 rounded-3xl border shadow-md mb-8 transition-colors ${theme === 'dark' ? 'border-red-950 shadow-red-950/5' : 'border-gray-100 shadow-red-100/20'}`}>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <div>
-                    <label className={`block font-black mb-2 uppercase text-xs tracking-widest transition-colors ${subTextColor}`}>Cari Bunpo</label>
-                    <div className="relative">
+        <div className="bg-[var(--card-bg)] p-6 rounded-[2.5rem] border border-[var(--border-color)] shadow-xl shadow-accent-blue/5 transition-all duration-300 w-full">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-5 items-start">
+                {/* Search Bunpo */}
+                <div className="sm:col-span-2 lg:col-span-5">
+                    <label className="block font-black mb-2 flex items-center gap-1.5 text-[11px] uppercase tracking-widest text-gray-500 dark:text-gray-400">
+                        <span>🔍</span> Cari Bunpo
+                    </label>
+                    <div className="relative group">
                         <input
                             type="text"
                             placeholder="Cari struktur, judul, atau penjelasan..."
-                            className={`w-full px-5 py-3 border rounded-2xl focus:outline-none focus:ring-2 focus:ring-brand/40 focus:border-brand transition-all group-hover:border-brand/30 ${inputBg} ${textColor} ${theme === 'dark' ? 'border-red-950' : 'border-gray-100'}`}
+                            className="w-full px-4 py-2.5 bg-[var(--background)] text-[var(--foreground)] border border-[var(--border-color)] focus:outline-none focus:ring-2 focus:ring-accent-blue/40 focus:border-accent-blue transition-all group-hover:border-accent-blue/30 rounded-2xl text-sm font-semibold"
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
                         />
                         {searchTerm && (
                             <button
                                 onClick={() => setSearchTerm('')}
-                                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                                className="absolute right-3 top-1/2 -translate-y-1/2 w-6 h-6 rounded-full flex items-center justify-center text-xs text-gray-400 hover:text-red-500 hover:bg-gray-200 dark:hover:bg-gray-800 transition-all"
                             >
                                 ✕
                             </button>
@@ -95,43 +97,56 @@ function FilterContent() {
                     </div>
                 </div>
 
-                <div>
-                    <label className={`block font-black mb-2 uppercase text-xs tracking-widest transition-colors ${subTextColor}`}>Filter Level JLPT</label>
-                    <div className="flex flex-wrap gap-2">
-                        {[5, 4, 3, 2, 1].map((level) => (
-                            <button
-                                key={level}
-                                onClick={() => handleLevelClick(level)}
-                                className={`px-5 py-2.5 rounded-xl border-2 transition-all font-black text-sm ${selectedLevels.includes(level.toString())
-                                    ? 'bg-brand text-white border-brand shadow-lg shadow-brand/20 scale-105'
-                                    : `${theme === 'dark' ? 'bg-black/40 text-gray-400 border-red-950 hover:border-red-500' : 'bg-background text-gray-500 border-gray-100 hover:border-brand/40 hover:bg-brand-light/10'}`
+                {/* Level Filter: 3-2 Grid */}
+                <div className="sm:col-span-1 lg:col-span-4">
+                    <label className="block font-black mb-2 uppercase text-[11px] tracking-widest text-gray-500 dark:text-gray-400 text-center sm:text-left">
+                        Filter Level JLPT
+                    </label>
+                    <div className="grid grid-cols-6 gap-1.5 w-full">
+                        {[5, 4, 3, 2, 1].map((level) => {
+                            const isSelected = selectedLevels.includes(level.toString());
+                            const spanClass = [5, 4, 3].includes(level) ? 'col-span-2' : 'col-span-3';
+                            return (
+                                <button
+                                    key={level}
+                                    type="button"
+                                    onClick={() => handleLevelClick(level)}
+                                    className={`${spanClass} py-2 rounded-xl border font-black text-xs transition-all duration-200 flex items-center justify-center ${
+                                        isSelected
+                                            ? 'bg-gradient-to-r from-accent-blue to-accent-green text-white border-transparent shadow-md shadow-accent-blue/20 scale-[1.02]'
+                                            : 'bg-[var(--background)] text-gray-600 dark:text-gray-400 border-[var(--border-color)] hover:border-accent-blue/40 hover:text-accent-blue hover:bg-accent-blue/5'
                                     }`}
-                            >
-                                N{level}
-                            </button>
-                        ))}
-                        
+                                >
+                                    N{level}
+                                </button>
+                            );
+                        })}
                     </div>
                 </div>
 
-                <div>
-                    <label className={`block font-black mb-2 uppercase text-xs tracking-widest transition-colors ${subTextColor}`}>Filter Chapter</label>
-                    <input
-                        type="number"
-                        min="1"
-                        placeholder="Contoh: 1"
-                        className={`w-full px-5 py-3 border rounded-2xl focus:outline-none focus:ring-2 focus:ring-brand/40 focus:border-brand transition-all group-hover:border-brand/30 ${inputBg} ${textColor} ${theme === 'dark' ? 'border-red-950' : 'border-gray-100'}`}
-                        value={selectedChapter}
-                        onChange={(e) => setSelectedChapter(e.target.value)}
-                    />
-                    {selectedChapter && (
-                        <button
-                            onClick={() => setSelectedChapter('')}
-                            className="mt-2 text-sm text-red-600 hover:underline"
-                        >
-                            Hapus Filter Chapter
-                        </button>
-                    )}
+                {/* Chapter Filter */}
+                <div className="sm:col-span-1 lg:col-span-3">
+                    <label className="block font-black mb-2 uppercase text-[11px] tracking-widest text-gray-500 dark:text-gray-400 text-center sm:text-left">
+                        Filter Chapter
+                    </label>
+                    <div className="relative group">
+                        <input
+                            type="number"
+                            min="1"
+                            placeholder="Contoh: 1"
+                            className="w-full px-4 py-2.5 bg-[var(--background)] text-[var(--foreground)] border border-[var(--border-color)] focus:outline-none focus:ring-2 focus:ring-accent-blue/40 focus:border-accent-blue transition-all group-hover:border-accent-blue/30 rounded-2xl text-sm font-semibold"
+                            value={selectedChapter}
+                            onChange={(e) => setSelectedChapter(e.target.value)}
+                        />
+                        {selectedChapter && (
+                            <button
+                                onClick={() => setSelectedChapter('')}
+                                className="absolute right-3 top-1/2 -translate-y-1/2 w-6 h-6 rounded-full flex items-center justify-center text-xs text-gray-400 hover:text-red-500 hover:bg-gray-200 dark:hover:bg-gray-800 transition-all"
+                            >
+                                ✕
+                            </button>
+                        )}
+                    </div>
                 </div>
             </div>
         </div>
@@ -140,7 +155,7 @@ function FilterContent() {
 
 export default function BunpoFilter() {
     return (
-        <Suspense fallback={<div className="p-6 bg-white rounded-lg shadow-md mb-8 h-48 animate-pulse"></div>}>
+        <Suspense fallback={<div className="bg-[var(--card-bg)] p-6 rounded-[2.5rem] border border-[var(--border-color)] w-full h-32 animate-pulse"></div>}>
             <FilterContent />
         </Suspense>
     );
