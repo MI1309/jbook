@@ -1,0 +1,1600 @@
+[
+  {
+    "id": "a1b2c3d4-e5f6-4a5b-8c9d-0e1f2a3b4c5d",
+    "word": "つける",
+    "reading": "tsukeru",
+    "furigana": "つける",
+    "meaning": "menyalakan",
+    "word_type": "transitive",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "電気を つけました。",
+        "id": "Saya menyalakan lampu"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "つける",
+      "past": "つけた",
+      "negative": "つけない",
+      "masu_form": "つけます"
+    }
+  },
+  {
+    "id": "b2c3d4e5-f6g7-4b6c-9d0e-1f2a3b4c5d6e",
+    "word": "つく",
+    "reading": "tsuku",
+    "furigana": "つく",
+    "meaning": "menyala",
+    "word_type": "intransitive",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "電気が ついています。",
+        "id": "Lampu menyala"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "つく",
+      "past": "ついた",
+      "negative": "つかない",
+      "masu_form": "つきます"
+    }
+  },
+  {
+    "id": "c3d4e5f6-g7h8-4c7d-0e1f-2a3b4c5d6e7f",
+    "word": "落とす",
+    "reading": "otosu",
+    "furigana": "おとす",
+    "meaning": "menjatuhkan",
+    "word_type": "transitive",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "財布を どこかに 落としました。",
+        "id": "Saya menjatuhkan dompet di suatu tempat"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "落とす",
+      "past": "落とした",
+      "negative": "落とさない",
+      "masu_form": "落とします"
+    }
+  },
+  {
+    "id": "d4e5f6g7-h8i9-4d8e-1f2g-3b4c5d6e7f8g",
+    "word": "落ちる",
+    "reading": "ochiru",
+    "furigana": "おちる",
+    "meaning": "jatuh",
+    "word_type": "intransitive",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "木から りんごが 落ちました。",
+        "id": "Apel jatuh dari pohon"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "落ちる",
+      "past": "落ちた",
+      "negative": "落ちない",
+      "masu_form": "落ちます"
+    }
+  },
+  {
+    "id": "e5f6g7h8-i9j0-4e9f-2g3h-4c5d6e7f8g9h",
+    "word": "折る",
+    "reading": "oru",
+    "furigana": "おる",
+    "meaning": "mematahkan, melipat",
+    "word_type": "transitive",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "紙を 半分に 折ってください。",
+        "id": "Tolong lipat setengah kertasnya (lipat jadi dua)"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "折る",
+      "past": "折った",
+      "negative": "折らない",
+      "masu_form": "折ります"
+    }
+  },
+  {
+    "id": "f6g7h8i9-j0k1-4f0g-3h4i-5d6e7f8g9h0i",
+    "word": "折れる",
+    "reading": "oreru",
+    "furigana": "おれる",
+    "meaning": "patah",
+    "word_type": "intransitive",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "強い 風で 枝が 折れました。",
+        "id": "Ranting pohon patah karena angin kencang"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "折れる",
+      "past": "折れた",
+      "negative": "折れない",
+      "masu_form": "折れます"
+    }
+  },
+  {
+    "id": "g7h8i9j0-k1l2-4g1h-4i5j-6e7f8g9h0i1j",
+    "word": "上げる",
+    "reading": "ageru",
+    "furigana": "あげる",
+    "meaning": "menaikkan",
+    "word_type": "transitive",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "荷物を 棚の上に 上げました。",
+        "id": "Saya menaikkan barang ke atas rak/lemari"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "上げる",
+      "past": "上げた",
+      "negative": "上げない",
+      "masu_form": "上げます"
+    }
+  },
+  {
+    "id": "h8i9j0k1-l2m3-4h2i-5j6k-7f8g9h0i1j2k",
+    "word": "上がる",
+    "reading": "agaru",
+    "furigana": "あがる",
+    "meaning": "naik",
+    "word_type": "intransitive",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "物価が どんどん 上がっています。",
+        "id": "Harga barang terus menerus naik"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "上がる",
+      "past": "上がった",
+      "negative": "上がらない",
+      "masu_form": "上がります"
+    }
+  },
+  {
+    "id": "i9j0k1l2-m3n4-4i3j-6k7l-8g9h0i1j2k3l",
+    "word": "割る",
+    "reading": "waru",
+    "furigana": "わる",
+    "meaning": "memecahkan",
+    "word_type": "transitive",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "卵を 割って 料理を 作ります。",
+        "id": "Saya memecah telur lalu membuat masakan"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "割る",
+      "past": "割った",
+      "negative": "割らない",
+      "masu_form": "割ります"
+    }
+  },
+  {
+    "id": "j0k1l2m3-n4o5-4j4k-7l8m-9h0i1j2k3l4m",
+    "word": "割れる",
+    "reading": "wareru",
+    "furigana": "われる",
+    "meaning": "pecah",
+    "word_type": "intransitive",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "窓のガラスが 割れました。",
+        "id": "Kaca jendela pecah"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "割れる",
+      "past": "割れた",
+      "negative": "割れない",
+      "masu_form": "割れます"
+    }
+  },
+  {
+    "id": "k1l2m3n4-o5p6-4k5l-8m9n-0i1j2k3l4m5n",
+    "word": "起こす",
+    "reading": "okosu",
+    "furigana": "おこす",
+    "meaning": "membangunkan",
+    "word_type": "transitive",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "明日 6時に 起こしてください。",
+        "id": "Besok tolong bangunkan jam 6"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "起こす",
+      "past": "起こした",
+      "negative": "起こさない",
+      "masu_form": "起こします"
+    }
+  },
+  {
+    "id": "l2m3n4o5-p6q7-4l6m-9n0o-1j2k3l4m5n6o",
+    "word": "起きる",
+    "reading": "okiru",
+    "furigana": "おきる",
+    "meaning": "bangun",
+    "word_type": "intransitive",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "毎朝 6時に 起きています。",
+        "id": "Setiap pagi saya bangun jam 6"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "起きる",
+      "past": "起きた",
+      "negative": "起きない",
+      "masu_form": "起きます"
+    }
+  },
+    {
+    "id": "m3n4o5p6-q7r8-5m7n-0o1p-2k3l4m5n6o7p",
+    "word": "止める",
+    "reading": "tomeru",
+    "furigana": "と",
+    "meaning": "memberhentikan",
+    "word_type": "transitive",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "あそこに 車を 止めてください。",
+        "id": "Tolong hentikan/parkir mobilnya di sana"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "止める",
+      "past": "止めた",
+      "negative": "止めない",
+      "masu_form": "止めます"
+    }
+  },
+  {
+    "id": "n4o5p6q7-r8s9-5n8o-1p2q-3l4m5n6o7p8q",
+    "word": "止まる",
+    "reading": "tomaru",
+    "furigana": "と",
+    "meaning": "berhenti",
+    "word_type": "intransitive",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "バスが 止まりました。",
+        "id": "Bus berhenti"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "止まる",
+      "past": "止まった",
+      "negative": "止まらない",
+      "masu_form": "止まります"
+    }
+  },
+  {
+    "id": "o5p6q7r8-s9t0-5o9p-2q3r-4m5n6o7p8q9r",
+    "word": "閉める",
+    "reading": "shimeru",
+    "furigana": "し",
+    "meaning": "menutup",
+    "word_type": "transitive",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "窓を 閉めます。",
+        "id": "Saya menutup jendela"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "閉める",
+      "past": "閉めた",
+      "negative": "閉めない",
+      "masu_form": "閉めます"
+    }
+  },
+  {
+    "id": "p6q7r8s9-t0u1-5p0q-3r4s-5n6o7p8q9r0s",
+    "word": "閉まる",
+    "reading": "shimaru",
+    "furigana": "し",
+    "meaning": "tertutup",
+    "word_type": "intransitive",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "窓が 閉まりました。",
+        "id": "Jendela tertutup"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "閉まる",
+      "past": "閉まった",
+      "negative": "閉まらない",
+      "masu_form": "閉まります"
+    }
+  },
+  {
+    "id": "q7r8s9t0-u1v2-5q1r-4s5t-6o7p8q9r0s1t",
+    "word": "直す",
+    "reading": "naosu",
+    "furigana": "なお",
+    "meaning": "memperbaiki",
+    "word_type": "transitive",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "自転車を 自分で 直しました。",
+        "id": "Saya memperbaiki sepeda sendiri"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "直す",
+      "past": "直した",
+      "negative": "直さない",
+      "masu_form": "直します"
+    }
+  },
+  {
+    "id": "r8s9t0u1-v2w3-5r2s-5t6u-7p8q9r0s1t2u",
+    "word": "直る",
+    "reading": "naoru",
+    "furigana": "なお",
+    "meaning": "membaik",
+    "word_type": "intransitive",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "壊れた 時計が 直りました。",
+        "id": "Jam yang rusak sudah diperbaiki/membaik"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "直る",
+      "past": "直った",
+      "negative": "直らない",
+      "masu_form": "直ります"
+    }
+  },
+  {
+    "id": "s9t0u1v2-w3x4-5s3t-6u7v-8q9r0s1t2u3v",
+    "word": "続ける",
+    "reading": "tsuzukeru",
+    "furigana": "つづ",
+    "meaning": "melanjutkan",
+    "word_type": "transitive",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "これからも 運動を 続けたいです。",
+        "id": "Mulai sekarang pun saya ingin melanjukan olahraga"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "続ける",
+      "past": "続けた",
+      "negative": "続けない",
+      "masu_form": "続けます"
+    }
+  },
+  {
+    "id": "t0u1v2w3-x4y5-5t4u-7v8w-9r0s1t2u3v4w",
+    "word": "続く",
+    "reading": "tsuzuku",
+    "furigana": "つづ",
+    "meaning": "berlanjut",
+    "word_type": "intransitive",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "雨が 三日 続きました。",
+        "id": "Hujan berlanjut selama tiga hari"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "続く",
+      "past": "続いた",
+      "negative": "続かない",
+      "masu_form": "続きます"
+    }
+  },
+  {
+    "id": "u1v2w3x4-y5z6-5u5v-8w9x-0s1t2u3v4w5x",
+    "word": "入れる",
+    "reading": "ireru",
+    "furigana": "い",
+    "meaning": "memasukkan",
+    "word_type": "transitive",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "カバンに 本を 入れました。",
+        "id": "Saya memasukkan buku ke dalam tas"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "入れる",
+      "past": "入れた",
+      "negative": "入れない",
+      "masu_form": "入れます"
+    }
+  },
+  {
+    "id": "v2w3x4y5-z6a7-5v6w-9x0y-1t2u3v4w5x6y",
+    "word": "入る",
+    "reading": "hairu",
+    "furigana": "はい",
+    "meaning": "masuk",
+    "word_type": "intransitive",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "お風呂に 入ってから 寝ます。",
+        "id": "Setelah mandi saya tidur"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "入る",
+      "past": "入った",
+      "negative": "入らない",
+      "masu_form": "入ります"
+    }
+  },
+  {
+    "id": "w3x4y5z6-a7b8-5w7x-0y1z-2u3v4w5x6y7z",
+    "word": "並べる",
+    "reading": "naraberu",
+    "furigana": "なら",
+    "meaning": "menjajarkan",
+    "word_type": "transitive",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "机の上に 本を 並べます。",
+        "id": "Saya menjajarkan buku di atas meja"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "並べる",
+      "past": "並べた",
+      "negative": "並べない",
+      "masu_form": "並べます"
+    }
+  },
+  {
+    "id": "x4y5z6a7-b8c9-5x8y-1z2a-3v4w5x6y7z8a",
+    "word": "並ぶ",
+    "reading": "narabu",
+    "furigana": "なら",
+    "meaning": "berjajar, antri",
+    "word_type": "intransitive",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "店の前に 人が 並んでいます。",
+        "id": "Orang-orang sedang berjajar/antri di depan toko"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "並ぶ",
+      "past": "並んだ",
+      "negative": "並ばない",
+      "masu_form": "並びます"
+    }
+  },
+  {
+    "id": "y5z6a7b8-c9d0-5y9z-2a3b-4w5x6y7z8a9b",
+    "word": "変える",
+    "reading": "kaeru",
+    "furigana": "か",
+    "meaning": "mengubah",
+    "word_type": "transitive",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "予定を 少し 変えました。",
+        "id": "Saya mengubah sedikit jadwalnya"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "変える",
+      "past": "変えた",
+      "negative": "変えない",
+      "masu_form": "変えます"
+    }
+  },
+  {
+    "id": "z6a7b8c9-d0e1-5z0a-3b4c-5x6y7z8a9b0c",
+    "word": "変わる",
+    "reading": "kawaru",
+    "furigana": "か",
+    "meaning": "berubah",
+    "word_type": "intransitive",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "信号が 青に 変わりました。",
+        "id": "Lampu lalu lintas berubah menjadi hijau"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "変わる",
+      "past": "変わった",
+      "negative": "変わらない",
+      "masu_form": "変わります"
+    }
+  },
+  {
+    "id": "a7b8c9d0-e1f2-5a1b-4c5d-6y7z8a9b0c1d",
+    "word": "下げる",
+    "reading": "sageru",
+    "furigana": "さ",
+    "meaning": "menurunkan",
+    "word_type": "transitive",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "テレビの音を 下げてください。",
+        "id": "Tolong turunkan suara televisi"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "下げる",
+      "past": "下げた",
+      "negative": "下げない",
+      "masu_form": "下げます"
+    }
+  },
+  {
+    "id": "b8c9d0e1-f2g3-5b2c-5d6e-7z8a9b0c1d2e",
+    "word": "下がる",
+    "reading": "sagaru",
+    "furigana": "さ",
+    "meaning": "turun",
+    "word_type": "intransitive",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "熱が 下がって よかったです。",
+        "id": "Syukurlah demamnya sudah turun"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "下がる",
+      "past": "下がった",
+      "negative": "下がらない",
+      "masu_form": "下がります"
+    }
+  }
+]  {
+    "id": "c3d4e5f6-g7h8-6c7d-0e1f-2a3b4c5d6e7f",
+    "word": "壊す",
+    "reading": "kowasu",
+    "furigana": "こわす",
+    "meaning": "merusak",
+    "word_type": "transitive",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "テレビを 壊して しまいました。",
+        "id": "Saya merusakkan TV"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "壊す",
+      "past": "壊した",
+      "negative": "壊さない",
+      "masu_form": "壊します"
+    }
+  },
+  {
+    "id": "d4e5f6g7-h8i9-6d8e-1f2g-3b4c5d6e7f8g",
+    "word": "壊れる",
+    "reading": "kowareru",
+    "furigana": "こわれる",
+    "meaning": "rusak",
+    "word_type": "intransitive",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "テレビが 壊れて しまいました。",
+        "id": "Komputernya rusak"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "壊れる",
+      "past": "壊れた",
+      "negative": "壊れない",
+      "masu_form": "壊れます"
+    }
+  },
+  {
+    "id": "e5f6g7h8-i9j0-6e9f-2g3h-4c5d6e7f8g9h",
+    "word": "出す",
+    "reading": "dasu",
+    "furigana": "だす",
+    "meaning": "mengeluarkan",
+    "word_type": "transitive",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "ゴミを 外に 出してください。",
+        "id": "Tolong keluarkan sampahnya ke luar"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "出す",
+      "past": "出した",
+      "negative": "出さない",
+      "masu_form": "出します"
+    }
+  },
+  {
+    "id": "f6g7h8i9-j0k1-6f0g-3h4i-5d6e7f8g9h0i",
+    "word": "出る",
+    "reading": "deru",
+    "furigana": "でる",
+    "meaning": "keluar",
+    "word_type": "intransitive",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "この漢字は 試験に 出ます。",
+        "id": "Kanji ini keluar dalam ujian"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "出る",
+      "past": "出た",
+      "negative": "出ない",
+      "masu_form": "出ます"
+    }
+  },
+  {
+    "id": "g7h8i9j0-k1l2-6g1h-4i5j-6e7f8g9h0i1j",
+    "word": "始める",
+    "reading": "hajimeru",
+    "furigana": "はじめる",
+    "meaning": "memulai",
+    "word_type": "transitive",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "授業を 始めましょう。",
+        "id": "Mari memulai pelajaran"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "始める",
+      "past": "始めた",
+      "negative": "始めない",
+      "masu_form": "始めます"
+    }
+  },
+  {
+    "id": "h8i9j0k1-l2m3-6h2i-5j6k-7f8g9h0i1j2k",
+    "word": "始まる",
+    "reading": "hajimaru",
+    "furigana": "はじまる",
+    "meaning": "mulai",
+    "word_type": "intransitive",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "授業が もう 始まりました。",
+        "id": "Pelajarannya sudah dimulai"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "始まる",
+      "past": "始まった",
+      "negative": "始まらない",
+      "masu_form": "始まります"
+    }
+  },
+  {
+    "id": "i9j0k1l2-m3n4-6i3j-6k7l-8g9h0i1j2k3l",
+    "word": "消す",
+    "reading": "kesu",
+    "furigana": "けす",
+    "meaning": "mematikan",
+    "word_type": "transitive",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "教室の電気を 消しました。",
+        "id": "Saya mematikan lampu kelas"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "消す",
+      "past": "消した",
+      "negative": "消さない",
+      "masu_form": "消します"
+    }
+  },
+  {
+    "id": "j0k1l2m3-n4o5-6j4k-7l8m-9h0i1j2k3l4m",
+    "word": "消える",
+    "reading": "kieru",
+    "furigana": "きえる",
+    "meaning": "mati",
+    "word_type": "intransitive",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "急に 電気が 消えました。",
+        "id": "Tiba-tiba lampu padam"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "消える",
+      "past": "消えた",
+      "negative": "消えない",
+      "masu_form": "消えます"
+    }
+  },
+  {
+    "id": "k1l2m3n4-o5p6-6k5l-8m9n-0i1j2k3l4m5n",
+    "word": "焼く",
+    "reading": "yaku",
+    "furigana": "やく",
+    "meaning": "membakar",
+    "word_type": "transitive",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "パンを 焼いています。",
+        "id": "Saya sedang membakar/memanggang roti"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "焼く",
+      "past": "焼いた",
+      "negative": "焼かない",
+      "masu_form": "焼きます"
+    }
+  },
+  {
+    "id": "l2m3n4o5-p6q7-6l6m-9n0o-1j2k3l4m5n6o",
+    "word": "焼ける",
+    "reading": "yakeru",
+    "furigana": "やける",
+    "meaning": "terbakar",
+    "word_type": "intransitive",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "パンが 焼けました。",
+        "id": "Rotinya sudah dipanggang (matang)"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "焼ける",
+      "past": "焼けた",
+      "negative": "焼けない",
+      "masu_form": "焼けます"
+    }
+  },
+  {
+    "id": "m3n4o5p6-q7r8-6m7n-0o1p-2k3l4m5n6o7p",
+    "word": "集める",
+    "reading": "atsumeru",
+    "furigana": "あつめる",
+    "meaning": "mengumpulkan",
+    "word_type": "transitive",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "切⼿を 集めています。",
+        "id": "Saya mengumpulkan prangko"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "集める",
+      "past": "集めた",
+      "negative": "集めない",
+      "masu_form": "集めます"
+    }
+  },
+  {
+    "id": "n4o5p6q7-r8s9-6n8o-1p2q-3l4m5n6o7p8q",
+    "word": "集まる",
+    "reading": "atsumaru",
+    "furigana": "あつまる",
+    "meaning": "berkumpul",
+    "word_type": "intransitive",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "⼈が ⼤勢 集まりました。",
+        "id": "Banyak orang berkumpul"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "集まる",
+      "past": "集まった",
+      "negative": "集まらない",
+      "masu_form": "集まります"
+    }
+  },
+  {
+    "id": "o5p6q7r8-s9t0-6o9p-2q3r-4m5n6o7p8q9r",
+    "word": "開ける",
+    "reading": "akeru",
+    "furigana": "あける",
+    "meaning": "membuka",
+    "word_type": "transitive",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "窓を 開けても いいですか。",
+        "id": "Bolehkah saya membuka jendela"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "開ける",
+      "past": "開けた",
+      "negative": "開けない",
+      "masu_form": "開けます"
+    }
+  },
+  {
+    "id": "p6q7r8s9-t0u1-6p0q-3r4s-5n6o7p8q9r0s",
+    "word": "開く",
+    "reading": "aku",
+    "furigana": "あく",
+    "meaning": "terbuka",
+    "word_type": "intransitive",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "ドアが ⾃動で 開きます。",
+        "id": "Pintu terbuka secara otomatis"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "開く",
+      "past": "開いた",
+      "negative": "開かない",
+      "masu_form": "開きます"
+    }
+  },
+  {
+    "id": "q7r8s9t0-u1v2-6q1r-4s5t-6o7p8q9r0s1t",
+    "word": "破る",
+    "reading": "yaburu",
+    "furigana": "やぶる",
+    "meaning": "merobek",
+    "word_type": "transitive",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "紙を 破りました。",
+        "id": "Saya merobek kertas"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "破る",
+      "past": "破った",
+      "negative": "破らない",
+      "masu_form": "破ります"
+    }
+  },
+  {
+    "id": "r8s9t0u1-v2w3-6r2s-5t6u-7p8q9r0s1t2u",
+    "word": "破れる",
+    "reading": "yabureru",
+    "furigana": "やぶれる",
+    "meaning": "sobek",
+    "word_type": "intransitive",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "紙が 破れました。",
+        "id": "Kertasnya sobek"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "破れる",
+      "past": "破れた",
+      "negative": "破れない",
+      "masu_form": "破れます"
+    }
+  },
+    {
+    "id": "c3d4e5f6-g7h8-6c7d-0e1f-2a3b4c5d6e7f",
+    "word": "壊す",
+    "reading": "kowasu",
+    "furigana": "こわす",
+    "meaning": "merusak",
+    "word_type": "transitive",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "テレビを 壊して しまいました。",
+        "id": "Saya merusakkan TV"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "壊す",
+      "past": "壊した",
+      "negative": "壊さない",
+      "masu_form": "壊します"
+    }
+  },
+  {
+    "id": "d4e5f6g7-h8i9-6d8e-1f2g-3b4c5d6e7f8g",
+    "word": "壊れる",
+    "reading": "kowareru",
+    "furigana": "こわれる",
+    "meaning": "rusak",
+    "word_type": "intransitive",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "テレビが 壊れて しまいました。",
+        "id": "Komputernya rusak"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "壊れる",
+      "past": "壊れた",
+      "negative": "壊れない",
+      "masu_form": "壊れます"
+    }
+  },
+  {
+    "id": "e5f6g7h8-i9j0-6e9f-2g3h-4c5d6e7f8g9h",
+    "word": "出す",
+    "reading": "dasu",
+    "furigana": "だす",
+    "meaning": "mengeluarkan",
+    "word_type": "transitive",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "ゴミを 外に 出してください。",
+        "id": "Tolong keluarkan sampahnya ke luar"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "出す",
+      "past": "出した",
+      "negative": "出さない",
+      "masu_form": "出します"
+    }
+  },
+  {
+    "id": "f6g7h8i9-j0k1-6f0g-3h4i-5d6e7f8g9h0i",
+    "word": "出る",
+    "reading": "deru",
+    "furigana": "でる",
+    "meaning": "keluar",
+    "word_type": "intransitive",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "この漢字は 試験に 出ます。",
+        "id": "Kanji ini keluar dalam ujian"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "出る",
+      "past": "出た",
+      "negative": "出ない",
+      "masu_form": "出ます"
+    }
+  },
+  {
+    "id": "g7h8i9j0-k1l2-6g1h-4i5j-6e7f8g9h0i1j",
+    "word": "始める",
+    "reading": "hajimeru",
+    "furigana": "はじめる",
+    "meaning": "memulai",
+    "word_type": "transitive",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "授業を 始めましょう。",
+        "id": "Mari memulai pelajaran"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "始める",
+      "past": "始めた",
+      "negative": "始めない",
+      "masu_form": "始めます"
+    }
+  },
+  {
+    "id": "h8i9j0k1-l2m3-6h2i-5j6k-7f8g9h0i1j2k",
+    "word": "始まる",
+    "reading": "hajimaru",
+    "furigana": "はじまる",
+    "meaning": "mulai",
+    "word_type": "intransitive",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "授業が もう 始まりました。",
+        "id": "Pelajarannya sudah dimulai"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "始まる",
+      "past": "始まった",
+      "negative": "始まらない",
+      "masu_form": "始まります"
+    }
+  },
+  {
+    "id": "i9j0k1l2-m3n4-6i3j-6k7l-8g9h0i1j2k3l",
+    "word": "消す",
+    "reading": "kesu",
+    "furigana": "けす",
+    "meaning": "mematikan",
+    "word_type": "transitive",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "教室の電気を 消しました。",
+        "id": "Saya mematikan lampu kelas"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "消す",
+      "past": "消した",
+      "negative": "消さない",
+      "masu_form": "消します"
+    }
+  },
+  {
+    "id": "j0k1l2m3-n4o5-6j4k-7l8m-9h0i1j2k3l4m",
+    "word": "消える",
+    "reading": "kieru",
+    "furigana": "きえる",
+    "meaning": "mati",
+    "word_type": "intransitive",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "急に 電気が 消えました。",
+        "id": "Tiba-tiba lampu padam"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "消える",
+      "past": "消えた",
+      "negative": "消えない",
+      "masu_form": "消えます"
+    }
+  },
+  {
+    "id": "k1l2m3n4-o5p6-6k5l-8m9n-0i1j2k3l4m5n",
+    "word": "焼く",
+    "reading": "yaku",
+    "furigana": "やく",
+    "meaning": "membakar",
+    "word_type": "transitive",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "パンを 焼いています。",
+        "id": "Saya sedang membakar/memanggang roti"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "焼く",
+      "past": "焼いた",
+      "negative": "焼かない",
+      "masu_form": "焼きます"
+    }
+  },
+  {
+    "id": "l2m3n4o5-p6q7-6l6m-9n0o-1j2k3l4m5n6o",
+    "word": "焼ける",
+    "reading": "yakeru",
+    "furigana": "やける",
+    "meaning": "terbakar",
+    "word_type": "intransitive",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "パンが 焼けました。",
+        "id": "Rotinya sudah dipanggang (matang)"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "焼ける",
+      "past": "焼けた",
+      "negative": "焼けない",
+      "masu_form": "焼けます"
+    }
+  },
+  {
+    "id": "m3n4o5p6-q7r8-6m7n-0o1p-2k3l4m5n6o7p",
+    "word": "集める",
+    "reading": "atsumeru",
+    "furigana": "あつめる",
+    "meaning": "mengumpulkan",
+    "word_type": "transitive",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "切⼿を 集めています。",
+        "id": "Saya mengumpulkan prangko"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "集める",
+      "past": "集めた",
+      "negative": "集めない",
+      "masu_form": "集めます"
+    }
+  },
+  {
+    "id": "n4o5p6q7-r8s9-6n8o-1p2q-3l4m5n6o7p8q",
+    "word": "集まる",
+    "reading": "atsumaru",
+    "furigana": "あつまる",
+    "meaning": "berkumpul",
+    "word_type": "intransitive",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "⼈が ⼤勢 集まりました。",
+        "id": "Banyak orang berkumpul"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "集まる",
+      "past": "集まった",
+      "negative": "集まらない",
+      "masu_form": "集まります"
+    }
+  },
+  {
+    "id": "o5p6q7r8-s9t0-6o9p-2q3r-4m5n6o7p8q9r",
+    "word": "開ける",
+    "reading": "akeru",
+    "furigana": "あける",
+    "meaning": "membuka",
+    "word_type": "transitive",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "窓を 開けても いいですか。",
+        "id": "Bolehkah saya membuka jendela"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "開ける",
+      "past": "開けた",
+      "negative": "開けない",
+      "masu_form": "開けます"
+    }
+  },
+  {
+    "id": "p6q7r8s9-t0u1-6p0q-3r4s-5n6o7p8q9r0s",
+    "word": "開く",
+    "reading": "aku",
+    "furigana": "あく",
+    "meaning": "terbuka",
+    "word_type": "intransitive",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "ドアが ⾃動で 開きます。",
+        "id": "Pintu terbuka secara otomatis"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "開く",
+      "past": "開いた",
+      "negative": "開かない",
+      "masu_form": "開きます"
+    }
+  },
+  {
+    "id": "q7r8s9t0-u1v2-6q1r-4s5t-6o7p8q9r0s1t",
+    "word": "破る",
+    "reading": "yaburu",
+    "furigana": "やぶる",
+    "meaning": "merobek",
+    "word_type": "transitive",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "紙を 破りました。",
+        "id": "Saya merobek kertas"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "破る",
+      "past": "破った",
+      "negative": "破らない",
+      "masu_form": "破ります"
+    }
+  },
+  {
+    "id": "r8s9t0u1-v2w3-6r2s-5t6u-7p8q9r0s1t2u",
+    "word": "破れる",
+    "reading": "yabureru",
+    "furigana": "やぶれる",
+    "meaning": "sobek",
+    "word_type": "intransitive",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "紙が 破れました。",
+        "id": "Kertasnya sobek"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "破れる",
+      "past": "破れた",
+      "negative": "破れない",
+      "masu_form": "破れます"
+    }
+  },
+    {
+    "id": "e5f6g7h8-i9j0-7e9f-2g3h-4c5d6e7f8g9h",
+    "word": "建てる",
+    "reading": "tateru",
+    "furigana": "たてる",
+    "meaning": "mendirikan",
+    "word_type": "transitive",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "新しい家を 建てる 予定です。",
+        "id": "Saya berencana membangun rumah baru"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "建てる",
+      "past": "建てた",
+      "negative": "建てない",
+      "masu_form": "建てます"
+    }
+  },
+  {
+    "id": "f6g7h8i9-j0k1-7f0g-3h4i-5d6e7f8g9h0i",
+    "word": "建つ",
+    "reading": "tatsu",
+    "furigana": "たつ",
+    "meaning": "berdiri, dibangun",
+    "word_type": "intransitive",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "駅の前に 高いビルが 建ちました。",
+        "id": "Gedung tinggi berdiri/dibangun di depan stasiun"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "建つ",
+      "past": "建った",
+      "negative": "建たない",
+      "masu_form": "建ちます"
+    }
+  },
+  {
+    "id": "g7h8i9j0-k1l2-7g1h-4i5j-6e7f8g9h0i1j",
+    "word": "戻す",
+    "reading": "modosu",
+    "furigana": "もどす",
+    "meaning": "mengembalikan",
+    "word_type": "transitive",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "本を 棚に 戻して おきます。",
+        "id": "Saya mengembalikan buku ke rak"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "戻す",
+      "past": "戻した",
+      "negative": "戻さない",
+      "masu_form": "戻します"
+    }
+  },
+  {
+    "id": "h8i9j0k1-l2m3-7h2i-5j6k-7f8g9h0i1j2k",
+    "word": "戻る",
+    "reading": "modoru",
+    "furigana": "もどる",
+    "meaning": "kembali",
+    "word_type": "intransitive",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "すぐに 事務所に 戻ります。",
+        "id": "Saya akan segera kembali ke kantor"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "戻る",
+      "past": "戻った",
+      "negative": "戻らない",
+      "masu_form": "戻ります"
+    }
+  },
+  {
+    "id": "i9j0k1l2-m3n4-7i3j-6k7l-8g9h0i1j2k3l",
+    "word": "残す",
+    "reading": "nokosu",
+    "furigana": "のこす",
+    "meaning": "menyisakan",
+    "word_type": "transitive",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "食べ物を 残さないで ください。",
+        "id": "Tolong jangan menyisakan makanan"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "残す",
+      "past": "残した",
+      "negative": "残さない",
+      "masu_form": "残します"
+    }
+  },
+  {
+    "id": "j0k1l2m3-n4o5-7j4k-7l8m-9h0i1j2k3l4m",
+    "word": "残る",
+    "reading": "nokoru",
+    "furigana": "のこる",
+    "meaning": "tersisa",
+    "word_type": "intransitive",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "料理が たくさん 残っています。",
+        "id": "Makanannya banyak tersisa"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "残る",
+      "past": "残った",
+      "negative": "残らない",
+      "masu_form": "残ります"
+    }
+  },
+  {
+    "id": "k1l2m3n4-o5p6-7k5l-8m9n-0i1j2k3l4m5n",
+    "word": "沸かす",
+    "reading": "wakasu",
+    "furigana": "わかす",
+    "meaning": "mendidihkan",
+    "word_type": "transitive",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "お湯を 沸かしました。",
+        "id": "Saya mendidihkan air (memasak air)"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "沸かす",
+      "past": "沸かした",
+      "negative": "沸かさない",
+      "masu_form": "沸かします"
+    }
+  },
+  {
+    "id": "l2m3n4o5-p6q7-7l6m-9n0o-1j2k3l4m5n6o",
+    "word": "沸く",
+    "reading": "waku",
+    "furigana": "わく",
+    "meaning": "mendidih",
+    "word_type": "intransitive",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "お湯が 沸きました。",
+        "id": "Air sudah mendidih"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "沸く",
+      "past": "沸いた",
+      "negative": "沸かない",
+      "masu_form": "沸きます"
+    }
+  },
+  {
+    "id": "m3n4o5p6-q7r8-7m7n-0o1p-2k3l4m5n6o7p",
+    "word": "無くす",
+    "reading": "nakusu",
+    "furigana": "なくす",
+    "meaning": "menghilangkan",
+    "word_type": "transitive",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "鍵を 無くして 困っています。",
+        "id": "Saya kebingungan karena menghilangkan kunci"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "無くす",
+      "past": "無くした",
+      "negative": "無くさない",
+      "masu_form": "無くします"
+    }
+  },
+  {
+    "id": "n4o5p6q7-r8s9-7n8o-1p2q-3l4m5n6o7p8q",
+    "word": "無くなる",
+    "reading": "nakunaru",
+    "furigana": "なくなる",
+    "meaning": "hilang, habis",
+    "word_type": "intransitive",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "自信が 無くなって しまいました。",
+        "id": "Saya kehilangan percaya diri"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "無くなる",
+      "past": "無くなった",
+      "negative": "無くならない",
+      "masu_form": "無くなります"
+    }
+  },
+  {
+    "id": "o5p6q7r8-s9t0-7o9p-2q3r-4m5n6o7p8q9r",
+    "word": "汚す",
+    "reading": "yogosu",
+    "furigana": "よごす",
+    "meaning": "mengotori",
+    "word_type": "transitive",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "服を 汚して しまいました。",
+        "id": "Saya mengotori baju (membuat baju jadi kotor)"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "汚す",
+      "past": "汚した",
+      "negative": "汚さない",
+      "masu_form": "汚します"
+    }
+  },
+  {
+    "id": "p6q7r8s9-t0u1-7p0q-3r4s-5n6o7p8q9r0s",
+    "word": "汚れる",
+    "reading": "yogoreru",
+    "furigana": "よごれる",
+    "meaning": "kotor",
+    "word_type": "intransitive",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "服が 汚れて しまいました。",
+        "id": "Bajunya jadi kotor"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "汚れる",
+      "past": "汚れた",
+      "negative": "汚れない",
+      "masu_form": "汚れます"
+    }
+  },
+  {
+    "id": "q7r8s9t0-u1v2-7q1r-4s5t-6o7p8q9r0s1t",
+    "word": "見つける",
+    "reading": "mitsukeru",
+    "furigana": "みつける",
+    "meaning": "menemukan",
+    "word_type": "transitive",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "いい 仕事を 見つけたいです。",
+        "id": "Saya ingin menemukan pekerjaan yang bagus"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "見つける",
+      "past": "見つけた",
+      "negative": "見つけない",
+      "masu_form": "見つけます"
+    }
+  },
+  {
+    "id": "r8s9t0u1-v2w3-7r2s-5t6u-7p8q9r0s1t2u",
+    "word": "見つかる",
+    "reading": "mitsukaru",
+    "furigana": "みつかる",
+    "meaning": "ketemu",
+    "word_type": "intransitive",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "なくした鍵が 見つかりました。",
+        "id": "Kunci yang hilang telah ditemukan"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "見つかる",
+      "past": "見つかった",
+      "negative": "見つからない",
+      "masu_form": "見つかります"
+    }
+  },
+  {
+    "id": "s9t0u1v2-w3x4-7s3t-6u7v-8q9r0s1t2u3v",
+    "word": "治す",
+    "reading": "naosu",
+    "furigana": "なおす",
+    "meaning": "menyembuhkan",
+    "word_type": "transitive",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "早く 病気を 治したいです。",
+        "id": "Saya ingin cepat sembuh dari sakit"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "治す",
+      "past": "治した",
+      "negative": "治さない",
+      "masu_form": "治します"
+    }
+  },
+  {
+    "id": "t0u1v2w3-x4y5-7t4u-7v8w-9r0s1t2u3v4w",
+    "word": "治る",
+    "reading": "naoru",
+    "furigana": "なおる",
+    "meaning": "sembuh",
+    "word_type": "intransitive",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "風邪が 3日で 治りました。",
+        "id": "Flu sembuh dalam 3 hari"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "治る",
+      "past": "治った",
+      "negative": "治らない",
+      "masu_form": "治ります"
+    }
+  },
+  
+
+]

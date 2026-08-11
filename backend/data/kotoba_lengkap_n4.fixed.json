@@ -1,0 +1,2131 @@
+[
+  {
+    "id": "d1e2f3a4-b5c6-4d7e-8f9g-0h1i2j3k4l5m",
+    "word": "引く",
+    "reading": "hiku",
+    "furigana": "ひく",
+    "meaning": "menarik (bisa juga digunakan untuk “terkena flu” dan “mencari di kamus”)",
+    "word_type": "godan",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "ドアを 押さないで 引いて ください。",
+        "id": "Tolong tarik pintunya, jangan didorong"
+      },
+      {
+        "jp": "風邪を引きます。",
+        "id": "terkena flu/masuk angin"
+      },
+      {
+        "jp": "分からない言葉があったので、辞書を引きました。",
+        "id": "Karena ada kata yang tidak saya mengerti, jadi saya cari di kamus"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "引く",
+      "past": "引いた",
+      "negative": "引かない",
+      "masu_form": "引きます"
+    }
+  },
+  {
+    "id": "f5a6b7c8-d9e0-4f1a-2b3c-4d5e6f7g8h9i",
+    "word": "弾く",
+    "reading": "hiku",
+    "furigana": "ひく",
+    "meaning": "memainkan (piano, gitar)",
+    "word_type": "godan",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "彼女はピアノを上手に弾きました。",
+        "id": "Dia (perempuan) memainkan piano dengan pandai"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "弾く",
+      "past": "弾いた",
+      "negative": "弾かない",
+      "masu_form": "弾きます"
+    }
+  },
+  {
+    "id": "e4a1c0d0-b5f6-4d2d-8a1b-9c8f7d2e0a1b",
+    "word": "吹く",
+    "reading": "fuku",
+    "furigana": "ふく",
+    "meaning": "bertiup",
+    "word_type": "godan",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "今日は強い風が吹いています。",
+        "id": "Hari ini bertiup angin yang kencang"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "吹く",
+      "past": "吹いた",
+      "negative": "吹かない",
+      "masu_form": "吹きます"
+    }
+  },
+  {
+    "id": "a2b3c4d5-e6f7-4g8h-9i0j-k1l2m3n4o5p6",
+    "word": "拭く",
+    "reading": "fuku",
+    "furigana": "ふく",
+    "meaning": "mengelap",
+    "word_type": "godan",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "机の上をきれいに拭きました。",
+        "id": "Saya mengelap atas meja dengan bersih (sampai bersih)"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "拭く",
+      "past": "拭いた",
+      "negative": "拭かない",
+      "masu_form": "拭きます"
+    }
+  },
+  {
+    "id": "b3c4d5e6-f7g8-4h9i-0j1k-l2m3n4o5p6q7",
+    "word": "会う",
+    "reading": "au",
+    "furigana": "あう",
+    "meaning": "bertemu",
+    "word_type": "godan",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "明日、友達に会う約束があります。",
+        "id": "Besok saya ada janji bertemu dengan teman"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "会う",
+      "past": "会った",
+      "negative": "会わない",
+      "masu_form": "会います"
+    }
+  },
+  {
+    "id": "c4d5e6f7-g8h9-4i0j-1k2l-m3n4o5p6q7r8",
+    "word": "合う",
+    "reading": "au",
+    "furigana": "あう",
+    "meaning": "cocok",
+    "word_type": "godan",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "この仕事は彼に合っていると思います。",
+        "id": "Saya pikir pekerjaan ini cocok untuknya"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "合う",
+      "past": "合った",
+      "negative": "合わない",
+      "masu_form": "合います"
+    }
+  },
+  {
+    "id": "7b8e9f0a-1c2d-4e5f-8a9b-0c1d2e3f4a5b",
+    "word": "泣く",
+    "reading": "naku",
+    "furigana": "なく",
+    "meaning": "menangis",
+    "word_type": "godan",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "子どもが 大きな 声で 泣いて います。",
+        "id": "Anak menangis dengan suara keras"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "泣く",
+      "past": "泣いた",
+      "negative": "泣かない",
+      "masu_form": "泣きます"
+    }
+  },
+  {
+    "id": "a1b2c3d4-e5f6-4a5b-8c9d-0e1f2a3b4c5d",
+    "word": "鳴く",
+    "reading": "naku",
+    "furigana": "なく",
+    "meaning": "bersuara (hewan)",
+    "word_type": "godan",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "庭で 鳥が 鳴いて います。",
+        "id": "Burung bersuara (berkicau) di halaman"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "鳴く",
+      "past": "鳴いた",
+      "negative": "鳴かない",
+      "masu_form": "鳴きます"
+    }
+  },
+  {
+    "id": "f5a6b7c8-d9e0-4123-b1c2-d3e4f5g6h7i8",
+    "word": "差す",
+    "reading": "sasu",
+    "furigana": "さす",
+    "meaning": "memakai (payung)",
+    "word_type": "godan",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "雨が 降って いるので、傘を さして います。",
+        "id": "Karena hujan, saya memakai payung"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "差す",
+      "past": "差した",
+      "negative": "差さない",
+      "masu_form": "差します"
+    }
+  },
+  {
+    "id": "g6b7c8d9-e0f1-4234-c2d3-e4f5g6h7i8j9",
+    "word": "刺す",
+    "reading": "sasu",
+    "furigana": "さす",
+    "meaning": "menusuk",
+    "word_type": "godan",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "妹は フォークで 果物を 刺しました。",
+        "id": "Adik perempuan menusuk buah dengan garpu"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "刺す",
+      "past": "刺した",
+      "negative": "刺さない",
+      "masu_form": "刺します"
+    }
+  },
+  {
+    "id": "f5e4d3c2-b1a0-4f5e-8d9c-0b1a2f3e4d5c",
+    "word": "登る",
+    "reading": "noboru",
+    "furigana": "のぼる",
+    "meaning": "mendaki",
+    "word_type": "godan",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "来週、家族と 山に 登ります。",
+        "id": "Minggu depan saya akan mendaki gunung bersama keluarga"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "登る",
+      "past": "登った",
+      "negative": "登らない",
+      "masu_form": "登ります"
+    }
+  },
+  {
+    "id": "1a2b3c4d-5e6f-4a1b-2c3d-4e5f6a7b8c9d",
+    "word": "上る",
+    "reading": "noboru",
+    "furigana": "のぼる",
+    "meaning": "naik",
+    "word_type": "godan",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "エレベーターで 6階まで 上りました。",
+        "id": "Saya naik sampai lantai enam menggunakan lift"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "上る",
+      "past": "上った",
+      "negative": "上らない",
+      "masu_form": "上ります"
+    }
+  },
+  {
+    "id": "d4c3b2a1-0f9e-4d8c-7b6a-5f4e3d2c1b0a",
+    "word": "探す",
+    "reading": "sagasu",
+    "furigana": "さがす",
+    "meaning": "mencari (sesuatu yang diinginkan atau dibutuhkan)",
+    "word_type": "godan",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "なくした鍵を 探しましたが、見つかりませんでした。",
+        "id": "Saya sudah mencari kunci yang hilang, tapi tidak ketemu"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "探す",
+      "past": "探した",
+      "negative": "探さない",
+      "masu_form": "探します"
+    }
+  },
+  {
+    "id": "e5d4c3b2-a1b0-4f5e-9d8c-7a6b5c4d3e2f",
+    "word": "捜す",
+    "reading": "sagasu",
+    "furigana": "さがす",
+    "meaning": "mencari (orang/hewan yang hilang)",
+    "word_type": "godan",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "犬が いなくなったので、家族 みんなで 捜しました。",
+        "id": "Karena anjingnya hilang, seluruh keluarga mencarinya"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "捜す",
+      "past": "捜した",
+      "negative": "捜さない",
+      "masu_form": "捜します"
+    }
+  },
+  {
+    "id": "7d9e0f1a-2b3c-4d5e-6f7g-8h9i0j1k2l3m",
+    "word": "直る",
+    "reading": "naoru",
+    "furigana": "なおる",
+    "meaning": "membaik, menjadi baik",
+    "word_type": "godan",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "壊れた 時計が やっと 直りました。",
+        "id": "Jam yang rusak akhirnya sudah membaik (jadi bisa digunakan)"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "直る",
+      "past": "直った",
+      "negative": "直らない",
+      "masu_form": "直ります"
+    }
+  },
+  {
+    "id": "8e0f1a2b-3c4d-5e6f-7g8h-9i0j1k2l3m4n",
+    "word": "治る",
+    "reading": "naoru",
+    "furigana": "なおる",
+    "meaning": "sembuh",
+    "word_type": "godan",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "けがが 治るまで 休みます。",
+        "id": "Saya akan beristirahat sampai cedera/luka sembuh"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "治る",
+      "past": "治った",
+      "negative": "治らない",
+      "masu_form": "治ります"
+    }
+  },
+  {
+    "id": "9f0a1b2c-4d5e-6f7g-8h9i-0j1k2l3m4n5o",
+    "word": "飛ぶ",
+    "reading": "tobu",
+    "furigana": "とぶ",
+    "meaning": "terbang",
+    "word_type": "godan",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "飛行機が 空を 飛んで います。",
+        "id": "Pesawat terbang di langit"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "飛ぶ",
+      "past": "飛んだ",
+      "negative": "飛ばない",
+      "masu_form": "飛びます"
+    }
+  },
+  {
+    "id": "0a1b2c3d-5e6f-7g8h-9i0j-1k2l3m4n5o6p",
+    "word": "跳ぶ",
+    "reading": "tobu",
+    "furigana": "とぶ",
+    "meaning": "meloncat, melompat",
+    "word_type": "godan",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "うさぎが 高く 跳びました。",
+        "id": "Kelinci melompat tinggi"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "跳ぶ",
+      "past": "跳んだ",
+      "negative": "跳ばない",
+      "masu_form": "跳びます"
+    }
+  },
+  {
+    "id": "1b2c3d4e-6f7g-8h9i-0j1k-2l3m4n5o6p7q",
+    "word": "写す",
+    "reading": "utsusu",
+    "furigana": "うつす",
+    "meaning": "menyalin, mengcopy",
+    "word_type": "godan",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "先生が 書いた文を ノートに 写しました。",
+        "id": "Saya menyalin kalimat yang ditulis guru ke buku catatan"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "写す",
+      "past": "写した",
+      "negative": "写さない",
+      "masu_form": "写します"
+    }
+  },
+  {
+    "id": "2c3d4e5f-7g8h-9i0j-1k2l-3m4n5o6p7q8r",
+    "word": "移す",
+    "reading": "utsusu",
+    "furigana": "うつす",
+    "meaning": "memindahkan",
+    "word_type": "godan",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "窓の近くに テーブルを 移しました。",
+        "id": "Saya memindahkan meja ke dekat jendela"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "移す",
+      "past": "移した",
+      "negative": "移さない",
+      "masu_form": "移します"
+    }
+  },
+  {
+    "id": "3d4e5f6g-8h9i-0j1k-2l3m-4n5o6p7q8r9s",
+    "word": "怒る",
+    "reading": "okoru",
+    "furigana": "おこる",
+    "meaning": "marah (karena emosi)",
+    "word_type": "godan",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "友達を 待って いましたが、来なかったので 怒りました。",
+        "id": "Saya menunggu teman tetapi dia tidak datang, jadi saya marah"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "怒る",
+      "past": "怒った",
+      "negative": "怒らない",
+      "masu_form": "怒ります"
+    }
+  },
+  {
+    "id": "4e5f6g7h-9i0j-1k2l-3m4n-5o6p7q8r9s0t",
+    "word": "起こる",
+    "reading": "okoru",
+    "furigana": "おこる",
+    "meaning": "terjadi (peristiwa, masalah)",
+    "word_type": "godan",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "昨日、交差点で 事故が 起こりました。",
+        "id": "Kemarin terjadi kecelakaan di perempatan"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "起こる",
+      "past": "起こった",
+      "negative": "起こらない",
+      "masu_form": "起こります"
+    }
+  },
+  {
+    "id": "5f6g7h8i-0j1k-2l3m-4n5o-6p7q8r9s0t1u",
+    "word": "初めて",
+    "reading": "hajimete",
+    "furigana": "はじめて",
+    "meaning": "pertama kali",
+    "word_type": "fukushi (kata keterangan)",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "初めて 日本へ 行きました。",
+        "id": "Pergi ke Jepang untuk pertama kalinya"
+      }
+    ],
+    "conjugations_complete": null
+  },
+  {
+    "id": "6g7h8i9j-1k2l-3m4n-5o6p-7q8r9s0t1u2v",
+    "word": "初めは",
+    "reading": "hajime wa",
+    "furigana": "はじめは",
+    "meaning": "awalnya",
+    "word_type": "fukushi (kata keterangan)",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "初めは 一人で 旅行するのが 不安でした。",
+        "id": "Awalnya bepergian sendirian itu mengkhawatirkan"
+      }
+    ],
+    "conjugations_complete": null
+  },
+  {
+    "id": "7h8i9j0k-2l3m-4n5o-6p7q-8r9s0t1u2v3w",
+    "word": "始めに",
+    "reading": "hajime ni",
+    "furigana": "はじめに",
+    "meaning": "pertama-tama",
+    "word_type": "fukushi (kata keterangan)",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "始めに 自己紹介を してください。",
+        "id": "Pertama-tama tolong perkenalkan diri"
+      }
+    ],
+    "conjugations_complete": null
+  },
+  {
+    "id": "8i9j0k1l-3m4n-5o6p-7q8r-9s0t1u2v3w4x",
+    "word": "空く",
+    "reading": "aku",
+    "furigana": "あく",
+    "meaning": "kosong, tersedia (available)",
+    "word_type": "godan",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "この席は 空いて いますか。",
+        "id": "Apakah kursi ini kosong?"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "空く",
+      "past": "空いた",
+      "negative": "空かない",
+      "masu_form": "空きます"
+    }
+  },
+  {
+    "id": "9j0k1l2m-4n5o-6p7q-8r9s-0t1u2v3w4x5y",
+    "word": "空く",
+    "reading": "suku",
+    "furigana": "すく",
+    "meaning": "kosong, tidak padat (sepi/tidak ramai)",
+    "word_type": "godan",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "平日の道は いつom selalu 空いて います。",
+        "id": "Jalanan pada hari kerja selalu kosong"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "空く",
+      "past": "空いた",
+      "negative": "空かない",
+      "masu_form": "空きます"
+    }
+  },
+  {
+    "id": "0k1l2m3n-5o6p-7q8r-9s0t-1u2v3w4x5y6z",
+    "word": "吐く",
+    "reading": "haku",
+    "furigana": "はく",
+    "meaning": "muntah",
+    "word_type": "godan",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "気分が 悪くて 吐いて しまいました。",
+        "id": "Saya muntah karena merasa tidak enak badan"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "吐く",
+      "past": "吐いた",
+      "negative": "吐かない",
+      "masu_form": "吐きます"
+    }
+  },
+  {
+    "id": "1l2m3n4o-6p7q-8r9s-0t1u-2v3w4x5y6z7a",
+    "word": "はく",
+    "reading": "haku",
+    "furigana": "はく",
+    "meaning": "memakai (sepatu, celana dll)",
+    "word_type": "godan",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "新しい 靴を はいて 出かけます。",
+        "id": "Pergi keluar dengan memakai sepatu baru"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "はく",
+      "past": "はいた",
+      "negative": "はかない",
+      "masu_form": "はきます"
+    }
+  },
+  {
+    "id": "2m3n4o5p-7q8r-9s0t-1u2v-3w4x5y6z7a8b",
+    "word": "掃く",
+    "reading": "haku",
+    "furigana": "はく",
+    "meaning": "menyapu",
+    "word_type": "godan",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "ほうきで 庭を 掃きましょう。",
+        "id": "Mari menyapu halaman dengan sapu"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "掃く",
+      "past": "掃いた",
+      "negative": "掃かない",
+      "masu_form": "掃きます"
+    }
+  },
+  {
+    "id": "5f6g7h8i-9j0k-1l2m-3n4o-5p6q7r8s9t0u",
+    "word": "着く",
+    "reading": "tsuku",
+    "furigana": "つく",
+    "meaning": "tiba (orang/kendaraan)",
+    "word_type": "godan",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "電車は もうすぐ 駅に 着きます。",
+        "id": "Kereta akan segera tiba di stasiun"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "着く",
+      "past": "着いた",
+      "negative": "着かない",
+      "masu_form": "着きます"
+    }
+  },
+  {
+    "id": "6g7h8i9j-0k1l-2m3n-4o5p-6q7r8s9t0u1v",
+    "word": "届く",
+    "reading": "todoku",
+    "furigana": "とどく",
+    "meaning": "sampai (barang, pesan dll)",
+    "word_type": "godan",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "今日、新しい パソコンが 届きました。",
+        "id": "Hari ini laptop baru saya sudah sampai"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "届く",
+      "past": "届いた",
+      "negative": "届かない",
+      "masu_form": "届きます"
+    }
+  },
+  {
+    "id": "7h8i9j0k-1l2m-3n4o-5p6q-7r8s9t0u1v2w",
+    "word": "考える",
+    "reading": "kangaeru",
+    "furigana": "かんがえる",
+    "meaning": "berpikir (mempertimbangkan/menanyakan hasil pemikiran)",
+    "word_type": "ichidan",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "答えを よく 考えてから 書きます。｜どう考えますか。",
+        "id": "Saya menulis setelah mikir jawabannya dengan baik (menanyakan pertimbangan)"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "考える",
+      "past": "考えた",
+      "negative": "考えない",
+      "masu_form": "考えます"
+    }
+  },
+  {
+    "id": "8i9j0k1l-2m3n-4o5p-6q7r-8s9t0u1v2w3x",
+    "word": "思う",
+    "reading": "omou",
+    "furigana": "おもう",
+    "meaning": "berpikir (merasakan/menanyakan kesan, opini, atau pendapat)",
+    "word_type": "godan",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "彼は 明日 来る と思います。｜どう思いますか。",
+        "id": "Saya pikir dia akan datang besok (menanyakan kesan atau opini)"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "思う",
+      "past": "思った",
+      "negative": "思わない",
+      "masu_form": "思います"
+    }
+  },
+  {
+    "id": "9j0k1l2m-3n4o-5p6q-7r8s-9t0u1v2w3x4y",
+    "word": "足りる",
+    "reading": "tariru",
+    "furigana": "たりる",
+    "meaning": "cukup, tidak kurang",
+    "word_type": "ichidan",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "３人で 食べるには、この料理で 足ります。",
+        "id": "Untuk dimakan tiga orang, makanan ini cukup (tidak kurang)"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "足りる",
+      "past": "足りta",
+      "negative": "足りない",
+      "masu_form": "足りる"
+    }
+  },
+  {
+    "id": "0k1l2m3n-4o5p-6q7r-8s9t-0u1v2w3x4y5z",
+    "word": "十分",
+    "reading": "jubun",
+    "furigana": "じゅうぶん",
+    "meaning": "cukup, memadai, lebih dari cukup",
+    "word_type": "na-keiyoushi / meishi",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "３人で 食べるには、この料理で 十分です。",
+        "id": "Untuk dimakan tiga orang, makanan ini sudah cukup (lebih dari cukup)"
+      }
+    ],
+    "conjugations_complete": null
+  },
+  {
+    "id": "1l2m3n4o-5p6q-7r8s-9t0u-1v2w3x4y5z6a",
+    "word": "働く",
+    "reading": "hataraku",
+    "furigana": "はたらく",
+    "meaning": "bekerja (fokus : kegiatan)",
+    "word_type": "godan",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "私は 会社で 働いて います。",
+        "id": "Saya bekerja di perusahaan (menekankan kegiatan bekerja)"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "働く",
+      "past": "働いた",
+      "negative": "働かない",
+      "masu_form": "働きます"
+    }
+  },
+  {
+    "id": "2m3n4o5p-6q7r-8s9t-0u1v-2w3x4y5z6a7b",
+    "word": "勤める",
+    "reading": "tsutomeru",
+    "furigana": "つとめる",
+    "meaning": "bekerja (fokus : terdaftar di perusahaan sebagai karyawan, biasanya untuk kerja kantoran)",
+    "word_type": "ichidan",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "私は 会社に 勤めて います。",
+        "id": "Saya bekerja di perusahaan (menekankan saya kerja di perusahaan tersebut)"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "勤める",
+      "past": "勤めた",
+      "negative": "勤めない",
+      "masu_form": "勤めます"
+    }
+  },
+  {
+    "id": "3b4c5d6e-7f8g-9h0i-1j2k-3l4m5n6o7p8q",
+    "word": "覚える",
+    "reading": "oboeru",
+    "furigana": "おぼ",
+    "meaning": "menghafal, ingat",
+    "word_type": "ichidan",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "新しい 単語を たくさん 覚えました。",
+        "id": "Saya menghafal banyak kosakata baru"
+      },
+      {
+        "jp": "昨⽇のことは 覚えて いますか。",
+        "id": "Apakah kamu ingat hal-hal (yang terjadi) kemarin?"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "覚える",
+      "past": "覚えた",
+      "negative": "覚えない",
+      "masu_form": "覚えます"
+    }
+  },
+  {
+    "id": "4c5d6e7f-8g9h-0i1j-2k3l-4m5n6o7p8q9r",
+    "word": "思い出す",
+    "reading": "omoidasu",
+    "furigana": "おもいだ",
+    "meaning": "teringat, mengingat",
+    "word_type": "godan",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "子どもの頃のことを 思い出しました。",
+        "id": "Saya teringat kembali perihal masa kecil"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "思い出す",
+      "past": "思い出した",
+      "negative": "思い出さない",
+      "masu_form": "思い出します"
+    }
+  },
+  {
+    "id": "5d6e7f8g-9h0i-1j2k-3l4m-5n6o7p8q9r0s",
+    "word": "借りる",
+    "reading": "kariru",
+    "furigana": "か",
+    "meaning": "meminjam",
+    "word_type": "ichidan",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "借りて ください。",
+        "id": "Tolong pinjam"
+      },
+      {
+        "jp": "お⾦が ⾜りなかったら、友達から 借りて ください。",
+        "id": "Kalau uangmu tidak cukup, tolong pinjam ke teman"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "借りる",
+      "past": "借りた",
+      "negative": "借りない",
+      "masu_form": "借ります"
+    }
+  },
+  {
+    "id": "6e7f8g9h-0i1j-2k3l-4m5n-6o7p8q9r0s1t",
+    "word": "貸す",
+    "reading": "kasu",
+    "furigana": "か",
+    "meaning": "meminjamkan",
+    "word_type": "godan",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "貸して ください。",
+        "id": "Tolong pinjamkan (saya)"
+      },
+      {
+        "jp": "すみません、そのペンを 貸して ください。",
+        "id": "Permisi, tolong pinjamkan pulpen itu (kepada saya)"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "貸す",
+      "past": "貸した",
+      "negative": "貸さない",
+      "masu_form": "貸します"
+    }
+  },
+  {
+    "id": "7f8g9h0i-1j2k-3l4m-5n6o-7p8q9r0s1t2u",
+    "word": "予約する",
+    "reading": "yoyaku suru",
+    "furigana": "よやく",
+    "meaning": "membuat reservasi, booking",
+    "word_type": "suru (kata kerja gabungan)",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "ホテルの部屋を 予約しました。",
+        "id": "Saya sudah memesan (membuat reservasi) kamar hotel"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "予約する",
+      "past": "予約した",
+      "negative": "予約しない",
+      "masu_form": "予約します"
+    }
+  },
+  {
+    "id": "8g9h0i1j-2k3l-4m5n-6o7p-8q9r0s1t2u3v",
+    "word": "注⽂する",
+    "reading": "chuumon suru",
+    "furigana": "ちゅうもん",
+    "meaning": "memesan, order",
+    "word_type": "suru (kata kerja gabungan)",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "レストランで 料理を 注⽂しました。",
+        "id": "Saya memesan (order) makanan di restoran"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "注⽂する",
+      "past": "注⽂した",
+      "negative": "注⽂しない",
+      "masu_form": "注⽂します"
+    }
+  },
+  {
+    "id": "9h0i1j2k-3l4m-5n6o-7p8q-9r0s1t2u3v4w",
+    "word": "遅れる",
+    "reading": "okureru",
+    "furigana": "おく",
+    "meaning": "terlambat (orang, kereta dll)",
+    "word_type": "ichidan",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "会議に 遅れない ように、早く 家を 出ました。",
+        "id": "Saya berangkat lebih awal agar tidak terlambat ke rapat"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "遅れる",
+      "past": "遅れた",
+      "negative": "遅れない",
+      "masu_form": "遅れます"
+    }
+  },
+  {
+    "id": "0i1j2k3l-4m5n-6o7p-8q9r-0s1t2u3v4w5x",
+    "word": "遅刻する",
+    "reading": "chikoku suru",
+    "furigana": "ちこk",
+    "meaning": "terlambat (orang) - lebih spesifik, seperti terlambat ke suatu acara yang sudah ditentukan waktunya",
+    "word_type": "suru (kata kerja gabungan)",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "授業に ５分 遅刻して しました。",
+        "id": "Saya terlambat 5 menit masuk kelas"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "遅刻する",
+      "past": "遅刻した",
+      "negative": "遅刻しない",
+      "masu_form": "遅刻します"
+    }
+  },
+  {
+    "id": "1b2c3d4e-5f6g-7h8i-9j0k-1l2m3n4o5p6q",
+    "word": "連れて行く",
+    "reading": "tsurete iku",
+    "furigana": "つ　い",
+    "meaning": "mengajak (membawa pergi)",
+    "word_type": "godan",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "明⽇、⼦どもを 公園に 連れて ⾏きます。",
+        "id": "Besok saya akan mengajak anak pergi ke taman"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "連れて行く",
+      "past": "連れて行った",
+      "negative": "連れて行かない",
+      "masu_form": "連れて行きます"
+    }
+  },
+  {
+    "id": "2c3d4e5f-6g7h-8i9j-0k1l-2m3n4o5p6q7r",
+    "word": "連れて来る",
+    "reading": "tsurete kuru",
+    "furigana": "つ　く",
+    "meaning": "mengajak (membawa datang)",
+    "word_type": "irregular",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "友達を 家に 連れて 来ました。",
+        "id": "Saya mengajak teman datang ke rumah"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "連れて来る",
+      "past": "連れて来た",
+      "negative": "連れて来ない",
+      "masu_form": "連れて来ます"
+    }
+  },
+  {
+    "id": "3d4e5f6g-7h8i-9j0k-1l2m-3n4o5p6q7r8s",
+    "word": "誘う",
+    "reading": "sasou",
+    "furigana": "さそ",
+    "meaning": "mengajak (secara lisan, ayo)",
+    "word_type": "godan",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "友達を 映画に 誘いました。",
+        "id": "Saya mengajak teman menonton film"
+      },
+      {
+        "jp": "彼女を デートに 誘いました。",
+        "id": "Saya mengajak pacar untuk nge-date (berkencan)"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "誘う",
+      "past": "誘った",
+      "negative": "誘わない",
+      "masu_form": "誘います"
+    }
+  },
+  {
+    "id": "4e5f6g7h-8i9j-0k1l-2m3n-4o5p6q7r8s9t",
+    "word": "招待する",
+    "reading": "shoutai suru",
+    "furigana": "しょうたい",
+    "meaning": "mengundang",
+    "word_type": "suru",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "先生を 結婚式に 招待しました。",
+        "id": "Saya mengundang guru ke upacara pernikahan"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "招待する",
+      "past": "招待した",
+      "negative": "招待しない",
+      "masu_form": "招待します"
+    }
+  },
+  {
+    "id": "5f6g7h8i-9j0k-1l2m-3n4o-5p6q7r8s9t0u",
+    "word": "見える",
+    "reading": "mieru",
+    "furigana": "み",
+    "meaning": "terlihat",
+    "word_type": "ichidan",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "めがねを かけると、よく ⾒えます。",
+        "id": "Kalau memakai kacamata, terlihat dengan jelas"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "見える",
+      "past": "見えた",
+      "negative": "見えない",
+      "masu_form": "見えます"
+    }
+  },
+  {
+    "id": "6g7h8i9j-0k1l-2m3n-4o5p-6q7r8s9t0u1v",
+    "word": "見せる",
+    "reading": "miseru",
+    "furigana": "み",
+    "meaning": "memperlihatkan",
+    "word_type": "ichidan",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "新しい かばんを ⺟に ⾒せました。",
+        "id": "Saya memperlihatkan tas baru kepada ibu"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "見せる",
+      "past": "見せた",
+      "negative": "見せない",
+      "masu_form": "見せます"
+    }
+  },
+  {
+    "id": "7h8i9j0k-1l2m-3n4o-5p6q-7r8s9t0u1v2w",
+    "word": "バックする",
+    "reading": "bakku suru",
+    "furigana": "",
+    "meaning": "mundur, memundurkan",
+    "word_type": "suru",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "車を バックして 駐車場に 入れました。",
+        "id": "Saya memundurkan mobil lalu memasukkan ke tempat parkir"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "バックする",
+      "past": "バックした",
+      "negative": "バックしない",
+      "masu_form": "バックします"
+    }
+  },
+  {
+    "id": "8i9j0k1l-2m3n-4o5p-6q7r-8s9t0u1v2w3x",
+    "word": "下がる",
+    "reading": "sagaru",
+    "furigana": "さ",
+    "meaning": "mundur",
+    "word_type": "godan",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "危ないので、白線の内側まで 下がってください。",
+        "id": "Karena berbahaya, mohon mundur hingga sisi dalam garis putih (tidak boleh melewati garis putih)"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "下がる",
+      "past": "下がった",
+      "negative": "下がらない",
+      "masu_form": "下がります"
+    }
+  },
+  {
+    "id": "1b2c3d4e-5f6g-7h8i-9j0k-1l2m3n4o5p6q",
+    "word": "つける",
+    "reading": "tsukeru",
+    "furigana": "つける",
+    "meaning": "menyalakan, mengenakan, membubuhkan, memberi nama, mencatat",
+    "word_type": "ichidan",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "電気を つけました。",
+        "id": "Menyalakan lampu"
+      },
+      {
+        "jp": "母は ネックレスを つけて います。",
+        "id": "Ibu memakai kalung"
+      },
+      {
+        "jp": "ポテトに ソースを つけて 食べます。",
+        "id": "Makan kentang dengan mencocolkan saus"
+      },
+      {
+        "jp": "赤ちゃんに 名前を つけました。",
+        "id": "Memberi nama kepada bayi"
+      },
+      {
+        "jp": "日記を つけて います。",
+        "id": "Menulis catatan harian"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "つける",
+      "past": "つけた",
+      "negative": "つけない",
+      "masu_form": "つけます"
+    }
+  },
+  {
+    "id": "2c3d4e5f-6g7h-8i9j-0k1l-2m3n4o5p6q7r",
+    "word": "出る",
+    "reading": "deru",
+    "furigana": "でる",
+    "meaning": "keluar, berangkat, muncul, hadir/ikut serta, lulus (sekolah/kuliah)",
+    "word_type": "ichidan",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "部屋を 出ました。",
+        "id": "Keluar dari kamar"
+      },
+      {
+        "jp": "朝 7時に 家を 出ます。",
+        "id": "Berangkat dari rumah pukul tujuh pagi"
+      },
+      {
+        "jp": "太陽が 出ました。∕熱が 出ました。",
+        "id": "Matahari muncul/terbit ∕ Demam muncul"
+      },
+      {
+        "jp": "会議に 出ます。／試合に 出ます。",
+        "id": "Menghadiri rapat ／ Tampil di pertandingan"
+      },
+      {
+        "jp": "大学を 出ました。",
+        "id": "Lulus dari universitas"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "出る",
+      "past": "出た",
+      "negative": "出ない",
+      "masu_form": "出ます"
+    }
+  },
+  {
+    "id": "3d4e5f6g-7h8i-9j0k-1l2m-3n4o5p6q7r8s",
+    "word": "消す",
+    "reading": "kesu",
+    "furigana": "けす",
+    "meaning": "mematikan, memadamkan, menghapus, menghilangkan",
+    "word_type": "godan",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "テレビを 消した。",
+        "id": "Mematikan televisi"
+      },
+      {
+        "jp": "今すぐ 火を 消して ください。",
+        "id": "Tolong segera padamkan apinya sekarang juga"
+      },
+      {
+        "jp": "黒板の字を 消しました。",
+        "id": "Menghapus tulisan di papan tulis"
+      },
+      {
+        "jp": "犯人は 証拠を 消しました。",
+        "id": "Pelaku menghilangkan barang bukti"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "消す",
+      "past": "消した",
+      "negative": "消さない",
+      "masu_form": "消します"
+    }
+  },
+  {
+    "id": "f5a6e4d0-c4a6-4d0d-9a1b-7a6f8d2c0b9e",
+    "word": "かける",
+    "reading": "kakeru",
+    "furigana": "かける",
+    "meaning": "menggantung (bisa digunakan juga untuk “menelpon”, “mengunci” dan “menyetrika”)",
+    "word_type": "ichidan",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "部屋の壁に 時計が かけて あります。",
+        "id": "Di dinding kamar digantung (dipasang) jam dinding"
+      },
+      {
+        "jp": "先⽣に 電話を かけても いいですか。",
+        "id": "Bolehkah saya menelepon guru"
+      },
+      {
+        "jp": "出かけるとき、鍵を かけて ください。",
+        "id": "Saat pergi keluar, tolong kunci pintunya"
+      },
+      {
+        "jp": "毎週 洋服に アイロンを かけます。",
+        "id": "Setiap minggu saya menyetrika baju"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "かける",
+      "past": "かけた",
+      "negative": "かけない",
+      "masu_form": "かけます"
+    }
+  },
+  {
+    "id": "7d9e0f1a-2b3c-4d5e-6f7g-8h9i0j1k2l3m",
+    "word": "動く",
+    "reading": "ugoku",
+    "furigana": "うご",
+    "meaning": "bergerak, berfungsi",
+    "word_type": "godan",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "この機械は 古いですが、まだ 動くので 使って います。",
+        "id": "Mesin ini sudah tua, tapi karena masih berfungsi, jadi saya menggunakannya"
+      },
+      {
+        "jp": "ボタンを 押したら、急に エレベーターが 動き出しました。",
+        "id": "Ketika tombol ditekan, lift tiba-tiba mulai bergerak"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "動く",
+      "past": "動いた",
+      "negative": "動かない",
+      "masu_form": "動きます"
+    }
+  },
+  {
+    "id": "8e0f1a2b-3c4d-5e6f-7g8h-9i0j1k2l3m4n",
+    "word": "送る",
+    "reading": "okuru",
+    "furigana": "おく",
+    "meaning": "mengirim (barang), mengantar (seseorang)",
+    "word_type": "godan",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "誕⽣⽇のお祝いメッセージを 送りました。",
+        "id": "Saya mengirim pesan ucapan ulang tahun"
+      },
+      {
+        "jp": "⽗が 駅まで 送って くれました。",
+        "id": "Ayah mengantarkan saya sampai stasiun"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "送る",
+      "past": "送った",
+      "negative": "送らない",
+      "masu_form": "送ります"
+    }
+  },
+  {
+    "id": "3d4e5f6g-7h8i-9j0k-1l2m-3n4o5p6q7r8s",
+    "word": "やる",
+    "reading": "yaru",
+    "furigana": "やる",
+    "meaning": "melakukan, memberi (memberi kepada yang berpangkat lebih rendah, termasuk hewan & tanaman)",
+    "word_type": "godan",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "まだ 時間が あるので、宿題は 後で やりましょう。",
+        "id": "Karena masih ada waktu, PR nya kita kerjakan nanti saja"
+      },
+      {
+        "jp": "泣いている ⼦どもに お菓⼦を やりました。",
+        "id": "Saya memberi snack/camilan ke anak yang menangis"
+      },
+      {
+        "jp": "今朝 花に 水を やってから 仕事に 行きました。",
+        "id": "Tadi pagi setelah menyiram bunga, saya pergi kerja"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "やる",
+      "past": "やった",
+      "negative": "やらない",
+      "masu_form": "やります"
+    }
+  },
+  {
+    "id": "4e5f6g7h-8i9j-0k1l-2m3n-4o5p6q7r8s9t",
+    "word": "守る",
+    "reading": "mamoru",
+    "furigana": "まも",
+    "meaning": "melindungi, menaati/patuh (aturan, janji)",
+    "word_type": "godan",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "警察は 町の安全を 守って います。",
+        "id": "Polisi melindungi keamanan kota"
+      },
+      {
+        "jp": "約束を 守ることは、とても 大切です。",
+        "id": "Menepati janji adalah hal yang sangat penting"
+      },
+      {
+        "jp": "交通ルールを 守らないと 危ないです。",
+        "id": "Kalau tidak mematuhi aturan lalu lintas, itu berbahaya"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "守る",
+      "past": "守った",
+      "negative": "守らない",
+      "masu_form": "守ります"
+    }
+  },
+  {
+    "id": "5f6g7h8i-9j0k-1l2m-3n4o-5p6q7r8s9t0u",
+    "word": "まとめる",
+    "reading": "matomeru",
+    "furigana": "まとめる",
+    "meaning": "mengumpulkan jadi satu, merangkum",
+    "word_type": "ichidan",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "旅⾏の写真を アルバムに まとめて います。",
+        "id": "Saya mengumpulkan foto perjalanan ke dalam album"
+      },
+      {
+        "jp": "会議の内容を ノートに まとめました。",
+        "id": "Saya merangkum isi rapat di buku catatan"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "まとめる",
+      "past": "まとめた",
+      "negative": "まとめない",
+      "masu_form": "まとめます"
+    }
+  },
+  {
+    "id": "1b2c3d4e-5f6g-7h8i-9j0k-1l2m3n4o5p6q",
+    "word": "頼む",
+    "reading": "tanomu",
+    "furigana": "たの",
+    "meaning": "meminta, memesan",
+    "word_type": "godan",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "先⽣に レポートのチェックを 頼みました。 (=お願いしました)",
+        "id": "Saya meminta guru untuk memeriksa laporan"
+      },
+      {
+        "jp": "この店では、電話で ピザを 頼むことが できます。",
+        "id": "Di toko ini, kita bisa memesan pizza lewat telepon"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "頼む",
+      "past": "頼んだ",
+      "negative": "頼まない",
+      "masu_form": "頼みます"
+    }
+  },
+  {
+    "id": "2c3d4e5f-6g7h-8i9j-0k1l-2m3n4o5p6q7r",
+    "word": "困る",
+    "reading": "komaru",
+    "furigana": "こま",
+    "meaning": "bingung, mengalami kesulitan (tidak tahu harus bagaimana)",
+    "word_type": "godan",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "何から 始めればいいか 分からなくて 困っています。",
+        "id": "Saya bingung karena tidak tahu harus mulai dari apa/dari mana"
+      },
+      {
+        "jp": "仕事が 多すぎて 困っています。",
+        "id": "Saya kesulitan karena pekerjaan terlalu banyak"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "困る",
+      "past": "困った",
+      "negative": "困らない",
+      "masu_form": "困ります"
+    }
+  },
+  {
+    "id": "3d4e5f6g-7h8i-9j0k-1l2m-3n4o5p6q7r8s",
+    "word": "紹介する",
+    "reading": "shoutai suru",
+    "furigana": "しょうかい",
+    "meaning": "memperkenalkan (bisa juga digunakan untuk memberitahu sesuatu seperti tempat, barang, dll)",
+    "word_type": "suru",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "友達に 日本語の先生を 紹介して もらいました。",
+        "id": "Saya diperkenalkan guru bahasa Jepang oleh teman"
+      },
+      {
+        "jp": "友達が 安くておいしい店を 紹介してくれました。",
+        "id": "Teman memberitahu saya sebuah toko yang murah dan enak"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "紹介する",
+      "past": "紹介した",
+      "negative": "紹介しない",
+      "masu_form": "紹介します"
+    }
+  },
+  {
+    "id": "4e5f6g7h-8i9j-0k1l-2m3n-4o5p6q7r8s9t",
+    "word": "開く",
+    "reading": "hiraku",
+    "furigana": "ひら",
+    "meaning": "membuka, mengadakan",
+    "word_type": "godan",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "分からない言葉が あったので、辞書を 開いて 調べました。",
+        "id": "Karena ada kata yang tidak saya mengerti, saya membuka kamus dan mencarinya"
+      },
+      {
+        "jp": "来週、この町で 大きなお祭りが 開かれる そうです。",
+        "id": "Katanya minggu depan akan diadakan festival besar di kota ini"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "開く",
+      "past": "開いた",
+      "negative": "開かない",
+      "masu_form": "開きます"
+    }
+  },
+  {
+    "id": "1b2c3d4e-5f6g-7h8i-9j0k-1l2m3n4o5p6q",
+    "word": "受ける",
+    "reading": "ukeru",
+    "furigana": "う",
+    "meaning": "menerima, mengikuti",
+    "word_type": "ichidan",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "⽇本語能⼒試験を 受ける 予定です。",
+        "id": "Saya berencana ikut ujian kemampuan bahasa Jepang"
+      },
+      {
+        "jp": "⾯接を 受ける",
+        "id": "mengikuti/menerima wawancara (diwawancarai)"
+      },
+      {
+        "jp": "強い⾵を 受けながら、⾃転⾞で 駅まで 向かった。",
+        "id": "Sambil terkena angin kencang, saya menuju stasiun dengan sepeda"
+      },
+      {
+        "jp": "診察を 受ける",
+        "id": "menjalani pemeriksaan dokter"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "受ける",
+      "past": "受けた",
+      "negative": "受けない",
+      "masu_form": "受けます"
+    }
+  },
+  {
+    "id": "2c3d4e5f-6g7h-8i9j-0k1l-2m3n4o5p6q7r",
+    "word": "合格する",
+    "reading": "goukaku suru",
+    "furigana": "ごうかく",
+    "meaning": "lulus (ujian, seleksi)",
+    "word_type": "suru",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "友達が ⼤学の⼊学試験に 合格しました。",
+        "id": "Teman saya lulus ujian masuk universitas"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "合格する",
+      "past": "合格した",
+      "negative": "合格しない",
+      "masu_form": "合格します"
+    }
+  },
+  {
+    "id": "3d4e5f6g-7h8i-9j0k-1l2m-3n4o5p6q7r8s",
+    "word": "卒業する",
+    "reading": "sotsugyou suru",
+    "furigana": "そつぎょう",
+    "meaning": "lulus (sekolah, kuliah)",
+    "word_type": "suru",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "私は 去年 ⼤学を 卒業しました。",
+        "id": "Saya lulus kuliah tahun lalu"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "卒業する",
+      "past": "卒業した",
+      "negative": "卒業しない",
+      "masu_form": "卒業します"
+    }
+  },
+  {
+    "id": "4e5f6g7h-8i9j-0k1l-2m3n-4o5p6q7r8s9t",
+    "word": "余る",
+    "reading": "amaru",
+    "furigana": "あま",
+    "meaning": "tersisa (berlebih, kelebihan)",
+    "word_type": "godan",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "弁当を 作りすぎて、ご飯が 余りました。",
+        "id": "Saya membuat bekal terlalu banyak sehingga nasi masih tersisa"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "余る",
+      "past": "余った",
+      "negative": "余らない",
+      "masu_form": "余ります"
+    }
+  },
+  {
+    "id": "5f6g7h8i-9j0k-1l2m-3n4o-5p6q7r8s9t0u",
+    "word": "残る",
+    "reading": "nokoru",
+    "furigana": "のこ",
+    "meaning": "tersisa",
+    "word_type": "godan",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "仕事が まだ 残っています。",
+        "id": "Pekerjaan masih tersisa"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "残る",
+      "past": "残った",
+      "negative": "残らない",
+      "masu_form": "残ります"
+    }
+  },
+  {
+    "id": "6g7h8i9j-0k1l-2m3n-4o5p-6q7r8s9t0u1v",
+    "word": "予習する",
+    "reading": "youshuu suru",
+    "furigana": "よしゅう",
+    "meaning": "belajar (sebagai persiapan)",
+    "word_type": "suru",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "明日の授業のために、教科書を 予習しました。",
+        "id": "Untuk pelajaran besok, saya mempelajari buku pelajaran terlebih dahulu"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "予習する",
+      "past": "予習した",
+      "negative": "予習しない",
+      "masu_form": "予習します"
+    }
+  },
+  {
+    "id": "7h8i9j0k-1l2m-3n4o-5p6q-7r8s9t0u1v2w",
+    "word": "復習する",
+    "reading": "fukushuu suru",
+    "furigana": "ふくしゅう",
+    "meaning": "belajar (mengulang)",
+    "word_type": "suru",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "毎⽇ 少しずつ 復習すると、覚えやすく なります。",
+        "id": "Jika kamu belajar mengulang sedikit demi sedikit setiap hari, maka akan jadi mudah hafal"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "復習する",
+      "past": "復習した",
+      "negative": "復習しない",
+      "masu_form": "復習します"
+    }
+  },
+  {
+    "id": "e4f5a6b7-c8d9-0123-4567-89abcdef0123",
+    "word": "洗う",
+    "reading": "arau",
+    "furigana": "あら",
+    "meaning": "mencuci (makna umum)",
+    "word_type": "godan",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "野菜を よく 洗ってから ⻝べます。",
+        "id": "Saya makan sayuran setelah mencucinya dengan baik"
+      },
+      {
+        "jp": "シャツを 洗う。",
+        "id": "Mencuci kemeja"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "洗う",
+      "past": "洗った",
+      "negative": "洗わない",
+      "masu_form": "洗います"
+    }
+  },
+  {
+    "id": "f5a6b7c8-d9e0-1234-5678-9abcdef01234",
+    "word": "洗濯する",
+    "reading": "sentaku suru",
+    "furigana": "せんたく",
+    "meaning": "mencuci (laundry)",
+    "word_type": "suru",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "洗濯した服を 外で ⼲します。",
+        "id": "Saya menjemur di luar pakaian yang sudah dicuci"
+      },
+      {
+        "jp": "シャツを 洗濯する。",
+        "id": "Mencuci kemeja"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "洗濯する",
+      "past": "洗濯した",
+      "negative": "洗濯しない",
+      "masu_form": "洗濯します"
+    }
+  },
+  {
+    "id": "6b7c8d9e-0f1a-2345-6789-abcdef012345",
+    "word": "壊れる",
+    "reading": "kowareru",
+    "furigana": "こわ",
+    "meaning": "rusak (makna umum)",
+    "word_type": "ichidan",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "おもちゃが 壊れました。",
+        "id": "Mainannya rusak"
+      },
+      {
+        "jp": "パソコンが 壊れました。",
+        "id": "Komputernya rusak (menekankan hasil akhirnya: komputer rusak)"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "壊れる",
+      "past": "壊れた",
+      "negative": "壊れない",
+      "masu_form": "壊れます"
+    }
+  },
+  {
+    "id": "7c8d9e0f-1a2b-3456-7890-abcdef012345",
+    "word": "故障する",
+    "reading": "koshou suru",
+    "furigana": "こしょう",
+    "meaning": "rusak, tidak berfungsi (mesin)",
+    "word_type": "suru",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "パソコンが 故障して います。",
+        "id": "Komputernya mengalami kerusakan (menekankan gangguan fungsi atau kerusakan teknis)"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "故障する",
+      "past": "故障した",
+      "negative": "故障しない",
+      "masu_form": "故障します"
+    }
+  },
+  {
+    "id": "8d9e0f1a-2b3c-4567-8901-abcdef012345",
+    "word": "眠る",
+    "reading": "nemuru",
+    "furigana": "ねむ",
+    "meaning": "tidur, dalam keadaan tertidur",
+    "word_type": "godan",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "⾳楽を 聞きながら 眠ることが あります。",
+        "id": "Ada kalanya saya tidur sambil mendengarkan musik"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "眠る",
+      "past": "眠った",
+      "negative": "眠らない",
+      "masu_form": "眠ります"
+    }
+  },
+  {
+    "id": "9e0f1a2b-3c4d-5678-9012-abcdef012345",
+    "word": "寝る",
+    "reading": "neru",
+    "furigana": "ね",
+    "meaning": "tidur, berbaring",
+    "word_type": "ichidan",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "芝⽣に 寝ながら 空を ⾒ていました。",
+        "id": "Saya melihat langit sambil berbaring di rumput/rerumputan"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "寝る",
+      "past": "寝た",
+      "negative": "寝ない",
+      "masu_form": "寝ます"
+    }
+  },
+  {
+    "id": "0f1a2b3c-4d5e-6789-0123-abcdef012345",
+    "word": "参加する",
+    "reading": "sanka suru",
+    "furigana": "さんか",
+    "meaning": "ikut serta (berpartisipasi)",
+    "word_type": "suru",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "来週の旅⾏に 参加したいです。",
+        "id": "Saya ingin ikut serta perjalanan wisata minggu depan"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "参加する",
+      "past": "参加した",
+      "negative": "参加しない",
+      "masu_form": "参加します"
+    }
+  },
+  {
+    "id": "1a2b3c4d-5e6f-7890-1234-abcdef012345",
+    "word": "出る",
+    "reading": "deru",
+    "furigana": "で",
+    "meaning": "ikut serta (tampil)",
+    "word_type": "ichidan",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "彼は 初めて 全国⼤会の試合に 出ました。",
+        "id": "Dia untuk pertama kalinya tampil dalam pertandingan tingkat nasional"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "出る",
+      "past": "出た",
+      "negative": "出ない",
+      "masu_form": "出ます"
+    }
+  },
+  {
+    "id": "1a2b3c4d-5e6f-7890-1234-567890abcdef",
+    "word": "驚く",
+    "reading": "odoroku",
+    "furigana": "おどろ",
+    "meaning": "kaget",
+    "word_type": "godan",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "試験の結果を 見て 驚きました。",
+        "id": "Saya kaget melihat hasil ujian"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "驚く",
+      "past": "驚いた",
+      "negative": "驚かない",
+      "masu_form": "驚きます"
+    }
+  },
+  {
+    "id": "2b3c4d5e-6f7g-8901-2345-678901abcdef",
+    "word": "びっくりする",
+    "reading": "bikkuri suru",
+    "furigana": "びっくり",
+    "meaning": "kaget (bisa diucapkan ketika merasa kaget)",
+    "word_type": "suru",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "急に 犬が 出てきて びっくりした。",
+        "id": "Saya terkejut karena tiba-tiba ada anjing muncul"
+      },
+      {
+        "jp": "わあ、びっくりした！",
+        "id": "Wah, kaget saya!"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "びっくりする",
+      "past": "びっくりした",
+      "negative": "びっくりしない",
+      "masu_form": "びっくりします"
+    }
+  },
+  {
+    "id": "3c4d5e6f-7g8h-9012-3456-789012abcdef",
+    "word": "準備する",
+    "reading": "junbi suru",
+    "furigana": "じゅんび",
+    "meaning": "mempersiapkan (makna lebih luas, menyiapkan sesuatu secara umum, seperti kegiatan, acara, rapat, ujian, alat, dsb)",
+    "word_type": "suru",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "試験の準備を しています。",
+        "id": "Saya sedang mempersiapkan ujian"
+      },
+      {
+        "jp": "先生は 授業の準備を しています。",
+        "id": "Guru sedang menyiapkan pelajaran/kelas"
+      },
+      {
+        "jp": "飲み物の準備を してください。",
+        "id": "Tolong siapkan minumannya"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "準備する",
+      "past": "準備した",
+      "negative": "準備しない",
+      "masu_form": "準備します"
+    }
+  },
+  {
+    "id": "4d5e6f7g-8h9i-0123-4567-890123abcdef",
+    "word": "用意する",
+    "reading": "youi suru",
+    "furigana": "ようい",
+    "meaning": "menyediakan, menyiapkan (fokus pada menyiapkan atau menyediakan benda/hal yang diperlukan)",
+    "word_type": "suru",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "払う ためのお金を 用意しました。",
+        "id": "Saya sudah menyiapkan uang untuk pembayaran"
+      },
+      {
+        "jp": "会議の資料を 用意してください。",
+        "id": "Tolong siapkan dokumen rapat"
+      },
+      {
+        "jp": "お客様のために いすを 用意します。",
+        "id": "Saya menyediakan kursi untuk tamu"
+      },
+      {
+        "jp": "私が 弁当を 用意します。",
+        "id": "Saya yang akan menyiapkan bento nya"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "用意する",
+      "past": "用意した",
+      "negative": "用意しない",
+      "masu_form": "用意します"
+    }
+  },
+  {
+    "id": "5e6f7g8h-9i0j-1234-5678-901234abcdef",
+    "word": "支度する",
+    "reading": "shitaku suru",
+    "furigana": "したく",
+    "meaning": "mempersiapkan (bersiap untuk aktivitas sehari-hari, seperti sebelum berangkat/makan/tidur, dll)",
+    "word_type": "suru",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "母は 夕食の支度を しています。",
+        "id": "Ibu sedang menyiapkan makan malam"
+      },
+      {
+        "jp": "学校へ行く 支度をして ください。",
+        "id": "Tolong bersiap pergi ke sekolah"
+      },
+      {
+        "jp": "旅行の支度が まだ 終わっていません。",
+        "id": "Persiapan perjalanan masih belum selesai"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "支度する",
+      "past": "支度した",
+      "negative": "支度しない",
+      "masu_form": "支度します"
+    }
+  },
+  {
+    "id": "7f8g9h0i-1j2k-3l4m-5n6o-7p8q9r0s1t2u",
+    "word": "使用する",
+    "reading": "shiyou suru",
+    "furigana": "しよう",
+    "meaning": "menggunakan (menggunakan benda, alat, obat, perangkat, bahan, dll sesuai dengan fungsi & kegunaannya)",
+    "word_type": "suru",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "この部屋は 会議に 使用されています。",
+        "id": "Ruangan ini digunakan untuk rapat"
+      },
+      {
+        "jp": "会社では このソフトを 使用しています。",
+        "id": "Di kantor menggunakan software ini"
+      },
+      {
+        "jp": "説明書を 読んでから 使用してください。",
+        "id": "Tolong gunakan setelah membaca buku petunjuk"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "使用する",
+      "past": "使用した",
+      "negative": "使用しない",
+      "masu_form": "使用します"
+    }
+  },
+  {
+    "id": "8g9h0i1j-2k3l-4m5n-6o7p-8q9r0s1t2u3v",
+    "word": "利用する",
+    "reading": "riyou suru",
+    "furigana": "りよう",
+    "meaning": "memanfaatkan, menggunakan (misal memanfaatkan layanan, fasilitas, sarana, sistem, kesempatan)",
+    "word_type": "suru",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "毎日 バスを 利用しています。",
+        "id": "Saya menggunakan bus setiap hari"
+      },
+      {
+        "jp": "私は この図書館を よく 利用します。",
+        "id": "Saya sering menggunakan perpustakaan ini"
+      },
+      {
+        "jp": "駅の近くの駐車場を 利用しました。",
+        "id": "Saya menggunakan tempat parkir dekat stasiun"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "利用する",
+      "past": "利用した",
+      "negative": "利用しない",
+      "masu_form": "利用します"
+    }
+  },
+  {
+    "id": "9h0i1j2k-3l4m-5n6o-7p8q-9r0s1t2u3v4w",
+    "word": "発見する",
+    "reading": "hakken suru",
+    "furigana": "はっけん",
+    "meaning": "menciptakan",
+    "word_type": "suru",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "公園で 珍しい鳥を 発見しました。",
+        "id": "Saya menemukan burung yang langka di taman"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "発見する",
+      "past": "発見した",
+      "negative": "発見しない",
+      "masu_form": "発見します"
+    }
+  },
+  {
+    "id": "0i1j2k3l-4m5n-6o7p-8q9r-0s1t2u3v4w5x",
+    "word": "発明する",
+    "reading": "hatsumei suru",
+    "furigana": "はつめい",
+    "meaning": "menemukan",
+    "word_type": "suru",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "インスタント ラーメンは 1958年に 発明されました。",
+        "id": "Ramen instan ditemukan pada tahun 1958"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "発明する",
+      "past": "発明した",
+      "negative": "発明しない",
+      "masu_form": "発明します"
+    }
+  },
+  {
+    "id": "1j2k3l4m-5n6o-7p8q-9r0s-1t2u3v4w5x6y",
+    "word": "録音する",
+    "reading": "rokuon suru",
+    "furigana": "ろくおん",
+    "meaning": "merekam (suara)",
+    "word_type": "suru",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "日本語の発音を 録音して、練習しています。",
+        "id": "Saya berlatih dengan merekam pelafalan bahasa Jepang"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "録音する",
+      "past": "録音した",
+      "negative": "録音しない",
+      "masu_form": "録音します"
+    }
+  },
+  {
+    "id": "2k3l4m5n-6o7p-8q9r-0s1t-2u3v4w5x6y7z",
+    "word": "録画する",
+    "reading": "rokuga suru",
+    "furigana": "ろくが",
+    "meaning": "merekam (video)",
+    "word_type": "suru",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "会議の様子を 録画して、後で 確認しました。",
+        "id": "Saya merekam jalannya rapat lalu memeriksanya setelah itu"
+      }
+    ],
+    "conjugations_complete": {
+      "non_past": "録画する",
+      "past": "録画した",
+      "negative": "録画しない",
+      "masu_form": "録画します"
+    }
+  }
+]
