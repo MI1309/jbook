@@ -48,6 +48,7 @@ export default function KotobaDetailUI({ vocab: initialVocab, onClose }) {
     // Edit state
     const [isEditing, setIsEditing] = useState(false);
     const [editData, setEditData] = useState({
+        word: initialVocab?.word || '',
         meaning: initialVocab?.meaning || '',
         reading: initialVocab?.reading || '',
         furigana: initialVocab?.furigana || '',
@@ -61,6 +62,7 @@ export default function KotobaDetailUI({ vocab: initialVocab, onClose }) {
     useEffect(() => {
         setVocab(initialVocab);
         setEditData({
+            word: initialVocab?.word || '',
             meaning: initialVocab?.meaning || '',
             reading: initialVocab?.reading || '',
             furigana: initialVocab?.furigana || '',
@@ -215,6 +217,14 @@ export default function KotobaDetailUI({ vocab: initialVocab, onClose }) {
 
     const handleSave = async () => {
         // Safeguard: Prevent saving error messages or extremely long HTML-like strings
+        if (!editData.word?.trim()) {
+            toast.error('Kata utama tidak boleh kosong.');
+            return;
+        }
+        if (!editData.reading?.trim()) {
+            toast.error('Reading tidak boleh kosong.');
+            return;
+        }
         if (editData.meaning.includes('Error 500') || editData.meaning.includes('<!DOCTYPE html>')) {
             toast.error('Format arti tidak valid. Harap periksa kembali.');
             return;
@@ -298,6 +308,13 @@ export default function KotobaDetailUI({ vocab: initialVocab, onClose }) {
                             <div className="flex flex-col items-center">
                                 {isEditing ? (
                                     <div className="flex flex-col gap-2 mb-4 w-full max-w-xs">
+                                        <input
+                                            type="text"
+                                            value={editData.word}
+                                            onChange={(e) => setEditData({...editData, word: e.target.value})}
+                                            className={`text-center text-sm p-2 rounded-xl border-2 ${borderStyle} ${cardBg} font-black focus:border-blue-500 outline-none`}
+                                            placeholder="Kata / Judul Kotoba"
+                                        />
                                         <input
                                             type="text"
                                             value={editData.reading}

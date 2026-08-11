@@ -61,6 +61,7 @@ class VocabSchema(Schema):
     conjugations: Optional[List[dict]] = None
 
 class UpdateVocabSchema(Schema):
+    word: Optional[str] = None
     meaning: Optional[str] = None
     word_type: Optional[str] = None
     reading: Optional[str] = None
