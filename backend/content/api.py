@@ -102,6 +102,12 @@ def update_kanji(request, kanji_id: UUID, data: UpdateKanjiSchema):
     kanji.save()
     return kanji
 
+@router.delete("/kanji/{kanji_id}", auth=AuthBearer())
+def delete_kanji(request, kanji_id: UUID):
+    kanji = get_object_or_404(Kanji, id=kanji_id)
+    kanji.delete()
+    return {"success": True}
+
 class AnnouncementSchema(Schema):
     id: UUID
     title: str = Field(..., max_length=255)
@@ -597,8 +603,8 @@ def update_vocab(request, vocab_id: str, payload: VocabCreateSchema):
     except Exception as e:
         return 400, {"error": str(e)}
 
-@router.delete("/kotoba/{vocab_id}")
-@router.delete("/vocab/{vocab_id}")
+@router.delete("/kotoba/{vocab_id}", auth=AuthBearer())
+@router.delete("/vocab/{vocab_id}", auth=AuthBearer())
 def delete_vocab(request, vocab_id: str):
     from .models import Vocab
     vocab = get_object_or_404(Vocab, id=vocab_id)

@@ -7,7 +7,7 @@ import { hasKanji, extractKanji } from '@/lib/utils';
 import { resolveContentId, API_URL } from '@/lib/api';
 import { dbGetAll } from '@/lib/offline-db';
 import { useTheme } from '@/context/ThemeContext';
-import { Volume2, Edit2, Check, X } from 'lucide-react';
+import { Volume2, Edit2, Check, X, Trash } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import { toast } from 'react-toastify';
 import Cookies from 'js-cookie';
@@ -55,6 +55,7 @@ export default function KotobaDetailUI({ vocab: initialVocab, onClose }) {
         word_type: initialVocab?.word_type || ''
     });
     const [saving, setSaving] = useState(false);
+    const [deleting, setDeleting] = useState(false);
 
     const isAdmin = user?.is_staff || user?.is_superuser;
 
@@ -215,6 +216,36 @@ export default function KotobaDetailUI({ vocab: initialVocab, onClose }) {
         }
     };
 
+    const handleDelete = async () => {
+        if (!confirm('Hapus Kotoba ini? Tindakan ini tidak bisa dibatalkan.')) return;
+        setDeleting(true);
+        try {
+            const baseUrl = (process.env.NEXT_PUBLIC_API_URL || 'https://imronm.pythonanywhere.com/api')
+                .replace(/\/$/, '');
+            const token = Cookies.get('access_token');
+            const res = await fetch(`${baseUrl}/content/vocab/${vocab.id}`, {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+            if (res.ok) {
+                toast.success('Kotoba berhasil dihapus.');
+                if (onClose) {
+                    onClose();
+                } else {
+                    router.push('/kotoba');
+                }
+            } else {
+                toast.error('Gagal menghapus Kotoba. Pastikan Anda memiliki hak akses.');
+            }
+        } catch (err) {
+            toast.error('Terjadi kesalahan jaringan saat menghapus.');
+        } finally {
+            setDeleting(false);
+        }
+    };
+
     const handleSave = async () => {
         // Safeguard: Prevent saving error messages or extremely long HTML-like strings
         if (!editData.word?.trim()) {
@@ -282,18 +313,25 @@ export default function KotobaDetailUI({ vocab: initialVocab, onClose }) {
                 <div className={`${cardBg} rounded-[2.5rem] shadow-2xl p-6 sm:p-8 md:p-12 text-center border-t-8 border-blue-600 relative overflow-hidden w-full transition-all border-b border-x ${borderStyle}`}>
                     {/* Admin Edit Button */}
                     {isAdmin && (
-                        <div className="absolute top-4 right-4 sm:top-6 sm:right-6 z-30">
-                            <button
-                                onClick={(e) => { e.stopPropagation(); setIsEditing(!isEditing); }}
-                                className={`p-2 sm:p-3 rounded-xl transition-all ${
-                                    isEditing
-                                        ? 'bg-red-500 text-white shadow-lg shadow-red-500/20'
-                                        : 'bg-blue-600/10 text-blue-600 hover:bg-blue-600 hover:text-white shadow-sm'
-                                }`}
-                                title={isEditing ? "Batal Edit" : "Edit Kotoba (Admin)"}
-                            >
-                                {isEditing ? <X className="w-4 h-4 sm:w-5 sm:h-5" /> : <Edit2 className="w-4 h-4 sm:w-5 sm:h-5" />}
-                            </button>
+                            <div className="absolute top-4 right-4 sm:top-6 sm:right-6 z-30 flex gap-2">
+                                <button
+                                    onClick={(e) => { e.stopPropagation(); setIsEditing(!isEditing); }}
+                                    className={`p-2 sm:p-3 rounded-xl transition-all ${
+                                        isEditing
+                                            ? 'bg-red-500 text-white shadow-lg shadow-red-500/20'
+                                            : 'bg-blue-600/10 text-blue-600 hover:bg-blue-600 hover:text-white shadow-sm'
+                                    }`}
+                                    title={isEditing ? "Batal Edit" : "Edit Kotoba (Admin)"}
+                                >
+                                    {isEditing ? <X className="w-4 h-4 sm:w-5 sm:h-5" /> : <Edit2 className="w-4 h-4 sm:w-5 sm:h-5" />}
+                                </button>
+                                <button
+                                    onClick={(e) => { e.stopPropagation(); handleDelete(); }}
+                                    className="p-2 sm:p-3 rounded-xl bg-red-600 text-white shadow-lg shadow-red-500/20 hover:bg-red-700 transition-all"
+                                    title="Hapus Kotoba"
+                                    disabled={deleting || saving}
+                                >
+                                    <Trash className="w-4 h-4 sm:w-5 sm:h-5" />
                         </div>
                     )}
 

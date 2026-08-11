@@ -133,13 +133,14 @@ class VocabAdmin(admin.ModelAdmin):
     delete_duplicate_vocab.short_description = 'Delete duplicate Vocab entries (keep first per word+meaning)'
 
     def duplicate_vocab_view(self, request):
-        duplicates = Vocab.objects.values('word').annotate(count=Count('id')).filter(count__gt=1).order_by('word')
+        duplicates = Vocab.objects.values('word', 'meaning').annotate(count=Count('id')).filter(count__gt=1).order_by('word', 'meaning')
         rows = []
         for dup in duplicates:
             word = dup['word']
-            items = Vocab.objects.filter(word=word).order_by('meaning', 'id')
-            rows.append((word, dup['count'], [
-                f'<a href="{reverse("admin:content_vocab_change", args=[item.id])}">{item.id}</a> {item.meaning}'
+            meaning = dup['meaning']
+            items = Vocab.objects.filter(word=word, meaning=meaning).order_by('id')
+            rows.append((word, meaning, dup['count'], [
+                f'<a href="{reverse("admin:content_vocab_change", args=[item.id])}">{item.id}</a> {item.meaning} (N{item.jlpt_level})'
                 for item in items
             ]))
 

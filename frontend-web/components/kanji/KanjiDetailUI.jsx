@@ -9,7 +9,7 @@ import { resolveContentId } from '@/lib/api';
 import { useTheme } from '@/context/ThemeContext';
 import KanjiStrokeViewer from './KanjiStrokeViewer'; 
 import { useAuth } from '@/context/AuthContext';
-import { Edit2, Check, X } from 'lucide-react';
+import { Edit2, Check, X, Trash } from 'lucide-react';
 import Cookies from 'js-cookie';
 import { toast } from 'react-toastify';
 
@@ -31,6 +31,7 @@ export default function KanjiDetailUI({ kanji: initialKanji, onClose }) {
         jlpt_level: initialKanji?.jlpt_level || 5
     });
     const [saving, setSaving] = useState(false);
+    const [deleting, setDeleting] = useState(false);
 
     const isAdmin = user?.is_staff || user?.is_superuser;
 
@@ -99,6 +100,36 @@ export default function KanjiDetailUI({ kanji: initialKanji, onClose }) {
         }
     };
 
+    const handleDelete = async () => {
+        if (!confirm('Hapus Kanji ini? Tindakan ini tidak bisa dibatalkan.')) return;
+        setDeleting(true);
+        try {
+            const baseUrl = (process.env.NEXT_PUBLIC_API_URL || 'https://imronm.pythonanywhere.com/api')
+                .replace(/\/$/, '');
+            const token = Cookies.get('access_token');
+            const res = await fetch(`${baseUrl}/content/kanji/${kanji.id}`, {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+            if (res.ok) {
+                toast.success('Kanji berhasil dihapus.');
+                if (onClose) {
+                    onClose();
+                } else {
+                    router.push('/kanji');
+                }
+            } else {
+                toast.error('Gagal menghapus Kanji. Pastikan Anda memiliki hak akses.');
+            }
+        } catch (err) {
+            toast.error('Terjadi kesalahan jaringan saat menghapus.');
+        } finally {
+            setDeleting(false);
+        }
+    };
+
     const handleSave = async () => {
         // Safeguard: Prevent saving error messages or extremely long HTML-like strings
         if (editData.meaning.includes('Error 500') || editData.meaning.includes('<!DOCTYPE html>')) {
@@ -159,7 +190,7 @@ export default function KanjiDetailUI({ kanji: initialKanji, onClose }) {
                         >
                             {/* Admin Edit Button */}
                             {isAdmin && (
-                                <div className="absolute -top-4 right-0 sm:-right-4 md:top-0 md:right-auto md:-left-16 z-30">
+                                <div className="absolute -top-4 right-0 sm:-right-4 md:top-0 md:right-auto md:-left-20 z-30 flex gap-2">
                                     <button
                                         onClick={(e) => { e.stopPropagation(); setIsEditing(!isEditing); }}
                                         className={`p-3 rounded-2xl transition-all ${
@@ -170,6 +201,14 @@ export default function KanjiDetailUI({ kanji: initialKanji, onClose }) {
                                         title={isEditing ? "Batal Edit" : "Edit Kanji (Admin)"}
                                     >
                                         {isEditing ? <X className="w-5 h-5" /> : <Edit2 className="w-5 h-5" />}
+                                    </button>
+                                    <button
+                                        onClick={(e) => { e.stopPropagation(); handleDelete(); }}
+                                        className="p-3 rounded-2xl bg-red-600 text-white hover:bg-red-700 shadow-lg shadow-red-500/20 transition-all"
+                                        title="Hapus Kanji"
+                                        disabled={deleting || saving}
+                                    >
+                                        <Trash className="w-5 h-5" />
                                     </button>
                                 </div>
                             )}
