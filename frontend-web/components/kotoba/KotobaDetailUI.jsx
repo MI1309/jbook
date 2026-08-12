@@ -279,6 +279,13 @@ export default function KotobaDetailUI({ vocab: initialVocab, onClose }) {
             if (res.ok) {
                 const updated = await res.json();
                 setVocab(updated);
+                setEditData({
+                    word: updated.word || editData.word,
+                    meaning: updated.meaning || editData.meaning,
+                    reading: updated.reading || editData.reading,
+                    furigana: updated.furigana || editData.furigana,
+                    word_type: updated.word_type || editData.word_type
+                });
                 setIsEditing(false);
                 toast.success('Berhasil memperbarui Kotoba!');
             } else {
@@ -332,7 +339,8 @@ export default function KotobaDetailUI({ vocab: initialVocab, onClose }) {
                                     disabled={deleting || saving}
                                 >
                                     <Trash className="w-4 h-4 sm:w-5 sm:h-5" />
-                        </div>
+                                </button>
+                            </div>
                     )}
 
                     <div className="absolute top-0 right-0 p-3 sm:p-4 opacity-5 text-7xl sm:text-9xl font-serif select-none pointer-events-none text-blue-900 leading-none">
