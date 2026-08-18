@@ -386,26 +386,32 @@ export default function KotobaDetailUI({ vocab: initialVocab, onClose }) {
                                         </select>
                                     </div>
                                 ) : null}
-                                <ruby className={`text-3xl sm:text-4xl md:text-5xl font-black tracking-wider transition-colors ${textColor}`}>
-                                    {characters.map((char, index) => (
-                                        hasKanji(char) ? (
-                                            <span
-                                                key={index}
-                                                onClick={() => handleKanjiClick(char)}
-                                                className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-white cursor-pointer transition-all duration-200 border-b-4 border-transparent hover:border-blue-600 dark:hover:border-white px-1 rounded-t-xl"
-                                            >
-                                                {char}
-                                            </span>
-                                        ) : (
-                                            <span key={index} className="px-0.5">{char}</span>
-                                        )
-                                    ))}
-                                    {!isEditing && hasKanji(vocab.word) && (
-                                        <rt className="text-base sm:text-lg md:text-xl text-gray-900 dark:text-white font-black leading-none">
-                                            {vocab.furigana || vocab.reading || ''}
-                                        </rt>
-                                    )}
-                                </ruby>
+                                {(() => {
+                                    const furiganaMap = Array.isArray(vocab.furigana_map) ? vocab.furigana_map : [];
+                                    return (
+                                        <ruby className={`text-3xl sm:text-4xl md:text-5xl font-black tracking-wider transition-colors ${textColor}`}>
+                                            {characters.map((char, index) => {
+                                                if (hasKanji(char)) {
+                                                    const seg = furiganaMap[index] || '';
+                                                    return (
+                                                        <span
+                                                            key={index}
+                                                            onClick={() => handleKanjiClick(char)}
+                                                            className="inline-block text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-white cursor-pointer transition-colors"
+                                                            style={{ lineHeight: 1 }}
+                                                        >
+                                                            {char}
+                                                            {!isEditing && seg ? (
+                                                                <rt className="text-base sm:text-lg md:text-xl text-gray-900 dark:text-white font-black leading-none">{seg}</rt>
+                                                            ) : null}
+                                                        </span>
+                                                    );
+                                                }
+                                                return <span key={index} className="px-0.5">{char}</span>;
+                                            })}
+                                        </ruby>
+                                    );
+                                })()}
                             </div>
                             <button
                                 onClick={playAudio}

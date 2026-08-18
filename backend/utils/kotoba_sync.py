@@ -23,6 +23,79 @@ def generate_furigana(text: str) -> str:
     furigana = "".join([item['hira'] for item in result])
     return furigana
 
+
+def is_kanji(ch: str) -> bool:
+    # Unicode range for common CJK Unified Ideographs
+    return bool(ch and ('\u4e00' <= ch <= '\u9fff' or '\u3400' <= ch <= '\u4dbf'))
+
+
+def generate_furigana_map(text: str) -> List[str]:
+    """
+    Return a list of furigana segments aligned with each character in `text`.
+    For non-kanji characters the segment will be an empty string.
+    Uses pykakasi.convert as a best-effort to split readings per-character.
+    """
+    if not text:
+        return []
+
+    converted = kakasi.convert(text)
+    # Initialize empty map
+    fmap: List[str] = ['' for _ in text]
+
+    # Iterate through converted segments and assign readings to Kanji characters
+    pos = 0
+    for seg in converted:
+        orig = seg.get('orig', '')
+        hira = seg.get('hira', '')
+        L = len(orig)
+        if L == 0:
+            continue
+
+        # Count kanji chars in this orig segment
+        kanji_chars = [c for c in orig if is_kanji(c)]
+        kcount = len(kanji_chars)
+
+        if kcount == 0:
+            # advance pos by orig length
+            pos += L
+            continue
+
+        # If there's only one kanji in the segment, give it the whole hira
+        if kcount == 1:
+            # find index of the kanji within orig
+            idx_in_orig = None
+            for i, c in enumerate(orig):
+                if is_kanji(c):
+                    idx_in_orig = i
+                    break
+            if idx_in_orig is not None:
+                # global index
+                global_idx = pos + idx_in_orig
+                if 0 <= global_idx < len(fmap):
+                    fmap[global_idx] = hira
+        else:
+            # Multiple kanji in the segment: split hira into kcount parts roughly equally
+            # distribute remainder to the earlier parts
+            total = len(hira)
+            base = total // kcount if kcount else 0
+            rem = total - base * kcount
+            p = 0
+            # iterate orig positions and assign to each kanji encountered
+            for i, c in enumerate(orig):
+                if is_kanji(c):
+                    take = base + (1 if rem > 0 else 0)
+                    if rem > 0:
+                        rem -= 1
+                    part = hira[p:p+take]
+                    global_idx = pos + i
+                    if 0 <= global_idx < len(fmap):
+                        fmap[global_idx] = part
+                    p += take
+
+        pos += L
+
+    return fmap
+
 def translate_ja_to_id(text: str) -> str:
     """
     Translate Japanese text to Indonesian using deep-translator (Google Translate).
@@ -66,6 +139,16 @@ def process_new_kotoba(word_data: Dict[str, Any]) -> Dict[str, Any]:
     for ex in examples:
         if 'sentence' in ex and not ex.get('meaning'):
             ex['meaning'] = translate_ja_to_id(ex['sentence'])
+    
+    # Build furigana map per character for better frontend rendering
+    if word:
+        try:
+            fmap = generate_furigana_map(word)
+            if fmap:
+                word_data['furigana_map'] = fmap
+        except Exception:
+            # don't fail on mapping errors
+            pass
             
     return word_data
 
@@ -111,6 +194,7 @@ def sync_kotoba_data(local_data: List[Dict[str, Any]], skip_existing: bool = Fal
             defaults = {
                 'reading': item.get('reading', ''),
                 'furigana': item.get('furigana', ''),
+                'furigana_map': item.get('furigana_map', []),
                 'meaning': item.get('meaning', ''),
                 'word_type': item.get('word_type', ''),
                 'jlpt_level': item.get('jlpt_level', 5),

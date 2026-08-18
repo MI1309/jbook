@@ -66,6 +66,8 @@ class Vocab(models.Model):
     kanji_rel = models.ManyToManyField(Kanji, related_name='vocab', blank=True)
     jlpt_level = models.IntegerField(choices=JLPTLevel.choices, default=JLPTLevel.N5)
     examples = models.JSONField(default=list, help_text="Contoh kalimat")
+    # Per-character furigana mapping (list aligned with `word` characters)
+    furigana_map = models.JSONField(default=list, help_text="List of furigana segments aligned per character in `word`")
 
     def __str__(self):
         return self.word
