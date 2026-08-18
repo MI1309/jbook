@@ -1,5 +1,6 @@
 import json
 import logging
+import uuid
 from typing import List, Dict, Any
 import pykakasi
 from deep_translator import GoogleTranslator
@@ -89,6 +90,18 @@ def sync_kotoba_data(local_data: List[Dict[str, Any]], skip_existing: bool = Fal
             
             # Check by ID if provided, otherwise by Word
             vocab_id = item.get('id')
+            # Validate provided id: if it's not a valid UUID, ignore it
+            if vocab_id:
+                try:
+                    # sanitize common smart quotes and whitespace
+                    if isinstance(vocab_id, str):
+                        vocab_id = vocab_id.strip().strip('“”"')
+                    uuid_obj = uuid.UUID(str(vocab_id))
+                    vocab_id = str(uuid_obj)
+                except Exception:
+                    logger.warning(f"Invalid UUID provided for word {item.get('word', '')}: {vocab_id}. Ignoring provided id.")
+                    vocab_id = None
+                    item.pop('id', None)
             word = item.get('word')
             
             if not word:
@@ -135,15 +148,29 @@ def sync_kotoba_data(local_data: List[Dict[str, Any]], skip_existing: bool = Fal
                 if skip_existing and Vocab.objects.filter(word=word).exists():
                     stats['skipped'] += 1
                 else:
-                    # Try to find by Word
-                    vocab, created = Vocab.objects.update_or_create(
-                        word=word,
-                        defaults=defaults
-                    )
-                    if created:
-                        stats["added"] += 1
-                    else:
+                    # Ensure we don't create duplicates: find all with same word
+                    qs = Vocab.objects.filter(word=word)
+                    if qs.exists():
+                        # If multiple entries exist, keep the first and remove the rest
+                        if qs.count() > 1:
+                            first = qs.first()
+                            others = qs.exclude(id=first.id)
+                            others.delete()
+                            vocab = first
+                        else:
+                            vocab = qs.first()
+
+                        # Overwrite fields with provided/default values
+                        for k, v in defaults.items():
+                            setattr(vocab, k, v)
+                        if word:
+                            vocab.word = word
+                        vocab.save()
                         stats["updated"] += 1
+                    else:
+                        # Create new entry
+                        vocab = Vocab.objects.create(word=word, **defaults)
+                        stats["added"] += 1
                     
         except Exception as e:
             logger.error(f"Error syncing item {item.get('word', 'Unknown')}: {str(e)}")
