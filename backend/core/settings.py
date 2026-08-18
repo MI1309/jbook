@@ -212,11 +212,36 @@ BACKEND_URL = os.environ.get("BACKEND_URL", "https://imronm.pythonanywhere.com")
 # CACHE (OTP RESET)
 # ===============================
 
-CACHES = {
-    "default": {
-        "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
+# Cache backend selection
+# Default to a file-based cache which is "shared" and satisfies django-ratelimit checks.
+# You can override via the CACHE_BACKEND environment variable (e.g., set to 'locmem' or 'filebased').
+CACHE_BACKEND = os.environ.get('CACHE_BACKEND', 'filebased')
+
+if CACHE_BACKEND == 'filebased':
+    CACHE_DIR = os.environ.get('CACHE_DIR', str(BASE_DIR / 'django_cache'))
+    os.makedirs(CACHE_DIR, exist_ok=True)
+    CACHES = {
+        'default': {
+            'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
+            'LOCATION': CACHE_DIR,
+        }
     }
-}
+elif CACHE_BACKEND == 'locmem':
+    CACHES = {
+        'default': {
+            'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        }
+    }
+else:
+    # Fallback: try filebased if unknown value provided
+    CACHE_DIR = str(BASE_DIR / 'django_cache')
+    os.makedirs(CACHE_DIR, exist_ok=True)
+    CACHES = {
+        'default': {
+            'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
+            'LOCATION': CACHE_DIR,
+        }
+    }
 
 
 # ===============================
