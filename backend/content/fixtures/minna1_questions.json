@@ -437,12 +437,12 @@
   },
   {
     "book": 1, "chapter": 20, "question_type": "doukai", "jlpt_level": 5,
-    "question_jp": "あしたパーティーにいく？",
+    "question_jp": "あしたパーティーにいく?",
     "shown_translation": "Apakah kamu pergi ke pesta besok?",
     "is_translation_correct": true,
     "correct_answer": "Benar",
     "options": ["Benar", "Salah"],
-    "explanation": "「いく？」= bentuk kasual/biasa dari「いきますか」. Digunakan antar teman."
+    "explanation": "「いく?」= bentuk kasual/biasa dari「いきますか」. Digunakan antar teman."
   },
   {
     "book": 1, "chapter": 20, "question_type": "fill_blank", "jlpt_level": 5,

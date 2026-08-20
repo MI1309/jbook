@@ -1,6 +1,6 @@
 [
     {
-        "title": "～にかけて",
+        "title": "~にかけて",
         "structure": "Noun (Place/Time) + にかけて",
         "explanation": "Mulai dari ... sampai ... (cakupan waktu/tempat).",
         "chapter": 76,
@@ -13,7 +13,7 @@
         ]
     },
     {
-        "title": "～だらけ",
+        "title": "~だらけ",
         "structure": "Noun + だらけ",
         "explanation": "Penuh dengan ... (sesuatu yang tidak menyenangkan/kotor).",
         "chapter": 77,
@@ -26,7 +26,7 @@
         ]
     },
     {
-        "title": "～おかげで / ～せいで",
+        "title": "~おかげで / ~せいで",
         "structure": "Plain Form + おかげで / せいで",
         "explanation": "Berkat ... (positif) / Gara-gara ... (negatif).",
         "chapter": 78,
@@ -43,7 +43,7 @@
         ]
     },
     {
-        "title": "～とおりに",
+        "title": "~とおりに",
         "structure": "Verb-Dict/Ta / Noun-no + とおりに",
         "explanation": "Sesuai dengan ... / Seperti ...",
         "chapter": 79,
@@ -56,7 +56,7 @@
         ]
     },
     {
-        "title": "～について / ～につき",
+        "title": "~について / ~につき",
         "structure": "Noun + について / につき",
         "explanation": "Tentang ... / Mengenai ... / Per ...",
         "chapter": 80,
@@ -69,7 +69,7 @@
         ]
     },
     {
-        "title": "～に加えて",
+        "title": "~に加えて",
         "structure": "Noun + に加えて",
         "explanation": "Di samping ... / Ditambah lagi ...",
         "chapter": 81,
@@ -82,7 +82,7 @@
         ]
     },
     {
-        "title": "～こそ",
+        "title": "~こそ",
         "structure": "Noun + こそ",
         "explanation": "Justru ... (penekanan).",
         "chapter": 82,
@@ -95,7 +95,7 @@
         ]
     },
     {
-        "title": "～さい(に)",
+        "title": "~さい(に)",
         "structure": "Verb-Dict/Ta / Noun-no + さい(に)",
         "explanation": "Pada saat ... / Ketika ... (Formal dari とき).",
         "chapter": 83,
@@ -108,7 +108,7 @@
         ]
     },
     {
-        "title": "～最中に",
+        "title": "~最中に",
         "structure": "Noun-no / Verb-Teiru + 最中に",
         "explanation": "Tepat di tengah-tengah ...",
         "chapter": 84,
@@ -121,7 +121,7 @@
         ]
     },
     {
-        "title": "～しかない",
+        "title": "~しかない",
         "structure": "Verb-Dict + しかない",
         "explanation": "Tidak ada pilihan lain selain ...",
         "chapter": 85,
@@ -134,7 +134,7 @@
         ]
     },
     {
-        "title": "～わけがない",
+        "title": "~わけがない",
         "structure": "Plain Form + わけがない",
         "explanation": "Tidak mungkin ... (Mustahil).",
         "chapter": 86,
@@ -147,7 +147,7 @@
         ]
     },
     {
-        "title": "～ことにする",
+        "title": "~ことにする",
         "structure": "Verb-Dict/Nai + ことにする",
         "explanation": "Memutuskan untuk ...",
         "chapter": 87,
@@ -160,7 +160,7 @@
         ]
     },
     {
-        "title": "～ようとする",
+        "title": "~ようとする",
         "structure": "Verb-Volitional + とする",
         "explanation": "Mencoba untuk ... / Hendak ...",
         "chapter": 88,
@@ -173,7 +173,7 @@
         ]
     },
     {
-        "title": "～がち",
+        "title": "~がち",
         "structure": "Verb-Stem / Noun + がち",
         "explanation": "Cenderung ... / Sering ... (negatif).",
         "chapter": 89,
@@ -186,7 +186,7 @@
         ]
     },
     {
-        "title": "～に反して",
+        "title": "~に反して",
         "structure": "Noun + に反して",
         "explanation": "Berlawanan dengan ... / Bertentangan dengan ...",
         "chapter": 90,
@@ -199,7 +199,7 @@
         ]
     },
     {
-        "title": "～上(に)",
+        "title": "~上(に)",
         "structure": "Plain Form + 上(に)",
         "explanation": "Di samping ... / Terlebih lagi ... (Menambahkan hal sejenis).",
         "chapter": 91,
@@ -212,7 +212,7 @@
         ]
     },
     {
-        "title": "～向け / ～向き",
+        "title": "~向け / ~向き",
         "structure": "Noun + 向け / 向き",
         "explanation": "Ditujukan untuk ... / Cocok untuk ...",
         "chapter": 92,
@@ -229,7 +229,7 @@
         ]
     },
     {
-        "title": "～っぽい",
+        "title": "~っぽい",
         "structure": "Noun / Verb-Stem / Adj-Stem + っぽい",
         "explanation": "Kelihatan seperti ... / Bernuansa ...",
         "chapter": 93,
@@ -246,7 +246,7 @@
         ]
     },
     {
-        "title": "～気味",
+        "title": "~気味",
         "structure": "Verb-Stem / Noun + 気味",
         "explanation": "Agak ... / Sedikit merasak ...",
         "chapter": 94,
@@ -259,7 +259,7 @@
         ]
     },
     {
-        "title": "～やら～やら",
+        "title": "~やら~やら",
         "structure": "Noun/Verb + やら + Noun/Verb + やら",
         "explanation": "... dan ... dan lain-lain (menunjukkan banyak hal/kekacauan).",
         "chapter": 95,
@@ -272,7 +272,7 @@
         ]
     },
     {
-        "title": "～か～ないかのうちに",
+        "title": "~か~ないかのうちに",
         "structure": "Verb-Dict + か + Verb-Nai + かのうちに",
         "explanation": "Begitu ... (selesai/terjadi), langsung ... (hampir bersamaan).",
         "chapter": 96,
@@ -285,7 +285,7 @@
         ]
     },
     {
-        "title": "～てからでないと",
+        "title": "~てからでないと",
         "structure": "Verb-Te + からでないと",
         "explanation": "Kalau belum ... (tidak bisa ...).",
         "chapter": 97,
@@ -298,7 +298,7 @@
         ]
     },
     {
-        "title": "～ことなく",
+        "title": "~ことなく",
         "structure": "Verb-Dict + ことなく",
         "explanation": "Tanpa (melakukan) ... (Formal dari ないで).",
         "chapter": 98,
@@ -311,7 +311,7 @@
         ]
     },
     {
-        "title": "～どころか",
+        "title": "~どころか",
         "structure": "Plain Form + どころか",
         "explanation": "Jangankan ... (malah sebaliknya / jauh dari itu).",
         "chapter": 99,
@@ -324,7 +324,7 @@
         ]
     },
     {
-        "title": "～末(に)",
+        "title": "~末(に)",
         "structure": "Noun-no / Verb-Ta + 末(に)",
         "explanation": "Pada akhirnya ... (setelah proses panjang).",
         "chapter": 100,

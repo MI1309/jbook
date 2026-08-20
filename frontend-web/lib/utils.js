@@ -166,8 +166,9 @@ export function to_romaji(text) {
  */
 export function hasKanji(text) {
     if (!text) return false;
-    const kanjiRegex = /[\u4E00-\u9FAF\u3400-\u4DBF]/;
-    return kanjiRegex.test(text);
+    const normalized = text.normalize('NFKC');
+    const kanjiRegex = /[\u4E00-\u9FAF\u3400-\u4DBF\u2F00-\u2FD5\u2E80-\u2EFF]/;
+    return kanjiRegex.test(normalized) || kanjiRegex.test(text);
 }
 
 /**
@@ -175,8 +176,9 @@ export function hasKanji(text) {
  */
 export function extractKanji(text) {
     if (!text) return [];
+    const normalized = text.normalize('NFKC');
     const kanjiRegex = /[\u4E00-\u9FAF\u3400-\u4DBF]/g;
-    const matches = text.match(kanjiRegex);
+    const matches = normalized.match(kanjiRegex);
     if (!matches) return [];
     return [...new Set(matches)]; // Unique Kanjis
 }

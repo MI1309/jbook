@@ -1,6 +1,7 @@
 import json
 import logging
 import uuid
+import unicodedata
 from typing import List, Dict, Any
 import pykakasi
 from deep_translator import GoogleTranslator
@@ -18,6 +19,7 @@ def generate_furigana(text: str) -> str:
     """
     if not text:
         return ""
+    text = unicodedata.normalize('NFKC', text)
     result = kakasi.convert(text)
     # Reconstruct the string using hira (hiragana)
     furigana = "".join([item['hira'] for item in result])
@@ -25,8 +27,11 @@ def generate_furigana(text: str) -> str:
 
 
 def is_kanji(ch: str) -> bool:
-    # Unicode range for common CJK Unified Ideographs
-    return bool(ch and ('\u4e00' <= ch <= '\u9fff' or '\u3400' <= ch <= '\u4dbf'))
+    if not ch:
+        return False
+    ch_norm = unicodedata.normalize('NFKC', ch)
+    # Unicode range for common CJK Unified Ideographs & Radicals
+    return bool('\u4e00' <= ch_norm <= '\u9fff' or '\u3400' <= ch_norm <= '\u4dbf')
 
 
 def generate_furigana_map(text: str) -> List[str]:
@@ -38,11 +43,11 @@ def generate_furigana_map(text: str) -> List[str]:
     if not text:
         return []
 
+    text = unicodedata.normalize('NFKC', text)
     converted = kakasi.convert(text)
     # Initialize empty map
     fmap: List[str] = ['' for _ in text]
 
-    # Iterate through converted segments and assign readings to Kanji characters
     pos = 0
     for seg in converted:
         orig = seg.get('orig', '')
@@ -51,46 +56,47 @@ def generate_furigana_map(text: str) -> List[str]:
         if L == 0:
             continue
 
-        # Count kanji chars in this orig segment
-        kanji_chars = [c for c in orig if is_kanji(c)]
-        kcount = len(kanji_chars)
+        kanji_indices = [i for i, c in enumerate(orig) if is_kanji(c)]
+        kcount = len(kanji_indices)
 
         if kcount == 0:
-            # advance pos by orig length
             pos += L
             continue
 
-        # If there's only one kanji in the segment, give it the whole hira
+        # Strip common prefix/suffix kana between orig and hira (okurigana)
+        prefix_len = 0
+        while (prefix_len < len(orig) and prefix_len < len(hira) 
+               and orig[prefix_len] == hira[prefix_len] 
+               and not is_kanji(orig[prefix_len])):
+            prefix_len += 1
+
+        suffix_len = 0
+        while (suffix_len < (len(orig) - prefix_len) 
+               and suffix_len < (len(hira) - prefix_len) 
+               and orig[len(orig) - 1 - suffix_len] == hira[len(hira) - 1 - suffix_len] 
+               and not is_kanji(orig[len(orig) - 1 - suffix_len])):
+            suffix_len += 1
+
+        core_hira = hira[prefix_len : len(hira) - suffix_len] if suffix_len else hira[prefix_len:]
+
         if kcount == 1:
-            # find index of the kanji within orig
-            idx_in_orig = None
-            for i, c in enumerate(orig):
-                if is_kanji(c):
-                    idx_in_orig = i
-                    break
-            if idx_in_orig is not None:
-                # global index
-                global_idx = pos + idx_in_orig
-                if 0 <= global_idx < len(fmap):
-                    fmap[global_idx] = hira
+            idx = kanji_indices[0]
+            if 0 <= pos + idx < len(fmap):
+                fmap[pos + idx] = core_hira
         else:
-            # Multiple kanji in the segment: split hira into kcount parts roughly equally
-            # distribute remainder to the earlier parts
-            total = len(hira)
+            # Distribute core_hira among kanji
+            total = len(core_hira)
             base = total // kcount if kcount else 0
             rem = total - base * kcount
             p = 0
-            # iterate orig positions and assign to each kanji encountered
-            for i, c in enumerate(orig):
-                if is_kanji(c):
-                    take = base + (1 if rem > 0 else 0)
-                    if rem > 0:
-                        rem -= 1
-                    part = hira[p:p+take]
-                    global_idx = pos + i
-                    if 0 <= global_idx < len(fmap):
-                        fmap[global_idx] = part
-                    p += take
+            for idx in kanji_indices:
+                take = base + (1 if rem > 0 else 0)
+                if rem > 0:
+                    rem -= 1
+                part = core_hira[p:p+take]
+                if 0 <= pos + idx < len(fmap):
+                    fmap[pos + idx] = part
+                p += take
 
         pos += L
 
@@ -113,7 +119,8 @@ def process_new_kotoba(word_data: Dict[str, Any]) -> Dict[str, Any]:
     """
     Takes incomplete kotoba data and fills in the blanks (translation, furigana).
     """
-    word = word_data.get('word', '')
+    word = unicodedata.normalize('NFKC', word_data.get('word', ''))
+    word_data['word'] = word
     reading = word_data.get('reading', '')
     furigana = word_data.get('furigana', '')
     meaning = word_data.get('meaning', '')

@@ -51,7 +51,7 @@
         { "kotoba": "だんせい", "kanji": "男性", "suffix": "N", "terjemahan": "laki-laki" },
         { "kotoba": "じょせい", "kanji": "女性", "suffix": "N", "terjemahan": "perempuan" },
         { "kotoba": "どうも", "kanji": "-", "suffix": "Adv", "terjemahan": "tampaknya (digunakan dalam asumsi)" },
-        { "kotoba": "～によると", "kanji": "-", "suffix": "Frasa", "terjemahan": "menurut ～" }
+        { "kotoba": "~によると", "kanji": "-", "suffix": "Frasa", "terjemahan": "menurut ~" }
       ],
       "Kosakata_Tambahan_Percakapan_Bacaan": [
         { "kotoba": "こいびと", "kanji": "恋人", "suffix": "N", "terjemahan": "kekasih, pacar" },
@@ -82,7 +82,7 @@
         { "kotoba": "にゅうかん", "kanji": "入管", "suffix": "N", "terjemahan": "Biro Imigrasi" },
         { "kotoba": "さいにゅうこくビザ", "kanji": "再入国ビザ", "suffix": "N", "terjemahan": "visa izin masuk kembali" },
         { "kotoba": "じゆうに", "kanji": "自由に", "suffix": "Adv", "terjemahan": "dengan bebas" },
-        { "kotoba": "～かん", "kanji": "～間", "suffix": "Suf", "terjemahan": "selama ～ (jangka waktu)" },
+        { "kotoba": "~かん", "kanji": "~間", "suffix": "Suf", "terjemahan": "selama ~ (jangka waktu)" },
         { "kotoba": "いい ことですね。", "kanji": "-", "suffix": "Frasa", "terjemahan": "Itu bagus ya." }
       ],
       "Kosakata_Tambahan_Percakapan_Bacaan": [
@@ -93,7 +93,7 @@
         { "kotoba": "かまいません", "kanji": "-", "suffix": "Frasa", "terjemahan": "tidak apa-apa/tidak masalah" },
         { "kotoba": "たのしみます", "kanji": "楽しみます", "suffix": "V-I", "terjemahan": "menikmati diri" },
         { "kotoba": "もともと", "kanji": "-", "suffix": "Adv", "terjemahan": "asal-muasalnya, tadinya" },
-        { "kotoba": "～せいき", "kanji": "～世紀", "suffix": "Suf", "terjemahan": "abad ke-～" },
+        { "kotoba": "~せいき", "kanji": "~世紀", "suffix": "Suf", "terjemahan": "abad ke-~" },
         { "kotoba": "かわりを します", "kanji": "代わりを します", "suffix": "V-III", "terjemahan": "menjadi pengganti" },
         { "kotoba": "スピード", "kanji": "-", "suffix": "N", "terjemahan": "kecepatan" },
         { "kotoba": "きょうそうします", "kanji": "競走します", "suffix": "V-III", "terjemahan": "balapan" },
@@ -103,7 +103,7 @@
         { "kotoba": "すがた", "kanji": "姿", "suffix": "N", "terjemahan": "sosok, penampilan" },
         { "kotoba": "こころ", "kanji": "心", "suffix": "N", "terjemahan": "hati, pikiran" },
         { "kotoba": "とらえます", "kanji": "-", "suffix": "V-II", "terjemahan": "menangkap" },
-        { "kotoba": "～に とって", "kanji": "-", "suffix": "Frasa", "terjemahan": "bagi ～" }
+        { "kotoba": "~に とって", "kanji": "-", "suffix": "Frasa", "terjemahan": "bagi ~" }
       ],
       "Kata_Referensi_Disiplin_Anak": [
         { "kotoba": "じぜんのなかであそぶ", "kanji": "自然の中で遊ぶ", "suffix": "Frasa", "terjemahan": "bermain di alam terbuka" },
@@ -132,7 +132,7 @@
         { "kotoba": "かいじょう", "kanji": "会場", "suffix": "N", "terjemahan": "tempat pertemuan/aula" },
         { "kotoba": "バスてい", "kanji": "バス停", "suffix": "N", "terjemahan": "halte bus" },
         { "kotoba": "ぼうえき", "kanji": "貿易", "suffix": "N", "terjemahan": "perdagangan" },
-        { "kotoba": "～さま", "kanji": "～様", "suffix": "Suf", "terjemahan": "Tuan/Nyonya ～ (hormat)" },
+        { "kotoba": "~さま", "kanji": "~様", "suffix": "Suf", "terjemahan": "Tuan/Nyonya ~ (hormat)" },
         { "kotoba": "かえりに", "kanji": "帰りに", "suffix": "Adv", "terjemahan": "saat jalan pulang" },
         { "kotoba": "たまに", "kanji": "-", "suffix": "Adv", "terjemahan": "sesekali" },
         { "kotoba": "ちっとも", "kanji": "-", "suffix": "Adv", "terjemahan": "sama sekali tidak (dengan negatif)" },
@@ -154,7 +154,7 @@
       ],
       "Kata_Referensi_Telepon": [
         { "kotoba": "もしもし", "kanji": "-", "suffix": "Intj", "terjemahan": "halo (di telepon)" },
-        { "kotoba": "～のおたくでいらっしゃいますか", "kanji": "～のお宅でいらっしゃいますか", "suffix": "Frasa", "terjemahan": "apakah ini rumah kediaman ～?" },
+        { "kotoba": "~のおたくでいらっしゃいますか", "kanji": "~のお宅でいらっしゃいますか", "suffix": "Frasa", "terjemahan": "apakah ini rumah kediaman ~?" },
         { "kotoba": "――と もうしますが", "kanji": "――と 申しますが", "suffix": "Frasa", "terjemahan": "nama saya ―― (merendah)" },
         { "kotoba": "がいしゅつちゅうです", "kanji": "外出中です", "suffix": "Frasa", "terjemahan": "sedang berada di luar" },
         { "kotoba": "でんごんを おねがいできますか", "kanji": "伝言を お願いできますか", "suffix": "Frasa", "terjemahan": "bisakah saya menitip pesan?" }
@@ -172,7 +172,7 @@
         { "kotoba": "うかがいます", "kanji": "伺います", "suffix": "V-I", "terjemahan": "bertanya, mendengar, berkunjung (bentuk rendah hati dari kikimasu/ikimasu/kimasu)" },
         { "kotoba": "おめに かかります", "kanji": "お目に かかります", "suffix": "V-I", "terjemahan": "bertemu (bentuk rendah hati dari aimasu)" },
         { "kotoba": "ございます", "kanji": "-", "suffix": "V-I", "terjemahan": "ada (bentuk sopan dari arimasu)" },
-        { "kotoba": "～で ございます", "kanji": "-", "suffix": "Frasa", "terjemahan": "adalah (bentuk sopan dari ~desu)" },
+        { "kotoba": "~で ございます", "kanji": "-", "suffix": "Frasa", "terjemahan": "adalah (bentuk sopan dari ~desu)" },
         { "kotoba": "わたくし", "kanji": "私", "suffix": "N", "terjemahan": "saya (bentuk paling sopan/rendah hati)" },
         { "kotoba": "ガイド", "kanji": "-", "suffix": "N", "terjemahan": "pemandu, guide" },
         { "kotoba": "おたく", "kanji": "お宅", "suffix": "N", "terjemahan": "rumah (orang lain)" },

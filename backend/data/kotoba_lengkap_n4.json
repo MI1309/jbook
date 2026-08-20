@@ -653,7 +653,7 @@
     "jlpt_level": 4,
     "examples": [
       {
-        "jp": "答えを よく 考えてから 書きます。｜どう考えますか。",
+        "jp": "答えを よく 考えてから 書きます。|どう考えますか。",
         "id": "Saya menulis setelah mikir jawabannya dengan baik (menanyakan pertimbangan)"
       }
     ],
@@ -674,7 +674,7 @@
     "jlpt_level": 4,
     "examples": [
       {
-        "jp": "彼は 明日 来る と思います。｜どう思いますか。",
+        "jp": "彼は 明日 来る と思います。|どう思いますか。",
         "id": "Saya pikir dia akan datang besok (menanyakan kesan atau opini)"
       }
     ],
@@ -695,7 +695,7 @@
     "jlpt_level": 4,
     "examples": [
       {
-        "jp": "３人で 食べるには、この料理で 足ります。",
+        "jp": "3人で 食べるには、この料理で 足ります。",
         "id": "Untuk dimakan tiga orang, makanan ini cukup (tidak kurang)"
       }
     ],
@@ -716,7 +716,7 @@
     "jlpt_level": 4,
     "examples": [
       {
-        "jp": "３人で 食べるには、この料理で 十分です。",
+        "jp": "3人で 食べるには、この料理で 十分です。",
         "id": "Untuk dimakan tiga orang, makanan ini sudah cukup (lebih dari cukup)"
       }
     ],
@@ -778,7 +778,7 @@
         "id": "Saya menghafal banyak kosakata baru"
       },
       {
-        "jp": "昨⽇のことは 覚えて いますか。",
+        "jp": "昨日のことは 覚えて いますか。",
         "id": "Apakah kamu ingat hal-hal (yang terjadi) kemarin?"
       }
     ],
@@ -824,7 +824,7 @@
         "id": "Tolong pinjam"
       },
       {
-        "jp": "お⾦が ⾜りなかったら、友達から 借りて ください。",
+        "jp": "お金が 足りなかったら、友達から 借りて ください。",
         "id": "Kalau uangmu tidak cukup, tolong pinjam ke teman"
       }
     ],
@@ -883,7 +883,7 @@
   },
   {
     "id": "415c0a77-a558-41d3-8df4-9ec8f8517dcb",
-    "word": "注⽂する",
+    "word": "注文する",
     "reading": "chuumon suru",
     "furigana": "ちゅうもん",
     "meaning": "memesan, order",
@@ -891,15 +891,15 @@
     "jlpt_level": 4,
     "examples": [
       {
-        "jp": "レストランで 料理を 注⽂しました。",
+        "jp": "レストランで 料理を 注文しました。",
         "id": "Saya memesan (order) makanan di restoran"
       }
     ],
     "conjugations_complete": {
-      "non_past": "注⽂する",
-      "past": "注⽂した",
-      "negative": "注⽂しない",
-      "masu_form": "注⽂します"
+      "non_past": "注文する",
+      "past": "注文した",
+      "negative": "注文しない",
+      "masu_form": "注文します"
     }
   },
   {
@@ -933,7 +933,7 @@
     "jlpt_level": 4,
     "examples": [
       {
-        "jp": "授業に ５分 遅刻して しました。",
+        "jp": "授業に 5分 遅刻して しました。",
         "id": "Saya terlambat 5 menit masuk kelas"
       }
     ],
@@ -948,13 +948,13 @@
     "id": "3f919566-150e-4b8e-bf3e-051ea5bbf4e3",
     "word": "連れて行く",
     "reading": "tsurete iku",
-    "furigana": "つ　い",
+    "furigana": "つ い",
     "meaning": "mengajak (membawa pergi)",
     "word_type": "godan",
     "jlpt_level": 4,
     "examples": [
       {
-        "jp": "明⽇、⼦どもを 公園に 連れて ⾏きます。",
+        "jp": "明日、子どもを 公園に 連れて 行きます。",
         "id": "Besok saya akan mengajak anak pergi ke taman"
       }
     ],
@@ -969,7 +969,7 @@
     "id": "d3680d22-57ae-49c3-8e0b-1d7e7cd14f04",
     "word": "連れて来る",
     "reading": "tsurete kuru",
-    "furigana": "つ　く",
+    "furigana": "つ く",
     "meaning": "mengajak (membawa datang)",
     "word_type": "irregular",
     "jlpt_level": 4,
@@ -1042,7 +1042,7 @@
     "jlpt_level": 4,
     "examples": [
       {
-        "jp": "めがねを かけると、よく ⾒えます。",
+        "jp": "めがねを かけると、よく 見えます。",
         "id": "Kalau memakai kacamata, terlihat dengan jelas"
       }
     ],
@@ -1063,7 +1063,7 @@
     "jlpt_level": 4,
     "examples": [
       {
-        "jp": "新しい かばんを ⺟に ⾒せました。",
+        "jp": "新しい かばんを 母に 見せました。",
         "id": "Saya memperlihatkan tas baru kepada ibu"
       }
     ],
@@ -1175,8 +1175,8 @@
         "id": "Matahari muncul/terbit ∕ Demam muncul"
       },
       {
-        "jp": "会議に 出ます。／試合に 出ます。",
-        "id": "Menghadiri rapat ／ Tampil di pertandingan"
+        "jp": "会議に 出ます。/試合に 出ます。",
+        "id": "Menghadiri rapat / Tampil di pertandingan"
       },
       {
         "jp": "大学を 出ました。",
@@ -1237,7 +1237,7 @@
         "id": "Di dinding kamar digantung (dipasang) jam dinding"
       },
       {
-        "jp": "先⽣に 電話を かけても いいですか。",
+        "jp": "先生に 電話を かけても いいですか。",
         "id": "Bolehkah saya menelepon guru"
       },
       {
@@ -1291,11 +1291,11 @@
     "jlpt_level": 4,
     "examples": [
       {
-        "jp": "誕⽣⽇のお祝いメッセージを 送りました。",
+        "jp": "誕生日のお祝いメッセージを 送りました。",
         "id": "Saya mengirim pesan ucapan ulang tahun"
       },
       {
-        "jp": "⽗が 駅まで 送って くれました。",
+        "jp": "父が 駅まで 送って くれました。",
         "id": "Ayah mengantarkan saya sampai stasiun"
       }
     ],
@@ -1320,7 +1320,7 @@
         "id": "Karena masih ada waktu, PR nya kita kerjakan nanti saja"
       },
       {
-        "jp": "泣いている ⼦どもに お菓⼦を やりました。",
+        "jp": "泣いている 子どもに お菓子を やりました。",
         "id": "Saya memberi snack/camilan ke anak yang menangis"
       },
       {
@@ -1374,7 +1374,7 @@
     "jlpt_level": 4,
     "examples": [
       {
-        "jp": "旅⾏の写真を アルバムに まとめて います。",
+        "jp": "旅行の写真を アルバムに まとめて います。",
         "id": "Saya mengumpulkan foto perjalanan ke dalam album"
       },
       {
@@ -1399,7 +1399,7 @@
     "jlpt_level": 4,
     "examples": [
       {
-        "jp": "先⽣に レポートのチェックを 頼みました。 (=お願いしました)",
+        "jp": "先生に レポートのチェックを 頼みました。 (=お願いしました)",
         "id": "Saya meminta guru untuk memeriksa laporan"
       },
       {
@@ -1499,15 +1499,15 @@
     "jlpt_level": 4,
     "examples": [
       {
-        "jp": "⽇本語能⼒試験を 受ける 予定です。",
+        "jp": "日本語能力試験を 受ける 予定です。",
         "id": "Saya berencana ikut ujian kemampuan bahasa Jepang"
       },
       {
-        "jp": "⾯接を 受ける",
+        "jp": "面接を 受ける",
         "id": "mengikuti/menerima wawancara (diwawancarai)"
       },
       {
-        "jp": "強い⾵を 受けながら、⾃転⾞で 駅まで 向かった。",
+        "jp": "強い風を 受けながら、自転車で 駅まで 向かった。",
         "id": "Sambil terkena angin kencang, saya menuju stasiun dengan sepeda"
       },
       {
@@ -1532,7 +1532,7 @@
     "jlpt_level": 4,
     "examples": [
       {
-        "jp": "友達が ⼤学の⼊学試験に 合格しました。",
+        "jp": "友達が 大学の入学試験に 合格しました。",
         "id": "Teman saya lulus ujian masuk universitas"
       }
     ],
@@ -1553,7 +1553,7 @@
     "jlpt_level": 4,
     "examples": [
       {
-        "jp": "私は 去年 ⼤学を 卒業しました。",
+        "jp": "私は 去年 大学を 卒業しました。",
         "id": "Saya lulus kuliah tahun lalu"
       }
     ],
@@ -1637,7 +1637,7 @@
     "jlpt_level": 4,
     "examples": [
       {
-        "jp": "毎⽇ 少しずつ 復習すると、覚えやすく なります。",
+        "jp": "毎日 少しずつ 復習すると、覚えやすく なります。",
         "id": "Jika kamu belajar mengulang sedikit demi sedikit setiap hari, maka akan jadi mudah hafal"
       }
     ],
@@ -1683,7 +1683,7 @@
     "jlpt_level": 4,
     "examples": [
       {
-        "jp": "洗濯した服を 外で ⼲します。",
+        "jp": "洗濯した服を 外で 干します。",
         "id": "Saya menjemur di luar pakaian yang sudah dicuci"
       },
       {
@@ -1754,7 +1754,7 @@
     "jlpt_level": 4,
     "examples": [
       {
-        "jp": "⾳楽を 聞きながら 眠ることが あります。",
+        "jp": "音楽を 聞きながら 眠ることが あります。",
         "id": "Ada kalanya saya tidur sambil mendengarkan musik"
       }
     ],
@@ -1775,7 +1775,7 @@
     "jlpt_level": 4,
     "examples": [
       {
-        "jp": "芝⽣に 寝ながら 空を ⾒ていました。",
+        "jp": "芝生に 寝ながら 空を 見ていました。",
         "id": "Saya melihat langit sambil berbaring di rumput/rerumputan"
       }
     ],
@@ -1796,7 +1796,7 @@
     "jlpt_level": 4,
     "examples": [
       {
-        "jp": "来週の旅⾏に 参加したいです。",
+        "jp": "来週の旅行に 参加したいです。",
         "id": "Saya ingin ikut serta perjalanan wisata minggu depan"
       }
     ],
@@ -1842,7 +1842,7 @@
         "id": "Saya terkejut karena tiba-tiba ada anjing muncul"
       },
       {
-        "jp": "わあ、びっくりした！",
+        "jp": "わあ、びっくりした!",
         "id": "Wah, kaget saya!"
       }
     ],

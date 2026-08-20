@@ -1,7 +1,7 @@
 [
   {
     "id": "76d8b9a1-8e2c-4b5a-9d3f-c1e0f2a4b6d7",
-    "title": "～んです (~n desu)",
+    "title": "~んです (~n desu)",
     "structure": "V/i-adj/na-adj/N Plain Form + んです (Khusus na-adj & N + な)",
     "explanation": "Digunakan dalam bahasa lisan untuk menjelaskan alasan, latar belakang, atau mengonfirmasi informasi yang dilihat atau didengar.",
     "chapter": 26,
@@ -12,7 +12,7 @@
         "id": "Ibu Watanabe terkadang menggunakan dialek Osaka ya. Apakah Anda (dulu) tinggal di Osaka?"
       },
       {
-        "jp": "どうして 遅れたんですか。…バスが 来なかったんです。",
+        "jp": "どうして 遅れたんですか。...バスが 来なかったんです。",
         "id": "Mengapa Anda terlambat? ...Karena bus tidak datang."
       }
     ]
@@ -54,7 +54,7 @@
     "jlpt_level": 4,
     "sentences": [
       {
-        "jp": "運動会に 参加しますか。…いいえ、スポーツは あまり 好きじゃないんです。",
+        "jp": "運動会に 参加しますか。...いいえ、スポーツは あまり 好きじゃないんです。",
         "id": "Apakah Anda akan ikut serta dalam hari olahraga? ...Tidak, kalau olahraga saya tidak begitu suka."
       }
     ]
@@ -122,7 +122,7 @@
   {
     "id": "e091c667-0e55-49c3-852d-dd43d2ab0c95",
     "title": "Partikel は (Kontras)",
-    "structure": "N1 は ～ が、N2 は ～",
+    "structure": "N1 は ~ が、N2 は ~",
     "explanation": "Digunakan untuk menonjolkan perbedaan atau perbandingan antara dua hal.",
     "chapter": 27,
     "jlpt_level": 4,
@@ -195,8 +195,8 @@
   },
   {
     "id": "c9c853c9-45da-4beb-99f2-baae763c6fb1",
-    "title": "Plain form し、～ (Mendaftarkan Hal/Alasan)",
-    "structure": "Bentuk Biasa + し、[Bentuk Biasa + し]、～",
+    "title": "Plain form し、~ (Mendaftarkan Hal/Alasan)",
+    "structure": "Bentuk Biasa + し、[Bentuk Biasa + し]、~",
     "explanation": "Digunakan untuk menghubungkan kalimat yang mendeskripsikan beberapa keunggulan subjek, atau menyebutkan lebih dari satu penyebab/alasan.",
     "chapter": 28,
     "jlpt_level": 4,
@@ -234,7 +234,7 @@
     "jlpt_level": 4,
     "sentences": [
       {
-        "jp": "この レストランは 値段も 安いし、おいしいんです。…それで 人が 多いんですね。",
+        "jp": "この レストランは 値段も 安いし、おいしいんです。...それで 人が 多いんですね。",
         "id": "Restoran ini harganya murah dan rasanya enak. ...Oleh karena itu banyak orang ya."
       }
     ]
@@ -273,8 +273,8 @@
   },
   {
     "id": "8817d768-8dbb-4874-bfd9-5d97ea6b278c",
-    "title": "Vて-form しまいました／しまいます (Selesai)",
-    "structure": "Kata Kerja Bentuk て + しまいました／しまいます",
+    "title": "Vて-form しまいました/しまいます (Selesai)",
+    "structure": "Kata Kerja Bentuk て + しまいました/しまいます",
     "explanation": "Menekankan bahwa suatu tindakan atau kejadian telah selesai dilakukan secara tuntas.",
     "chapter": 29,
     "jlpt_level": 4,
@@ -439,14 +439,14 @@
   },
   {
     "id": "fb546045-c35e-4c86-8a67-e985689e9bfa",
-    "title": "それは ～",
+    "title": "それは ~",
     "structure": "それは + Kalimat",
     "explanation": "Kata sambung 'sore wa' digunakan untuk merujuk pada hal yang baru saja dikatakan oleh lawan bicara.",
     "chapter": 30,
     "jlpt_level": 4,
     "sentences": [
       {
-        "jp": "ブロードウェイで ミュージカルを 見たいと 思うんですが。…それは いいですね。",
+        "jp": "ブロードウェイで ミュージカルを 見たいと 思うんですが。...それは いいですね。",
         "id": "Saya rasa saya ingin menonton musikal di Broadway. ...Itu bagus ya."
       }
     ]
@@ -474,7 +474,7 @@
     "jlpt_level": 4,
     "sentences": [
       {
-        "jp": "ちょっと 休まない？ …うん、休もう。",
+        "jp": "ちょっと 休まない? ...うん、休もう。",
         "id": "Mau istirahat sebentar? ...Ya, mari kita istirahat."
       }
     ]
@@ -537,7 +537,7 @@
   },
   {
     "id": "e4b140dd-d4aa-42a8-b980-efc0e43a44ed",
-    "title": "こ～ / そ～ (Demonstrative dalam Tulisan)",
+    "title": "こ~ / そ~ (Demonstrative dalam Tulisan)",
     "structure": "こ-series / そ-series",
     "explanation": "Dalam bahasa tulisan, seri 'ko' merujuk pada hal yang segera disebutkan, sedangkan seri 'so' merujuk pada hal yang telah disebutkan sebelumnya.",
     "chapter": 31,
@@ -565,7 +565,7 @@
   },
   {
     "id": "907b6547-807c-48a7-a5a4-0aa3f60345e7",
-    "title": "～でしょう (Dugaan)",
+    "title": "~でしょう (Dugaan)",
     "structure": "V/i-adj/na-adj/N Plain Form + でしょう (na-adj & N tanpa だ)",
     "explanation": "Menyatakan dugaan atau kesimpulan pembicara berdasarkan informasi yang ada.",
     "chapter": 32,
@@ -579,7 +579,7 @@
   },
   {
     "id": "e8dd5a4b-f47f-4823-ade7-2a05da7b7b0d",
-    "title": "～かもしれません (Kemungkinan)",
+    "title": "~かもしれません (Kemungkinan)",
     "structure": "V/i-adj/na-adj/N Plain Form + かもしれません (na-adj & N tanpa だ)",
     "explanation": "Menyatakan kemungkinan suatu kejadian (tingkat kepastian lebih rendah dari 'deshou').",
     "chapter": 32,
@@ -663,7 +663,7 @@
   },
   {
     "id": "e7421f09-7423-4da0-83f2-968a885d9716",
-    "title": "～と 読みます / ～と 書いて あります",
+    "title": "~と 読みます / ~と 書いて あります",
     "structure": "Kanji/Tanda + と 読みます / 書いて あります",
     "explanation": "Menyatakan cara membaca Kanji atau isi dari suatu tulisan di suatu tempat.",
     "chapter": 33,
@@ -684,14 +684,14 @@
     "jlpt_level": 4,
     "sentences": [
       {
-        "jp": "この マークは どういう 意味ですか。…洗濯機で 洗えるという意味です。",
+        "jp": "この マークは どういう 意味ですか。...洗濯機で 洗えるという意味です。",
         "id": "Apa arti tanda ini? ...Artinya bisa dicuci dengan mesin cuci."
       }
     ]
   },
   {
     "id": "38c1ddf2-4bdc-4d50-af34-1700534fff4d",
-    "title": "～と 言っていました",
+    "title": "~と 言っていました",
     "structure": "Subjek + は + Plain Form + と 言っていました",
     "explanation": "Digunakan untuk menyampaikan pesan atau perkataan orang ketiga (lebih berfokus pada penyampaian berita daripada sekadar kutipan).",
     "chapter": 33,
@@ -705,7 +705,7 @@
   },
   {
     "id": "03526a16-550b-402b-87f3-f4b111f8a079",
-    "title": "～と 伝えて いただけませんか",
+    "title": "~と 伝えて いただけませんか",
     "structure": "Plain Form + と 伝えて いただけませんか",
     "explanation": "Ungkapan sopan untuk meminta bantuan seseorang menyampaikan pesan kepada pihak lain.",
     "chapter": 33,
@@ -775,7 +775,7 @@
   },
   {
     "id": "e5f6a7b8-c9d0-4e1f-2a3b-4c5d6e7f8a9b",
-    "title": "V1 て／ないで、V2 (Kondisi Penyerta)",
+    "title": "V1 て/ないで、V2 (Kondisi Penyerta)",
     "structure": "V1 te-form / V1 nai-form ないで + V2",
     "explanation": "V1 menjelaskan kondisi atau cara yang menyertai tindakan utama V2.",
     "chapter": 34,
@@ -817,8 +817,8 @@
   },
   {
     "id": "1505c69d-4c2c-41f6-8b72-f816d4904c6e",
-    "title": "Bentuk ～ば (Syarat Mutlak)",
-    "structure": "Kalimat 1 (Bentuk Pengandaian) ～ば、Kalimat 2",
+    "title": "Bentuk ~ば (Syarat Mutlak)",
+    "structure": "Kalimat 1 (Bentuk Pengandaian) ~ば、Kalimat 2",
     "explanation": "Menjelaskan syarat yang diperlukan agar suatu kejadian di Kalimat 2 dapat terwujud.",
     "chapter": 35,
     "jlpt_level": 4,
@@ -831,8 +831,8 @@
   },
   {
     "id": "aae31200-b0c4-465c-8a54-d25f7bc44b08",
-    "title": "Bentuk ～ば (Penilaian atas Situasi)",
-    "structure": "Kalimat 1 (Bentuk Pengandaian) ～ば、Kalimat 2",
+    "title": "Bentuk ~ば (Penilaian atas Situasi)",
+    "structure": "Kalimat 1 (Bentuk Pengandaian) ~ば、Kalimat 2",
     "explanation": "Digunakan untuk menyatakan pendapat atau keputusan pembicara berdasarkan situasi yang dikatakan orang lain.",
     "chapter": 35,
     "jlpt_level": 4,
@@ -873,7 +873,7 @@
   },
   {
     "id": "cfab4f90-4826-4c86-821f-e5ff140dd5aa",
-    "title": "～ば ～ほど (Semakin... semakin...)",
+    "title": "~ば ~ほど (Semakin... semakin...)",
     "structure": "V-ba V-dict / Adj-ba Adj-plain + ほど",
     "explanation": "Menyatakan perubahan tingkat yang berbanding lurus antara bagian awal dan akhir kalimat.",
     "chapter": 35,
@@ -941,14 +941,14 @@
   },
   {
     "id": "d9e4f5a6-b8c9-4d0e-1f2a-3b4c5d6e7f8a",
-    "title": "～とか",
+    "title": "~とか",
     "structure": "N1 とか、N2 とか",
     "explanation": "Digunakan untuk memberikan contoh beberapa hal dalam daftar yang tidak terbatas. Lebih sering digunakan dalam bahasa lisan dibandingkan partikel 'ya'.",
     "chapter": 36,
     "jlpt_level": 4,
     "sentences": [
       {
-        "jp": "どんな スポーツを して いますか。…そうですね。テニスとか 水泳とか……。",
+        "jp": "どんな スポーツを して いますか。...そうですね。テニスとか 水泳とか......。",
         "id": "Olahraga apa yang Anda lakukan? ...Mari kita lihat. Seperti tenis, renang, dan sebagainya."
       }
     ]
@@ -1143,7 +1143,7 @@
   },
   {
     "id": "c38bf30b-a0a4-4818-8d63-471b5438ae45",
-    "title": "～とき (mo/ya/no/ni)",
+    "title": "~とき (mo/ya/no/ni)",
     "structure": "V-plain + とき + Partikel",
     "explanation": "Berbagai partikel dapat ditambahkan setelah 'toki' (ketika) karena kata tersebut berfungsi sebagai kata benda.",
     "chapter": 38,
@@ -1189,7 +1189,7 @@
   },
   {
     "id": "ca694178-ac57-47a6-bd9f-fef67e5abf7f",
-    "title": "～ので (Karena - Objektif/Halus)",
+    "title": "~ので (Karena - Objektif/Halus)",
     "structure": "V/i-adj/na-adj/N Plain Form + ので (na-adj & N + な)",
     "explanation": "Menyatakan alasan secara objektif dan lebih halus daripada '~kara'. Sering digunakan untuk meminta izin atau memberikan alasan kepada atasan.",
     "chapter": 39,
@@ -1277,7 +1277,7 @@
   },
   {
     "id": "503c444c-f0d6-4844-8996-f97b5b029f5a",
-    "title": "～でしょうか",
+    "title": "~でしょうか",
     "structure": "Kalimat + でしょうか",
     "explanation": "Bentuk tanya yang lebih sopan dan halus untuk menanyakan situasi atau keadaan seseorang/sesuatu.",
     "chapter": 40,
@@ -1355,7 +1355,7 @@
   },
   {
     "id": "a42b1c2d-e4f5-5a6b-7c8d-9e0f1a2b3c4d",
-    "title": "～ために (Untuk/Demi)",
+    "title": "~ために (Untuk/Demi)",
     "structure": "V-dictionary form / N の + ために",
     "explanation": "Pola kalimat ini digunakan untuk menunjukkan suatu tujuan yang ingin dicapai secara sengaja.",
     "chapter": 42,
@@ -1373,7 +1373,7 @@
   },
   {
     "id": "81698928-7c3c-4a8b-9126-01b61a501d08",
-    "title": "～のに (Untuk kegunaan/tujuan)",
+    "title": "~のに (Untuk kegunaan/tujuan)",
     "structure": "V-dictionary form のに / N に + (tsukaimasu/benri desu/yaku ni tachimasu, dll)",
     "explanation": "Digunakan untuk menunjukkan kegunaan atau tujuan suatu benda, serta waktu atau biaya yang diperlukan untuk suatu hal.",
     "chapter": 42,
@@ -1419,7 +1419,7 @@
   },
   {
     "id": "3eb9f578-7464-401f-8749-1f89fdf1829c",
-    "title": "～そうです (Kelihatannya/Tampaknya)",
+    "title": "~そうです (Kelihatannya/Tampaknya)",
     "structure": "V-masu form / i-adj (tanpa i) / na-adj (tanpa na) + そうです",
     "explanation": "Menyatakan dugaan berdasarkan pengamatan visual langsung terhadap suatu benda atau situasi.",
     "chapter": 43,
@@ -1461,7 +1461,7 @@
   },
   {
     "id": "7a8b9c0d-e1f2-4a3b-b4c5-d6e7f8a9b0c1",
-    "title": "～すぎます (Terlalu/Berlebihan)",
+    "title": "~すぎます (Terlalu/Berlebihan)",
     "structure": "Vます-form / i-adj (tanpa い) / na-adj (tanpa な) + すぎます",
     "explanation": "Menunjukkan bahwa derajat suatu tindakan atau keadaan adalah berlebihan atau melampaui batas normal.",
     "chapter": 44,
@@ -1479,7 +1479,7 @@
   },
   {
     "id": "e40d5ca2-b10f-45de-b4a0-57e6a95acb17",
-    "title": "～やすいです / ～にくいです",
+    "title": "~やすいです / ~にくいです",
     "structure": "Vます-form + やすいです / にくいです",
     "explanation": "Digunakan untuk menyatakan kemudahan atau kesulitan dalam menangani sesuatu, atau kecenderungan sesuatu untuk berubah menjadi keadaan tertentu.",
     "chapter": 44,
@@ -1497,8 +1497,8 @@
   },
   {
     "id": "20db3f44-9d70-4733-80cd-e6b395959e17",
-    "title": "～く / ～に します (Membuat menjadi...)",
-    "structure": "i-adj (～く) / na-adj (～に) / N (に) + します",
+    "title": "~く / ~に します (Membuat menjadi...)",
+    "structure": "i-adj (~く) / na-adj (~に) / N (に) + します",
     "explanation": "Menunjukkan bahwa seseorang secara sengaja mengubah atau membuat suatu benda menjadi keadaan tertentu.",
     "chapter": 44,
     "jlpt_level": 4,
@@ -1534,7 +1534,7 @@
   {
     "id": "123fd062-f84b-4dfc-995a-d7abf93ca11a",
     "title": "Kata Sifat sebagai Keterangan (Adverbs)",
-    "structure": "i-adj (～く) / na-adj (～に) + Verb",
+    "structure": "i-adj (~く) / na-adj (~に) + Verb",
     "explanation": "Mengubah kata sifat menjadi kata keterangan untuk menerangkan bagaimana suatu tindakan dilakukan.",
     "chapter": 44,
     "jlpt_level": 4,
@@ -1551,8 +1551,8 @@
   },
   {
     "id": "2565bda9-4d42-4f16-9439-79c1d65c7435",
-    "title": "～場合は (Dalam hal/Seandainya)",
-    "structure": "V plain / i-adj plain / na-adj plain (～な) / N (～の) + 場合は",
+    "title": "~場合は (Dalam hal/Seandainya)",
+    "structure": "V plain / i-adj plain / na-adj plain (~な) / N (~の) + 場合は",
     "explanation": "Digunakan untuk membicarakan situasi hipotetis dan bagaimana konsekuensi atau cara menanganinya.",
     "chapter": 45,
     "jlpt_level": 4,
@@ -1569,8 +1569,8 @@
   },
   {
     "id": "318e59a3-bd2b-4b79-8411-03e081d94b2c",
-    "title": "～のに (Padahal/Meskipun)",
-    "structure": "V plain / i-adj plain / na-adj plain (～な) / N (～な) + のに",
+    "title": "~のに (Padahal/Meskipun)",
+    "structure": "V plain / i-adj plain / na-adj plain (~な) / N (~な) + のに",
     "explanation": "Menunjukkan bahwa kenyataan yang terjadi berbeda atau berlawanan dengan apa yang diharapkan. Seringkali mengandung nuansa kekecewaan.",
     "chapter": 45,
     "jlpt_level": 4,
@@ -1587,7 +1587,7 @@
   },
   {
     "id": "a92b1c3d-e4f5-4a1b-9c2d-3e4f5a6b7c8d",
-    "title": "～ところです (Titik Waktu Tindakan)",
+    "title": "~ところです (Titik Waktu Tindakan)",
     "structure": "V-dict / V-te iru / V-ta + ところです",
     "explanation": "Menunjukkan tahap spesifik dari suatu tindakan: akan dimulai (V-dict), sedang berlangsung (V-te iru), atau baru saja selesai dilakukan (V-ta).",
     "chapter": 46,
@@ -1627,7 +1627,7 @@
   },
   {
     "id": "5787d020-f15e-4198-8352-6da413903851",
-    "title": "～はずです (Seharusnya/Pasti)",
+    "title": "~はずです (Seharusnya/Pasti)",
     "structure": "Plain Form + はずです (na-adj + な / N + の)",
     "explanation": "Menyatakan keyakinan kuat pembicara bahwa sesuatu pasti terjadi atau berada dalam kondisi tertentu berdasarkan alasan atau bukti yang logis.",
     "chapter": 46,
@@ -1663,7 +1663,7 @@
   },
   {
     "id": "48776fbc-b375-4d1a-b530-8cfda0e6d587",
-    "title": "～ようです (Sepertinya/Rupanya)",
+    "title": "~ようです (Sepertinya/Rupanya)",
     "structure": "Plain Form + ようです (na-adj + な / N + の)",
     "explanation": "Menyatakan dugaan subjektif pembicara berdasarkan pengamatan panca indra atau informasi yang diterima dari situasi sekitar.",
     "chapter": 47,
@@ -1681,7 +1681,7 @@
   },
   {
     "id": "868f9f53-91e8-4520-83ef-0b91adf051d4",
-    "title": "声／音／におい／味が します",
+    "title": "声/音/におい/味が します",
     "structure": "N (Suara/Bunyi/Bau/Rasa) + が します",
     "explanation": "Digunakan untuk mendeskripsikan fenomena yang ditangkap oleh indra pendengar, penciuman, atau perasa.",
     "chapter": 47,
@@ -1833,7 +1833,7 @@
   },
   {
     "id": "e5fe4022-ea98-4f8b-a73a-de0df3a7e9b6",
-    "title": "～まして (~mashite)",
+    "title": "~まして (~mashite)",
     "structure": "V-te form -> V-mashite",
     "explanation": "Merupakan bentuk sopan dari bentuk sambung '~te' untuk menjaga tingkat kesopanan dalam kalimat.",
     "chapter": 49,
@@ -1876,7 +1876,7 @@
         "id": "Nama saya (rendah hati menyebutkan nama) Miller."
       },
       {
-        "jp": "あしたは だれが 手伝いに 来て くれますか。…わたしが 伺います。",
+        "jp": "あしたは だれが 手伝いに 来て くれますか。...わたしが 伺います。",
         "id": "Besok siapa yang akan datang membantu? ...Saya yang akan datang (rendah hati)."
       }
     ]

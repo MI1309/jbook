@@ -209,12 +209,12 @@
     "book": 2, "chapter": 37, "question_type": "context_match", "jlpt_level": 4,
     "question_jp": "",
     "question_id": "Candi ini dibangun pada abad ke-8.",
-    "correct_answer": "この寺は８世紀に建てられました。",
+    "correct_answer": "この寺は8世紀に建てられました。",
     "options": [
-      "この寺は８世紀に建てられました。",
-      "この寺は８世紀に建てました。",
-      "この寺は８世紀に建っていました。",
-      "この寺は８世紀に建ててあります。"
+      "この寺は8世紀に建てられました。",
+      "この寺は8世紀に建てました。",
+      "この寺は8世紀に建っていました。",
+      "この寺は8世紀に建ててあります。"
     ],
     "explanation": "Pola pasif 「建てられました」digunakan untuk menyatakan objek umum yang dibangun/didirikan."
   },

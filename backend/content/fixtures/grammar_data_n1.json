@@ -1,6 +1,6 @@
 [
     {
-        "title": "～なり",
+        "title": "~なり",
         "structure": "Verb-Dict + なり",
         "explanation": "Begitu ... langsung ... (aksi berturutan, subjek biasanya orang ketiga).",
         "chapter": 101,
@@ -13,7 +13,7 @@
         ]
     },
     {
-        "title": "～が早いか",
+        "title": "~が早いか",
         "structure": "Verb-Dict + が早いか",
         "explanation": "Segera setelah ... (hampir bersamaan, menekankan kecepatan).",
         "chapter": 102,
@@ -26,7 +26,7 @@
         ]
     },
     {
-        "title": "～そばから",
+        "title": "~そばから",
         "structure": "Verb-Dict/Ta + そばから",
         "explanation": "Baru saja ... (tapi langsung terjadi lagi, berulang-ulang, nuansa negatif).",
         "chapter": 103,
@@ -39,7 +39,7 @@
         ]
     },
     {
-        "title": "～において / ～における",
+        "title": "~において / ~における",
         "structure": "Noun + において / における + Noun",
         "explanation": "Di ... / Pada ... (menunjukkan tempat, waktu, situasi; Formal).",
         "chapter": 104,
@@ -52,7 +52,7 @@
         ]
     },
     {
-        "title": "～にあって",
+        "title": "~にあって",
         "structure": "Noun + にあって",
         "explanation": "Dalam kondisi/situasi ... (khusus).",
         "chapter": 105,
@@ -65,7 +65,7 @@
         ]
     },
     {
-        "title": "～皮切りに(して)",
+        "title": "~皮切りに(して)",
         "structure": "Noun + を皮切りに(して)",
         "explanation": "Dimulai dari ... (dan berlanjut ke yang lain).",
         "chapter": 106,
@@ -78,7 +78,7 @@
         ]
     },
     {
-        "title": "～に至るまで",
+        "title": "~に至るまで",
         "structure": "Noun + に至るまで",
         "explanation": "Sampai ke ... (menunjukkan cakupan yang luas/detail).",
         "chapter": 107,
@@ -91,7 +91,7 @@
         ]
     },
     {
-        "title": "～を限りに",
+        "title": "~を限りに",
         "structure": "Noun (Waktu) + を限りに",
         "explanation": "Terakhir pada ... / Sampai batas ... (menyatakan akhir).",
         "chapter": 108,
@@ -104,20 +104,20 @@
         ]
     },
     {
-        "title": "～をもって",
+        "title": "~をもって",
         "structure": "Noun + をもって",
         "explanation": "Dengan ... / Pada ... (Tanda batas waktu/cara; Formal).",
         "chapter": 109,
         "jlpt_level": 1,
         "sentences": [
             {
-                "jp": "本日の営業は午後５時をもって終了します。",
+                "jp": "本日の営業は午後5時をもって終了します。",
                 "id": "Operasional hari ini berakhir pada pukul 5 sore."
             }
         ]
     },
     {
-        "title": "～といった",
+        "title": "~といった",
         "structure": "Noun + といった",
         "explanation": "... seperti ... (contoh).",
         "chapter": 110,
@@ -130,7 +130,7 @@
         ]
     },
     {
-        "title": "～こととて",
+        "title": "~こととて",
         "structure": "Noun-no / Verb-Dict/Ta + こととて",
         "explanation": "Karena ... (maka dimaklumi; Formal/Archaic).",
         "chapter": 111,
@@ -143,7 +143,7 @@
         ]
     },
     {
-        "title": "～ゆえ(に)",
+        "title": "~ゆえ(に)",
         "structure": "Plain Form + ゆえ(に)",
         "explanation": "Karena ... / Sebab ... (Formal/Penulisan).",
         "chapter": 112,
@@ -156,7 +156,7 @@
         ]
     },
     {
-        "title": "～にかたくない",
+        "title": "~にかたくない",
         "structure": "Verb-Dict / Noun + にかたくない",
         "explanation": "Tidak sulit untuk ... (membayangkan/memahami).",
         "chapter": 113,
@@ -169,7 +169,7 @@
         ]
     },
     {
-        "title": "～にたえない",
+        "title": "~にたえない",
         "structure": "Verb-Dict / Noun + にたえない",
         "explanation": "Tidak tahan untuk ... / Tidak layak untuk ...",
         "chapter": 114,
@@ -182,7 +182,7 @@
         ]
     },
     {
-        "title": "～べく",
+        "title": "~べく",
         "structure": "Verb-Dict + べく",
         "explanation": "Demi ... / Untuk ... (Tujuan; Formal).",
         "chapter": 115,
@@ -195,7 +195,7 @@
         ]
     },
     {
-        "title": "～んがため(に)",
+        "title": "~んがため(に)",
         "structure": "Verb-Nai (minus nai) + んがため(に)",
         "explanation": "Dengan tujuan untuk ... (Tekad kuat).",
         "chapter": 116,
@@ -208,7 +208,7 @@
         ]
     },
     {
-        "title": "～ごとく",
+        "title": "~ごとく",
         "structure": "Noun-no / Verb-Ta + ごとく",
         "explanation": "Seperti ... / Bagaikan ... (Perumpamaan).",
         "chapter": 117,
@@ -221,7 +221,7 @@
         ]
     },
     {
-        "title": "～ずにはおかない",
+        "title": "~ずにはおかない",
         "structure": "Verb-Nai + ずにはおかない",
         "explanation": "Pasti akan ... / Mau tidak mau akan ... (Hasil alami/tekad).",
         "chapter": 118,
@@ -234,7 +234,7 @@
         ]
     },
     {
-        "title": "～なりに / ～なりの",
+        "title": "~なりに / ~なりの",
         "structure": "Noun / Verb / Adj + なりに",
         "explanation": "Sesuai dengan kapasitas/gaya ...",
         "chapter": 119,
@@ -247,7 +247,7 @@
         ]
     },
     {
-        "title": "～ないものでもない",
+        "title": "~ないものでもない",
         "structure": "Verb-Nai + ものでもない",
         "explanation": "Bukan tidak mungkin ... (Ada kemungkinan kecil).",
         "chapter": 120,
@@ -260,7 +260,7 @@
         ]
     },
     {
-        "title": "～極まる / ～極まりない",
+        "title": "~極まる / ~極まりない",
         "structure": "Adj-na + 極まる / 極まりない",
         "explanation": "Sangat ... / Tak terhingga ... (Ekstrem).",
         "chapter": 121,
@@ -273,7 +273,7 @@
         ]
     },
     {
-        "title": "～の至り",
+        "title": "~の至り",
         "structure": "Noun + の至り",
         "explanation": "Puncak dari ... (Perasaan).",
         "chapter": 122,
@@ -286,7 +286,7 @@
         ]
     },
     {
-        "title": "～てやまない",
+        "title": "~てやまない",
         "structure": "Verb-Te + やまない",
         "explanation": "Sangat ... / Tidak henti-hentinya ... (Harapan/perasaan).",
         "chapter": 123,
@@ -299,8 +299,8 @@
         ]
     },
     {
-        "title": "～に堪えない",
-        "structure": "Noun + に堪えない / ～にたえない",
+        "title": "~に堪えない",
+        "structure": "Noun + に堪えない / ~にたえない",
         "explanation": "Sangat ... (perasaan, saking ...nya).",
         "chapter": 124,
         "jlpt_level": 1,
@@ -312,7 +312,7 @@
         ]
     },
     {
-        "title": "～を余儀なくされる",
+        "title": "~を余儀なくされる",
         "structure": "Noun + を余儀なくされる",
         "explanation": "Terpaksa harus ... (karena keadaan).",
         "chapter": 125,

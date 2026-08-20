@@ -807,7 +807,7 @@
     "jlpt_level": 4,
     "examples": [
       {
-        "jp": "切⼿を 集めています。",
+        "jp": "切手を 集めています。",
         "id": "Saya mengumpulkan prangko"
       }
     ],
@@ -828,7 +828,7 @@
     "jlpt_level": 4,
     "examples": [
       {
-        "jp": "⼈が ⼤勢 集まりました。",
+        "jp": "人が 大勢 集まりました。",
         "id": "Banyak orang berkumpul"
       }
     ],
@@ -870,7 +870,7 @@
     "jlpt_level": 4,
     "examples": [
       {
-        "jp": "ドアが ⾃動で 開きます。",
+        "jp": "ドアが 自動で 開きます。",
         "id": "Pintu terbuka secara otomatis"
       }
     ],
@@ -1143,7 +1143,7 @@
     "jlpt_level": 4,
     "examples": [
       {
-        "jp": "切⼿を 集めています。",
+        "jp": "切手を 集めています。",
         "id": "Saya mengumpulkan prangko"
       }
     ],
@@ -1164,7 +1164,7 @@
     "jlpt_level": 4,
     "examples": [
       {
-        "jp": "⼈が ⼤勢 集まりました。",
+        "jp": "人が 大勢 集まりました。",
         "id": "Banyak orang berkumpul"
       }
     ],
@@ -1206,7 +1206,7 @@
     "jlpt_level": 4,
     "examples": [
       {
-        "jp": "ドアが ⾃動で 開きます。",
+        "jp": "ドアが 自動で 開きます。",
         "id": "Pintu terbuka secara otomatis"
       }
     ],
@@ -1689,7 +1689,7 @@
     "jlpt_level": 4,
     "examples": [
       {
-        "jp": "⼿を ⾼く 伸ばしてください。",
+        "jp": "手を 高く 伸ばしてください。",
         "id": "Tolong rentangkan tangan tinggi-tinggi"
       }
     ],
@@ -1752,7 +1752,7 @@
     "jlpt_level": 4,
     "examples": [
       {
-        "jp": "参加する ⼈が 増えました。",
+        "jp": "参加する 人が 増えました。",
         "id": "Orang yang ikut serta bertambah"
       }
     ],
@@ -1815,7 +1815,7 @@
     "jlpt_level": 4,
     "examples": [
       {
-        "jp": "困っている⼈を 助けます。",
+        "jp": "困っている人を 助けます。",
         "id": "Saya menolong orang yang mengalami kesulitan"
       }
     ],
@@ -1899,7 +1899,7 @@
     "jlpt_level": 4,
     "examples": [
       {
-        "jp": "お菓⼦を 減らします。",
+        "jp": "お菓子を 減らします。",
         "id": "Saya mengurangi snack/camilan"
       }
     ],
@@ -1920,7 +1920,7 @@
     "jlpt_level": 4,
     "examples": [
       {
-        "jp": "⼈⼝が  減りました。",
+        "jp": "人口が  減りました。",
         "id": "Penduduk berkurang"
       }
     ],
@@ -2298,7 +2298,7 @@
     "jlpt_level": 4,
     "examples": [
       {
-        "jp": "⼆⼈は 去年 離婚しました。",
+        "jp": "二人は 去年 離婚しました。",
         "id": "Mereka berdua bercerai tahun lalu"
       }
     ],
@@ -2319,7 +2319,7 @@
     "jlpt_level": 4,
     "examples": [
       {
-        "jp": "みんなの協⼒で イベントが 成功しました。",
+        "jp": "みんなの協力で イベントが 成功しました。",
         "id": "Acara berhasil karena kerja sama semua orang"
       },
       {
@@ -2357,7 +2357,7 @@
   },
   {
     "id": "i9j0k1l2-m3n4-0i9j-2k3l-8g9h0i1j2k3l",
-    "word": "⼊院する",
+    "word": "入院する",
     "reading": "nyuuin suru",
     "furigana": "にゅういん",
     "meaning": "masuk rumah sakit",
@@ -2365,15 +2365,15 @@
     "jlpt_level": 4,
     "examples": [
       {
-        "jp": "⺟は 病院に ⼊院しました。",
+        "jp": "母は 病院に 入院しました。",
         "id": "Ibu dirawat di rumah sakit (masuk rumah sakit karena harus dirawat inap)"
       }
     ],
     "conjugations_complete": {
-      "non_past": "⼊院する",
-      "past": "⼊院した",
-      "negative": "⼊院しない",
-      "masu_form": "⼊院します"
+      "non_past": "入院する",
+      "past": "入院した",
+      "negative": "入院しない",
+      "masu_form": "入院します"
     }
   },
   {
@@ -2386,7 +2386,7 @@
     "jlpt_level": 4,
     "examples": [
       {
-        "jp": "⺟は 病院を 退院しました。",
+        "jp": "母は 病院を 退院しました。",
         "id": "Ibu keluar dari rumah sakit (setelah selesai dirawat)"
       }
     ],
@@ -2407,7 +2407,7 @@
     "jlpt_level": 4,
     "examples": [
       {
-        "jp": "駅を 出発した ばかりなので、まだ 席が あります。（＝出る）",
+        "jp": "駅を 出発した ばかりなので、まだ 席が あります。(=出る)",
         "id": "Karena baru saja berangkat dari stasiun, jadi masih ada kursi kosong"
       }
     ],
@@ -2449,7 +2449,7 @@
     "jlpt_level": 4,
     "examples": [
       {
-        "jp": "全員が 会議に 出席しました。（＝出る）",
+        "jp": "全員が 会議に 出席しました。(=出る)",
         "id": "Semua orang menghadiri rapat"
       }
     ],
@@ -2575,7 +2575,7 @@
     "jlpt_level": 4,
     "examples": [
       {
-        "jp": "私は その意⾒に 賛成します。",
+        "jp": "私は その意見に 賛成します。",
         "id": "Saya setuju dengan pendapat itu"
       }
     ],
@@ -2596,7 +2596,7 @@
     "jlpt_level": 4,
     "examples": [
       {
-        "jp": "何⼈かが 新しい ルールに 反対しました。",
+        "jp": "何人かが 新しい ルールに 反対しました。",
         "id": "Beberapa orang tidak setuju dengan aturan baru"
       }
     ],
@@ -2609,7 +2609,7 @@
   },
   {
     "id": "6b7c8d9e-0f1a-2345-6789-abcdef012345",
-    "word": "⼼配する",
+    "word": "心配する",
     "reading": "shinpai suru",
     "furigana": "しんぱい",
     "meaning": "khawatir, cemas",
@@ -2617,20 +2617,20 @@
     "jlpt_level": 4,
     "examples": [
       {
-        "jp": "試験の結果を ⼼配して います。",
+        "jp": "試験の結果を 心配して います。",
         "id": "Saya khawatir dengan hasil ujian"
       }
     ],
     "conjugations_complete": {
-      "non_past": "⼼配する",
-      "past": "⼼配した",
-      "negative": "⼼配しない",
-      "masu_form": "⼼配します"
+      "non_past": "心配する",
+      "past": "心配した",
+      "negative": "心配しない",
+      "masu_form": "心配します"
     }
   },
   {
     "id": "7c8d9e0f-1a2b-3456-7890-abcdef012345",
-    "word": "安⼼する",
+    "word": "安心する",
     "reading": "anshin suru",
     "furigana": "あんしん",
     "meaning": "lega, tenang, merasa aman",
@@ -2638,15 +2638,15 @@
     "jlpt_level": 4,
     "examples": [
       {
-        "jp": "無事に 家に 着いて 安⼼しました。",
+        "jp": "無事に 家に 着いて 安心しました。",
         "id": "Saya merasa lega tiba di rumah dengan selamat"
       }
     ],
     "conjugations_complete": {
-      "non_past": "安⼼する",
-      "past": "安⼼した",
-      "negative": "安⼼しない",
-      "masu_form": "安⼼します"
+      "non_past": "安心する",
+      "past": "安心した",
+      "negative": "安心しない",
+      "masu_form": "安心します"
     }
   },
   {
@@ -2680,7 +2680,7 @@
     "jlpt_level": 4,
     "examples": [
       {
-        "jp": "毎⽇ 電⾞で 通学して います。",
+        "jp": "毎日 電車で 通学して います。",
         "id": "Setiap hari pulang-pergi ke sekolah dengan kereta"
       }
     ],
@@ -2701,7 +2701,7 @@
     "jlpt_level": 4,
     "examples": [
       {
-        "jp": "バイクで 通勤するのは ⼤変です。",
+        "jp": "バイクで 通勤するのは 大変です。",
         "id": "Pulang-pergi ke kantor dengan sepeda motor itu berat"
       }
     ],
@@ -2722,11 +2722,11 @@
     "jlpt_level": 4,
     "examples": [
       {
-        "jp": "⾞に 注意して 道を 渡ります。",
+        "jp": "車に 注意して 道を 渡ります。",
         "id": "Saya menyeberangi jalan dengan berhati-hati pada mobil"
       },
       {
-        "jp": "先⽣に 注意されました。",
+        "jp": "先生に 注意されました。",
         "id": "Saya ditegur oleh guru"
       }
     ],
@@ -3150,7 +3150,7 @@
     "jlpt_level": 4,
     "examples": [
       {
-        "jp": "分からないことを 先⽣に 質問します。",
+        "jp": "分からないことを 先生に 質問します。",
         "id": "Menanyakan hal yang tidak dimengerti kepada guru"
       }
     ],
@@ -3163,7 +3163,7 @@
   },
   {
     "id": "8d9e0f1a-2b3c-4567-8901-abcdef012346",
-    "word": "お⾒舞いする",
+    "word": "お見舞いする",
     "reading": "omimai suru",
     "furigana": "みまい",
     "meaning": "menjenguk",
@@ -3171,15 +3171,15 @@
     "jlpt_level": 4,
     "examples": [
       {
-        "jp": "病気の友達を お⾒舞いしました。",
+        "jp": "病気の友達を お見舞いしました。",
         "id": "Saya menjenguk teman yang sakit"
       }
     ],
     "conjugations_complete": {
-      "non_past": "お⾒舞いする",
-      "past": "お⾒舞いした",
-      "negative": "お⾒舞いしない",
-      "masu_form": "お⾒舞いします"
+      "non_past": "お見舞いする",
+      "past": "お見舞いした",
+      "negative": "お見舞いしない",
+      "masu_form": "お見舞いします"
     }
   },
   {
@@ -3213,11 +3213,11 @@
     "jlpt_level": 4,
     "examples": [
       {
-        "jp": "祖⺟の世話をする。",
+        "jp": "祖母の世話をする。",
         "id": "Saya merawat nenek"
       },
       {
-        "jp": "⽝や花の世話をする。",
+        "jp": "犬や花の世話をする。",
         "id": "Saya merawat anjing & bunga"
       },
       {
@@ -3234,7 +3234,7 @@
   },
   {
     "id": "1a2b3c4d-5e6f-7890-1234-abcdef012346",
-    "word": "⾯接する",
+    "word": "面接する",
     "reading": "mensetsu suru",
     "furigana": "めんせつ",
     "meaning": "mewawancarai",
@@ -3242,15 +3242,15 @@
     "jlpt_level": 4,
     "examples": [
       {
-        "jp": "会社の⼈が 私を ⾯接しました。",
+        "jp": "会社の人が 私を 面接しました。",
         "id": "Orang dari perusahaan mewawancarai saya"
       }
     ],
     "conjugations_complete": {
-      "non_past": "⾯接する",
-      "past": "⾯接した",
-      "negative": "⾯接しない",
-      "masu_form": "⾯接します"
+      "non_past": "面接する",
+      "past": "面接した",
+      "negative": "面接しない",
+      "masu_form": "面接します"
     }
   },
     {
@@ -3263,7 +3263,7 @@
     "jlpt_level": 4,
     "examples": [
       {
-        "jp": "⼿伝ってくれた 友達に 感謝しました。",
+        "jp": "手伝ってくれた 友達に 感謝しました。",
         "id": "Saya berterima kasih kepada teman yang sudah membantu saya"
       }
     ],
@@ -3284,7 +3284,7 @@
     "jlpt_level": 4,
     "examples": [
       {
-        "jp": "妻は 来⽉ 出産する 予定です。",
+        "jp": "妻は 来月 出産する 予定です。",
         "id": "Istri saya rencananya akan melahirkan bulan depan"
       }
     ],
@@ -3326,7 +3326,7 @@
     "jlpt_level": 4,
     "examples": [
       {
-        "jp": "先⽣は 試験の⽇を 変更しました。",
+        "jp": "先生は 試験の日を 変更しました。",
         "id": "Guru mengubah hari ujian"
       }
     ],
@@ -3347,7 +3347,7 @@
     "jlpt_level": 4,
     "examples": [
       {
-        "jp": "⼦どもたちは 体育館で 体操しています。",
+        "jp": "子どもたちは 体育館で 体操しています。",
         "id": "Anak-anak sedang senam di gymnasium/gedung olahraga"
       }
     ],
@@ -3368,7 +3368,7 @@
     "jlpt_level": 4,
     "examples": [
       {
-        "jp": "健康のために できるだけ 毎⽇ 運動するように しています。",
+        "jp": "健康のために できるだけ 毎日 運動するように しています。",
         "id": "Demi kesehatan setiap hari saya usahakan sebisa mungkin berolahraga"
       }
     ],
@@ -3599,7 +3599,7 @@
     "jlpt_level": 4,
     "examples": [
       {
-        "jp": "先生は 授業中のスマホの使⽤を 禁止しました。",
+        "jp": "先生は 授業中のスマホの使用を 禁止しました。",
         "id": "Guru melarang penggunaan ponsel selama pelajaran"
       }
     ],
@@ -3788,7 +3788,7 @@
     "jlpt_level": 4,
     "examples": [
       {
-        "jp": "⽝に ⾜を 噛まれました。",
+        "jp": "犬に 足を 噛まれました。",
         "id": "Kaki saya digigit anjing"
       },
       {
@@ -3901,7 +3901,7 @@
     "jlpt_level": 4,
     "examples": [
       {
-        "jp": "⽗は 休みの⽇に よく 川で ⿂を 釣ります。",
+        "jp": "父は 休みの日に よく 川で 魚を 釣ります。",
         "id": "Ayah sering memancing ikan di sungai pada hari libur"
       }
     ],
@@ -3922,7 +3922,7 @@
     "jlpt_level": 4,
     "examples": [
       {
-        "jp": "⼈の物を 盗んでは いけません。",
+        "jp": "人の物を 盗んでは いけません。",
         "id": "Tidak boleh mencuri barang milik orang lain"
       }
     ],
@@ -3964,7 +3964,7 @@
     "jlpt_level": 4,
     "examples": [
       {
-        "jp": "先⽣は クラスを ⼆つのグループに 分けました。",
+        "jp": "先生は クラスを 二つのグループに 分けました。",
         "id": "Guru membagi kelas menjadi dua kelompok"
       }
     ],
@@ -3985,7 +3985,7 @@
     "jlpt_level": 4,
     "examples": [
       {
-        "jp": "靴を 脱がないで 部屋に ⼊っては いけません。",
+        "jp": "靴を 脱がないで 部屋に 入っては いけません。",
         "id": "Tidak boleh masuk kamar tanpa melepas sepatu"
       }
     ],
@@ -4073,7 +4073,7 @@
     "jlpt_level": 4,
     "examples": [
       {
-        "jp": "道が 狭いので、⼤きい⾞は 通れません。",
+        "jp": "道が 狭いので、大きい車は 通れません。",
         "id": "Karena jalannya sempit, mobil besar tidak bisa lewat"
       }
     ],
@@ -4098,7 +4098,7 @@
         "id": "Demi kesehatan, setelah bekerja saya rutin pergi ke gym"
       },
       {
-        "jp": "妹は ⼩さい ころから ピアノ教室に 通って います。",
+        "jp": "妹は 小さい ころから ピアノ教室に 通って います。",
         "id": "Adik perempuan saya mengikuti les piano sejak kecil"
       }
     ],
@@ -4119,7 +4119,7 @@
     "jlpt_level": 4,
     "examples": [
       {
-        "jp": "⽝が 急に ⾛ってきたので、怖くなって 逃げました。",
+        "jp": "犬が 急に 走ってきたので、怖くなって 逃げました。",
         "id": "Karena anjing tiba-tiba berlari mendekat, saya jadi takut dan melarikan diri"
       }
     ],
@@ -4140,7 +4140,7 @@
     "jlpt_level": 4,
     "examples": [
       {
-        "jp": "重い 荷物は ⼆⼈で 運んだ ほうが いいですよ。",
+        "jp": "重い 荷物は 二人で 運んだ ほうが いいですよ。",
         "id": "Barang yang berat sebaiknya diangkut dua orang"
       }
     ],
@@ -4182,7 +4182,7 @@
     "jlpt_level": 4,
     "examples": [
       {
-        "jp": "⽇本へ ⾏ったら、昔 お世話になった先⽣を 訪ねたいです。",
+        "jp": "日本へ 行ったら、昔 お世話になった先生を 訪ねたいです。",
         "id": "Kalau pergi ke Jepang, saya ingin mengunjungi guru yang dulu banyak membantu saya"
       }
     ],
@@ -4203,7 +4203,7 @@
     "jlpt_level": 4,
     "examples": [
       {
-        "jp": "旅⾏中は 駅の近くのホテルに 泊まりました。",
+        "jp": "旅行中は 駅の近くのホテルに 泊まりました。",
         "id": "Selama perjalanan, saya menginap di hotel dekat stasiun"
       }
     ],
@@ -4224,7 +4224,7 @@
     "jlpt_level": 4,
     "examples": [
       {
-        "jp": "⼭を 降りると、⼩さな村が ⾒えます。",
+        "jp": "山を 降りると、小さな村が 見えます。",
         "id": "Begitu turun gunung, terlihat sebuah desa kecil"
       }
     ],
@@ -4245,7 +4245,7 @@
     "jlpt_level": 4,
     "examples": [
       {
-        "jp": "困ったときは、家族に 頼ることも ⼤切です。",
+        "jp": "困ったときは、家族に 頼ることも 大切です。",
         "id": "Saat kesulitan, penting juga untuk bergantung pada keluarga"
       }
     ],
@@ -4258,7 +4258,7 @@
   },
   {
     "id": "k4l5m6n7-o8p9-4d8e-1f2g-3b4c5d6e7f8g",
-    "word": "⼿伝う",
+    "word": "手伝う",
     "reading": "tetsudau",
     "furigana": "て",
     "meaning": "membantu",
@@ -4266,15 +4266,15 @@
     "jlpt_level": 4,
     "examples": [
       {
-        "jp": "友達の引っ越しを ⼿伝うことに しました。",
+        "jp": "友達の引っ越しを 手伝うことに しました。",
         "id": "Saya memutuskan untuk membantu pindahan teman"
       }
     ],
     "conjugations_complete": {
-      "non_past": "⼿伝う",
-      "past": "⼿伝った",
-      "negative": "⼿伝わない",
-      "masu_form": "⼿伝います"
+      "non_past": "手伝う",
+      "past": "手伝った",
+      "negative": "手伝わない",
+      "masu_form": "手伝います"
     }
   },
   {
@@ -4287,7 +4287,7 @@
     "jlpt_level": 4,
     "examples": [
       {
-        "jp": "頑張ったときは、⾃分を 褒めてもいい と思います。",
+        "jp": "頑張ったときは、自分を 褒めてもいい と思います。",
         "id": "Ketika sudah berusaha keras, saya rasa tidak apa-apa memuji diri sendiri"
       }
     ],
@@ -4308,7 +4308,7 @@
     "jlpt_level": 4,
     "examples": [
       {
-        "jp": "先⽣に 遅れることを 知らせました。",
+        "jp": "先生に 遅れることを 知らせました。",
         "id": "Saya memberitahu guru bahwa saya akan terlambat"
       }
     ],
@@ -4363,7 +4363,7 @@
   },
   {
     "id": "c3d4e5f6-a1b2-4c5d-9e8f-0123456789ab",
-    "word": "⽐べる",
+    "word": "比べる",
     "reading": "kuraberu",
     "furigana": "くら",
     "meaning": "membandingkan",
@@ -4371,15 +4371,15 @@
     "jlpt_level": 4,
     "examples": [
       {
-        "jp": "値段を ⽐べてから 買った ほうが いいです。",
+        "jp": "値段を 比べてから 買った ほうが いいです。",
         "id": "Sebaiknya membeli setelah membandingkan harga"
       }
     ],
     "conjugations_complete": {
-      "non_past": "⽐べる",
-      "past": "⽐べた",
-      "negative": "⽐べない",
-      "masu_form": "⽐べます"
+      "non_past": "比べる",
+      "past": "比べた",
+      "negative": "比べない",
+      "masu_form": "比べます"
     }
   },
   {
@@ -4413,7 +4413,7 @@
     "jlpt_level": 4,
     "examples": [
       {
-        "jp": "明⽇の天気を インターネットで 調べました。",
+        "jp": "明日の天気を インターネットで 調べました。",
         "id": "Saya mencari tahu cuaca besok di internet"
       }
     ],
@@ -4434,7 +4434,7 @@
     "jlpt_level": 4,
     "examples": [
       {
-        "jp": "彼の⾔葉を 信じて、もう⼀度 チャンスを あげました。",
+        "jp": "彼の言葉を 信じて、もう一度 チャンスを あげました。",
         "id": "Saya mempercayai kata-katanya dan memberi kesempatan sekali lagi"
       }
     ],
@@ -4455,7 +4455,7 @@
     "jlpt_level": 4,
     "examples": [
       {
-        "jp": "この部屋に ⼊ったとき、少し 寒さを 感じました。",
+        "jp": "この部屋に 入ったとき、少し 寒さを 感じました。",
         "id": "Saat masuk ke ruangan ini, saya merasa sedikit dingin"
       }
     ],
@@ -4476,7 +4476,7 @@
     "jlpt_level": 4,
     "examples": [
       {
-        "jp": "次の旅⾏は どこに ⾏くか まだ 決めて いません。",
+        "jp": "次の旅行は どこに 行くか まだ 決めて いません。",
         "id": "Perjalanan berikutnya saya masih belum menentukan mau pergi ke mana"
       }
     ],
@@ -4497,7 +4497,7 @@
     "jlpt_level": 4,
     "examples": [
       {
-        "jp": "試験に 合格する ために、毎⽇ 頑張って 勉強して います。",
+        "jp": "試験に 合格する ために、毎日 頑張って 勉強して います。",
         "id": "Untuk lulus ujian, saya belajar setiap hari dengan penuh semangat (berusaha keras)"
       }
     ],
@@ -4518,7 +4518,7 @@
     "jlpt_level": 4,
     "examples": [
       {
-        "jp": "⽇本の⽣活に 慣れるまで、少し 時間が かかりました。",
+        "jp": "日本の生活に 慣れるまで、少し 時間が かかりました。",
         "id": "Butuh sedikit waktu sampai terbiasa dengan kehidupan di Jepang"
       }
     ],
@@ -4732,7 +4732,7 @@
   },
   {
     "id": "o1k2o3n4-a5u6-7b8c-9d0e-1f2g3h4i5j6k",
-    "word": "⾏う",
+    "word": "行う",
     "reading": "okonau",
     "furigana": "おこな",
     "meaning": "melaksanakan, mengadakan",
@@ -4740,15 +4740,15 @@
     "jlpt_level": 4,
     "examples": [
       {
-        "jp": "この病院では、毎年 無料の健康診断を ⾏って います。",
+        "jp": "この病院では、毎年 無料の健康診断を 行って います。",
         "id": "Rumah sakit ini mengadakan medical check up gratis setiap tahun"
       }
     ],
     "conjugations_complete": {
-      "non_past": "⾏う",
-      "past": "⾏った",
-      "negative": "⾏わない",
-      "masu_form": "⾏います"
+      "non_past": "行う",
+      "past": "行った",
+      "negative": "行わない",
+      "masu_form": "行います"
     }
   },
   {
@@ -4765,7 +4765,7 @@
         "id": "Saya bermaksud berhenti kerja paruh waktu"
       },
       {
-        "jp": "散歩に ⾏くのを やめました。",
+        "jp": "散歩に 行くのを やめました。",
         "id": "tidak jadi pergi jalan-jalan"
       }
     ],
@@ -4786,7 +4786,7 @@
     "jlpt_level": 4,
     "examples": [
       {
-        "jp": "明⽇は 晴れる そうなので、公園へ ⾏こう と思っています。",
+        "jp": "明日は 晴れる そうなので、公園へ 行こう と思っています。",
         "id": "Karena besok katanya bakal cerah, jadi saya bermaksud ingin pergi ke taman"
       }
     ],
@@ -4820,7 +4820,7 @@
   },
   {
     "id": "y1a2m3u4-v5w6-7x8y-9z0a-1b2c3d4e5f6g",
-    "word": "⽌む",
+    "word": "止む",
     "reading": "yamu",
     "furigana": "や",
     "meaning": "reda",
@@ -4828,15 +4828,15 @@
     "jlpt_level": 4,
     "examples": [
       {
-        "jp": "⾬が ⽌んだから、だんだん 晴れて きました。",
+        "jp": "雨が 止んだから、だんだん 晴れて きました。",
         "id": "Setelah hujan reda, cuaca perlahan menjadi cerah"
       }
     ],
     "conjugations_complete": {
-      "non_past": "⽌む",
-      "past": "⽌んだ",
-      "negative": "⽌まない",
-      "masu_form": "⽌みます"
+      "non_past": "止む",
+      "past": "止んだ",
+      "negative": "止まない",
+      "masu_form": "止みます"
     }
   },
   {
@@ -4933,7 +4933,7 @@
     "jlpt_level": 4,
     "examples": [
       {
-        "jp": "この店は ⼈気が あるので、昼になると とても 込みます。",
+        "jp": "この店は 人気が あるので、昼になると とても 込みます。",
         "id": "Karena restoran ini populer, di siang hari sangat ramai/penuh dengan customer"
       }
     ],
@@ -4954,7 +4954,7 @@
     "jlpt_level": 4,
     "examples": [
       {
-        "jp": "さっきから 外で ⼤勢の⼈が 騒いで います。",
+        "jp": "さっきから 外で 大勢の人が 騒いで います。",
         "id": "Dari tadi banyak orang ribut di luar"
       }
     ],
@@ -4996,7 +4996,7 @@
     "jlpt_level": 4,
     "examples": [
       {
-        "jp": "太りたくないなら、お菓⼦を ⻝べすぎない ほうが いいです。",
+        "jp": "太りたくないなら、お菓子を ⻝べすぎない ほうが いいです。",
         "id": "Kalau tidak ingin gemuk, sebaiknya jangan makan snack/camilan terlalu banyak"
       }
     ],
@@ -5554,7 +5554,7 @@
     "jlpt_level": 4,
     "examples": [
       {
-        "jp": "このバスに 乗れば、乗り換えないで 市役所まで ⾏けます。",
+        "jp": "このバスに 乗れば、乗り換えないで 市役所まで 行けます。",
         "id": "Kalau naik bus ini, bisa pergi ke balai kota tanpa transit"
       }
     ],
@@ -5567,7 +5567,7 @@
   },
   {
     "id": "u1v2w3x4-y5z6-7a8b-9c0d-e1f2g3h4i5j6",
-    "word": "役に⽴つ",
+    "word": "役に立つ",
     "reading": "yaku ni tatsu",
     "furigana": "やく た",
     "meaning": "bermanfaat, berguna",
@@ -5575,7 +5575,7 @@
     "jlpt_level": 4,
     "examples": [
       {
-        "jp": "この本は ⽇本語の勉強に 役に⽴ちます。",
+        "jp": "この本は 日本語の勉強に 役に立ちます。",
         "id": "Buku ini bermanfaat untuk belajar bahasa Jepang"
       }
     ],
@@ -5617,7 +5617,7 @@
     "jlpt_level": 4,
     "examples": [
       {
-        "jp": "急げば、電⾞に 間に合う かもしれません。",
+        "jp": "急げば、電車に 間に合う かもしれません。",
         "id": "Kalau buru-buru, mungkin akan keburu naik kereta"
       }
     ],
@@ -5638,7 +5638,7 @@
     "jlpt_level": 4,
     "examples": [
       {
-        "jp": "参加したい⼈は、⾦曜⽇までに 申し込んで ください。",
+        "jp": "参加したい人は、金曜日までに 申し込んで ください。",
         "id": "Orang yang ingin ikut serta, silakan mendaftar paling lambat hari Jumat"
       }
     ],
@@ -5659,11 +5659,11 @@
     "jlpt_level": 4,
     "examples": [
       {
-        "jp": "明⽇ お弁当を 持って いきます。",
+        "jp": "明日 お弁当を 持って いきます。",
         "id": "Besok saya akan membawa bekal"
       },
       {
-        "jp": "明⽇ 辞書を 持って きて ください。",
+        "jp": "明日 辞書を 持って きて ください。",
         "id": "Besok tolong bawa kamus"
       }
     ],
@@ -5730,7 +5730,7 @@
     "jlpt_level": 4,
     "examples": [
       {
-        "jp": "明⽇の朝、妹を 空港まで 送りに⾏く 予定です。",
+        "jp": "明日の朝、妹を 空港まで 送りに行く 予定です。",
         "id": "Besok pagi saya berencana mengantar adik perempuan ke bandara"
       }
     ],
@@ -5772,7 +5772,7 @@
     "jlpt_level": 4,
     "examples": [
       {
-        "jp": "旅⾏の前に、計画を⽴て おいた ほうがいいです。",
+        "jp": "旅行の前に、計画を立て おいた ほうがいいです。",
         "id": "Sebelum traveling, sebaiknya menyusun rencana terlebih dahulu"
       }
     ],
@@ -5793,7 +5793,7 @@
     "jlpt_level": 4,
     "examples": [
       {
-        "jp": "もし 道に迷ったら、近くの⼈に 聞けばいいです。",
+        "jp": "もし 道に迷ったら、近くの人に 聞けばいいです。",
         "id": "Seandainya kamu tersesat di jalan, tanya saja ke orang terdekat"
       }
     ],
@@ -5986,7 +5986,7 @@
     "jlpt_level": 4,
     "examples": [
       {
-        "jp": "どうしたの？今日は 元気がない みたいですね。",
+        "jp": "どうしたの?今日は 元気がない みたいですね。",
         "id": "Kamu kenapa? Hari ini kelihatannya kamu tidak bersemangat"
       }
     ],
@@ -6305,7 +6305,7 @@
     "jlpt_level": 4,
     "examples": [
       {
-        "jp": "⼤学を 卒業した あと、仕事を探し始めました。",
+        "jp": "大学を 卒業した あと、仕事を探し始めました。",
         "id": "Setelah lulus kuliah, saya mulai mencari pekerjaan"
       }
     ],
@@ -6318,7 +6318,7 @@
   },
   {
     "id": "n0o1p2q3-r4s5-6t7u-v8w9-x0y1z2a3b4c5",
-    "word": "仕事を⾒つける",
+    "word": "仕事を見つける",
     "reading": "shigoto o mitsukeru",
     "furigana": "し ごと み",
     "meaning": "menemukan pekerjaan",
@@ -6326,7 +6326,7 @@
     "jlpt_level": 4,
     "examples": [
       {
-        "jp": "やっと 仕事を⾒つける ことが できました。",
+        "jp": "やっと 仕事を見つける ことが できました。",
         "id": "Akhirnya saya bisa menemukan pekerjaan"
       }
     ],
@@ -6347,7 +6347,7 @@
     "jlpt_level": 4,
     "examples": [
       {
-        "jp": "⾛っている ときに、上着のボタンがとれました。",
+        "jp": "走っている ときに、上着のボタンがとれました。",
         "id": "Saat sedang berlari, kancing jaket saya terlepas"
       }
     ],
@@ -6368,7 +6368,7 @@
     "jlpt_level": 4,
     "examples": [
       {
-        "jp": "⼦どものころ、⽝を飼って いました。",
+        "jp": "子どものころ、犬を飼って いました。",
         "id": "Saat kecil, saya memelihara anjing"
       }
     ],
@@ -6423,7 +6423,7 @@
   },
   {
     "id": "s5t6u7v8-w9x0-1y2z-a3b4-c5d6e7f8g9h0",
-    "word": "中⽌になる",
+    "word": "中止になる",
     "reading": "chuushi ni naru",
     "furigana": "ちゅう し",
     "meaning": "dibatalkan, menjadi batal",
@@ -6431,7 +6431,7 @@
     "jlpt_level": 4,
     "examples": [
       {
-        "jp": "台⾵が 近づいて いるので、イベントが 中⽌になる かもしれません。",
+        "jp": "台風が 近づいて いるので、イベントが 中止になる かもしれません。",
         "id": "Karena angin topan mendekat, acaranya mungkin akan dibatalkan"
       }
     ],
@@ -6465,7 +6465,7 @@
   },
   {
     "id": "a1b2c3d4-e5f6-7g8h-9i0j-k1l2m3n4o5p6",
-    "word": "⽬が覚める",
+    "word": "目が覚める",
     "reading": "me ga sameru",
     "furigana": "め さ",
     "meaning": "terbangun, bangun dari tidur",
@@ -6473,7 +6473,7 @@
     "jlpt_level": 4,
     "examples": [
       {
-        "jp": "今朝は 6時に ⽬が覚めました。",
+        "jp": "今朝は 6時に 目が覚めました。",
         "id": "Pagi ini saya terbangun pada pukul enam"
       }
     ],
@@ -6528,7 +6528,7 @@
   },
   {
     "id": "d4e5f6g7-h8i9-0j1k-l2m3-n4o5p6q7r8s9",
-    "word": "お茶を⽴てる",
+    "word": "お茶を立てる",
     "reading": "ocha o tateru",
     "furigana": "ちゃ た",
     "meaning": "membuat teh (tea ceremony)",
@@ -6536,7 +6536,7 @@
     "jlpt_level": 4,
     "examples": [
       {
-        "jp": "茶道の授業で お茶を⽴てました。",
+        "jp": "茶道の授業で お茶を立てました。",
         "id": "Saya membuat teh dalam kelas upacara minum teh"
       }
     ],
@@ -6591,7 +6591,7 @@
   },
   {
     "id": "g7h8i9j0-k1l2-m3n4-o5p6-q7r8s9t0u1v2",
-    "word": "⼈気がある",
+    "word": "人気がある",
     "reading": "ninki ga aru",
     "furigana": "にん き",
     "meaning": "populer, disukai banyak orang",
@@ -6599,7 +6599,7 @@
     "jlpt_level": 4,
     "examples": [
       {
-        "jp": "⽇本の漫画は 外国⼈に ⼈気があります。",
+        "jp": "日本の漫画は 外国人に 人気があります。",
         "id": "Komik Jepang populer di kalangan orang asing"
       }
     ],
@@ -6612,7 +6612,7 @@
   },
   {
     "id": "h8i9j0k1-l2m3-n4o5-p6q7-r8s9t0u1v2w3",
-    "word": "⼈気が出る",
+    "word": "人気が出る",
     "reading": "ninki ga deru",
     "furigana": "にん き で",
     "meaning": "menjadi populer, mulai terkenal",
@@ -6620,7 +6620,7 @@
     "jlpt_level": 4,
     "examples": [
       {
-        "jp": "この歌⼿は 最近 若者に ⼈気が出ました。",
+        "jp": "この歌手は 最近 若者に 人気が出ました。",
         "id": "Penyanyi ini baru-baru ini menjadi populer di kalangan anak muda"
       }
     ],

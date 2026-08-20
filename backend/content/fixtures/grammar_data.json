@@ -1,6 +1,6 @@
 [
     {
-        "title": "～は～です",
+        "title": "~は~です",
         "structure": "N1 は N2 です",
         "explanation": "Pola kalimat dasar untuk menyatakan 'N1 adalah N2'.",
         "chapter": 1,
@@ -13,7 +13,7 @@
         ]
     },
     {
-        "title": "～か",
+        "title": "~か",
         "structure": "Kalimat + か",
         "explanation": "Partikel untuk membuat kalimat tanya.",
         "chapter": 1,
@@ -26,7 +26,7 @@
         ]
     },
     {
-        "title": "～の～",
+        "title": "~の~",
         "structure": "N1 の N2",
         "explanation": "Menyatakan kepemilikan atau hubungan (N2 milik N1).",
         "chapter": 2,
@@ -52,20 +52,20 @@
         ]
     },
     {
-        "title": "今～時～分です",
+        "title": "今~時~分です",
         "structure": "Ima + ... ji + ... fun + desu",
         "explanation": "Menyatakan waktu sekarang.",
         "chapter": 4,
         "jlpt_level": 5,
         "sentences": [
             {
-                "jp": "今４時５分です。",
+                "jp": "今4時5分です。",
                 "id": "Sekarang jam 4 lewat 5 menit."
             }
         ]
     },
     {
-        "title": "～へ行きます",
+        "title": "~へ行きます",
         "structure": "Tempat + へ (e) + 行きます",
         "explanation": "Pergi ke suatu tempat.",
         "chapter": 5,
@@ -91,7 +91,7 @@
         ]
     },
     {
-        "title": "～で～",
+        "title": "~で~",
         "structure": "Alat + で + Verb",
         "explanation": "Melakukan sesuatu menggunakan alat/cara.",
         "chapter": 7,
@@ -121,7 +121,7 @@
         ]
     },
     {
-        "title": "～があります / います",
+        "title": "~があります / います",
         "structure": "N ga Arimasu / Imasu",
         "explanation": "Menyatakan keberadaan (Arimasu untuk benda mati, Imasu untuk makhluk hidup).",
         "chapter": 9,
@@ -138,7 +138,7 @@
         ]
     },
     {
-        "title": "～に～があります",
+        "title": "~に~があります",
         "structure": "Tempat + ni + N + ga Arimasu",
         "explanation": "Menyatakan lokasi keberadaan benda.",
         "chapter": 10,
@@ -151,14 +151,14 @@
         ]
     },
     {
-        "title": "～個 / ～枚 / ～台",
+        "title": "~個 / ~枚 / ~台",
         "structure": "Bilangan + Kata Bantu Bilangan",
         "explanation": "Menghitung benda dengan kata bantu bilangan (counter).",
         "chapter": 11,
         "jlpt_level": 5,
         "sentences": [
             {
-                "jp": "りんごを３つ買いました。",
+                "jp": "りんごを3つ買いました。",
                 "id": "Saya membeli 3 apel."
             }
         ]
@@ -177,7 +177,7 @@
         ]
     },
     {
-        "title": "～たいです",
+        "title": "~たいです",
         "structure": "Verb-Masu + たいです",
         "explanation": "Menyatakan keinginan (ingin melakukan ...).",
         "chapter": 13,
@@ -203,7 +203,7 @@
         ]
     },
     {
-        "title": "～てもいいですか",
+        "title": "~てもいいですか",
         "structure": "Bentuk-Te + もいいですか",
         "explanation": "Meminta izin (Bolehkah saya...?).",
         "chapter": 15,
@@ -216,7 +216,7 @@
         ]
     },
     {
-        "title": "～てから",
+        "title": "~てから",
         "structure": "Bentuk-Te + から",
         "explanation": "Menyatakan urutan kegiatan (Setelah melakukan A, melakukan B).",
         "chapter": 16,
@@ -229,7 +229,7 @@
         ]
     },
     {
-        "title": "～ないでください",
+        "title": "~ないでください",
         "structure": "Bentuk-Nai + でください",
         "explanation": "Larangan sopan / Meminta untuk tidak melakukan sesuatu.",
         "chapter": 17,
@@ -242,7 +242,7 @@
         ]
     },
     {
-        "title": "～ことができます",
+        "title": "~ことができます",
         "structure": "Kamus-kei + ことができます",
         "explanation": "Menyatakan kemampuan (Bisa melakukan ...).",
         "chapter": 18,
@@ -255,7 +255,7 @@
         ]
     },
     {
-        "title": "～たことがあります",
+        "title": "~たことがあります",
         "structure": "Bentuk-Ta + ことがあります",
         "explanation": "Menyatakan pengalaman (Pernah melakukan ...).",
         "chapter": 19,
@@ -275,7 +275,7 @@
         "jlpt_level": 5,
         "sentences": [
             {
-                "jp": "明日パーティーに行く？",
+                "jp": "明日パーティーに行く?",
                 "id": "Besok pergi ke pesta?"
             }
         ]
@@ -307,7 +307,7 @@
         ]
     },
     {
-        "title": "～とき",
+        "title": "~とき",
         "structure": "Verb/Adj + とき",
         "explanation": "Menyatakan waktu (Ketika/Saat ...).",
         "chapter": 23,
@@ -333,7 +333,7 @@
         ]
     },
     {
-        "title": "～たら",
+        "title": "~たら",
         "structure": "Bentuk-Ta + ら",
         "explanation": "Pengandaian (Kalau/Jika ...).",
         "chapter": 25,
@@ -346,7 +346,7 @@
         ]
     },
     {
-        "title": "～んです",
+        "title": "~んです",
         "structure": "Bentuk Biasa + んです",
         "explanation": "Menjelaskan alasan atau situasi.",
         "chapter": 26,
@@ -359,7 +359,7 @@
         ]
     },
     {
-        "title": "～ていただけませんか",
+        "title": "~ていただけませんか",
         "structure": "Bentuk-Te + いただけませんか",
         "explanation": "Permintaan yang sangat sopan.",
         "chapter": 26,
@@ -385,7 +385,7 @@
         ]
     },
     {
-        "title": "～ながら",
+        "title": "~ながら",
         "structure": "Verb-Masu + ながら",
         "explanation": "Melakukan dua aksi bersamaan (Sambil ...).",
         "chapter": 28,
@@ -398,7 +398,7 @@
         ]
     },
     {
-        "title": "～ています (Keadaan)",
+        "title": "~ています (Keadaan)",
         "structure": "Verb-Te + います",
         "explanation": "Menyatakan keadaan akibat aksi (e.g., Pintu terbuka).",
         "chapter": 29,
@@ -411,7 +411,7 @@
         ]
     },
     {
-        "title": "～てあります",
+        "title": "~てあります",
         "structure": "Verb-Te + あります",
         "explanation": "Keadaan hasil perbuatan seseorang (e.g., Poster tertempel).",
         "chapter": 30,
@@ -437,7 +437,7 @@
         ]
     },
     {
-        "title": "～ほうがいいです",
+        "title": "~ほうがいいです",
         "structure": "Bentuk-Ta/Nai + ほうがいいです",
         "explanation": "Saran (Sebaiknya ...).",
         "chapter": 32,
@@ -457,17 +457,17 @@
         "jlpt_level": 4,
         "sentences": [
             {
-                "jp": "急げ！",
+                "jp": "急げ!",
                 "id": "Cepat!"
             },
             {
-                "jp": "触るな！",
+                "jp": "触るな!",
                 "id": "Jangan sentuh!"
             }
         ]
     },
     {
-        "title": "～とおりに",
+        "title": "~とおりに",
         "structure": "Verb/Noun + とおりに",
         "explanation": "Sesuai dengan / Seperti ...",
         "chapter": 34,
@@ -493,7 +493,7 @@
         ]
     },
     {
-        "title": "～ようになります",
+        "title": "~ようになります",
         "structure": "Verb-Potential + ようになります",
         "explanation": "Perubahan kemampuan (Menjadi bisa ...).",
         "chapter": 36,
@@ -519,7 +519,7 @@
         ]
     },
     {
-        "title": "～のは～です",
+        "title": "~のは~です",
         "structure": "Verb-Plain + のは + Adjective",
         "explanation": "Menjadikan kata kerja sebagai subjek (Nominalisasi).",
         "chapter": 38,
@@ -532,7 +532,7 @@
         ]
     },
     {
-        "title": "～て / ～で (Sebab)",
+        "title": "~て / ~で (Sebab)",
         "structure": "Bentuk-Te + ...",
         "explanation": "Menyatakan sebab/alasan.",
         "chapter": 39,
@@ -545,7 +545,7 @@
         ]
     },
     {
-        "title": "～かどうかわかりません",
+        "title": "~かどうかわかりません",
         "structure": "Kalimat + かどうか",
         "explanation": "Clause tanya tidak langsung (Apakah ... atau tidak).",
         "chapter": 40,
@@ -571,7 +571,7 @@
         ]
     },
     {
-        "title": "～ために",
+        "title": "~ために",
         "structure": "Verb/Noun + ために",
         "explanation": "Tujuan (Demi/Untuk ...).",
         "chapter": 42,
@@ -584,7 +584,7 @@
         ]
     },
     {
-        "title": "～そうです (Kelihatannya)",
+        "title": "~そうです (Kelihatannya)",
         "structure": "Verb-Masu/Adj + そうです",
         "explanation": "Dugaan berdasarkan penglihatan (Sepertinya akan/sedang...).",
         "chapter": 43,
@@ -597,7 +597,7 @@
         ]
     },
     {
-        "title": "～すぎます",
+        "title": "~すぎます",
         "structure": "Verb-Masu/Adj + すぎます",
         "explanation": "Terlalu ... (Berlebihan).",
         "chapter": 44,
@@ -610,7 +610,7 @@
         ]
     },
     {
-        "title": "～場合は",
+        "title": "~場合は",
         "structure": "Plain Form + 場合は",
         "explanation": "Dalam kasus ... / Jika ...",
         "chapter": 45,
@@ -623,7 +623,7 @@
         ]
     },
     {
-        "title": "～ところです",
+        "title": "~ところです",
         "structure": "Verb dict/te-iru/ta + ところです",
         "explanation": "Waktu yang tepat (Baru saja akan/sedang/telah ...).",
         "chapter": 46,
@@ -636,7 +636,7 @@
         ]
     },
     {
-        "title": "～そうです (Konon/Katanya)",
+        "title": "~そうです (Konon/Katanya)",
         "structure": "Plain Form + そうです",
         "explanation": "Kabar burung / Info dari orang lain (Katanya ...).",
         "chapter": 47,

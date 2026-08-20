@@ -112,11 +112,11 @@
     "jlpt_level": 4,
     "examples": [
       {
-        "jp": "コーヒーを 濃く ⼊れた",
+        "jp": "コーヒーを 濃く 入れた",
         "id": "Membuat kopi yang kental"
       },
       {
-        "jp": "⾊が 濃い",
+        "jp": "色が 濃い",
         "id": "Warnanya pekat"
       },
       {
@@ -250,7 +250,7 @@
         "id": "Film itu luar biasa"
       },
       {
-        "jp": "すばらしい景⾊を ⾒た",
+        "jp": "すばらしい景色を 見た",
         "id": "Melihat pemandangan yang luar biasa"
       }
     ]
@@ -269,7 +269,7 @@
         "id": "Tumben dia datang lebih cepat"
       },
       {
-        "jp": "珍しい⿃を ⾒た",
+        "jp": "珍しい鳥を 見た",
         "id": "Melihat burung yang langka"
       }
     ]
@@ -284,11 +284,11 @@
     "jlpt_level": 4,
     "examples": [
       {
-        "jp": "毎⽇ ⽇本語を 勉強していて、本当に 偉い。",
+        "jp": "毎日 日本語を 勉強していて、本当に 偉い。",
         "id": "Kamu belajar bahasa Jepang setiap hari, hebat sekali ya"
       },
       {
-        "jp": "偉い⼈に 会った。",
+        "jp": "偉い人に 会った。",
         "id": "Bertemu dengan orang hebat"
       }
     ]
@@ -326,11 +326,11 @@
     "jlpt_level": 4,
     "examples": [
       {
-        "jp": "⾵邪が ひどく なった。",
+        "jp": "風邪が ひどく なった。",
         "id": "Flunya jadi parah"
       },
       {
-        "jp": "彼は ひどいことを ⾔った。",
+        "jp": "彼は ひどいことを 言った。",
         "id": "Dia mengatakan hal yang kejam/jahat"
       }
     ]
@@ -379,7 +379,7 @@
   },
   {
     "id": "v2w3x4y5-z6a7-8b9c-0d1e-f2g3h4i5j6k8",
-    "word": "塩⾟い",
+    "word": "塩辛い",
     "reading": "shiokarai",
     "furigana": "しお から",
     "meaning": "asin",
@@ -387,7 +387,7 @@
     "jlpt_level": 4,
     "examples": [
       {
-        "jp": "塩⾟いスープを 飲んだ。",
+        "jp": "塩辛いスープを 飲んだ。",
         "id": "Minum sup yang asin"
       }
     ]
@@ -435,6 +435,104 @@
       {
         "jp": "この川は 深い。",
         "id": "Sungai ini dalam"
+      }
+    ]
+  },
+  {
+    "id": "e1f2g3h4-a5b6-7c8d-9e0f-1a2b3c4d5e6f",
+    "word": "気持ちが悪い",
+    "reading": "kimochi ga warui",
+    "furigana": "き も わる",
+    "meaning": "tidak enak badan, merasa jijik (tidak nyaman terhadap sesuatu)",
+    "word_type": "i-adjective",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "長い時間 車に 乗ると 気持ちが 悪くなる(=吐き気が する)",
+        "id": "Kalau naik mobil dalam waktu yang lama, saya jadi merasa tidak enak badan (misal seperti mual, ingin muntah)"
+      },
+      {
+        "jp": "その虫を 見て 気持ちが 悪くなった",
+        "id": "Melihat serangga itu saya jadi merasa jijik"
+      }
+    ]
+  },
+  {
+    "id": "f2g3h4i5-b6c7-8d9e-0f1a-2b3c4d5e6f7a",
+    "word": "気持ちがいい",
+    "reading": "kimochi ga ii",
+    "furigana": "き も",
+    "meaning": "nyaman, enak rasanya, segar",
+    "word_type": "i-adjective",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "朝の散歩は 気持ちが いいです",
+        "id": "Jalan-jalan pagi terasa segar"
+      },
+      {
+        "jp": "この温泉のお湯は 気持ちが いいです",
+        "id": "Air onsen ini terasa sangat nyaman (terasa enak di badan)"
+      }
+    ]
+  },
+  {
+    "id": "g3h4i5j6-c7d8-9e0f-1a2b-3c4d5e6f7a8b",
+    "word": "都合がいい",
+    "reading": "tsugou ga ii",
+    "furigana": "つ ごう",
+    "meaning": "pas dengan jadwal atau keadaan (tidak berhalangan)",
+    "word_type": "i-adjective",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "都合が いい時間を 教えて ください",
+        "id": "Tolong beritahu waktu yang cocok/pas/yang kamu bisa"
+      }
+    ]
+  },
+  {
+    "id": "h4i5j6k7-d8e9-0f1a-2b3c-4d5e6f7a8b9c",
+    "word": "都合が悪い",
+    "reading": "tsugou ga warui",
+    "furigana": "つ ごう わる",
+    "meaning": "berhalangan, tidak ada waktu (tidak bisa)",
+    "word_type": "i-adjective",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "都合が 悪ければ 別の日に exchange (別の日でも) いいです",
+        "id": "Kalau tidak bisa/berhalangan, hari lain juga tidak masalah"
+      }
+    ]
+  },
+  {
+    "id": "i5j6k7l8-e9f0-1a2b-3c4d-5e6f7a8b9c0d",
+    "word": "大きな",
+    "reading": "ookina",
+    "furigana": "おお",
+    "meaning": "besar (subjektif, abstrak)",
+    "word_type": "adnominal",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "大きな声で 名前を 呼びました",
+        "id": "Saya memanggil namanya dengan suara keras"
+      }
+    ]
+  },
+  {
+    "id": "j6k7l8m9-f0a1-2b3c-4d5e-6f7a8b9c0d1e",
+    "word": "小さな",
+    "reading": "chiisana",
+    "furigana": "ちい",
+    "meaning": "kecil (subjektif, abstrak)",
+    "word_type": "adnominal",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "朝、おいしいコーヒーを 飲むことが 私の小さな幸せです",
+        "id": "Minum kopi yang enak di pagi hari adalah kebahagiaan kecil saya"
       }
     ]
   },

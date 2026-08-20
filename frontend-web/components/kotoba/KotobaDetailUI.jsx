@@ -75,7 +75,8 @@ export default function KotobaDetailUI({ vocab: initialVocab, onClose }) {
         async function fetchKanjiDetails() {
             if (!vocab?.word) return;
 
-            const uniqueKanjis = extractKanji(vocab.word);
+            const normalizedWord = (vocab.word || '').normalize('NFKC');
+            const uniqueKanjis = extractKanji(normalizedWord);
             if (uniqueKanjis.length === 0) return;
 
             try {
@@ -128,8 +129,9 @@ export default function KotobaDetailUI({ vocab: initialVocab, onClose }) {
     // ✅ Early return SETELAH semua hook
     if (!vocab) return null;
 
-    const characters = (vocab.word || '').split('');
-    const uniqueKanjis = extractKanji(vocab.word || '');
+    const normalizedWord = (vocab.word || '').normalize('NFKC');
+    const characters = normalizedWord.split('');
+    const uniqueKanjis = extractKanji(normalizedWord);
 
     // Conjugation toggles
     const [isFormal, setIsFormal] = useState(false);
@@ -389,27 +391,36 @@ export default function KotobaDetailUI({ vocab: initialVocab, onClose }) {
                                 {(() => {
                                     const furiganaMap = Array.isArray(vocab.furigana_map) ? vocab.furigana_map : [];
                                     return (
-                                        <ruby className={`text-3xl sm:text-4xl md:text-5xl font-black tracking-wider transition-colors ${textColor}`}>
+                                        <div className="flex items-end justify-center flex-wrap gap-x-0.5 tracking-wider">
                                             {characters.map((char, index) => {
-                                                if (hasKanji(char)) {
-                                                    const seg = furiganaMap[index] || '';
+                                                const isK = hasKanji(char);
+                                                const seg = furiganaMap[index] || '';
+                                                if (isK) {
                                                     return (
-                                                        <span
+                                                        <ruby
                                                             key={index}
                                                             onClick={() => handleKanjiClick(char)}
-                                                            className="inline-block text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-white cursor-pointer transition-colors"
-                                                            style={{ lineHeight: 1 }}
+                                                            className="text-3xl sm:text-4xl md:text-5xl font-black text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-white cursor-pointer transition-colors"
                                                         >
                                                             {char}
                                                             {!isEditing && seg ? (
-                                                                <rt className="text-base sm:text-lg md:text-xl text-gray-900 dark:text-white font-black leading-none">{seg}</rt>
+                                                                <rt className="text-xs sm:text-sm md:text-base text-gray-700 dark:text-gray-300 font-bold select-none text-center">
+                                                                    {seg}
+                                                                </rt>
                                                             ) : null}
-                                                        </span>
+                                                        </ruby>
                                                     );
                                                 }
-                                                return <span key={index} className="px-0.5">{char}</span>;
+                                                return (
+                                                    <span
+                                                        key={index}
+                                                        className={`text-3xl sm:text-4xl md:text-5xl font-black transition-colors ${textColor}`}
+                                                    >
+                                                        {char}
+                                                    </span>
+                                                );
                                             })}
-                                        </ruby>
+                                        </div>
                                     );
                                 })()}
                             </div>
