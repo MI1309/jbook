@@ -391,7 +391,7 @@ export default function KotobaDetailUI({ vocab: initialVocab, onClose }) {
                                 {(() => {
                                     const furiganaMap = Array.isArray(vocab.furigana_map) ? vocab.furigana_map : [];
                                     return (
-                                        <div className="flex items-end justify-center flex-wrap gap-x-0.5 tracking-wider">
+                                        <p className="text-center tracking-wider" style={{ lineHeight: '4rem' }}>
                                             {characters.map((char, index) => {
                                                 const isK = hasKanji(char);
                                                 const seg = furiganaMap[index] || '';
@@ -404,7 +404,7 @@ export default function KotobaDetailUI({ vocab: initialVocab, onClose }) {
                                                         >
                                                             {char}
                                                             {!isEditing && seg ? (
-                                                                <rt className="text-xs sm:text-sm md:text-base text-gray-700 dark:text-gray-300 font-bold select-none text-center">
+                                                                <rt className="text-gray-700 dark:text-gray-300 font-bold select-none" style={{ fontSize: '0.55em', letterSpacing: 'normal' }}>
                                                                     {seg}
                                                                 </rt>
                                                             ) : null}
@@ -420,7 +420,7 @@ export default function KotobaDetailUI({ vocab: initialVocab, onClose }) {
                                                     </span>
                                                 );
                                             })}
-                                        </div>
+                                        </p>
                                     );
                                 })()}
                             </div>
