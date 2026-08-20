@@ -1,0 +1,443 @@
+[
+  {
+    "id": "a1b2c3d4-e5f6-7g8h-9i0j-k1l2m3n4o5p6",
+    "word": "厳しい",
+    "reading": "kibishii",
+    "furigana": "きび",
+    "meaning": "tegas, ketat",
+    "word_type": "i-adjective",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "厳しい 先生が いる。",
+        "id": "Ada guru yang tegas"
+      },
+      {
+        "jp": "先生は 厳しく 注意した。",
+        "id": "Guru menegur dengan tegas"
+      }
+    ]
+  },
+  {
+    "id": "b2c3d4e5-f6g7-8h9i-0j1k-l2m3n4o5p6q7",
+    "word": "親しい",
+    "reading": "shitashii",
+    "furigana": "した",
+    "meaning": "akrab, dekat",
+    "word_type": "i-adjective",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "彼とは 親しい。",
+        "id": "(kalau) dengan dia, saya akrab"
+      },
+      {
+        "jp": "親しい 友達が いる。",
+        "id": "Mempunyai teman dekat"
+      },
+      {
+        "jp": "みんなと 親しく 話した。",
+        "id": "Berbicara dengan akrab dengan semuanya"
+      }
+    ]
+  },
+  {
+    "id": "c3d4e5f6-g7h8-9i0j-k1l2-m3n4o5p6q7r8",
+    "word": "恥ずかしい",
+    "reading": "hazukashii",
+    "furigana": "はず",
+    "meaning": "malu",
+    "word_type": "i-adjective",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "間違えて 恥ずかしい。",
+        "id": "Malu karena salah"
+      },
+      {
+        "jp": "恥ずかしく 笑った。",
+        "id": "Tersenyum malu-malu"
+      },
+      {
+        "jp": "恥ずかしい 話を 聞いた。",
+        "id": "Mendengar cerita yang memalukan"
+      }
+    ]
+  },
+  {
+    "id": "d4e5f6g7-h8i9-0j1k-l2m3-n4o5p6q7r8s9",
+    "word": "美しい",
+    "reading": "utsukushii",
+    "furigana": "うつく",
+    "meaning": "cantik, indah",
+    "word_type": "i-adjective",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "美しい 景色を 見た。",
+        "id": "Melihat pemandangan indah"
+      },
+      {
+        "jp": "美しい 女性が 歩いている。",
+        "id": "Seorang wanita cantik berjalan"
+      }
+    ]
+  },
+  {
+    "id": "e5f6g7h8-i9j0-k1l2-m3n4-o5p6q7r8s9t0",
+    "word": "眠い",
+    "reading": "nemui",
+    "furigana": "ねむ",
+    "meaning": "mengantuk",
+    "word_type": "i-adjective",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "眠い 顔を している。",
+        "id": "Wajahnya mengantuk"
+      },
+      {
+        "jp": "眠くて 勉強できない。",
+        "id": "Karena mengantuk, jadi tidak bisa belajar"
+      }
+    ]
+  },
+    {
+    "id": "c1o2i3a4-b5c6-7d8e-9f0a-1a2b3c4d5e6f",
+    "word": "濃い",
+    "reading": "koi",
+    "furigana": "こ",
+    "meaning": "pekat, kuat, kental",
+    "word_type": "i-adjective",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "コーヒーを 濃く ⼊れた",
+        "id": "Membuat kopi yang kental"
+      },
+      {
+        "jp": "⾊が 濃い",
+        "id": "Warnanya pekat"
+      },
+      {
+        "jp": "濃い味 of ラーメンを ⻝べた",
+        "id": "Makan ramen yang rasanya kuat/strong"
+      }
+    ]
+  },
+  {
+    "id": "u1s2u3i4-b5c6-7d8e-9f0b-2b3c4d5e6f7a",
+    "word": "薄い",
+    "reading": "usui",
+    "furigana": "うす",
+    "meaning": "tipis, encer, hambar",
+    "word_type": "i-adjective",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "このスープは 薄い",
+        "id": "Sup ini encer"
+      },
+      {
+        "jp": "味が 薄い",
+        "id": "Rasanya hambar"
+      },
+      {
+        "jp": "この本は 字が 薄い",
+        "id": "Buku ini hurufnya kurang jelas"
+      },
+      {
+        "jp": "薄い本を 買った",
+        "id": "Beli buku yang tipis"
+      }
+    ]
+  },
+  {
+    "id": "k1a2t3a4-b5c6-7d8e-9f0c-3c4d5e6f7a8b",
+    "word": "硬い",
+    "reading": "katai",
+    "furigana": "かた",
+    "meaning": "keras",
+    "word_type": "i-adjective",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "硬いパンを ⻝べた",
+        "id": "Makan roti yang keras"
+      },
+      {
+        "jp": "パンを 硬く 焼いた",
+        "id": "Memanggang roti hingga keras"
+      }
+    ]
+  },
+  {
+    "id": "y1a2w3a4-b5c6-7d8e-9f0d-4d5e6f7a8b9c",
+    "word": "柔らかい",
+    "reading": "yawarakai",
+    "furigana": "やわ",
+    "meaning": "lembut, empuk",
+    "word_type": "i-adjective",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "この布 is 柔らかい",
+        "id": "Kain ini lembut"
+      },
+      {
+        "jp": "柔らかい枕を 使っている",
+        "id": "Menggunakan bantal yang empuk"
+      }
+    ]
+  },
+  {
+    "id": "t1a2d3a4-b5c6-7d8e-9f0e-5e6f7a8b9c0d",
+    "word": "正しい",
+    "reading": "tadashii",
+    "furigana": "ただ",
+    "meaning": "benar",
+    "word_type": "i-adjective",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "その答えは 正しい",
+        "id": "Jawaban itu benar"
+      },
+      {
+        "jp": "正しい答えを 書いた",
+        "id": "Menulis jawaban yang benar"
+      },
+      {
+        "jp": "正しく 答えた",
+        "id": "Menjawab dengan benar"
+      }
+    ]
+  },
+  {
+    "id": "k1u2w3a4-b5c6-7d8e-9f0f-6f7a8b9c0d1e",
+    "word": "詳しい",
+    "reading": "kuwashii",
+    "furigana": "くわ",
+    "meaning": "detail, terperinci",
+    "word_type": "i-adjective",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "彼は 歴史に 詳しい",
+        "id": "Dia paham sejarah dengan baik"
+      },
+      {
+        "jp": "詳しい説明を 聞いた",
+        "id": "Mendengar penjelasan yang rinci"
+      },
+      {
+        "jp": "詳しく 説明した",
+        "id": "Menjelaskan dengan rinci"
+      }
+    ]
+  },
+  {
+    "id": "s1u2b3a4-b5c6-7d8e-9f0f-7f8g9h0i1j2k",
+    "word": "すばらしい",
+    "reading": "subarashii",
+    "furigana": "",
+    "meaning": "hebat, luar biasa",
+    "word_type": "i-adjective",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "その映画は すばらしい",
+        "id": "Film itu luar biasa"
+      },
+      {
+        "jp": "すばらしい景⾊を ⾒た",
+        "id": "Melihat pemandangan yang luar biasa"
+      }
+    ]
+  },
+  {
+    "id": "m1e2z3u4-r5a6-7d8e-9f0f-8g9h0i1j2k3l",
+    "word": "珍しい",
+    "reading": "mezurashii",
+    "furigana": "めずら",
+    "meaning": "langka, tidak biasanya (tumben)",
+    "word_type": "i-adjective",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "彼が 珍しく 早く来た",
+        "id": "Tumben dia datang lebih cepat"
+      },
+      {
+        "jp": "珍しい⿃を ⾒た",
+        "id": "Melihat burung yang langka"
+      }
+    ]
+  },
+  {
+    "id": "q7r8s9t0-u1v2-3w4x-5y6z-a7b8c9d0e1f3",
+    "word": "偉い",
+    "reading": "erai",
+    "furigana": "えら",
+    "meaning": "hebat",
+    "word_type": "i-adjective",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "毎⽇ ⽇本語を 勉強していて、本当に 偉い。",
+        "id": "Kamu belajar bahasa Jepang setiap hari, hebat sekali ya"
+      },
+      {
+        "jp": "偉い⼈に 会った。",
+        "id": "Bertemu dengan orang hebat"
+      }
+    ]
+  },
+  {
+    "id": "r8s9t0u1-v2w3-4x5y-6z7a-b8c9d0e1f2g4",
+    "word": "細かい",
+    "reading": "komakai",
+    "furigana": "こま",
+    "meaning": "detail, kecil/halus, receh",
+    "word_type": "i-adjective",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "細かく 説明した。",
+        "id": "Menjelaskan secara rinci"
+      },
+      {
+        "jp": "野菜を 細かく 切った。",
+        "id": "Memotong sayuran kecil-kecil"
+      },
+      {
+        "jp": "字が 細かい。",
+        "id": "Hurufnya kecil-kecil"
+      }
+    ]
+  },
+  {
+    "id": "s9t0u1v2-w3x4-5y6z-7a8b-c9d0e1f2g3h5",
+    "word": "ひどい",
+    "reading": "hidoi",
+    "furigana": "",
+    "meaning": "kejam, parah, jahat",
+    "word_type": "i-adjective",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "⾵邪が ひどく なった。",
+        "id": "Flunya jadi parah"
+      },
+      {
+        "jp": "彼は ひどいことを ⾔った。",
+        "id": "Dia mengatakan hal yang kejam/jahat"
+      }
+    ]
+  },
+  {
+    "id": "t0u1v2w3-x4y5-6z7a-8b9c-d0e1f2g3h4i6",
+    "word": "温い",
+    "reading": "nurui",
+    "furigana": "ぬる",
+    "meaning": "hangat kuku (kurang panas)",
+    "word_type": "i-adjective",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "温いお茶を 飲んだ。",
+        "id": "Minum teh hangat-hangat kuku"
+      },
+      {
+        "jp": "お茶を 温く した。",
+        "id": "Membuat teh menjadi hangat-hangat kuku"
+      }
+    ]
+  },
+  {
+    "id": "u1v2w3x4-y5z6-7a8b-9c0d-e1f2g3h4i5j7",
+    "word": "うまい",
+    "reading": "umai",
+    "furigana": "",
+    "meaning": "enak, pandai/mahir",
+    "word_type": "i-adjective",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "うまい料理を ⻝べた。",
+        "id": "Makan masakan yang enak"
+      },
+      {
+        "jp": "うまく 話せない。",
+        "id": "Tidak bisa bicara dengan pandai"
+      },
+      {
+        "jp": "彼は サッカーが うまい。",
+        "id": "Dia jago bermain sepak bola"
+      }
+    ]
+  },
+  {
+    "id": "v2w3x4y5-z6a7-8b9c-0d1e-f2g3h4i5j6k8",
+    "word": "塩⾟い",
+    "reading": "shiokarai",
+    "furigana": "しお から",
+    "meaning": "asin",
+    "word_type": "i-adjective",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "塩⾟いスープを 飲んだ。",
+        "id": "Minum sup yang asin"
+      }
+    ]
+  },
+  {
+    "id": "w3x4y5z6-a7b8-9c0d-1e2f-g3h4i5j6k7l9",
+    "word": "浅い",
+    "reading": "asai",
+    "furigana": "あさ",
+    "meaning": "dangkal",
+    "word_type": "i-adjective",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "この池は 浅い。",
+        "id": "Kolam ini dangkal"
+      },
+      {
+        "jp": "知識が 浅い。",
+        "id": "Pengetahuannya masih dangkal"
+      },
+      {
+        "jp": "浅く 座る。",
+        "id": "Duduk tidak terlalu dalam (ke belakang)"
+      }
+    ]
+  },
+  {
+    "id": "x4y5z6a7-b8c9-0d1e-2f3g-h4i5j6k7l8m0",
+    "word": "深い",
+    "reading": "fukai",
+    "furigana": "ふか",
+    "meaning": "dalam, erat",
+    "word_type": "i-adjective",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "深い関係が ある。",
+        "id": "Memiliki hubungan yang erat"
+      },
+      {
+        "jp": "深く 考える。",
+        "id": "Berpikir secara mendalam"
+      },
+      {
+        "jp": "この川は 深い。",
+        "id": "Sungai ini dalam"
+      }
+    ]
+  },
+  
+
+]

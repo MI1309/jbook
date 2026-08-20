@@ -243,6 +243,9 @@ else:
         }
     }
 
+SILENCED_SYSTEM_CHECKS = ['django_ratelimit.E003', 'django_ratelimit.W001']
+
+
 
 # ===============================
 # AUTHENTICATION & JWT (90 DAYS)
