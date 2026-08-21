@@ -400,7 +400,7 @@ function KotobaContent({ onRefreshRequest, refreshKey }) {
                     {items.map((vocab) => (
                         <Link
                             key={vocab.id}
-                            href={`/kotoba/${vocab.id}`}
+                            href={`/kotoba/${vocab.id}${searchParams.toString() ? `?${searchParams.toString()}` : ''}`}
                             onClick={(e) => {
                                 if (typeof navigator !== 'undefined' && !navigator.onLine) {
                                     e.preventDefault();

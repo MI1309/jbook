@@ -1,3 +1,4 @@
+import { Suspense } from 'react';
 import { getVocabDetail } from '@/lib/api';
 import Link from 'next/link';
 import { hasKanji } from '@/lib/utils';
@@ -16,5 +17,9 @@ export default async function KotobaDetailPage({ params }) {
         );
     }
 
-    return <KotobaDetailUI vocab={vocab} />;
+    return (
+        <Suspense fallback={<div className="min-h-screen flex items-center justify-center text-gray-400 font-bold">🏮 Memuat...</div>}>
+            <KotobaDetailUI vocab={vocab} />
+        </Suspense>
+    );
 }

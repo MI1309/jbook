@@ -19,11 +19,25 @@ function FilterContent() {
     const [selectedLevels, setSelectedLevels] = useState(initialLevels);
     const [wordType, setWordType] = useState(initialType);
 
+    // Restore saved filters on mount if URL has no parameters
+    useEffect(() => {
+        const currentQuery = searchParams.toString();
+        if (!currentQuery && typeof window !== 'undefined') {
+            const saved = sessionStorage.getItem('kotoba_filter_params');
+            if (saved) {
+                router.replace(`/kotoba?${saved}`, { scroll: false });
+            }
+        }
+    }, []);
+
     // Sync state with URL changes (e.g. back button)
     useEffect(() => {
         setSearchTerm(searchParams.get('search') || '');
         setSelectedLevels(searchParams.get('level')?.split(',').filter(Boolean) || []);
         setWordType(searchParams.get('word_type') || '');
+        if (searchParams.toString() && typeof window !== 'undefined') {
+            sessionStorage.setItem('kotoba_filter_params', searchParams.toString());
+        }
     }, [searchParams]);
 
     // Debounce search term to avoid too many URL updates (500ms delay)
@@ -58,7 +72,15 @@ function FilterContent() {
         // Only push if changed
         if (debouncedSearch !== currentSearch || selectedLevels.join(',') !== currentLevel || wordType !== currentType) {
             params.delete('page'); // Reset pagination on new search/filter
-            router.push(`/kotoba?${params.toString()}`, { scroll: false });
+            const newQuery = params.toString();
+            if (typeof window !== 'undefined') {
+                if (newQuery) {
+                    sessionStorage.setItem('kotoba_filter_params', newQuery);
+                } else {
+                    sessionStorage.removeItem('kotoba_filter_params');
+                }
+            }
+            router.push(`/kotoba?${newQuery}`, { scroll: false });
         }
 
     }, [debouncedSearch, selectedLevels, wordType, router, searchParams]);
@@ -142,15 +164,23 @@ function FilterContent() {
                             onChange={(e) => setWordType(e.target.value)}
                         >
                             <option value="">Semua Tipe</option>
-                            <option value="noun">Noun</option>
-                            <option value="verb">Verb</option>
-                            <option value="adjective">Adjective</option>
-                            <option value="suffix">Suffix</option>
-                            <option value="particle">Particle</option>
-                            <option value="counter">Counter</option>
-                            <option value="conjunction">Conjunction</option>
-                            <option value="interjection">Interjection</option>
-                            <option value="pronoun">Pronoun</option>
+                            <option value="noun">Noun (Kata Benda)</option>
+                            <option value="verb">Semua Verb (Kata Kerja)</option>
+                            <option value="transitive">Transitive Verb (他動詞 - Transitif)</option>
+                            <option value="intransitive">Intransitive Verb (自動詞 - Intransitif)</option>
+                            <option value="godan">Godan Verb (Golongan 1)</option>
+                            <option value="ichidan">Ichidan Verb (Golongan 2)</option>
+                            <option value="suru">Suru Verb (Golongan 3)</option>
+                            <option value="adjective">Semua Adjective (Kata Sifat)</option>
+                            <option value="i_adj">I-Adjective (い形)</option>
+                            <option value="na_adj">Na-Adjective (な形)</option>
+                            <option value="adverb">Adverb (Kata Keterangan)</option>
+                            <option value="particle">Particle (Partikel)</option>
+                            <option value="suffix">Suffix (Akhiran)</option>
+                            <option value="counter">Counter (Kata Bantu Bilangan)</option>
+                            <option value="conjunction">Conjunction (Kata Sambung)</option>
+                            <option value="interjection">Interjection (Kata Seru)</option>
+                            <option value="pronoun">Pronoun (Kata Ganti)</option>
                         </select>
                         <div className="pointer-events-none absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400 text-[10px]">
                             ▼

@@ -83,7 +83,29 @@ def generate_furigana_map(text: str) -> list:
 class Command(BaseCommand):
     help = 'Normalize all Vocab and Kanji unicode characters (NFKC) and update furigana map'
 
+    def add_arguments(self, parser):
+        parser.add_argument(
+            '--force',
+            action='store_true',
+            help='Force update all furigana_map even if already set',
+        )
+        parser.add_argument(
+            '--test',
+            type=str,
+            help='Test generate_furigana_map for a specific word and print result',
+        )
+
     def handle(self, *args, **options):
+        # Debug mode: test a single word
+        if options.get('test'):
+            word = options['test']
+            result = generate_furigana_map(word)
+            self.stdout.write(f"Word: {word!r}")
+            self.stdout.write(f"furigana_map: {result}")
+            return
+
+        force = options.get('force', False)
+
         self.stdout.write("Normalizing Vocab objects...")
         vocab_updated = 0
         for v in Vocab.objects.all():
@@ -107,7 +129,7 @@ class Command(BaseCommand):
 
             # Regenerate furigana map
             new_fmap = generate_furigana_map(v.word)
-            if v.furigana_map != new_fmap:
+            if force or v.furigana_map != new_fmap:
                 v.furigana_map = new_fmap
                 changed = True
 

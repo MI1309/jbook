@@ -161,6 +161,16 @@ export function to_romaji(text) {
     return res;
 }
 
+export function isKanjiChar(ch) {
+    if (!ch) return false;
+    const normalized = ch.normalize('NFKC');
+    const code = normalized.charCodeAt(0);
+    return (code >= 0x4E00 && code <= 0x9FAF) || 
+           (code >= 0x3400 && code <= 0x4DBF) || 
+           (code >= 0x2F00 && code <= 0x2FD5) || 
+           (code >= 0x2E80 && code <= 0x2EFF);
+}
+
 /**
  * Checks if a given string contains any Kanji characters.
  */
@@ -181,6 +191,239 @@ export function extractKanji(text) {
     const matches = normalized.match(kanjiRegex);
     if (!matches) return [];
     return [...new Set(matches)]; // Unique Kanjis
+}
+
+/**
+ * Strips prefix and suffix okurigana from a furigana segment for a kanji at index `kanjiIdx`.
+ */
+function stripOkurigana(kanjiIdx, token, wordChars) {
+    if (!token) return '';
+    let result = to_kana(String(token).trim());
+    
+    // Find consecutive kana following this kanji
+    let okurigana = '';
+    for (let i = kanjiIdx + 1; i < wordChars.length; i++) {
+        if (isKanjiChar(wordChars[i])) break;
+        okurigana += wordChars[i];
+    }
+    if (okurigana && result.endsWith(okurigana) && result.length > okurigana.length) {
+        result = result.substring(0, result.length - okurigana.length);
+    }
+    
+    // Also check for prefix kana preceding this kanji (e.g. お)
+    let prefixKana = '';
+    for (let i = kanjiIdx - 1; i >= 0; i--) {
+        if (isKanjiChar(wordChars[i])) break;
+        prefixKana = wordChars[i] + prefixKana;
+    }
+    if (prefixKana && result.startsWith(prefixKana) && result.length > prefixKana.length) {
+        result = result.substring(prefixKana.length);
+    }
+    
+    return result;
+}
+
+/**
+ * Generates an array of furigana segments aligned with each character in `word`.
+ * Handles multiple kanji, space-separated furigana (e.g. "れい い"), romaji readings with spaces ("orei o iu"),
+ * okurigana anchors, and partial existing maps while stripping duplicate okurigana.
+ */
+export function generateFuriganaMap(word, reading, furigana, existingMap) {
+    // Flexible argument handling: if 3rd arg is array, it's existingMap
+    if (Array.isArray(furigana)) {
+        existingMap = furigana;
+        furigana = null;
+    }
+    
+    if (!word) return [];
+    const normWord = word.normalize('NFKC');
+    const chars = Array.from(normWord);
+    const kanjiIndices = chars.map((c, i) => isKanjiChar(c) ? i : -1).filter(i => i !== -1);
+    
+    if (kanjiIndices.length === 0) {
+        return chars.map(() => '');
+    }
+    
+    // Helper to sanitize and strip duplicate okurigana from all map entries
+    const cleanFinalMap = (map) => {
+        return map.map((seg, i) => {
+            if (!isKanjiChar(chars[i]) || !seg) return '';
+            return stripOkurigana(i, seg, chars);
+        });
+    };
+    
+    // 1. If existing map covers ALL kanji in word
+    if (Array.isArray(existingMap) && existingMap.length === chars.length) {
+        const allCovered = kanjiIndices.every(idx => existingMap[idx] && String(existingMap[idx]).trim() !== '');
+        if (allCovered) {
+            return cleanFinalMap(existingMap);
+        }
+    }
+    
+    const fmap = chars.map(() => '');
+
+    // 2. Try explicit furigana field if provided
+    if (furigana && typeof furigana === 'string' && furigana.trim()) {
+        const normFuri = furigana.normalize('NFKC').trim();
+        const fTokens = normFuri.split(/[\s,、]+/).filter(Boolean);
+        if (fTokens.length === kanjiIndices.length) {
+            kanjiIndices.forEach((idx, k) => {
+                fmap[idx] = stripOkurigana(idx, fTokens[k], chars);
+            });
+            return cleanFinalMap(fmap);
+        } else if (fTokens.length === 1 && kanjiIndices.length === 1) {
+            fmap[kanjiIndices[0]] = stripOkurigana(kanjiIndices[0], fTokens[0], chars);
+            return cleanFinalMap(fmap);
+        }
+    }
+    
+    // 3. Segment from reading (or furigana if reading not given)
+    const rawInput = (reading || furigana || '');
+    if (!rawInput) {
+        // Fallback to existing map if it had at least something
+        if (Array.isArray(existingMap) && existingMap.length === chars.length) {
+            return cleanFinalMap(existingMap);
+        }
+        return fmap;
+    }
+    
+    // Convert entire reading/romaji to Kana without dropping words after spaces!
+    const normReading = String(rawInput).normalize('NFKC').split('(')[0].split('（')[0].trim();
+    const cleanReading = normReading
+        .split(/[\s,、]+/)
+        .filter(Boolean)
+        .map(token => to_kana(token))
+        .join('');
+        
+    if (!cleanReading) {
+        return fmap;
+    }
+    
+    // Helper to find kana anchor with particle fuzzy equivalence (を <-> お, は <-> わ, へ <-> え)
+    const findAnchor = (text, anchor, fromIdx) => {
+        if (!anchor) return text.length;
+        const exact = text.indexOf(anchor, fromIdx);
+        if (exact !== -1) return exact;
+        
+        let altAnchor = anchor
+            .replace(/を/g, 'お')
+            .replace(/は/g, 'わ')
+            .replace(/へ/g, 'え');
+        let altIdx = text.indexOf(altAnchor, fromIdx);
+        if (altIdx !== -1) return altIdx;
+        
+        altAnchor = anchor
+            .replace(/お/g, 'を')
+            .replace(/わ/g, 'は')
+            .replace(/え/g, 'へ');
+        altIdx = text.indexOf(altAnchor, fromIdx);
+        if (altIdx !== -1) return altIdx;
+        
+        return -1;
+    };
+
+    // Break word into segments of consecutive kanji and non-kanji
+    const segments = [];
+    let currentType = null;
+    let currentChars = [];
+    let currentIndices = [];
+    
+    for (let i = 0; i < chars.length; i++) {
+        const char = chars[i];
+        const isK = isKanjiChar(char);
+        const type = isK ? 'kanji' : 'kana';
+        if (type !== currentType) {
+            if (currentChars.length > 0) {
+                segments.push({ type: currentType, text: currentChars.join(''), indices: [...currentIndices] });
+            }
+            currentType = type;
+            currentChars = [char];
+            currentIndices = [i];
+        } else {
+            currentChars.push(char);
+            currentIndices.push(i);
+        }
+    }
+    if (currentChars.length > 0) {
+        segments.push({ type: currentType, text: currentChars.join(''), indices: [...currentIndices] });
+    }
+    
+    let readPos = 0;
+    for (let s = 0; s < segments.length; s++) {
+        const seg = segments[s];
+        if (seg.type === 'kana') {
+            const matchIdx = findAnchor(cleanReading, seg.text, readPos);
+            if (matchIdx !== -1) {
+                readPos = matchIdx + seg.text.length;
+            }
+        } else {
+            // Kanji segment: look ahead for the next kana anchor
+            let nextAnchor = null;
+            for (let nextS = s + 1; nextS < segments.length; nextS++) {
+                if (segments[nextS].type === 'kana') {
+                    nextAnchor = segments[nextS].text;
+                    break;
+                }
+            }
+            
+            let endPos = cleanReading.length;
+            if (nextAnchor) {
+                const anchorIdx = findAnchor(cleanReading, nextAnchor, readPos);
+                if (anchorIdx !== -1) {
+                    endPos = anchorIdx;
+                }
+            }
+            
+            const kanjiReading = cleanReading.substring(readPos, endPos);
+            readPos = endPos;
+            
+            const kCount = seg.indices.length;
+            if (kCount === 1) {
+                fmap[seg.indices[0]] = kanjiReading;
+            } else if (kCount > 1) {
+                const total = kanjiReading.length;
+                const base = Math.floor(total / kCount);
+                let rem = total % kCount;
+                let p = 0;
+                for (let k = 0; k < kCount; k++) {
+                    const take = base + (rem > 0 ? 1 : 0);
+                    if (rem > 0) rem--;
+                    fmap[seg.indices[k]] = kanjiReading.substring(p, p + take);
+                    p += take;
+                }
+            }
+        }
+    }
+    
+    // 4. Fill in any missing kanji segments from existingMap
+    kanjiIndices.forEach(idx => {
+        if (!fmap[idx] || fmap[idx].trim() === '') {
+            if (Array.isArray(existingMap) && existingMap[idx] && String(existingMap[idx]).trim() !== '') {
+                fmap[idx] = existingMap[idx];
+            }
+        }
+    });
+
+    // 5. Fallback safety: If there are kanjis with missing furigana
+    const stillEmpty = kanjiIndices.filter(idx => !fmap[idx] || fmap[idx].trim() === '');
+    if (stillEmpty.length > 0) {
+        if (stillEmpty.length === 1) {
+            fmap[stillEmpty[0]] = cleanReading;
+        } else {
+            const total = cleanReading.length;
+            const base = Math.floor(total / stillEmpty.length);
+            let rem = total % stillEmpty.length;
+            let p = 0;
+            for (let k = 0; k < stillEmpty.length; k++) {
+                const take = base + (rem > 0 ? 1 : 0);
+                if (rem > 0) rem--;
+                fmap[stillEmpty[k]] = cleanReading.substring(p, p + take);
+                p += take;
+            }
+        }
+    }
+    
+    return cleanFinalMap(fmap);
 }
 
 /**

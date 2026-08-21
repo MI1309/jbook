@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { toHiragana, toKatakana } from 'wanakana';
 import { hasKanji } from '@/lib/utils';
 import { resolveContentId } from '@/lib/api';
+import { getRadicalInfo } from '@/lib/radicals';
 import { useTheme } from '@/context/ThemeContext';
 import KanjiStrokeViewer from './KanjiStrokeViewer'; 
 import { useAuth } from '@/context/AuthContext';
@@ -259,7 +260,7 @@ export default function KanjiDetailUI({ kanji: initialKanji, onClose }) {
 
                         {/* Title & Core Info */}
                         <div className="flex-1 text-center md:text-left py-4">
-                             <div className="inline-flex items-center gap-2 mb-6">
+                             <div className="inline-flex items-center gap-2.5 mb-6 flex-wrap justify-center md:justify-start">
                                 <span className="bg-blue-600 text-white text-xs font-black px-4 py-1.5 rounded-full shadow-lg shadow-blue-500/10">
                                     {isEditing ? (
                                         <select 
@@ -271,6 +272,16 @@ export default function KanjiDetailUI({ kanji: initialKanji, onClose }) {
                                         </select>
                                     ) : `JLPT N${kanji.jlpt_level}`}
                                 </span>
+
+                                {kanji.radical && (
+                                    <span className="bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/20 text-xs font-black px-4 py-1.5 rounded-full inline-flex items-center gap-1.5 shadow-sm">
+                                        <span className="text-[10px] font-black uppercase text-gray-400">部首 (Radikal):</span>
+                                        <span className="font-japanese font-black text-sm">{kanji.radical}</span>
+                                        {getRadicalInfo(kanji.radical)?.meaning && (
+                                            <span className="font-bold text-[11px] opacity-80">({getRadicalInfo(kanji.radical).meaning})</span>
+                                        )}
+                                    </span>
+                                )}
                              </div>
                             
                             {isEditing ? (
@@ -313,8 +324,44 @@ export default function KanjiDetailUI({ kanji: initialKanji, onClose }) {
             {/* Detailed Info Sections */}
             <div className={`container mx-auto px-6 py-20 max-w-5xl transition-colors ${textColor}`}>
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
-                    {/* Read Alignments (On/Kun) */}
+                    {/* Read Alignments (On/Kun) & Radikal */}
                     <div className="lg:col-span-1 space-y-8">
+                        {/* Radikal Info Card */}
+                        {kanji.radical && (
+                            <section className={`${sectionBg} rounded-3xl p-6 border ${borderStyle}`}>
+                                <h3 className={`text-xs font-black uppercase tracking-widest mb-4 flex items-center gap-2 ${subTextColor}`}>
+                                    <span className="w-1.5 h-1.5 rounded-full bg-blue-600"></span>
+                                    Radikal Utama (部首)
+                                </h3>
+                                {(() => {
+                                    const rad = getRadicalInfo(kanji.radical);
+                                    return (
+                                        <div 
+                                            onClick={() => router.push(`/kanji?radical=${encodeURIComponent(kanji.radical)}`)}
+                                            className={`group flex items-center gap-4 ${cardBg} border ${borderStyle} hover:border-blue-600 p-4 rounded-2xl transition-all shadow-sm active:scale-95 cursor-pointer`}
+                                            title="Klik untuk filter kanji dengan radikal ini"
+                                        >
+                                            <span className="text-4xl font-japanese font-black text-blue-600 dark:text-blue-400 group-hover:scale-110 transition-transform w-12 text-center">
+                                                {kanji.radical}
+                                            </span>
+                                            <div className="flex-1 min-w-0">
+                                                <p className={`text-sm font-black leading-snug truncate ${textColor}`}>
+                                                    {rad?.meaning || 'Radikal Dasar'}
+                                                </p>
+                                                <p className={`text-[10px] font-black uppercase tracking-tighter mt-0.5 ${subTextColor}`}>
+                                                    {rad?.name ? `${rad.name} (${rad.reading})` : 'Klik untuk filter kanji'}
+                                                </p>
+                                            </div>
+                                            <span className="text-gray-400 group-hover:text-blue-500 group-hover:translate-x-0.5 transition-all text-sm font-black">→</span>
+                                        </div>
+                                    );
+                                })()}
+                                <p className="text-[10px] font-bold text-gray-400 mt-3 px-1">
+                                    💡 Radikal membantu mengingat pola bentuk & makna dasar kanji.
+                                </p>
+                            </section>
+                        )}
+
                         {/* Onyomi */}
                         <section className={`${sectionBg} rounded-3xl p-8 border ${borderStyle}`}>
                             <h3 className={`text-xs font-black uppercase tracking-widest mb-6 flex items-center gap-2 ${subTextColor}`}>
@@ -356,54 +403,52 @@ export default function KanjiDetailUI({ kanji: initialKanji, onClose }) {
  
                     {/* Examples Section */}
                     <div className="lg:col-span-2">
-                        <section className={`${cardBg} rounded-[2.5rem] border ${borderStyle} p-10 shadow-2xl shadow-blue-500/5 h-full transition-colors`}>
-                            <h3 className={`text-2xl font-black mb-10 flex items-center gap-4 transition-colors ${textColor}`}>
-                                <span className="p-3 bg-blue-600 text-white rounded-2xl">🔖</span>
+                        <section className={`${cardBg} rounded-[2.5rem] border ${borderStyle} p-8 shadow-2xl shadow-blue-500/5 h-full transition-colors`}>
+                            <h3 className={`text-lg font-black mb-6 flex items-center gap-3 transition-colors ${textColor}`}>
+                                <span className="p-2.5 bg-blue-600 text-white rounded-xl text-sm">🔖</span>
                                 Contoh Kata (Kotoba)
                             </h3>
                             
-                            <div className="space-y-6">
+                            <div className="space-y-3">
                                 {kanji.examples && kanji.examples.length > 0 ? (
-                                    kanji.examples.map((ex, i) => (
+                                    kanji.examples.slice(0, 4).map((ex, i) => (
                                         <div 
                                             key={i} 
                                             onClick={() => handleExampleClick(ex.word)}
-                                            className={`group p-6 ${sectionBg} hover:${cardBg} rounded-[2rem] border ${theme === 'dark' ? 'border-blue-950/20' : 'border-gray-100'} hover:border-blue-600 transition-all cursor-pointer`}
+                                            className={`group p-4 ${sectionBg} hover:${cardBg} rounded-2xl border ${theme === 'dark' ? 'border-blue-950/20' : 'border-gray-100'} hover:border-blue-600 transition-all cursor-pointer`}
                                         >
-                                            <div className="flex justify-between items-start gap-4">
+                                            <div className="flex justify-between items-center gap-3">
                                                 <div>
-                                                    <ruby className={`text-3xl font-black transition-colors ${textColor} group-hover:text-blue-600`}>
+                                                    <ruby className={`text-xl font-black transition-colors ${textColor} group-hover:text-blue-600`}>
                                                         {ex.word}
                                                         {hasKanji(ex.word) && (
-                                                            <rt className={`text-xs font-black pb-1 select-none ${theme === 'dark' ? 'text-blue-400' : 'text-blue-600'}`}>{ex.reading}</rt>
+                                                            <rt className={`text-[10px] font-black pb-1 select-none ${theme === 'dark' ? 'text-blue-400' : 'text-blue-600'}`}>{ex.reading}</rt>
                                                         )}
                                                     </ruby>
-                                                    <p className={`mt-3 text-lg font-bold ${subTextColor}`}>{ex.meaning}</p>
+                                                    <p className={`mt-1 text-xs font-bold ${subTextColor}`}>{ex.meaning}</p>
                                                 </div>
-                                                <div className="opacity-0 group-hover:opacity-100 p-3 bg-blue-600 text-white rounded-xl transition-opacity active:scale-95 shadow-xl shadow-blue-500/20 font-black text-xs">
+                                                <div className="opacity-0 group-hover:opacity-100 p-2 bg-blue-600 text-white rounded-xl transition-opacity active:scale-95 shadow-lg shadow-blue-500/20 font-black text-[10px] flex-shrink-0">
                                                     Detail →
                                                 </div>
                                             </div>
                                         </div>
                                     ))
                                 ) : (
-                                    <div className={`text-center py-16 ${sectionBg} rounded-3xl border-2 border-dashed ${borderStyle}`}>
-                                        <p className={`font-bold italic ${subTextColor}`}>Belum tersedia contoh kata.</p>
+                                    <div className={`text-center py-12 ${sectionBg} rounded-3xl border-2 border-dashed ${borderStyle}`}>
+                                        <p className={`font-bold italic text-sm ${subTextColor}`}>Belum tersedia contoh kata.</p>
                                     </div>
                                 )}
                             </div>
+                            {kanji.examples && kanji.examples.length > 4 && (
+                                <p className={`text-[10px] font-bold mt-4 text-center ${subTextColor}`}>
+                                    +{kanji.examples.length - 4} contoh lainnya tersedia di detail kotoba
+                                </p>
+                            )}
                         </section>
                     </div>
                 </div>
             </div>
             
-            {/* Action Footer */}
-            <footer className={`container mx-auto px-6 py-12 max-w-5xl border-t ${borderStyle} text-center transition-colors`}>
-                <p className={`text-[10px] font-black uppercase tracking-widest mb-6 ${subTextColor}`}>Siap untuk berlatih?</p>
-                <Link href="/practice" className="inline-flex items-center gap-3 bg-blue-600 text-white px-10 py-5 rounded-3xl font-black hover:bg-blue-700 transition-all shadow-2xl shadow-blue-500/20 active:scale-95">
-                    Mulai Latihan Kanji <span className="text-lg">🎯</span>
-                </Link>
-            </footer>
         </div>
     );
 }

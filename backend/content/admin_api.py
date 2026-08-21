@@ -370,6 +370,8 @@ from .models import Vocab
 class VocabCreateSchema(BaseModel):
     word: str = Field(..., max_length=255)
     reading: Optional[str] = None
+    furigana: Optional[str] = None
+    furigana_map: Optional[List[str]] = Field(default_factory=list)
     meaning: Optional[str] = None
     word_type: Optional[str] = None
     jlpt_level: int = Field(..., ge=1, le=5)

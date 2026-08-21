@@ -57,6 +57,7 @@ class VocabSchema(Schema):
     word_type: Optional[str] = None
     jlpt_level: int = Field(..., ge=1, le=5)
     furigana: Optional[str] = None
+    furigana_map: Optional[List[str]] = Field(default_factory=list)
     examples: List[dict] = Field(default_factory=list)
     conjugations: Optional[List[dict]] = None
 
@@ -85,6 +86,7 @@ class KanjiSchema(Schema):
     word_type: Optional[str] = None
     examples: List[dict] = Field(default_factory=list)
     svg_data: Optional[str] = None
+    radical: Optional[str] = None
 
 @router.put("/vocab/{vocab_id}", response=VocabSchema, auth=AuthBearer())
 def update_vocab(request, vocab_id: UUID, data: UpdateVocabSchema):
@@ -353,6 +355,7 @@ class VocabSchema(Schema):
     word: str
     reading: Optional[str] = None
     furigana: Optional[str] = None
+    furigana_map: Optional[List[str]] = Field(default_factory=list)
     meaning: str
     word_type: Optional[str] = None
     jlpt_level: int
@@ -397,7 +400,21 @@ def list_vocab(request,
             qs = qs.filter(jlpt_level__in=levels)
         
     if params.word_type:
-        qs = qs.filter(word_type=params.word_type)
+        if params.word_type == 'verb':
+            qs = qs.filter(word_type__in=[
+                WordType.GODAN_VERB,
+                WordType.ICHIDAN_VERB,
+                WordType.SURU_VERB,
+                WordType.INTRANSITIVE_VERB,
+                WordType.TRANSITIVE_VERB,
+            ])
+        elif params.word_type == 'adjective':
+            qs = qs.filter(word_type__in=[
+                WordType.ADJECTIVE_I,
+                WordType.ADJECTIVE_NA,
+            ])
+        else:
+            qs = qs.filter(word_type=params.word_type)
 
     if params.search:
         from utils.kana import to_kana, to_romaji
@@ -476,6 +493,13 @@ def get_vocab(request, vocab_id: str):
         vocab.reading = to_kana(vocab.reading.lower())
     if vocab.furigana:
         vocab.furigana = to_kana(vocab.furigana.lower())
+    
+    if not vocab.furigana_map and vocab.word:
+        try:
+            from utils.kotoba_sync import generate_furigana_map
+            vocab.furigana_map = generate_furigana_map(vocab.word)
+        except Exception:
+            pass
     
     # Populate conjugations dynamically ONLY IF IT'S A VERB (STRICT CHECK using official WordType enum!)
     vocab.conjugations = None
