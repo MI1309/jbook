@@ -536,6 +536,269 @@
       }
     ]
   },
+  {
+    "id": "f1u2k3z4-a5t6-7b8c-9d0e-1f2g3h4i5j6k",
+    "word": "複雑（な）",
+    "reading": "fukuzatsu",
+    "furigana": "ふくざつ",
+    "meaning": "rumit, kompleks",
+    "word_type": "na-adjective",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "この問題は 複雑だ。",
+        "id": "Masalah ini rumit"
+      },
+      {
+        "jp": "複雑な問題を 考えた。",
+        "id": "Memikirkan masalah yang rumit"
+      },
+      {
+        "jp": "話を 複雑にした。",
+        "id": "Membuat pembicaraan menjadi rumit"
+      }
+    ]
+  },
+  {
+    "id": "s1h2o3c4-k5u6-7v8w-9y0z-1a2b3c4d5e6f",
+    "word": "ショック（な）",
+    "reading": "shokku",
+    "furigana": "",
+    "meaning": "syok, kaget",
+    "word_type": "na-adjective",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "ショックな出来事だった。",
+        "id": "Kejadian yang mengejutkan"
+      },
+      {
+        "jp": "試験に 落ちて、とてもショックだ。",
+        "id": "Saya sangat syok karena gagal dalam ujian"
+      }
+    ]
+  },
+  {
+    "id": "k1i2k3e4-n5a6-7r8u-9v0w-1x2y3z4a5b6c",
+    "word": "危険（な）",
+    "reading": "kiken",
+    "furigana": "きけん",
+    "meaning": "berbahaya",
+    "word_type": "na-adjective",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "ここは 危険だ。",
+        "id": "Di sini berbahaya"
+      },
+      {
+        "jp": "危険な場所に 行かないでください。",
+        "id": "Jangan pergi ke tempat yang berbahaya"
+      }
+    ]
+  },
+  {
+    "id": "i1s2s3h4-o5u6-7k8e-9n0m-1e2i3a4b5c6d",
+    "word": "一生懸命（な）",
+    "reading": "isshoukenmei",
+    "furigana": "いっしょうけんめい",
+    "meaning": "sungguh-sungguh",
+    "word_type": "na-adjective",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "一生懸命な学生だ。",
+        "id": "Siswa yang sungguh-sungguh"
+      },
+      {
+        "jp": "一生懸命 (に) 勉強した。",
+        "id": "Belajar dengan sungguh-sungguh"
+      }
+    ]
+  },
+  {
+    "id": "a1n2z3e4-n5f6-7g8h-9i0j-1k2l3m4n5o6p",
+    "word": "安全（な）",
+    "reading": "anzen",
+    "furigana": "あんぜん",
+    "meaning": "aman",
+    "word_type": "na-adjective",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "安全な道を 歩いた。",
+        "id": "Berjalan di jalan yang aman"
+      },
+      {
+        "jp": "安全 (に) 運転して ください。",
+        "id": "Tolong mengemudi dengan aman"
+      }
+    ]
+  },
+  {
+    "id": "t1o2k3u4-i5f6-7g8h-9i0j-1k2l3m4n5o6q",
+    "word": "得意（な）",
+    "reading": "tokui",
+    "furigana": "とく",
+    "meaning": "pandai",
+    "word_type": "na-adjective",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "私は 数学が 得意だ。",
+        "id": "Saya pandai matematika"
+      },
+      {
+        "jp": "得意な科目は 数学だ。",
+        "id": "Mata pelajaran yang saya kuasai adalah matematika"
+      }
+    ]
+  },
+  {
+    "id": "d1a2i3j4-i5f6-7g8h-9i0j-1k2l3m4n5o6r",
+    "word": "大事（な）",
+    "reading": "daiji",
+    "furigana": "だいじ",
+    "meaning": "penting, berharga, harus dijaga",
+    "word_type": "na-adjective",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "水を 大事に使う。",
+        "id": "Menggunakan air dengan hati-hati"
+      },
+      {
+        "jp": "健康は 大事だ。",
+        "id": "Kesehatan itu penting"
+      },
+      {
+        "jp": "大事な話が ある。",
+        "id": "Ada hal penting yang ingin dibicarakan"
+      }
+    ]
+  },
+  {
+    "id": "h1i2t3s4-y5u6-7o8b-9u0n-1a2b3c4d5e6f",
+    "word": "必要（な）",
+    "reading": "hitsuyou",
+    "furigana": "ひつよう",
+    "meaning": "diperlukan, dibutuhkan",
+    "word_type": "na-adjective",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "必要な物を 買った。",
+        "id": "Membeli barang yang dibutuhkan"
+      },
+      {
+        "jp": "お金が 必要だ。",
+        "id": "Membutuhkan uang"
+      }
+    ]
+  },
+  {
+    "id": "n1i2g3a4-t5e6-7v8w-9y0z-2b3c4d5e6f7a",
+    "word": "苦手（な）",
+    "reading": "nigate",
+    "furigana": "にが",
+    "meaning": "kurang pandai",
+    "word_type": "na-adjective",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "私は 英語が 苦手だ。",
+        "id": "Saya kurang pandai bahasa Inggris"
+      },
+      {
+        "jp": "苦手な科目は 英語だ。",
+        "id": "Mata pelajaran yang tidak saya kuasai adalah bahasa Inggris"
+      }
+    ]
+  },
+  {
+    "id": "j1u2u3y4-o5u6-7k8e-9n0m-2e2i3a4b5c6d",
+    "word": "重要（な）",
+    "reading": "juuyou",
+    "furigana": "じゅうよう",
+    "meaning": "penting secara objektif, formal",
+    "word_type": "na-adjective",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "重要な書類を 送った。",
+        "id": "Mengirim dokumen penting"
+      },
+      {
+        "jp": "重要に 考えている。",
+        "id": "Menganggapnya penting"
+      },
+      {
+        "jp": "これは 重要な問題だ。",
+        "id": "Ini masalah yang penting"
+      }
+    ]
+  },
+  {
+    "id": "s1h2i3n4-k5e6-7n8m-9o0p-1q2r3s4t5u6v",
+    "word": "真剣（な）",
+    "reading": "shinken",
+    "furigana": "しんけん",
+    "meaning": "serius",
+    "word_type": "na-adjective",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "真剣な顔を している。",
+        "id": "Memasang wajah serius"
+      },
+      {
+        "jp": "真剣に 練習している（真剣＝まじめ）。",
+        "id": "Berlatih dengan serius"
+      }
+    ]
+  },
+  {
+    "id": "n1e2s3s4-h5i6-7n8m-9o0p-2q3r4s5t6u7v",
+    "word": "熱心（な）",
+    "reading": "nesshin",
+    "furigana": "ねっしん",
+    "meaning": "rajin, tekun, berantusias",
+    "word_type": "na-adjective",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "熱心な学生だ。",
+        "id": "Siswa yang rajin/tekun"
+      },
+      {
+        "jp": "熱心に 教える。",
+        "id": "Mengajar dengan penuh antusias"
+      }
+    ]
+  },
+  {
+    "id": "h1i2s3s4-h5i6-7n8m-9o0p-3q4r5s6t7u8v",
+    "word": "必死（な）",
+    "reading": "hisshi",
+    "furigana": "ひっし",
+    "meaning": "sekuat tenaga, mati-matian",
+    "word_type": "na-adjective",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "必死に 走った。",
+        "id": "Berlari sekuat tenaga"
+      },
+      {
+        "jp": "必死な顔で 勉強している。",
+        "id": "Belajar dengan wajah sekuat tenaga"
+      },
+      {
+        "jp": "彼は 合格のために 必死だ。",
+        "id": "Dia mati-matian demi lulus"
+      }
+    ]
+  },
   
 
 ]
