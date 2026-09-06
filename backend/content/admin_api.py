@@ -2,17 +2,29 @@ from typing import List, Optional
 from uuid import UUID
 from django.db.models import Q
 from django.shortcuts import get_object_or_404
-from ninja import Router, Schema
+from ninja import Router, Schema, File
+from ninja.files import UploadedFile
 from ninja.security import HttpBearer
 from ninja.errors import HttpError
 from pydantic import BaseModel, Field
 import csv
 import json
+import mimetypes
+import os
 from datetime import datetime
 from django.http import HttpResponse
-from .models import Kanji, Grammar, Blog, JLPTLevel, Vocab, Particle, Announcement
+from django.conf import settings
+from .models import Kanji, Grammar, Blog, JLPTLevel, Vocab, Particle, Announcement, MediaAttachment
 from users.api import AuthBearer
 from django.db import transaction
+
+
+def get_file_url(file_field):
+    if not file_field:
+        return None
+    if settings.MEDIA_URL.startswith('http'):
+        return f"{settings.MEDIA_URL}{file_field.name}"
+    return f"{settings.MEDIA_URL}{file_field.name}"
 
 router = Router()
 
@@ -25,21 +37,40 @@ class AdminAuth(AuthBearer):
         raise HttpError(403, "Admin access required")
 
 # Schemas
+class MediaAttachmentSchema(BaseModel):
+    id: UUID
+    filename: str
+    media_type: str
+    mime_type: Optional[str] = None
+    file_size: int = 0
+    url: str
+    created_at: datetime
+
+    class Config:
+        from_attributes = True
+
+
 class BlogSchema(BaseModel):
     id: UUID
     title: str = Field(..., max_length=255)
     slug: str = Field(..., max_length=255, pattern=r"^[a-zA-Z0-9-]+$")
     content: str = Field(..., max_length=100000)
+    excerpt: Optional[str] = None
+    featured_image_url: Optional[str] = None
     tags: List[str]
     is_published: bool
-    created_at: str
+    created_at: datetime
+    updated_at: Optional[datetime] = None
     
-    model_config = {"from_attributes": True}
+    class Config:
+        from_attributes = True
 
 class BlogCreateSchema(BaseModel):
     title: str = Field(..., max_length=255)
     slug: str = Field(..., max_length=255, pattern=r"^[a-zA-Z0-9-]+$")
     content: str = Field(..., max_length=100000)
+    excerpt: Optional[str] = Field("", max_length=1000)
+    featured_image_url: Optional[str] = Field("", max_length=1000)
     tags: List[str] = Field(default_factory=list)
     is_published: bool = False
 
@@ -112,27 +143,126 @@ def admin_search(request, q: str):
 
     return results
 
+
+# ================================
+# MEDIA ATTACHMENT CRUD / UPLOAD
+# ================================
+def _detect_media_type(mime: str, filename: str) -> str:
+    if mime:
+        if mime.startswith('image/'):
+            return 'image'
+        if mime.startswith('audio/'):
+            return 'audio'
+        if mime.startswith('video/'):
+            return 'video'
+        if mime in ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                   'application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet']:
+            return 'document'
+    ext = os.path.splitext(filename)[1].lower()
+    if ext in ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.svg', '.bmp']:
+        return 'image'
+    if ext in ['.mp3', '.wav', '.ogg', '.m4a', '.aac']:
+        return 'audio'
+    if ext in ['.mp4', '.webm', '.mov', '.avi']:
+        return 'video'
+    if ext in ['.pdf', '.doc', '.docx', '.xls', '.xlsx', '.ppt', '.pptx', '.txt']:
+        return 'document'
+    return 'other'
+
+
+@router.post("/media/upload", auth=AdminAuth(), response=MediaAttachmentSchema)
+def admin_upload_media(request, file: UploadedFile = File(...)):
+    mime = file.content_type or mimetypes.guess_type(file.name)[0] or ''
+    media_type = _detect_media_type(mime, file.name)
+
+    attachment = MediaAttachment.objects.create(
+        file=file,
+        filename=file.name,
+        media_type=media_type,
+        mime_type=mime,
+        file_size=file.size if hasattr(file, 'size') else 0
+    )
+
+    attachment.url = get_file_url(attachment.file)
+    return attachment
+
+
+@router.get("/media", auth=AdminAuth(), response=List[MediaAttachmentSchema])
+def admin_list_media(request):
+    items = list(MediaAttachment.objects.all().order_by('-created_at')[:100])
+    for item in items:
+        item.url = get_file_url(item.file)
+    return items
+
+
+@router.delete("/media/{id}", auth=AdminAuth())
+def admin_delete_media(request, id: str):
+    attachment = get_object_or_404(MediaAttachment, id=id)
+    try:
+        if attachment.file and attachment.file.path:
+            if os.path.isfile(attachment.file.path):
+                os.remove(attachment.file.path)
+    except Exception:
+        pass
+    attachment.delete()
+    return {"success": True}
+
+
 # Blog CRUD
 @router.post("/blog", auth=AdminAuth(), response=BlogSchema)
 def admin_create_blog(request, payload: BlogCreateSchema):
-    blog = Blog.objects.create(**payload.dict())
+    data = payload.dict()
+    featured_url = data.pop('featured_image_url', '') or None
+    blog = Blog.objects.create(**data)
+
+    if featured_url:
+        prefix = settings.MEDIA_URL
+        if featured_url.startswith(prefix):
+            rel_path = featured_url[len(prefix):]
+            blog.featured_image = rel_path
+            blog.save(update_fields=['featured_image'])
+
+    blog.featured_image_url = get_file_url(blog.featured_image)
     return blog
+
 
 @router.get("/blog", auth=AdminAuth(), response=List[BlogSchema])
 def admin_list_blogs(request):
-    return Blog.objects.all().order_by('-created_at')
+    blogs = list(Blog.objects.all().order_by('-created_at'))
+    for b in blogs:
+        b.featured_image_url = get_file_url(b.featured_image)
+    return blogs
+
 
 @router.get("/blog/{id}", auth=AdminAuth(), response=BlogSchema)
 def admin_get_blog(request, id: str):
-    return get_object_or_404(Blog, id=id)
+    blog = get_object_or_404(Blog, id=id)
+    blog.featured_image_url = get_file_url(blog.featured_image)
+    return blog
+
 
 @router.put("/blog/{id}", auth=AdminAuth(), response=BlogSchema)
 def admin_update_blog(request, id: str, payload: BlogCreateSchema):
     blog = get_object_or_404(Blog, id=id)
-    for attr, value in payload.dict().items():
+    data = payload.dict()
+    featured_url = data.pop('featured_image_url', '')
+
+    for attr, value in data.items():
         setattr(blog, attr, value)
+
+    prefix = settings.MEDIA_URL
+    if featured_url:
+        if featured_url.startswith(prefix):
+            blog.featured_image = featured_url[len(prefix):]
+        else:
+            blog.featured_image = featured_url if not featured_url.startswith('http') else blog.featured_image
+    else:
+        blog.featured_image = None
+
     blog.save()
+    blog.featured_image_url = get_file_url(blog.featured_image)
     return blog
+
 
 @router.delete("/blog/{id}", auth=AdminAuth())
 def admin_delete_blog(request, id: str):

@@ -707,20 +707,28 @@ export async function getVocabDetail(id) {
     return handleNetworkError('getVocabDetail', new Error('Offline'), null);
 }
 
-export async function getBlogList() {
-    // Blog harus online — bypass cache-store jika offline, atau gunakan TTL sangat pendek
+export async function getBlogList(options = {}) {
+    // Blog dengan cache ISR revalidate (default 300s / 5m)
     try {
-        const res = await fetch(`${API_URL}/content/blog`, { cache: 'no-store' });
+        const fetchOptions = {
+            next: { revalidate: 300 },
+            ...options
+        };
+        const res = await fetch(`${API_URL}/content/blog`, fetchOptions);
         return handleResponse(res, 'getBlogList');
     } catch (error) {
         return handleNetworkError('getBlogList', error, []);
     }
 }
 
-export async function getBlogDetailBySlug(slug) {
-    // Blog harus online
+export async function getBlogDetailBySlug(slug, options = {}) {
+    // Blog detail dengan cache ISR revalidate
     try {
-        const res = await fetch(`${API_URL}/content/blog/${slug}`, { cache: 'no-store' });
+        const fetchOptions = {
+            next: { revalidate: 300 },
+            ...options
+        };
+        const res = await fetch(`${API_URL}/content/blog/${slug}`, fetchOptions);
         return handleResponse(res, 'getBlogDetailBySlug');
     } catch (error) {
         return handleNetworkError('getBlogDetailBySlug', error, null);

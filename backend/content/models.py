@@ -88,6 +88,8 @@ class Blog(models.Model):
     title = models.CharField(max_length=255)
     slug = models.SlugField(unique=True, max_length=255)
     content = models.TextField(help_text="Konten blog (Markdown/HTML)")
+    excerpt = models.TextField(blank=True, null=True, help_text="Cuplikan singkat postingan")
+    featured_image = models.ImageField(upload_to='blog/featured/', blank=True, null=True, help_text="Gambar utama postingan")
     tags = models.JSONField(default=list, help_text="Tags/Kategori")
     is_published = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -95,6 +97,26 @@ class Blog(models.Model):
 
     def __str__(self):
         return self.title
+
+class MediaAttachment(models.Model):
+    MEDIA_TYPES = [
+        ('image', 'Image'),
+        ('audio', 'Audio'),
+        ('video', 'Video'),
+        ('document', 'Document'),
+        ('other', 'Other'),
+    ]
+
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    file = models.FileField(upload_to='blog/media/%Y/%m/%d/')
+    filename = models.CharField(max_length=255)
+    media_type = models.CharField(max_length=20, choices=MEDIA_TYPES, default='image')
+    mime_type = models.CharField(max_length=100, blank=True, null=True)
+    file_size = models.PositiveIntegerField(default=0, help_text="Ukuran file dalam bytes")
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.filename
 
 class ContentSuggestion(models.Model):
     TYPES = [

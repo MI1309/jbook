@@ -175,6 +175,14 @@ STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 
 # ===============================
+# MEDIA FILES (Uploads)
+# ===============================
+
+MEDIA_URL = "media/"
+MEDIA_ROOT = BASE_DIR / "mediafiles"
+
+
+# ===============================
 # EMAIL CONFIG
 # ===============================
 

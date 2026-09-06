@@ -3,6 +3,7 @@ from typing import List, Optional
 from pydantic import BaseModel, Field, field_validator
 from ninja.security import HttpBearer
 from core.decorators import rate_limit
+from django.conf import settings
 from .models import Kanji, Grammar, Blog, ContentSuggestion, Announcement, Vocab
 from django.shortcuts import get_object_or_404
 from django.db.models import Q
@@ -11,6 +12,14 @@ from datetime import datetime
 from django.http import HttpResponse
 
 router = Router()
+
+
+def get_file_url(file_field):
+    if not file_field:
+        return None
+    if settings.MEDIA_URL.startswith('http'):
+        return f"{settings.MEDIA_URL}{file_field.name}"
+    return f"{settings.MEDIA_URL}{file_field.name}"
 
 class AuthBearer(HttpBearer):
     def authenticate(self, request, token):
@@ -152,6 +161,8 @@ class BlogSchema(Schema):
     title: str = Field(..., max_length=255)
     slug: str = Field(..., max_length=255, pattern=r"^[a-zA-Z0-9-]+$")
     content: str = Field(..., max_length=100000)
+    excerpt: Optional[str] = None
+    featured_image_url: Optional[str] = None
     tags: List[str]
     is_published: bool
     created_at: datetime
@@ -666,11 +677,16 @@ def import_kotoba(request, file: UploadedFile = File(...)):
 
 @router.get("/blog", response=List[BlogSchema])
 def list_blog(request):
-    return Blog.objects.filter(is_published=True).order_by('-created_at')
+    blogs = list(Blog.objects.filter(is_published=True).order_by('-created_at'))
+    for b in blogs:
+        b.featured_image_url = get_file_url(b.featured_image)
+    return blogs
 
 @router.get("/blog/{slug}", response=BlogSchema)
 def get_blog(request, slug: str):
-    return get_object_or_404(Blog, slug=slug, is_published=True)
+    blog = get_object_or_404(Blog, slug=slug, is_published=True)
+    blog.featured_image_url = get_file_url(blog.featured_image)
+    return blog
 
 class SuggestionSchema(Schema):
     type: str = Field(..., max_length=100)

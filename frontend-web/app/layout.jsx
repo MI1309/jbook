@@ -20,17 +20,26 @@ const geistMono = Geist_Mono({
     subsets: ["latin"],
 });
 
+const BASE_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://jbook-five.vercel.app';
+
 export const metadata = {
-    metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || 'https://jbook-five.vercel.app'),
+    metadataBase: new URL(BASE_URL),
     title: {
-        default: "JBook - Belajar Bahasa Jepang",
+        default: "JBook - Belajar Bahasa Jepang Lengkap & Interaktif",
         template: "%s | JBook"
     },
-    description: "Aplikasi belajar bahasa Jepang lengkap dengan materi Kanji, Bunpo (tata bahasa), Kotoba (kosakata), dan latihan soal JLPT. Tingkatkan kemampuan bahasa Jepang Anda sekarang juga.",
-    keywords: ["belajar bahasa jepang", "kanji", "bunpo", "kotoba", "JLPT", "bahasa jepang online", "jbook", "latihan jlpt", "kosakata jepang", "tata bahasa jepang"],
-    authors: [{ name: "JBook Team" }],
+    description: "Aplikasi belajar bahasa Jepang terlengkap: Kanji JLPT N5-N1, Bunpo Tata Bahasa, Kotoba Kosakata, latihan soal, tips belajar & panduan ujian JLPT interaktif.",
+    keywords: [
+        "belajar bahasa jepang", "bahasa jepang online", "jbook", "kursus bahasa jepang",
+        "kanji", "hiragana", "katakana", "bunpo", "tata bahasa jepang",
+        "kotoba", "kosakata jepang", "jlpt", "latihan jlpt", "ujian jlpt",
+        "jlpt n5", "jlpt n4", "jlpt n3", "jlpt n2", "jlpt n1",
+        "kakitori", "latihan kanji", "grammar jepang", "vocabulary jepang"
+    ],
+    authors: [{ name: "JBook Team", url: BASE_URL }],
     creator: "JBook Team",
     publisher: "JBook",
+    category: "education",
     manifest: "/manifest.json",
     icons: {
         icon: [
@@ -43,29 +52,31 @@ export const metadata = {
         shortcut: "/favicon.ico",
     },
     openGraph: {
-        title: "JBook - Platform Belajar Bahasa Jepang Lengkap",
-        description: "Pelajari Kanji, Bunpo, dan Kotoba dengan interaktif. Siapkan diri Anda untuk ujian JLPT dengan materi dan latihan terlengkap di JBook.",
-        url: 'https://jbook.vercel.app',
+        type: 'website',
+        locale: 'id_ID',
+        url: BASE_URL,
         siteName: 'JBook',
+        title: "JBook - Platform Belajar Bahasa Jepang #1",
+        description: "Pelajari Kanji, Bunpo, dan Kotoba dengan interaktif. Siapkan ujian JLPT N5-N1 dengan materi, latihan soal, dan tips terlengkap.",
         images: [
             {
                 url: '/icon-512.png',
                 width: 512,
                 height: 512,
-                alt: 'JBook Logo',
+                alt: 'JBook - Belajar Bahasa Jepang',
+                type: 'image/png',
             },
         ],
-        locale: 'id_ID',
-        type: 'website',
     },
     twitter: {
         card: 'summary_large_image',
-        title: 'JBook - Belajar Bahasa Jepang',
-        description: 'Aplikasi interaktif untuk belajar Kanji, Bunpo, dan Kotoba.',
+        title: 'JBook - Belajar Bahasa Jepang Lengkap',
+        description: 'Kursus bahasa Jepang interaktif: Kanji, Bunpo, Kotoba & latihan JLPT terlengkap.',
         images: ['/icon-512.png'],
+        creator: '@jbook',
     },
     alternates: {
-        canonical: '/',
+        canonical: BASE_URL,
     },
     robots: {
         index: true,
@@ -78,24 +89,34 @@ export const metadata = {
             'max-snippet': -1,
         },
     },
+    verification: {
+        google: 'jbook-verification',
+    },
+    formatDetection: {
+        email: false,
+        address: false,
+        telephone: false,
+    },
 };
 
 export const viewport = {
     themeColor: "#dc2626",
     width: "device-width",
     initialScale: 1,
-    maximumScale: 1,
+    maximumScale: 5,
+    colorScheme: "light dark",
 };
 
 
 export default function RootLayout({ children }) {
     return (
-        <html lang="en" suppressHydrationWarning className="dark preload">
+        <html lang="id-ID" suppressHydrationWarning className="dark preload">
             <head>
                 <link rel="icon" href="/favicon.ico" />
                 <link rel="icon" type="image/png" sizes="32x32" href="/icon-32.png" />
                 <link rel="icon" type="image/png" sizes="16x16" href="/icon-16.png" />
                 <link rel="apple-touch-icon" sizes="192x192" href="/icon-192.png" />
+                <link rel="alternate" type="application/rss+xml" title="JBook Blog RSS Feed" href="/feed.xml" />
             </head>
             <body
                 className={`${geistSans.variable} ${geistMono.variable} antialiased bg-background text-foreground min-h-screen flex flex-col transition-colors duration-300`}
