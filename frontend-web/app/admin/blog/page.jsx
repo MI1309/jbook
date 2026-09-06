@@ -6,6 +6,7 @@ import { API_URL } from '@/lib/api';
 import Link from 'next/link';
 import Cookies from 'js-cookie';
 import ConfirmationModal from '@/components/common/ConfirmationModal';
+import { uploadToBlob } from '@/lib/blob-upload';
 
 function slugify(str) {
     return str.toLowerCase()
@@ -93,38 +94,49 @@ export default function BlogAdmin() {
 
         setUploadingMedia(true);
         setMediaMessage(null);
-        const token = Cookies.get('access_token');
         let successCount = 0;
+        const newMediaItems = [];
 
         for (const file of Array.from(files)) {
             try {
-                const formData = new FormData();
-                formData.append('file', file);
-
-                const res = await fetch(`${API_URL}/admin/media/upload`, {
-                    method: 'POST',
-                    headers: { 'Authorization': `Bearer ${token}` },
-                    body: formData,
-                });
-
-                if (res.ok) {
+                const blobResult = await uploadToBlob(file, { folder: 'blog' });
+                if (blobResult && blobResult.url) {
                     successCount++;
+                    newMediaItems.push({
+                        id: 'blob_' + Date.now() + '_' + Math.random().toString(36).substring(2, 9),
+                        filename: file.name,
+                        url: blobResult.url,
+                        file_size: file.size,
+                        media_type: file.type.startsWith('image/') ? 'image' : 
+                                   file.type.startsWith('audio/') ? 'audio' :
+                                   file.type.startsWith('video/') ? 'video' : 'document',
+                        mime_type: file.type,
+                        created_at: new Date().toISOString(),
+                    });
                 }
             } catch (err) {
                 console.error("Upload error:", err);
             }
         }
 
+        if (newMediaItems.length > 0) {
+            setMediaList(prev => [...newMediaItems, ...prev]);
+        }
+
         setUploadingMedia(false);
-        setMediaMessage({ type: 'success', text: `Berhasil upload ${successCount} file!` });
+        if (successCount > 0) {
+            setMediaMessage({ type: 'success', text: `Berhasil upload ${successCount} file ke Vercel Blob (Permanen)!` });
+        } else {
+            setMediaMessage({ type: 'error', text: 'Gagal mengunggah file. Pastikan BLOB_READ_WRITE_TOKEN telah diset.' });
+        }
         if (fileInputRef.current) fileInputRef.current.value = '';
-        await fetchMedia();
     };
 
     const getFullMediaUrl = (url) => {
         if (!url) return '';
-        if (url.startsWith('http')) return url;
-        return `${API_URL.replace(/\/$/, '')}/${url.replace(/^\//, '')}`;
+        if (url.startsWith('http://') || url.startsWith('https://')) return url;
+        const cleanBase = API_URL.replace(/\/api\/?$/, '');
+        return `${cleanBase}/${url.replace(/^\//, '')}`;
     };
 
     const copyMediaUrl = (media) => {

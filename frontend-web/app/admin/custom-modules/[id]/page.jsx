@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from 'react';
 import { jbookApi } from '@/services/jbookApi';
 import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
+import AudioUploadWidget from '@/components/admin/AudioUploadWidget';
 
 export default function AdminCustomModuleDetailPage() {
     const { id } = useParams();
@@ -194,10 +195,11 @@ export default function AdminCustomModuleDetailPage() {
                         </div>
                     )}
                     {editModuleData.module_type === 'choukai' && (
-                        <div>
-                            <label className="block text-sm font-medium mb-1">URL Audio</label>
-                            <input type="text" className="w-full p-2.5 md:p-2 border rounded-lg bg-transparent" value={editModuleData.audio_url} onChange={e => setEditModuleData({...editModuleData, audio_url: e.target.value})} />
-                        </div>
+                        <AudioUploadWidget
+                            value={editModuleData.audio_url}
+                            onChange={(url) => setEditModuleData({ ...editModuleData, audio_url: url })}
+                            folder="choukai"
+                        />
                     )}
 
                     <div className="flex justify-end gap-2 pt-2">

@@ -17,9 +17,13 @@ router = Router()
 def get_file_url(file_field):
     if not file_field:
         return None
-    if settings.MEDIA_URL.startswith('http'):
-        return f"{settings.MEDIA_URL}{file_field.name}"
-    return f"{settings.MEDIA_URL}{file_field.name}"
+    name = str(file_field.name) if hasattr(file_field, 'name') else str(file_field)
+    if name.startswith('http://') or name.startswith('https://'):
+        return name
+    media_url = settings.MEDIA_URL if settings.MEDIA_URL.endswith('/') else f"{settings.MEDIA_URL}/"
+    if not media_url.startswith('/') and not media_url.startswith('http'):
+        media_url = f"/{media_url}"
+    return f"{media_url}{name.lstrip('/')}"
 
 class AuthBearer(HttpBearer):
     def authenticate(self, request, token):

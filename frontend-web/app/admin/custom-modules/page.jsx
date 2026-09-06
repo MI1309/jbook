@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { jbookApi } from '@/services/jbookApi';
 import Link from 'next/link';
+import AudioUploadWidget from '@/components/admin/AudioUploadWidget';
 
 export default function AdminCustomModulesPage() {
     const [modules, setModules] = useState([]);
@@ -99,10 +100,11 @@ export default function AdminCustomModulesPage() {
                         </div>
                     )}
                     {formData.module_type === 'choukai' && (
-                        <div>
-                            <label className="block text-sm font-medium mb-1">URL Audio</label>
-                            <input type="text" className="w-full p-2.5 md:p-2 border rounded-lg bg-transparent" value={formData.audio_url} onChange={e => setFormData({...formData, audio_url: e.target.value})} />
-                        </div>
+                        <AudioUploadWidget
+                            value={formData.audio_url}
+                            onChange={(url) => setFormData({ ...formData, audio_url: url })}
+                            folder="choukai"
+                        />
                     )}
                     <div className="flex gap-2 justify-end pt-2">
                         <button type="button" onClick={() => setIsCreating(false)} className="px-4 py-2.5 md:py-2 border rounded-lg text-sm font-medium">Batal</button>

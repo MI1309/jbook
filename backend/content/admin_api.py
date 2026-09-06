@@ -22,9 +22,13 @@ from django.db import transaction
 def get_file_url(file_field):
     if not file_field:
         return None
-    if settings.MEDIA_URL.startswith('http'):
-        return f"{settings.MEDIA_URL}{file_field.name}"
-    return f"{settings.MEDIA_URL}{file_field.name}"
+    name = str(file_field.name) if hasattr(file_field, 'name') else str(file_field)
+    if name.startswith('http://') or name.startswith('https://'):
+        return name
+    media_url = settings.MEDIA_URL if settings.MEDIA_URL.endswith('/') else f"{settings.MEDIA_URL}/"
+    if not media_url.startswith('/') and not media_url.startswith('http'):
+        media_url = f"/{media_url}"
+    return f"{media_url}{name.lstrip('/')}"
 
 router = Router()
 
@@ -217,10 +221,12 @@ def admin_create_blog(request, payload: BlogCreateSchema):
 
     if featured_url:
         prefix = settings.MEDIA_URL
-        if featured_url.startswith(prefix):
+        if prefix and featured_url.startswith(prefix):
             rel_path = featured_url[len(prefix):]
             blog.featured_image = rel_path
-            blog.save(update_fields=['featured_image'])
+        else:
+            blog.featured_image = featured_url
+        blog.save(update_fields=['featured_image'])
 
     blog.featured_image_url = get_file_url(blog.featured_image)
     return blog
@@ -252,10 +258,10 @@ def admin_update_blog(request, id: str, payload: BlogCreateSchema):
 
     prefix = settings.MEDIA_URL
     if featured_url:
-        if featured_url.startswith(prefix):
+        if prefix and featured_url.startswith(prefix):
             blog.featured_image = featured_url[len(prefix):]
         else:
-            blog.featured_image = featured_url if not featured_url.startswith('http') else blog.featured_image
+            blog.featured_image = featured_url
     else:
         blog.featured_image = None
 
