@@ -173,9 +173,9 @@ export default function ResetPasswordPage() {
                 </Suspense>
 
                 <div className="text-center mt-10 space-y-6">
-                    <Link href="/login" className={`inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-widest transition-all ${isDark ? 'text-neutral-700 hover:text-white' : 'text-gray-400 hover:text-gray-900'}`}>
+                    <Link href="/" className={`inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-widest transition-all ${isDark ? 'text-neutral-700 hover:text-white' : 'text-gray-400 hover:text-gray-900'}`}>
                         <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg>
-                        Kembali ke Login
+                        Beranda
                     </Link>
                 </div>
             </div>

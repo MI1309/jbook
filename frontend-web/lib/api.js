@@ -26,6 +26,7 @@ async function serveFromDb(storeName, { level, search, chapter, word_type, radic
         if (chapter) items = items.filter(i => String(i.chapter) === String(chapter));
         if (word_type) items = items.filter(i => i.word_type === word_type);
         if (radical) items = items.filter(i => i.radical === radical);
+        else items = items.filter(i => !(String(i.jlpt_level) === '1' && i.character === i.radical));
 
         if (search) {
             const q = search.toLowerCase();

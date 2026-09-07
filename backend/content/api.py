@@ -6,7 +6,7 @@ from core.decorators import rate_limit
 from django.conf import settings
 from .models import Kanji, Grammar, Blog, ContentSuggestion, Announcement, Vocab
 from django.shortcuts import get_object_or_404
-from django.db.models import Q
+from django.db.models import F, Q
 from uuid import UUID
 from datetime import datetime
 from django.http import HttpResponse
@@ -207,6 +207,8 @@ def list_kanji(request,
         
     if radical:
         qs = qs.filter(radical=radical)
+    else:
+        qs = qs.exclude(jlpt_level=1, character=F('radical'))
         
     if params.search:
         # Search in character, meaning, onyomi, kunyomi

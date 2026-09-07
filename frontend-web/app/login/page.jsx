@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { useTheme } from '@/context/ThemeContext';
 import Link from 'next/link';
@@ -25,6 +25,52 @@ export default function LoginPage() {
     if (!mounted) return null;
 
     const isDark = theme === 'dark';
+    const loginTemporarilyDisabled = true;
+
+    if (loginTemporarilyDisabled) {
+        return (
+        <div className={`min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 transition-all duration-500 relative overflow-hidden ${
+            isDark
+                ? 'bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-neutral-900 via-black to-neutral-950'
+                : 'bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-blue-50 via-gray-50 to-white'
+        }`}>
+            <div className={`max-w-md w-full space-y-8 p-10 rounded-[2.5rem] backdrop-blur-xl border transition-all duration-300 relative z-10 ${
+                isDark
+                    ? 'bg-black/40 border-white/5 shadow-[0_0_50px_-12px_rgba(37,99,235,0.2)]'
+                    : 'bg-white/80 border-gray-100 shadow-xl shadow-blue-500/5'
+            }`}>
+                <div className="text-center">
+                    <div className="inline-block p-4 rounded-3xl bg-blue-600 shadow-lg shadow-blue-500/40 mb-6">
+                        <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 11c0 3.517-1.009 6.799-2.753 9.571m-3.44-2.04l.054-.09A10.003 10.003 0 0012 21a10.003 10.003 0 008.384-4.51l.054.09m-4.287-4.21C18.06 13.002 20 11.227 20 9a8 8 0 10-16 0c0 2.227 1.94 4.002 3.847 4.79" />
+                        </svg>
+                    </div>
+                    <h2 className={`text-3xl font-black tracking-tight ${isDark ? 'text-white' : 'text-gray-900'}`}>
+                        Login sementara ditutup
+                    </h2>
+                    <p className={`mt-4 text-sm leading-6 ${isDark ? 'text-neutral-400' : 'text-gray-600'}`}>
+                        Fitur login sedang kami stabilkan agar pengalaman belajar tetap aman dan dapat diandalkan.
+                    </p>
+                </div>
+
+                <div className={`rounded-2xl border p-4 text-center text-xs font-bold leading-5 ${
+                    isDark ? 'border-blue-900/50 bg-blue-950/20 text-blue-300' : 'border-blue-100 bg-blue-50 text-blue-700'
+                }`}>
+                    Akun yang sudah login tetap tersimpan. Anda tidak perlu login ulang dari halaman ini.
+                </div>
+
+                <div className="flex flex-col gap-3 text-center">
+                    <Link href="/" className="w-full rounded-2xl bg-blue-600 px-4 py-4 text-xs font-black uppercase tracking-[0.2em] text-white transition-all hover:bg-blue-500">
+                        Kembali ke Beranda
+                    </Link>
+                    <Link href="/register" className={`text-xs font-black uppercase tracking-widest transition-colors ${isDark ? 'text-neutral-500 hover:text-white' : 'text-gray-500 hover:text-gray-900'}`}>
+                        Belum punya akun? Daftar
+                    </Link>
+                </div>
+            </div>
+        </div>
+        );
+    }
 
     return (
         <div className={`min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 transition-all duration-500 relative overflow-hidden ${

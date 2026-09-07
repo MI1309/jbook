@@ -193,9 +193,6 @@ export default function Navbar() {
                                     </div>
                                 ) : (
                                     <div className="flex items-center space-x-2">
-                                        <Link href="/login" className="text-gray-700 dark:text-gray-200 hover:text-accent-blue px-3 py-2 rounded-md text-sm font-medium transition-all duration-200 hover:bg-accent-blue/10" onClick={(e) => handleNavClick(e, '/login')}>
-                                            Masuk
-                                        </Link>
                                         <Link href="/register" className="bg-gradient-to-r from-accent-blue to-accent-green text-white px-4 py-2 rounded-md text-sm font-medium shadow-sm transition-all duration-200 hover:opacity-90 hover:shadow-md hover:-translate-y-px" onClick={(e) => handleNavClick(e, '/register')}>
                                             Daftar
                                         </Link>
@@ -304,9 +301,6 @@ export default function Navbar() {
                                 </div>
                             ) : (
                                 <div className="px-5 space-y-2">
-                                    <Link href="/login" className={`block px-3 py-2 rounded-md text-sm font-black transition-colors ${!mounted ? 'text-gray-600' : (theme === 'dark' ? 'text-gray-400 hover:text-white' : 'text-accent-blue hover:text-accent-blue')}`} onClick={(e) => handleNavClick(e, '/login')}>
-                                        Masuk
-                                    </Link>
                                     <Link href="/register" className="block px-3 py-2 rounded-xl text-sm font-black text-white bg-accent-blue hover:bg-accent-blue/90 transition-all duration-200 text-center shadow-lg shadow-accent-blue/10" onClick={(e) => handleNavClick(e, '/register')}>
                                         Daftar
                                     </Link>

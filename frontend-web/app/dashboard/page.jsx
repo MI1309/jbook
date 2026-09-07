@@ -91,12 +91,6 @@ export default function DashboardOverviewPage() {
                             <p className="text-xs text-blue-600/80 font-bold uppercase tracking-wider">Data hanya tersimpan di browser ini</p>
                         </div>
                     </div>
-                    <Link
-                        href="/login"
-                        className="bg-blue-600 text-white px-6 py-3 rounded-2xl font-black text-sm hover:scale-[1.05] active:scale-[0.95] transition-all shadow-lg shadow-blue-500/20"
-                    >
-                        Pindahkan Data ke Akun →
-                    </Link>
                 </div>
             )}
 
