@@ -1,17 +1,16 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { useTheme } from '@/context/ThemeContext';
 import Link from 'next/link';
-import { GoogleLogin } from '@react-oauth/google';
 
 export default function RegisterPage() {
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
-    const { register, googleLogin } = useAuth();
+    const { register } = useAuth();
     const { theme, mounted } = useTheme();
 
     const handleSubmit = async (e) => {
@@ -132,30 +131,6 @@ export default function RegisterPage() {
                         Daftar Sekarang
                     </button>
                 </form>
-
-                <div className="mt-10">
-                    <div className="relative">
-                        <div className="absolute inset-0 flex items-center">
-                            <div className={`w-full border-t ${isDark ? 'border-neutral-800' : 'border-gray-100'}`} />
-                        </div>
-                        <div className="relative flex justify-center text-[10px] font-black uppercase tracking-[0.2em]">
-                            <span className={`px-4 transition-colors ${isDark ? 'bg-black text-neutral-600' : 'bg-white text-gray-400'}`}>
-                                Atau
-                            </span>
-                        </div>
-                    </div>
-
-                    <div className="mt-8 flex justify-center">
-                        <div className={`p-1 rounded-2xl transition-all ${isDark ? 'bg-neutral-800/50 hover:bg-neutral-800' : 'bg-gray-50 hover:bg-white'}`}>
-                            <GoogleLogin
-                                theme={isDark ? "dark" : "outline"}
-                                shape="circle"
-                                onSuccess={googleLogin}
-                                onError={() => setError('Google Registration Failed')}
-                            />
-                        </div>
-                    </div>
-                </div>
 
                 <div className="text-center mt-10 space-y-6">
                     <Link href="/" className={`inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-widest transition-all ${isDark ? 'text-neutral-700 hover:text-white' : 'text-gray-400 hover:text-gray-900'}`}>

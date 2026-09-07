@@ -1,19 +1,5 @@
 [
     {
-        "char": "遺",
-        "meaning": "Meninggalkan",
-        "on": [
-            "I",
-            "YUI"
-        ],
-        "kun": [
-            "noko-su"
-        ],
-        "strokes": 15,
-        "level": 1,
-        "radical": "辵"
-    },
-    {
         "char": "劇",
         "meaning": "Drama, Hebat",
         "on": [
@@ -300,17 +286,6 @@
         "radical": "日"
     },
     {
-        "char": "忠",
-        "meaning": "Setia",
-        "on": [
-            "CHUU"
-        ],
-        "kun": [],
-        "strokes": 8,
-        "level": 1,
-        "radical": "心"
-    },
-    {
         "char": "映",
         "meaning": "Memantulkan",
         "on": [
@@ -425,19 +400,6 @@
         "radical": "网"
     },
     {
-        "char": "朗",
-        "meaning": "Cerah, Ceria",
-        "on": [
-            "ROU"
-        ],
-        "kun": [
-            "hoga-raka"
-        ],
-        "strokes": 10,
-        "level": 1,
-        "radical": "月"
-    },
-    {
         "char": "脳",
         "meaning": "Otak",
         "on": [
@@ -462,19 +424,6 @@
         "radical": "竹"
     },
     {
-        "char": "聖",
-        "meaning": "Suci",
-        "on": [
-            "SEI"
-        ],
-        "kun": [
-            "hijiri"
-        ],
-        "strokes": 13,
-        "level": 1,
-        "radical": "耳"
-    },
-    {
         "char": "俳",
         "meaning": "Aktor, Haiku",
         "on": [
@@ -484,32 +433,6 @@
         "strokes": 10,
         "level": 1,
         "radical": "人"
-    },
-    {
-        "char": "誠",
-        "meaning": "Tulus",
-        "on": [
-            "SEI"
-        ],
-        "kun": [
-            "makoto"
-        ],
-        "strokes": 13,
-        "level": 1,
-        "radical": "言"
-    },
-    {
-        "char": "潮",
-        "meaning": "Pasang Surut",
-        "on": [
-            "CHOU"
-        ],
-        "kun": [
-            "shio"
-        ],
-        "strokes": 15,
-        "level": 1,
-        "radical": "水"
     },
     {
         "char": "賃",
@@ -676,17 +599,6 @@
         "radical": "大"
     },
     {
-        "char": "陛",
-        "meaning": "Yang Mulia",
-        "on": [
-            "HEI"
-        ],
-        "kun": [],
-        "strokes": 10,
-        "level": 1,
-        "radical": "阜"
-    },
-    {
         "char": "後",
         "meaning": "Permaisuri, Belakang",
         "on": [
@@ -713,19 +625,6 @@
         "strokes": 12,
         "level": 1,
         "radical": "力"
-    },
-    {
-        "char": "奮",
-        "meaning": "Bersemangat",
-        "on": [
-            "FUN"
-        ],
-        "kun": [
-            "furu-u"
-        ],
-        "strokes": 16,
-        "level": 1,
-        "radical": "大"
     },
     {
         "char": "訳",
@@ -761,30 +660,6 @@
         ],
         "kun": [],
         "strokes": 10,
-        "level": 1,
-        "radical": "言"
-    },
-    {
-        "char": "詐",
-        "meaning": "Penipuan",
-        "on": [
-            "SA"
-        ],
-        "kun": [],
-        "strokes": 12,
-        "level": 1,
-        "radical": "言"
-    },
-    {
-        "char": "詔",
-        "meaning": "Titah Kaisar",
-        "on": [
-            "SHOU"
-        ],
-        "kun": [
-            "mikotonori"
-        ],
-        "strokes": 12,
         "level": 1,
         "radical": "言"
     }

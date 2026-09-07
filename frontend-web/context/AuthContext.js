@@ -2,7 +2,6 @@
 
 import { createContext, useContext, useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { GoogleOAuthProvider } from '@react-oauth/google';
 import Cookies from 'js-cookie';
 
 const AuthContext = createContext();
@@ -33,8 +32,6 @@ export function AuthProvider({ children }) {
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
     const router = useRouter();
-
-    const GOOGLE_CLIENT_ID = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
 
     useEffect(() => {
         // Cleanup old localStorage tokens (migration from old system)
@@ -186,30 +183,6 @@ export function AuthProvider({ children }) {
         }
     };
 
-    const googleLogin = async (credentialResponse) => {
-        try {
-            const res = await fetch(`${API_URL}/auth/google`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ token: credentialResponse.credential }),
-            });
-
-            const data = await res.json();
-            if (!res.ok) throw new Error(data.detail || data.message || 'Login Google gagal.');
-
-            setAuthCookies(data.access, data.refresh);
-            setUser(data.user);
-            router.push('/');
-            return { success: true };
-        } catch (error) {
-            console.error("Google login error:", error);
-            const message = error.message === 'Failed to fetch' 
-                ? 'Koneksi gagal. Mohon periksa internet Anda.' 
-                : error.message;
-            return { success: false, error: message };
-        }
-    };
-
     const forgotPassword = async (email) => {
         try {
             const res = await fetch(`${API_URL}/auth/password-reset`, {
@@ -261,15 +234,13 @@ export function AuthProvider({ children }) {
     const logout = () => doLogout(true);
 
     return (
-        <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
-            <AuthContext.Provider value={{
-                user, loading,
-                login, register, googleLogin,
-                logout, forgotPassword, resetPassword,
-            }}>
-                {children}
-            </AuthContext.Provider>
-        </GoogleOAuthProvider>
+        <AuthContext.Provider value={{
+            user, loading,
+            login, register,
+            logout, forgotPassword, resetPassword,
+        }}>
+            {children}
+        </AuthContext.Provider>
     );
 }
 

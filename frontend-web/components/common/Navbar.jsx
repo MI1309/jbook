@@ -122,6 +122,7 @@ export default function Navbar() {
                                     { href: '/bunpo', label: 'Tata Bahasa' },
                                     { href: '/kana', label: 'Kana' },
                                     { href: '/kotoba', label: 'Kotoba' },
+                                    { href: '/practice', label: 'Latihan' },
                                     { href: '/tts', label: 'TTS' },
 
                                     { href: '/about', label: 'Tentang Kami' },
@@ -192,11 +193,7 @@ export default function Navbar() {
                                         </button>
                                     </div>
                                 ) : (
-                                    <div className="flex items-center space-x-2">
-                                        <Link href="/register" className="bg-gradient-to-r from-accent-blue to-accent-green text-white px-4 py-2 rounded-md text-sm font-medium shadow-sm transition-all duration-200 hover:opacity-90 hover:shadow-md hover:-translate-y-px" onClick={(e) => handleNavClick(e, '/register')}>
-                                            Daftar
-                                        </Link>
-                                    </div>
+                                    null
                                 )
                             )}
                         </div>
@@ -249,6 +246,7 @@ export default function Navbar() {
                             { href: '/bunpo', label: 'Tata Bahasa' },
                             { href: '/kana', label: 'Kana' },
                             { href: '/kotoba', label: 'Kotoba' },
+                            { href: '/practice', label: 'Latihan' },
                             { href: '/tts', label: 'TTS' },
                             { href: '/about', label: 'Tentang Kami' },
                         ].map(({ href, label }, i) => (
@@ -300,11 +298,7 @@ export default function Navbar() {
                                     </button>
                                 </div>
                             ) : (
-                                <div className="px-5 space-y-2">
-                                    <Link href="/register" className="block px-3 py-2 rounded-xl text-sm font-black text-white bg-accent-blue hover:bg-accent-blue/90 transition-all duration-200 text-center shadow-lg shadow-accent-blue/10" onClick={(e) => handleNavClick(e, '/register')}>
-                                        Daftar
-                                    </Link>
-                                </div>
+                                null
                             )
                         )}
                     </div>
