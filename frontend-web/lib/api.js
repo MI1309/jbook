@@ -212,8 +212,13 @@ export async function getKanjiLevelVisibility() {
 }
 
 export async function getKanjiList({ level, search, radical, limit = 50, page = 1 } = {}) {
+    const visibility = await getKanjiLevelVisibility();
+    const enabledLevels = (visibility.enabled_levels || [4, 5]).map(Number);
+    const requestedLevels = level
+        ? String(level).split(',').map(Number).filter(item => enabledLevels.includes(item))
+        : enabledLevels;
     const queryParams = new URLSearchParams();
-    if (level) queryParams.append('level', level);
+    if (requestedLevels.length) queryParams.append('level', requestedLevels.join(','));
     if (search) queryParams.append('search', search);
     if (radical) queryParams.append('radical', radical);
     if (limit) queryParams.append('limit', limit);
@@ -224,8 +229,7 @@ export async function getKanjiList({ level, search, radical, limit = 50, page = 
     // Check local smart matches first (Parallel or Fallback)
     let localSmartResults = null;
     if (typeof window !== 'undefined') {
-        const visibility = await getKanjiLevelVisibility();
-        localSmartResults = await serveFromDb('kanji', { level, search, radical, page: 1, limit: 200, enabledLevels: visibility.enabled_levels });
+        localSmartResults = await serveFromDb('kanji', { level: requestedLevels.join(','), search, radical, page: 1, limit: 200, enabledLevels });
     }
 
     // 1. Jika Online: Ambil dari API (Selalu Prioritas Utama)

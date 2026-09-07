@@ -12,14 +12,18 @@ Kami telah memperbarui konfigurasi `metadata` bawaan dari Next.js untuk menyerta
 ## 2. Peta Situs (Sitemap - app/sitemap.js)
 File `sitemap.js` akan menghasilkan `sitemap.xml` secara dinamis.
 Sitemap membantu Googlebot menemukan dan mengindeks seluruh halaman penting di aplikasi (seperti beranda, about, blog, kanji, bunpo, kotoba, dan practice) beserta informasi prioritas dan seberapa sering konten diperbarui.
+Untuk Kanji, sitemap mengambil seluruh ID detail melalui endpoint publik khusus, bukan hanya 300 item pertama. Halaman detail Kanji tetap dapat ditemukan mesin pencari walaupun levelnya sedang disembunyikan dari katalog pengembangan.
 
-## 3. Robots.txt (app/robots.js)
+## 3. SEO Halaman Detail Kanji
+Setiap halaman `/kanji/{id}` memiliki judul, deskripsi, canonical URL, Open Graph, dan kata kunci yang dibentuk dari karakter, arti, Onyomi, dan Kunyomi. Halaman tersebut juga menyertakan structured data `LearningResource` agar konteks materi belajar lebih jelas bagi mesin pencari.
+
+## 4. Robots.txt (app/robots.js)
 File `robots.js` mengontrol perilaku bot mesin pencari (crawler). 
 - Mengizinkan (`allow: '/'`) bot untuk merayapi seluruh situs.
 - Melarang (`disallow`) bot merayapi direktori yang bersifat privat seperti `/admin/`.
 - Menyertakan link ke `sitemap.xml` agar mesin pencari langsung tahu struktur situs.
 
-## 4. Hosting Vercel & SEO
+## 5. Hosting Vercel & SEO
 Aplikasi yang di-hosting di Vercel menggunakan Next.js otomatis dioptimalkan untuk SEO karena adanya fitur **Server-Side Rendering (SSR)** dan **Static Site Generation (SSG)**. Mesin pencari dapat langsung membaca HTML yang sudah ter-render sehingga mempercepat proses indeksing dan meningkatkan skor *Core Web Vitals* yang menjadi faktor krusial dalam algoritma ranking Google.
 
 ## Rekomendasi Selanjutnya untuk SEO

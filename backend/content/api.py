@@ -27,6 +27,13 @@ def kanji_visibility(request):
         "enabled_levels": [level for level in range(1, 6) if level not in disabled_levels],
     }
 
+@router.get("/kanji/sitemap")
+def kanji_sitemap(request):
+    return [
+        {"id": str(kanji.id)}
+        for kanji in Kanji.objects.all().only('id')
+    ]
+
 
 def get_file_url(file_field):
     if not file_field:

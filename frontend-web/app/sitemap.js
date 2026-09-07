@@ -24,9 +24,20 @@ async function fetchList(endpoint, limit = 500) {
   }
 }
 
+async function fetchAllKanji() {
+  try {
+    const res = await fetch(`${API_URL}/content/kanji/sitemap`, { next: { revalidate: 86400 } });
+    if (!res.ok) return [];
+    const data = await res.json();
+    return Array.isArray(data) ? data : [];
+  } catch (e) {
+    return [];
+  }
+}
+
 export default async function sitemap() {
   const blogs = await safeFetch(getBlogList, []);
-  const kanjis = await fetchList('/content/kanji', 300);
+  const kanjis = await fetchAllKanji();
   const bunpos = await fetchList('/content/grammar', 300);
   const kotobas = await fetchList('/content/vocab', 300);
 
@@ -107,8 +118,8 @@ export default async function sitemap() {
     priority: 0.9,
   }));
 
-  // Kanji detail pages (safe cap 300)
-  const kanjiPages = kanjis.slice(0, 300).map((k) => ({
+  // Include every Kanji detail page, including levels hidden from the catalogue.
+  const kanjiPages = kanjis.map((k) => ({
     url: `${BASE_URL}/kanji/${k.id}`,
     lastModified: today,
     changeFrequency: 'yearly',
