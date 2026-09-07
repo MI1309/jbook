@@ -14,7 +14,7 @@ import os
 from datetime import datetime
 from django.http import HttpResponse
 from django.conf import settings
-from .models import Kanji, Grammar, Blog, JLPTLevel, Vocab, Particle, Announcement, MediaAttachment
+from .models import Kanji, Grammar, Blog, JLPTLevel, Vocab, Particle, Announcement, MediaAttachment, FeatureSetting
 from users.api import AuthBearer
 from django.db import transaction
 
@@ -84,6 +84,25 @@ class SearchResultSchema(BaseModel):
     title: str = Field(..., max_length=255)
     subtitle: Optional[str] = None
     tags: List[str] = Field(default_factory=list)
+
+class KanjiVisibilitySchema(Schema):
+    disabled_levels: List[int] = Field(default_factory=list)
+
+@router.get("/kanji/visibility", auth=AdminAuth())
+def admin_get_kanji_visibility(request):
+    setting = FeatureSetting.objects.filter(key='kanji_visibility').first()
+    value = setting.value if setting and isinstance(setting.value, dict) else {'disabled_levels': [1, 2, 3]}
+    return {'disabled_levels': value.get('disabled_levels', [1, 2, 3])}
+
+@router.put("/kanji/visibility", auth=AdminAuth())
+def admin_update_kanji_visibility(request, data: KanjiVisibilitySchema):
+    disabled_levels = sorted(set(data.disabled_levels))
+    if any(level not in range(1, 6) for level in disabled_levels):
+        raise HttpError(400, "Level Kanji harus berada di antara 1 dan 5")
+    setting, _ = FeatureSetting.objects.get_or_create(key='kanji_visibility')
+    setting.value = {'disabled_levels': disabled_levels}
+    setting.save(update_fields=['value', 'updated_at'])
+    return {'disabled_levels': disabled_levels}
 
 # Admin Dashboard Stats
 @router.get("/stats", auth=AdminAuth(), response=dict)

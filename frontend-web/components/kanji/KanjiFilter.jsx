@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import { useDebounce } from 'use-debounce';
 import { useTheme } from '@/context/ThemeContext';
+import { getKanjiLevelVisibility } from '@/lib/api';
 
 
 const RADICALS_BY_STROKES = [
@@ -137,6 +138,15 @@ function FilterContent() {
     const [selectedLevels, setSelectedLevels] = useState(initialLevels);
     const [expandedGroup, setExpandedGroup] = useState(null);
     const [showRadicals, setShowRadicals] = useState(false);
+    const [enabledLevels, setEnabledLevels] = useState([4, 5]);
+
+    useEffect(() => {
+        getKanjiLevelVisibility().then(data => {
+            const levels = data.enabled_levels || [4, 5];
+            setEnabledLevels(levels);
+            setSelectedLevels(current => current.filter(level => levels.includes(Number(level))));
+        });
+    }, []);
     
     // Sync state with URL changes (e.g. back button)
     useEffect(() => {
@@ -264,9 +274,9 @@ function FilterContent() {
                         Filter Level JLPT
                     </label>
                     <div className="grid grid-cols-6 gap-1.5 w-full">
-                        {[5, 4, 3, 2, 1].map((level) => {
+                        {[5, 4, 3, 2, 1].filter(level => enabledLevels.includes(level)).map((level) => {
                             const isSelected = selectedLevels.includes(level.toString());
-                            const spanClass = [5, 4, 3].includes(level) ? 'col-span-2' : 'col-span-3';
+                            const spanClass = 'col-span-3';
                             return (
                                 <button
                                     key={level}

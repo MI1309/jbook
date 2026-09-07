@@ -5,7 +5,7 @@ from django.shortcuts import get_object_or_404
 from django.contrib.auth import get_user_model
 from .models import QuizAttempt, UserProgress
 from .tts_logic import CrosswordGenerator
-from content.models import Kanji, Vocab, Grammar, Particle, MinnaQuestion, DoukaiPassage, DoukaiQuestion
+from content.models import Kanji, Vocab, Grammar, Particle, MinnaQuestion, DoukaiPassage, DoukaiQuestion, FeatureSetting
 import random
 import uuid
 from datetime import datetime, timedelta
@@ -168,7 +168,10 @@ def generate_quiz(request, limit: int = 10, level: Optional[str] = None, type: s
     
     for t in requested_types:
         if t == 'kanji':
-            qs = Kanji.objects.all()
+            setting = FeatureSetting.objects.filter(key='kanji_visibility').first()
+            value = setting.value if setting and isinstance(setting.value, dict) else {'disabled_levels': [1, 2, 3]}
+            disabled_levels = value.get('disabled_levels', [1, 2, 3])
+            qs = Kanji.objects.exclude(jlpt_level__in=disabled_levels)
             d_type = 'kanji'
         elif t in ['vocab', 'kotoba']:
             qs = Vocab.objects.all()

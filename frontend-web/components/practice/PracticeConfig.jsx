@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useTheme } from '@/context/ThemeContext';
-import { getDoukaiCount } from '@/lib/api';
+import { getDoukaiCount, getKanjiLevelVisibility } from '@/lib/api';
 
 export default function PracticeConfig() {
     const { theme, mounted } = useTheme();
@@ -27,9 +27,24 @@ export default function PracticeConfig() {
 
     // Doukai state
     const [doukaiCount, setDoukaiCount] = useState(0);
+    const [jlptLevels, setJlptLevels] = useState([
+        { id: '5', label: 'N5', color: 'bg-green-100 text-green-700 border-green-200' },
+        { id: '4', label: 'N4', color: 'bg-blue-100 text-blue-700 border-blue-200' },
+    ]);
 
     useEffect(() => {
         getDoukaiCount().then(setDoukaiCount);
+        getKanjiLevelVisibility().then(data => {
+            const enabled = data.enabled_levels || [4, 5];
+            setSelectedLevels(current => current.filter(level => enabled.includes(Number(level))));
+            setJlptLevels([
+                { id: '5', label: 'N5', color: 'bg-green-100 text-green-700 border-green-200' },
+                { id: '4', label: 'N4', color: 'bg-blue-100 text-blue-700 border-blue-200' },
+                { id: '3', label: 'N3', color: 'bg-yellow-100 text-yellow-700 border-yellow-200' },
+                { id: '2', label: 'N2', color: 'bg-orange-100 text-orange-700 border-orange-200' },
+                { id: '1', label: 'N1', color: 'bg-blue-100 text-blue-700 border-blue-200' },
+            ].filter(level => enabled.includes(Number(level.id))));
+        });
     }, []);
 
     const types = [
@@ -38,14 +53,6 @@ export default function PracticeConfig() {
         { id: 'vocab', label: 'Kotoba', icon: '📖', sub: 'Kosakata' },
         { id: 'grammar', label: 'Bunpo', icon: '📝', sub: 'Tata Bahasa' },
         { id: 'particle', label: 'Partikel', icon: '🔗', sub: 'は, が, を' },
-    ];
-
-    const jlptLevels = [
-        { id: '5', label: 'N5', color: 'bg-green-100 text-green-700 border-green-200' },
-        { id: '4', label: 'N4', color: 'bg-blue-100 text-blue-700 border-blue-200' },
-        { id: '3', label: 'N3', color: 'bg-yellow-100 text-yellow-700 border-yellow-200' },
-        { id: '2', label: 'N2', color: 'bg-orange-100 text-orange-700 border-orange-200' },
-        { id: '1', label: 'N1', color: 'bg-blue-100 text-blue-700 border-blue-200' },
     ];
 
     const toggleType = (id) => {

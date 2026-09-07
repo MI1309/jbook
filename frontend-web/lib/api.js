@@ -13,10 +13,11 @@ import {
  * Try to serve from IndexedDB. Returns null if store is empty.
  * Applies filters and pagination client-side.
  */
-async function serveFromDb(storeName, { level, search, chapter, word_type, radical, page = 1, limit = 50 } = {}) {
+async function serveFromDb(storeName, { level, search, chapter, word_type, radical, page = 1, limit = 50, enabledLevels } = {}) {
     try {
         let items = await dbGetAll(storeName);
         if (!items || items.length === 0) return null;
+        if (storeName === 'kanji') items = items.filter(i => (enabledLevels || [4, 5]).includes(Number(i.jlpt_level)));
         if (level) {
             const levelValues = String(level).split(',').map(l => l.trim()).filter(Boolean);
             if (levelValues.length) {
@@ -200,6 +201,16 @@ export async function resolveContentId(type, character) {
     return findIdByString(storeMap[type] || type, character);
 }
 
+export async function getKanjiLevelVisibility() {
+    try {
+        const res = await fetch(`${API_URL}/content/kanji/visibility`, { cache: 'no-store' });
+        if (!res.ok) throw new Error('Kanji visibility request failed');
+        return await res.json();
+    } catch (error) {
+        return { disabled_levels: [1, 2, 3], enabled_levels: [4, 5] };
+    }
+}
+
 export async function getKanjiList({ level, search, radical, limit = 50, page = 1 } = {}) {
     const queryParams = new URLSearchParams();
     if (level) queryParams.append('level', level);
@@ -213,7 +224,8 @@ export async function getKanjiList({ level, search, radical, limit = 50, page = 
     // Check local smart matches first (Parallel or Fallback)
     let localSmartResults = null;
     if (typeof window !== 'undefined') {
-        localSmartResults = await serveFromDb('kanji', { level, search, radical, page: 1, limit: 200 });
+        const visibility = await getKanjiLevelVisibility();
+        localSmartResults = await serveFromDb('kanji', { level, search, radical, page: 1, limit: 200, enabledLevels: visibility.enabled_levels });
     }
 
     // 1. Jika Online: Ambil dari API (Selalu Prioritas Utama)

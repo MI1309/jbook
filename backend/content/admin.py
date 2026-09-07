@@ -3,7 +3,7 @@ from django.contrib import admin
 from django.db.models import Count
 from django.http import HttpResponse
 from django.urls import path, reverse
-from .models import Kanji, Vocab, Grammar, Blog, Particle, Announcement, MinnaQuestion, DoukaiPassage, DoukaiQuestion
+from .models import Kanji, Vocab, Grammar, Blog, Particle, Announcement, MinnaQuestion, DoukaiPassage, DoukaiQuestion, FeatureSetting
 
 @admin.action(description="Export selected items as CSV")
 def export_as_csv(modeladmin, request, queryset):
@@ -197,3 +197,8 @@ class MinnaQuestionAdmin(admin.ModelAdmin):
     @admin.display(description='Kalimat Soal')
     def question_jp_short(self, obj):
         return obj.question_jp[:60] + ('…' if len(obj.question_jp) > 60 else '')
+
+@admin.register(FeatureSetting)
+class FeatureSettingAdmin(admin.ModelAdmin):
+    list_display = ('key', 'value', 'updated_at')
+    readonly_fields = ('updated_at',)

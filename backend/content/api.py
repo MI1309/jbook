@@ -4,7 +4,7 @@ from pydantic import BaseModel, Field, field_validator
 from ninja.security import HttpBearer
 from core.decorators import rate_limit
 from django.conf import settings
-from .models import Kanji, Grammar, Blog, ContentSuggestion, Announcement, Vocab
+from .models import Kanji, Grammar, Blog, ContentSuggestion, Announcement, Vocab, FeatureSetting
 from django.shortcuts import get_object_or_404
 from django.db.models import F, Q
 from uuid import UUID
@@ -12,6 +12,20 @@ from datetime import datetime
 from django.http import HttpResponse
 
 router = Router()
+
+def get_disabled_kanji_levels():
+    setting = FeatureSetting.objects.filter(key='kanji_visibility').first()
+    if not setting or not isinstance(setting.value, dict):
+        return {1, 2, 3}
+    return {level for level in setting.value.get('disabled_levels', []) if level in range(1, 6)}
+
+@router.get("/kanji/visibility")
+def kanji_visibility(request):
+    disabled_levels = sorted(get_disabled_kanji_levels())
+    return {
+        "disabled_levels": disabled_levels,
+        "enabled_levels": [level for level in range(1, 6) if level not in disabled_levels],
+    }
 
 
 def get_file_url(file_field):
@@ -198,12 +212,12 @@ class GrammarListResponse(BaseModel):
 def list_kanji(request, 
                params: ListQuerySchema = Query(...),
                radical: Optional[str] = None):
-    qs = Kanji.objects.all()
+    qs = Kanji.objects.exclude(jlpt_level__in=get_disabled_kanji_levels())
     
     if params.level:
         levels = parse_levels(params.level)
         if levels:
-            qs = qs.filter(jlpt_level__in=levels)
+            qs = qs.filter(jlpt_level__in=[level for level in levels if level not in get_disabled_kanji_levels()])
         
     if radical:
         qs = qs.filter(radical=radical)
