@@ -1,5 +1,9 @@
 const base_url = process.env.NEXT_PUBLIC_API_URL || 'https://imronm.pythonanywhere.com/api';
 export const API_URL = base_url.endsWith('/') ? base_url.slice(0, -1) : base_url;
+
+let kanjiVisibilityCache = null;
+let kanjiVisibilityExpiresAt = 0;
+let kanjiVisibilityRequest = null;
 import Cookies from 'js-cookie';
 import { fetchWithCache } from '@/lib/cache-store';
 import { dbGetAll, dbHasData, dbGet } from '@/lib/offline-db';
@@ -202,10 +206,28 @@ export async function resolveContentId(type, character) {
 }
 
 export async function getKanjiLevelVisibility() {
+    if (kanjiVisibilityCache && Date.now() < kanjiVisibilityExpiresAt) {
+        return kanjiVisibilityCache;
+    }
+    if (kanjiVisibilityRequest) return kanjiVisibilityRequest;
+
+    kanjiVisibilityRequest = fetch(`${API_URL}/content/kanji/visibility`, { cache: 'no-store' })
+        .then(res => {
+            if (!res.ok) throw new Error('Kanji visibility request failed');
+            return res.json();
+        })
+        .then(data => {
+            kanjiVisibilityCache = data;
+            kanjiVisibilityExpiresAt = Date.now() + 5 * 60 * 1000;
+            return data;
+        })
+        .catch(() => ({ disabled_levels: [1, 2, 3], enabled_levels: [4, 5] }))
+        .finally(() => {
+            kanjiVisibilityRequest = null;
+        });
+
     try {
-        const res = await fetch(`${API_URL}/content/kanji/visibility`, { cache: 'no-store' });
-        if (!res.ok) throw new Error('Kanji visibility request failed');
-        return await res.json();
+        return await kanjiVisibilityRequest;
     } catch (error) {
         return { disabled_levels: [1, 2, 3], enabled_levels: [4, 5] };
     }
@@ -226,9 +248,11 @@ export async function getKanjiList({ level, search, radical, limit = 50, page = 
 
     const cacheKey = `kanji-list-${queryParams.toString()}`;
     
-    // Check local smart matches first (Parallel or Fallback)
+    // Local smart search is only needed offline. Scanning all IndexedDB stores
+    // before every online request makes filtering and pagination unnecessarily slow.
     let localSmartResults = null;
-    if (typeof window !== 'undefined') {
+    const isOffline = typeof window !== 'undefined' && typeof navigator !== 'undefined' && !navigator.onLine;
+    if (isOffline) {
         localSmartResults = await serveFromDb('kanji', { level: requestedLevels.join(','), search, radical, page: 1, limit: 200, enabledLevels });
     }
 
@@ -242,22 +266,6 @@ export async function getKanjiList({ level, search, radical, limit = 50, page = 
             });
 
             const responseData = { ...data };
-
-            // Merge with local results if search is active
-            if (search && localSmartResults) {
-                const apiItems = [...(responseData.items || [])];
-                // Merge all local results that aren't in the API response
-                const localItems = localSmartResults.items || [];
-                
-                localItems.forEach(si => {
-                    if (!apiItems.find(ai => ai.character === si.character)) {
-                        apiItems.push(si);
-                    }
-                });
-                
-                responseData.items = apiItems;
-                responseData.total = apiItems.length;
-            }
 
             return responseData;
         } catch (error) {
@@ -624,9 +632,11 @@ export async function getVocabList({ level, search, word_type, limit = 50, page 
     // Prioritas Baru: API Pertama (Online) > Database Lokal (Offline/Gagal)
     const cacheKey = `vocab-list-${queryParams.toString()}`;
     
-    // Check local smart matches first (Parallel or Fallback)
+    // Local filtering is only needed offline. Online requests already return
+    // paginated results from the API, while a local scan reads the full store.
     let localSmartResults = null;
-    if (typeof window !== 'undefined') {
+    const isOffline = typeof window !== 'undefined' && typeof navigator !== 'undefined' && !navigator.onLine;
+    if (isOffline) {
         localSmartResults = await serveFromDb('vocab', { level, search, word_type, page: 1, limit: 200 });
     }
     
@@ -641,30 +651,6 @@ export async function getVocabList({ level, search, word_type, limit = 50, page 
             });
 
             const responseData = { ...data };
-
-            // Merge with local results if search is active (for _matchTarget highlighting)
-            if (search && localSmartResults) {
-                const apiItems = [...(responseData.items || [])];
-                const localItems = localSmartResults.items || [];
-                
-                // First, enrich API items with local _matchTarget if they match
-                apiItems.forEach((ai, index) => {
-                    const li = localItems.find(item => item.id === ai.id || item.word === ai.word);
-                    if (li && li._matchTarget) {
-                        apiItems[index] = { ...ai, _matchTarget: li._matchTarget };
-                    }
-                });
-
-                // Then, merge local items that aren't in API response
-                localItems.forEach(si => {
-                    if (!apiItems.find(ai => ai.id === si.id || ai.word === si.word)) {
-                        apiItems.push(si);
-                    }
-                });
-                
-                responseData.items = apiItems;
-                responseData.total = apiItems.length;
-            }
 
             return responseData;
         } catch (error) {

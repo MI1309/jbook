@@ -32,11 +32,17 @@ function FilterContent() {
 
     // Sync state with URL changes (e.g. back button)
     useEffect(() => {
-        setSearchTerm(searchParams.get('search') || '');
-        setSelectedLevels(searchParams.get('level')?.split(',').filter(Boolean) || []);
-        setWordType(searchParams.get('word_type') || '');
-        if (searchParams.toString() && typeof window !== 'undefined') {
-            sessionStorage.setItem('kotoba_filter_params', searchParams.toString());
+        const nextSearch = searchParams.get('search') || '';
+        const nextLevels = searchParams.get('level')?.split(',').filter(Boolean) || [];
+        const nextType = searchParams.get('word_type') || '';
+
+        setSearchTerm(current => current === nextSearch ? current : nextSearch);
+        setSelectedLevels(current => current.join(',') === nextLevels.join(',') ? current : nextLevels);
+        setWordType(current => current === nextType ? current : nextType);
+
+        const query = searchParams.toString();
+        if (query && typeof window !== 'undefined') {
+            sessionStorage.setItem('kotoba_filter_params', query);
         }
     }, [searchParams]);
 

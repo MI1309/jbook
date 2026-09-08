@@ -1,9 +1,15 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useGameStore } from '../../stores/gameStore';
 import { Trophy, RotateCcw, X } from 'lucide-react';
 
 export const CompletionModal = () => {
   const { gameState, resetGame } = useGameStore();
+
+  useEffect(() => {
+    if (!gameState.isCompleted) return undefined;
+    const timer = window.setTimeout(resetGame, 2500);
+    return () => window.clearTimeout(timer);
+  }, [gameState.isCompleted, resetGame]);
 
   if (!gameState.isCompleted) return null;
 

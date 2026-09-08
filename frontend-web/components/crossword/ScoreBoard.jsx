@@ -1,11 +1,11 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useGameStore } from '../../stores/gameStore';
-import { Trophy, Timer, Flame } from 'lucide-react';
+import { Trophy, Flame } from 'lucide-react';
 
 export const ScoreBoard = () => {
   const { gameState } = useGameStore();
 
-  if (!gameState.grid) return null;
+  if (!gameState.grid && gameState.mode !== 'kanji') return null;
 
   // Formatting time (elapsed time in seconds, we could format it to mm:ss if we had a timer running in store)
   // For now just show score and streak placeholder
@@ -23,6 +23,14 @@ export const ScoreBoard = () => {
       </div>
 
       <div className="flex items-center gap-6">
+        {gameState.mode === 'kanji' && (
+          <div className="flex flex-col items-center">
+            <div className="text-xs text-gray-500 uppercase font-bold tracking-wider">Terjawab</div>
+            <div className="text-lg font-bold text-foreground">
+              {gameState.kanjiAnswered ? gameState.currentKanjiQuestion + 1 : gameState.currentKanjiQuestion} / {gameState.kanjiQuestions.length}
+            </div>
+          </div>
+        )}
         <div className="flex flex-col items-center">
           <div className="flex items-center gap-1 text-orange-500 text-sm font-medium">
             <Flame size={14} /> Streak

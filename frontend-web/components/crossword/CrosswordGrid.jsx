@@ -67,6 +67,9 @@ export const CrosswordGrid = () => {
   }) || activeWordIds[0];
 
   const activeWord = gameState.grid?.words.find(word => word.id === activeWordId);
+  const kanjiChoices = gameState.mode === 'kanji'
+    ? gameState.grid.choiceBank || [...new Set(gameState.grid.words.flatMap(word => [...word.text]))]
+    : [];
 
   return (
     <div ref={containerRef} className="w-full max-w-full min-w-0 flex flex-col items-center">
@@ -84,11 +87,13 @@ export const CrosswordGrid = () => {
         </div>
       )}
 
-      <div className="w-full text-center mb-3 px-1">
-        <p className="inline-flex flex-wrap justify-center items-center gap-1.5 text-[10px] uppercase tracking-widest sm:text-xs font-bold text-accent-green bg-accent-green/10 px-3 py-1.5 rounded-full border border-accent-green/20">
-          <span className="text-sm">💡</span> Peringatan: Gunakan Keyboard Jepang (Romaji/Kana) untuk pengalaman terbaik.
-        </p>
-      </div>
+      {gameState.mode !== 'kanji' && (
+        <div className="w-full text-center mb-3 px-1">
+          <p className="inline-flex flex-wrap justify-center items-center gap-1.5 text-[10px] uppercase tracking-widest sm:text-xs font-bold text-accent-green bg-accent-green/10 px-3 py-1.5 rounded-full border border-accent-green/20">
+            <span className="text-sm">💡</span> Peringatan: Gunakan Keyboard Jepang (Romaji/Kana) untuk pengalaman terbaik.
+          </p>
+        </div>
+      )}
 
       <div className="w-full max-w-full overflow-hidden flex justify-center">
         <div 
@@ -111,7 +116,7 @@ export const CrosswordGrid = () => {
                 isSelected={isSelected}
                 isHighlighted={isHighlighted}
                 onSelect={() => selectCell(rIdx, cIdx)}
-                onInput={handleInput}
+                onInput={gameState.mode === 'kanji' ? () => {} : handleInput}
                 onDelete={deleteChar}
                 onNavigate={handleNavigate}
               />
@@ -120,6 +125,28 @@ export const CrosswordGrid = () => {
         )}
         </div>
       </div>
+
+      {gameState.mode === 'kanji' && (
+        <div className="w-full max-w-lg mt-5 p-4 rounded-2xl bg-[var(--card-bg)] border border-[var(--border-color)]">
+          <p className="text-xs text-gray-500 font-bold uppercase tracking-widest text-center mb-3">
+            Pilih satu kanji untuk kotak aktif
+          </p>
+          <div className="flex flex-wrap justify-center gap-2">
+            {kanjiChoices.map(char => (
+              <button
+                key={char}
+                type="button"
+                onClick={() => handleInput(char)}
+                disabled={gameState.isCompleted || gameState.grid.cells[gameState.selectedCell?.row]?.[gameState.selectedCell?.col]?.validationState === 'correct'}
+                className="h-12 min-w-12 px-3 rounded-xl border-2 border-[var(--border-color)] bg-[var(--background)] text-xl font-japanese font-bold hover:border-accent-blue hover:text-accent-blue transition-colors disabled:opacity-50"
+                aria-label={`Pilih kanji ${char}`}
+              >
+                {char}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 };

@@ -6,7 +6,7 @@ import { clsx } from 'clsx';
 export const LevelSelector = () => {
   const { gameState, startGame } = useGameStore();
   const [selectedLevel, setSelectedLevel] = useState('5');
-  const [selectedMode, setSelectedMode] = useState('all');
+  const [selectedMode, setSelectedMode] = useState('kanji');
   const [isLoading, setIsLoading] = useState(false);
 
   const levels = [
@@ -18,7 +18,6 @@ export const LevelSelector = () => {
   ];
 
   const modes = [
-    { id: 'all', name: 'Campuran', desc: 'Semua kata' },
     { id: 'kanji', name: 'Full Kanji', desc: 'Hanya kosa kata Kanji' },
     { id: 'hiragana', name: 'Hiragana Only', desc: 'Tanpa Kanji' }
   ];
@@ -62,7 +61,7 @@ export const LevelSelector = () => {
 
       <div className="mb-8">
         <label className="block text-sm font-bold text-gray-400 uppercase tracking-widest mb-3">Mode Soal</label>
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           {modes.map(m => (
             <button
               key={m.id}

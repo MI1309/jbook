@@ -65,7 +65,6 @@ export const CluePanel = () => {
     const isCompleted = word.isCompleted;
     const cellNum = gameState.grid.cells[word.startRow][word.startCol].number;
     
-    // Check if the word contains Kanji
     const hasKanji = /[\u4e00-\u9faf]/.test(word.word || "");
 
     return (
@@ -83,7 +82,7 @@ export const CluePanel = () => {
         <div className={clsx("flex-1", isCompleted && "line-through font-medium")}>
           <div className="text-foreground font-bold">{word.clue}</div>
           <div className="flex items-center gap-2 mt-1">
-            {hasKanji && (
+            {gameState.mode !== 'kanji' && hasKanji && (
               <span 
                 onClick={(e) => {
                   e.stopPropagation();

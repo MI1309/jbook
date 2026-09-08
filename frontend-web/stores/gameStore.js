@@ -2,14 +2,20 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import * as wanakana from 'wanakana';
 import { toast } from 'react-toastify';
-import { getVocabList, submitPracticeResults } from '@/lib/api';
+import { getKanjiList, getVocabList, submitPracticeResults } from '@/lib/api';
 import { generateCrosswordGrid } from '../utils/gridGenerator';
 import { isHiragana, isValidJapanese } from '../utils/japaneseValidators';
+import { hiraganaDakuon, hiraganaGojuon, hiraganaYoon } from '@/data/kana';
 
 console.log("JBook Crossword Engine v2.1 (Manual Mapping Fix) Loaded");
 
 const initialGameState = {
   grid: null,
+  mode: null,
+  kanjiQuestions: [],
+  currentKanjiQuestion: 0,
+  selectedKanjiAnswer: null,
+  kanjiAnswered: false,
   selectedCell: null,
   selectedDirection: 'across',
   score: 0,
@@ -28,18 +34,25 @@ export const useGameStore = create(
 
   startGame: async (level, mode = 'all') => {
     try {
-      // Randomize page to get different words each time
-      const randomPage = Math.floor(Math.random() * 5) + 1;
-      const response = await getVocabList({ level, page: randomPage });
+      const response = await getVocabList({ level, limit: 1000, page: 1 });
       let kotobaList = response.items || [];
+      let kanjiCharacters = null;
+      const hiraganaChoiceBank = [...hiraganaGojuon, ...hiraganaDakuon, ...hiraganaYoon]
+        .flatMap(item => [...(item.kana || '')])
+        .filter(Boolean);
+
+      if (mode === 'kanji') {
+        const kanjiResponse = await getKanjiList({ level, limit: 1000, page: 1 });
+        kanjiCharacters = new Set((kanjiResponse.items || []).map(item => item.character).filter(Boolean));
+      }
       
       // 1. Fetch more words if necessary
-      const fetchDepth = mode === 'all' ? 3 : 50; // Scan even deeper for Kanji mode
-      const minPoolSize = mode === 'all' ? 50 : 200; // Target larger pool for specific modes
+      const fetchDepth = mode === 'all' ? 3 : 10;
+      const minPoolSize = mode === 'all' ? 50 : 200;
       
       if (kotobaList.length < minPoolSize) {
         for (let p = 1; p <= fetchDepth; p++) {
-          if (p === randomPage) continue;
+          if (p === 1) continue;
           try {
             const res = await getVocabList({ level, page: p });
             if (res.items && res.items.length > 0) {
@@ -57,7 +70,7 @@ export const useGameStore = create(
       // 2. Normalize
       const normalizedKotoba = kotobaList.map(k => {
         const kanjiWord = k.word || k.kanji || k.original_word || "";
-        const rawReading = k.hiragana || k.reading || k.furigana || kanjiWord || "";
+        const rawReading = k.reading || k.hiragana || k.furigana || kanjiWord || "";
         const cleanReading = rawReading.split(';')[0].split('(')[0].replace(/[\s\t\n]/g, '').trim();
         return { ...k, word: kanjiWord, hiragana: cleanReading };
       });
@@ -75,18 +88,45 @@ export const useGameStore = create(
         throw new Error(`Terlalu sedikit kata (${validWords.length}) untuk membuat grid di mode ini. Coba level lain.`);
       }
 
-      // 4. Shuffle and Generate
-      validWords = validWords.sort(() => Math.random() - 0.5);
-      const grid = generateCrosswordGrid(validWords, 12, 12, level);
+      if (mode === 'kanji') {
+        validWords = validWords.filter(k => {
+          if (!k.word || !/^[\u4e00-\u9faf]+$/.test(k.word) || k.word.length > 20) return false;
+          return [...k.word].every(character => kanjiCharacters?.has(character));
+        });
+        if (validWords.length < 5) {
+          throw new Error(`Terlalu sedikit kata kanji (${validWords.length}) untuk membuat grid. Coba level lain.`);
+        }
+
+        validWords = Array.from(
+          new Map(validWords.map(word => [word.word, word])).values()
+        );
+      }
+
+      // Keep kanji candidates ordered by graph relevance; the generator performs its own bounded retries.
+      if (mode !== 'kanji') validWords = validWords.sort(() => Math.random() - 0.5);
+      const gridSize = mode === 'kanji' ? 20 : 12;
+      const grid = generateCrosswordGrid(validWords, gridSize, gridSize, level, mode === 'kanji', {
+        minWords: 5,
+        maxWords: 10,
+        maxAttempts: 5,
+        maxNodes: 5000,
+        choiceBank: mode === 'kanji' ? [...(kanjiCharacters || [])] : hiraganaChoiceBank,
+        choiceBankLimit: mode === 'kanji' ? 12 : null
+      });
       
-      if (!grid || grid.words.length === 0) {
-        throw new Error("Gagal membuat susunan grid. Silakan coba lagi.");
+      if (!grid || grid.words.length < 5) {
+        throw new Error("Gagal membuat minimal 5 soal kanji. Silakan coba lagi.");
       }
 
       set({
         gameState: {
           ...get().gameState,
           grid,
+          mode,
+          kanjiQuestions: [],
+          currentKanjiQuestion: 0,
+          selectedKanjiAnswer: null,
+          kanjiAnswered: false,
           level,
           selectedCell: findFirstCell(grid),
           selectedDirection: 'across',
@@ -146,6 +186,32 @@ export const useGameStore = create(
     
     const newGrid = { ...grid };
     const cell = newGrid.cells[selectedCell.row][selectedCell.col];
+
+    if (gameState.mode === 'kanji') {
+      if (cell.validationState === 'correct') {
+        moveToNextCell(get, set);
+        return;
+      }
+
+      cell.userInput = fullValue;
+      if (fullValue === cell.char) {
+        cell.validationState = 'correct';
+        if (!cell.scoreAwarded) {
+          gameState.score += 10;
+          cell.scoreAwarded = true;
+        }
+      } else {
+        cell.validationState = 'wrong';
+        if (!cell.penaltyApplied) {
+          gameState.score = Math.max(0, gameState.score - 5);
+          cell.penaltyApplied = true;
+        }
+      }
+      set({ gameState: { ...gameState, grid: newGrid } });
+      get().checkAnswer(selectedCell);
+      moveToNextCell(get, set);
+      return;
+    }
     
     if (cell.validationState === 'correct') {
        if (wanakana.toHiragana(fullValue) === wanakana.toHiragana(cell.char)) {
@@ -207,7 +273,7 @@ export const useGameStore = create(
       }
       
       set({ gameState: { ...gameState, grid: newGrid } });
-      get().checkAnswer();
+      get().checkAnswer(selectedCell);
       
       // Move to next cell
       moveToNextCell(get, set);
@@ -256,6 +322,7 @@ export const useGameStore = create(
     
     cell.userInput = cell.char;
     cell.validationState = 'correct';
+    cell.scoreAwarded = true;
     
     set({
       gameState: {
@@ -265,18 +332,21 @@ export const useGameStore = create(
       }
     });
     
-    get().checkAnswer();
+    get().checkAnswer(selectedCell);
   },
 
-  checkAnswer: () => {
+  checkAnswer: (changedCell = null) => {
     const { gameState } = get();
     const { grid } = gameState;
     if (!grid) return;
     
-    let allComplete = true;
     const completedIds = [...gameState.completedWordIds];
+    const affectedIds = changedCell
+      ? new Set(grid.cells[changedCell.row][changedCell.col].wordIds)
+      : new Set(grid.words.map(word => word.id));
     
     for (const word of grid.words) {
+      if (!affectedIds.has(word.id)) continue;
       let wordComplete = true;
       for (let i = 0; i < word.text.length; i++) {
         const r = word.direction === 'across' ? word.startRow : word.startRow + i;
@@ -302,12 +372,13 @@ export const useGameStore = create(
         }
       }
     }
+
+    const allComplete = grid.words.every(word => word.isCompleted);
     
     set({
       gameState: {
         ...gameState,
         completedWordIds: completedIds,
-        isCompleted: allComplete,
         isCompleted: allComplete,
       }
     });
