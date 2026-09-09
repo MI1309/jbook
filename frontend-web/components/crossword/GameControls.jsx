@@ -11,7 +11,7 @@ export const GameControls = () => {
     <div className="flex flex-wrap items-center justify-center gap-3 p-4">
       <button
         onClick={useHint}
-        disabled={gameState.isCompleted}
+        disabled={gameState.isCompleted || gameState.score <= 0}
         className="flex items-center gap-2 px-4 py-2 bg-accent-green/10 hover:bg-accent-green/20 text-accent-green border border-accent-green/20 rounded-full font-medium transition-colors disabled:opacity-50"
       >
         <Lightbulb size={18} />
@@ -19,7 +19,7 @@ export const GameControls = () => {
       </button>
 
       <button
-        onClick={() => startGame(gameState.level)}
+        onClick={() => startGame(gameState.level, gameState.mode)}
         className="flex items-center gap-2 px-4 py-2 bg-[var(--background)] hover:bg-[var(--card-bg)] text-foreground border border-[var(--border-color)] rounded-full font-medium transition-colors"
       >
         <RotateCcw size={18} />

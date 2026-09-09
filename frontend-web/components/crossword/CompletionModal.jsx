@@ -29,7 +29,7 @@ export const CompletionModal = () => {
             <Trophy size={40} className="text-yellow-300" />
           </div>
           <h2 className="text-3xl font-black mb-1">Luar Biasa!</h2>
-          <p className="text-red-100">Kamu berhasil menyelesaikan teka-teki N{gameState.level}.</p>
+          <p className="text-red-100">Kamu berhasil menyelesaikan teka-teki kanji.</p>
         </div>
 
         <div className="p-8">

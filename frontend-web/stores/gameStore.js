@@ -102,8 +102,8 @@ export const useGameStore = create(
         );
       }
 
-      // Keep kanji candidates ordered by graph relevance; the generator performs its own bounded retries.
-      if (mode !== 'kanji') validWords = validWords.sort(() => Math.random() - 0.5);
+      // Shuffle the level pool first; graph degree still selects the best hub from this random sample.
+      validWords = validWords.sort(() => Math.random() - 0.5);
       const gridSize = mode === 'kanji' ? 20 : 12;
       const grid = generateCrosswordGrid(validWords, gridSize, gridSize, level, mode === 'kanji', {
         minWords: 5,
@@ -315,7 +315,7 @@ export const useGameStore = create(
     const { gameState } = get();
     const { grid, selectedCell } = gameState;
     
-    if (!grid || !selectedCell || gameState.isCompleted) return;
+    if (!grid || !selectedCell || gameState.isCompleted || gameState.score <= 0) return;
     
     const cell = grid.cells[selectedCell.row][selectedCell.col];
     if (cell.validationState === 'correct') return;
@@ -333,6 +333,7 @@ export const useGameStore = create(
     });
     
     get().checkAnswer(selectedCell);
+    moveToNextCell(get, set);
   },
 
   checkAnswer: (changedCell = null) => {
@@ -365,7 +366,6 @@ export const useGameStore = create(
         }
       } else {
         word.isCompleted = false;
-        allComplete = false;
         const idx = completedIds.indexOf(word.id);
         if (idx !== -1) {
           completedIds.splice(idx, 1);

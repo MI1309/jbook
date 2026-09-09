@@ -5,17 +5,8 @@ import { clsx } from 'clsx';
 
 export const LevelSelector = () => {
   const { gameState, startGame } = useGameStore();
-  const [selectedLevel, setSelectedLevel] = useState('5');
   const [selectedMode, setSelectedMode] = useState('kanji');
   const [isLoading, setIsLoading] = useState(false);
-
-  const levels = [
-    { id: '5', name: 'N5', desc: 'Beginner' },
-    { id: '4', name: 'N4', desc: 'Basic' },
-    { id: '3', name: 'N3', desc: 'Intermediate' },
-    { id: '2', name: 'N2', desc: 'Pre-Advanced' },
-    { id: '1', name: 'N1', desc: 'Advanced' }
-  ];
 
   const modes = [
     { id: 'kanji', name: 'Full Kanji', desc: 'Hanya kosa kata Kanji' },
@@ -24,7 +15,7 @@ export const LevelSelector = () => {
 
   const handleStart = async () => {
     setIsLoading(true);
-    await startGame(selectedLevel, selectedMode);
+    await startGame(null, selectedMode);
     setIsLoading(false);
   };
 
@@ -35,28 +26,6 @@ export const LevelSelector = () => {
       <div className="mb-8">
         <h2 className="text-3xl font-japanese font-black text-[var(--foreground)] mb-2">JBook Crossword</h2>
         <p className="text-gray-500 dark:text-gray-400">Sesuaikan mode permainan Anda</p>
-      </div>
-
-      <div className="mb-6">
-        <label className="block text-sm font-bold text-gray-400 uppercase tracking-widest mb-3">Pilih Level JLPT</label>
-        <div className="grid grid-cols-5 gap-1.5 sm:gap-3">
-          {levels.map(lvl => {
-            return (
-              <button
-                key={lvl.id}
-                onClick={() => setSelectedLevel(lvl.id)}
-                className={clsx(
-                  "relative flex flex-col items-center p-2 sm:p-3 rounded-xl border-2 transition-all",
-                  selectedLevel === lvl.id
-                    ? "border-accent-blue bg-accent-blue/10 text-accent-blue shadow-sm"
-                    : "border-[var(--border-color)] hover:border-accent-blue/40 text-gray-500"
-                )}
-              >
-                <span className="font-bold text-sm sm:text-lg">{lvl.name}</span>
-              </button>
-            );
-          })}
-        </div>
       </div>
 
       <div className="mb-8">

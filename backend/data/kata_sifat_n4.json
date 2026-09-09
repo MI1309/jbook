@@ -799,6 +799,507 @@
       }
     ]
   },
-  
+  {
+    "id": "e2f3g4h5-i6j7-8k9l-0m1n-2o3p4q5r6s7t",
+    "word": "大変（な）",
+    "reading": "taihen",
+    "furigana": "たいへん",
+    "meaning": "berat, sulit",
+    "word_type": "na-adjective",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "大変な仕事を している。",
+        "id": "Melakukan pekerjaan yang berat"
+      }
+    ]
+  },
+  {
+    "id": "f3g4h5i6-j7k8-9l0m-1n2o-3p4q5r6s7t8u",
+    "word": "特別（な）",
+    "reading": "tokubetsu",
+    "furigana": "とくべつ",
+    "meaning": "istimewa, spesial, khusus",
+    "word_type": "na-adjective",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "特別な理由が ある。",
+        "id": "Ada alasan khusus"
+      },
+      {
+        "jp": "今回は 特別に 無料です。",
+        "id": "Kali ini gratis secara khusus"
+      },
+      {
+        "jp": "特別な日。",
+        "id": "Hari istimewa"
+      },
+      {
+        "jp": "特別な人。",
+        "id": "Orang yang spesial"
+      }
+    ]
+  },
+  {
+    "id": "g4h5i6j7-k8l9-0m1n-2o3p-4q5r6s7t8u9v",
+    "word": "丁寧（な）",
+    "reading": "teinei",
+    "furigana": "ていねい",
+    "meaning": "sopan, teliti, rapi, rinci",
+    "word_type": "na-adjective",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "丁寧な説明だった。",
+        "id": "Penjelasan yang rinci/detail"
+      },
+      {
+        "jp": "丁寧に 書いて ください。",
+        "id": "Tolong tulis dengan rapi dan teliti"
+      },
+      {
+        "jp": "丁寧な言い方。",
+        "id": "Cara bicara yang sopan"
+      }
+    ]
+  },
+  {
+    "id": "h5i6j7k8-l9m0-1n2o-3p4q-5r6s7t8u9v0w",
+    "word": "不安（な）",
+    "reading": "fuan",
+    "furigana": "ふan",
+    "meaning": "cemas, khawatir",
+    "word_type": "na-adjective",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "不安に 感じる。",
+        "id": "Merasa khawatir"
+      },
+      {
+        "jp": "試験が 不安だ。",
+        "id": "Khawatir dengan ujian"
+      },
+      {
+        "jp": "不安な気持ちに なる。",
+        "id": "Menjadi merasa cemas"
+      }
+    ]
+  },
+  {
+    "id": "i6j7k8l9-m0n1-2o3p-4q5r-6s7t8u9v0w1x",
+    "word": "無理（な）",
+    "reading": "muri",
+    "furigana": "むり",
+    "meaning": "mustahil, memaksakan",
+    "word_type": "na-adjective",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "無理なお願いだ。",
+        "id": "Permintaan yang mustahil"
+      },
+      {
+        "jp": "今日は 無理 da。",
+        "id": "Hari ini tidak bisa"
+      },
+      {
+        "jp": "無理に 起こした。",
+        "id": "Membangunkannya secara paksa"
+      }
+    ]
+  },
+  {
+    "id": "j7k8l9m0-n1o2-3p4q-5r6s-7t8u9v0w1x2y",
+    "word": "残念（な）",
+    "reading": "zannen",
+    "furigana": "ざんねん",
+    "meaning": "kecewa, disayangkan",
+    "word_type": "na-adjective",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "残念な結果だった。",
+        "id": "Hasilnya mengecewakan"
+      },
+      {
+        "jp": "残念に 思う。",
+        "id": "Merasa disayangkan"
+      },
+      {
+        "jp": "試験に 落ちて 残念だ。",
+        "id": "Kecewa karena gagal ujian"
+      }
+    ]
+  },
+  {
+    "id": "k8l9m0n1-o2p3-4q5r-6s7t-8u9v0w1x2y3z",
+    "word": "正直（な）",
+    "reading": "shoujiki",
+    "furigana": "しょうじき",
+    "meaning": "jujur",
+    "word_type": "na-adjective",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "正直な人が 好きだ。",
+        "id": "Suka orang yang jujur"
+      },
+      {
+        "jp": "正直に話した。",
+        "id": "Berbicara dengan jujur"
+      }
+    ]
+  },
+  {
+    "id": "l9m0n1o2-p3q4-5r6s-7t8u-9v0w1x2y3z4a",
+    "word": "無駄（な）",
+    "reading": "muda",
+    "furigana": "むだ",
+    "meaning": "sia-sia, percuma",
+    "word_type": "na-adjective",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "無駄な時間を 過ごした。",
+        "id": "Menghabiskan waktu percuma"
+      },
+      {
+        "jp": "お金を 無駄に 使った。",
+        "id": "Menggunakan uang dengan sia-sia"
+      }
+    ]
+  },
+  {
+    "id": "m1n2o3p4-q5r6-7s8t-9u0v-1w2x3y4z5a6b",
+    "word": "不思議（な）",
+    "reading": "fushigi",
+    "furigana": "ふ し ぎ",
+    "meaning": "aneh, heran",
+    "word_type": "na-adjective",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "不思議な話を 聞いた",
+        "id": "Mendengar cerita yang aneh"
+      },
+      {
+        "jp": "不思議に思った",
+        "id": "Menganggap aneh/merasa heran"
+      }
+    ]
+  },
+  {
+    "id": "n2o3p4q5-r6s7-8t9u-0v1w-2x3y4z5a6b7c",
+    "word": "自由（な）",
+    "reading": "jiyuu",
+    "furigana": "じ ゆう",
+    "meaning": "bebas, sesukanya",
+    "word_type": "na-adjective",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "自由な時間が ある",
+        "id": "Ada waktu bebas"
+      },
+      {
+        "jp": "自由に使って ください",
+        "id": "Silakan gunakan dengan bebas"
+      },
+      {
+        "jp": "自由を選ぶ",
+        "id": "Memilih dengan bebas"
+      }
+    ]
+  },
+  {
+    "id": "o3p4q5r6-s7t8-9u0v-1w2x-3y4z5a6b7c8d",
+    "word": "丈夫（な）",
+    "reading": "joubu",
+    "furigana": "じょうぶ",
+    "meaning": "kuat, kokoh",
+    "word_type": "na-adjective",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "丈夫にかばんを買った",
+        "id": "Membeli tas yang kuat"
+      },
+      {
+        "jp": "丈夫に 作られている",
+        "id": "Dibuat dengan kokoh"
+      },
+      {
+        "jp": "体が丈夫で、病気をしない",
+        "id": "Karena badan kuat, jadi tidak sakit"
+      }
+    ]
+  },
+  {
+    "id": "p4q5r6s7-t8u9-0v1w-2x3y-4z5a6b7c8d9e",
+    "word": "伝統的（な）",
+    "reading": "dentouteki",
+    "furigana": "でん とう てき",
+    "meaning": "tradisional",
+    "word_type": "na-adjective",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "伝統的な料理を 食べた",
+        "id": "Makan masakan tradisional"
+      },
+      {
+        "jp": "伝統的に 行われている",
+        "id": "Diselenggarakan secara tradisional"
+      }
+    ]
+  },
+  {
+    "id": "q5r6s7t8-u9v0-1w2x-3y4z-5a6b7c8d9e0f",
+    "word": "幸せ（な）",
+    "reading": "shiawase",
+    "furigana": "しあわ",
+    "meaning": "bahagia",
+    "word_type": "na-adjective",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "幸せな気持ちに なった",
+        "id": "Menjadi merasa bahagia"
+      },
+      {
+        "jp": "幸せに 暮らしている",
+        "id": "Menjalani kehidupan dengan bahagia"
+      }
+    ]
+  },
+  {
+    "id": "r6s7t8u9-v0w1-2x3y-4z5a-6b7c8d9e0f1g",
+    "word": "急（な）",
+    "reading": "kyuu",
+    "furigana": "きゅう",
+    "meaning": "tiba-tiba, curam",
+    "word_type": "na-adjective",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "急に 雨が 降った",
+        "id": "Tiba-tiba hujan turun"
+      },
+      {
+        "jp": "急な坂を 上った",
+        "id": "Naik tanjakan yang curam"
+      }
+    ]
+  },
+  {
+    "id": "s7t8u9v0-w1x2-3y4z-5a6b-7c8d9e0f1g2h",
+    "word": "楽（な）",
+    "reading": "raku",
+    "furigana": "らく",
+    "meaning": "ringan, mudah",
+    "word_type": "na-adjective",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "楽な仕事を 探している",
+        "id": "Mencari pekerjaan yang ringan"
+      },
+      {
+        "jp": "楽に 勝てた",
+        "id": "Bisa menang mudah"
+      },
+      {
+        "jp": "仕事が 終わって 楽になった",
+        "id": "Setelah pekerjaan selesai, saya merasa ringan/lega"
+      }
+    ]
+  },
+  {
+    "id": "t8u9v0w1-x2y3-4z5a-6b7c-8d9e0f1g2h3i",
+    "word": "嫌（な）",
+    "reading": "iya",
+    "furigana": "いや",
+    "meaning": "tidak mau, gak suka, gak enak",
+    "word_type": "na-adjective",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "嫌な気持ちに なった",
+        "id": "Menjadi merasa tidak enak"
+      },
+      {
+        "jp": "勉強は 嫌だ",
+        "id": "Tidak mau belajar"
+      },
+      {
+        "jp": "嫌な夢を 見た",
+        "id": "Bermimpi buruk/tidak menyenangkan"
+      }
+    ]
+  },
+  {
+    "id": "h01-gou-001",
+    "word": "〜号",
+    "reading": "gou",
+    "furigana": "ごう",
+    "meaning": "nomor (untuk penamaan resmi, nomor kamar, atau kereta)",
+    "word_type": "suffix",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "一号",
+        "id": "nomor 1"
+      },
+      {
+        "jp": "406号室",
+        "id": "kamar nomor 406"
+      },
+      {
+        "jp": "新幹線104号",
+        "id": "shinkansen nomor 104"
+      }
+    ]
+  },
+  {
+    "id": "h02-shiki-002",
+    "word": "〜式",
+    "reading": "shiki",
+    "furigana": "しき",
+    "meaning": "upacara",
+    "word_type": "suffix",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "結婚式",
+        "id": "upacara pernikahan"
+      },
+      {
+        "jp": "入学式",
+        "id": "upacara masuk sekolah"
+      },
+      {
+        "jp": "卒業式",
+        "id": "upacara kelulusan"
+      },
+      {
+        "jp": "葬式",
+        "id": "upacara pemakaman"
+      }
+    ]
+  },
+  {
+    "id": "h03-chuu-juu-003",
+    "word": "〜中",
+    "reading": "chuu / juu",
+    "furigana": "ちゅう・じゅう",
+    "meaning": "sedang (chuu) / seluruh, di seluruh, sepanjang (juu)",
+    "word_type": "suffix",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "世界中",
+        "id": "di seluruh dunia"
+      },
+      {
+        "jp": "日本中",
+        "id": "di seluruh Jepang"
+      },
+      {
+        "jp": "一日中",
+        "id": "sepanjang hari"
+      },
+      {
+        "jp": "一年中",
+        "id": "sepanjang tahun"
+      },
+      {
+        "jp": "準備中",
+        "id": "sedang persiapan"
+      },
+      {
+        "jp": "運転中",
+        "id": "sedang mengemudi"
+      },
+      {
+        "jp": "工事中",
+        "id": "sedang dalam pengerjaan"
+      }
+    ]
+  },
+  {
+    "id": "h04-bun-004",
+    "word": "〜分",
+    "reading": "bun",
+    "furigana": "ぶん",
+    "meaning": "porsi, bagian, jatah",
+    "word_type": "suffix",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "二人分",
+        "id": "porsi untuk dua orang"
+      },
+      {
+        "jp": "全員分",
+        "id": "jatah untuk semua"
+      },
+      {
+        "jp": "今日の分",
+        "id": "bagian/jatah hari ini"
+      }
+    ]
+  },
+  {
+    "id": "h05-sei-005",
+    "word": "〜製",
+    "reading": "sei",
+    "furigana": "せい",
+    "meaning": "buatan, terbuat dari",
+    "word_type": "suffix",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "日本製",
+        "id": "buatan Jepang"
+      },
+      {
+        "jp": "韓国製",
+        "id": "buatan Korea"
+      },
+      {
+        "jp": "木製",
+        "id": "terbuat dari kayu"
+      }
+    ]
+  },
+  {
+    "id": "h06-ten-006",
+    "word": "〜点",
+    "reading": "ten",
+    "furigana": "てん",
+    "meaning": "nilai, poin",
+    "word_type": "suffix",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "70点",
+        "id": "nilai 70"
+      },
+      {
+        "jp": "100点",
+        "id": "nilai 100"
+      },
+      {
+        "jp": "満点",
+        "id": "nilai sempurna"
+      },
+      {
+        "jp": "注意点",
+        "id": "poin/hal yang perlu diperhatikan"
+      }
+    ]
+  }
 
 ]
