@@ -75,6 +75,15 @@ export const useGameStore = create(
         return { ...k, word: kanjiWord, hiragana: cleanReading };
       });
 
+      // The kanji endpoint can be empty because of visibility or offline cache filters.
+      // Kotoba itself remains a reliable source for the characters used in this puzzle.
+      if (mode === 'kanji') {
+        const kotobaCharacters = normalizedKotoba.flatMap(k => (
+          [...(k.word || '')].filter(char => /[\u4e00-\u9faf]/.test(char))
+        ));
+        kotobaCharacters.forEach(char => kanjiCharacters.add(char));
+      }
+
       // 3. Filter by valid Japanese and Mode
       let validWords = normalizedKotoba.filter(k => k.hiragana && k.hiragana.length > 1 && isValidJapanese(k.hiragana));
       
@@ -90,8 +99,10 @@ export const useGameStore = create(
 
       if (mode === 'kanji') {
         validWords = validWords.filter(k => {
-          if (!k.word || !/^[\u4e00-\u9faf]+$/.test(k.word) || k.word.length > 20) return false;
-          return [...k.word].every(character => kanjiCharacters?.has(character));
+          if (!k.word || !/[\u4e00-\u9faf]/.test(k.word) || k.word.length > 20) return false;
+          return [...k.word]
+            .filter(character => /[\u4e00-\u9faf]/.test(character))
+            .every(character => kanjiCharacters?.has(character));
         });
         if (validWords.length < 5) {
           throw new Error(`Terlalu sedikit kata kanji (${validWords.length}) untuk membuat grid. Coba level lain.`);

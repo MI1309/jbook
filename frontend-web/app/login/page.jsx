@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { useTheme } from '@/context/ThemeContext';
 import Link from 'next/link';
+import Image from 'next/image';
 
 export default function LoginPage() {
     const [email, setEmail] = useState('');
@@ -35,26 +36,28 @@ export default function LoginPage() {
             <div className={`absolute top-0 right-0 w-96 h-96 rounded-full blur-[100px] opacity-20 animate-pulse ${isDark ? 'bg-blue-900/40' : 'bg-blue-200'}`} />
             <div className={`absolute bottom-0 left-0 w-96 h-96 rounded-full blur-[100px] opacity-10 animate-pulse delay-700 ${isDark ? 'bg-blue-800/30' : 'bg-blue-100'}`} />
 
-            <div className={`max-w-md w-full space-y-8 p-10 rounded-[2.5rem] backdrop-blur-xl border transition-all duration-300 relative z-10 ${
+            <div className={`max-w-md w-full p-6 sm:p-10 rounded-[2.5rem] backdrop-blur-xl border transition-all duration-300 relative z-10 ${
                 isDark 
                     ? 'bg-black/40 border-white/5 shadow-[0_0_50px_-12px_rgba(37,99,235,0.2)]' 
                     : 'bg-white/80 border-gray-100 shadow-xl shadow-blue-500/5'
             }`}>
                 <div className="text-center">
-                    <div className="inline-block p-4 rounded-3xl bg-blue-600 shadow-lg shadow-blue-500/40 mb-6 group transition-transform hover:scale-110">
-                        <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 11c0 3.517-1.009 6.799-2.753 9.571m-3.44-2.04l.054-.09A10.003 10.003 0 0012 21a10.003 10.003 0 008.384-4.51l.054.09m-4.287-4.21C18.06 13.002 20 11.227 20 9a8 8 0 10-16 0c0 2.227 1.94 4.002 3.847 4.79" />
-                        </svg>
+                    <div className="inline-flex rounded-[1.75rem] bg-white p-2 shadow-xl shadow-blue-500/25 ring-1 ring-blue-100/80 transition-transform duration-300 hover:scale-105 dark:bg-neutral-900 dark:ring-white/10">
+                        <Image
+                            src="/icon-192.png"
+                            alt="Logo JBook"
+                            width="96"
+                            height="96"
+                            priority
+                            className="h-24 w-24 rounded-2xl object-cover"
+                        />
                     </div>
                     <h2 className={`text-4xl font-black tracking-tight transition-colors ${isDark ? 'text-white' : 'text-gray-900'}`}>
-                        Masuk
+                        Login
                     </h2>
-                    <p className={`mt-3 text-sm font-bold tracking-wide uppercase transition-colors ${isDark ? 'text-neutral-500' : 'text-gray-400'}`}>
-                        Lanjutkan Belajar JBook
-                    </p>
                 </div>
                 
-                <form className="mt-10 space-y-6" onSubmit={handleSubmit}>
+                <form className="mt-8 space-y-5" onSubmit={handleSubmit}>
                     {error && (
                         <div className={`p-4 rounded-2xl text-xs font-black uppercase tracking-widest border animate-shake transition-colors ${
                             isDark ? 'bg-red-950/20 border-red-900/50 text-red-400' : 'bg-red-50 border-red-200 text-red-600'
@@ -103,7 +106,7 @@ export default function LoginPage() {
                         </div>
                     </div>
 
-                    <div className="flex items-center justify-end">
+                    <div className="flex items-center justify-end pt-1">
                         <Link href="/forgot-password" className="text-[10px] font-black uppercase tracking-widest text-blue-600 hover:text-blue-400 transition-all hover:scale-105">
                             Lupa Password?
                         </Link>
@@ -111,24 +114,30 @@ export default function LoginPage() {
 
                     <button
                         type="submit"
-                        className="w-full group relative flex justify-center py-4 px-4 border border-transparent text-xs font-black uppercase tracking-[0.2em] rounded-2xl text-white bg-blue-600 hover:bg-blue-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all shadow-xl shadow-blue-600/20 active:scale-95 overflow-hidden"
+                        className="w-full group relative flex justify-center py-4 px-4 border border-transparent text-xs font-black uppercase tracking-[0.2em] rounded-2xl text-white bg-blue-600 hover:bg-blue-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all shadow-xl shadow-blue-600/20 active:scale-[0.98] overflow-hidden"
                     >
                         <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-white/0 via-white/20 to-white/0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 ease-in-out" />
                         Masuk Sekarang
                     </button>
                 </form>
 
-                <div className="text-center mt-10 space-y-6">
+                <div className="text-center mt-8 space-y-5">
                     <p className={`text-sm font-medium transition-colors ${isDark ? 'text-neutral-500' : 'text-gray-500'}`}>
                         Belum punya akun?{' '}
                         <Link href="/register" className="font-black text-blue-600 hover:text-blue-400 transition-colors">
                             Daftar
                         </Link>
                     </p>
-                    <Link href="/" className={`inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-widest transition-all ${isDark ? 'text-neutral-700 hover:text-white' : 'text-gray-400 hover:text-gray-900'}`}>
-                        <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg>
-                        Beranda
-                    </Link>
+                    <div className="flex items-center justify-center gap-4 text-[10px] font-black uppercase tracking-widest">
+                        <Link href="/privacy-security" className={`transition-colors ${isDark ? 'text-neutral-600 hover:text-accent-blue' : 'text-gray-400 hover:text-blue-600'}`}>
+                            Privasi & Keamanan
+                        </Link>
+                        <span className={isDark ? 'text-neutral-700' : 'text-gray-300'} aria-hidden="true">•</span>
+                        <Link href="/" className={`inline-flex items-center gap-1.5 transition-all ${isDark ? 'text-neutral-600 hover:text-white' : 'text-gray-400 hover:text-gray-900'}`}>
+                            <svg className="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg>
+                            Beranda
+                        </Link>
+                    </div>
                 </div>
             </div>
         </div>

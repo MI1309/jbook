@@ -45,7 +45,7 @@ const kotobaPool = [
         exampleMeaning: 'Kami terus melakukan perbaikan pada pekerjaan kami sehari-hari.'
     },
     {
-        word: '心強い (kokorozuyoi)',
+        word: '心強い (kokorotsuyoi)',
         meaning: 'Merasa aman / berbesar hati / terbantu',
         reading: 'こころづよい',
         example: '皆さんが応援してくれて心強いです。',
@@ -151,7 +151,7 @@ export default function Home() {
                     </div>
 
                     <h1 className="text-4xl md:text-6xl font-japanese font-black tracking-tight leading-tight max-w-3xl mt-4">
-                        JBook: <span className="text-accent-blue dark:text-accent-blue drop-shadow-[0_0_15px_rgba(56,189,248,0.15)]">Kamus Jepang</span>
+                        JBook <span className="text-accent-blue dark:text-accent-blue drop-shadow-[0_0_15px_rgba(56,189,248,0.15)]">Kamus Jepang</span>
                     </h1>
 
                     <p className="text-base md:text-lg text-gray-500 dark:text-gray-400 max-w-2xl font-light mt-4">

@@ -4,6 +4,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useGameStore } from '../../stores/gameStore';
 import { CrosswordCell } from './CrosswordCell';
 import * as wanakana from 'wanakana';
+import { toast } from 'react-toastify';
+import { Keyboard, Sparkles } from 'lucide-react';
 
 export const CrosswordGrid = () => {
   const { gameState, selectCell, inputChar, deleteChar } = useGameStore();
@@ -25,10 +27,44 @@ export const CrosswordGrid = () => {
     return () => window.removeEventListener('resize', updateSize);
   }, [gameState.grid]);
 
+  useEffect(() => {
+    if (!gameState.grid || gameState.mode === 'kanji') return;
+
+    toast.info(
+      <div className="relative z-10 flex items-center gap-3 pb-1 text-left">
+        <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-white/15 text-white shadow-inner">
+          <Keyboard size={22} strokeWidth={2.2} />
+        </div>
+        <div className="min-w-0">
+          <div className="mb-0.5 flex items-center gap-1.5 text-[11px] font-black uppercase tracking-[0.16em] text-white/75">
+            <Sparkles size={12} /> Petunjuk cepat
+          </div>
+          <p className="text-sm font-bold leading-snug text-white">
+            Gunakan keyboard Jepang
+          </p>
+          <p className="text-xs font-medium text-white/70">
+            Romaji atau Kana untuk mengisi kotak
+          </p>
+        </div>
+      </div>,
+      {
+      toastId: 'tts-keyboard-tip',
+      autoClose: 3500,
+      position: 'top-center',
+      closeOnClick: true,
+      pauseOnHover: true,
+      icon: false,
+      closeButton: true,
+      className: '!w-[min(92vw,420px)] !min-h-0 !rounded-2xl !border !border-white/20 !bg-gradient-to-r !from-sky-600 !via-blue-600 !to-emerald-500 !p-0 !shadow-2xl !shadow-sky-900/30',
+      bodyClassName: '!p-4',
+      progressClassName: '!bg-white/80'
+    });
+  }, [gameState.grid, gameState.mode]);
+
   if (!gameState.grid) {
     return (
       <div className="flex items-center justify-center p-8 bg-[var(--card-bg)] rounded-[2rem] shadow-sm border border-[var(--border-color)] w-full max-w-md mx-auto min-h-[300px]">
-        <div className="text-gray-500 font-bold uppercase tracking-widest text-xs">Pilih level untuk memulai...</div>
+        <div className="text-gray-500 font-bold uppercase tracking-widest text-xs">Pilih mode untuk memulai...</div>
       </div>
     );
   }
@@ -84,14 +120,6 @@ export const CrosswordGrid = () => {
           <div className="font-bold text-foreground text-base leading-tight">
             {activeWord.clue}
           </div>
-        </div>
-      )}
-
-      {gameState.mode !== 'kanji' && (
-        <div className="w-full text-center mb-3 px-1">
-          <p className="inline-flex flex-wrap justify-center items-center gap-1.5 text-[10px] uppercase tracking-widest sm:text-xs font-bold text-accent-green bg-accent-green/10 px-3 py-1.5 rounded-full border border-accent-green/20">
-            <span className="text-sm">💡</span> Peringatan: Gunakan Keyboard Jepang (Romaji/Kana) untuk pengalaman terbaik.
-          </p>
         </div>
       )}
 

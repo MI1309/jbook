@@ -1300,6 +1300,227 @@
         "id": "poin/hal yang perlu diperhatikan"
       }
     ]
-  }
+  },
+    {
+    "id": "h07-dai-007",
+    "word": "〜代",
+    "reading": "dai",
+    "furigana": "だい",
+    "meaning": "biaya, ongkos",
+    "word_type": "suffix",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "電気代",
+        "id": "biaya listrik"
+      },
+      {
+        "jp": "ガス代",
+        "id": "biaya gas"
+      },
+      {
+        "jp": "電話代",
+        "id": "biaya telepon"
+      },
+      {
+        "jp": "食事代",
+        "id": "biaya makan"
+      }
+    ]
+  },
+  {
+    "id": "h08-kan-008",
+    "word": "〜間",
+    "reading": "kan",
+    "furigana": "かん",
+    "meaning": "selama (jangka waktu)",
+    "word_type": "suffix",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "三日間",
+        "id": "selama 3 hari"
+      },
+      {
+        "jp": "一週間",
+        "id": "selama 1 minggu"
+      },
+      {
+        "jp": "二か月間",
+        "id": "selama 2 bulan"
+      },
+      {
+        "jp": "三年間",
+        "id": "selama 3 tahun"
+      }
+    ]
+  },
+  {
+    "id": "h09-bai-009",
+    "word": "〜倍",
+    "reading": "bai",
+    "furigana": "ばい",
+    "meaning": "kali lipat",
+    "word_type": "suffix",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "二倍",
+        "id": "2 kali lipat"
+      },
+      {
+        "jp": "三倍",
+        "id": "3 kali lipat"
+      },
+      {
+        "jp": "四倍",
+        "id": "4 kali lipat"
+      },
+      {
+        "jp": "百倍",
+        "id": "100 kali lipat"
+      }
+    ]
+  },
+  {
+    "id": "h10-ya-010",
+    "word": "〜屋",
+    "reading": "ya",
+    "furigana": "や",
+    "meaning": "toko, tukang",
+    "word_type": "suffix",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "パン屋",
+        "id": "toko roti"
+      },
+      {
+        "jp": "電気屋",
+        "id": "toko elektronik"
+      },
+      {
+        "jp": "床屋",
+        "id": "tukang cukur"
+      },
+      {
+        "jp": "八百屋",
+        "id": "toko sayur"
+      }
+    ]
+  },
+  {
+    "id": "h11-ka-011",
+    "word": "〜家",
+    "reading": "ka",
+    "furigana": "か",
+    "meaning": "orang yang ahli, profesi",
+    "word_type": "suffix",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "音楽家",
+        "id": "musisi"
+      },
+      {
+        "jp": "小説家",
+        "id": "novelis"
+      },
+      {
+        "jp": "政治家",
+        "id": "politikus"
+      },
+      {
+        "jp": "画家",
+        "id": "pelukis"
+      }
+    ]
+  },
+  {
+    "id": "h12-i-012",
+    "word": "〜位",
+    "reading": "i",
+    "furigana": "い",
+    "meaning": "peringkat, ranking",
+    "word_type": "suffix",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "一位",
+        "id": "juara/ranking 1"
+      },
+      {
+        "jp": "二位",
+        "id": "ranking 2"
+      },
+      {
+        "jp": "三位",
+        "id": "ranking 3"
+      },
+      {
+        "jp": "四位",
+        "id": "ranking 4"
+      }
+    ]
+  },
+  {
+    "id": "h13-zutsu-013",
+    "word": "〜ずつ",
+    "reading": "zutsu",
+    "furigana": "ずつ",
+    "meaning": "masing-masing",
+    "word_type": "suffix",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "一人ずつ",
+        "id": "masing-masing orang"
+      },
+      {
+        "jp": "百円ずつ",
+        "id": "masing-masing 100 yen"
+      },
+      {
+        "jp": "五分ずつ",
+        "id": "masing-masing 5 menit"
+      },
+      {
+        "jp": "半分ずつ 取ってください",
+        "id": "silakan ambil masing-masing setengah"
+      }
+    ]
+  },
+  {
+    "id": "h14-gawa-014",
+    "word": "〜側",
+    "reading": "gawa",
+    "furigana": "がわ",
+    "meaning": "sisi",
+    "word_type": "suffix",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "右側",
+        "id": "sisi kanan"
+      },
+      {
+        "jp": "南側",
+        "id": "sisi selatan"
+      },
+      {
+        "jp": "海側",
+        "id": "sisi laut"
+      },
+      {
+        "jp": "窓側",
+        "id": "sisi jendela"
+      },
+      {
+        "jp": "通路側",
+        "id": "sisi lorong"
+      }
+    ]
+  },
+  
 
 ]

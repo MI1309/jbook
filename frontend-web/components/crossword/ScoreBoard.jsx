@@ -1,15 +1,12 @@
 import React from 'react';
 import { useGameStore } from '../../stores/gameStore';
-import { Trophy, Flame } from 'lucide-react';
+import { Trophy } from 'lucide-react';
 
 export const ScoreBoard = () => {
   const { gameState } = useGameStore();
 
   if (!gameState.grid && gameState.mode !== 'kanji') return null;
 
-  // Formatting time (elapsed time in seconds, we could format it to mm:ss if we had a timer running in store)
-  // For now just show score and streak placeholder
-  
   return (
     <div className="flex justify-between items-center w-full bg-[var(--card-bg)] p-3 sm:p-4 rounded-xl shadow-sm border border-[var(--border-color)] mb-6">
       <div className="flex items-center gap-2">
@@ -31,14 +28,6 @@ export const ScoreBoard = () => {
             </div>
           </div>
         )}
-        <div className="flex flex-col items-center">
-          <div className="flex items-center gap-1 text-orange-500 text-sm font-medium">
-            <Flame size={14} /> Streak
-          </div>
-          <div className="text-lg font-bold text-orange-600">
-            x1
-          </div>
-        </div>
       </div>
     </div>
   );

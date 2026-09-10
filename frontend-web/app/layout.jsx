@@ -141,6 +141,9 @@ export default function RootLayout({ children }) {
                                 draggable
                                 pauseOnHover
                                 theme="colored"
+                                toastClassName="!rounded-2xl !border !border-white/20 !px-4 !py-3 !shadow-2xl !shadow-slate-950/20"
+                                bodyClassName="!p-0 !text-sm !font-semibold"
+                                progressClassName="!z-0 !h-1 !bg-white/80"
                             />
                         </PracticeProvider>
                     </AuthProvider>

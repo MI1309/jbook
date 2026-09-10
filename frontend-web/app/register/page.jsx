@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { useTheme } from '@/context/ThemeContext';
 import Link from 'next/link';
+import Image from 'next/image';
 
 export default function RegisterPage() {
     const [username, setUsername] = useState('');
@@ -36,26 +37,28 @@ export default function RegisterPage() {
             <div className={`absolute top-0 left-0 w-96 h-96 rounded-full blur-[100px] opacity-20 animate-pulse ${isDark ? 'bg-red-900' : 'bg-red-200'}`} />
             <div className={`absolute bottom-0 right-0 w-96 h-96 rounded-full blur-[100px] opacity-10 animate-pulse delay-700 ${isDark ? 'bg-red-800' : 'bg-red-100'}`} />
 
-            <div className={`max-w-md w-full space-y-8 p-10 rounded-[2.5rem] backdrop-blur-xl border transition-all duration-300 relative z-10 ${
+            <div className={`max-w-md w-full p-6 sm:p-10 rounded-[2.5rem] backdrop-blur-xl border transition-all duration-300 relative z-10 ${
                 isDark 
                     ? 'bg-black/40 border-white/5 shadow-[0_0_50px_-12px_rgba(220,38,38,0.2)]' 
                     : 'bg-white/80 border-gray-100 shadow-xl shadow-red-500/5'
             }`}>
                 <div className="text-center">
-                    <div className="inline-block p-4 rounded-3xl bg-red-600 shadow-lg shadow-red-500/40 mb-6 group transition-transform hover:scale-110">
-                        <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
-                        </svg>
+                    <div className="inline-flex rounded-[1.75rem] bg-white p-2 shadow-xl shadow-red-500/25 ring-1 ring-red-100/80 transition-transform duration-300 hover:scale-105 dark:bg-neutral-900 dark:ring-white/10">
+                        <Image
+                            src="/icon-192.png"
+                            alt="Logo JBook"
+                            width="96"
+                            height="96"
+                            priority
+                            className="h-24 w-24 rounded-2xl object-cover"
+                        />
                     </div>
                     <h2 className={`text-4xl font-black tracking-tight transition-colors ${isDark ? 'text-white' : 'text-gray-900'}`}>
                         Daftar
                     </h2>
-                    <p className={`mt-3 text-sm font-bold tracking-wide uppercase transition-colors ${isDark ? 'text-neutral-500' : 'text-gray-400'}`}>
-                        Mulai Perjalanan JBook Kamu
-                    </p>
                 </div>
                 
-                <form className="mt-10 space-y-6" onSubmit={handleSubmit}>
+                <form className="mt-8 space-y-5" onSubmit={handleSubmit}>
                     {error && (
                         <div className={`p-4 rounded-2xl text-xs font-black uppercase tracking-widest border animate-shake transition-colors ${
                             isDark ? 'bg-red-950/20 border-red-900/50 text-red-400' : 'bg-red-50 border-red-200 text-red-600'
@@ -125,18 +128,24 @@ export default function RegisterPage() {
 
                     <button
                         type="submit"
-                        className="w-full group relative flex justify-center py-4 px-4 border border-transparent text-xs font-black uppercase tracking-[0.2em] rounded-2xl text-white bg-red-600 hover:bg-red-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-all shadow-xl shadow-red-600/20 active:scale-95 overflow-hidden"
+                        className="w-full group relative flex justify-center py-4 px-4 border border-transparent text-xs font-black uppercase tracking-[0.2em] rounded-2xl text-white bg-red-600 hover:bg-red-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-all shadow-xl shadow-red-600/20 active:scale-[0.98] overflow-hidden"
                     >
                         <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-white/0 via-white/20 to-white/0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 ease-in-out" />
                         Daftar Sekarang
                     </button>
                 </form>
 
-                <div className="text-center mt-10 space-y-6">
-                    <Link href="/" className={`inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-widest transition-all ${isDark ? 'text-neutral-700 hover:text-white' : 'text-gray-400 hover:text-gray-900'}`}>
-                        <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg>
-                        Beranda
-                    </Link>
+                <div className="text-center mt-8 space-y-5">
+                    <div className="flex items-center justify-center gap-4 text-[10px] font-black uppercase tracking-widest">
+                        <Link href="/privacy-security" className={`transition-colors ${isDark ? 'text-neutral-600 hover:text-accent-blue' : 'text-gray-400 hover:text-red-600'}`}>
+                            Privasi & Keamanan
+                        </Link>
+                        <span className={isDark ? 'text-neutral-700' : 'text-gray-300'} aria-hidden="true">•</span>
+                        <Link href="/" className={`inline-flex items-center gap-1.5 transition-all ${isDark ? 'text-neutral-600 hover:text-white' : 'text-gray-400 hover:text-gray-900'}`}>
+                            <svg className="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg>
+                            Beranda
+                        </Link>
+                    </div>
                 </div>
             </div>
         </div>

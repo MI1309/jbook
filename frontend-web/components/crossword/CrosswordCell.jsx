@@ -30,7 +30,7 @@ export const CrosswordCell = ({
     return (
       <div
         style={{ width: cellSize, height: cellSize }}
-        className="bg-[var(--border-color)] border border-[var(--border-color)]"
+        className="bg-gradient-to-br from-slate-200/80 via-sky-100/70 to-emerald-100/80 dark:from-slate-800/80 dark:via-slate-700/70 dark:to-emerald-950/60 border border-white/40 dark:border-white/10"
       />
     );
   }
@@ -88,7 +88,7 @@ export const CrosswordCell = ({
       {cell.number && (
         <span
           style={{ fontSize: numberSize }}
-          className="absolute top-0 left-0.5 text-gray-500 leading-none"
+          className="absolute top-0 left-0.5 text-accent-blue dark:text-sky-300 font-black leading-none"
         >
           {cell.number}
         </span>
