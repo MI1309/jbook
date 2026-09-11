@@ -155,7 +155,7 @@ export default function Home() {
                     </h1>
 
                     <p className="text-base md:text-lg text-gray-500 dark:text-gray-400 max-w-2xl font-light mt-4">
-                        Cari kosakata, kanji, dan tata bahasa, atau mulai latihan interaktif untuk menguji kemampuan Anda.
+                        Kamus bahasa jepang disertai latihan soal dan game teka-teki silang .
                     </p>
 
                     {/* SEARCH INTERACTIVE */}

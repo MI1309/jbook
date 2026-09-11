@@ -24,12 +24,10 @@ export const LevelSelector = () => {
   return (
     <div className="w-full bg-[var(--card-bg)] p-4 sm:p-8 md:p-10 rounded-3xl shadow-xl border border-[var(--border-color)] text-center">
       <div className="mb-8">
-        <h2 className="text-3xl font-japanese font-black text-[var(--foreground)] mb-2">JBook Crossword</h2>
-        <p className="text-gray-500 dark:text-gray-400">Sesuaikan mode permainan Anda</p>
+        <h2 className="text-3xl font-japanese font-black text-[var(--foreground)] mb-2">Sesuaikan mode permainan</h2>
       </div>
 
       <div className="mb-8">
-        <label className="block text-sm font-bold text-gray-400 uppercase tracking-widest mb-3">Mode Soal</label>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           {modes.map(m => (
             <button
@@ -58,11 +56,11 @@ export const LevelSelector = () => {
         className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-accent-blue to-accent-green hover:opacity-90 text-white py-4 rounded-xl font-bold text-lg transition-all active:scale-95 disabled:opacity-70 shadow-xl shadow-accent-blue/20"
       >
         {isLoading ? (
-          <span className="animate-pulse text-sm">Menyiapkan Grid...</span>
+          <span className="animate-pulse text-sm">Loading ...</span>
         ) : (
           <>
             <Play fill="currentColor" size={20} />
-            Mulai Bermain
+            Mulai
           </>
         )}
       </button>

@@ -20,7 +20,6 @@ export default function CrosswordPage() {
             テカ-テキ <span className="text-transparent bg-clip-text bg-gradient-to-r from-accent-blue to-accent-green">Silang</span>
           </h1>
           <div className="h-1 w-16 bg-gradient-to-r from-accent-blue to-accent-green rounded-full mx-auto mb-3" />
-          <p className="text-gray-500 dark:text-gray-400 font-bold text-sm sm:text-lg">Latih kosa kata bahasa Jepang JLPT kamu di sini.</p>
         </header>
 
         {!gameState.grid ? (
