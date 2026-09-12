@@ -1521,6 +1521,306 @@
       }
     ]
   },
-  
+  {
+    "id": "i01-shibaraku-001",
+    "word": "しばらく",
+    "reading": "shibaraku",
+    "furigana": "",
+    "meaning": "untuk sementara waktu",
+    "word_type": "adverb",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "しばらく 日本語を 勉強して いなかったので、少し 忘れました。",
+        "id": "Karena untuk sementara saya tidak belajar bahasa Jepang, jadi sedikit lupa"
+      }
+    ]
+  },
+  {
+    "id": "i02-konoida-002",
+    "word": "この間",
+    "reading": "konoida",
+    "furigana": "あいだ",
+    "meaning": "beberapa waktu lalu",
+    "word_type": "adverb",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "この間 友達に 教えてもらった 店へ 行ってみました。",
+        "id": "Beberapa waktu lalu saya pergi ke restoran yang dikasih tahu oleh teman"
+      }
+    ]
+  },
+  {
+    "id": "i03-sonogo-003",
+    "word": "その後",
+    "reading": "sonogo",
+    "furigana": "ご",
+    "meaning": "setelah itu",
+    "word_type": "conjunction",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "駅で 友達と 会った。その後、一緒に 買い物を しました。",
+        "id": "Saya bertemu teman di stasiun. Setelah itu, kami berbelanja bersama"
+      }
+    ]
+  },
+  {
+    "id": "i04-sorosoro-004",
+    "word": "そろそろ",
+    "reading": "sorosoro",
+    "furigana": "",
+    "meaning": "sudah waktunya, sudah saatnya",
+    "word_type": "adverb",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "もう9時なので、そろそろ 帰りましょう。",
+        "id": "Karena sudah jam sembilan, ayo sudah saatnya kita pulang"
+      }
+    ]
+  },
+  {
+    "id": "i05-imanimo-005",
+    "word": "今にも",
+    "reading": "imanimo",
+    "furigana": "いま",
+    "meaning": "sekarang, sesaat lagi (akan segera)",
+    "word_type": "adverb",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "黒い雲が 広がっていて、今にも 雨が 降りそうです。",
+        "id": "Awan hitam menyebar/meluas dan sepertinya sesaat lagi akan turun hujan"
+      }
+    ]
+  },
+  {
+    "id": "i06-konogoro-006",
+    "word": "このごろ",
+    "reading": "konogoro",
+    "furigana": "",
+    "meaning": "akhir-akhir ini",
+    "word_type": "adverb",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "このごろ 仕事が 忙しいが、できるだけ 早く 寝るように しています。",
+        "id": "Akhir-akhir ini pekerjaan sibuk, tetapi saya berusaha sebisa mungkin tidur lebih awal"
+      }
+    ]
+  },
+   {
+    "id": "i07-kanari-007",
+    "word": "かなり",
+    "reading": "kanari",
+    "furigana": "",
+    "meaning": "cukup, lumayan",
+    "word_type": "adverb",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "このかばんは かなり 重いので、一人では 運べません。",
+        "id": "Tas ini cukup berat sehingga tidak bisa dibawa/diangkut sendirian"
+      }
+    ]
+  },
+  {
+    "id": "i08-mazu-008",
+    "word": "まず",
+    "reading": "mazu",
+    "furigana": "",
+    "meaning": "pertama-tama",
+    "word_type": "adverb",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "料理を 始める 前に、まず 材料を 確認して おいて ください。",
+        "id": "Sebelum mulai memasak, pertama-tama tolong pastikan bahannya terlebih dahulu"
+      }
+    ]
+  },
+  {
+    "id": "i09-zuibun-009",
+    "word": "ずいぶん",
+    "reading": "zuibun",
+    "furigana": "",
+    "meaning": "sangat, cukup (lebih dari yang diperkirakan)",
+    "word_type": "adverb",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "今日は ずいぶん 人が 多いので、店の前が 混んで います。",
+        "id": "Hari ini karena orangnya cukup banyak, sehingga depan toko menjadi padat"
+      }
+    ]
+  },
+  {
+    "id": "i10-tsugini-010",
+    "word": "次に",
+    "reading": "tsugini",
+    "furigana": "つぎ",
+    "meaning": "berikutnya, selanjutnya",
+    "word_type": "conjunction",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "この説明を 読んで ください。次に、練習問題を やって みましょう。",
+        "id": "Silahkan baca penjelasan ini. Berikutnya, mari mencoba soal latihan"
+      }
+    ]
+  },
+  {
+    "id": "i11-tattaima-011",
+    "word": "たった今",
+    "reading": "tattaima",
+    "furigana": "いま",
+    "meaning": "baru saja",
+    "word_type": "adverb",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "たった今、駅に 着いた ところです。",
+        "id": "Saya baru saja sampai di stasiun"
+      }
+    ]
+  },
+  {
+    "id": "i12-hotondo-012",
+    "word": "ほとんど",
+    "reading": "hotondo",
+    "furigana": "",
+    "meaning": "hampir, hampir semua",
+    "word_type": "adverb",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "宿題は ほとんど 終わったので、あとは 確認する だけです。",
+        "id": "Karena PR nya hampir selesai, selanjutnya hanya tinggal memeriksa/memastikannya saja"
+      }
+    ]
+  },
+  {
+    "id": "i13-choudo-013",
+    "word": "ちょうど",
+    "reading": "choudo",
+    "furigana": "",
+    "meaning": "tepat, pas",
+    "word_type": "adverb",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "駅に 着いた とき、ちょうど 電車が 来ました。",
+        "id": "Saat tiba di stasiun, pas/tepat keretanya datang"
+      }
+    ]
+  },
+   {
+    "id": "i14-kichinto-014",
+    "word": "きちんと",
+    "reading": "kichinto",
+    "furigana": "",
+    "meaning": "dengan baik/rapi/tertib/benar",
+    "word_type": "adverb",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "使った物は、元の所に きちんと 戻して ください。",
+        "id": "Tolong kembalikan barang yang digunakan ke tempat semula dengan benar"
+      }
+    ]
+  },
+  {
+    "id": "i15-dekirudake-015",
+    "word": "できるだけ",
+    "reading": "dekirudake",
+    "furigana": "",
+    "meaning": "sebisa mungkin (semaksimal mungkin)",
+    "word_type": "adverb",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "会議に 遅れないように、できるだけ 早く 家を 出ました。",
+        "id": "Agar tidak terlambat ke rapat, sebisa mungkin saya keluar rumah dengan cepat"
+      }
+    ]
+  },
+  {
+    "id": "i16-chanto-016",
+    "word": "ちゃんと",
+    "reading": "chanto",
+    "furigana": "",
+    "meaning": "dengan baik, sebagaimana mestinya",
+    "word_type": "adverb",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "朝ご飯を ちゃんと 食べないと、元気が 出ません。",
+        "id": "Kalau tidak sarapan dengan baik/sebagaimana mestinya, jadi tidak bersemangat"
+      }
+    ]
+  },
+  {
+    "id": "i17-narubeku-017",
+    "word": "なるべく",
+    "reading": "narubeku",
+    "furigana": "",
+    "meaning": "sebisa mungkin (sebisanya saja)",
+    "word_type": "adverb",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "風邪を 引いているので、なるべく 外に 出ないように しています。",
+        "id": "Karena sedang flu, sebisanya saya berusaha untuk tidak keluar rumah"
+      }
+    ]
+  },
+  {
+    "id": "i18-hakkiri-018",
+    "word": "はっきり",
+    "reading": "hakkiri",
+    "furigana": "",
+    "meaning": "dengan jelas",
+    "word_type": "adverb",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "あまり 聞こえなかったので、もう一度 はっきり 言って ください。",
+        "id": "Karena tidak begitu terdengar, tolong katakan sekali lagi dengan jelas"
+      }
+    ]
+  },
+  {
+    "id": "i19-kanarazu-019",
+    "word": "必ず",
+    "reading": "kanarazu",
+    "furigana": "かなら",
+    "meaning": "pasti, pastikan",
+    "word_type": "adverb",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "明日の会議には 必ず 参加して ください。",
+        "id": "Tolong pastikan ikut rapat besok"
+      }
+    ]
+  },
+  {
+    "id": "i20-zettaini-020",
+    "word": "絶対に",
+    "reading": "zettaini",
+    "furigana": "ぜったい",
+    "meaning": "pasti, pastikan",
+    "word_type": "adverb",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "絶対に 約束を 忘れないで ください。",
+        "id": "Tolong jangan lupa janji itu apa pun yang terjadi"
+      }
+    ]
+  },
+   
 
 ]

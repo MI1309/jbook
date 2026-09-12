@@ -20,14 +20,6 @@ export const ScoreBoard = () => {
       </div>
 
       <div className="flex items-center gap-6">
-        {gameState.mode === 'kanji' && (
-          <div className="flex flex-col items-center">
-            <div className="text-xs text-gray-500 uppercase font-bold tracking-wider">Terjawab</div>
-            <div className="text-lg font-bold text-foreground">
-              {gameState.kanjiAnswered ? gameState.currentKanjiQuestion + 1 : gameState.currentKanjiQuestion} / {gameState.kanjiQuestions.length}
-            </div>
-          </div>
-        )}
       </div>
     </div>
   );

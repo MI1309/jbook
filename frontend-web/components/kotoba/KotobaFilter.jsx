@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import { useDebounce } from 'use-debounce';
 import { useTheme } from '@/context/ThemeContext';
+import { getVocabLevelVisibility } from '@/lib/api';
 
 function FilterContent() {
     const { theme, mounted } = useTheme();
@@ -18,6 +19,15 @@ function FilterContent() {
     const [searchTerm, setSearchTerm] = useState(initialSearch);
     const [selectedLevels, setSelectedLevels] = useState(initialLevels);
     const [wordType, setWordType] = useState(initialType);
+    const [enabledLevels, setEnabledLevels] = useState([1, 2, 3, 4, 5]);
+
+    useEffect(() => {
+        getVocabLevelVisibility().then(data => {
+            const levels = data.enabled_levels || [1, 2, 3, 4, 5];
+            setEnabledLevels(levels);
+            setSelectedLevels(current => current.filter(l => levels.includes(Number(l))));
+        });
+    }, []);
 
     // Restore saved filters on mount if URL has no parameters
     useEffect(() => {
@@ -130,7 +140,7 @@ function FilterContent() {
                         Level
                     </label>
                     <div className="grid grid-cols-6 gap-1.5 w-full">
-                        {[5, 4, 3, 2, 1].map((levelItem) => {
+                        {[5, 4, 3, 2, 1].filter(levelItem => enabledLevels.includes(levelItem)).map((levelItem) => {
                             const isSelected = selectedLevels.includes(levelItem.toString());
                             const spanClass = [5, 4, 3].includes(levelItem) ? 'col-span-2' : 'col-span-3';
                             return (

@@ -13,6 +13,7 @@ import { useAuth } from '@/context/AuthContext';
 import { toast } from 'react-toastify';
 import Cookies from 'js-cookie';
 import { conjugateVerbComplete } from '@/utils/conjugation';
+import KanjiStrokeViewer from '@/components/kanji/KanjiStrokeViewer';
 
 const WORD_TYPES = [
     { value: '', label: '-- Tanpa Tipe --' },
@@ -46,6 +47,9 @@ export default function KotobaDetailUI({ vocab: initialVocab, onClose }) {
     const [vocab, setVocab] = useState(initialVocab);
     const [kanjiDetails, setKanjiDetails] = useState([]);
     const [playing, setPlaying] = useState(false);
+    const [animatingKanjis, setAnimatingKanjis] = useState({});
+    const [kanjiSvgMap, setKanjiSvgMap] = useState({});
+    const [loadingKanjis, setLoadingKanjis] = useState({});
 
     const handleBack = (e) => {
         if (e) e.preventDefault();
@@ -201,6 +205,7 @@ export default function KotobaDetailUI({ vocab: initialVocab, onClose }) {
     const normalizedWord = (vocab.word || '').normalize('NFKC');
     const characters = normalizedWord.split('');
     const uniqueKanjis = extractKanji(normalizedWord);
+    const strokeCharSize = mounted && typeof window !== 'undefined' ? (window.innerWidth < 640 ? 52 : (window.innerWidth < 1024 ? 60 : 68)) : 60;
 
     const playAudio = () => {
         if (playing) return;
@@ -232,12 +237,97 @@ export default function KotobaDetailUI({ vocab: initialVocab, onClose }) {
         audio.play().catch(speakFallback);
     };
 
-    const handleKanjiClick = async (char) => {
+    // Auto pre-fetch SVG untuk kanji yang ada di kata agar animasi langsung instan
+    useEffect(() => {
+        if (!uniqueKanjis || uniqueKanjis.length === 0) return;
+        uniqueKanjis.forEach(async (char) => {
+            if (kanjiSvgMap[char]) return;
+            const localDetail = kanjiDetails.find(kd => kd.character === char);
+            const localSvg = localDetail?.svg_data || localDetail?.kanjivg;
+            if (localSvg) {
+                setKanjiSvgMap(prev => ({ ...prev, [char]: localSvg }));
+                return;
+            }
+            try {
+                const unicodeHex = char.charCodeAt(0).toString(16).padStart(5, '0');
+                const fallbackUrl = `https://raw.githubusercontent.com/KanjiVG/kanjivg/master/kanji/${unicodeHex}.svg`;
+                const res = await fetch(fallbackUrl);
+                if (res.ok) {
+                    const text = await res.text();
+                    setKanjiSvgMap(prev => ({ ...prev, [char]: text }));
+                }
+            } catch (e) {}
+        });
+    }, [uniqueKanjis, kanjiDetails]);
+
+    const navigateToKanji = async (char) => {
         const id = await resolveContentId('kanji', char);
         if (id) {
             router.push(`/kanji/${id}`);
         } else {
             router.push(`/kanji?search=${encodeURIComponent(char)}`);
+        }
+    };
+
+    const handleKanjiClick = async (char) => {
+        const isCurrentlyActive = !animatingKanjis[char];
+        setAnimatingKanjis(prev => ({ ...prev, [char]: isCurrentlyActive }));
+
+        if (!isCurrentlyActive || kanjiSvgMap[char]) return;
+
+        const localDetail = kanjiDetails.find(kd => kd.character === char);
+        const localSvg = localDetail?.svg_data || localDetail?.kanjivg;
+        if (localSvg) {
+            setKanjiSvgMap(prev => ({ ...prev, [char]: localSvg }));
+            return;
+        }
+
+        setLoadingKanjis(prev => ({ ...prev, [char]: true }));
+        try {
+            const baseUrl = (process.env.NEXT_PUBLIC_API_URL || 'https://imronm.pythonanywhere.com/api')
+                .replace(/\/$/, '');
+            const id = await resolveContentId('kanji', char);
+            if (id) {
+                const res = await fetch(`${baseUrl}/content/kanji/${id}`);
+                if (res.ok) {
+                    const data = await res.json();
+                    const svg = data?.svg_data || data?.kanjivg;
+                    if (svg) {
+                        setKanjiSvgMap(prev => ({ ...prev, [char]: svg }));
+                        setLoadingKanjis(prev => ({ ...prev, [char]: false }));
+                        return;
+                    }
+                }
+            }
+
+            const unicodeHex = char.charCodeAt(0).toString(16).padStart(5, '0');
+            const fallbackUrl = `https://raw.githubusercontent.com/KanjiVG/kanjivg/master/kanji/${unicodeHex}.svg`;
+            const svgRes = await fetch(fallbackUrl);
+            if (svgRes.ok) {
+                const svgText = await svgRes.text();
+                setKanjiSvgMap(prev => ({ ...prev, [char]: svgText }));
+            }
+        } catch (e) {
+            console.warn('[jbook] Gagal mengambil SVG kanji:', e);
+        } finally {
+            setLoadingKanjis(prev => ({ ...prev, [char]: false }));
+        }
+    };
+
+    const allKanjisAnimating = uniqueKanjis.length > 0 && uniqueKanjis.every(k => animatingKanjis[k]);
+
+    const toggleAllKanjis = () => {
+        if (allKanjisAnimating) {
+            setAnimatingKanjis({});
+        } else {
+            const next = {};
+            uniqueKanjis.forEach(k => {
+                next[k] = true;
+                if (!kanjiSvgMap[k]) {
+                    handleKanjiClick(k);
+                }
+            });
+            setAnimatingKanjis(next);
         }
     };
 
@@ -415,33 +505,79 @@ export default function KotobaDetailUI({ vocab: initialVocab, onClose }) {
                                     </div>
                                 ) : (
                                     <div className="z-10 text-center w-full px-2 py-4">
-                                        <p className="text-center tracking-wider font-japanese font-black text-3xl sm:text-4xl lg:text-5xl leading-relaxed" style={{ lineHeight: '4.5rem' }}>
+                                        <div className="flex flex-wrap items-end justify-center font-japanese font-black text-3xl sm:text-4xl lg:text-5xl" style={{ lineHeight: '1.2' }}>
                                             {characters.map((char, index) => {
                                                 const isK = hasKanji(char);
                                                 const seg = furiganaMap[index] || '';
+                                                const isAnimating = !!animatingKanjis[char];
+                                                const isLoading = !!loadingKanjis[char];
+                                                const svg = kanjiSvgMap[char];
+
                                                 if (isK) {
                                                     return (
-                                                        <ruby
+                                                        <span
                                                             key={index}
                                                             onClick={() => handleKanjiClick(char)}
-                                                            className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-white cursor-pointer transition-colors"
+                                                            className="inline-flex flex-col items-center justify-end align-bottom mx-0.5 cursor-pointer group/char select-none"
+                                                            title={isAnimating ? "Klik untuk kembali ke teks kanji" : `Klik untuk melihat cara tulis kanji ${char}`}
                                                         >
-                                                            {char}
-                                                            {seg ? (
-                                                                <rt className="text-gray-600 dark:text-gray-300 font-bold select-none" style={{ fontSize: '0.45em', letterSpacing: 'normal' }}>
-                                                                    {seg}
-                                                                </rt>
-                                                            ) : null}
-                                                        </ruby>
+                                                            {/* Furigana di atas */}
+                                                            <span 
+                                                                className="text-gray-500 dark:text-gray-400 font-bold leading-tight h-5 flex items-center justify-center select-none"
+                                                                style={{ fontSize: '0.42em', letterSpacing: 'normal' }}
+                                                            >
+                                                                {seg || ''}
+                                                            </span>
+
+                                                            {/* Kanji atau Animasi Goresan Langsung Seukuran Karakter */}
+                                                            {isAnimating ? (
+                                                                <span className="inline-flex items-center justify-center p-0.5 animate-in fade-in zoom-in-95 duration-200">
+                                                                    {isLoading || !svg ? (
+                                                                        <span 
+                                                                            style={{ width: strokeCharSize, height: strokeCharSize }}
+                                                                            className="border border-dashed border-blue-400 dark:border-blue-700 rounded-xl flex items-center justify-center bg-white dark:bg-zinc-900"
+                                                                        >
+                                                                            <span className="w-5 h-5 border-2 border-blue-600 border-t-transparent rounded-full animate-spin" />
+                                                                        </span>
+                                                                    ) : (
+                                                                        <KanjiStrokeViewer 
+                                                                            svgContent={svg} 
+                                                                            size={strokeCharSize} 
+                                                                            isAnimating={true} 
+                                                                        />
+                                                                    )}
+                                                                </span>
+                                                            ) : (
+                                                                <span 
+                                                                    style={{ minWidth: strokeCharSize * 0.75, minHeight: strokeCharSize }}
+                                                                    className="inline-flex items-center justify-center text-blue-600 dark:text-blue-400 group-hover/char:text-blue-700 dark:group-hover/char:text-white transition-colors group-hover/char:scale-105 group-hover/char:underline underline-offset-8"
+                                                                >
+                                                                    {char}
+                                                                </span>
+                                                            )}
+                                                        </span>
                                                     );
                                                 }
+
                                                 return (
-                                                    <span key={index} className={`transition-colors ${textColor}`}>
-                                                        {char}
+                                                    <span
+                                                        key={index}
+                                                        className="inline-flex flex-col items-center justify-end align-bottom mx-0.5 select-none"
+                                                    >
+                                                        {/* Placeholder furigana agar tinggi baseline seimbang */}
+                                                        <span className="h-5 text-transparent select-none pointer-events-none" style={{ fontSize: '0.42em' }}>
+                                                            &nbsp;
+                                                        </span>
+                                                        <span 
+                                                            style={{ minHeight: strokeCharSize }}
+                                                            className={`inline-flex items-center justify-center transition-colors ${textColor}`}
+                                                        >
+                                                            {char}
+                                                        </span>
                                                     </span>
                                                 );
                                             })}
-                                        </p>
+                                        </div>
                                     </div>
                                 )}
 
@@ -458,6 +594,19 @@ export default function KotobaDetailUI({ vocab: initialVocab, onClose }) {
                                     <Volume2 className={`w-5 h-5 ${playing ? 'scale-110' : ''}`} />
                                 </button>
                             </div>
+
+                            {/* Petunjuk aksi di bawah kotak */}
+                            {uniqueKanjis.length > 0 && !isEditing && (
+                                <div className="flex flex-col items-center gap-1 mt-1">
+                                    <button
+                                        type="button"
+                                        onClick={toggleAllKanjis}
+                                        className="text-[10px] font-black uppercase tracking-widest text-gray-400 hover:text-blue-600 transition-colors cursor-pointer"
+                                    >
+                                        {allKanjisAnimating ? 'Kembali ke teks kata normal' : 'Klik kanji untuk melihat cara tulis'}
+                                    </button>
+                                </div>
+                            )}
                         </div>
 
                         {/* Right: Title & Core Info */}
@@ -544,7 +693,7 @@ export default function KotobaDetailUI({ vocab: initialVocab, onClose }) {
                                         return (
                                             <div
                                                 key={i}
-                                                onClick={() => handleKanjiClick(char)}
+                                                onClick={() => navigateToKanji(char)}
                                                 className={`group flex items-start gap-3.5 ${cardBg} border ${borderStyle} hover:border-blue-600 p-4 rounded-2xl transition-all shadow-sm active:scale-95 cursor-pointer text-left`}
                                             >
                                                 <span className="text-3xl sm:text-4xl font-serif font-black text-blue-600 dark:text-blue-400 group-hover:scale-110 transition-transform w-10 sm:w-12 text-center pt-0.5">

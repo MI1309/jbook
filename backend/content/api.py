@@ -27,6 +27,21 @@ def kanji_visibility(request):
         "enabled_levels": [level for level in range(1, 6) if level not in disabled_levels],
     }
 
+def get_disabled_vocab_levels():
+    setting = FeatureSetting.objects.filter(key='vocab_visibility').first()
+    if not setting or not isinstance(setting.value, dict):
+        return set()
+    return {level for level in setting.value.get('disabled_levels', []) if level in range(1, 6)}
+
+@router.get("/vocab/visibility")
+@router.get("/kotoba/visibility")
+def vocab_visibility(request):
+    disabled_levels = sorted(get_disabled_vocab_levels())
+    return {
+        "disabled_levels": disabled_levels,
+        "enabled_levels": [level for level in range(1, 6) if level not in disabled_levels],
+    }
+
 @router.get("/kanji/sitemap")
 def kanji_sitemap(request):
     return [
@@ -430,12 +445,14 @@ def list_vocab(request,
     from utils.kana import to_kana
     from utils.conjugation import deconjugate_verb
     
-    qs = Vocab.objects.all().order_by('word')
+    disabled_levels = get_disabled_vocab_levels()
+    qs = Vocab.objects.exclude(jlpt_level__in=disabled_levels).order_by('word')
     
     if params.level:
         levels = parse_levels(params.level)
         if levels:
-            qs = qs.filter(jlpt_level__in=levels)
+            valid_levels = [l for l in levels if l not in disabled_levels]
+            qs = qs.filter(jlpt_level__in=valid_levels)
         
     if params.word_type:
         if params.word_type == 'verb':

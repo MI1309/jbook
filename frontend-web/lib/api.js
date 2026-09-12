@@ -4,6 +4,9 @@ export const API_URL = base_url.endsWith('/') ? base_url.slice(0, -1) : base_url
 let kanjiVisibilityCache = null;
 let kanjiVisibilityExpiresAt = 0;
 let kanjiVisibilityRequest = null;
+let vocabVisibilityCache = null;
+let vocabVisibilityExpiresAt = 0;
+let vocabVisibilityRequest = null;
 import Cookies from 'js-cookie';
 import { fetchWithCache } from '@/lib/cache-store';
 import { dbGetAll, dbHasData, dbGet } from '@/lib/offline-db';
@@ -230,6 +233,34 @@ export async function getKanjiLevelVisibility() {
         return await kanjiVisibilityRequest;
     } catch (error) {
         return { disabled_levels: [1, 2, 3], enabled_levels: [4, 5] };
+    }
+}
+
+export async function getVocabLevelVisibility() {
+    if (vocabVisibilityCache && Date.now() < vocabVisibilityExpiresAt) {
+        return vocabVisibilityCache;
+    }
+    if (vocabVisibilityRequest) return vocabVisibilityRequest;
+
+    vocabVisibilityRequest = fetch(`${API_URL}/content/vocab/visibility`, { cache: 'no-store' })
+        .then(res => {
+            if (!res.ok) throw new Error('Vocab visibility request failed');
+            return res.json();
+        })
+        .then(data => {
+            vocabVisibilityCache = data;
+            vocabVisibilityExpiresAt = Date.now() + 5 * 60 * 1000;
+            return data;
+        })
+        .catch(() => ({ disabled_levels: [], enabled_levels: [1, 2, 3, 4, 5] }))
+        .finally(() => {
+            vocabVisibilityRequest = null;
+        });
+
+    try {
+        return await vocabVisibilityRequest;
+    } catch (error) {
+        return { disabled_levels: [], enabled_levels: [1, 2, 3, 4, 5] };
     }
 }
 
@@ -622,8 +653,13 @@ export async function resetPracticeProgress() {
 }
 
 export async function getVocabList({ level, search, word_type, limit = 50, page = 1 } = {}) {
+    const visibility = await getVocabLevelVisibility();
+    const enabledLevels = (visibility.enabled_levels || [1, 2, 3, 4, 5]).map(Number);
+    const requestedLevels = level
+        ? String(level).split(',').map(Number).filter(item => enabledLevels.includes(item))
+        : enabledLevels;
     const queryParams = new URLSearchParams();
-    if (level) queryParams.append('level', level);
+    if (requestedLevels.length) queryParams.append('level', requestedLevels.join(','));
     if (search) queryParams.append('search', search);
     if (word_type) queryParams.append('word_type', word_type);
     if (limit) queryParams.append('limit', limit);

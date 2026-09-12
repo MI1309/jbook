@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useTheme } from '@/context/ThemeContext';
-import { getDoukaiCount, getKanjiLevelVisibility } from '@/lib/api';
+import { getDoukaiCount, getKanjiLevelVisibility, getVocabLevelVisibility } from '@/lib/api';
 
 export default function PracticeConfig() {
     const { theme, mounted } = useTheme();
@@ -26,24 +26,29 @@ export default function PracticeConfig() {
     const [chapterEnd, setChapterEnd] = useState(25);
 
     // Doukai state
-    const [doukaiCount, setDoukaiCount] = useState(0);
+    const [doukaiCount, setDoukaiCount] = useState(null);
     const [jlptLevels, setJlptLevels] = useState([
         { id: '5', label: 'N5', color: 'bg-green-100 text-green-700 border-green-200' },
         { id: '4', label: 'N4', color: 'bg-blue-100 text-blue-700 border-blue-200' },
+        { id: '3', label: 'N3', color: 'bg-yellow-100 text-yellow-700 border-yellow-200' },
+        { id: '2', label: 'N2', color: 'bg-orange-100 text-orange-700 border-orange-200' },
+        { id: '1', label: 'N1', color: 'bg-blue-100 text-blue-700 border-blue-200' },
     ]);
 
     useEffect(() => {
         getDoukaiCount().then(setDoukaiCount);
-        getKanjiLevelVisibility().then(data => {
-            const enabled = data.enabled_levels || [4, 5];
-            setSelectedLevels(current => current.filter(level => enabled.includes(Number(level))));
+        Promise.all([getKanjiLevelVisibility(), getVocabLevelVisibility()]).then(([kanjiData, vocabData]) => {
+            const kanjiEnabled = (kanjiData.enabled_levels || [4, 5]).map(Number);
+            const vocabEnabled = (vocabData.enabled_levels || [1, 2, 3, 4, 5]).map(Number);
+            const allEnabled = Array.from(new Set([...kanjiEnabled, ...vocabEnabled]));
+            setSelectedLevels(current => current.filter(level => allEnabled.includes(Number(level))));
             setJlptLevels([
                 { id: '5', label: 'N5', color: 'bg-green-100 text-green-700 border-green-200' },
                 { id: '4', label: 'N4', color: 'bg-blue-100 text-blue-700 border-blue-200' },
                 { id: '3', label: 'N3', color: 'bg-yellow-100 text-yellow-700 border-yellow-200' },
                 { id: '2', label: 'N2', color: 'bg-orange-100 text-orange-700 border-orange-200' },
                 { id: '1', label: 'N1', color: 'bg-blue-100 text-blue-700 border-blue-200' },
-            ].filter(level => enabled.includes(Number(level.id))));
+            ].filter(level => allEnabled.includes(Number(level.id))));
         });
     }, []);
 

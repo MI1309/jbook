@@ -157,6 +157,14 @@ export const useGameStore = create(
     
     const cell = gameState.grid.cells[row][col];
     if (cell.isBlock) return;
+
+    let newGrid = gameState.grid;
+    if (cell.validationState === 'wrong') {
+      newGrid = { ...gameState.grid };
+      const targetCell = newGrid.cells[row][col];
+      targetCell.userInput = '';
+      targetCell.validationState = 'empty';
+    }
     
     // Toggle direction if clicking same cell
     let direction = gameState.selectedDirection;
@@ -164,7 +172,7 @@ export const useGameStore = create(
       direction = direction === 'across' ? 'down' : 'across';
     } else {
       // Auto determine direction based on available words at this cell
-      const activeWords = gameState.grid.words.filter(w => cell.wordIds.includes(w.id));
+      const activeWords = newGrid.words.filter(w => cell.wordIds.includes(w.id));
       if (activeWords.length === 1) {
         direction = activeWords[0].direction;
       }
@@ -173,6 +181,7 @@ export const useGameStore = create(
     set({
       gameState: {
         ...gameState,
+        grid: newGrid,
         selectedCell: { row, col },
         selectedDirection: direction
       }

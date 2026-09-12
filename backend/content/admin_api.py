@@ -104,6 +104,27 @@ def admin_update_kanji_visibility(request, data: KanjiVisibilitySchema):
     setting.save(update_fields=['value', 'updated_at'])
     return {'disabled_levels': disabled_levels}
 
+class VocabVisibilitySchema(Schema):
+    disabled_levels: List[int] = Field(default_factory=list)
+
+@router.get("/vocab/visibility", auth=AdminAuth())
+@router.get("/kotoba/visibility", auth=AdminAuth())
+def admin_get_vocab_visibility(request):
+    setting = FeatureSetting.objects.filter(key='vocab_visibility').first()
+    value = setting.value if setting and isinstance(setting.value, dict) else {'disabled_levels': []}
+    return {'disabled_levels': value.get('disabled_levels', [])}
+
+@router.put("/vocab/visibility", auth=AdminAuth())
+@router.put("/kotoba/visibility", auth=AdminAuth())
+def admin_update_vocab_visibility(request, data: VocabVisibilitySchema):
+    disabled_levels = sorted(set(data.disabled_levels))
+    if any(level not in range(1, 6) for level in disabled_levels):
+        raise HttpError(400, "Level Kotoba harus berada di antara 1 dan 5")
+    setting, _ = FeatureSetting.objects.get_or_create(key='vocab_visibility')
+    setting.value = {'disabled_levels': disabled_levels}
+    setting.save(update_fields=['value', 'updated_at'])
+    return {'disabled_levels': disabled_levels}
+
 # Admin Dashboard Stats
 @router.get("/stats", auth=AdminAuth(), response=dict)
 def admin_get_stats(request):

@@ -174,7 +174,10 @@ def generate_quiz(request, limit: int = 10, level: Optional[str] = None, type: s
             qs = Kanji.objects.exclude(jlpt_level__in=disabled_levels)
             d_type = 'kanji'
         elif t in ['vocab', 'kotoba']:
-            qs = Vocab.objects.all()
+            setting = FeatureSetting.objects.filter(key='vocab_visibility').first()
+            value = setting.value if setting and isinstance(setting.value, dict) else {'disabled_levels': []}
+            disabled_levels = value.get('disabled_levels', [])
+            qs = Vocab.objects.exclude(jlpt_level__in=disabled_levels)
             d_type = 'vocab'
         elif t in ['grammar', 'bunpo']:
             qs = Grammar.objects.all()

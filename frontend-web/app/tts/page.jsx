@@ -31,10 +31,13 @@ export default function CrosswordPage() {
             <div className="flex flex-col lg:flex-row gap-4 lg:gap-8 items-start relative w-full min-w-0 mt-4">
               <div className="w-full lg:w-7/12 min-w-0 flex flex-col items-center">
                 <CrosswordGrid />
+                <div className="w-full lg:hidden">
+                  <CluePanel />
+                </div>
                 <GameControls />
               </div>
               
-              <div className="w-full lg:w-5/12 min-w-0">
+              <div className="hidden lg:block w-full lg:w-5/12 min-w-0">
                 <CluePanel />
               </div>
             </div>

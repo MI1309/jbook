@@ -12,6 +12,8 @@ export const CrosswordGrid = () => {
   const containerRef = useRef(null);
   const [cellSize, setCellSize] = useState(32);
 
+  const shownTipGridRef = useRef(null);
+
   useEffect(() => {
     if (!gameState.grid) return;
 
@@ -25,10 +27,14 @@ export const CrosswordGrid = () => {
     updateSize();
     window.addEventListener('resize', updateSize);
     return () => window.removeEventListener('resize', updateSize);
-  }, [gameState.grid]);
+  }, [gameState.grid?.width]);
 
   useEffect(() => {
     if (!gameState.grid || gameState.mode === 'kanji') return;
+
+    const gridKey = gameState.grid.generatedAt || gameState.grid;
+    if (shownTipGridRef.current === gridKey) return;
+    shownTipGridRef.current = gridKey;
 
     toast.info(
       <div className="relative z-10 flex items-center gap-3 pb-1 text-left">
@@ -59,7 +65,7 @@ export const CrosswordGrid = () => {
       bodyClassName: '!p-4',
       progressClassName: '!bg-white/80'
     });
-  }, [gameState.grid, gameState.mode]);
+  }, [gameState.grid?.generatedAt, gameState.mode]);
 
   if (!gameState.grid) {
     return (
@@ -103,21 +109,18 @@ export const CrosswordGrid = () => {
   }) || activeWordIds[0];
 
   const activeWord = gameState.grid?.words.find(word => word.id === activeWordId);
-  const kanjiChoices = gameState.mode === 'kanji'
-    ? gameState.grid.choiceBank || [...new Set(gameState.grid.words.flatMap(word => [...word.text]))]
-    : [];
 
   return (
     <div ref={containerRef} className="w-full max-w-full min-w-0 flex flex-col items-center">
       {activeWord && (
-        <div className="lg:hidden w-full bg-accent-blue/10 border border-accent-blue/20 p-3 mb-4 rounded-[1.5rem] shadow-sm animate-in fade-in slide-in-from-top-2">
+        <div className="lg:hidden w-full bg-accent-blue/10 border border-accent-blue/20 p-3 sm:p-4 mb-4 rounded-2xl shadow-sm animate-in fade-in slide-in-from-top-2">
           <div className="flex items-center gap-2 mb-1">
-            <span className="font-bold text-accent-blue bg-[var(--background)] border border-[var(--border-color)] px-2 py-0.5 rounded text-[10px] uppercase tracking-widest">
+            <span className="font-bold text-accent-blue bg-[var(--background)] border border-[var(--border-color)] px-2 py-0.5 rounded text-[10px] sm:text-xs uppercase tracking-widest">
               {gameState.selectedDirection === 'across' ? 'Mendatar' : 'Menurun'}
             </span>
-            <span className="text-[10px] text-gray-500 font-medium">({activeWord.text.length} kotak)</span>
+            <span className="text-[10px] sm:text-xs text-gray-500 font-medium">({activeWord.text.length} kotak)</span>
           </div>
-          <div className="font-bold text-foreground text-base leading-tight">
+          <div className="font-bold text-foreground text-base sm:text-lg leading-tight">
             {activeWord.clue}
           </div>
         </div>
@@ -143,6 +146,7 @@ export const CrosswordGrid = () => {
                 cellSize={cellSize}
                 isSelected={isSelected}
                 isHighlighted={isHighlighted}
+                isKanjiMode={gameState.mode === 'kanji'}
                 onSelect={() => selectCell(rIdx, cIdx)}
                 onInput={gameState.mode === 'kanji' ? () => {} : handleInput}
                 onDelete={deleteChar}
@@ -153,28 +157,6 @@ export const CrosswordGrid = () => {
         )}
         </div>
       </div>
-
-      {gameState.mode === 'kanji' && (
-        <div className="w-full max-w-lg mt-5 p-4 rounded-2xl bg-[var(--card-bg)] border border-[var(--border-color)]">
-          <p className="text-xs text-gray-500 font-bold uppercase tracking-widest text-center mb-3">
-            Pilih satu kanji untuk kotak aktif
-          </p>
-          <div className="flex flex-wrap justify-center gap-2">
-            {kanjiChoices.map(char => (
-              <button
-                key={char}
-                type="button"
-                onClick={() => handleInput(char)}
-                disabled={gameState.isCompleted || gameState.grid.cells[gameState.selectedCell?.row]?.[gameState.selectedCell?.col]?.validationState === 'correct'}
-                className="h-12 min-w-12 px-3 rounded-xl border-2 border-[var(--border-color)] bg-[var(--background)] text-xl font-japanese font-bold hover:border-accent-blue hover:text-accent-blue transition-colors disabled:opacity-50"
-                aria-label={`Pilih kanji ${char}`}
-              >
-                {char}
-              </button>
-            ))}
-          </div>
-        </div>
-      )}
     </div>
   );
 };

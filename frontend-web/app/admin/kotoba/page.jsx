@@ -27,12 +27,57 @@ export default function KotobaAdmin() {
     const [bulkDeleteProgress, setBulkDeleteProgress] = useState(0);
     const [pendingDelete, setPendingDelete] = useState(null);
     const [previewingAll, setPreviewingAll] = useState(false);
+    const [disabledLevels, setDisabledLevels] = useState([]);
+    const [savingVisibility, setSavingVisibility] = useState(false);
 
     useEffect(() => { 
         setCurrentPage(1);
     }, [search, level]);
 
-    useEffect(() => { fetchAllVocabs(); }, []);
+    useEffect(() => { 
+        fetchAllVocabs();
+        fetchVisibility();
+    }, []);
+
+    const fetchVisibility = async () => {
+        try {
+            const token = Cookies.get('access_token');
+            const res = await fetch(`${API_URL}/admin/vocab/visibility`, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            if (res.ok) {
+                const data = await res.json();
+                setDisabledLevels(data.disabled_levels || []);
+            }
+        } catch (error) {
+            console.error('Failed to fetch Kotoba visibility', error);
+        }
+    };
+
+    const toggleVisibility = async (lvl) => {
+        const nextDisabledLevels = disabledLevels.includes(lvl)
+            ? disabledLevels.filter(item => item !== lvl)
+            : [...disabledLevels, lvl].sort((a, b) => a - b);
+        setSavingVisibility(true);
+        try {
+            const token = Cookies.get('access_token');
+            const res = await fetch(`${API_URL}/admin/vocab/visibility`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({ disabled_levels: nextDisabledLevels })
+            });
+            if (!res.ok) throw new Error('Visibility update failed');
+            setDisabledLevels(nextDisabledLevels);
+            toast.success(`Kotoba N${lvl} ${nextDisabledLevels.includes(lvl) ? 'dinonaktifkan' : 'diaktifkan'}`);
+        } catch (error) {
+            toast.error('Gagal mengubah visibilitas level Kotoba.');
+        } finally {
+            setSavingVisibility(false);
+        }
+    };
 
     useEffect(() => {
         applyFiltersAndPagination();
@@ -233,6 +278,35 @@ export default function KotobaAdmin() {
                     </svg>
                     Tambah Kotoba
                 </Link>
+            </div>
+
+            {/* Visibilitas Kotoba per Level */}
+            <div className="p-6 rounded-[2rem] border backdrop-blur-xl bg-white/5 border-white/5 shadow-2xl">
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                    <div>
+                        <h2 className="text-sm font-black uppercase tracking-widest text-white">Visibilitas Kotoba</h2>
+                        <p className="text-xs text-neutral-500 mt-2">Klik level untuk mengaktifkan atau menonaktifkan kosakata yang tampil di publik dan latihan. Perubahan tersimpan otomatis.</p>
+                    </div>
+                    <div className="flex flex-wrap gap-2">
+                        {[5, 4, 3, 2, 1].map(lvl => {
+                            const isDisabled = disabledLevels.includes(lvl);
+                            return (
+                                <button
+                                    key={lvl}
+                                    type="button"
+                                    disabled={savingVisibility}
+                                    onClick={() => toggleVisibility(lvl)}
+                                    className={`px-4 py-2 rounded-xl border text-xs font-black transition-all cursor-pointer ${isDisabled
+                                        ? 'bg-red-600/20 border-red-500/40 text-red-300'
+                                        : 'bg-emerald-600/20 border-emerald-500/40 text-emerald-300'
+                                    } disabled:opacity-50`}
+                                >
+                                    N{lvl} {isDisabled ? 'OFF' : 'ON'}
+                                </button>
+                            );
+                        })}
+                    </div>
+                </div>
             </div>
 
             {/* Filters & Search */}
