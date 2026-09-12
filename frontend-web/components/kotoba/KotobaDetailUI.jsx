@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { hasKanji, extractKanji, generateFuriganaMap } from '@/lib/utils';
 import { resolveContentId } from '@/lib/api';
 import { getRadicalInfo } from '@/lib/radicals';
-import { dbGetAll } from '@/lib/offline-db';
+
 import { useTheme } from '@/context/ThemeContext';
 import { Volume2, Edit2, Check, X, Trash } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
@@ -101,44 +101,32 @@ export default function KotobaDetailUI({ vocab: initialVocab, onClose }) {
             if (uniqueKanjis.length === 0) return;
 
             try {
-                // 1. Coba dari IndexedDB lokal dulu
-                const allKanjis = await dbGetAll('kanji');
-                let foundKanjis = [];
-                if (allKanjis && allKanjis.length > 0) {
-                    foundKanjis = allKanjis.filter(k => uniqueKanjis.includes(k.character));
-                }
+                const baseUrl = (process.env.NEXT_PUBLIC_API_URL || 'https://imronm.pythonanywhere.com/api')
+                    .replace(/\/$/, '');
 
-                // 2. Fetch dari API untuk yang belum ketemu di lokal
-                const missing = uniqueKanjis.filter(char => !foundKanjis.some(fk => fk.character === char));
-                if (missing.length > 0) {
-                    const baseUrl = (process.env.NEXT_PUBLIC_API_URL || 'https://imronm.pythonanywhere.com/api')
-                        .replace(/\/$/, '');
-
-                    const fetchPromises = missing.map(async (char) => {
-                        try {
-                            // Coba resolveContentId dulu (IndexedDB → API search)
-                            const id = await resolveContentId('kanji', char);
-                            if (id) {
-                                const res = await fetch(`${baseUrl}/content/kanji/${id}`);
-                                if (res.ok) return await res.json();
-                            }
-                            // Fallback langsung search by karakter
-                            const res = await fetch(`${baseUrl}/content/kanji?search=${encodeURIComponent(char)}&limit=1`);
-                            if (res.ok) {
-                                const data = await res.json();
-                                return data.items?.[0] || null;
-                            }
-                        } catch (e) {
-                            return null;
+                // Langsung fetch semua dari API (tanpa cek IndexedDB)
+                const fetchPromises = uniqueKanjis.map(async (char) => {
+                    try {
+                        // Coba resolveContentId dulu (IndexedDB id-map → API by id)
+                        const id = await resolveContentId('kanji', char);
+                        if (id) {
+                            const res = await fetch(`${baseUrl}/content/kanji/${id}`);
+                            if (res.ok) return await res.json();
                         }
+                        // Fallback langsung search by karakter
+                        const res = await fetch(`${baseUrl}/content/kanji?search=${encodeURIComponent(char)}&limit=1`);
+                        if (res.ok) {
+                            const data = await res.json();
+                            return data.items?.[0] || null;
+                        }
+                    } catch (e) {
                         return null;
-                    });
+                    }
+                    return null;
+                });
 
-                    const apiResults = (await Promise.all(fetchPromises)).filter(Boolean);
-                    foundKanjis = [...foundKanjis, ...apiResults];
-                }
-
-                setKanjiDetails(foundKanjis);
+                const results = (await Promise.all(fetchPromises)).filter(Boolean);
+                setKanjiDetails(results);
             } catch (err) {
                 console.warn('[jbook-vocab] Failed to fetch kanji details:', err);
             }
@@ -146,6 +134,7 @@ export default function KotobaDetailUI({ vocab: initialVocab, onClose }) {
 
         fetchKanjiDetails();
     }, [vocab?.word]);
+
 
     // Conjugation toggles
     const [isFormal, setIsFormal] = useState(false);
@@ -853,38 +842,48 @@ export default function KotobaDetailUI({ vocab: initialVocab, onClose }) {
                         )}
 
                         {/* Non-verb: Tampilkan info radikal kanji penyusun (full detail) */}
-                        {!isVerbType && uniqueKanjis.length > 0 && kanjiDetails.length > 0 && (
+                        {!isVerbType && uniqueKanjis.length > 0 && (
                             <section className={`${cardBg} rounded-[2.5rem] border ${borderStyle} p-8 shadow-xl shadow-blue-500/5 transition-colors`}>
                                 <h3 className={`text-xl font-black mb-6 flex items-center gap-3 transition-colors ${textColor}`}>
                                     <span className="p-2.5 bg-blue-600 text-white rounded-xl text-sm">🔩</span>
                                     Radikal Pembentuk Kanji (部首)
                                 </h3>
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                    {kanjiDetails.map((kd, idx) => {
-                                        const radInfo = kd.radical ? getRadicalInfo(kd.radical) : null;
+                                    {uniqueKanjis.map((char, idx) => {
+                                        const kd = kanjiDetails.find(k => k.character === char);
+                                        const radInfo = kd?.radical ? getRadicalInfo(kd.radical) : null;
                                         return (
                                             <div
                                                 key={idx}
-                                                onClick={() => handleKanjiClick(kd.character)}
+                                                onClick={() => navigateToKanji(char)}
                                                 className={`group p-5 rounded-2xl border ${borderStyle} ${sectionBg} hover:border-blue-600 transition-all cursor-pointer active:scale-95`}
                                             >
                                                 {/* Kanji Character + Meaning */}
                                                 <div className="flex items-start gap-4 mb-4">
                                                     <span className="text-5xl font-serif font-black text-blue-600 dark:text-blue-400 group-hover:scale-110 transition-transform">
-                                                        {kd.character}
+                                                        {char}
                                                     </span>
                                                     <div className="flex-1">
-                                                        <p className={`text-base font-black leading-snug ${textColor}`}>{kd.meaning}</p>
-                                                        <p className={`text-xs font-bold mt-1 ${subTextColor}`}>
-                                                            {kd.onyomi?.[0] && `音: ${kd.onyomi[0]}`}
-                                                            {kd.onyomi?.[0] && kd.kunyomi?.[0] && ' · '}
-                                                            {kd.kunyomi?.[0] && `訓: ${kd.kunyomi[0]}`}
-                                                        </p>
+                                                        {kd ? (
+                                                            <>
+                                                                <p className={`text-base font-black leading-snug ${textColor}`}>{kd.meaning}</p>
+                                                                <p className={`text-xs font-bold mt-1 ${subTextColor}`}>
+                                                                    {kd.onyomi?.[0] && `音: ${kd.onyomi[0]}`}
+                                                                    {kd.onyomi?.[0] && kd.kunyomi?.[0] && ' · '}
+                                                                    {kd.kunyomi?.[0] && `訓: ${kd.kunyomi[0]}`}
+                                                                </p>
+                                                            </>
+                                                        ) : (
+                                                            <>
+                                                                <p className={`text-base font-black leading-snug ${subTextColor}`}>Data belum tersedia</p>
+                                                                <p className={`text-xs font-bold mt-1 ${subTextColor} opacity-60`}>Klik untuk cari detail kanji</p>
+                                                            </>
+                                                        )}
                                                     </div>
                                                 </div>
 
                                                 {/* Radikal Info */}
-                                                {kd.radical && (
+                                                {kd?.radical && (
                                                     <div className={`flex items-center gap-3 mt-2 pt-3 border-t ${borderStyle}`}>
                                                         <div className="flex items-center gap-2 bg-blue-500/10 dark:bg-blue-950/30 border border-blue-500/20 px-3 py-2 rounded-xl flex-shrink-0">
                                                             <span className="text-[10px] font-black text-gray-400 uppercase">部首</span>

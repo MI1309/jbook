@@ -146,8 +146,8 @@ export default function Navbar() {
                         <div className="hidden md:flex items-center space-x-2">
                             {/* Theme toggle disabled (forced dark mode) */}
 
-                            {/* Offline Download Button */}
-                            <button
+                            {/* Offline Download Button — sementara dinonaktifkan */}
+                            {/* <button
                                 onClick={() => setShowOfflineModal(true)}
                                 title={hasOfflineData ? 'Data offline tersedia' : 'Unduh untuk offline'}
                                 className={`relative p-2 rounded-xl transition-all duration-200 ${
@@ -161,7 +161,8 @@ export default function Navbar() {
                                 {hasOfflineData && (
                                     <span className="absolute top-1 right-1 w-2 h-2 bg-green-500 rounded-full border-2 border-white dark:border-black" />
                                 )}
-                            </button>
+                            </button> */}
+
                             {!loading && (
                                 user ? (
                                     <div className="flex items-center space-x-2">
@@ -201,7 +202,8 @@ export default function Navbar() {
                         {/* Mobile: Download + Hamburger */}
                         <div className="flex items-center gap-1 md:hidden">
 
-                            <button
+                            {/* Offline Download Button (mobile) — sementara dinonaktifkan */}
+                            {/* <button
                                 onClick={() => setShowOfflineModal(true)}
                                 title={hasOfflineData ? 'Data offline tersedia' : 'Unduh untuk offline'}
                                 className="relative p-2 rounded-md text-accent-blue hover:text-accent-blue hover:bg-accent-blue/10 transition-all duration-200"
@@ -214,7 +216,8 @@ export default function Navbar() {
                                 {hasOfflineData && (
                                     <span className="absolute top-1 right-1 w-2 h-2 bg-green-500 rounded-full" />
                                 )}
-                            </button>
+                            </button> */}
+
 
                             <button
                                 onClick={() => setIsMenuOpen(!isMenuOpen)}
