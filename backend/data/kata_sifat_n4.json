@@ -1821,6 +1821,111 @@
       }
     ]
   },
+    {
+    "id": "i21-sorenara-021",
+    "word": "それなら",
+    "reading": "sorenara",
+    "furigana": "",
+    "meaning": "kalau begitu",
+    "word_type": "conjunction",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "電車が 遅れている そうです。それなら、バスで 行きませんか。",
+        "id": "Katanya keretanya terlambat. Kalau begitu, bagaimana kalau kita naik bus saja?"
+      }
+    ]
+  },
+  {
+    "id": "i22-suruto-022",
+    "word": "すると",
+    "reading": "suruto",
+    "furigana": "",
+    "meaning": "lalu, kemudian",
+    "word_type": "conjunction",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "駅に 着いた。すると、ちょうど 電車が 来た。",
+        "id": "Saya tiba di stasiun. Lalu, kereta datang tepat saat itu"
+      }
+    ]
+  },
+  {
+    "id": "i23-mata-023",
+    "word": "また",
+    "reading": "mata",
+    "furigana": "",
+    "meaning": "selain itu, dan juga",
+    "word_type": "conjunction",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "この店は 安い。また、駅から 近くて 便利だ。",
+        "id": "Toko ini murah. Selain itu, letaknya dekat stasiun dan praktis"
+      }
+    ]
+  },
+  {
+    "id": "i24-doumo-024",
+    "word": "どうも",
+    "reading": "doumo",
+    "furigana": "",
+    "meaning": "rupanya, sepertinya",
+    "word_type": "adverb",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "どうも この機械は 故障して いる ようです。",
+        "id": "Sepertinya mesin ini rusak"
+      }
+    ]
+  },
+  {
+    "id": "i25-tashika-025",
+    "word": "確か",
+    "reading": "tashika",
+    "furigana": "たし",
+    "meaning": "kalau tidak salah",
+    "word_type": "adverb",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "確か この近くに 大きな 公園が ありました。",
+        "id": "Kalau tidak salah, ada taman besar di dekat sini"
+      }
+    ]
+  },
+  {
+    "id": "i26-jitsuwa-026",
+    "word": "実は",
+    "reading": "jitsuwa",
+    "furigana": "じつ",
+    "meaning": "sebenarnya",
+    "word_type": "adverb",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "実は 来月 日本へ 留学する ことに なりました。",
+        "id": "Sebenarnya saya akan belajar ke Jepang bulan depan"
+      }
+    ]
+  },
+  {
+    "id": "i27-yahari-027",
+    "word": "やはり",
+    "reading": "yahari",
+    "furigana": "",
+    "meaning": "memang, seperti yang diduga",
+    "word_type": "adverb",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "やはり 日本語は 毎日 使わないと、なかなか 上手に ならない。",
+        "id": "Bahasa Jepang itu memang kalau tidak digunakan setiap hari, sulit untuk menjadi pandai"
+      }
+    ]
+  },
    
 
 ]
