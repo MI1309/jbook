@@ -239,7 +239,9 @@ def list_kanji(request,
     if params.level:
         levels = parse_levels(params.level)
         if levels:
-            qs = qs.filter(jlpt_level__in=[level for level in levels if level not in get_disabled_kanji_levels()])
+            valid_levels = [level for level in levels if level not in get_disabled_kanji_levels()]
+            if valid_levels:
+                qs = qs.filter(jlpt_level__in=valid_levels)
         
     if radical:
         qs = qs.filter(radical=radical)
@@ -452,7 +454,8 @@ def list_vocab(request,
         levels = parse_levels(params.level)
         if levels:
             valid_levels = [l for l in levels if l not in disabled_levels]
-            qs = qs.filter(jlpt_level__in=valid_levels)
+            if valid_levels:
+                qs = qs.filter(jlpt_level__in=valid_levels)
         
     if params.word_type:
         if params.word_type == 'verb':

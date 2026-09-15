@@ -274,18 +274,23 @@ function FilterContent() {
                         Filter Level JLPT
                     </label>
                     <div className="grid grid-cols-6 gap-1.5 w-full">
-                        {[5, 4, 3, 2, 1].filter(level => enabledLevels.includes(level)).map((level) => {
-                            const isSelected = selectedLevels.includes(level.toString());
-                            const spanClass = 'col-span-3';
+                        {[5, 4, 3, 2, 1].map((level) => {
+                            const isEnabled = enabledLevels.includes(level);
+                            const isSelected = isEnabled && selectedLevels.includes(level.toString());
+                            const spanClass = [5, 4, 3].includes(level) ? 'col-span-2' : 'col-span-3';
                             return (
                                 <button
                                     key={level}
                                     type="button"
-                                    onClick={() => handleLevelClick(level)}
-                                    className={`${spanClass} py-2 rounded-xl border font-black text-xs transition-all duration-200 flex items-center justify-center cursor-pointer ${
-                                        isSelected
-                                            ? 'bg-gradient-to-r from-accent-blue to-accent-green text-white border-transparent shadow-md shadow-accent-blue/20 scale-[1.02]'
-                                            : 'bg-[var(--background)] text-gray-600 dark:text-gray-400 border-[var(--border-color)] hover:border-accent-blue/40 hover:text-accent-blue hover:bg-accent-blue/5'
+                                    onClick={() => isEnabled && handleLevelClick(level)}
+                                    disabled={!isEnabled}
+                                    title={!isEnabled ? 'Level ini dinonaktifkan oleh admin' : ''}
+                                    className={`${spanClass} py-2 rounded-xl border font-black text-xs transition-all duration-200 flex items-center justify-center ${
+                                        !isEnabled
+                                            ? 'bg-[var(--background)] text-gray-400 dark:text-gray-600 border-[var(--border-color)] opacity-40 cursor-not-allowed grayscale'
+                                            : isSelected
+                                                ? 'bg-gradient-to-r from-accent-blue to-accent-green text-white border-transparent shadow-md shadow-accent-blue/20 scale-[1.02] cursor-pointer'
+                                                : 'bg-[var(--background)] text-gray-600 dark:text-gray-400 border-[var(--border-color)] hover:border-accent-blue/40 hover:text-accent-blue hover:bg-accent-blue/5 cursor-pointer'
                                     }`}
                                 >
                                     N{level}

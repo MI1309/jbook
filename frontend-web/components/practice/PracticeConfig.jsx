@@ -27,28 +27,59 @@ export default function PracticeConfig() {
 
     // Doukai state
     const [doukaiCount, setDoukaiCount] = useState(null);
-    const [jlptLevels, setJlptLevels] = useState([
-        { id: '5', label: 'N5', color: 'bg-green-100 text-green-700 border-green-200' },
-        { id: '4', label: 'N4', color: 'bg-blue-100 text-blue-700 border-blue-200' },
-        { id: '3', label: 'N3', color: 'bg-yellow-100 text-yellow-700 border-yellow-200' },
-        { id: '2', label: 'N2', color: 'bg-orange-100 text-orange-700 border-orange-200' },
-        { id: '1', label: 'N1', color: 'bg-blue-100 text-blue-700 border-blue-200' },
-    ]);
+    const [kanjiEnabledLevels, setKanjiEnabledLevels] = useState([4, 5]);
+    const [vocabEnabledLevels, setVocabEnabledLevels] = useState([1, 2, 3, 4, 5]);
+    const jlptLevels = [
+        { id: '5', label: 'N5' },
+        { id: '4', label: 'N4' },
+        { id: '3', label: 'N3' },
+        { id: '2', label: 'N2' },
+        { id: '1', label: 'N1' },
+    ];
+    const kanjiAvailable = kanjiEnabledLevels.length > 0;
+
+    const isLevelEnabledForSelection = (levelId, types = selectedTypes) => {
+        const level = Number(levelId);
+        const hasUnrestrictedType = types.some(t => ['grammar', 'particle', 'kana'].includes(t));
+        if (hasUnrestrictedType) return true;
+
+        const kanjiSelected = types.includes('kanji');
+        const vocabSelected = types.includes('vocab');
+        if (kanjiSelected && vocabSelected) {
+            return kanjiEnabledLevels.includes(level) || vocabEnabledLevels.includes(level);
+        }
+        if (kanjiSelected) return kanjiEnabledLevels.includes(level);
+        if (vocabSelected) return vocabEnabledLevels.includes(level);
+        return true;
+    };
 
     useEffect(() => {
         getDoukaiCount().then(setDoukaiCount);
         Promise.all([getKanjiLevelVisibility(), getVocabLevelVisibility()]).then(([kanjiData, vocabData]) => {
             const kanjiEnabled = (kanjiData.enabled_levels || [4, 5]).map(Number);
             const vocabEnabled = (vocabData.enabled_levels || [1, 2, 3, 4, 5]).map(Number);
-            const allEnabled = Array.from(new Set([...kanjiEnabled, ...vocabEnabled]));
-            setSelectedLevels(current => current.filter(level => allEnabled.includes(Number(level))));
-            setJlptLevels([
-                { id: '5', label: 'N5', color: 'bg-green-100 text-green-700 border-green-200' },
-                { id: '4', label: 'N4', color: 'bg-blue-100 text-blue-700 border-blue-200' },
-                { id: '3', label: 'N3', color: 'bg-yellow-100 text-yellow-700 border-yellow-200' },
-                { id: '2', label: 'N2', color: 'bg-orange-100 text-orange-700 border-orange-200' },
-                { id: '1', label: 'N1', color: 'bg-blue-100 text-blue-700 border-blue-200' },
-            ].filter(level => allEnabled.includes(Number(level.id))));
+            setKanjiEnabledLevels(kanjiEnabled);
+            setVocabEnabledLevels(vocabEnabled);
+
+            setSelectedTypes(current => {
+                const next = current.filter(type => type !== 'kanji' || kanjiEnabled.length > 0);
+                if (next.length === 0) return ['vocab'];
+                return next;
+            });
+            setSelectedLevels(current => current.filter(level => {
+                const types = selectedTypes.filter(type => type !== 'kanji' || kanjiEnabled.length > 0);
+                const resolvedTypes = types.length > 0 ? types : ['vocab'];
+                const hasUnrestrictedType = resolvedTypes.some(t => ['grammar', 'particle', 'kana'].includes(t));
+                if (hasUnrestrictedType) return true;
+                const kanjiSelected = resolvedTypes.includes('kanji');
+                const vocabSelected = resolvedTypes.includes('vocab');
+                if (kanjiSelected && vocabSelected) {
+                    return kanjiEnabled.includes(Number(level)) || vocabEnabled.includes(Number(level));
+                }
+                if (kanjiSelected) return kanjiEnabled.includes(Number(level));
+                if (vocabSelected) return vocabEnabled.includes(Number(level));
+                return true;
+            }));
         });
     }, []);
 
@@ -61,15 +92,19 @@ export default function PracticeConfig() {
     ];
 
     const toggleType = (id) => {
-        setSelectedTypes(prev => 
-            prev.includes(id) 
-                ? (prev.length > 1 ? prev.filter(t => t !== id) : prev) 
-                : [...prev, id]
-        );
+        if (id === 'kanji' && !kanjiAvailable) return;
+        setSelectedTypes(prev => {
+            const next = prev.includes(id)
+                ? (prev.length > 1 ? prev.filter(t => t !== id) : prev)
+                : [...prev, id];
+            setSelectedLevels(current => current.filter(level => isLevelEnabledForSelection(level, next)));
+            return next;
+        });
     };
 
     const toggleLevel = (id) => {
-        setSelectedLevels(prev => 
+        if (!isLevelEnabledForSelection(id)) return;
+        setSelectedLevels(prev =>
             prev.includes(id) ? prev.filter(l => l !== id) : [...prev, id]
         );
     };
@@ -100,9 +135,13 @@ export default function PracticeConfig() {
             params.append('chapter', chapters.join(','));
             params.append('mode', mode);
         } else {
-            params.append('type', selectedTypes.join(','));
-            if (selectedLevels.length > 0) {
-                params.append('level', selectedLevels.join(','));
+            const activeTypes = selectedTypes.filter(type => type !== 'kanji' || kanjiAvailable);
+            if (activeTypes.length === 0) return;
+            const activeLevels = selectedLevels.filter(level => isLevelEnabledForSelection(level, activeTypes));
+            if (selectedLevels.length > 0 && activeLevels.length === 0) return;
+            params.append('type', activeTypes.join(','));
+            if (activeLevels.length > 0) {
+                params.append('level', activeLevels.join(','));
             }
             params.append('mode', mode);
         }
@@ -214,29 +253,36 @@ export default function PracticeConfig() {
                                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2.5 sm:gap-4">
                                     {types.map(t => {
                                         const kakitoriDisabled = mode === 'kakitori' && !['vocab'].includes(t.id);
-                                        const isSelected = selectedTypes.includes(t.id);
+                                        const featureDisabled = t.id === 'kanji' && !kanjiAvailable;
+                                        const typeDisabled = kakitoriDisabled || featureDisabled;
+                                        const isSelected = selectedTypes.includes(t.id) && !typeDisabled;
+                                        const disabledTitle = featureDisabled
+                                            ? 'Kanji dinonaktifkan oleh admin'
+                                            : kakitoriDisabled
+                                                ? 'Tidak tersedia untuk mode Kakitori'
+                                                : '';
                                         return (
                                             <button
                                                 key={t.id}
-                                                onClick={() => !kakitoriDisabled && toggleType(t.id)}
-                                                disabled={kakitoriDisabled}
-                                                title={kakitoriDisabled ? 'Tidak tersedia untuk mode Kakitori' : ''}
+                                                onClick={() => !typeDisabled && toggleType(t.id)}
+                                                disabled={typeDisabled}
+                                                title={disabledTitle}
                                                 className={`flex flex-col items-center justify-center p-3.5 sm:p-4 rounded-2xl border-2 transition-all duration-300 ${
-                                                    kakitoriDisabled
+                                                    typeDisabled
                                                         ? `${cardBg} ${borderStyle} opacity-35 cursor-not-allowed grayscale`
                                                         : isSelected
                                                             ? 'bg-gradient-to-br from-blue-50 to-sky-50 dark:from-blue-950/30 dark:to-sky-950/10 border-blue-500 shadow-lg shadow-blue-500/20 transform hover:scale-[1.03] cursor-pointer'
                                                             : `${cardBg} ${borderStyle} hover:border-blue-300 dark:hover:border-blue-800 hover:shadow-md transform hover:scale-[1.03] cursor-pointer`
                                                 }`}
                                             >
-                                                <span className="text-2xl sm:text-3xl mb-1">{kakitoriDisabled ? '🔒' : t.icon}</span>
+                                                <span className="text-2xl sm:text-3xl mb-1">{typeDisabled ? '🔒' : t.icon}</span>
                                                 <span className={`font-bold text-xs sm:text-sm transition-colors ${
-                                                    kakitoriDisabled ? subTextColor : isSelected ? 'text-blue-700 dark:text-blue-400' : textColor
+                                                    typeDisabled ? subTextColor : isSelected ? 'text-blue-700 dark:text-blue-400' : textColor
                                                 }`}>
                                                     {t.label}
                                                 </span>
                                                 <span className={`text-[9px] sm:text-[10px] mt-0.5 uppercase font-medium transition-colors ${subTextColor} text-center`}>
-                                                    {kakitoriDisabled ? 'Tidak tersedia' : t.sub}
+                                                    {featureDisabled ? 'Dinonaktifkan' : kakitoriDisabled ? 'Tidak tersedia' : t.sub}
                                                 </span>
                                             </button>
                                         );
@@ -448,19 +494,27 @@ export default function PracticeConfig() {
                                     JLPT Level
                                 </label>
                                 <div className="flex flex-wrap gap-3">
-                                    {jlptLevels.map(l => (
+                                    {jlptLevels.map(l => {
+                                        const levelDisabled = !isLevelEnabledForSelection(l.id);
+                                        const isSelected = selectedLevels.includes(l.id) && !levelDisabled;
+                                        return (
                                         <button
                                             key={l.id}
                                             onClick={() => toggleLevel(l.id)}
-                                            className={`w-12 h-12 rounded-xl border-2 font-black transition-all duration-300 transform hover:scale-110 ${
-                                                selectedLevels.includes(l.id)
-                                                    ? 'bg-gradient-to-br from-blue-600 to-sky-600 border-transparent text-white shadow-lg shadow-blue-500/30 scale-110'
-                                                    : `${cardBg} ${borderStyle} ${subTextColor} hover:border-blue-300 dark:hover:border-blue-800 hover:text-blue-600 dark:hover:text-blue-400`
+                                            disabled={levelDisabled}
+                                            title={levelDisabled ? 'Level ini dinonaktifkan oleh admin' : ''}
+                                            className={`w-12 h-12 rounded-xl border-2 font-black transition-all duration-300 ${
+                                                levelDisabled
+                                                    ? `${cardBg} ${borderStyle} ${subTextColor} opacity-35 cursor-not-allowed grayscale`
+                                                    : isSelected
+                                                        ? 'bg-gradient-to-br from-blue-600 to-sky-600 border-transparent text-white shadow-lg shadow-blue-500/30 scale-110 transform hover:scale-110'
+                                                        : `${cardBg} ${borderStyle} ${subTextColor} hover:border-blue-300 dark:hover:border-blue-800 hover:text-blue-600 dark:hover:text-blue-400 transform hover:scale-110`
                                             }`}
                                         >
                                             {l.label}
                                         </button>
-                                    ))}
+                                        );
+                                    })}
                                     <button
                                         onClick={() => setSelectedLevels([])}
                                         className={`px-4 h-12 rounded-xl border-2 font-bold transition-all duration-300 transform hover:scale-105 ${

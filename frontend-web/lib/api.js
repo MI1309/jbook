@@ -25,6 +25,7 @@ async function serveFromDb(storeName, { level, search, chapter, word_type, radic
         let items = await dbGetAll(storeName);
         if (!items || items.length === 0) return null;
         if (storeName === 'kanji') items = items.filter(i => (enabledLevels || [4, 5]).includes(Number(i.jlpt_level)));
+        if (storeName === 'vocab') items = items.filter(i => (enabledLevels || [1, 2, 3, 4, 5]).includes(Number(i.jlpt_level)));
         if (level) {
             const levelValues = String(level).split(',').map(l => l.trim()).filter(Boolean);
             if (levelValues.length) {
@@ -267,9 +268,10 @@ export async function getVocabLevelVisibility() {
 export async function getKanjiList({ level, search, radical, limit = 50, page = 1 } = {}) {
     const visibility = await getKanjiLevelVisibility();
     const enabledLevels = (visibility.enabled_levels || [4, 5]).map(Number);
-    const requestedLevels = level
+    let requestedLevels = level
         ? String(level).split(',').map(Number).filter(item => enabledLevels.includes(item))
-        : enabledLevels;
+        : [...enabledLevels];
+    if (!requestedLevels.length) requestedLevels = [...enabledLevels];
     const queryParams = new URLSearchParams();
     if (requestedLevels.length) queryParams.append('level', requestedLevels.join(','));
     if (search) queryParams.append('search', search);
@@ -452,7 +454,50 @@ export async function getMinnaQuestions({ limit = 10, book = null, chapter = nul
     throw new Error('Offline mode tidak didukung untuk latihan Minna Book saat ini.');
 }
 
+async function sanitizePracticeSelection({ type, level }) {
+    const requestedTypes = String(type || 'kanji').split(',').map(t => t.trim().toLowerCase()).filter(Boolean);
+    const needsKanji = requestedTypes.includes('kanji');
+    const needsVocab = requestedTypes.some(t => t === 'vocab' || t === 'kotoba');
+
+    let kanjiEnabled = [4, 5];
+    let vocabEnabled = [1, 2, 3, 4, 5];
+    if (needsKanji) {
+        const vis = await getKanjiLevelVisibility();
+        kanjiEnabled = (vis.enabled_levels || [4, 5]).map(Number);
+    }
+    if (needsVocab) {
+        const vis = await getVocabLevelVisibility();
+        vocabEnabled = (vis.enabled_levels || [1, 2, 3, 4, 5]).map(Number);
+    }
+
+    const safeTypes = requestedTypes.filter(t => t !== 'kanji' || kanjiEnabled.length > 0);
+    if (!safeTypes.length) return { type: '', level: null };
+
+    if (!level) return { type: safeTypes.join(','), level: null };
+
+    const levels = String(level).split(',').map(l => l.trim()).filter(Boolean);
+    const unrestricted = safeTypes.some(t => ['grammar', 'particle', 'kana'].includes(t));
+    const filteredLevels = unrestricted ? levels : levels.filter(l => {
+        const n = Number(l);
+        const kanjiSelected = safeTypes.includes('kanji');
+        const vocabSelected = safeTypes.includes('vocab') || safeTypes.includes('kotoba');
+        if (kanjiSelected && vocabSelected) return kanjiEnabled.includes(n) || vocabEnabled.includes(n);
+        if (kanjiSelected) return kanjiEnabled.includes(n);
+        if (vocabSelected) return vocabEnabled.includes(n);
+        return true;
+    });
+
+    if (!filteredLevels.length) return { type: '', level: null };
+    return { type: safeTypes.join(','), level: filteredLevels.join(',') };
+}
+
 export async function getPracticeQuestions({ limit = 10, level = null, type = 'kanji' } = {}) {
+    const sanitized = await sanitizePracticeSelection({ type, level });
+    if (!sanitized.type) return [];
+
+    type = sanitized.type;
+    level = sanitized.level;
+
     const params = new URLSearchParams();
     if (limit) params.append('limit', limit);
     if (level) params.append('level', level);
@@ -516,6 +561,16 @@ async function generateOfflineQuestions({ limit, level, type }) {
 
             const storeName = t === 'kanji' ? 'kanji' : (t === 'vocab' || t === 'kotoba' ? 'vocab' : 'grammar');
             let pool = await dbGetAll(storeName);
+
+            if (t === 'kanji') {
+                const visibility = await getKanjiLevelVisibility();
+                const enabledLevels = (visibility.enabled_levels || [4, 5]).map(Number);
+                pool = pool.filter(i => enabledLevels.includes(Number(i.jlpt_level)));
+            } else if (t === 'vocab' || t === 'kotoba') {
+                const visibility = await getVocabLevelVisibility();
+                const enabledLevels = (visibility.enabled_levels || [1, 2, 3, 4, 5]).map(Number);
+                pool = pool.filter(i => enabledLevels.includes(Number(i.jlpt_level)));
+            }
             
             if (level) {
                 // Support multi-level filtering
@@ -655,9 +710,10 @@ export async function resetPracticeProgress() {
 export async function getVocabList({ level, search, word_type, limit = 50, page = 1 } = {}) {
     const visibility = await getVocabLevelVisibility();
     const enabledLevels = (visibility.enabled_levels || [1, 2, 3, 4, 5]).map(Number);
-    const requestedLevels = level
+    let requestedLevels = level
         ? String(level).split(',').map(Number).filter(item => enabledLevels.includes(item))
-        : enabledLevels;
+        : [...enabledLevels];
+    if (!requestedLevels.length) requestedLevels = [...enabledLevels];
     const queryParams = new URLSearchParams();
     if (requestedLevels.length) queryParams.append('level', requestedLevels.join(','));
     if (search) queryParams.append('search', search);
@@ -673,7 +729,7 @@ export async function getVocabList({ level, search, word_type, limit = 50, page 
     let localSmartResults = null;
     const isOffline = typeof window !== 'undefined' && typeof navigator !== 'undefined' && !navigator.onLine;
     if (isOffline) {
-        localSmartResults = await serveFromDb('vocab', { level, search, word_type, page: 1, limit: 200 });
+        localSmartResults = await serveFromDb('vocab', { level: requestedLevels.join(','), search, word_type, page: 1, limit: 200, enabledLevels });
     }
     
     // 1. Jika Online: Ambil dari API
@@ -693,7 +749,7 @@ export async function getVocabList({ level, search, word_type, limit = 50, page 
             // Jika API Gagal (misal: timeout), coba fallback ke Offline
             if (typeof window !== 'undefined') {
                 if (localSmartResults) return localSmartResults;
-                const offline = await serveFromDb('vocab', { level, search, word_type, page, limit });
+                const offline = await serveFromDb('vocab', { level: requestedLevels.join(','), search, word_type, page, limit, enabledLevels });
                 if (offline && offline.items.length > 0) return offline;
             }
             throw error;
@@ -703,7 +759,7 @@ export async function getVocabList({ level, search, word_type, limit = 50, page 
     // 2. Jika Benar-benar Offline: Ambil dari Database Lokal
     if (typeof window !== 'undefined') {
         if (localSmartResults) return localSmartResults;
-        const offline = await serveFromDb('vocab', { level, search, word_type, page, limit });
+        const offline = await serveFromDb('vocab', { level: requestedLevels.join(','), search, word_type, page, limit, enabledLevels });
         if (offline && offline.items.length > 0) return offline;
     }
     

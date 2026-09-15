@@ -7,6 +7,13 @@ import { useDebounce } from 'use-debounce';
 import { useTheme } from '@/context/ThemeContext';
 import { getVocabLevelVisibility } from '@/lib/api';
 
+function sanitizeLevels(rawLevels, allowedLevels) {
+    const values = Array.isArray(rawLevels)
+        ? rawLevels
+        : String(rawLevels || '').split(',');
+    return values.filter(Boolean).filter(level => allowedLevels.includes(Number(level)));
+}
+
 function FilterContent() {
     const { theme, mounted } = useTheme();
     const router = useRouter();
@@ -20,30 +27,47 @@ function FilterContent() {
     const [selectedLevels, setSelectedLevels] = useState(initialLevels);
     const [wordType, setWordType] = useState(initialType);
     const [enabledLevels, setEnabledLevels] = useState([1, 2, 3, 4, 5]);
+    const [visibilityReady, setVisibilityReady] = useState(false);
 
     useEffect(() => {
         getVocabLevelVisibility().then(data => {
-            const levels = data.enabled_levels || [1, 2, 3, 4, 5];
+            const levels = (data.enabled_levels || [1, 2, 3, 4, 5]).map(Number);
             setEnabledLevels(levels);
-            setSelectedLevels(current => current.filter(l => levels.includes(Number(l))));
-        });
-    }, []);
 
-    // Restore saved filters on mount if URL has no parameters
-    useEffect(() => {
-        const currentQuery = searchParams.toString();
-        if (!currentQuery && typeof window !== 'undefined') {
-            const saved = sessionStorage.getItem('kotoba_filter_params');
-            if (saved) {
-                router.replace(`/kotoba?${saved}`, { scroll: false });
+            const currentQuery = searchParams.toString();
+            let params = new URLSearchParams(currentQuery);
+            if (!currentQuery && typeof window !== 'undefined') {
+                const saved = sessionStorage.getItem('kotoba_filter_params');
+                if (saved) params = new URLSearchParams(saved);
             }
-        }
+
+            const safeLevels = sanitizeLevels(params.get('level'), levels);
+            if (safeLevels.length) params.set('level', safeLevels.join(','));
+            else params.delete('level');
+
+            setSelectedLevels(safeLevels);
+            setSearchTerm(params.get('search') || '');
+            setWordType(params.get('word_type') || '');
+
+            const nextQuery = params.toString();
+            if (nextQuery !== currentQuery) {
+                if (typeof window !== 'undefined') {
+                    if (nextQuery) sessionStorage.setItem('kotoba_filter_params', nextQuery);
+                    else sessionStorage.removeItem('kotoba_filter_params');
+                }
+                router.replace(nextQuery ? `/kotoba?${nextQuery}` : '/kotoba', { scroll: false });
+            }
+
+            setVisibilityReady(true);
+        });
     }, []);
 
     // Sync state with URL changes (e.g. back button)
     useEffect(() => {
+        if (!visibilityReady) return;
+
         const nextSearch = searchParams.get('search') || '';
-        const nextLevels = searchParams.get('level')?.split(',').filter(Boolean) || [];
+        const nextLevels = sanitizeLevels(searchParams.get('level'), enabledLevels);
         const nextType = searchParams.get('word_type') || '';
 
         setSearchTerm(current => current === nextSearch ? current : nextSearch);
@@ -54,14 +78,17 @@ function FilterContent() {
         if (query && typeof window !== 'undefined') {
             sessionStorage.setItem('kotoba_filter_params', query);
         }
-    }, [searchParams]);
+    }, [searchParams, visibilityReady, enabledLevels]);
 
     // Debounce search term to avoid too many URL updates (500ms delay)
     const [debouncedSearch] = useDebounce(searchTerm, 500);
 
     // Update URL when search term, level, or type changes
     useEffect(() => {
+        if (!visibilityReady) return;
+
         const params = new URLSearchParams(searchParams.toString());
+        const safeLevels = sanitizeLevels(selectedLevels, enabledLevels);
 
         if (debouncedSearch) {
             params.set('search', debouncedSearch);
@@ -69,8 +96,8 @@ function FilterContent() {
             params.delete('search');
         }
 
-        if (selectedLevels.length) {
-            params.set('level', selectedLevels.join(','));
+        if (safeLevels.length) {
+            params.set('level', safeLevels.join(','));
         } else {
             params.delete('level');
         }
@@ -86,7 +113,7 @@ function FilterContent() {
         const currentType = searchParams.get('word_type') || '';
 
         // Only push if changed
-        if (debouncedSearch !== currentSearch || selectedLevels.join(',') !== currentLevel || wordType !== currentType) {
+        if (debouncedSearch !== currentSearch || safeLevels.join(',') !== currentLevel || wordType !== currentType) {
             params.delete('page'); // Reset pagination on new search/filter
             const newQuery = params.toString();
             if (typeof window !== 'undefined') {
@@ -99,7 +126,7 @@ function FilterContent() {
             router.push(`/kotoba?${newQuery}`, { scroll: false });
         }
 
-    }, [debouncedSearch, selectedLevels, wordType, router, searchParams]);
+    }, [debouncedSearch, selectedLevels, wordType, router, searchParams, visibilityReady, enabledLevels]);
 
     const textColor = !mounted ? 'text-black' : (theme === 'dark' ? 'text-white' : 'text-black');
     const subTextColor = !mounted ? 'text-black/50' : (theme === 'dark' ? 'text-white/50' : 'text-black/50');
@@ -140,14 +167,18 @@ function FilterContent() {
                         Level
                     </label>
                     <div className="grid grid-cols-6 gap-1.5 w-full">
-                        {[5, 4, 3, 2, 1].filter(levelItem => enabledLevels.includes(levelItem)).map((levelItem) => {
-                            const isSelected = selectedLevels.includes(levelItem.toString());
+                        {[5, 4, 3, 2, 1].map((levelItem) => {
+                            const isEnabled = enabledLevels.includes(levelItem);
+                            const isSelected = isEnabled && selectedLevels.includes(levelItem.toString());
                             const spanClass = [5, 4, 3].includes(levelItem) ? 'col-span-2' : 'col-span-3';
                             return (
                                 <button
                                     key={levelItem}
                                     type="button"
+                                    disabled={!isEnabled}
+                                    title={!isEnabled ? 'Level ini dinonaktifkan oleh admin' : ''}
                                     onClick={() => {
+                                        if (!isEnabled) return;
                                         const stringLevel = levelItem.toString();
                                         if (selectedLevels.includes(stringLevel)) {
                                             setSelectedLevels(selectedLevels.filter(l => l !== stringLevel));
@@ -156,9 +187,11 @@ function FilterContent() {
                                         }
                                     }}
                                     className={`${spanClass} py-2 rounded-xl border font-black text-xs transition-all duration-200 flex items-center justify-center ${
-                                        isSelected
-                                            ? 'bg-gradient-to-r from-accent-blue to-accent-green text-white border-transparent shadow-md shadow-accent-blue/20 scale-[1.02]'
-                                            : 'bg-[var(--background)] text-gray-600 dark:text-gray-400 border-[var(--border-color)] hover:border-accent-blue/40 hover:text-accent-blue hover:bg-accent-blue/5'
+                                        !isEnabled
+                                            ? 'bg-[var(--background)] text-gray-400 dark:text-gray-600 border-[var(--border-color)] opacity-40 cursor-not-allowed grayscale'
+                                            : isSelected
+                                                ? 'bg-gradient-to-r from-accent-blue to-accent-green text-white border-transparent shadow-md shadow-accent-blue/20 scale-[1.02] cursor-pointer'
+                                                : 'bg-[var(--background)] text-gray-600 dark:text-gray-400 border-[var(--border-color)] hover:border-accent-blue/40 hover:text-accent-blue hover:bg-accent-blue/5 cursor-pointer'
                                     }`}
                                 >
                                     N{levelItem}
