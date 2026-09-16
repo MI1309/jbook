@@ -1,0 +1,15 @@
+{
+  "id": "id-unik-anda",
+  "word": "日本語",
+  "reading": "nihongo",
+  "furigana": "にほんご",
+  "meaning": "bahasa Jepang",
+  "word_type": "noun",
+  "jlpt_level": 4,
+  "examples": [
+    {
+      "jp": "日本語を勉強しています。",
+      "id": "Saya sedang belajar bahasa Jepang."
+    }
+  ]
+}
