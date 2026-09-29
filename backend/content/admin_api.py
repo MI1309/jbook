@@ -16,6 +16,7 @@ from django.http import HttpResponse
 from django.conf import settings
 from .models import Kanji, Grammar, Blog, JLPTLevel, Vocab, Particle, Announcement, MediaAttachment, FeatureSetting
 from users.api import AuthBearer
+from core.decorators import rate_limit
 from django.db import transaction
 
 
@@ -95,6 +96,7 @@ def admin_get_kanji_visibility(request):
     return {'disabled_levels': value.get('disabled_levels', [1, 2, 3])}
 
 @router.put("/kanji/visibility", auth=AdminAuth())
+@rate_limit(key='user', rate='30/m')
 def admin_update_kanji_visibility(request, data: KanjiVisibilitySchema):
     disabled_levels = sorted(set(data.disabled_levels))
     if any(level not in range(1, 6) for level in disabled_levels):
@@ -116,6 +118,7 @@ def admin_get_vocab_visibility(request):
 
 @router.put("/vocab/visibility", auth=AdminAuth())
 @router.put("/kotoba/visibility", auth=AdminAuth())
+@rate_limit(key='user', rate='30/m')
 def admin_update_vocab_visibility(request, data: VocabVisibilitySchema):
     disabled_levels = sorted(set(data.disabled_levels))
     if any(level not in range(1, 6) for level in disabled_levels):
@@ -215,6 +218,7 @@ def _detect_media_type(mime: str, filename: str) -> str:
 
 
 @router.post("/media/upload", auth=AdminAuth(), response=MediaAttachmentSchema)
+@rate_limit(key='user', rate='20/h')
 def admin_upload_media(request, file: UploadedFile = File(...)):
     mime = file.content_type or mimetypes.guess_type(file.name)[0] or ''
     media_type = _detect_media_type(mime, file.name)
@@ -240,6 +244,7 @@ def admin_list_media(request):
 
 
 @router.delete("/media/{id}", auth=AdminAuth())
+@rate_limit(key='user', rate='30/m')
 def admin_delete_media(request, id: str):
     attachment = get_object_or_404(MediaAttachment, id=id)
     try:
@@ -254,6 +259,7 @@ def admin_delete_media(request, id: str):
 
 # Blog CRUD
 @router.post("/blog", auth=AdminAuth(), response=BlogSchema)
+@rate_limit(key='user', rate='30/m')
 def admin_create_blog(request, payload: BlogCreateSchema):
     data = payload.dict()
     featured_url = data.pop('featured_image_url', '') or None
@@ -288,6 +294,7 @@ def admin_get_blog(request, id: str):
 
 
 @router.put("/blog/{id}", auth=AdminAuth(), response=BlogSchema)
+@rate_limit(key='user', rate='30/m')
 def admin_update_blog(request, id: str, payload: BlogCreateSchema):
     blog = get_object_or_404(Blog, id=id)
     data = payload.dict()
@@ -311,6 +318,7 @@ def admin_update_blog(request, id: str, payload: BlogCreateSchema):
 
 
 @router.delete("/blog/{id}", auth=AdminAuth())
+@rate_limit(key='user', rate='10/m')
 def admin_delete_blog(request, id: str):
     blog = get_object_or_404(Blog, id=id)
     blog.delete()
@@ -352,6 +360,7 @@ def admin_list_kanjis(request, level: int = None):
     return results
 
 @router.post("/kanji", auth=AdminAuth(), response=KanjiSchema)
+@rate_limit(key='user', rate='30/m')
 def admin_create_kanji(request, payload: KanjiCreateSchema):
     kanji = Kanji.objects.create(**payload.dict())
     return kanji
@@ -380,6 +389,7 @@ def admin_kanji_duplicates(request):
 
 
 @router.post("/kanji/duplicates/delete", auth=AdminAuth())
+@rate_limit(key='user', rate='10/m')
 def admin_kanji_duplicates_delete(request, payload: DeleteIdsSchema):
     ids = payload.ids
     if not ids:
@@ -399,6 +409,7 @@ def admin_get_kanji(request, id: str):
     return kanji
 
 @router.put("/kanji/{id}", auth=AdminAuth(), response=KanjiSchema)
+@rate_limit(key='user', rate='30/m')
 def admin_update_kanji(request, id: str, payload: KanjiCreateSchema):
     kanji = get_object_or_404(Kanji, id=id)
     for attr, value in payload.dict().items():
@@ -407,6 +418,7 @@ def admin_update_kanji(request, id: str, payload: KanjiCreateSchema):
     return kanji
 
 @router.delete("/kanji/{id}", auth=AdminAuth())
+@rate_limit(key='user', rate='10/m')
 def admin_delete_kanji(request, id: str):
     kanji = get_object_or_404(Kanji, id=id)
     kanji.delete()
@@ -466,6 +478,7 @@ def admin_list_bunpos(request, level: int = None, chapter: int = None, search: s
     return list(query[:1000])  # grammar lists are usually small, safety cap
 
 @router.post("/bunpo", auth=AdminAuth(), response=GrammarSchema)
+@rate_limit(key='user', rate='30/m')
 def admin_create_bunpo(request, payload: GrammarCreateSchema):
     grammar = Grammar.objects.create(**payload.dict())
     return grammar
@@ -475,6 +488,7 @@ def admin_get_bunpo(request, id: str):
     return get_object_or_404(Grammar, id=id)
 
 @router.put("/bunpo/{id}", auth=AdminAuth(), response=GrammarSchema)
+@rate_limit(key='user', rate='30/m')
 def admin_update_bunpo(request, id: str, payload: GrammarCreateSchema):
     grammar = get_object_or_404(Grammar, id=id)
     for attr, value in payload.dict().items():
@@ -483,6 +497,7 @@ def admin_update_bunpo(request, id: str, payload: GrammarCreateSchema):
     return grammar
 
 @router.delete("/bunpo/{id}", auth=AdminAuth())
+@rate_limit(key='user', rate='10/m')
 def admin_delete_bunpo(request, id: str):
     grammar = get_object_or_404(Grammar, id=id)
     grammar.delete()
@@ -532,7 +547,7 @@ class VocabListResponse(BaseModel):
 # Vocab CRUD
 @router.get("/kotoba", auth=AdminAuth(), response=List[VocabSchema])
 @router.get("/vocab", auth=AdminAuth(), response=List[VocabSchema])
-def admin_list_vocabs(request, level: int = None, search: str = None, limit: int = 10000):
+def admin_list_vocabs(request, level: int = None, search: str = None, limit: int = 200):
     from utils.kana import to_kana
     
     query = Vocab.objects.all().order_by('jlpt_level', 'word')
@@ -549,7 +564,8 @@ def admin_list_vocabs(request, level: int = None, search: str = None, limit: int
             Q(reading__icontains=search_kana)
         )
         
-    items = list(query[:limit])  # safely cap from query param
+    limit = min(max(int(limit), 1), 300)
+    items = list(query[:limit])
     from utils.kana import to_kana
     for v in items:
         if v.reading:
@@ -561,6 +577,7 @@ def admin_list_vocabs(request, level: int = None, search: str = None, limit: int
 
 @router.post("/kotoba", auth=AdminAuth(), response=VocabSchema)
 @router.post("/vocab", auth=AdminAuth(), response=VocabSchema)
+@rate_limit(key='user', rate='30/m')
 def admin_create_vocab(request, payload: VocabCreateSchema):
     vocab = Vocab.objects.create(**payload.dict())
     return vocab
@@ -610,6 +627,7 @@ def admin_kotoba_duplicates(request):
 
 
 @router.post("/kotoba/duplicates/delete", auth=AdminAuth())
+@rate_limit(key='user', rate='10/m')
 def admin_kotoba_duplicates_delete(request, payload: DeleteIdsSchema):
     ids = payload.ids
     if not ids:
@@ -630,6 +648,7 @@ def admin_get_vocab(request, id: str):
 
 @router.put("/kotoba/{id}", auth=AdminAuth(), response=VocabSchema)
 @router.put("/vocab/{id}", auth=AdminAuth(), response=VocabSchema)
+@rate_limit(key='user', rate='30/m')
 def admin_update_vocab(request, id: str, payload: VocabCreateSchema):
     vocab = get_object_or_404(Vocab, id=id)
     for attr, value in payload.dict().items():
@@ -639,6 +658,7 @@ def admin_update_vocab(request, id: str, payload: VocabCreateSchema):
 
 @router.delete("/kotoba/{id}", auth=AdminAuth())
 @router.delete("/vocab/{id}", auth=AdminAuth())
+@rate_limit(key='user', rate='10/m')
 def admin_delete_vocab(request, id: str):
     vocab = get_object_or_404(Vocab, id=id)
     vocab.delete()
@@ -683,6 +703,7 @@ def admin_list_announcements(request):
     return Announcement.objects.filter(deleted_at__isnull=True).order_by('-priority', '-created_at')
 
 @router.post("/announcements", auth=AdminAuth(), response=AnnouncementSchema)
+@rate_limit(key='user', rate='30/m')
 def admin_create_announcement(request, payload: AnnouncementCreateSchema):
     announcement = Announcement.objects.create(**payload.dict())
     return announcement
@@ -692,6 +713,7 @@ def admin_get_announcement(request, id: str):
     return get_object_or_404(Announcement, id=id)
 
 @router.put("/announcements/{id}", auth=AdminAuth(), response=AnnouncementSchema)
+@rate_limit(key='user', rate='30/m')
 def admin_update_announcement(request, id: str, payload: AnnouncementCreateSchema):
     announcement = get_object_or_404(Announcement, id=id)
     for attr, value in payload.dict().items():
@@ -700,6 +722,7 @@ def admin_update_announcement(request, id: str, payload: AnnouncementCreateSchem
     return announcement
 
 @router.delete("/announcements/{id}", auth=AdminAuth())
+@rate_limit(key='user', rate='10/m')
 def admin_delete_announcement(request, id: str):
     from django.utils import timezone
     announcement = get_object_or_404(Announcement, id=id)
@@ -742,6 +765,7 @@ def admin_list_custom_modules(request):
     return CustomModule.objects.all().order_by('-created_at')
 
 @router.post("/custom-modules", auth=AdminAuth(), response=CustomModuleSchema)
+@rate_limit(key='user', rate='30/m')
 def admin_create_custom_module(request, payload: CustomModuleCreateSchema):
     module = CustomModule.objects.create(**payload.dict())
     return module
@@ -751,6 +775,7 @@ def admin_get_custom_module(request, id: str):
     return get_object_or_404(CustomModule, id=id)
 
 @router.put("/custom-modules/{id}", auth=AdminAuth(), response=CustomModuleSchema)
+@rate_limit(key='user', rate='30/m')
 def admin_update_custom_module(request, id: str, payload: CustomModuleCreateSchema):
     module = get_object_or_404(CustomModule, id=id)
     for attr, value in payload.dict().items():
@@ -759,6 +784,7 @@ def admin_update_custom_module(request, id: str, payload: CustomModuleCreateSche
     return module
 
 @router.delete("/custom-modules/{id}", auth=AdminAuth())
+@rate_limit(key='user', rate='10/m')
 def admin_delete_custom_module(request, id: str):
     module = get_object_or_404(CustomModule, id=id)
     module.delete()
@@ -770,12 +796,14 @@ def admin_list_custom_questions(request, module_id: str):
     return CustomQuestion.objects.filter(module_id=module_id).order_by('order', 'id')
 
 @router.post("/custom-modules/{module_id}/questions", auth=AdminAuth(), response=CustomQuestionSchema)
+@rate_limit(key='user', rate='60/m')
 def admin_create_custom_question(request, module_id: str, payload: CustomQuestionCreateSchema):
     module = get_object_or_404(CustomModule, id=module_id)
     question = CustomQuestion.objects.create(module=module, **payload.dict())
     return question
 
 @router.delete("/custom-questions/{id}", auth=AdminAuth())
+@rate_limit(key='user', rate='30/m')
 def admin_delete_custom_question(request, id: str):
     question = get_object_or_404(CustomQuestion, id=id)
     question.delete()
@@ -787,6 +815,7 @@ from ninja.files import UploadedFile
 import pandas as pd
 
 @router.post("/custom-modules/{module_id}/upload-excel", auth=AdminAuth())
+@rate_limit(key='user', rate='5/h')
 def admin_upload_custom_module_excel(request, module_id: str, file: UploadedFile = File(...)):
     module = get_object_or_404(CustomModule, id=module_id)
     try:

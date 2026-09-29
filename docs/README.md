@@ -2,6 +2,8 @@
 
 Selamat datang di dokumentasi API JBook. API ini dibangun menggunakan **Django Ninja** untuk kecepatan dan validasi tipe data yang kuat.
 
+Untuk inventaris fitur lengkap backend, web, dan mobile, lihat [Inventaris Fitur JBook](fitur-aplikasi.md).
+
 ## Base URL
 Semua endpoint di bawah ini memiliki prefix:
 `https://[domain-anda]/api`

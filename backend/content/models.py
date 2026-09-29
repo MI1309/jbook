@@ -103,6 +103,12 @@ class Blog(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    def save(self, *args, **kwargs):
+        from utils.sanitize import sanitize_html
+        self.content = sanitize_html(self.content)
+        self.excerpt = sanitize_html(self.excerpt)
+        super().save(*args, **kwargs)
+
     def __str__(self):
         return self.title
 
@@ -143,6 +149,11 @@ class ContentSuggestion(models.Model):
     approval_token = models.UUIDField(default=uuid.uuid4, editable=False)
     created_at = models.DateTimeField(auto_now_add=True)
 
+    def save(self, *args, **kwargs):
+        from utils.sanitize import sanitize_json_strings
+        self.data = sanitize_json_strings(self.data)
+        super().save(*args, **kwargs)
+
     def __str__(self):
         return f"{self.type} suggestion - {self.status}"
 
@@ -165,6 +176,11 @@ class Announcement(models.Model):
     deleted_at = models.DateTimeField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    def save(self, *args, **kwargs):
+        from utils.sanitize import sanitize_html
+        self.content = sanitize_html(self.content)
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return f"{self.title} ({self.get_type_display()})"
@@ -308,6 +324,12 @@ class CustomModule(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    def save(self, *args, **kwargs):
+        from utils.sanitize import sanitize_html
+        self.description = sanitize_html(self.description)
+        self.passage = sanitize_html(self.passage)
+        super().save(*args, **kwargs)
+
     def __str__(self):
         return f"[{self.get_module_type_display()}] {self.title}"
 
@@ -325,6 +347,14 @@ class CustomQuestion(models.Model):
     correct_answer = models.CharField(max_length=512, help_text="Jawaban benar (Teks atau 'True'/'False')")
     explanation = models.TextField(blank=True)
     order = models.IntegerField(default=0)
+
+    def save(self, *args, **kwargs):
+        from utils.sanitize import sanitize_html, sanitize_json_strings
+        self.question_text = sanitize_html(self.question_text)
+        self.correct_answer = sanitize_html(self.correct_answer)
+        self.explanation = sanitize_html(self.explanation)
+        self.options = sanitize_json_strings(self.options)
+        super().save(*args, **kwargs)
 
     class Meta:
         ordering = ['order', 'id']

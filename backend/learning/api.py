@@ -6,6 +6,7 @@ from django.contrib.auth import get_user_model
 from .models import QuizAttempt, UserProgress
 from .tts_logic import CrosswordGenerator
 from content.models import Kanji, Vocab, Grammar, Particle, MinnaQuestion, DoukaiPassage, DoukaiQuestion, FeatureSetting
+from core.decorators import rate_limit
 import random
 import uuid
 from datetime import datetime, timedelta
@@ -59,7 +60,7 @@ class AnswerSchema(Schema):
 
 
 class SubmissionSchema(Schema):
-    results: List[AnswerSchema]
+    results: List[AnswerSchema] = Field(..., max_length=500)
 
 class WrongStatSchema(Schema):
     character: str
@@ -150,6 +151,10 @@ class DoukaiPassageDetailSchema(DoukaiPassageSchema):
 class ExportDataSchema(Schema):
     attempts: List[QuizAttemptExportSchema]
     progress: List[UserProgressExportSchema]
+
+class ImportDataSchema(Schema):
+    attempts: List[QuizAttemptExportSchema] = Field(default_factory=list, max_length=5000)
+    progress: List[UserProgressExportSchema] = Field(default_factory=list, max_length=5000)
 
 @router.get("/practice/generate", response=List[QuestionSchema])
 def generate_quiz(request, limit: int = 10, level: Optional[str] = None, type: str = 'kanji'):
@@ -402,6 +407,7 @@ def get_doukai_passage(request, id: uuid.UUID):
     return passage
 
 @router.post("/practice/submit", auth=JWTAuth())
+@rate_limit(key='user', rate='30/m')
 def submit_quiz(request, payload: SubmissionSchema):
     user = request.auth
     attempts = []
@@ -463,6 +469,7 @@ def submit_quiz(request, payload: SubmissionSchema):
     return {"status": "success", "count": len(attempts), "results": "saved"}
 
 @router.get("/practice/analytics", response=AnalyticsSchema, auth=JWTAuth())
+@rate_limit(key='user', rate='60/m')
 def get_analytics(request):
     user = request.auth
 
@@ -656,6 +663,7 @@ def get_analytics(request):
     }
 
 @router.post("/practice/reset", auth=JWTAuth())
+@rate_limit(key='user', rate='5/h')
 def reset_progress(request):
     user = request.auth
 
@@ -669,6 +677,7 @@ def reset_progress(request):
     }
 
 @router.get("/practice/export", response=ExportDataSchema, auth=JWTAuth())
+@rate_limit(key='user', rate='10/h')
 def export_practice_data(request):
     user = request.auth
     
@@ -753,7 +762,8 @@ def export_practice_data(request):
     }
 
 @router.post("/practice/import", auth=JWTAuth())
-def import_practice_data(request, payload: ExportDataSchema):
+@rate_limit(key='user', rate='5/h')
+def import_practice_data(request, payload: ImportDataSchema):
     user = request.auth
     from django.contrib.contenttypes.models import ContentType
     from django.db import transaction, IntegrityError

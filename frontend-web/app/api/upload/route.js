@@ -4,6 +4,7 @@ import { NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
 
 const API_URL = (process.env.NEXT_PUBLIC_API_URL || 'https://imronm.pythonanywhere.com/api').replace(/\/$/, '');
+const MAX_UPLOAD_SIZE = 25 * 1024 * 1024;
 
 /**
  * Verify the caller is an authenticated admin/staff user.
@@ -58,12 +59,22 @@ export async function POST(request) {
 
         // Case 1: Direct multipart form data upload
         if (contentType.includes('multipart/form-data')) {
+            const contentLength = Number(request.headers.get('content-length'));
+            if (Number.isFinite(contentLength) && contentLength > MAX_UPLOAD_SIZE) {
+                return NextResponse.json({ error: 'File too large. Max 25MB.' }, { status: 413 });
+            }
             const formData = await request.formData();
             const file = formData.get('file');
             const folder = formData.get('folder') || 'media';
 
             if (!file || typeof file === 'string') {
                 return NextResponse.json({ error: 'No valid file provided' }, { status: 400 });
+            }
+            if (file.size > MAX_UPLOAD_SIZE) {
+                return NextResponse.json({ error: 'File too large. Max 25MB.' }, { status: 413 });
+            }
+            if (file.size > MAX_UPLOAD_SIZE) {
+                return NextResponse.json({ error: 'File too large. Max 25MB.' }, { status: 413 });
             }
 
             // Stricter folder whitelist to prevent arbitrary path writes

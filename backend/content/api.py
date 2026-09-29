@@ -82,7 +82,7 @@ class AuthBearer(HttpBearer):
 class ListQuerySchema(Schema):
     level: Optional[str] = None
     search: Optional[str] = None
-    limit: int = Field(50, ge=1, le=1000)
+    limit: int = Field(50, ge=1, le=300)
     page: int = Field(1, ge=1)
 
 
@@ -138,6 +138,7 @@ class KanjiSchema(Schema):
     radical: Optional[str] = None
 
 @router.put("/vocab/{vocab_id}", response=VocabSchema, auth=AuthBearer())
+@rate_limit(key='user', rate='30/m')
 def update_vocab(request, vocab_id: UUID, data: UpdateVocabSchema):
     vocab = get_object_or_404(Vocab, id=vocab_id)
     for attr, value in data.dict(exclude_unset=True).items():
@@ -146,6 +147,7 @@ def update_vocab(request, vocab_id: UUID, data: UpdateVocabSchema):
     return vocab
 
 @router.put("/kanji/{kanji_id}", response=KanjiSchema, auth=AuthBearer())
+@rate_limit(key='user', rate='30/m')
 def update_kanji(request, kanji_id: UUID, data: UpdateKanjiSchema):
     kanji = get_object_or_404(Kanji, id=kanji_id)
     for attr, value in data.dict(exclude_unset=True).items():
@@ -154,6 +156,7 @@ def update_kanji(request, kanji_id: UUID, data: UpdateKanjiSchema):
     return kanji
 
 @router.delete("/kanji/{kanji_id}", auth=AuthBearer())
+@rate_limit(key='user', rate='10/m')
 def delete_kanji(request, kanji_id: UUID):
     kanji = get_object_or_404(Kanji, id=kanji_id)
     kanji.delete()
@@ -695,7 +698,7 @@ def sync_kotoba(request, payload: SyncRequestSchema):
     stats = sync_kotoba_data(payload.data)
     return stats
 
-@router.post("/kotoba/translate")
+@router.post("/kotoba/translate", auth=AuthBearer())
 @rate_limit(key='ip', rate='60/m')
 def translate_kotoba(request, payload: TranslateRequestSchema):
     from utils.kotoba_sync import translate_ja_to_id, generate_furigana
@@ -732,14 +735,20 @@ def import_kotoba(request, file: UploadedFile = File(...)):
 
 @router.get("/blog", response=List[BlogSchema])
 def list_blog(request):
+    from utils.sanitize import sanitize_html
     blogs = list(Blog.objects.filter(is_published=True).order_by('-created_at'))
     for b in blogs:
+        b.content = sanitize_html(b.content)
+        b.excerpt = sanitize_html(b.excerpt)
         b.featured_image_url = get_file_url(b.featured_image)
     return blogs
 
 @router.get("/blog/{slug}", response=BlogSchema)
 def get_blog(request, slug: str):
+    from utils.sanitize import sanitize_html
     blog = get_object_or_404(Blog, slug=slug, is_published=True)
+    blog.content = sanitize_html(blog.content)
+    blog.excerpt = sanitize_html(blog.excerpt)
     blog.featured_image_url = get_file_url(blog.featured_image)
     return blog
 
@@ -834,11 +843,20 @@ class CustomModulePublicSchema(Schema):
 
 @router.get("/custom-modules", response=List[CustomModulePublicSchema])
 def public_list_custom_modules(request):
-    return CustomModule.objects.filter(is_published=True).order_by('-created_at')
+    from utils.sanitize import sanitize_html
+    modules = list(CustomModule.objects.filter(is_published=True).order_by('-created_at'))
+    for module in modules:
+        module.description = sanitize_html(module.description)
+        module.passage = sanitize_html(module.passage)
+    return modules
 
 @router.get("/custom-modules/{id}", response=CustomModulePublicSchema)
 def public_get_custom_module(request, id: str):
-    return get_object_or_404(CustomModule, id=id, is_published=True)
+    from utils.sanitize import sanitize_html
+    module = get_object_or_404(CustomModule, id=id, is_published=True)
+    module.description = sanitize_html(module.description)
+    module.passage = sanitize_html(module.passage)
+    return module
 
 @router.get("/custom-modules/{id}/questions", response=List[CustomQuestionPublicSchema])
 def public_get_custom_questions(request, id: str):
@@ -849,6 +867,7 @@ class SubmitAnswerSchema(Schema):
     answers: dict  # question_id -> user_answer
 
 @router.post("/custom-modules/{id}/submit")
+@rate_limit(key='ip', rate='10/m')
 def public_submit_custom_module(request, id: str, payload: SubmitAnswerSchema):
     module = get_object_or_404(CustomModule, id=id, is_published=True)
     questions = CustomQuestion.objects.filter(module=module)

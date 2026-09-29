@@ -115,7 +115,10 @@ def login(request, data: LoginSchema):
 @rate_limit(key='ip', rate='20/h')  # Max 20 google auth per IP per jam
 def google_auth(request, data: GoogleAuthSchema):
     try:
-        google_client_id = os.environ.get('GOOGLE_CLIENT_ID', None)
+        google_client_id = settings.GOOGLE_CLIENT_ID or None
+
+        if not settings.DEBUG and not google_client_id:
+            raise HttpError(503, "Google sign-in is not configured")
 
         # If GOOGLE_CLIENT_ID is configured, strictly validate the audience claim.
         # If not configured (dev), only verify signature + expiry, but log a warning.

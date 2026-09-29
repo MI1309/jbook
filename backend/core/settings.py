@@ -39,6 +39,7 @@ def _require_env(name, default=None, dev_default=None):
 # ===============================
 
 DEBUG = os.environ.get("DEBUG", "False") == "True"
+GOOGLE_CLIENT_ID = os.environ.get("GOOGLE_CLIENT_ID", "")
 
 SECRET_KEY = _require_env(
     "SECRET_KEY",
