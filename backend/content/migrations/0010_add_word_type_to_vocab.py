@@ -3,6 +3,46 @@
 from django.db import migrations, models
 
 
+def add_word_type_column_if_missing(apps, schema_editor):
+    vocab_model = apps.get_model("content", "Vocab")
+    table_name = vocab_model._meta.db_table
+    with schema_editor.connection.cursor() as cursor:
+        columns = {
+            column.name
+            for column in schema_editor.connection.introspection.get_table_description(cursor, table_name)
+        }
+
+    if "word_type" in columns:
+        return
+
+    field = models.CharField(
+        blank=True,
+        choices=[
+            ("noun", "Noun (Kata Benda)"),
+            ("godan_verb", "Godan Verb (Kata Kerja Gol. 1)"),
+            ("ichidan_verb", "Ichidan Verb (Kata Kerja Gol. 2)"),
+            ("suru_verb", "Suru Verb (Kata Kerja Gol. 3)"),
+            ("intransitive_verb", "Intransitive Verb (Intransitif)"),
+            ("transitive_verb", "Transitive Verb (Transitif)"),
+            ("i_adjective", "I-Adjective (Kata Sifat -i)"),
+            ("na_adjective", "Na-Adjective (Kata Sifat -na)"),
+            ("adverb", "Adverb (Kata Keterangan)"),
+            ("particle", "Particle (Partikel)"),
+            ("suffix", "Suffix (Akhiran)"),
+            ("prefix", "Prefix (Awalan)"),
+            ("conjunction", "Conjunction (Kata Sambung)"),
+            ("expression", "Expression (Ungkapan)"),
+            ("other", "Other (Lain-lain)"),
+        ],
+        help_text="Tipe kata (jenis kata)",
+        max_length=20,
+        null=True,
+    )
+    field.set_attributes_from_name("word_type")
+    field.model = vocab_model
+    schema_editor.add_field(vocab_model, field)
+
+
 class Migration(migrations.Migration):
 
     dependencies = [
@@ -10,31 +50,36 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.AddField(
-            model_name="vocab",
-            name="word_type",
-            field=models.CharField(
-                blank=True,
-                choices=[
-                    ("noun", "Noun (Kata Benda)"),
-                    ("godan_verb", "Godan Verb (Kata Kerja Gol. 1)"),
-                    ("ichidan_verb", "Ichidan Verb (Kata Kerja Gol. 2)"),
-                    ("suru_verb", "Suru Verb (Kata Kerja Gol. 3)"),
-                    ("intransitive_verb", "Intransitive Verb (Intransitif)"),
-                    ("transitive_verb", "Transitive Verb (Transitif)"),
-                    ("i_adjective", "I-Adjective (Kata Sifat -i)"),
-                    ("na_adjective", "Na-Adjective (Kata Sifat -na)"),
-                    ("adverb", "Adverb (Kata Keterangan)"),
-                    ("particle", "Particle (Partikel)"),
-                    ("suffix", "Suffix (Akhiran)"),
-                    ("prefix", "Prefix (Awalan)"),
-                    ("conjunction", "Conjunction (Kata Sambung)"),
-                    ("expression", "Expression (Ungkapan)"),
-                    ("other", "Other (Lain-lain)"),
-                ],
-                help_text="Tipe kata (jenis kata)",
-                max_length=20,
-                null=True,
-            ),
+        migrations.SeparateDatabaseAndState(
+            database_operations=[migrations.RunPython(add_word_type_column_if_missing, migrations.RunPython.noop)],
+            state_operations=[
+                migrations.AddField(
+                    model_name="vocab",
+                    name="word_type",
+                    field=models.CharField(
+                        blank=True,
+                        choices=[
+                            ("noun", "Noun (Kata Benda)"),
+                            ("godan_verb", "Godan Verb (Kata Kerja Gol. 1)"),
+                            ("ichidan_verb", "Ichidan Verb (Kata Kerja Gol. 2)"),
+                            ("suru_verb", "Suru Verb (Kata Kerja Gol. 3)"),
+                            ("intransitive_verb", "Intransitive Verb (Intransitif)"),
+                            ("transitive_verb", "Transitive Verb (Transitif)"),
+                            ("i_adjective", "I-Adjective (Kata Sifat -i)"),
+                            ("na_adjective", "Na-Adjective (Kata Sifat -na)"),
+                            ("adverb", "Adverb (Kata Keterangan)"),
+                            ("particle", "Particle (Partikel)"),
+                            ("suffix", "Suffix (Akhiran)"),
+                            ("prefix", "Prefix (Awalan)"),
+                            ("conjunction", "Conjunction (Kata Sambung)"),
+                            ("expression", "Expression (Ungkapan)"),
+                            ("other", "Other (Lain-lain)"),
+                        ],
+                        help_text="Tipe kata (jenis kata)",
+                        max_length=20,
+                        null=True,
+                    ),
+                ),
+            ],
         ),
     ]

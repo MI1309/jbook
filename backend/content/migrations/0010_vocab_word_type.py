@@ -3,6 +3,42 @@
 from django.db import migrations, models
 
 
+def add_word_type_column_if_missing(apps, schema_editor):
+    vocab_model = apps.get_model("content", "Vocab")
+    table_name = vocab_model._meta.db_table
+    with schema_editor.connection.cursor() as cursor:
+        columns = {
+            column.name
+            for column in schema_editor.connection.introspection.get_table_description(cursor, table_name)
+        }
+
+    if "word_type" in columns:
+        return
+
+    field = models.CharField(
+        blank=True,
+        choices=[
+            ("noun", "Noun (Kata Benda)"),
+            ("godan", "Godan Verb (Kata Kerja Golongan 1)"),
+            ("ichidan", "Ichidan Verb (Kata Kerja Golongan 2)"),
+            ("suru", "Suru Verb (Kata Kerja Golongan 3)"),
+            ("intransitive", "Intransitive Verb (Kata Kerja Intransitif)"),
+            ("transitive", "Transitive Verb (Kata Kerja Transitif)"),
+            ("i_adj", "I-Adjective (Kata Sifat I)"),
+            ("na_adj", "Na-Adjective (Kata Sifat Na)"),
+            ("adverb", "Adverb (Kata Keterangan)"),
+            ("particle", "Particle (Partikel)"),
+            ("suffix", "Suffix (Akhiran)"),
+            ("other", "Lain-lain"),
+        ],
+        help_text="Tipe kata (e.g. Noun, Godan Verb)",
+        max_length=20,
+        null=True,
+    )
+    field.set_attributes_from_name("word_type")
+    field.model = vocab_model
+    schema_editor.add_field(vocab_model, field)
+
 class Migration(migrations.Migration):
 
     dependencies = [
@@ -10,27 +46,33 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.AddField(
-            model_name="vocab",
-            name="word_type",
-            field=models.CharField(
-                blank=True,
-                choices=[
-                    ("noun", "Noun (Kata Benda)"),
-                    ("godan", "Godan Verb (Kata Kerja Golongan 1)"),
-                    ("ichidan", "Ichidan Verb (Kata Kerja Golongan 2)"),
-                    ("suru", "Suru Verb (Kata Kerja Golongan 3)"),
-                    ("intransitive", "Intransitive Verb (Kata Kerja Intransitif)"),
-                    ("transitive", "Transitive Verb (Kata Kerja Transitif)"),
-                    ("i_adj", "I-Adjective (Kata Sifat I)"),
-                    ("na_adj", "Na-Adjective (Kata Sifat Na)"),
-                    ("adverb", "Adverb (Kata Keterangan)"),
-                    ("particle", "Particle (Partikel)"),
-                    ("other", "Lain-lain"),
-                ],
-                help_text="Tipe kata (e.g. Noun, Godan Verb)",
-                max_length=20,
-                null=True,
-            ),
+        migrations.SeparateDatabaseAndState(
+            database_operations=[migrations.RunPython(add_word_type_column_if_missing, migrations.RunPython.noop)],
+            state_operations=[
+                migrations.AddField(
+                    model_name="vocab",
+                    name="word_type",
+                    field=models.CharField(
+                        blank=True,
+                        choices=[
+                            ("noun", "Noun (Kata Benda)"),
+                            ("godan", "Godan Verb (Kata Kerja Golongan 1)"),
+                            ("ichidan", "Ichidan Verb (Kata Kerja Golongan 2)"),
+                            ("suru", "Suru Verb (Kata Kerja Golongan 3)"),
+                            ("intransitive", "Intransitive Verb (Kata Kerja Intransitif)"),
+                            ("transitive", "Transitive Verb (Kata Kerja Transitif)"),
+                            ("i_adj", "I-Adjective (Kata Sifat I)"),
+                            ("na_adj", "Na-Adjective (Kata Sifat Na)"),
+                            ("adverb", "Adverb (Kata Keterangan)"),
+                            ("particle", "Particle (Partikel)"),
+                            ("suffix", "Suffix (Akhiran)"),
+                            ("other", "Lain-lain"),
+                        ],
+                        help_text="Tipe kata (e.g. Noun, Godan Verb)",
+                        max_length=20,
+                        null=True,
+                    ),
+                ),
+            ],
         ),
     ]
