@@ -357,8 +357,10 @@ NINJA_JWT = {
     'USER_ID_CLAIM': 'user_id',
     'AUDIENCE': 'jbook',
     'ISSUER': 'jbook',
-    'JWK_URL': os.environ.get('JWK_URL', None),
 }
+_JWK_URL = os.environ.get('JWK_URL', '').strip()
+if _JWK_URL:
+    NINJA_JWT['JWK_URL'] = _JWK_URL
 
 # Session settings
 SESSION_COOKIE_AGE = 60 * 60 * 24 * int(os.environ.get('SESSION_DAYS', 7))  # 7 days

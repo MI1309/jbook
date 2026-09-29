@@ -211,6 +211,7 @@ Jika `check --deploy` melaporkan konfigurasi HTTPS yang tidak sesuai dengan prox
    from django.core.wsgi import get_wsgi_application
    application = get_wsgi_application()
    ```
+   **Penting:** jangan gunakan `jbook.settings`. Root package Django pada repo ini bernama `core`, sehingga nilai yang benar adalah `core.settings`. Pastikan `path` menunjuk ke folder `backend`, bukan root repository.
 6. Di bagian **Static files**: Tambahkan mapping untuk `/static/` ke path static kamu (contoh: `/home/[username]/jbook/backend/static`)
 7. Pastikan perintah `collectstatic --noinput` pada langkah validasi database berhasil dan path static di PythonAnywhere mengarah ke `STATIC_ROOT`.
 8. Klik tombol **Reload** di halaman Web PythonAnywhere!
