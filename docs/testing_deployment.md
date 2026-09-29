@@ -167,7 +167,7 @@ Contoh deployment ke **PythonAnywhere** (hosting Django yang ramah pemula)!
    ```
    Salin hasilnya langsung ke file `.env` di server. Jangan kirim atau tempel nilai secret ke chat/log.
 
-   `DEBUG=False` memerlukan secret minimal 50 karakter, host eksplisit, CORS origin eksplisit, Google Client ID, dan kredensial SMTP jika memakai SMTP. Django akan berhenti saat startup bila syarat wajib ini belum terpenuhi, bukan berjalan dalam konfigurasi setengah siap.
+   `DEBUG=False` memerlukan secret minimal 50 karakter, host eksplisit, dan CORS origin eksplisit. Google Client ID dan SMTP bersifat opsional untuk startup: tanpa Google Client ID, Google sign-in dinonaktifkan; tanpa kredensial SMTP, email reset password tidak dikirim. Isi keduanya untuk mengaktifkan fitur tersebut.
 
 ---
 

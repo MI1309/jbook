@@ -538,12 +538,6 @@ class VocabSchema(VocabCreateSchema):
     id: UUID
     model_config = {"from_attributes": True}
 
-class VocabListResponse(BaseModel):
-    items: List[VocabSchema]
-    total: int
-    debug_level: Optional[int] = None
-    debug_search: Optional[str] = None
-
 # Vocab CRUD
 @router.get("/kotoba", auth=AdminAuth(), response=List[VocabSchema])
 @router.get("/vocab", auth=AdminAuth(), response=List[VocabSchema])

@@ -73,8 +73,6 @@ ALLOWED_HOSTS = [
 ]
 if not DEBUG and (not ALLOWED_HOSTS or "*" in ALLOWED_HOSTS):
     raise ValueError("Production ALLOWED_HOSTS must be a non-empty explicit host list")
-if not DEBUG and not GOOGLE_CLIENT_ID:
-    raise ValueError("GOOGLE_CLIENT_ID must be configured in production")
 
 
 # ===============================
@@ -287,8 +285,11 @@ EMAIL_USE_TLS = os.environ.get("EMAIL_USE_TLS", "True") == "True"
 # Credentials: NEVER hardcode. Production must set env, dev can be empty (console backend).
 EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER", "")
 EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD", "")
-if not DEBUG and EMAIL_BACKEND.endswith("smtp.EmailBackend") and not (EMAIL_HOST_USER and EMAIL_HOST_PASSWORD):
-    raise ValueError("Production SMTP requires EMAIL_HOST_USER and EMAIL_HOST_PASSWORD")
+EMAIL_CONFIGURED = bool(EMAIL_HOST_USER and EMAIL_HOST_PASSWORD)
+if not DEBUG and EMAIL_BACKEND.endswith("smtp.EmailBackend") and not EMAIL_CONFIGURED:
+    print("[WARNING] SMTP credentials are missing; password-reset emails are disabled")
+if not DEBUG and not GOOGLE_CLIENT_ID:
+    print("[WARNING] GOOGLE_CLIENT_ID is missing; Google sign-in is disabled")
 
 DEFAULT_FROM_EMAIL = (
     os.environ.get("DEFAULT_FROM_EMAIL")
