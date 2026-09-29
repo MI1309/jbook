@@ -16,7 +16,30 @@ const levelStyles = {
     5: { badge: 'bg-emerald-500 text-white', accent: 'from-emerald-500/10 to-transparent', border: 'hover:border-emerald-400/40' },
 };
 
-import { getScriptTypes } from '@/lib/utils';
+import { getScriptTypes, to_kana, to_katakana } from '@/lib/utils';
+
+function firstReading(readings) {
+    return Array.isArray(readings)
+        ? readings.find((reading) => typeof reading === 'string' && reading.trim())?.trim() || ''
+        : '';
+}
+
+function toHiraganaReading(reading) {
+    return Array.from(to_kana(reading), (character) => {
+        const codePoint = character.codePointAt(0);
+        return codePoint >= 0x30a1 && codePoint <= 0x30f6
+            ? String.fromCodePoint(codePoint - 0x60)
+            : character;
+    }).join('');
+}
+
+function getKanjiCardReading(kanji) {
+    const kunyomi = firstReading(kanji.kunyomi);
+    if (kunyomi) return toHiraganaReading(kunyomi);
+
+    const onyomi = firstReading(kanji.onyomi);
+    return onyomi ? to_katakana(onyomi) : '-';
+}
 
 function HighlightText({ text, query, active = true }) {
     if (text === null || text === undefined) return null;
@@ -143,7 +166,7 @@ function KanjiContent() {
                                         )}
                                     </div>
                                     <div className="text-[10px] font-bold mt-1 tracking-tight uppercase text-gray-500 dark:text-gray-500 group-hover:text-accent-blue/70 transition-colors">
-                                        <HighlightText text={kanji.onyomi?.[0] || kanji.kunyomi?.[0] || '-'} query={search} active={kanji._matchTarget === 'reading'} />
+                                        <HighlightText text={getKanjiCardReading(kanji)} query={search} active={kanji._matchTarget === 'reading'} />
                                     </div>
                                 </div>
                             </Link>

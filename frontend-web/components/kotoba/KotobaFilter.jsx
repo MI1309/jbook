@@ -2,7 +2,7 @@
 
 import { Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useDebounce } from 'use-debounce';
 import { useTheme } from '@/context/ThemeContext';
 import { getVocabLevelVisibility } from '@/lib/api';
@@ -28,20 +28,28 @@ function FilterContent() {
     const [wordType, setWordType] = useState(initialType);
     const [enabledLevels, setEnabledLevels] = useState([1, 2, 3, 4, 5]);
     const [visibilityReady, setVisibilityReady] = useState(false);
+    const pendingRestoreQuery = useRef(null);
+    const initialized = useRef(false);
 
     useEffect(() => {
+        if (initialized.current) return;
+        initialized.current = true;
+
         getVocabLevelVisibility().then(data => {
-            const levels = (data.enabled_levels || [1, 2, 3, 4, 5]).map(Number);
+            const levels = (data.enabled_levels || [1, 2, 3, 4, 5]).map(Number).sort((a, b) => a - b);
             setEnabledLevels(levels);
 
-            const currentQuery = searchParams.toString();
+            const currentQuery = typeof window !== 'undefined'
+                ? window.location.search.slice(1)
+                : searchParams.toString();
             let params = new URLSearchParams(currentQuery);
             if (!currentQuery && typeof window !== 'undefined') {
                 const saved = sessionStorage.getItem('kotoba_filter_params');
                 if (saved) params = new URLSearchParams(saved);
             }
 
-            const safeLevels = sanitizeLevels(params.get('level'), levels);
+            const requestedLevels = sanitizeLevels(params.get('level'), levels);
+            const safeLevels = requestedLevels.length ? requestedLevels : levels;
             if (safeLevels.length) params.set('level', safeLevels.join(','));
             else params.delete('level');
 
@@ -51,6 +59,7 @@ function FilterContent() {
 
             const nextQuery = params.toString();
             if (nextQuery !== currentQuery) {
+                pendingRestoreQuery.current = nextQuery;
                 if (typeof window !== 'undefined') {
                     if (nextQuery) sessionStorage.setItem('kotoba_filter_params', nextQuery);
                     else sessionStorage.removeItem('kotoba_filter_params');
@@ -60,25 +69,24 @@ function FilterContent() {
 
             setVisibilityReady(true);
         });
-    }, []);
+    }, [router, searchParams]);
 
-    // Sync state with URL changes (e.g. back button)
+    // Keep the controlled filters aligned with browser Back/Forward navigation.
     useEffect(() => {
-        if (!visibilityReady) return;
+        const syncFromLocation = () => {
+            const params = new URLSearchParams(window.location.search);
+            const nextSearch = params.get('search') || '';
+            const nextLevels = sanitizeLevels(params.get('level'), enabledLevels);
+            const nextType = params.get('word_type') || '';
 
-        const nextSearch = searchParams.get('search') || '';
-        const nextLevels = sanitizeLevels(searchParams.get('level'), enabledLevels);
-        const nextType = searchParams.get('word_type') || '';
+            setSearchTerm(nextSearch);
+            setSelectedLevels(nextLevels);
+            setWordType(nextType);
+        };
 
-        setSearchTerm(current => current === nextSearch ? current : nextSearch);
-        setSelectedLevels(current => current.join(',') === nextLevels.join(',') ? current : nextLevels);
-        setWordType(current => current === nextType ? current : nextType);
-
-        const query = searchParams.toString();
-        if (query && typeof window !== 'undefined') {
-            sessionStorage.setItem('kotoba_filter_params', query);
-        }
-    }, [searchParams, visibilityReady, enabledLevels]);
+        window.addEventListener('popstate', syncFromLocation);
+        return () => window.removeEventListener('popstate', syncFromLocation);
+    }, [enabledLevels]);
 
     // Debounce search term to avoid too many URL updates (500ms delay)
     const [debouncedSearch] = useDebounce(searchTerm, 500);
@@ -86,6 +94,12 @@ function FilterContent() {
     // Update URL when search term, level, or type changes
     useEffect(() => {
         if (!visibilityReady) return;
+        if (pendingRestoreQuery.current !== null) {
+            if (searchParams.toString() !== pendingRestoreQuery.current) return;
+            pendingRestoreQuery.current = null;
+            return;
+        }
+        if (debouncedSearch !== searchTerm) return;
 
         const params = new URLSearchParams(searchParams.toString());
         const safeLevels = sanitizeLevels(selectedLevels, enabledLevels);
@@ -126,7 +140,7 @@ function FilterContent() {
             router.push(`/kotoba?${newQuery}`, { scroll: false });
         }
 
-    }, [debouncedSearch, selectedLevels, wordType, router, searchParams, visibilityReady, enabledLevels]);
+    }, [debouncedSearch, searchTerm, selectedLevels, wordType, router, searchParams, visibilityReady, enabledLevels]);
 
     const textColor = !mounted ? 'text-black' : (theme === 'dark' ? 'text-white' : 'text-black');
     const subTextColor = !mounted ? 'text-black/50' : (theme === 'dark' ? 'text-white/50' : 'text-black/50');
@@ -157,7 +171,7 @@ function FilterContent() {
                         )}
                     </div>
                     <p className="text-[10px] font-bold text-gray-400 mt-1.5 px-1">
-                        Tips: Ketik "neko", "猫", "ねこ", atau "kucing"
+                        Tips: Ketik &quot;neko&quot;, &quot;猫&quot;, &quot;ねこ&quot;, atau &quot;kucing&quot;
                     </p>
                 </div>
 

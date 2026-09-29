@@ -6,7 +6,6 @@ import Link from 'next/link';
 import { toHiragana, toKatakana } from 'wanakana';
 import { hasKanji } from '@/lib/utils';
 import { resolveContentId } from '@/lib/api';
-import { getRadicalInfo } from '@/lib/radicals';
 import { useTheme } from '@/context/ThemeContext';
 import KanjiStrokeViewer from './KanjiStrokeViewer'; 
 import { useAuth } from '@/context/AuthContext';
@@ -277,9 +276,6 @@ export default function KanjiDetailUI({ kanji: initialKanji, onClose }) {
                                     <span className="bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/20 text-xs font-black px-4 py-1.5 rounded-full inline-flex items-center gap-1.5 shadow-sm">
                                         <span className="text-[10px] font-black uppercase text-gray-400">部首 (Radikal):</span>
                                         <span className="font-japanese font-black text-sm">{kanji.radical}</span>
-                                        {getRadicalInfo(kanji.radical)?.meaning && (
-                                            <span className="font-bold text-[11px] opacity-80">({getRadicalInfo(kanji.radical).meaning})</span>
-                                        )}
                                     </span>
                                 )}
                              </div>
@@ -334,7 +330,6 @@ export default function KanjiDetailUI({ kanji: initialKanji, onClose }) {
                                     Radikal Utama (部首)
                                 </h3>
                                 {(() => {
-                                    const rad = getRadicalInfo(kanji.radical);
                                     return (
                                         <div 
                                             onClick={() => router.push(`/kanji?radical=${encodeURIComponent(kanji.radical)}`)}
@@ -344,21 +339,9 @@ export default function KanjiDetailUI({ kanji: initialKanji, onClose }) {
                                             <span className="text-4xl font-japanese font-black text-blue-600 dark:text-blue-400 group-hover:scale-110 transition-transform w-12 text-center">
                                                 {kanji.radical}
                                             </span>
-                                            <div className="flex-1 min-w-0">
-                                                <p className={`text-sm font-black leading-snug truncate ${textColor}`}>
-                                                    {rad?.meaning || 'Radikal Dasar'}
-                                                </p>
-                                                <p className={`text-[10px] font-black uppercase tracking-tighter mt-0.5 ${subTextColor}`}>
-                                                    {rad?.name ? `${rad.name} (${rad.reading})` : 'Klik untuk filter kanji'}
-                                                </p>
-                                            </div>
-                                            <span className="text-gray-400 group-hover:text-blue-500 group-hover:translate-x-0.5 transition-all text-sm font-black">→</span>
                                         </div>
                                     );
                                 })()}
-                                <p className="text-[10px] font-bold text-gray-400 mt-3 px-1">
-                                    💡 Radikal membantu mengingat pola bentuk & makna dasar kanji.
-                                </p>
                             </section>
                         )}
 

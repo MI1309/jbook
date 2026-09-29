@@ -449,7 +449,7 @@ def list_vocab(request,
     from utils.conjugation import deconjugate_verb
     
     disabled_levels = get_disabled_vocab_levels()
-    qs = Vocab.objects.exclude(jlpt_level__in=disabled_levels).order_by('word')
+    qs = Vocab.objects.exclude(jlpt_level__in=disabled_levels).order_by('jlpt_level', 'word')
     
     if params.level:
         levels = parse_levels(params.level)

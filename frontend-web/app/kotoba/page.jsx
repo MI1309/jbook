@@ -301,6 +301,7 @@ function KotobaContent({ onRefreshRequest, refreshKey }) {
     const [data, setData] = useState({ items: [], total: 0, pages: 1 });
     const [loading, setLoading] = useState(true);
     const [playingId, setPlayingId] = useState(null);
+    const latestRequest = useRef(0);
 
     const page = parseInt(searchParams.get('page')) || 1;
     const level = searchParams.get('level');
@@ -355,18 +356,28 @@ function KotobaContent({ onRefreshRequest, refreshKey }) {
     };
 
     useEffect(() => {
+        const requestId = latestRequest.current + 1;
+        latestRequest.current = requestId;
+        let cancelled = false;
+
         async function fetchData() {
             setLoading(true);
             try {
                 const result = await getVocabList({ level, search, word_type, limit, page });
-                setData(result || { items: [], total: 0, pages: 1 });
+                if (!cancelled && latestRequest.current === requestId) {
+                    setData(result || { items: [], total: 0, pages: 1 });
+                }
             } catch (err) {
-                console.error('[jbook-client] Gagal memuat Kotoba:', err.message);
+                if (!cancelled && latestRequest.current === requestId) {
+                    console.error('[jbook-client] Gagal memuat Kotoba:', err.message);
+                    setData({ items: [], total: 0, pages: 1 });
+                }
             } finally {
-                setLoading(false);
+                if (!cancelled && latestRequest.current === requestId) setLoading(false);
             }
         }
         fetchData();
+        return () => { cancelled = true; };
     }, [page, level, search, word_type, refreshKey]);
 
     const items = data.items || [];

@@ -3824,6 +3824,176 @@
     "jlpt_level": 4,
     "examples": []
   },
+    {
+    "id": "k04-ibento-001",
+    "word": "イベント",
+    "reading": "ibento",
+    "furigana": "",
+    "meaning": "event, acara",
+    "word_type": "noun",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "k04-matsuri-002",
+    "word": "祭り",
+    "reading": "matsuri",
+    "furigana": "まつ",
+    "meaning": "festival",
+    "word_type": "noun",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "k04-taikai-003",
+    "word": "大会",
+    "reading": "taikai",
+    "furigana": "たい かい",
+    "meaning": "perlombaan",
+    "word_type": "noun",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "k04-kyanpu-004",
+    "word": "キャンプ",
+    "reading": "kyanpu",
+    "furigana": "",
+    "meaning": "camping",
+    "word_type": "noun",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "k04-haikingu-005",
+    "word": "ハイキング",
+    "reading": "haikingu",
+    "furigana": "",
+    "meaning": "hiking",
+    "word_type": "noun",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "k04-bunkawoshoukai-006",
+    "word": "文化を紹介する",
+    "reading": "bunka wo shoukai suru",
+    "furigana": "ぶん か しょう かい",
+    "meaning": "Memperkenalkan budaya",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "k04-taiikukandeundou-007",
+    "word": "体育館で運動する",
+    "reading": "taiikukan de undou suru",
+    "furigana": "たい いく かん うん どう",
+    "meaning": "Berolahraga di gedung olahraga",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "k04-kouryuukainisanka-008",
+    "word": "交流会に参加する",
+    "reading": "kouryuukai ni sanka suru",
+    "furigana": "こう りゅう かい さん か",
+    "meaning": "Mengikuti acara gathering/networking",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "k04-guraundodehashiru-009",
+    "word": "グラウンドで走る",
+    "reading": "guraundo de hashiru",
+    "furigana": "はし",
+    "meaning": "Berlari di lapangan",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "k04-uketsukedenamaewokaku-010",
+    "word": "受付で名前を書く",
+    "reading": "uketsuke de namae wo kaku",
+    "furigana": "うけ つけ な まえ か",
+    "meaning": "Menulis nama di resepsionis",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "k04-battodebooruwoutsu-011",
+    "word": "バットでボールを打つ",
+    "reading": "batto de booru wo utsu",
+    "furigana": "う",
+    "meaning": "Memukul bola dengan tongkat pemukul",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "k04-washitsunifutonwoshiku-012",
+    "word": "和室にふとんを敷く",
+    "reading": "washitsu ni futon wo shiku",
+    "furigana": "わ しつ し",
+    "meaning": "Menggelar futon di ruangan ala Jepang",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "k04-douguwokatadzukeru-013",
+    "word": "道具を片付ける",
+    "reading": "dougu wo katadzukeru",
+    "furigana": "どう ぐ かた づ",
+    "meaning": "Merapikan peralatan",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "k04-rakettowomotteiku-014",
+    "word": "ラケットを持って行く",
+    "reading": "raketto wo motte iku",
+    "furigana": "も い",
+    "meaning": "Membawa (pergi) raket",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "k04-booruwonageru-015",
+    "word": "ボールを投げる",
+    "reading": "booru wo nageru",
+    "furigana": "な",
+    "meaning": "Melempar bola",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "k04-maruikatachiwoshiteiru-016",
+    "word": "丸い形をしている",
+    "reading": "marui katachi wo shite iru",
+    "furigana": "まる かたち",
+    "meaning": "Berbentuk bulat",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "k04-kaijou nihito ga atsumaru-017",
+    "word": "会場に人が集まる",
+    "reading": "kaijou ni hito ga atsumaru",
+    "furigana": "かい じょう ひと あつ",
+    "meaning": "Orang berkumpul di tempat acara",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
   
    
 
