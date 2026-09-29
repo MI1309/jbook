@@ -300,6 +300,8 @@ function KotobaContent({ onRefreshRequest, refreshKey }) {
     const detailId = searchParams.get('detail');
     const [data, setData] = useState({ items: [], total: 0, pages: 1 });
     const [loading, setLoading] = useState(true);
+    const [loadError, setLoadError] = useState(false);
+    const [retryKey, setRetryKey] = useState(0);
     const [playingId, setPlayingId] = useState(null);
     const latestRequest = useRef(0);
 
@@ -366,11 +368,13 @@ function KotobaContent({ onRefreshRequest, refreshKey }) {
                 const result = await getVocabList({ level, search, word_type, limit, page });
                 if (!cancelled && latestRequest.current === requestId) {
                     setData(result || { items: [], total: 0, pages: 1 });
+                    setLoadError(false);
                 }
             } catch (err) {
                 if (!cancelled && latestRequest.current === requestId) {
                     console.error('[jbook-client] Gagal memuat Kotoba:', err.message);
                     setData({ items: [], total: 0, pages: 1 });
+                    setLoadError(true);
                 }
             } finally {
                 if (!cancelled && latestRequest.current === requestId) setLoading(false);
@@ -378,7 +382,7 @@ function KotobaContent({ onRefreshRequest, refreshKey }) {
         }
         fetchData();
         return () => { cancelled = true; };
-    }, [page, level, search, word_type, refreshKey]);
+    }, [page, level, search, word_type, refreshKey, retryKey]);
 
     const items = data.items || [];
     const totalPages = data.pages || 1;
@@ -471,6 +475,21 @@ function KotobaContent({ onRefreshRequest, refreshKey }) {
                             </div>
                         </Link>
                     ))}
+                </div>
+            ) : loadError ? (
+                <div className="text-center py-24 rounded-[3rem] border border-amber-500/30 max-w-2xl mx-auto bg-amber-500/5">
+                    <div className="text-5xl mb-5" aria-hidden="true">📡</div>
+                    <h2 className="text-xl font-black mb-2 text-[var(--foreground)]">Kotoba belum dapat dimuat</h2>
+                    <p className="font-medium mb-6 text-sm text-gray-500 dark:text-gray-400">
+                        Server atau koneksi sedang bermasalah. Kosakata belum tentu tidak ditemukan.
+                    </p>
+                    <button
+                        type="button"
+                        onClick={() => setRetryKey((key) => key + 1)}
+                        className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-accent-blue to-accent-green text-white font-bold text-sm hover:opacity-90 active:scale-95 transition-all"
+                    >
+                        Coba Lagi
+                    </button>
                 </div>
             ) : (
                 <div className="text-center py-32 rounded-[3rem] border-4 border-dashed max-w-2xl mx-auto shadow-inner transition-colors bg-[var(--card-bg)] border-[var(--border-color)]">

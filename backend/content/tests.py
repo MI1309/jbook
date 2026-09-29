@@ -1,3 +1,27 @@
 from django.test import TestCase
 
-# Create your tests here.
+from .models import FeatureSetting, Vocab
+
+
+class VocabListApiTests(TestCase):
+    def setUp(self):
+        FeatureSetting.objects.create(
+            key='vocab_visibility',
+            value={'disabled_levels': [1, 2, 3]},
+        )
+        Vocab.objects.create(word='word-four', reading='reading-four', meaning='meaning-four', jlpt_level=4)
+        Vocab.objects.create(word='word-five', reading='reading-five', meaning='meaning-five', jlpt_level=5)
+
+    def test_vocab_list_uses_clean_paginated_response_contract(self):
+        response = self.client.get('/api/content/vocab?level=4%2C5&limit=30&page=1')
+
+        self.assertEqual(response.status_code, 200)
+        payload = response.json()
+        self.assertEqual(set(payload), {'items', 'total', 'page', 'pages'})
+        self.assertEqual([item['jlpt_level'] for item in payload['items']], [4, 5])
+
+    def test_vocab_list_excludes_disabled_levels_when_explicitly_requested(self):
+        response = self.client.get('/api/content/vocab?level=1%2C2%2C3&limit=30&page=1')
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()['items'], [])

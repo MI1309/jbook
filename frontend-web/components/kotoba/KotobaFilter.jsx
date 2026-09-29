@@ -14,19 +14,20 @@ function sanitizeLevels(rawLevels, allowedLevels) {
     return values.filter(Boolean).filter(level => allowedLevels.includes(Number(level)));
 }
 
+const DEFAULT_ENABLED_LEVELS = [4, 5];
+
 function FilterContent() {
     const { theme, mounted } = useTheme();
     const router = useRouter();
     const searchParams = useSearchParams();
 
     const initialSearch = searchParams.get('search') || '';
-    const initialLevels = searchParams.get('level')?.split(',').filter(Boolean) || [];
     const initialType = searchParams.get('word_type') || '';
 
     const [searchTerm, setSearchTerm] = useState(initialSearch);
-    const [selectedLevels, setSelectedLevels] = useState(initialLevels);
+    const [selectedLevels, setSelectedLevels] = useState([]);
     const [wordType, setWordType] = useState(initialType);
-    const [enabledLevels, setEnabledLevels] = useState([1, 2, 3, 4, 5]);
+    const [enabledLevels, setEnabledLevels] = useState(DEFAULT_ENABLED_LEVELS);
     const [visibilityReady, setVisibilityReady] = useState(false);
     const pendingRestoreQuery = useRef(null);
     const initialized = useRef(false);
@@ -45,11 +46,18 @@ function FilterContent() {
             let params = new URLSearchParams(currentQuery);
             if (!currentQuery && typeof window !== 'undefined') {
                 const saved = sessionStorage.getItem('kotoba_filter_params');
-                if (saved) params = new URLSearchParams(saved);
+                if (saved) {
+                    params = new URLSearchParams(saved);
+                }
             }
 
             const requestedLevels = sanitizeLevels(params.get('level'), levels);
-            const safeLevels = requestedLevels.length ? requestedLevels : levels;
+            const normalizedRequested = [...requestedLevels].sort((a, b) => a - b);
+            if (normalizedRequested.length === levels.length && normalizedRequested.every((level, index) => level === levels[index])) {
+                params.delete('level');
+            }
+
+            const safeLevels = sanitizeLevels(params.get('level'), levels);
             if (safeLevels.length) params.set('level', safeLevels.join(','));
             else params.delete('level');
 

@@ -457,6 +457,10 @@ def list_vocab(request,
             valid_levels = [l for l in levels if l not in disabled_levels]
             if valid_levels:
                 qs = qs.filter(jlpt_level__in=valid_levels)
+            else:
+                qs = qs.none()
+        else:
+            qs = qs.none()
         
     if params.word_type:
         if params.word_type == 'verb':

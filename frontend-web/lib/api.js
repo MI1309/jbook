@@ -249,11 +249,40 @@ export async function getVocabLevelVisibility() {
             return res.json();
         })
         .then(data => {
-            vocabVisibilityCache = data;
+            const enabledLevels = (Array.isArray(data.enabled_levels) ? data.enabled_levels : [4, 5])
+                .map(Number)
+                .filter(level => Number.isInteger(level) && level >= 1 && level <= 5)
+                .sort((a, b) => a - b);
+            vocabVisibilityCache = {
+                disabled_levels: (Array.isArray(data.disabled_levels) ? data.disabled_levels : [])
+                    .map(Number)
+                    .filter(level => Number.isInteger(level) && level >= 1 && level <= 5),
+                enabled_levels: enabledLevels,
+            };
             vocabVisibilityExpiresAt = Date.now() + 5 * 60 * 1000;
-            return data;
+            if (typeof window !== 'undefined') {
+                try {
+                    localStorage.setItem('jbook_vocab_visibility', JSON.stringify(vocabVisibilityCache));
+                } catch {}
+            }
+            return vocabVisibilityCache;
         })
-        .catch(() => ({ disabled_levels: [], enabled_levels: [1, 2, 3, 4, 5] }))
+        .catch(() => {
+            if (typeof window !== 'undefined') {
+                try {
+                    const cached = JSON.parse(localStorage.getItem('jbook_vocab_visibility') || 'null');
+                    if (Array.isArray(cached?.enabled_levels)) {
+                        vocabVisibilityCache = cached;
+                        vocabVisibilityExpiresAt = Date.now() + 60 * 1000;
+                        return cached;
+                    }
+                } catch {}
+            }
+            const fallback = { disabled_levels: [1, 2, 3], enabled_levels: [4, 5] };
+            vocabVisibilityCache = fallback;
+            vocabVisibilityExpiresAt = Date.now() + 60 * 1000;
+            return fallback;
+        })
         .finally(() => {
             vocabVisibilityRequest = null;
         });
@@ -268,10 +297,10 @@ export async function getVocabLevelVisibility() {
 export async function getKanjiList({ level, search, radical, limit = 50, page = 1 } = {}) {
     const visibility = await getKanjiLevelVisibility();
     const enabledLevels = (visibility.enabled_levels || [4, 5]).map(Number);
-    let requestedLevels = level
+    const requestedLevels = level
         ? String(level).split(',').map(Number).filter(item => enabledLevels.includes(item))
-        : [...enabledLevels];
-    if (!requestedLevels.length) requestedLevels = [...enabledLevels];
+        : [];
+    const localLevels = requestedLevels.length ? requestedLevels : enabledLevels;
     const queryParams = new URLSearchParams();
     if (requestedLevels.length) queryParams.append('level', requestedLevels.join(','));
     if (search) queryParams.append('search', search);
@@ -710,10 +739,10 @@ export async function resetPracticeProgress() {
 export async function getVocabList({ level, search, word_type, limit = 50, page = 1 } = {}) {
     const visibility = await getVocabLevelVisibility();
     const enabledLevels = (visibility.enabled_levels || [1, 2, 3, 4, 5]).map(Number);
-    let requestedLevels = level
+    const requestedLevels = level
         ? String(level).split(',').map(Number).filter(item => enabledLevels.includes(item))
-        : [...enabledLevels];
-    if (!requestedLevels.length) requestedLevels = [...enabledLevels];
+        : [];
+    const localLevels = requestedLevels.length ? requestedLevels : enabledLevels;
     const queryParams = new URLSearchParams();
     if (requestedLevels.length) queryParams.append('level', requestedLevels.join(','));
     if (search) queryParams.append('search', search);
@@ -729,7 +758,7 @@ export async function getVocabList({ level, search, word_type, limit = 50, page 
     let localSmartResults = null;
     const isOffline = typeof window !== 'undefined' && typeof navigator !== 'undefined' && !navigator.onLine;
     if (isOffline) {
-        localSmartResults = await serveFromDb('vocab', { level: requestedLevels.join(','), search, word_type, page: 1, limit: 200, enabledLevels });
+        localSmartResults = await serveFromDb('vocab', { level: localLevels.join(','), search, word_type, page: 1, limit: 200, enabledLevels });
     }
     
     // 1. Jika Online: Ambil dari API
@@ -749,7 +778,7 @@ export async function getVocabList({ level, search, word_type, limit = 50, page 
             // Jika API Gagal (misal: timeout), coba fallback ke Offline
             if (typeof window !== 'undefined') {
                 if (localSmartResults) return localSmartResults;
-                const offline = await serveFromDb('vocab', { level: requestedLevels.join(','), search, word_type, page, limit, enabledLevels });
+                const offline = await serveFromDb('vocab', { level: localLevels.join(','), search, word_type, page, limit, enabledLevels });
                 if (offline && offline.items.length > 0) return offline;
             }
             throw error;
@@ -759,7 +788,7 @@ export async function getVocabList({ level, search, word_type, limit = 50, page 
     // 2. Jika Benar-benar Offline: Ambil dari Database Lokal
     if (typeof window !== 'undefined') {
         if (localSmartResults) return localSmartResults;
-        const offline = await serveFromDb('vocab', { level: requestedLevels.join(','), search, word_type, page, limit, enabledLevels });
+        const offline = await serveFromDb('vocab', { level: localLevels.join(','), search, word_type, page, limit, enabledLevels });
         if (offline && offline.items.length > 0) return offline;
     }
     
