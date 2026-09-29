@@ -1,46 +1,17 @@
 # Core Django and Django Ninja
 Django==6.0.2
 django-ninja==1.5.3
-django-ninja-extra==0.31.0
-django-ninja-jwt==5.3.1  # Jika Anda menggunakan JWT untuk otentikasi
+django-ninja-jwt==5.3.1
 django-cors-headers==4.9.0
-dj-database-url==3.1.1   # Untuk konfigurasi database yang mudah
-psycopg2-binary==2.9.11  # Jika Anda menggunakan PostgreSQL
-django-ratelimit==4.1.0  # Rate limiting untuk perlindungan DDoS
-bleach==6.2.0  # Allowlist HTML sanitization for user-authored content
-google-auth==2.47.0  # Google ID token verification
-pandas==2.2.3  # Excel import for admin modules
-Pillow==11.1.0  # Django ImageField support
-
-# For serving static/media files in production
-whitenoise==6.11.0
-
-# For development server (optional, can be removed in production)
-# black==24.3.0
-# mypy==1.10.0
-# isort==5.13.2
-# flake8==7.1.0
-
-# For making HTTP requests (e.g., to external APIs)
-requests==2.31.0
-urllib3==2.6.3 # Kompatibilitas dengan requests
-
-# For managing environment variables
-python-dotenv==1.2.2
-
-# Common dependencies
-asgiref==3.11.1
-sqlparse==0.5.5
-werkzeug==3.1.6 # Seringkali dependency umum
-itsdangerous==2.2.0 # Seringkali dependency umum
-cryptography==46.0.5 # Untuk enkripsi
-cffi==2.0.0
-pycparser==3.0
-
-# Optional: For running the app in production
-gunicorn==25.1.0
-
-# Libraries that might be useful for specific features, but check if needed:
-# beautifulsoup4==4.1
-
+dj-database-url==3.1.1
+django-ratelimit==4.1.0
+bleach==6.2.0
+google-auth==2.47.0
+pandas==2.2.3
 openpyxl==3.1.2
+Pillow==11.1.0
+psycopg2-binary==2.9.11
+whitenoise==6.11.0
+requests==2.31.0
+python-dotenv==1.2.2
+gunicorn==25.1.0

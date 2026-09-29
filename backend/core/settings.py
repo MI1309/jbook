@@ -91,7 +91,6 @@ INSTALLED_APPS = [
     "django_ratelimit",  # Rate limiting untuk perlindungan DDoS
 
     "ninja",
-    "ninja_extra",
     "ninja_jwt",
 
     "users",
