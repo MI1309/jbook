@@ -1,156 +1,95 @@
-import { getBlogList } from '@/lib/api';
+import { getBlogList, API_URL } from '@/lib/api';
 import Link from 'next/link';
-import BlogListClient from './BlogListClient';
-
-const BASE_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://jbook-five.vercel.app';
-
-export const revalidate = 300; // ISR 5 minutes
 
 export const metadata = {
-    title: 'Blog Bahasa Jepang: Tips Belajar, Panduan JLPT & Materi | JBook',
-    description: 'Kumpulan artikel dan panduan terlengkap belajar bahasa Jepang di JBook. Tips tata bahasa (Bunpo), huruf Kanji, kosakata (Kotoba), budaya, dan kiat sukses lulus ujian JLPT N5-N1.',
-    keywords: [
-        'blog bahasa jepang',
-        'tips belajar bahasa jepang',
-        'panduan jlpt n5 n1',
-        'belajar kanji jepang',
-        'tata bahasa jepang',
-        'kosakata jepang kotoba',
-        'jbook blog',
-        'kursus bahasa jepang online',
-    ],
-    alternates: {
-        canonical: `${BASE_URL}/blog`,
-    },
-    openGraph: {
-        type: 'website',
-        locale: 'id_ID',
-        url: `${BASE_URL}/blog`,
-        siteName: 'JBook',
-        title: 'Blog Bahasa Jepang: Tips, Panduan JLPT & Materi | JBook',
-        description: 'Kumpulan artikel dan panduan terlengkap belajar bahasa Jepang. Kuasai Kanji, Bunpo, Kotoba, dan taklukkan ujian JLPT bersama JBook.',
-        images: [
-            {
-                url: `${BASE_URL}/icon-512.png`,
-                width: 512,
-                height: 512,
-                alt: 'JBook Blog - Belajar Bahasa Jepang',
-                type: 'image/png',
-            },
-        ],
-    },
-    twitter: {
-        card: 'summary_large_image',
-        title: 'Blog Bahasa Jepang: Tips & Panduan JLPT | JBook',
-        description: 'Kumpulan artikel dan tips terlengkap belajar bahasa Jepang di JBook.',
-        images: [`${BASE_URL}/icon-512.png`],
-        creator: '@jbook',
-    },
-    robots: {
-        index: true,
-        follow: true,
-    },
+    title: 'Blog JBook - Tips & Wawasan Belajar Bahasa Jepang',
+    description: 'Kumpulan artikel, tips, dan cerita menarik seputar perjalanan belajar bahasa Jepang kamu di JBook.',
 };
+
+function getFullMediaUrl(url) {
+    if (!url) return '';
+    if (url.startsWith('http')) return url;
+    return `${API_URL.replace(/\/$/, '')}/${url.replace(/^\//, '')}`;
+}
 
 export default async function BlogListPage() {
     let blogs = [];
     try {
-        const res = await getBlogList();
-        blogs = Array.isArray(res) ? res : [];
+        blogs = await getBlogList();
     } catch (error) {
-        console.error('Failed to fetch blogs in BlogListPage:', error.message);
+        console.error('Failed to fetch blogs during prerender:', error.message);
     }
 
-    const blogUrl = `${BASE_URL}/blog`;
-
-    // JSON-LD Structured Data (CollectionPage & ItemList)
-    const jsonLd = {
-        '@context': 'https://schema.org',
-        '@graph': [
-            {
-                '@type': 'CollectionPage',
-                '@id': `${blogUrl}#webpage`,
-                url: blogUrl,
-                name: 'Blog Bahasa Jepang JBook',
-                description: 'Kumpulan artikel edukatif, panduan tata bahasa, kanji, dan tips JLPT.',
-                isPartOf: {
-                    '@type': 'WebSite',
-                    '@id': `${BASE_URL}/#website`,
-                    name: 'JBook',
-                    url: BASE_URL,
-                },
-                inLanguage: 'id-ID',
-            },
-            {
-                '@type': 'BreadcrumbList',
-                '@id': `${blogUrl}#breadcrumb`,
-                itemListElement: [
-                    {
-                        '@type': 'ListItem',
-                        position: 1,
-                        name: 'Beranda',
-                        item: BASE_URL,
-                    },
-                    {
-                        '@type': 'ListItem',
-                        position: 2,
-                        name: 'Blog',
-                        item: blogUrl,
-                    },
-                ],
-            },
-            {
-                '@type': 'ItemList',
-                '@id': `${blogUrl}#itemlist`,
-                itemListElement: blogs.slice(0, 10).map((blog, idx) => ({
-                    '@type': 'ListItem',
-                    position: idx + 1,
-                    url: `${BASE_URL}/blog/${blog.slug}`,
-                    name: blog.title,
-                })),
-            },
-        ],
-    };
-
     return (
-        <main className="container mx-auto px-6 py-12 max-w-6xl min-h-screen">
-            {/* JSON-LD */}
-            <script
-                type="application/ld+json"
-                dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-            />
-
-            {/* Breadcrumb Navigation */}
-            <nav aria-label="Breadcrumb" className="mb-8">
-                <ol className="flex items-center gap-2 text-sm font-bold text-gray-500">
-                    <li>
-                        <Link href="/" className="hover:underline hover:text-red-500 transition-colors">
-                            Beranda
-                        </Link>
-                    </li>
-                    <li>/</li>
-                    <li className="text-red-600 font-extrabold" aria-current="page">
-                        Blog
-                    </li>
-                </ol>
-            </nav>
-
-            {/* Page Header */}
-            <header className="mb-14 text-center">
-                <span className="inline-block px-4 py-1.5 bg-red-50 text-red-600 rounded-full text-xs font-black uppercase tracking-widest mb-4">
-                    💡 Wawasan &amp; Edukasi
-                </span>
-                <h1 className="text-4xl sm:text-5xl md:text-6xl font-black text-gray-900 tracking-tight mb-4">
+        <div className="container mx-auto px-6 py-12 max-w-6xl min-h-screen">
+            <header className="mb-16 text-center">
+                <h1 className="text-5xl md:text-6xl font-black text-gray-900 tracking-tight mb-4">
                     JBook <span className="text-red-600">Blog</span>
                 </h1>
-                <p className="text-gray-500 font-medium text-base md:text-lg max-w-2xl mx-auto leading-relaxed">
-                    Kumpulan panduan, wawasan, tips, dan strategi praktis seputar perjalanan belajar Bahasa Jepang dan persiapan ujian JLPT kamu.
+                <p className="text-gray-500 font-medium text-lg max-w-2xl mx-auto">
+                    Wawasan, Tips, dan Cerita seputar belajar Bahasa Jepang
                 </p>
                 <div className="w-24 h-1.5 bg-red-600 mx-auto mt-6 rounded-full"></div>
             </header>
 
-            {/* Blog List with interactive Search & Filter */}
-            <BlogListClient initialBlogs={blogs} />
-        </main>
+            {blogs.length > 0 ? (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    {blogs.map((blog) => {
+                        const featuredImg = getFullMediaUrl(blog.featured_image_url);
+                        return (
+                            <Link key={blog.id} href={`/blog/${blog.slug}`} className="group block">
+                                <article className="bg-white rounded-3xl border border-gray-100 overflow-hidden shadow-sm hover:shadow-2xl hover:shadow-red-500/10 transition-all h-full flex flex-col active:scale-[0.98]">
+                                    {/* Featured Image */}
+                                    <div className="aspect-[16/9] bg-gray-50 overflow-hidden relative">
+                                        {featuredImg ? (
+                                            <img
+                                                src={featuredImg}
+                                                alt={blog.title}
+                                                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                                                onError={(e) => { e.currentTarget.style.display = 'none'; }}
+                                            />
+                                        ) : (
+                                            <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-red-50 via-orange-50 to-pink-50">
+                                                <div className="text-6xl opacity-30">📝</div>
+                                            </div>
+                                        )}
+                                    </div>
+
+                                    <div className="p-6 flex flex-col flex-1">
+                                        <div className="flex flex-wrap gap-2 mb-4">
+                                            {blog.tags && blog.tags.slice(0, 3).map(tag => (
+                                                <span key={tag} className="text-[10px] font-black uppercase tracking-widest px-2.5 py-1 bg-gray-50 text-gray-500 rounded-full group-hover:bg-red-50 group-hover:text-red-600 transition-colors">
+                                                    #{tag}
+                                                </span>
+                                            ))}
+                                        </div>
+                                        <h2 className="text-xl font-black text-gray-900 group-hover:text-red-600 transition-colors mb-3 leading-tight line-clamp-2">
+                                            {blog.title}
+                                        </h2>
+                                        <p className="text-gray-500 line-clamp-3 mb-6 text-sm leading-relaxed flex-1">
+                                            {(blog.excerpt || blog.content.replace(/[#*`]/g, '')).substring(0, 160)}...
+                                        </p>
+                                        <div className="flex items-center justify-between pt-4 border-t border-gray-50 mt-auto">
+                                            <span className="text-xs font-bold text-gray-400">
+                                                {new Date(blog.created_at).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })}
+                                            </span>
+                                            <span className="text-xs font-black text-red-600 flex items-center gap-1 group-hover:gap-2 transition-all">
+                                                Baca <span>→</span>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </article>
+                            </Link>
+                        );
+                    })}
+                </div>
+            ) : (
+                <div className="text-center py-24 bg-gray-50 rounded-[40px] border-2 border-dashed border-gray-200">
+                    <div className="text-6xl mb-6">🏜️</div>
+                    <h2 className="text-2xl font-black text-gray-900 mb-2">Belum ada postingan</h2>
+                    <p className="text-gray-400 font-medium">Nantikan update terbaru dari kami segera!</p>
+                </div>
+            )}
+        </div>
     );
 }

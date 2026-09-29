@@ -6,8 +6,6 @@ import { usePathname } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import { usePractice } from '@/context/PracticeContext';
 import { useTheme } from '@/context/ThemeContext';
-import OfflineDownloadModal from '@/components/common/OfflineDownloadModal';
-import { dbGetStats } from '@/lib/offline-download';
 import { toast } from 'react-toastify';
 import ConfirmationModal from '@/components/common/ConfirmationModal';
 
@@ -17,17 +15,8 @@ export default function Navbar() {
     const { theme, toggleTheme, mounted } = useTheme();
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [scrolled, setScrolled] = useState(false);
-    const [showOfflineModal, setShowOfflineModal] = useState(false);
-    const [hasOfflineData, setHasOfflineData] = useState(false);
     const [pendingNav, setPendingNav] = useState(null);
     const pathname = usePathname();
-
-    // Check if offline data exists
-    useEffect(() => {
-        dbGetStats().then(s => {
-            setHasOfflineData(s.vocab > 0 || s.kanji > 0);
-        }).catch(() => {});
-    }, [showOfflineModal]); // recheck after modal closes
 
     // Detect scroll for opacity effect
     useEffect(() => {
@@ -146,23 +135,6 @@ export default function Navbar() {
                         <div className="hidden md:flex items-center space-x-2">
                             {/* Theme toggle disabled (forced dark mode) */}
 
-                            {/* Offline Download Button — sementara dinonaktifkan */}
-                            {/* <button
-                                onClick={() => setShowOfflineModal(true)}
-                                title={hasOfflineData ? 'Data offline tersedia' : 'Unduh untuk offline'}
-                                className={`relative p-2 rounded-xl transition-all duration-200 ${
-                                    theme === 'dark' ? 'text-accent-blue hover:bg-accent-blue/10' : 'text-accent-blue hover:bg-accent-blue/10'
-                                }`}
-                            >
-                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5}
-                                        d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                                </svg>
-                                {hasOfflineData && (
-                                    <span className="absolute top-1 right-1 w-2 h-2 bg-green-500 rounded-full border-2 border-white dark:border-black" />
-                                )}
-                            </button> */}
-
                             {!loading && (
                                 user ? (
                                     <div className="flex items-center space-x-2">
@@ -199,26 +171,8 @@ export default function Navbar() {
                             )}
                         </div>
 
-                        {/* Mobile: Download + Hamburger */}
+                        {/* Mobile navigation toggle */}
                         <div className="flex items-center gap-1 md:hidden">
-
-                            {/* Offline Download Button (mobile) — sementara dinonaktifkan */}
-                            {/* <button
-                                onClick={() => setShowOfflineModal(true)}
-                                title={hasOfflineData ? 'Data offline tersedia' : 'Unduh untuk offline'}
-                                className="relative p-2 rounded-md text-accent-blue hover:text-accent-blue hover:bg-accent-blue/10 transition-all duration-200"
-                                aria-label="Mode offline"
-                            >
-                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-                                        d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                                </svg>
-                                {hasOfflineData && (
-                                    <span className="absolute top-1 right-1 w-2 h-2 bg-green-500 rounded-full" />
-                                )}
-                            </button> */}
-
-
                             <button
                                 onClick={() => setIsMenuOpen(!isMenuOpen)}
                                 className="p-2 rounded-md text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-accent-blue/50"
@@ -310,12 +264,6 @@ export default function Navbar() {
 
             {/* Spacer so content doesn't go under fixed navbar */}
             <div className="h-16" />
-
-            {/* Offline Download Modal */}
-            <OfflineDownloadModal
-                isOpen={showOfflineModal}
-                onClose={() => setShowOfflineModal(false)}
-            />
 
             <ConfirmationModal 
                 isOpen={!!pendingNav}

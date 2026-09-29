@@ -14,15 +14,14 @@
 6. [Lapisan Data & API (lib/api.js)](#6-lapisan-data--api-libapiJS)
 7. [Sistem Cache (lib/cache-store.js)](#7-sistem-cache-libcache-storeJS)
 8. [Database Offline (lib/offline-db.js + IndexedDB)](#8-database-offline-liboffline-dbjs--indexeddb)
-9. [Download Offline (lib/offline-download.js)](#9-download-offline-liboffline-downloadjs)
-10. [Antrean Offline (lib/offline-queue.js)](#10-antrean-offline-liboffline-queuejs)
-11. [Analitik Tamu (lib/local-analytics.js)](#11-analitik-tamu-liblocal-analyticsjs)
-12. [Utilitas Teks Jepang (lib/utils.js)](#12-utilitas-teks-jepang-libutilsjs)
-13. [Modul Latihan (PracticeRunner)](#13-modul-latihan-practicerunner)
-14. [Routing & Halaman Utama](#14-routing--halaman-utama)
-15. [Ketergantungan Data Antar Modul](#15-ketergantungan-data-antar-modul)
-16. [Alur Prioritas Data (Online vs Offline)](#16-alur-prioritas-data-online-vs-offline)
-17. [PWA & Service Worker](#17-pwa--service-worker)
+9. [Antrean Offline (lib/offline-queue.js)](#9-antrean-offline-liboffline-queuejs)
+10. [Analitik Tamu (lib/local-analytics.js)](#10-analitik-tamu-liblocal-analyticsjs)
+11. [Utilitas Teks Jepang (lib/utils.js)](#11-utilitas-teks-jepang-libutilsjs)
+12. [Modul Latihan (PracticeRunner)](#12-modul-latihan-practicerunner)
+13. [Routing & Halaman Utama](#13-routing--halaman-utama)
+14. [Ketergantungan Data Antar Modul](#14-ketergantungan-data-antar-modul)
+15. [Alur Prioritas Data (Online vs Offline)](#15-alur-prioritas-data-online-vs-offline)
+16. [PWA & Service Worker](#16-pwa--service-worker)
 
 ---
 
@@ -53,7 +52,6 @@ Untuk pemahaman mendalam pada sistem tertentu, silakan baca dokumen berikut:
 - 📝 **[Logika Sistem Latihan](file:///home/imron/jbook/frontend-web/docs/LOGIKA-SISTEM-LATIHAN.md)**: Alur kuis dari pemilihan soal hingga pengiriman hasil.
 - 🔗 **[Logika Relasi Data](file:///home/imron/jbook/frontend-web/docs/LOGIKA-RELASI-DATA.md)**: Mekanisme "Bedah Kanji" dan keterhubungan antar materi.
 - 📦 **[Logika Pengelolaan Data](file:///home/imron/jbook/frontend-web/docs/LOGIKA-PENGELOLAAN-DATA-LATIHAN.md)**: Arsitektur penyatuan data untuk efisiensi impor/ekspor.
-- 📥 **[Logika Download Offline](file:///home/imron/jbook/frontend-web/docs/LOGIKA-DOWNLOAD-OFFLINE.md)**: Proses sinkronisasi database massal ke IndexedDB.
 - ⚙️ **[Logika Sistem Admin](file:///home/imron/jbook/frontend-web/docs/LOGIKA-SISTEM-ADMIN.md)**: Pusat kendali keamanan, manajemen konten, dan ekspor data.
 
 ---
@@ -97,7 +95,6 @@ frontend-web/
 │   ├── BunpoDetailModal.jsx→ Modal wrapper untuk BunpoDetailUI
 │   ├── PracticeConfig.jsx  → Konfigurasi kuis latihan
 │   ├── PracticeRunner.jsx  → Mesin kuis latihan (soal, timer, hasil)
-│   ├── OfflineDownloadModal.jsx → Modal unduh konten untuk offline
 │   ├── OfflineIndicator.jsx→ Indikator status koneksi
 │   └── ResetProgressButton.jsx → Tombol reset progres latihan
 │
@@ -110,7 +107,6 @@ frontend-web/
     ├── api.js              → Semua pemanggilan API (dengan fallback offline)
     ├── cache-store.js      → Cache localStorage dengan TTL
     ├── offline-db.js       → IndexedDB wrapper (CRUD)
-    ├── offline-download.js → Download semua konten ke IndexedDB
     ├── offline-queue.js    → Antrean sinkronisasi hasil latihan saat offline
     ├── local-analytics.js  → Analitik latihan untuk mode tamu (localStorage)
     └── utils.js            → Deteksi & ekstraksi karakter Jepang (Kanji, Hiragana, Katakana)
@@ -349,42 +345,7 @@ openDB()
 
 ---
 
-## 9. Download Offline (lib/offline-download.js)
-
-**File:** `lib/offline-download.js`
-
-### Alur `downloadAllForOffline(onProgress)`
-
-```
-1. Request persistent storage dari browser (navigator.storage.persist)
-2. Untuk setiap step [vocab, kanji, grammar]:
-   a. Panggil onProgress({ step, total, label, percent })
-   b. fetch(url?limit=BESAR)
-   c. Ekstrak array items dari response
-   d. Normalisasi: pastikan setiap item punya 'id'
-   e. dbPutAll(storeName, normalized) → simpan ke IndexedDB
-   f. Panggil onProgress (selesai step)
-3. Simpan metadata: downloadedAt, version
-4. Return dbGetStats()
-```
-
-### Limit Download
-| Konten | Limit |
-|---|---|
-| Vocab | 10.000 item |
-| Kanji | 5.000 item |
-| Grammar | 2.000 item |
-
-### `isOfflineDataStale()`
-```
-downloadedAt tersimpan di meta?
-    ├─ Tidak → return false (belum pernah download)
-    └─ Ya → (now - downloadedAt) > 60 hari? → return true/false
-```
-
----
-
-## 10. Antrean Offline (lib/offline-queue.js)
+## 9. Antrean Offline (lib/offline-queue.js)
 
 **File:** `lib/offline-queue.js`  
 **Storage Key:** `offline_practice_queue` (localStorage)
@@ -416,7 +377,7 @@ navigator 'online' event fired (atau mount saat already online)
 
 ---
 
-## 11. Analitik Tamu (lib/local-analytics.js)
+## 10. Analitik Tamu (lib/local-analytics.js)
 
 **File:** `lib/local-analytics.js`  
 **Storage Key:** `guest_practice_analytics` (localStorage)
@@ -762,7 +723,6 @@ KotobaDetailUI
 ### Masalah Data Offline Tidak Muncul
 1. DevTools → Application → IndexedDB → `jbook-offline`
 2. Cek apakah store `vocab/kanji/grammar` ada isinya
-3. Jika kosong → buka modal Download Offline dan download ulang
 
 ### Masalah Cache Lama / Data Stale
 1. DevTools → Application → Local Storage

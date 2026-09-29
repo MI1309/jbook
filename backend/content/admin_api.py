@@ -432,40 +432,6 @@ def admin_export_kanji_csv(request, level: int = None, search: str = None):
         writer.writerow([obj.character, obj.meaning, onyomi_str, kunyomi_str, obj.strokes, obj.jlpt_level, obj.radical])
     return response
 
-
-@router.get("/kanji/duplicates", auth=AdminAuth())
-def admin_kanji_duplicates(request):
-    try:
-        # group by character
-        kanjis = Kanji.objects.all().order_by('character')
-        groups = {}
-        for k in kanjis:
-            groups.setdefault(k.character, []).append(k)
-
-        result = []
-        for char, items in groups.items():
-            if len(items) > 1:
-                result.append({
-                    "character": char,
-                    "count": len(items),
-                    "items": [{"id": str(i.id), "meaning": i.meaning, "jlpt_level": i.jlpt_level} for i in items]
-                })
-        return result
-    except Exception as e:
-        raise HttpError(500, f"Kanji duplicates error: {str(e)}")
-
-
-@router.post("/kanji/duplicates/delete", auth=AdminAuth())
-def admin_kanji_duplicates_delete(request, payload: DeleteIdsSchema):
-    ids = payload.ids
-    if not ids:
-        raise HttpError(400, "No ids provided")
-    with transaction.atomic():
-        objs = Kanji.objects.filter(id__in=ids)
-        count = objs.count()
-        objs.delete()
-    return {"deleted": count}
-
 # Bunpo Schemas
 class GrammarCreateSchema(BaseModel):
     title: str = Field(..., max_length=255)

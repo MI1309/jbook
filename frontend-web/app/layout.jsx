@@ -100,7 +100,7 @@ export const metadata = {
 };
 
 export const viewport = {
-    themeColor: "#dc2626",
+    themeColor: "#172978",
     width: "device-width",
     initialScale: 1,
     maximumScale: 5,
@@ -116,7 +116,6 @@ export default function RootLayout({ children }) {
                 <link rel="icon" type="image/png" sizes="32x32" href="/icon-32.png" />
                 <link rel="icon" type="image/png" sizes="16x16" href="/icon-16.png" />
                 <link rel="apple-touch-icon" sizes="192x192" href="/icon-192.png" />
-                <link rel="alternate" type="application/rss+xml" title="JBook Blog RSS Feed" href="/feed.xml" />
             </head>
             <body
                 className={`${geistSans.variable} ${geistMono.variable} antialiased bg-background text-foreground min-h-screen flex flex-col transition-colors duration-300`}
@@ -141,9 +140,6 @@ export default function RootLayout({ children }) {
                                 draggable
                                 pauseOnHover
                                 theme="colored"
-                                toastClassName="!rounded-2xl !border !border-white/20 !px-4 !py-3 !shadow-2xl !shadow-slate-950/20"
-                                bodyClassName="!p-0 !text-sm !font-semibold"
-                                progressClassName="!z-0 !h-1 !bg-white/80"
                             />
                         </PracticeProvider>
                     </AuthProvider>

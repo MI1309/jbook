@@ -1,9 +1,59 @@
 import { handleUpload } from '@vercel/blob/client';
 import { put } from '@vercel/blob';
 import { NextResponse } from 'next/server';
+import { cookies } from 'next/headers';
+
+const API_URL = (process.env.NEXT_PUBLIC_API_URL || 'https://imronm.pythonanywhere.com/api').replace(/\/$/, '');
+
+/**
+ * Verify the caller is an authenticated admin/staff user.
+ * We forward the access token to the backend's /auth/me and check is_staff/is_superuser.
+ */
+async function requireAdmin(request) {
+    const cookieStore = await cookies();
+    let accessToken = cookieStore.get('access_token')?.value;
+
+    if (!accessToken) {
+        // Also try Authorization header as a fallback (curl or script calling BFF token)
+        const authHeader = request.headers.get('authorization');
+        if (authHeader && authHeader.startsWith('Bearer ')) {
+            accessToken = authHeader.slice(7);
+        }
+    }
+
+    if (!accessToken) {
+        return null;
+    }
+
+    try {
+        const res = await fetch(`${API_URL}/auth/me`, {
+            headers: { Authorization: `Bearer ${accessToken}` },
+            cache: 'no-store',
+        });
+
+        if (!res.ok) return null;
+
+        const user = await res.json();
+        if (user && (user.is_staff || user.is_superuser)) {
+            return user;
+        }
+        return null;
+    } catch (e) {
+        console.error('[upload] Admin verification failed:', e.message);
+        return null;
+    }
+}
 
 export async function POST(request) {
     try {
+        const admin = await requireAdmin(request);
+        if (!admin) {
+            return NextResponse.json(
+                { error: 'Admin authentication required for media uploads.' },
+                { status: 401 }
+            );
+        }
+
         const contentType = request.headers.get('content-type') || '';
 
         // Case 1: Direct multipart form data upload
@@ -16,8 +66,12 @@ export async function POST(request) {
                 return NextResponse.json({ error: 'No valid file provided' }, { status: 400 });
             }
 
+            // Stricter folder whitelist to prevent arbitrary path writes
+            const allowedFolders = ['media', 'blog', 'audio', 'images', 'documents'];
+            const safeFolder = allowedFolders.includes(folder) ? folder : 'media';
+
             const cleanFileName = file.name.replace(/[^a-zA-Z0-9._-]/g, '_');
-            const pathname = `${folder}/${Date.now()}-${cleanFileName}`;
+            const pathname = `${safeFolder}/${Date.now()}-${cleanFileName}`;
 
             const blob = await put(pathname, file, {
                 access: 'public',
@@ -53,14 +107,15 @@ export async function POST(request) {
                         'application/vnd.openxmlformats-officedocument.presentationml.presentation',
                         'text/plain',
                     ],
-                    maximumSizeInBytes: 100 * 1024 * 1024, // 100MB
+                    maximumSizeInBytes: 25 * 1024 * 1024, // Reduced to 25MB for admin-only uploads
                     tokenPayload: JSON.stringify({
                         uploadedAt: new Date().toISOString(),
+                        uploadedBy: admin.username || admin.email || 'admin',
                     }),
                 };
             },
             onUploadCompleted: async ({ blob }) => {
-                console.log('Vercel Blob upload completed:', blob.url);
+                console.log(`[upload] Admin ${admin.username || admin.email} uploaded:`, blob.url);
             },
         });
 

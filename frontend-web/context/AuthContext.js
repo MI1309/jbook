@@ -9,8 +9,9 @@ const AuthContext = createContext();
 const base_url = process.env.NEXT_PUBLIC_API_URL || 'https://imronm.pythonanywhere.com/api';
 const API_URL = base_url.endsWith('/') ? base_url.slice(0, -1) : base_url;
 
-// Cookie expires in 90 days
-const COOKIE_EXPIRES_DAYS = 90;
+// Cookie expires aligned with backend JWT refresh token lifetime (default 7 days)
+// Backend default: REFRESH_TOKEN_LIFETIME = 7 days, SESSION_COOKIE_AGE = 7 days
+const COOKIE_EXPIRES_DAYS = Number(process.env.NEXT_PUBLIC_COOKIE_DAYS || 7);
 
 const cookieOptions = {
     expires: COOKIE_EXPIRES_DAYS,

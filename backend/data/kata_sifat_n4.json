@@ -3424,6 +3424,406 @@
     "jlpt_level": 4,
     "examples": []
   }.
+    {
+    "id": "p02-hudouwoaruku-001",
+    "word": "歩道を歩く",
+    "reading": "hodou wo aruku",
+    "furigana": "ほ どう ある",
+    "meaning": "Berjalan di trotoar",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "p02-senronoshitawo-002",
+    "word": "線路の下を通る",
+    "reading": "senro no shita wo touru",
+    "furigana": "せん ろ した とお",
+    "meaning": "Melewati bawah rel kereta",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "p02-misewaeigyouchuu-003",
+    "word": "店は営業中だ",
+    "reading": "mise wa eigyouchuu da",
+    "furigana": "みせ えい ぎょう ちゅう",
+    "meaning": "Tokonya sedang buka/beroperasi",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "p02-suiyoubiwateikyuubi-004",
+    "word": "水曜日は定休日だ",
+    "reading": "suiyoubi wa teikyuubi da",
+    "furigana": "すい よう び てい きゅう び",
+    "meaning": "Hari Rabu adalah hari libur tetap",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "p02-migigawanitatsu-005",
+    "word": "右側に立つ",
+    "reading": "migigawa ni tatsu",
+    "furigana": "みぎ がわ た",
+    "meaning": "Berdiri di sisi kanan",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "p02-tsukiatariwomagaru-006",
+    "word": "突き当りを曲がる",
+    "reading": "tsukiatari wo magaru",
+    "furigana": "つ あた ま",
+    "meaning": "Belok di ujung jalan/lorong",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "p02-tsuginokadowo-007",
+    "word": "次の角を右に曲がる",
+    "reading": "tsugi no kado wo migi ni magaru",
+    "furigana": "つぎ かど みぎ ま",
+    "meaning": "Belok kanan di belokan berikutnya",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "p02-mawariwomiru-008",
+    "word": "周りを見る",
+    "reading": "mawari wo miru",
+    "furigana": "まわ み",
+    "meaning": "Melihat sekeliling/sekitar",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "p02-kinjonomisedekau-009",
+    "word": "近所の店で買う",
+    "reading": "kinjo no mise de kau",
+    "furigana": "きん じょ みせ か",
+    "meaning": "Membeli di toko sekitar/dekat sini",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "p02-ienosobanikouen-010",
+    "word": "家のそばに公園がある",
+    "reading": "ie no soba ni kouen ga aru",
+    "furigana": "いえ こう えん",
+    "meaning": "Ada taman di sebelah rumah",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "p02-niwanihanawouer-011",
+    "word": "庭に花を植える",
+    "reading": "niwa ni hana wo ueru",
+    "furigana": "にわ はな う",
+    "meaning": "Menanam bunga di halaman",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "p02-hashinouede-012",
+    "word": "橋の上で写真を撮る",
+    "reading": "hashi no ue de shashin wo toru",
+    "furigana": "はし うえ しゃ しん と",
+    "meaning": "Mengambil foto di atas jembatan",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "p02-sakawokudaru-013",
+    "word": "坂を下る",
+    "reading": "saka wo kudaru",
+    "furigana": "さか くだ",
+    "meaning": "Menuruni tanjakan",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "p02-baitendekomimono-014",
+    "word": "売店で飲み物を買う",
+    "reading": "baiten de nomimono wo kau",
+    "furigana": "ばい てん の もの か",
+    "meaning": "Membeli minuman di kios/toko kecil",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "p02-shokudouwoderu-015",
+    "word": "食堂を出る",
+    "reading": "shokudou wo deru",
+    "furigana": "しょく どう で",
+    "meaning": "Keluar dari kantin",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "p02-rokkaani-016",
+    "word": "ロッカーに荷物を入れる",
+    "reading": "rokkaa ni nimotsu wo ireru",
+    "furigana": "に もつ い",
+    "meaning": "Memasukkan barang ke loker",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "p02-sanpokoosuwo-017",
+    "word": "散歩コースを歩く",
+    "reading": "sanpo koosu wo aruku",
+    "furigana": "さん ぽ ある",
+    "meaning": "Berjalan di rute jalan-jalan",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "p02-kyuukyuushawoyobu-018",
+    "word": "救急車を呼ぶ",
+    "reading": "kyuukyuusha wo yobu",
+    "furigana": "きゅう きゅう しゃ よ",
+    "meaning": "Memanggil ambulans",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "p02-shouboushagakuru-019",
+    "word": "消防車が来る",
+    "reading": "shoubousha ga kuru",
+    "furigana": "しょう ぼう しゃ く",
+    "meaning": "Mobil pemadam kebakaran datang",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "p02-patokaagahashiru-020",
+    "word": "パトカーが走る",
+    "reading": "patokaa ga hashiru",
+    "furigana": "はし",
+    "meaning": "Mobil polisi berjalan",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+    {
+    "id": "p03-deguchigamitsukaranai-001",
+    "word": "出口が見つからない",
+    "reading": "deguchi ga mitsukaranai",
+    "furigana": "で ぐち み",
+    "meaning": "Tidak menemukan pintu keluar",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "p03-iriguchidematsu-002",
+    "word": "入口で待つ",
+    "reading": "iriguchi de matsu",
+    "furigana": "いり ぐち ま",
+    "meaning": "Menunggu di pintu masuk",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "p03-hijouguchinochikanitatsu-003",
+    "word": "非常口の近くに立つ",
+    "reading": "hijouguchi no chika ni tatsu",
+    "furigana": "ひじょうぐち ちか た",
+    "meaning": "Berdiri di dekat pintu darurat",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "p03-waribikigaaru-004",
+    "word": "割引がある",
+    "reading": "waribiki ga aru",
+    "furigana": "わり びき",
+    "meaning": "Ada diskon",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "p03-minatokarafunegaderu-005",
+    "word": "港から船が出る",
+    "reading": "minato kara fune ga deru",
+    "furigana": "みなと ふね で",
+    "meaning": "Kapal berangkat dari pelabuhan",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "p03-doubutsuendepandawomiru-006",
+    "word": "動物園でパンダを見る",
+    "reading": "doubutsuen de panda wo miru",
+    "furigana": "どう ぶつ えん み",
+    "meaning": "Melihat panda di kebun binatang",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "p03-sakanANIESAwoyaru-007",
+    "word": "魚にえさをやる",
+    "reading": "sakana ni esa wo yaru",
+    "furigana": "さかな",
+    "meaning": "Memberi makan ikan",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "p03-basuteimadearuku-008",
+    "word": "バス停まで歩く",
+    "reading": "basutei made aruku",
+    "furigana": "てい ある",
+    "meaning": "Berjalan sampai halte bus",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "p03-gasoringanakunaru-009",
+    "word": "ガソリンがなくなる",
+    "reading": "gasorin ga nakunaru",
+    "furigana": "",
+    "meaning": "Bensin habis",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "p03-dorobounikiwotsukeru-010",
+    "word": "泥棒に気をつける",
+    "reading": "dorobou ni ki wo tsukeru",
+    "furigana": "どろ ぼう き",
+    "meaning": "Berhati-hati terhadap pencuri",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "p03-keikannikiku-011",
+    "word": "警官に聞く",
+    "reading": "keikan ni kiku",
+    "furigana": "けい かん き",
+    "meaning": "Bertanya kepada petugas kepolisian",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "p03-michinomannakawoaruku-012",
+    "word": "道の真ん中を歩く",
+    "reading": "michi no mannaka wo aruku",
+    "furigana": "みち ま なか ある",
+    "meaning": "Berjalan di tengah jalan",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "p03-mukouniyamagamieru-013",
+    "word": "向こうに山が見える",
+    "reading": "mukou ni yama ga mieru",
+    "furigana": "む やま み",
+    "meaning": "Gunung terlihat di sebelah sana",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "p03-ienouranihatakegaaru-014",
+    "word": "家の裏に畑がある",
+    "reading": "ie no ura ni hatake ga aru",
+    "furigana": "いえ うら はたけ",
+    "meaning": "Ada ladang di belakang rumah",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "p03-omoteninamaewokaku-015",
+    "word": "表に名前を書く",
+    "reading": "omote ni namae wo kaku",
+    "furigana": "おもて な まえ か",
+    "meaning": "Menulis nama di bagian depan",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "p03-kaigainisumu-016",
+    "word": "海外に住む",
+    "reading": "kaigai ni sumu",
+    "furigana": "かい がい す",
+    "meaning": "Tinggal di luar negeri",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "p03-yooroppaworyokousuru-017",
+    "word": "ヨーロッパを旅行する",
+    "reading": "yooroppa wo ryokou suru",
+    "furigana": "りょこう",
+    "meaning": "Berwisata ke Eropa",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "p03-enjinwokakeru-018",
+    "word": "エンジンをかける",
+    "reading": "enjin wo kakeru",
+    "furigana": "",
+    "meaning": "Menyalakan mesin",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "p03-mokutekiwokimeru-019",
+    "word": "目的を決める",
+    "reading": "mokuteki wo kimeru",
+    "furigana": "もく てき き",
+    "meaning": "Menentukan tujuan",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "p03-shuukanwokaeru-020",
+    "word": "習慣を変える",
+    "reading": "shuukan wo kaeru",
+    "furigana": "しゅうかん か",
+    "meaning": "Mengubah kebiasaan",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
   
    
 

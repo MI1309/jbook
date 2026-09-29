@@ -18,4 +18,10 @@ __pycache__/
 # Node Root
 node_modules/
 .vercel
-.env*.local
+
+# Environment variables — NEVER commit real secrets
+# (Keep .env.example files as templates)
+.env
+.env.*
+!.env.example
+!.env.template

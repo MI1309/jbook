@@ -435,8 +435,6 @@ class VocabListResponse(BaseModel):
     total: int
     page: int
     pages: int
-    debug_level: Optional[int] = None
-    debug_search: Optional[str] = None
 
 @router.get("/kotoba", response=VocabListResponse)
 @router.get("/vocab", response=VocabListResponse)
@@ -528,9 +526,7 @@ def list_vocab(request,
         "items": items,
         "total": total,
         "page": params.page,
-        "pages": pages,
-        "debug_level": params.level,
-        "debug_search": params.search
+        "pages": pages
     }
 
 
@@ -626,24 +622,32 @@ def get_vocab_audio(request, vocab_id: str):
 
 
 @router.get("/tts")
-def get_arbitrary_tts(request, text: str):
+@rate_limit(key='ip', rate='60/m')  # Max 60 TTS requests per IP per minute
+def get_arbitrary_tts(request, text: str = Query(..., max_length=500)):
     import requests
     from django.http import StreamingHttpResponse
     import urllib.parse
-    
-    encoded_text = urllib.parse.quote(text)
+
+    if not text or not text.strip():
+        return 400, {"error": "Text parameter is required"}
+
+    encoded_text = urllib.parse.quote(text[:500])
     tts_url = f"https://translate.google.com/translate_tts?ie=UTF-8&tl=ja&client=tw-ob&q={encoded_text}"
-    
+
     headers = {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
     }
-    
-    req = requests.get(tts_url, headers=headers, stream=True)
-    response = StreamingHttpResponse(
-        req.iter_content(chunk_size=4096),
-        content_type="audio/mpeg"
-    )
-    return response
+
+    try:
+        req = requests.get(tts_url, headers=headers, stream=True, timeout=10)
+        req.raise_for_status()
+        response = StreamingHttpResponse(
+            req.iter_content(chunk_size=4096),
+            content_type="audio/mpeg"
+        )
+        return response
+    except Exception as e:
+        return 502, {"error": "TTS service unavailable"}
 
 
 
@@ -662,44 +666,37 @@ class SyncRequestSchema(Schema):
 class TranslateRequestSchema(Schema):
     text: str = Field(..., max_length=500)
 
-@router.post("/kotoba", response={200: VocabSchema, 400: dict})
-@router.post("/vocab", response={200: VocabSchema, 400: dict})
+@router.post("/kotoba", response={200: VocabSchema, 400: dict}, auth=AuthBearer())
+@router.post("/vocab", response={200: VocabSchema, 400: dict}, auth=AuthBearer())
+@rate_limit(key='user', rate='30/m')
 def create_vocab(request, payload: VocabCreateSchema):
     from .models import Vocab
     try:
         vocab = Vocab.objects.create(**payload.dict())
         return 200, vocab
     except Exception as e:
-        return 400, {"error": str(e)}
-
-@router.put("/kotoba/{vocab_id}", response={200: VocabSchema, 404: dict, 400: dict})
-@router.put("/vocab/{vocab_id}", response={200: VocabSchema, 404: dict, 400: dict})
-def update_vocab(request, vocab_id: str, payload: VocabCreateSchema):
-    from .models import Vocab
-    vocab = get_object_or_404(Vocab, id=vocab_id)
-    try:
-        for attr, value in payload.dict().items():
-            setattr(vocab, attr, value)
-        vocab.save()
-        return 200, vocab
-    except Exception as e:
-        return 400, {"error": str(e)}
+        return 400, {"error": "Failed to create vocabulary"}
 
 @router.delete("/kotoba/{vocab_id}", auth=AuthBearer())
 @router.delete("/vocab/{vocab_id}", auth=AuthBearer())
+@rate_limit(key='user', rate='60/m')
 def delete_vocab(request, vocab_id: str):
     from .models import Vocab
     vocab = get_object_or_404(Vocab, id=vocab_id)
     vocab.delete()
     return {"success": True}
 
-@router.post("/kotoba/sync")
+@router.post("/kotoba/sync", auth=AuthBearer())
+@rate_limit(key='user', rate='10/m')
 def sync_kotoba(request, payload: SyncRequestSchema):
     from utils.kotoba_sync import sync_kotoba_data
+    if len(payload.data) > 1000:
+        return 400, {"error": "Batch sync limited to 1000 items per request"}
     stats = sync_kotoba_data(payload.data)
     return stats
 
 @router.post("/kotoba/translate")
+@rate_limit(key='ip', rate='60/m')
 def translate_kotoba(request, payload: TranslateRequestSchema):
     from utils.kotoba_sync import translate_ja_to_id, generate_furigana
     meaning = translate_ja_to_id(payload.text)
@@ -709,18 +706,29 @@ def translate_kotoba(request, payload: TranslateRequestSchema):
 from ninja import File
 from ninja.files import UploadedFile
 
-@router.post("/kotoba/import")
+@router.post("/kotoba/import", auth=AuthBearer())
+@rate_limit(key='user', rate='5/m')
 def import_kotoba(request, file: UploadedFile = File(...)):
     import json
     from utils.kotoba_sync import sync_kotoba_data
+    max_size = 5 * 1024 * 1024
+    if hasattr(file, 'size') and file.size > max_size:
+        return 400, {"error": "File too large. Max 5MB."}
     try:
-        data = json.loads(file.read().decode('utf-8'))
+        raw = file.read()
+        if len(raw) > max_size:
+            return 400, {"error": "File too large. Max 5MB."}
+        data = json.loads(raw.decode('utf-8'))
         if not isinstance(data, list):
             return 400, {"error": "Format JSON harus array/list of objects."}
+        if len(data) > 10000:
+            return 400, {"error": "Too many items. Max 10000 per import."}
         stats = sync_kotoba_data(data)
         return stats
+    except json.JSONDecodeError:
+        return 400, {"error": "Invalid JSON format"}
     except Exception as e:
-        return 400, {"error": str(e)}
+        return 400, {"error": "Import failed"}
 
 @router.get("/blog", response=List[BlogSchema])
 def list_blog(request):
@@ -737,36 +745,46 @@ def get_blog(request, slug: str):
 
 class SuggestionSchema(Schema):
     type: str = Field(..., max_length=100)
-    data: dict
+    data: dict = Field(..., max_length=10000)  # Cap the data size
 
 @router.post("/suggest")
+@rate_limit(key='ip', rate='3/h')  # Max 3 suggestions per IP per hour (anti spam)
+@rate_limit(key='ip', rate='10/m')
 def suggest_content(request, payload: SuggestionSchema):
     from django.core.mail import send_mail
     from django.conf import settings
     import json
-    from django.http import HttpResponse # Import here to avoid overlap
-    
+
+    valid_types = {'kanji', 'bunpo'}
+    if payload.type not in valid_types:
+        return 400, {"error": f"Invalid suggestion type. Must be one of: {', '.join(valid_types)}"}
+
     suggestion = ContentSuggestion.objects.create(
         type=payload.type,
         data=payload.data
     )
-    
+
     approve_url = f"{settings.BACKEND_URL}/api/content/suggest/{suggestion.id}/approve?token={suggestion.approval_token}"
     reject_url = f"{settings.BACKEND_URL}/api/content/suggest/{suggestion.id}/reject?token={suggestion.approval_token}"
-    
+
     subject = f"[JBook] New Content Suggestion: {payload.type.upper()}"
     message = f"Tipe: {payload.type}\nData:\n{json.dumps(payload.data, indent=2)}\n\n" \
               f"Klik link di bawah untuk menyetujui:\n{approve_url}\n\n" \
               f"Klik link di bawah untuk menolak:\n{reject_url}"
-              
-    send_mail(
-        subject,
-        message,
-        settings.DEFAULT_FROM_EMAIL,
-        [settings.EMAIL_HOST_USER],
-        fail_silently=False,
-    )
-    
+
+    # Only try to send email if credentials are actually configured
+    if settings.EMAIL_HOST_USER and settings.EMAIL_HOST_PASSWORD:
+        try:
+            send_mail(
+                subject,
+                message,
+                settings.DEFAULT_FROM_EMAIL,
+                [settings.EMAIL_HOST_USER],
+                fail_silently=True,
+            )
+        except Exception:
+            pass
+
     return {"message": "Saran kamu sudah dikirim ke admin untuk direview. Terima kasih!"}
 
 @router.get("/suggest/{id}/approve")

@@ -4,8 +4,8 @@
     "description": "Aplikasi belajar bahasa Jepang lengkap dengan Kanji, Bunpo, dan Kotoba.",
     "start_url": "/",
     "display": "standalone",
-    "background_color": "#ffffff",
-    "theme_color": "#dc2626",
+    "background_color": "#172978",
+    "theme_color": "#172978",
     "icons": [
         {
             "src": "/icon-192.png",

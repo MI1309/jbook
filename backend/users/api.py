@@ -115,19 +115,39 @@ def login(request, data: LoginSchema):
 @rate_limit(key='ip', rate='20/h')  # Max 20 google auth per IP per jam
 def google_auth(request, data: GoogleAuthSchema):
     try:
-        # Verify handle (we skip checking strict client_id for now to allow dev flexibility)
-        # In production, pass CLIENT_ID as second argument
-        # id_info = id_token.verify_oauth2_token(data.token, requests.Request(), settings.GOOGLE_CLIENT_ID) 
-        
-        # For now, just verifies signature and expiry with clock skew tolerance
-        id_info = id_token.verify_oauth2_token(data.token, requests.Request(), clock_skew_in_seconds=10)
+        google_client_id = os.environ.get('GOOGLE_CLIENT_ID', None)
+
+        # If GOOGLE_CLIENT_ID is configured, strictly validate the audience claim.
+        # If not configured (dev), only verify signature + expiry, but log a warning.
+        if google_client_id:
+            id_info = id_token.verify_oauth2_token(
+                data.token,
+                requests.Request(),
+                google_client_id,
+                clock_skew_in_seconds=10,
+            )
+        else:
+            # Dev mode fallback: signature + expiry only.
+            id_info = id_token.verify_oauth2_token(
+                data.token,
+                requests.Request(),
+                clock_skew_in_seconds=10,
+            )
+            print("[WARNING] GOOGLE_CLIENT_ID not configured — Google auth audience NOT validated. "
+                  "Set GOOGLE_CLIENT_ID in production to prevent token confusion attacks.")
+
+        # Ensure the token issuer is actually Google
+        if id_info.get('iss') not in ('accounts.google.com', 'https://accounts.google.com'):
+            raise HttpError(400, "Invalid token issuer")
+        if not id_info.get('email_verified'):
+            raise HttpError(400, "Google account email not verified")
 
         email = id_info['email']
         name = id_info.get('name', email.split('@')[0])
-        
+
         # Check if user exists
         user = User.objects.filter(email=email).first()
-        
+
         if not user:
             # Create new user
             # Generate a unique username based on email/name
@@ -137,19 +157,20 @@ def google_auth(request, data: GoogleAuthSchema):
             while User.objects.filter(username=username).exists():
                 username = f"{base_username}{counter}"
                 counter += 1
-                
+
             user = User.objects.create_user(
                 username=username,
                 email=email,
-                password=None # Unusable password
+                password=None  # Unusable password
             )
-            
+
         tokens = get_tokens_for_user(user)
         return {**tokens, "user": user}
 
+    except HttpError:
+        raise
     except Exception as e:
-        print(f"DEBUG: Google Auth Exception: {e}")
-        raise HttpError(400, f"Google auth failed: {str(e)}")
+        raise HttpError(400, "Google auth failed")
 
 @router.get("/me", response=UserSchema, auth=JWTAuth())
 @rate_limit(key='user', rate='120/m')  # Max 120 req per user per menit
@@ -167,14 +188,14 @@ def password_reset_request(request, data: PasswordResetRequestSchema):
         # Generate token and uid for direct link
         uid = urlsafe_base64_encode(force_bytes(user.pk))
         token = default_token_generator.make_token(user)
-        
+
         # Determine base URL for reset link
         # 1. Try Origin header (sent by browsers for POST)
         # 2. Try Referer header (common fallback)
         # 3. Fallback to settings.FRONTEND_URL
         origin = request.headers.get('origin')
         referer = request.headers.get('referer')
-        
+
         if origin:
             base_url = origin
         elif referer:
@@ -183,28 +204,42 @@ def password_reset_request(request, data: PasswordResetRequestSchema):
             base_url = f"{parsed_referer.scheme}://{parsed_referer.netloc}"
         else:
             base_url = getattr(settings, 'FRONTEND_URL', 'http://localhost:3000')
-            
+
         reset_link = f"{base_url}/reset-password?uid={uid}&token={token}"
-        
+
         # Also generate OTP for backward compatibility
         otp = _generate_otp(6)
         cache.set(f"otp_reset_{data.email}", otp, timeout=600)  # 10 menit
-        
+
         subject = "JBook - Reset Password"
-        message = f"Klik link berikut untuk reset password Anda:\n{reset_link}\n\nAtau gunakan kode OTP ini: {otp}\n\nLink dan kode ini berlaku selama 10 menit. Jika Anda tidak meminta reset password, abaikan email ini."
-        
-        send_mail(
-            subject,
-            message,
-            getattr(settings, 'DEFAULT_FROM_EMAIL', 'noreply@localhost'),
-            [user.email],
-            fail_silently=False,
+        message = (
+            f"Klik link berikut untuk reset password Anda:\n{reset_link}\n\n"
+            f"Atau gunakan kode OTP ini: {otp}\n\n"
+            f"Link dan kode ini berlaku selama 10 menit. "
+            f"Jika Anda tidak meminta reset password, abaikan email ini."
         )
-        return {
-            "message": "If an account with that email exists, a reset link has been sent to your email.",
-            "reset_link": reset_link
-        }
-    return {"message": "If an account with that email exists, a reset link has been sent to your email."}
+
+        # Only try to send email if credentials are actually configured
+        if getattr(settings, 'EMAIL_HOST_USER', None) and getattr(settings, 'EMAIL_HOST_PASSWORD', None):
+            try:
+                send_mail(
+                    subject,
+                    message,
+                    getattr(settings, 'DEFAULT_FROM_EMAIL', 'noreply@localhost'),
+                    [user.email],
+                    fail_silently=True,
+                )
+            except Exception:
+                pass
+        elif settings.DEBUG:
+            # In dev, print to console as fallback
+            print(f"\n[PASSWORD RESET - DEV MODE] Reset link for {user.email}: {reset_link}")
+            print(f"[PASSWORD RESET - DEV MODE] OTP for {user.email}: {otp}\n")
+
+    # ALWAYS return generic message. NEVER return reset_link or indicate if user exists — prevents email enumeration
+    return {
+        "message": "Jika akun dengan email tersebut ada, link reset sudah dikirim ke email Anda."
+    }
 
 @router.post("/password-reset-otp")
 @rate_limit(key='ip', rate='10/m')  # Max 10 otp confirm per IP per menit
