@@ -47,6 +47,12 @@ python manage.py test users content learning  # Jalankan semua test
 python manage.py test content.tests  # Atau test module tertentu saja
 ```
 
+Di server production, `DEBUG=False` mewajibkan konfigurasi production lengkap. Untuk test sekali jalan di Bash console tanpa memakai secret production, aktifkan development settings hanya untuk proses test tersebut:
+```bash
+DEBUG=True python manage.py test content.tests.VocabListApiTests
+```
+Jangan set `DEBUG=True` untuk proses web production; prefix di atas hanya berlaku pada perintah test itu.
+
 #### Menambah Unit Test Baru
 Buat file di `[app]/tests.py` (contoh `content/tests.py`):
 ```python
@@ -121,46 +127,66 @@ Contoh deployment ke **PythonAnywhere** (hosting Django yang ramah pemula)!
 
 1. Buat virtual environment:
    ```bash
-   mkvirtualenv jbook-venv --python=/usr/bin/python3.11
+   mkvirtualenv jbook-venv --python=/usr/bin/python3.13
    workon jbook-venv
    ```
 
 2. Install dependensi:
    ```bash
-   pip install -r /home/imron/jbook/backend/requirements.txt
-   # Tambahkan dependensi production jika perlu:
-   pip install gunicorn psycopg2-binary python-dotenv
+   cd /home/[username]/jbook/backend
+   pip install -r requirements.txt
    ```
 
-3. Buat file `.env` di direktori `backend/` (**JANGAN commit file ini ke Git!**):
+3. Buat file `.env` di direktori `backend/` (**JANGAN commit file ini ke Git!**). Settings memuat file ini langsung dari direktori backend:
    ```env
-   # .env (contoh)
-   DEBUG=False  # PENTING: Matikan DEBUG di production!
-   SECRET_KEY=generate_random_secret_key_here_kurang_dari_50_karakter
-   ALLOWED_HOSTS=.pythonanywhere.com,.yourdomain.com
-   DATABASE_URL=postgres://username:password@host:port/dbname  # Atau tetap SQLite untuk testing
-   CORS_ALLOWED_ORIGINS=https://yourfrontend.vercel.app,https://yourdomain.com
-   GOOGLE_CLIENT_ID=your_google_client_id.apps.googleusercontent.com
+   DEBUG=False
+   SECRET_KEY=<paste-a-random-key-generated-on-this-server>
+   ALLOWED_HOSTS=imronm.pythonanywhere.com
+   CORS_ALLOWED_ORIGINS=https://jbook-five.vercel.app
+   CSRF_TRUSTED_ORIGINS=https://jbook-five.vercel.app
+   FRONTEND_URL=https://jbook-five.vercel.app
+   BACKEND_URL=https://imronm.pythonanywhere.com
+   GOOGLE_CLIENT_ID=<google-oauth-client-id>
+   EMAIL_HOST=smtp.gmail.com
+   EMAIL_PORT=587
+   EMAIL_USE_TLS=True
+   EMAIL_HOST_USER=<smtp-account>
+   EMAIL_HOST_PASSWORD=<smtp-app-password>
+   ```
+
+   Mulai dari template supaya seluruh nama variabel konsisten:
+   ```bash
+   cp .env.example .env
+   nano .env
+   chmod 600 .env
    ```
 
    Cara generate `SECRET_KEY`:
    ```bash
    python -c 'from django.core.management.utils import get_random_secret_key; print(get_random_secret_key())'
    ```
+   Salin hasilnya langsung ke file `.env` di server. Jangan kirim atau tempel nilai secret ke chat/log.
+
+   `DEBUG=False` memerlukan secret minimal 50 karakter, host eksplisit, CORS origin eksplisit, Google Client ID, dan kredensial SMTP jika memakai SMTP. Django akan berhenti saat startup bila syarat wajib ini belum terpenuhi, bukan berjalan dalam konfigurasi setengah siap.
 
 ---
 
 ### 🗄️ Langkah 3: Setup Database Production
-Gunakan **PostgreSQL** untuk production (lebih stabil dibanding SQLite):
-1. Di PythonAnywhere, buka **Databases** → Buat database Postgres baru
-2. Update `DATABASE_URL` di `.env` sesuai kredensial yang diberikan
-3. Jalankan migrasi database:
+Untuk penggunaan production dengan banyak write bersamaan, gunakan database managed yang didukung hosting/deployment kamu dan isi `DATABASE_URL`. Jika memakai SQLite untuk deployment kecil, pastikan direktori dan file database writable serta lakukan backup berkala.
+1. Buat database pada provider yang dipilih dan salin URL koneksi ke `DATABASE_URL` pada `.env`.
+2. Pastikan host database mengizinkan koneksi dari server aplikasi.
+3. Jalankan pemeriksaan, migrasi, dan tes:
    ```bash
    cd /home/imron/jbook/backend
    workon jbook-venv
+   python manage.py check --deploy
    python manage.py migrate
+   python manage.py collectstatic --noinput
+   python manage.py test content.tests.VocabListApiTests
    python manage.py createsuperuser  # Buat akun admin pertama
    ```
+
+Jika `check --deploy` melaporkan konfigurasi HTTPS yang tidak sesuai dengan proxy hosting, pastikan `SECURE_PROXY_SSL_HEADER` cocok dengan header proxy platform. Hanya set `SECURE_SSL_REDIRECT=False` jika HTTPS memang sudah dipaksakan oleh platform dan redirect Django terbukti loop.
 
 ---
 
@@ -186,10 +212,20 @@ Gunakan **PostgreSQL** untuk production (lebih stabil dibanding SQLite):
    application = get_wsgi_application()
    ```
 6. Di bagian **Static files**: Tambahkan mapping untuk `/static/` ke path static kamu (contoh: `/home/[username]/jbook/backend/static`)
-7. Jalankan `python manage.py collectstatic` di Bash Console untuk menyalin file static ke folder yang benar
+7. Pastikan perintah `collectstatic --noinput` pada langkah validasi database berhasil dan path static di PythonAnywhere mengarah ke `STATIC_ROOT`.
 8. Klik tombol **Reload** di halaman Web PythonAnywhere!
 
 Backend kamu sekarang bisa diakses di `https://[username].pythonanywhere.com/`!
+
+Verifikasi sesudah reload:
+```bash
+curl -i https://[username].pythonanywhere.com/api/ping
+curl -i -X OPTIONS \
+   -H 'Origin: https://jbook-five.vercel.app' \
+   -H 'Access-Control-Request-Method: GET' \
+   https://[username].pythonanywhere.com/api/content/vocab
+```
+Respons kedua harus memuat `Access-Control-Allow-Origin: https://jbook-five.vercel.app`. Jika `/api/ping` masih 502, lihat **Web → Error log** dan **Server log**; CORS tidak dapat memperbaiki worker yang gagal start.
 
 ---
 
