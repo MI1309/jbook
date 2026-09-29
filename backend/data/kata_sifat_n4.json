@@ -1926,6 +1926,1505 @@
       }
     ]
   },
+   {
+    "id": "i28-hodo-028",
+    "word": "〜ほど",
+    "reading": "hodo",
+    "furigana": "",
+    "meaning": "kira-kira, sekitar",
+    "word_type": "adverb",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "この町には 1000人ほど 住んで いる そうです。",
+        "id": "Katanya ada sekitar seribu orang yang tinggal di kota ini"
+      }
+    ]
+  },
+  {
+    "id": "i29-nohitotsu-029",
+    "word": "〜の一つ",
+    "reading": "no hitotsu",
+    "furigana": "ひと",
+    "meaning": "salah satu...",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "読書は 私の趣味の一つです。",
+        "id": "Membaca adalah salah satu hobi saya"
+      }
+    ]
+  },
+  {
+    "id": "i30-sakini-030",
+    "word": "先に",
+    "reading": "saki ni",
+    "furigana": "さき",
+    "meaning": "terlebih dahulu",
+    "word_type": "adverb",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "先に 昼ご飯を 食べて から、買い物に 行きましょう。",
+        "id": "Mari makan siang terlebih dahulu, lalu pergi berbelanja"
+      }
+    ]
+  },
+  {
+    "id": "i31-douiu-031",
+    "word": "どういう〜",
+    "reading": "douiu",
+    "furigana": "",
+    "meaning": "yang bagaimana, yang seperti apa",
+    "word_type": "adverb",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "どういう人が 好きですか。",
+        "id": "Kamu suka orang yang bagaimana?"
+      },
+      {
+        "jp": "どういう 意味ですか。",
+        "id": "Maksud kamu apa? / artinya apa?"
+      }
+    ]
+  },
+  {
+    "id": "i32-saa-032",
+    "word": "さあ",
+    "reading": "saa",
+    "furigana": "",
+    "meaning": "ayo, mari",
+    "word_type": "interjection",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "さあ、もう 時間ですから 出発しましょう。",
+        "id": "Ayo, karena sudah waktunya mari berangkat"
+      }
+    ]
+  },
+  {
+    "id": "i33-ato-033",
+    "word": "あと〜",
+    "reading": "ato",
+    "furigana": "",
+    "meaning": "sisa/tinggal...lagi",
+    "word_type": "adverb",
+    "jlpt_level": 4,
+    "examples": [
+      {
+        "jp": "宿題は あと 一ページで 終わります。",
+        "id": "PR tinggal satu halaman lagi selesai"
+      },
+      {
+        "jp": "会議が 始まるまで あと 10分です。",
+        "id": "Sampai rapat dimulai, masih ada waktu 10 menit lagi"
+      }
+    ]
+  },
+   {
+    "id": "k01-yakan-001",
+    "word": "やかん",
+    "reading": "yakan",
+    "furigana": "",
+    "meaning": "ketel, ceret",
+    "word_type": "noun",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "k01-suihanki-002",
+    "word": "炊飯器",
+    "reading": "suihanki",
+    "furigana": "すい はん き",
+    "meaning": "penanak nasi, rice cooker",
+    "word_type": "noun",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "k01-sentakuki-003",
+    "word": "洗濯機",
+    "reading": "sentakuki",
+    "furigana": "せん たく き",
+    "meaning": "mesin cuci",
+    "word_type": "noun",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "k01-kagami-004",
+    "word": "鏡",
+    "reading": "kagami",
+    "furigana": "かがみ",
+    "meaning": "cermin",
+    "word_type": "noun",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "k01-sempuuki-005",
+    "word": "扇風機",
+    "reading": "sempuuki",
+    "furigana": "せん ぷう き",
+    "meaning": "kipas angin",
+    "word_type": "noun",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "k01-denshirenji-006",
+    "word": "電子レンジで弁当を温める",
+    "reading": "denshi renji de bento wo atatameru",
+    "furigana": "でん し あたた",
+    "meaning": "menghangatkan bekal dengan microwave",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "k01-nabedesuupu-007",
+    "word": "鍋でスープを作る",
+    "reading": "nabe de suupu wo tsukuru",
+    "furigana": "なべ つく",
+    "meaning": "membuat sup dengan panci",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "k01-daidokorodesara-008",
+    "word": "台所で皿を洗う",
+    "reading": "daidokoro de sara wo arau",
+    "furigana": "だいどころ さら あら",
+    "meaning": "mencuci piring di dapur",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "k01-yakandeoyu-009",
+    "word": "やかんでお湯をわかす",
+    "reading": "yakan de oyu wo wakasu",
+    "furigana": "ゆ",
+    "meaning": "merebus air dengan ketel",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "k01-furaipandetamago-010",
+    "word": "フライパンで卵を焼く",
+    "reading": "furaipan de tamago wo yaku",
+    "furigana": "たまご や",
+    "meaning": "menggoreng/memanggang telur dengan wajan",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "k01-houchouderingwo-011",
+    "word": "包丁でりんごを切る",
+    "reading": "houchou de ringo wo kiru",
+    "furigana": "ほうちょう き",
+    "meaning": "memotong apel dengan pisau",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "k01-shouyuwoireru-012",
+    "word": "しょうゆを入れる",
+    "reading": "shouyu wo ireru",
+    "furigana": "い",
+    "meaning": "memasukkan kecap asin",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "k01-manaitawokireini-013",
+    "word": "まな板をきれいに洗う",
+    "reading": "manaita wo kirei ni arau",
+    "furigana": "いた あら",
+    "meaning": "mencuci bersih talenan",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "k01-soosuwokakeru-014",
+    "word": "ソースをかける",
+    "reading": "soosu wo kakeru",
+    "furigana": "",
+    "meaning": "menambahkan saus",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "k01-kiitchenderyouri-015",
+    "word": "キッチンで料理する",
+    "reading": "kiitchen de ryouri suru",
+    "furigana": "りょうり",
+    "meaning": "memasak di dapur",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "k01-suidounomizu-016",
+    "word": "水道の水を飲む",
+    "reading": "suidou no mizu wo nomu",
+    "furigana": "すい どう みず の",
+    "meaning": "minum air keran",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "k01-kechappuwotsukeru-017",
+    "word": "ケチャップをつける",
+    "reading": "kechappu wo tsukeru",
+    "furigana": "",
+    "meaning": "mencocol/membubuhkan saus tomat",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+   {
+    "id": "k02-pokettogatsuiteiru-001",
+    "word": "ポケットがついている",
+    "reading": "poketto ga tsuite iru",
+    "furigana": "",
+    "meaning": "Ada sakunya (tertempel)",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "k02-aburadeageru-002",
+    "word": "油で揚げる",
+    "reading": "abura de ageru",
+    "furigana": "あぶら あ",
+    "meaning": "Menggoreng dengan minyak",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "k02-shatsunobotan-003",
+    "word": "シャツのボタンをしめる",
+    "reading": "shatsu no botan wo shimeru",
+    "furigana": "",
+    "meaning": "Mengancingkan kancing baju",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "k02-futonwotatamu-004",
+    "word": "ふとんを畳む",
+    "reading": "futon wo tatamu",
+    "furigana": "たた",
+    "meaning": "Melipat futon (kasur lantai)",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "k02-mayoneezuwokakeru-005",
+    "word": "マヨネーズをかける",
+    "reading": "mayoneezu wo kakeru",
+    "furigana": "",
+    "meaning": "Menambahkan mayones",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "k02-kutsushitawohaku-006",
+    "word": "靴下をはく",
+    "reading": "kutsushita wo haku",
+    "furigana": "くつ した",
+    "meaning": "Memakai kaos kaki",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "k02-senzaiwoireru-007",
+    "word": "洗剤を入れる",
+    "reading": "senzai wo ireru",
+    "furigana": "せん ざい い",
+    "meaning": "Memasukkan deterjen",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "k02-sentakumonowohosu-008",
+    "word": "洗濯物を干す",
+    "reading": "sentakumono wo hosu",
+    "furigana": "せん たく もの ほ",
+    "meaning": "Menjemur cucian",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "k02-doraiyaadekamiwo-009",
+    "word": "ドライヤーで髪を乾かす",
+    "reading": "doraiyaa de kami wo kawakasu",
+    "furigana": "かみ かわ",
+    "meaning": "Mengeringkan rambut dengan hair dryer",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "k02-shampuudekamiwo-010",
+    "word": "シャンプーで髪を洗う",
+    "reading": "shampoo de kami wo arau",
+    "furigana": "かみ あら",
+    "meaning": "Mencuci rambut dengan sampo",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+    {
+    "id": "k02-rimokondenchi-021",
+    "word": "リモコンの電池を交換する",
+    "reading": "rimokon no denchi wo koukan suru",
+    "furigana": "でん ち こう かん",
+    "meaning": "Mengganti baterai remote",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "k02-mezamashidokei-022",
+    "word": "目覚まし時計をセットする",
+    "reading": "mezamashidokei wo setto suru",
+    "furigana": "め ざ ど けい",
+    "meaning": "Mengatur alarm",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "k02-puraguwonuku-023",
+    "word": "プラグを抜く",
+    "reading": "puragu wo nuku",
+    "furigana": "ぬ",
+    "meaning": "Mencabut colokan",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "k02-konsentoni-024",
+    "word": "コンセントにプラグを入れる",
+    "reading": "konsento ni puragu wo ireru",
+    "furigana": "い",
+    "meaning": "Memasukkan colokan ke stop kontak",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "k02-suitchiwoosu-025",
+    "word": "スイッチを押す",
+    "reading": "suitchi wo osu",
+    "furigana": "お",
+    "meaning": "Menekan saklar",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "k02-dengenwokiru-026",
+    "word": "電源を切る",
+    "reading": "dengen wo kiru",
+    "furigana": "でん げん き",
+    "meaning": "Mematikan listrik",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "k02-kikaiwougokasu-027",
+    "word": "機械を動かす",
+    "reading": "kikai wo ugokasu",
+    "furigana": "き かい うご",
+    "meaning": "Mengoperasikan mesin",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "k02-reibougatsuyoi-028",
+    "word": "冷房が強い",
+    "reading": "reibou ga tsuyoi",
+    "furigana": "れい ぼう つよ",
+    "meaning": "AC/pendinginnya dingin sekali",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "k02-danbouwotsukeru-029",
+    "word": "暖房をつける",
+    "reading": "danbou wo tsukeru",
+    "furigana": "だん ぼう",
+    "meaning": "Menyalakan penghangat",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "k02-hashiwooku-030",
+    "word": "箸を置く",
+    "reading": "hashi wo oku",
+    "furigana": "はし お",
+    "meaning": "Meletakkan sumpit",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "k02-taorudekaradawo-031",
+    "word": "タオルで体をふく",
+    "reading": "taoru de karada wo fuku",
+    "furigana": "からだ",
+    "meaning": "Mengelap tubuh dengan handuk",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "k02-omochawokatadzukeru-032",
+    "word": "おもちゃを片付ける",
+    "reading": "omochao katadzukeru",
+    "furigana": "かた づ",
+    "meaning": "Merapikan mainan",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "k02-ningyoudeasobu-033",
+    "word": "人形で遊ぶ",
+    "reading": "ningyou de asobu",
+    "furigana": "にんぎょう あそ",
+    "meaning": "Bermain dengan boneka",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "k02-oyatsuwotaberu-034",
+    "word": "おやつを食べる",
+    "reading": "oyatsu wo taberu",
+    "furigana": "た",
+    "meaning": "Makan snack/camilan",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "k02-akusesariiwotsukeru-035",
+    "word": "アクセサリーをつける",
+    "reading": "akusesarii wo tsukeru",
+    "furigana": "",
+    "meaning": "Memakai aksesori",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "k02-yubiwawohameru-036",
+    "word": "指輪をはめる",
+    "reading": "yubiwa wo hameru",
+    "furigana": "ゆび わ",
+    "meaning": "Memakai cincin",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "k02-nekkuresuwohazusu-037",
+    "word": "ネックレスを外す",
+    "reading": "nekkuresu wo hazusu",
+    "furigana": "はず",
+    "meaning": "Melepas kalung",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "k02-madogarasuwoakeru-038",
+    "word": "窓ガラスを開ける",
+    "reading": "madogarasu wo akeru",
+    "furigana": "まど あ",
+    "meaning": "Membuka kaca jendela",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "k02-hikidashinishimau-039",
+    "word": "引き出しにしまう",
+    "reading": "hikidashi ni shimau",
+    "furigana": "ひ だ",
+    "meaning": "Menyimpan di laci",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "k02-kutsuhimowomusubu-040",
+    "word": "靴ひもを結ぶ",
+    "reading": "kutsuhimo wo musubu",
+    "furigana": "くつ むす",
+    "meaning": "Mengikat tali sepatu",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+    {
+    "id": "s01-jugyouwoukeru-001",
+    "word": "授業を受ける",
+    "reading": "jugyou wo ukeru",
+    "furigana": "じゅ ぎょう う",
+    "meaning": "Mengikuti kelas/pelajaran",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "s01-tesutowoukeru-002",
+    "word": "テストを受ける",
+    "reading": "tesuto wo ukeru",
+    "furigana": "う",
+    "meaning": "Mengikuti tes",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "s01-seitogakyoushitsuni-003",
+    "word": "生徒が教室に入る",
+    "reading": "seito ga kyoushitsu ni iru",
+    "furigana": "せい と きょう しつ はい",
+    "meaning": "Murid masuk kelas",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "s01-shougakusei-004",
+    "word": "小学生",
+    "reading": "shougakusei",
+    "furigana": "しょう がく せい",
+    "meaning": "siswa SD",
+    "word_type": "noun",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "s01-chuugakusei-005",
+    "word": "中学生",
+    "reading": "chuugakusei",
+    "furigana": "ちゅう がく せい",
+    "meaning": "siswa SMP",
+    "word_type": "noun",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "s01-koukousei-006",
+    "word": "高校生",
+    "reading": "koukousei",
+    "furigana": "こう こう せい",
+    "meaning": "siswa SMA",
+    "word_type": "noun",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "s01-daigakusei-007",
+    "word": "大学生",
+    "reading": "daigakusei",
+    "furigana": "だい がく せい",
+    "meaning": "mahasiswa",
+    "word_type": "noun",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "s01-daigakuinsei-008",
+    "word": "大学院生",
+    "reading": "daigakuinsei",
+    "furigana": "だい がく いん せい",
+    "meaning": "mahasiswa pascasarjana",
+    "word_type": "noun",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "s01-mondaini-kotaeru-009",
+    "word": "問題に答える",
+    "reading": "mondai ni kotaeru",
+    "furigana": "もん だい こた",
+    "meaning": "Menjawab soal",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "s01-suugakude100ten-010",
+    "word": "数学で100点を取る",
+    "reading": "suugaku de 100ten wo toru",
+    "furigana": "すう がく てん と",
+    "meaning": "Mendapat nilai 100 pada pelajaran matematika",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "s01-jimushitsuheiku-011",
+    "word": "事務室へ行く",
+    "reading": "jimushitsu he iku",
+    "furigana": "じ む しつ い",
+    "meaning": "Pergi ke ruang administrasi/tata usaha",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "s01-fukukouchousensei-012",
+    "word": "副校長先生に会う",
+    "reading": "fukukouchousensei ni au",
+    "furigana": "ふく こう ちょう せん せい あ",
+    "meaning": "Bertemu wakil kepala sekolah",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "s01-fugoukakuwo-013",
+    "word": "不合格を知らせる",
+    "reading": "fugoukaku wo shiraseru",
+    "furigana": "ふ ごう かく し",
+    "meaning": "Memberitahukan ketidaklulusan",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "s01-kouchousenseito-014",
+    "word": "校長先生と話す",
+    "reading": "kouchousensei to hanasu",
+    "furigana": "こう ちょう せん せい はな",
+    "meaning": "Berbicara dengan kepala sekolah",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "s01-kurasumeitoto-015",
+    "word": "クラスメイトと遊ぶ",
+    "reading": "kurasumeito to asobu",
+    "furigana": "あそ",
+    "meaning": "Bermain dengan teman sekelas",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "s01-nihongowomanabu-016",
+    "word": "日本語を学ぶ",
+    "reading": "nihongo wo manabu",
+    "furigana": "に ほん ご まな",
+    "meaning": "Belajar bahasa Jepang",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "s01-seisekigaagaru-017",
+    "word": "成績が上がる",
+    "reading": "seiseki ga agaru",
+    "furigana": "せい せき あ",
+    "meaning": "Nilainya naik",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+    {
+    "id": "s02-kyouikuwoukeru-001",
+    "word": "教育を受ける",
+    "reading": "kyouiku wo ukeru",
+    "furigana": "きょう いく う",
+    "meaning": "Menerima/mendapatkan pendidikan",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "s02-ronbunwoteishutsu-002",
+    "word": "論文を提出する",
+    "reading": "ronbun wo teishutsu suru",
+    "furigana": "ろん ぶん てい しゅつ",
+    "meaning": "Mengumpulkan makalah",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "s02-kagakunikyoumi-003",
+    "word": "科学に興味がある",
+    "reading": "kagaku ni kyoumi ga aru",
+    "furigana": "か がく きょう み",
+    "meaning": "Tertarik pada ilmu pengetahuan",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "s02-rikawatsukina-004",
+    "word": "理科は好きな教科だ",
+    "reading": "rika wa tsukina kyouka da",
+    "furigana": "り か す きょう か",
+    "meaning": "IPA adalah mata pelajaran yang kusukai",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "s02-shakainotesuto-005",
+    "word": "社会のテストがある",
+    "reading": "shakai no tesuto ga aru",
+    "furigana": "しゃ かい",
+    "meaning": "Ada ujian IPS",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "s02-nihonbungakuga-006",
+    "word": "日本文学が好きだ",
+    "reading": "nihon bungaku ga tsuki da",
+    "furigana": "に ほん ぶん がく す",
+    "meaning": "Suka sastra Jepang",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "s02-igakuwokenkyuu-007",
+    "word": "医学を研究する",
+    "reading": "igaku wo kenkyuu suru",
+    "furigana": "い がく けん きゅう",
+    "meaning": "Meneliti ilmu kedokteran",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "s02-seijinojugyou-008",
+    "word": "政治の授業を受ける",
+    "reading": "seiji no jugyou wo ukeru",
+    "furigana": "せい じ じゅ ぎょう う",
+    "meaning": "Mengikuti pelajaran politik",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "s02-houritsuwomamoru-009",
+    "word": "法律を守る",
+    "reading": "houritsu wo mamoru",
+    "furigana": "ほう りつ まも",
+    "meaning": "Mematuhi hukum",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "s02-keizainohonwo-010",
+    "word": "経済の本を読んだ",
+    "reading": "keizai no hon wo yonda",
+    "furigana": "けい ざい ほん よ",
+    "meaning": "Membaca buku ekonomi",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "s02-benkyousurukikai-011",
+    "word": "勉強する機会が増えた",
+    "reading": "benkyou suru kikai ga fueta",
+    "furigana": "べん きょう き かい ふ",
+    "meaning": "Kesempatan untuk belajar bertambah",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "s02-machigaiwonaosu-012",
+    "word": "間違いを直す",
+    "reading": "machigai wo naosu",
+    "furigana": "ま ちが なお",
+    "meaning": "Memperbaiki kesalahan",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "s02-taisetsunaoshirase-013",
+    "word": "大切なお知らせがある",
+    "reading": "taisetsu na oshirase ga aru",
+    "furigana": "たい せつ し",
+    "meaning": "Ada pengumuman penting",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "s02-renkyuuwahito-014",
+    "word": "連休は人が多い",
+    "reading": "renkyuu wa hito ga ooi",
+    "furigana": "れん きゅう ひと おお",
+    "meaning": "Saat libur panjang ada banyak orang",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "s02-zudesetsumei-015",
+    "word": "図で説明する",
+    "reading": "zu de setsumei suru",
+    "furigana": "ず せつ めい",
+    "meaning": "Menjelaskan dengan diagram",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "s02-senwohiku-016",
+    "word": "線を引く",
+    "reading": "sen wo hiku",
+    "furigana": "せん ひ",
+    "meaning": "Menarik garis",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "s02-yajirushinohoukou-017",
+    "word": "矢印の方向へ進む",
+    "reading": "yajirushi no houkou he susumu",
+    "furigana": "や じる ほう こう すす",
+    "meaning": "Maju ke arah tanda panah",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "s02-kyokagahitsuyou-018",
+    "word": "許可が必要だ",
+    "reading": "kyoka ga hitsuyou da",
+    "furigana": "きょ か ひつ よう",
+    "meaning": "Membutuhkan izin",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "s02-shimekirimadeni-019",
+    "word": "締め切りまでに出す",
+    "reading": "shimekiri made ni dasu",
+    "furigana": "し き だ",
+    "meaning": "Menyerahkan sebelum tenggat waktu",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "s02-kyuuryougaagaru-020",
+    "word": "給料が上がる",
+    "reading": "kyuuryou ga agaru",
+    "furigana": "きゅう りょう あ",
+    "meaning": "Gaji naik",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+    {
+    "id": "s03-kakariniwatasu-001",
+    "word": "係りに渡す",
+    "reading": "kakari ni watasu",
+    "furigana": "かかり わた",
+    "meaning": "Menyerahkan kepada petugas",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "s03-gakurekiwokaku-002",
+    "word": "学歴を書く",
+    "reading": "gakureki wo kaku",
+    "furigana": "がく れき か",
+    "meaning": "Menulis riwayat pendidikan",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "s03-shachounihoukoku-003",
+    "word": "社長に報告する",
+    "reading": "shachou ni houkoku suru",
+    "furigana": "しゃ ちょう ほう こく",
+    "meaning": "Melapor ke (presiden) direktur",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "s03-buchounimeeruwo-004",
+    "word": "部長にメールを送る",
+    "reading": "buchou ni meeru wo okuru",
+    "furigana": "ぶ ちょう おく",
+    "meaning": "Mengirim email ke kepala divisi (general manager)",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "s03-kachounishiryouwo-005",
+    "word": "課長に資料を渡す",
+    "reading": "kachou ni shiryou wo watasu",
+    "furigana": "か ちょう し りょう わた",
+    "meaning": "Menyerahkan dokumen kepada kepala bagian (manager)",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "s03-kakarichounishitsumon-006",
+    "word": "係長に質問する",
+    "reading": "kakarichou ni shitsumon suru",
+    "furigana": "かかり ちょう しつ もん",
+    "meaning": "Bertanya kepada kepala seksi (supervisor)",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "s03-shai'ngaatsumaru-007",
+    "word": "社員が集まる",
+    "reading": "shain ga atsumaru",
+    "furigana": "しゃ いん あつ",
+    "meaning": "Karyawan berkumpul",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "s03-keibiinnikiku-008",
+    "word": "警備員に聞く",
+    "reading": "keibiin ni kiku",
+    "furigana": "けい び いん き",
+    "meaning": "Bertanya ke petugas keamanan",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "s03-arubaitowosagasu-009",
+    "word": "アルバイトを探す",
+    "reading": "arubaito wo sagasu",
+    "furigana": "さが",
+    "meaning": "Mencari pekerjaan paruh waktu",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "s03-paatotaimuwohajimeru-010",
+    "word": "パートタイムを始める",
+    "reading": "paatotaimu wo hajimeru",
+    "furigana": "はじ",
+    "meaning": "Memulai pekerjaan paruh waktu",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "s03-sutaffuwoatsumeru-011",
+    "word": "スタッフを集める",
+    "reading": "sutaffu wo atsumeru",
+    "furigana": "あつ",
+    "meaning": "Mengumpulkan staf",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "s03-joushinisoudan-012",
+    "word": "上司に相談する",
+    "reading": "joushi ni soudan suru",
+    "furigana": "じょう し そう だん",
+    "meaning": "Berkonsultasi ke atasan",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "s03-bukawoshidou-013",
+    "word": "部下を指導する",
+    "reading": "buka wo shidou suru",
+    "furigana": "ぶ か し どう",
+    "meaning": "Membimbing bawahan",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "s03-douryoutogohan-014",
+    "word": "同僚にご飯を食べる",
+    "reading": "douryou to gohan wo taberu",
+    "furigana": "どう りょう はん た",
+    "meaning": "Makan dengan rekan kerja",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "s03-zen'indeshashinwo-015",
+    "word": "全員で写真を撮る",
+    "reading": "zen'in de shashin wo toru",
+    "furigana": "ぜん いん しゃ しん と",
+    "meaning": "Berfoto bersama semua orang",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "s03-chiimunoichiinni-016",
+    "word": "チームの一員になる",
+    "reading": "chiimu no ichiin ni naru",
+    "furigana": "いち いん",
+    "meaning": "Menjadi anggota tim",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "s03-okyakusamawoannai-017",
+    "word": "お客様を案内する",
+    "reading": "okyakusama wo annai suru",
+    "furigana": "きゃく さま あん ない",
+    "meaning": "Memandu pelanggan/customer",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "s03-dengonwotsutaeru-018",
+    "word": "伝言を伝える",
+    "reading": "dengon wo tsutaeru",
+    "furigana": "でん ごん つた",
+    "meaning": "Menyampaikan pesan",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "s03-senpaiwotetsudau-019",
+    "word": "先輩を手伝う",
+    "reading": "senpai wo tetsudau",
+    "furigana": "せん ぱい て つだ",
+    "meaning": "Membantu senior",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "s03-kouhainioshieru-020",
+    "word": "後輩に教える",
+    "reading": "kouhai ni oshieru",
+    "furigana": "こう はい おし",
+    "meaning": "Mengajari junior",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+    {
+    "id": "s04-ikenwokikasete-001",
+    "word": "意見を聞かせてください",
+    "reading": "iken wo kikasete kudasai",
+    "furigana": "い けん き",
+    "meaning": "Perdengarkan pendapatmu (tolong beritahu)",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "s04-riyuuwosetsumei-002",
+    "word": "理由を説明する",
+    "reading": "riyuu wo setsumei suru",
+    "furigana": "り ゆう せつ めい",
+    "meaning": "Menjelaskan alasan",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "s04-komentowomorau-003",
+    "word": "コメントをもらう",
+    "reading": "komento wo morau",
+    "furigana": "",
+    "meaning": "Menerima komentar",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "s04-aideawodasu-004",
+    "word": "アイデアを出す",
+    "reading": "aidea wo dasu",
+    "furigana": "だ",
+    "meaning": "Mengemukakan ide",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "s04-supiichiworenshuu-005",
+    "word": "スピーチを練習する",
+    "reading": "supiichi wo renshuu suru",
+    "furigana": "れん しゅう",
+    "meaning": "Berlatih pidato",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "s04-imiwoshiraberu-006",
+    "word": "意味を調べる",
+    "reading": "imi wo shiraberu",
+    "furigana": "い み しら",
+    "meaning": "Mencari tahu arti",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "s04-usowotsukuiu-007",
+    "word": "うそをつく／言う",
+    "reading": "uso wo tsuku / iu",
+    "furigana": "い",
+    "meaning": "Berbohong/mengatakan kebohongan",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "s04-hontounokotowo-008",
+    "word": "本当のことを話す",
+    "reading": "hontou no koto wo hanasu",
+    "furigana": "ほん とう はな",
+    "meaning": "Mengatakan hal yang sebenarnya",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "s04-shikaiwotanomu-009",
+    "word": "司会を頼む",
+    "reading": "shikai wo tanomu",
+    "furigana": "し かい たの",
+    "meaning": "Meminta jadi pembawa acara",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "s04-guruupuniiru-010",
+    "word": "グループに入る",
+    "reading": "guruupu ni iru",
+    "furigana": "はい",
+    "meaning": "Masuk ke kelompok",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "s04-teemanitsuitehanasu-011",
+    "word": "テーマについて話す",
+    "reading": "teema ni tsuite hanasu",
+    "furigana": "はな",
+    "meaning": "Berbicara tentang (suatu) tema",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "s04-shouraigatanoshimida-012",
+    "word": "将来が楽しみだ",
+    "reading": "shourai ga tanoshimi da",
+    "furigana": "しょう らい たの",
+    "meaning": "Menantikan masa depan",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "s04-asahayukushukkin-013",
+    "word": "朝早く出勤する",
+    "reading": "asa hayaku shukkin suru",
+    "furigana": "あさ はや しゅっ きん",
+    "meaning": "Masuk kerja pagi-pagi",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "s04-shoruinisainsuru-014",
+    "word": "書類にサインする",
+    "reading": "shorui ni sain suru",
+    "furigana": "しょ るい",
+    "meaning": "Menandatangan dokumen",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "s04-zangyougaooi-015",
+    "word": "残業が多い",
+    "reading": "zangyou ga ooi",
+    "furigana": "ざん ぎょう おお",
+    "meaning": "Banyak lembur",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "s04-sukoshikyuukei-016",
+    "word": "少し休憩する",
+    "reading": "sukoshi kyuukei suru",
+    "furigana": "すこ きゅう けい",
+    "meaning": "Istirahat sebentar",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "s04-tenshokuwokangaeru-017",
+    "word": "転職を考える",
+    "reading": "tenshoku wo kangaeru",
+    "furigana": "てん しょく かん が",
+    "meaning": "Memikirkan pindah kerja",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "s04-uchiawasewosuru-018",
+    "word": "打ち合わせをする",
+    "reading": "uchiawase wo suru",
+    "furigana": "う あ",
+    "meaning": "Melakukan meeting kecil untuk kordinasi/sebagai persiapan",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "s04-hoteruniotoiawase-019",
+    "word": "ホテルにお問い合わせする",
+    "reading": "hoteru ni otoiawase suru",
+    "furigana": "と あ",
+    "meaning": "Menghubungi hotel untuk menanyakan informasi",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+    {
+    "id": "p01-kousokudouro-001",
+    "word": "高速道路",
+    "reading": "kousokudouro",
+    "furigana": "こう そく どう ろ",
+    "meaning": "jalan tol",
+    "word_type": "noun",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "p01-oudanhodou-002",
+    "word": "横断歩道",
+    "reading": "oudanhodou",
+    "furigana": "おう だん ほ どう",
+    "meaning": "zebra cross",
+    "word_type": "noun",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "p01-fumikiri-003",
+    "word": "踏切",
+    "reading": "fumikiri",
+    "furigana": "ふみ きり",
+    "meaning": "palang pintu perlintasan kereta api",
+    "word_type": "noun",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "p01-gasorinsutando-004",
+    "word": "ガソリンスタンド",
+    "reading": "gasorin sutando",
+    "furigana": "",
+    "meaning": "pom bensin",
+    "word_type": "noun",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "p01-koujou-005",
+    "word": "工場",
+    "reading": "koujou",
+    "furigana": "こう じょう",
+    "meaning": "pabrik",
+    "word_type": "noun",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "p01-tokainokoutsuu-006",
+    "word": "都会の交通は便利だ",
+    "reading": "tokai no koutsuu wa benri da",
+    "furigana": "と かい こう つう べん り",
+    "meaning": "Lalu lintas di kota besar praktis",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "p01-keisatsushodesoudan-007",
+    "word": "警察署で相談する",
+    "reading": "keisatsusho de soudan suru",
+    "furigana": "けい さつ しょ そう だん",
+    "meaning": "Berkonsultasi di kantor polisi",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "p01-toukyoutawaaninoboru-008",
+    "word": "東京タワーに上る",
+    "reading": "toukyou tawaa ni noboru",
+    "furigana": "とう きょう のぼ",
+    "meaning": "Naik ke Tokyo Tower",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "p01-koubandemichikiku-009",
+    "word": "交番で道を聞く",
+    "reading": "kouban de michi wo kiku",
+    "furigana": "こう ばん みち き",
+    "meaning": "Bertanya jalan di pos polisi",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "p01-shouboushowokengaku-010",
+    "word": "消防署を見学する",
+    "reading": "shoubousho wo kengaku suru",
+    "furigana": "しょう ぼう しょ けん がく",
+    "meaning": "Mengunjungi kantor pemadam kebakaran untuk belajar",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "p01-hodoukyouwowataru-011",
+    "word": "歩道橋を渡る",
+    "reading": "hodoukyou wo wataru",
+    "furigana": "ほ どう きょう わた",
+    "meaning": "Menyeberangi jembatan penyeberangan",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "p01-kousatendeshingoumatsu-012",
+    "word": "交差点で信号を待つ",
+    "reading": "kousaten de shingou wo matsu",
+    "furigana": "こう さ てん しん ごう ま",
+    "meaning": "Menunggu lampu lalu lintas di perempatan",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "p01-gekijoudeshibaimiru-013",
+    "word": "劇場で芝居を見る",
+    "reading": "gekijou de shibai wo miru",
+    "furigana": "げき じょう し ばい み",
+    "meaning": "Menonton pertunjukan drama di teater",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "p01-chuushajounikurumatomeru-014",
+    "word": "駐車場に車を止める",
+    "reading": "chuushajou ni kuruma wo tomeru",
+    "furigana": "ちゅう しゃ じょう くるま と",
+    "meaning": "Memarkir mobil di tempat parkir",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "p01-dourowowataru-015",
+    "word": "道路を渡る",
+    "reading": "douro wo wataru",
+    "furigana": "どう ろ わた",
+    "meaning": "Menyeberangi jalan raya",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "p01-yuuenchinonyuujouryou-016",
+    "word": "遊園地の入場料",
+    "reading": "yuuenchi no nyuujouryou",
+    "furigana": "ゆう えん ち にゅう じょう りょう",
+    "meaning": "Biaya masuk taman bermain",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "p01-kyoukaidekekkonshiki-017",
+    "word": "教会で結婚式をする",
+    "reading": "kyoukai de kekkonshiki wo suru",
+    "furigana": "きょう かい けっ こん しき",
+    "meaning": "Mengadakan upacara pernikahan di gereja",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  }.
+  
    
 
 ]
