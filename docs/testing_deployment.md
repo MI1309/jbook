@@ -141,11 +141,11 @@ Contoh deployment ke **PythonAnywhere** (hosting Django yang ramah pemula)!
    ```env
    DEBUG=False
    SECRET_KEY=<paste-a-random-key-generated-on-this-server>
-   ALLOWED_HOSTS=imronm.pythonanywhere.com
-   CORS_ALLOWED_ORIGINS=https://jbook-five.vercel.app
-   CSRF_TRUSTED_ORIGINS=https://jbook-five.vercel.app
+   ALLOWED_HOSTS=japan.pythonanywhere.com
+   CORS_ALLOWED_ORIGINS=https://jbook-five.vercel.app,https://japan.pythonanywhere.com
+   CSRF_TRUSTED_ORIGINS=https://jbook-five.vercel.app,https://japan.pythonanywhere.com
    FRONTEND_URL=https://jbook-five.vercel.app
-   BACKEND_URL=https://imronm.pythonanywhere.com
+   BACKEND_URL=https://japan.pythonanywhere.com
    GOOGLE_CLIENT_ID=<google-oauth-client-id>
    EMAIL_HOST=smtp.gmail.com
    EMAIL_PORT=587

@@ -101,7 +101,7 @@ export default function KotobaDetailUI({ vocab: initialVocab, onClose }) {
             if (uniqueKanjis.length === 0) return;
 
             try {
-                const baseUrl = (process.env.NEXT_PUBLIC_API_URL || 'https://imronm.pythonanywhere.com/api')
+                const baseUrl = (process.env.NEXT_PUBLIC_API_URL || 'https://japan.pythonanywhere.com/api')
                     .replace(/\/$/, '');
 
                 // Langsung fetch semua dari API (tanpa cek IndexedDB)
@@ -200,7 +200,7 @@ export default function KotobaDetailUI({ vocab: initialVocab, onClose }) {
         if (playing) return;
         setPlaying(true);
 
-        const baseUrl = (process.env.NEXT_PUBLIC_API_URL || 'https://imronm.pythonanywhere.com/api')
+        const baseUrl = (process.env.NEXT_PUBLIC_API_URL || 'https://japan.pythonanywhere.com/api')
             .replace(/\/$/, '');
         const audioUrl = `${baseUrl}/content/vocab/${vocab.id}/audio`;
 
@@ -273,7 +273,7 @@ export default function KotobaDetailUI({ vocab: initialVocab, onClose }) {
 
         setLoadingKanjis(prev => ({ ...prev, [char]: true }));
         try {
-            const baseUrl = (process.env.NEXT_PUBLIC_API_URL || 'https://imronm.pythonanywhere.com/api')
+            const baseUrl = (process.env.NEXT_PUBLIC_API_URL || 'https://japan.pythonanywhere.com/api')
                 .replace(/\/$/, '');
             const id = await resolveContentId('kanji', char);
             if (id) {
@@ -324,7 +324,7 @@ export default function KotobaDetailUI({ vocab: initialVocab, onClose }) {
         if (!confirm('Hapus Kotoba ini? Tindakan ini tidak bisa dibatalkan.')) return;
         setDeleting(true);
         try {
-            const baseUrl = (process.env.NEXT_PUBLIC_API_URL || 'https://imronm.pythonanywhere.com/api')
+            const baseUrl = (process.env.NEXT_PUBLIC_API_URL || 'https://japan.pythonanywhere.com/api')
                 .replace(/\/$/, '');
             const token = Cookies.get('access_token');
             const res = await fetch(`${baseUrl}/content/vocab/${vocab.id}`, {
@@ -367,7 +367,7 @@ export default function KotobaDetailUI({ vocab: initialVocab, onClose }) {
 
         setSaving(true);
         try {
-            const baseUrl = (process.env.NEXT_PUBLIC_API_URL || 'https://imronm.pythonanywhere.com/api')
+            const baseUrl = (process.env.NEXT_PUBLIC_API_URL || 'https://japan.pythonanywhere.com/api')
                 .replace(/\/$/, '');
             const token = Cookies.get('access_token');
 

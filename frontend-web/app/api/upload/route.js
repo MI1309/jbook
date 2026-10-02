@@ -3,7 +3,7 @@ import { put } from '@vercel/blob';
 import { NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
 
-const API_URL = (process.env.NEXT_PUBLIC_API_URL || 'https://imronm.pythonanywhere.com/api').replace(/\/$/, '');
+const API_URL = (process.env.NEXT_PUBLIC_API_URL || 'https://japan.pythonanywhere.com/api').replace(/\/$/, '');
 const MAX_UPLOAD_SIZE = 25 * 1024 * 1024;
 
 /**

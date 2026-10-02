@@ -104,7 +104,7 @@ export default function KanjiDetailUI({ kanji: initialKanji, onClose }) {
         if (!confirm('Hapus Kanji ini? Tindakan ini tidak bisa dibatalkan.')) return;
         setDeleting(true);
         try {
-            const baseUrl = (process.env.NEXT_PUBLIC_API_URL || 'https://imronm.pythonanywhere.com/api')
+            const baseUrl = (process.env.NEXT_PUBLIC_API_URL || 'https://japan.pythonanywhere.com/api')
                 .replace(/\/$/, '');
             const token = Cookies.get('access_token');
             const res = await fetch(`${baseUrl}/content/kanji/${kanji.id}`, {
@@ -139,7 +139,7 @@ export default function KanjiDetailUI({ kanji: initialKanji, onClose }) {
 
         setSaving(true);
         try {
-            const baseUrl = (process.env.NEXT_PUBLIC_API_URL || 'https://imronm.pythonanywhere.com/api')
+            const baseUrl = (process.env.NEXT_PUBLIC_API_URL || 'https://japan.pythonanywhere.com/api')
                 .replace(/\/$/, '');
             const token = Cookies.get('access_token');
 

@@ -218,7 +218,7 @@ Menyimpan state global `isPracticing` (boolean). Digunakan untuk menyembunyikan 
 ## 7. Lapisan Data & API (lib/api.js)
 
 **File:** `lib/api.js`  
-**Base URL:** `process.env.NEXT_PUBLIC_API_URL` (default: `https://imronm.pythonanywhere.com/api`)
+**Base URL:** `process.env.NEXT_PUBLIC_API_URL` (default: `https://japan.pythonanywhere.com/api`)
 
 ### Pola Prioritas Data
 
@@ -701,7 +701,7 @@ KotobaDetailUI
 | `/blog/*` | NetworkFirst (timeout 3s) | 1 menit, max 10 entries |
 | Halaman non-blog/non-api | NetworkFirst (timeout 10s) | 30 hari, max 32 entries |
 | `/api/*` (same-origin) | NetworkFirst (timeout 10s) | 30 hari, max 64 entries |
-| `imronm.pythonanywhere.com/api/*` | NetworkFirst (timeout 10s) | 30 hari, max 128 entries |
+| `japan.pythonanywhere.com/api/*` | NetworkFirst (timeout 10s) | 30 hari, max 128 entries |
 
 ### Offline Fallback
 - Jika navigasi ke halaman apapun gagal saat offline → redirect ke `/offline`

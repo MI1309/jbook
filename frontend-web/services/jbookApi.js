@@ -1,6 +1,6 @@
 import Cookies from 'js-cookie';
 
-const base_url = process.env.NEXT_PUBLIC_API_URL || 'https://imronm.pythonanywhere.com/api';
+const base_url = process.env.NEXT_PUBLIC_API_URL || 'https://japan.pythonanywhere.com/api';
 const API_BASE = base_url.endsWith('/') ? base_url.slice(0, -1) : base_url;
 
 class JBookAPI {

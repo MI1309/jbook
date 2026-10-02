@@ -1,4 +1,4 @@
-const base_url = process.env.NEXT_PUBLIC_API_URL || 'https://imronm.pythonanywhere.com/api';
+const base_url = process.env.NEXT_PUBLIC_API_URL || 'https://japan.pythonanywhere.com/api';
 export const API_URL = base_url.endsWith('/') ? base_url.slice(0, -1) : base_url;
 
 let kanjiVisibilityCache = null;

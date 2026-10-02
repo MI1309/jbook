@@ -2,7 +2,7 @@ import requests
 import json
 
 # URL API di PythonAnywhere
-BASE_URL = "https://imronm.pythonanywhere.com/api/content/kanji"
+BASE_URL = "https://japan.pythonanywhere.com/api/content/kanji"
 
 # Kanji yang baru kita tambahkan untuk dites
 TEST_KANJI = ["二", "十", "会", "駅"]

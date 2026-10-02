@@ -4,7 +4,7 @@ class AppConstants {
   /// Fallback keeps the current production URL.
   static const String baseUrl = String.fromEnvironment(
     'API_BASE_URL',
-    defaultValue: 'https://imronm.pythonanywhere.com/api',
+    defaultValue: 'https://japan.pythonanywhere.com/api',
   );
   
   // Auth endpoints

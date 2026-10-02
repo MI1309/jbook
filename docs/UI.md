@@ -238,7 +238,7 @@ Navbar (Admin) → Admin Dashboard → Pilih menu (Kanji/Kotoba/Bunpo/Blog/Pengu
 ## 4. Kebutuhan Data & Logika (State/Backend Requirements)
 
 ### A. Data dari Backend API (Django REST Framework)
-Base URL: `NEXT_PUBLIC_API_URL` (default: `https://imronm.pythonanywhere.com/api`)
+Base URL: `NEXT_PUBLIC_API_URL` (default: `https://japan.pythonanywhere.com/api`)
 
 | Endpoint                              | Method | Deskripsi                                                                 |
 |---------------------------------------|--------|---------------------------------------------------------------------------|

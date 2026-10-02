@@ -6,7 +6,7 @@ import Cookies from 'js-cookie';
 
 const AuthContext = createContext();
 
-const base_url = process.env.NEXT_PUBLIC_API_URL || 'https://imronm.pythonanywhere.com/api';
+const base_url = process.env.NEXT_PUBLIC_API_URL || 'https://japan.pythonanywhere.com/api';
 const API_URL = base_url.endsWith('/') ? base_url.slice(0, -1) : base_url;
 
 // Cookie expires aligned with backend JWT refresh token lifetime (default 7 days)

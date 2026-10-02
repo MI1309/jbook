@@ -63,9 +63,9 @@ if not DEBUG and len(SECRET_KEY) < 50:
 
 # Production: strict list. Dev: allow localhost + wildcard for flexibility.
 _ALLOWED_HOSTS_DEFAULT = (
-    "imronm.pythonanywhere.com,localhost,127.0.0.1"
+    "japan.pythonanywhere.com,localhost,127.0.0.1"
     if DEBUG else
-    "imronm.pythonanywhere.com"
+    "japan.pythonanywhere.com"
 )
 ALLOWED_HOSTS = [
     h.strip() for h in os.environ.get("ALLOWED_HOSTS", _ALLOWED_HOSTS_DEFAULT).split(",")
@@ -133,7 +133,7 @@ ROOT_URLCONF = "core.urls"
 _CORS_DEFAULT = (
     "http://localhost:3000,http://127.0.0.1:3000,http://localhost:8000"
     if DEBUG else
-    "https://jbook-five.vercel.app,https://imronm.pythonanywhere.com"
+    "https://jbook-five.vercel.app,https://japan.pythonanywhere.com"
 )
 _CORS_ORIGINS = [
     o.strip() for o in os.environ.get("CORS_ALLOWED_ORIGINS", _CORS_DEFAULT).split(",")
@@ -297,7 +297,7 @@ DEFAULT_FROM_EMAIL = (
 )
 
 FRONTEND_URL = os.environ.get("FRONTEND_URL", "http://localhost:3000" if DEBUG else "https://jbook-five.vercel.app")
-BACKEND_URL = os.environ.get("BACKEND_URL", "http://localhost:8000" if DEBUG else "https://imronm.pythonanywhere.com")
+BACKEND_URL = os.environ.get("BACKEND_URL", "http://localhost:8000" if DEBUG else "https://japan.pythonanywhere.com")
 
 
 # ===============================

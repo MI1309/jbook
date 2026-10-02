@@ -69,7 +69,7 @@ const withPWA = withPWAInit({
             // External API (PythonAnywhere backend)
             {
                 urlPattern: ({ url }) =>
-                    url.hostname === "imronm.pythonanywhere.com" &&
+                    url.hostname === "japan.pythonanywhere.com" &&
                     url.pathname.startsWith("/api/"),
                 handler: "NetworkFirst",
                 options: {

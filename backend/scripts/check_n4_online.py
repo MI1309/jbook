@@ -9,7 +9,7 @@ import requests
 BACKEND_ROOT = Path(__file__).resolve().parent.parent
 sys.path.append(str(BACKEND_ROOT))
 
-API_BASE_URL = os.environ.get('JBOOK_API_BASE_URL', 'https://imronm.pythonanywhere.com/api')
+API_BASE_URL = os.environ.get('JBOOK_API_BASE_URL', 'https://japan.pythonanywhere.com/api')
 API_EMAIL = os.environ.get('JBOOK_API_EMAIL')
 API_PASSWORD = os.environ.get('JBOOK_API_PASSWORD')
 DATA_FILE = BACKEND_ROOT / 'data' / 'kotoba_lengkap_n4.json'
