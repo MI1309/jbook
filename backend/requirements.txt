@@ -12,4 +12,5 @@ Pillow==11.1.0
 whitenoise==6.11.0
 requests==2.31.0
 python-dotenv==1.2.2
+email-validator==2.3.0
 
