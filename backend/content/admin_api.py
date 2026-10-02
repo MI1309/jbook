@@ -804,48 +804,62 @@ def admin_delete_custom_question(request, id: str):
     return {"success": True}
 
 # Upload Excel Endpoint
+import io
+import openpyxl
 from ninja import File
 from ninja.files import UploadedFile
-import pandas as pd
 
 @router.post("/custom-modules/{module_id}/upload-excel", auth=AdminAuth())
 @rate_limit(key='user', rate='5/h')
 def admin_upload_custom_module_excel(request, module_id: str, file: UploadedFile = File(...)):
     module = get_object_or_404(CustomModule, id=module_id)
     try:
-        df = pd.read_excel(file.read())
+        wb = openpyxl.load_workbook(filename=io.BytesIO(file.read()), data_only=True)
+        sheet = wb.active
+        
         # Expected columns: question_type, question, option_a, option_b, option_c, option_d, correct_answer, explanation
+        header_row = next(sheet.iter_rows(max_row=1, values_only=True), None)
+        if not header_row:
+            raise ValueError("File Excel kosong atau tidak memiliki header.")
+            
+        header_map = {str(cell).strip().lower(): idx for idx, cell in enumerate(header_row) if cell is not None}
         
-        # Delete existing questions if needed, or append. Let's append but start order from max
         max_order = CustomQuestion.objects.filter(module=module).count()
-        
         questions_to_create = []
-        for index, row in df.iterrows():
-            q_type = row.get('question_type', 'choice')
-            if pd.isna(q_type):
-                q_type = 'choice'
-            else:
-                q_type = str(q_type).lower().strip()
-                
-            question_text = str(row.get('question', ''))
-            if pd.isna(row.get('question')) or not question_text:
+        
+        for row in sheet.iter_rows(min_row=2, values_only=True):
+            if not row or not any(cell is not None for cell in row):
                 continue
-                
-            correct_answer = str(row.get('correct_answer', ''))
-            if pd.isna(row.get('correct_answer')):
-                correct_answer = ''
-                
-            explanation = str(row.get('explanation', ''))
-            if pd.isna(row.get('explanation')):
-                explanation = ''
-                
+
+            def get_val(col_name):
+                idx = header_map.get(col_name)
+                if idx is not None and idx < len(row) and row[idx] is not None:
+                    return row[idx]
+                return None
+
+            raw_q_type = get_val('question_type')
+            q_type = str(raw_q_type).lower().strip() if raw_q_type is not None else 'choice'
+
+            raw_question = get_val('question')
+            if raw_question is None:
+                continue
+            question_text = str(raw_question).strip()
+            if not question_text:
+                continue
+
+            raw_ans = get_val('correct_answer')
+            correct_answer = str(raw_ans).strip() if raw_ans is not None else ''
+
+            raw_exp = get_val('explanation')
+            explanation = str(raw_exp).strip() if raw_exp is not None else ''
+
             options = []
             if q_type == 'choice':
                 for opt_col in ['option_a', 'option_b', 'option_c', 'option_d']:
-                    opt_val = row.get(opt_col)
-                    if not pd.isna(opt_val):
+                    opt_val = get_val(opt_col)
+                    if opt_val is not None:
                         options.append(str(opt_val))
-            
+
             max_order += 1
             questions_to_create.append(CustomQuestion(
                 module=module,
@@ -856,7 +870,7 @@ def admin_upload_custom_module_excel(request, module_id: str, file: UploadedFile
                 explanation=explanation,
                 order=max_order
             ))
-            
+
         CustomQuestion.objects.bulk_create(questions_to_create)
         return {"success": True, "count": len(questions_to_create)}
     except Exception as e:
