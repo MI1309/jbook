@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/context/AuthContext';
-import { API_URL } from '@/lib/api';
+import { API_URL, setKanjiVisibilityCache } from '@/lib/api';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import Cookies from 'js-cookie';
@@ -67,6 +67,7 @@ export default function KanjiAdmin() {
             });
             if (!res.ok) throw new Error('Visibility update failed');
             setDisabledLevels(nextDisabledLevels);
+            setKanjiVisibilityCache(nextDisabledLevels);
             toast.success(`Kanji N${level} ${nextDisabledLevels.includes(level) ? 'dinonaktifkan' : 'diaktifkan'}`);
         } catch (error) {
             toast.error('Gagal mengubah visibilitas level Kanji.');

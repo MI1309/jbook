@@ -209,6 +209,52 @@ export async function resolveContentId(type, character) {
     return findIdByString(storeMap[type] || type, character);
 }
 
+export function invalidateVisibilityCache() {
+    kanjiVisibilityCache = null;
+    kanjiVisibilityExpiresAt = 0;
+    kanjiVisibilityRequest = null;
+    vocabVisibilityCache = null;
+    vocabVisibilityExpiresAt = 0;
+    vocabVisibilityRequest = null;
+    if (typeof window !== 'undefined') {
+        try {
+            localStorage.removeItem('jbook_vocab_visibility');
+            localStorage.removeItem('jbook_kanji_visibility');
+        } catch {}
+        window.dispatchEvent(new CustomEvent('jbook:visibility-updated'));
+    }
+}
+
+export function setKanjiVisibilityCache(disabledLevels) {
+    const disabled = (Array.isArray(disabledLevels) ? disabledLevels : [])
+        .map(Number)
+        .filter(level => Number.isInteger(level) && level >= 1 && level <= 5);
+    const enabled = [1, 2, 3, 4, 5].filter(level => !disabled.includes(level));
+    kanjiVisibilityCache = { disabled_levels: disabled, enabled_levels: enabled };
+    kanjiVisibilityExpiresAt = Date.now() + 5 * 60 * 1000;
+    if (typeof window !== 'undefined') {
+        try {
+            localStorage.setItem('jbook_kanji_visibility', JSON.stringify(kanjiVisibilityCache));
+        } catch {}
+        window.dispatchEvent(new CustomEvent('jbook:visibility-updated', { detail: { type: 'kanji', cache: kanjiVisibilityCache } }));
+    }
+}
+
+export function setVocabVisibilityCache(disabledLevels) {
+    const disabled = (Array.isArray(disabledLevels) ? disabledLevels : [])
+        .map(Number)
+        .filter(level => Number.isInteger(level) && level >= 1 && level <= 5);
+    const enabled = [1, 2, 3, 4, 5].filter(level => !disabled.includes(level));
+    vocabVisibilityCache = { disabled_levels: disabled, enabled_levels: enabled };
+    vocabVisibilityExpiresAt = Date.now() + 5 * 60 * 1000;
+    if (typeof window !== 'undefined') {
+        try {
+            localStorage.setItem('jbook_vocab_visibility', JSON.stringify(vocabVisibilityCache));
+        } catch {}
+        window.dispatchEvent(new CustomEvent('jbook:visibility-updated', { detail: { type: 'vocab', cache: vocabVisibilityCache } }));
+    }
+}
+
 export async function getKanjiLevelVisibility() {
     if (kanjiVisibilityCache && Date.now() < kanjiVisibilityExpiresAt) {
         return kanjiVisibilityCache;
@@ -221,11 +267,40 @@ export async function getKanjiLevelVisibility() {
             return res.json();
         })
         .then(data => {
-            kanjiVisibilityCache = data;
+            const enabledLevels = (Array.isArray(data.enabled_levels) ? data.enabled_levels : [4, 5])
+                .map(Number)
+                .filter(level => Number.isInteger(level) && level >= 1 && level <= 5)
+                .sort((a, b) => a - b);
+            kanjiVisibilityCache = {
+                disabled_levels: (Array.isArray(data.disabled_levels) ? data.disabled_levels : [])
+                    .map(Number)
+                    .filter(level => Number.isInteger(level) && level >= 1 && level <= 5),
+                enabled_levels: enabledLevels,
+            };
             kanjiVisibilityExpiresAt = Date.now() + 5 * 60 * 1000;
-            return data;
+            if (typeof window !== 'undefined') {
+                try {
+                    localStorage.setItem('jbook_kanji_visibility', JSON.stringify(kanjiVisibilityCache));
+                } catch {}
+            }
+            return kanjiVisibilityCache;
         })
-        .catch(() => ({ disabled_levels: [1, 2, 3], enabled_levels: [4, 5] }))
+        .catch(() => {
+            if (typeof window !== 'undefined') {
+                try {
+                    const cached = JSON.parse(localStorage.getItem('jbook_kanji_visibility') || 'null');
+                    if (Array.isArray(cached?.enabled_levels)) {
+                        kanjiVisibilityCache = cached;
+                        kanjiVisibilityExpiresAt = Date.now() + 60 * 1000;
+                        return cached;
+                    }
+                } catch {}
+            }
+            const fallback = { disabled_levels: [1, 2, 3], enabled_levels: [4, 5] };
+            kanjiVisibilityCache = fallback;
+            kanjiVisibilityExpiresAt = Date.now() + 60 * 1000;
+            return fallback;
+        })
         .finally(() => {
             kanjiVisibilityRequest = null;
         });
@@ -300,6 +375,10 @@ export async function getKanjiList({ level, search, radical, limit = 50, page = 
     const requestedLevels = level
         ? String(level).split(',').map(Number).filter(item => enabledLevels.includes(item))
         : [];
+    const hasExplicitLevel = level !== undefined && level !== null && String(level).trim() !== '';
+    if (hasExplicitLevel && requestedLevels.length === 0) {
+        return { items: [], total: 0, page: 1, pages: 1 };
+    }
     const localLevels = requestedLevels.length ? requestedLevels : enabledLevels;
     const queryParams = new URLSearchParams();
     if (requestedLevels.length) queryParams.append('level', requestedLevels.join(','));
@@ -499,7 +578,7 @@ async function sanitizePracticeSelection({ type, level }) {
         vocabEnabled = (vis.enabled_levels || [1, 2, 3, 4, 5]).map(Number);
     }
 
-    const safeTypes = requestedTypes.filter(t => t !== 'kanji' || kanjiEnabled.length > 0);
+    const safeTypes = requestedTypes.filter(t => (t !== 'kanji' || kanjiEnabled.length > 0) && (!['vocab', 'kotoba'].includes(t) || vocabEnabled.length > 0));
     if (!safeTypes.length) return { type: '', level: null };
 
     if (!level) return { type: safeTypes.join(','), level: null };
@@ -742,6 +821,10 @@ export async function getVocabList({ level, search, word_type, limit = 50, page 
     const requestedLevels = level
         ? String(level).split(',').map(Number).filter(item => enabledLevels.includes(item))
         : [];
+    const hasExplicitLevel = level !== undefined && level !== null && String(level).trim() !== '';
+    if (hasExplicitLevel && requestedLevels.length === 0) {
+        return { items: [], total: 0, page: 1, pages: 1 };
+    }
     const localLevels = requestedLevels.length ? requestedLevels : enabledLevels;
     const queryParams = new URLSearchParams();
     if (requestedLevels.length) queryParams.append('level', requestedLevels.join(','));

@@ -96,6 +96,19 @@ function FilterContent() {
         return () => window.removeEventListener('popstate', syncFromLocation);
     }, [enabledLevels]);
 
+    // Re-sync visibility immediately when updated by admin or cache invalidation
+    useEffect(() => {
+        const handleVisibilityUpdated = () => {
+            getVocabLevelVisibility().then(data => {
+                const levels = (data.enabled_levels || [1, 2, 3, 4, 5]).map(Number).sort((a, b) => a - b);
+                setEnabledLevels(levels);
+                setSelectedLevels(current => sanitizeLevels(current, levels));
+            });
+        };
+        window.addEventListener('jbook:visibility-updated', handleVisibilityUpdated);
+        return () => window.removeEventListener('jbook:visibility-updated', handleVisibilityUpdated);
+    }, []);
+
     // Debounce search term to avoid too many URL updates (500ms delay)
     const [debouncedSearch] = useDebounce(searchTerm, 500);
 

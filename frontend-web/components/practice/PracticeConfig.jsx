@@ -37,6 +37,7 @@ export default function PracticeConfig() {
         { id: '1', label: 'N1' },
     ];
     const kanjiAvailable = kanjiEnabledLevels.length > 0;
+    const vocabAvailable = vocabEnabledLevels.length > 0;
 
     const isLevelEnabledForSelection = (levelId, types = selectedTypes) => {
         const level = Number(levelId);
@@ -53,22 +54,26 @@ export default function PracticeConfig() {
         return true;
     };
 
-    useEffect(() => {
-        getDoukaiCount().then(setDoukaiCount);
-        Promise.all([getKanjiLevelVisibility(), getVocabLevelVisibility()]).then(([kanjiData, vocabData]) => {
+    const syncVisibility = () => {
+        return Promise.all([getKanjiLevelVisibility(), getVocabLevelVisibility()]).then(([kanjiData, vocabData]) => {
             const kanjiEnabled = (kanjiData.enabled_levels || [4, 5]).map(Number);
             const vocabEnabled = (vocabData.enabled_levels || [1, 2, 3, 4, 5]).map(Number);
             setKanjiEnabledLevels(kanjiEnabled);
             setVocabEnabledLevels(vocabEnabled);
 
             setSelectedTypes(current => {
-                const next = current.filter(type => type !== 'kanji' || kanjiEnabled.length > 0);
-                if (next.length === 0) return ['vocab'];
+                const next = current.filter(type => (type !== 'kanji' || kanjiEnabled.length > 0) && (type !== 'vocab' || vocabEnabled.length > 0));
+                if (next.length === 0) {
+                    const fallbackType = ['kanji', 'vocab', 'grammar', 'particle', 'kana'].find(t =>
+                        (t !== 'kanji' || kanjiEnabled.length > 0) && (t !== 'vocab' || vocabEnabled.length > 0)
+                    );
+                    return [fallbackType || 'grammar'];
+                }
                 return next;
             });
             setSelectedLevels(current => current.filter(level => {
-                const types = selectedTypes.filter(type => type !== 'kanji' || kanjiEnabled.length > 0);
-                const resolvedTypes = types.length > 0 ? types : ['vocab'];
+                const types = selectedTypes.filter(type => (type !== 'kanji' || kanjiEnabled.length > 0) && (type !== 'vocab' || vocabEnabled.length > 0));
+                const resolvedTypes = types.length > 0 ? types : ['grammar'];
                 const hasUnrestrictedType = resolvedTypes.some(t => ['grammar', 'particle', 'kana'].includes(t));
                 if (hasUnrestrictedType) return true;
                 const kanjiSelected = resolvedTypes.includes('kanji');
@@ -81,6 +86,17 @@ export default function PracticeConfig() {
                 return true;
             }));
         });
+    };
+
+    useEffect(() => {
+        getDoukaiCount().then(setDoukaiCount);
+        syncVisibility();
+
+        const handleVisibilityUpdated = () => {
+            syncVisibility();
+        };
+        window.addEventListener('jbook:visibility-updated', handleVisibilityUpdated);
+        return () => window.removeEventListener('jbook:visibility-updated', handleVisibilityUpdated);
     }, []);
 
     const types = [
@@ -93,6 +109,7 @@ export default function PracticeConfig() {
 
     const toggleType = (id) => {
         if (id === 'kanji' && !kanjiAvailable) return;
+        if (id === 'vocab' && !vocabAvailable) return;
         setSelectedTypes(prev => {
             const next = prev.includes(id)
                 ? (prev.length > 1 ? prev.filter(t => t !== id) : prev)
@@ -252,15 +269,17 @@ export default function PracticeConfig() {
                                 </label>
                                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2.5 sm:gap-4">
                                     {types.map(t => {
-                                        const kakitoriDisabled = mode === 'kakitori' && !['vocab'].includes(t.id);
-                                        const featureDisabled = t.id === 'kanji' && !kanjiAvailable;
+                                        const featureDisabled = (t.id === 'kanji' && !kanjiAvailable) || (t.id === 'vocab' && !vocabAvailable);
+                                        const kakitoriDisabled = mode === 'kakitori' && (!['vocab'].includes(t.id) || !vocabAvailable);
                                         const typeDisabled = kakitoriDisabled || featureDisabled;
                                         const isSelected = selectedTypes.includes(t.id) && !typeDisabled;
-                                        const disabledTitle = featureDisabled
+                                        const disabledTitle = (t.id === 'kanji' && !kanjiAvailable)
                                             ? 'Kanji dinonaktifkan oleh admin'
-                                            : kakitoriDisabled
-                                                ? 'Tidak tersedia untuk mode Kakitori'
-                                                : '';
+                                            : (t.id === 'vocab' && !vocabAvailable)
+                                                ? 'Kotoba dinonaktifkan oleh admin'
+                                                : kakitoriDisabled
+                                                    ? 'Tidak tersedia untuk mode Kakitori'
+                                                    : '';
                                         return (
                                             <button
                                                 key={t.id}
@@ -315,23 +334,30 @@ export default function PracticeConfig() {
 
                                     <button
                                         onClick={() => {
+                                            if (!vocabAvailable) return;
                                             setMode('kakitori');
                                             const kakitoriAllowed = ['vocab'];
                                             const filtered = selectedTypes.filter(t => kakitoriAllowed.includes(t));
                                             setSelectedTypes(filtered.length > 0 ? filtered : ['vocab']);
                                         }}
+                                        disabled={!vocabAvailable}
+                                        title={!vocabAvailable ? 'Kotoba dinonaktifkan oleh admin' : ''}
                                         className={`flex items-center gap-4 p-4 rounded-2xl border-2 transition-all duration-300 transform hover:scale-[1.01] ${
-                                            mode === 'kakitori'
-                                                ? 'bg-gradient-to-br from-blue-50 to-sky-50 dark:from-blue-950/30 dark:to-sky-950/10 border-blue-500 shadow-lg shadow-blue-500/20'
-                                                : `${cardBg} ${borderStyle} hover:border-blue-300 dark:hover:border-blue-800 hover:shadow-md`
+                                            !vocabAvailable
+                                                ? `${cardBg} ${borderStyle} opacity-35 cursor-not-allowed grayscale`
+                                                : mode === 'kakitori'
+                                                    ? 'bg-gradient-to-br from-blue-50 to-sky-50 dark:from-blue-950/30 dark:to-sky-950/10 border-blue-500 shadow-lg shadow-blue-500/20 cursor-pointer'
+                                                    : `${cardBg} ${borderStyle} hover:border-blue-300 dark:hover:border-blue-800 hover:shadow-md cursor-pointer`
                                         }`}
                                     >
-                                        <span className="text-3xl">🎧</span>
+                                        <span className="text-3xl">{!vocabAvailable ? '🔒' : '🎧'}</span>
                                         <div className="text-left">
-                                            <span className={`block font-bold transition-colors ${mode === 'kakitori' ? 'text-blue-700 dark:text-blue-400' : textColor}`}>
+                                            <span className={`block font-bold transition-colors ${!vocabAvailable ? subTextColor : mode === 'kakitori' ? 'text-blue-700 dark:text-blue-400' : textColor}`}>
                                                 Kakitori (Dikte / Tulis Suara)
                                             </span>
-                                            <span className={`text-[10px] uppercase font-medium transition-colors ${subTextColor}`}>Dengar audio & tulis dalam Kana</span>
+                                            <span className={`text-[10px] uppercase font-medium transition-colors ${subTextColor}`}>
+                                                {!vocabAvailable ? 'Dinonaktifkan oleh admin' : 'Dengar audio & tulis dalam Kana'}
+                                            </span>
                                         </div>
                                     </button>
                                 </div>

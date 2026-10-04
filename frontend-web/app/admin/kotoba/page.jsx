@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/context/AuthContext';
-import { API_URL } from '@/lib/api';
+import { API_URL, setVocabVisibilityCache } from '@/lib/api';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import Cookies from 'js-cookie';
@@ -71,6 +71,7 @@ export default function KotobaAdmin() {
             });
             if (!res.ok) throw new Error('Visibility update failed');
             setDisabledLevels(nextDisabledLevels);
+            setVocabVisibilityCache(nextDisabledLevels);
             toast.success(`Kotoba N${lvl} ${nextDisabledLevels.includes(lvl) ? 'dinonaktifkan' : 'diaktifkan'}`);
         } catch (error) {
             toast.error('Gagal mengubah visibilitas level Kotoba.');

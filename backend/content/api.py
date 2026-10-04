@@ -245,6 +245,10 @@ def list_kanji(request,
             valid_levels = [level for level in levels if level not in get_disabled_kanji_levels()]
             if valid_levels:
                 qs = qs.filter(jlpt_level__in=valid_levels)
+            else:
+                qs = qs.none()
+        else:
+            qs = qs.none()
         
     if radical:
         qs = qs.filter(radical=radical)

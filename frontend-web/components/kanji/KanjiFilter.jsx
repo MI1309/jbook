@@ -2,7 +2,7 @@
 
 import { Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useDebounce } from 'use-debounce';
 import { useTheme } from '@/context/ThemeContext';
 import { getKanjiLevelVisibility } from '@/lib/api';
@@ -122,40 +122,111 @@ const RADICALS_BY_STROKES = [
     }
 ];
 
+function sanitizeLevels(rawLevels, allowedLevels) {
+    const values = Array.isArray(rawLevels)
+        ? rawLevels
+        : String(rawLevels || '').split(',');
+    return values.filter(Boolean).filter(level => allowedLevels.includes(Number(level)));
+}
+
+const DEFAULT_ENABLED_LEVELS = [4, 5];
+
 function FilterContent() {
     const { theme, mounted } = useTheme();
     const router = useRouter();
     const searchParams = useSearchParams();
 
-    // Initialize state from URL params
-
     const initialSearch = searchParams.get('search') || '';
     const initialRadical = searchParams.get('radical') || '';
-    const initialLevels = searchParams.get('level')?.split(',').filter(Boolean) || [];
 
     const [searchTerm, setSearchTerm] = useState(initialSearch);
     const [selectedRadical, setSelectedRadical] = useState(initialRadical);
-    const [selectedLevels, setSelectedLevels] = useState(initialLevels);
+    const [selectedLevels, setSelectedLevels] = useState([]);
     const [expandedGroup, setExpandedGroup] = useState(null);
     const [showRadicals, setShowRadicals] = useState(false);
-    const [enabledLevels, setEnabledLevels] = useState([4, 5]);
+    const [enabledLevels, setEnabledLevels] = useState(DEFAULT_ENABLED_LEVELS);
+    const [visibilityReady, setVisibilityReady] = useState(false);
+    const pendingRestoreQuery = useRef(null);
+    const initialized = useRef(false);
 
     useEffect(() => {
+        if (initialized.current) return;
+        initialized.current = true;
+
         getKanjiLevelVisibility().then(data => {
-            const levels = data.enabled_levels || [4, 5];
+            const levels = (data.enabled_levels || [4, 5]).map(Number).sort((a, b) => a - b);
             setEnabledLevels(levels);
-            setSelectedLevels(current => current.filter(level => levels.includes(Number(level))));
-        });
-    }, []);
-    
-    // Sync state with URL changes (e.g. back button)
-    useEffect(() => {
-        setSearchTerm(searchParams.get('search') || '');
-        setSelectedRadical(searchParams.get('radical') || '');
-        setSelectedLevels(searchParams.get('level')?.split(',').filter(Boolean) || []);
-    }, [searchParams]);
 
-    // Debounce search term to avoid too many URL updates
+            const currentQuery = typeof window !== 'undefined'
+                ? window.location.search.slice(1)
+                : searchParams.toString();
+            let params = new URLSearchParams(currentQuery);
+            if (!currentQuery && typeof window !== 'undefined') {
+                const saved = sessionStorage.getItem('kanji_filter_params');
+                if (saved) {
+                    params = new URLSearchParams(saved);
+                }
+            }
+
+            const requestedLevels = sanitizeLevels(params.get('level'), levels);
+            const normalizedRequested = [...requestedLevels].sort((a, b) => a - b);
+            if (normalizedRequested.length === levels.length && normalizedRequested.every((level, index) => level === levels[index])) {
+                params.delete('level');
+            }
+
+            const safeLevels = sanitizeLevels(params.get('level'), levels);
+            if (safeLevels.length) params.set('level', safeLevels.join(','));
+            else params.delete('level');
+
+            setSelectedLevels(safeLevels);
+            setSearchTerm(params.get('search') || '');
+            setSelectedRadical(params.get('radical') || '');
+
+            const nextQuery = params.toString();
+            if (nextQuery !== currentQuery) {
+                pendingRestoreQuery.current = nextQuery;
+                if (typeof window !== 'undefined') {
+                    if (nextQuery) sessionStorage.setItem('kanji_filter_params', nextQuery);
+                    else sessionStorage.removeItem('kanji_filter_params');
+                }
+                router.replace(nextQuery ? `/kanji?${nextQuery}` : '/kanji', { scroll: false });
+            }
+
+            setVisibilityReady(true);
+        });
+    }, [router, searchParams]);
+
+    // Keep the controlled filters aligned with browser Back/Forward navigation.
+    useEffect(() => {
+        const syncFromLocation = () => {
+            const params = new URLSearchParams(window.location.search);
+            const nextSearch = params.get('search') || '';
+            const nextLevels = sanitizeLevels(params.get('level'), enabledLevels);
+            const nextRadical = params.get('radical') || '';
+
+            setSearchTerm(nextSearch);
+            setSelectedLevels(nextLevels);
+            setSelectedRadical(nextRadical);
+        };
+
+        window.addEventListener('popstate', syncFromLocation);
+        return () => window.removeEventListener('popstate', syncFromLocation);
+    }, [enabledLevels]);
+
+    // Re-sync visibility immediately when updated by admin or cache invalidation
+    useEffect(() => {
+        const handleVisibilityUpdated = () => {
+            getKanjiLevelVisibility().then(data => {
+                const levels = (data.enabled_levels || [4, 5]).map(Number).sort((a, b) => a - b);
+                setEnabledLevels(levels);
+                setSelectedLevels(current => sanitizeLevels(current, levels));
+            });
+        };
+        window.addEventListener('jbook:visibility-updated', handleVisibilityUpdated);
+        return () => window.removeEventListener('jbook:visibility-updated', handleVisibilityUpdated);
+    }, []);
+
+    // Debounce search term to avoid too many URL updates (500ms delay)
     const [debouncedSearch] = useDebounce(searchTerm, 500);
 
     // Open group if selected radical is inside it initially
@@ -167,11 +238,20 @@ function FilterContent() {
                 setExpandedGroup(group.strokes);
             }
         }
-    }, []);
+    }, [initialRadical]);
 
     // Update URL when filters change
     useEffect(() => {
+        if (!visibilityReady) return;
+        if (pendingRestoreQuery.current !== null) {
+            if (searchParams.toString() !== pendingRestoreQuery.current) return;
+            pendingRestoreQuery.current = null;
+            return;
+        }
+        if (debouncedSearch !== searchTerm) return;
+
         const params = new URLSearchParams(searchParams.toString());
+        const safeLevels = sanitizeLevels(selectedLevels, enabledLevels);
 
         if (debouncedSearch) {
             params.set('search', debouncedSearch);
@@ -185,24 +265,30 @@ function FilterContent() {
             params.delete('radical');
         }
 
-        if (selectedLevels.length) {
-            params.set('level', selectedLevels.join(','));
+        if (safeLevels.length) {
+            params.set('level', safeLevels.join(','));
         } else {
             params.delete('level');
         }
 
-        // Reset page when filter changes, IF search/radical/level changed
-        // We need to compare with current params to avoid loop if effect runs on mount
         const currentSearch = searchParams.get('search') || '';
         const currentRadical = searchParams.get('radical') || '';
         const currentLevel = searchParams.get('level') || '';
 
-        if (debouncedSearch !== currentSearch || selectedRadical !== currentRadical || selectedLevels.join(',') !== currentLevel) {
+        if (debouncedSearch !== currentSearch || selectedRadical !== currentRadical || safeLevels.join(',') !== currentLevel) {
             params.delete('page'); // Reset pagination
-            router.push(`/kanji?${params.toString()}`, { scroll: false });
+            const newQuery = params.toString();
+            if (typeof window !== 'undefined') {
+                if (newQuery) {
+                    sessionStorage.setItem('kanji_filter_params', newQuery);
+                } else {
+                    sessionStorage.removeItem('kanji_filter_params');
+                }
+            }
+            router.push(`/kanji?${newQuery}`, { scroll: false });
         }
 
-    }, [debouncedSearch, selectedRadical, selectedLevels, router, searchParams]);
+    }, [debouncedSearch, searchTerm, selectedRadical, selectedLevels, router, searchParams, visibilityReady, enabledLevels]);
 
     const handleRadicalClick = (rad) => {
         if (selectedRadical === rad) {
@@ -228,6 +314,7 @@ function FilterContent() {
     };
 
     const handleLevelClick = (level) => {
+        if (!enabledLevels.includes(level)) return;
         const stringLevel = level.toString();
         if (selectedLevels.includes(stringLevel)) {
             setSelectedLevels(selectedLevels.filter(l => l !== stringLevel));
