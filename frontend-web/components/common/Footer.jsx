@@ -1,10 +1,12 @@
 'use client';
 
 import { useTheme } from '@/context/ThemeContext';
+import { useAuth } from '@/context/AuthContext';
 import Link from 'next/link';
 
 export default function Footer() {
     const { mounted } = useTheme();
+    const { user } = useAuth();
     const currentYear = new Date().getFullYear();
 
     if (!mounted) return null;
@@ -31,7 +33,9 @@ export default function Footer() {
                         <Link href="/kanji" className="hover:text-accent-blue transition-colors">Kanji</Link>
                         <Link href="/kotoba" className="hover:text-accent-blue transition-colors">Kotoba</Link>
                         <Link href="/bunpo" className="hover:text-accent-blue transition-colors">Bunpo</Link>
-                        <Link href="/practice" className="hover:text-accent-blue transition-colors">Latihan</Link>
+                        <Link href={user ? '/dashboard' : '/practice'} className="hover:text-accent-blue transition-colors">
+                            {user ? 'Dashboard' : 'Latihan'}
+                        </Link>
                     </div>
 
                     {/* Copyright Section */}

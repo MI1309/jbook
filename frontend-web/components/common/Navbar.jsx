@@ -194,7 +194,7 @@ export default function Navbar() {
                         md:hidden overflow-hidden
                         transition-all duration-300 ease-in-out
                         ${isMenuOpen ? 'max-h-[500px] opacity-100' : 'max-h-0 opacity-0'}
-                        ${!mounted ? 'bg-white border-gray-100' : (theme === 'dark' ? 'bg-[#0b0b0d] border-[#212127]' : 'bg-[#faf9f6] border-[#e5e5db]')} border-t
+                        ${!mounted ? 'bg-white border-gray-100' : (theme === 'dark' ? 'bg-[#0b0b0d] border-[#212127]' : 'bg-[#faf9f6] border-[#e5e5db]')} ${user ? 'border-t' : ''}
                     `}
                 >
                     <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
@@ -219,10 +219,9 @@ export default function Navbar() {
                         ))}
                     </div>
 
-                    <div className={`pt-3 pb-4 border-t ${!mounted ? 'border-gray-100' : (theme === 'dark' ? 'border-[#212127]' : 'border-gray-100')}`}>
-                        {!loading && (
-                            user ? (
-                                <div className="px-5 space-y-2">
+                    {!loading && user && (
+                        <div className={`pt-3 pb-4 border-t ${!mounted ? 'border-gray-100' : (theme === 'dark' ? 'border-[#212127]' : 'border-gray-100')}`}>
+                            <div className="px-5 space-y-2">
                                     <div className={`flex items-center py-2`}>
                                         <div className={`w-8 h-8 rounded-full flex items-center justify-center mr-3 ${!mounted ? 'bg-gray-100' : (theme === 'dark' ? 'bg-accent-blue/10' : 'bg-gray-100')}`}>
                                             <span className={`text-sm font-bold ${!mounted ? 'text-gray-400' : (theme === 'dark' ? 'text-accent-blue' : 'text-gray-600')}`}>{user.username?.[0]?.toUpperCase()}</span>
@@ -253,12 +252,9 @@ export default function Navbar() {
                                     >
                                         Keluar
                                     </button>
-                                </div>
-                            ) : (
-                                null
-                            )
-                        )}
-                    </div>
+                            </div>
+                        </div>
+                    )}
                 </div>
             </nav>
 

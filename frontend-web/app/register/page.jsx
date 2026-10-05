@@ -136,6 +136,12 @@ export default function RegisterPage() {
                 </form>
 
                 <div className="text-center mt-8 space-y-5">
+                    <p className={`text-sm font-medium transition-colors ${isDark ? 'text-neutral-500' : 'text-gray-500'}`}>
+                        Sudah punya akun?{' '}
+                        <Link href="/login" className="font-black text-red-600 hover:text-red-400 transition-colors">
+                            Masuk
+                        </Link>
+                    </p>
                     <div className="flex items-center justify-center gap-4 text-[10px] font-black uppercase tracking-widest">
                         <Link href="/privacy-security" className={`transition-colors ${isDark ? 'text-neutral-600 hover:text-accent-blue' : 'text-gray-400 hover:text-red-600'}`}>
                             Privasi & Keamanan

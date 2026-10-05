@@ -73,7 +73,7 @@ function PracticePageContent() {
                     <div className="mb-8 sm:mb-10 flex flex-col md:flex-row md:items-center justify-between gap-6 border-b border-[var(--border-color)] pb-6 text-center md:text-left">
                         <div>
                             <h1 className={`text-3xl sm:text-4xl md:text-6xl font-japanese font-black mb-2 tracking-tight transition-colors ${textColor}`}>
-                                練習 <span className="text-transparent bg-clip-text bg-gradient-to-r from-accent-blue to-accent-green drop-shadow-sm">Latihan & Analitik</span>
+                                練習 <span className="text-transparent bg-clip-text bg-gradient-to-r from-accent-blue to-accent-green drop-shadow-sm">Latihan</span>
                             </h1>
                             <div className="h-1.5 w-24 bg-gradient-to-r from-accent-blue to-accent-green rounded-full mt-3 sm:mt-4 mx-auto md:mx-0"></div>
                         </div>

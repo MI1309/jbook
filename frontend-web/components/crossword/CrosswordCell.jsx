@@ -15,7 +15,6 @@ export const CrosswordCell = ({
 }) => {
   const inputRef = useRef(null);
   const fontSize = Math.max(12, Math.floor(cellSize * 0.55));
-  const numberSize = Math.max(7, Math.floor(cellSize * 0.22));
 
   useEffect(() => {
     if (isSelected && inputRef.current && !isKanjiMode) {
@@ -92,21 +91,6 @@ export const CrosswordCell = ({
       onKeyDown={isKanjiMode ? handleKeyDown : undefined}
       tabIndex={isKanjiMode ? 0 : undefined}
     >
-      {cell.number && (
-        <span
-          style={{ fontSize: numberSize }}
-          className={clsx(
-            "absolute top-0 left-0.5 font-black leading-none",
-            cell.validationState === 'wrong'
-              ? "text-rose-500 dark:text-rose-400"
-              : cell.validationState === 'correct'
-              ? "text-emerald-600 dark:text-emerald-400"
-              : "text-accent-blue dark:text-sky-300"
-          )}
-        >
-          {cell.number}
-        </span>
-      )}
       {!isKanjiMode && (
         <input
           ref={inputRef}

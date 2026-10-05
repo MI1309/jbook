@@ -13,11 +13,6 @@ const sections = [
     text: 'Kredensial akun diproses melalui sistem autentikasi aplikasi. Jangan membagikan password atau token sesi kepada siapa pun. Gunakan password yang unik dan segera ubah jika merasa akun tidak aman.'
   },
   {
-    icon: ShieldCheck,
-    title: 'Penyimpanan offline',
-    text: 'Saat fitur offline digunakan, sebagian materi belajar dapat disimpan di perangkat melalui penyimpanan lokal browser. Data lokal ini dapat dihapus dengan membersihkan data situs atau melalui pengaturan perangkat.'
-  },
-  {
     icon: UserRoundCheck,
     title: 'Kontrol pengguna',
     text: 'Pengguna dapat keluar dari akun, menghapus progres latihan melalui fitur yang tersedia, dan menghubungi tim JBook untuk pertanyaan atau permintaan terkait data akun.'
@@ -39,9 +34,8 @@ export default function PrivacySecurityPage() {
         <header className="mb-8 max-w-2xl sm:mb-10">
           <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-accent-blue/20 bg-accent-blue/10 px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.18em] text-accent-blue">
             <ShieldCheck className="h-3.5 w-3.5" />
-            Kepercayaan dan perlindungan
+            Privasi & Keamanan
           </div>
-          <h1 className="text-3xl font-black tracking-tight text-accent-blue sm:text-4xl">Privasi & Keamanan</h1>
           <p className="mt-3 text-sm leading-relaxed text-gray-600 dark:text-gray-300 sm:text-base">
             Ringkasan cara JBook menggunakan, menyimpan, dan membantu melindungi data saat kamu belajar.
           </p>

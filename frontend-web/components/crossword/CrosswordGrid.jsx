@@ -20,8 +20,8 @@ export const CrosswordGrid = () => {
     const updateSize = () => {
       const cols = gameState.grid.width;
       const containerWidth = containerRef.current?.clientWidth || window.innerWidth - 32;
-      const size = Math.floor(containerWidth / cols) - 1;
-      setCellSize(Math.min(40, Math.max(22, size)));
+      const size = Math.floor((containerWidth - cols - 1) / cols);
+      setCellSize(Math.min(40, Math.max(10, size)));
     };
 
     updateSize();

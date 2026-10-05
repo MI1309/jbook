@@ -34,7 +34,7 @@ export const useGameStore = create(
 
   startGame: async (level, mode = 'all') => {
     try {
-      const response = await getVocabList({ level, limit: 1000, page: 1 });
+      const response = await getVocabList({ level, limit: 300, page: 1 });
       let kotobaList = response.items || [];
       let kanjiCharacters = null;
       const hiraganaChoiceBank = [...hiraganaGojuon, ...hiraganaDakuon, ...hiraganaYoon]
@@ -42,7 +42,7 @@ export const useGameStore = create(
         .filter(Boolean);
 
       if (mode === 'kanji') {
-        const kanjiResponse = await getKanjiList({ level, limit: 1000, page: 1 });
+        const kanjiResponse = await getKanjiList({ level, limit: 300, page: 1 });
         kanjiCharacters = new Set((kanjiResponse.items || []).map(item => item.character).filter(Boolean));
       }
       

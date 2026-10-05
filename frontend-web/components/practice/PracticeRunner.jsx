@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback, useRef, Suspense } from 'react';
+import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import { usePractice } from '@/context/PracticeContext';
@@ -15,7 +16,6 @@ import { hasKanji } from '@/lib/utils';
 import * as wanakana from 'wanakana';
 import { toast } from 'react-toastify';
 import { Volume2 } from 'lucide-react';
-import { conjugateVerb } from '@/utils/conjugation';
 
 /**
  * Sanitizes reading text to ensure it's Japanese Kana.
@@ -61,6 +61,7 @@ function PracticeContent() {
     const [submitting, setSubmitting] = useState(false);
     const [results, setResults] = useState([]);
     const [finished, setFinished] = useState(false);
+    const [showRegisterPrompt, setShowRegisterPrompt] = useState(false);
     const [error, setError] = useState(null);
     const [detailView, setDetailView] = useState(null);
     const [showReadingManual, setShowReadingManual] = useState(false);
@@ -199,10 +200,13 @@ function PracticeContent() {
             }
 
             setFinished(true);
+            if (!user) setShowRegisterPrompt(true);
             sessionStorage.removeItem('guest_practice_session');
-            toast.success('Latihan selesai! Hasil telah disimpan.', {
-                theme: theme === 'dark' ? 'dark' : 'colored'
-            });
+            if (user) {
+                toast.success('Latihan selesai! Hasil telah disimpan.', {
+                    theme: theme === 'dark' ? 'dark' : 'colored'
+                });
+            }
         } catch (error) {
             console.error('Failed to finish session:', error);
             setError(`Gagal menyimpan hasil latihan: ${error.message}`);
@@ -257,6 +261,11 @@ function PracticeContent() {
             }
         }
 
+        if (source === 'minna') {
+            router.replace('/practice');
+            return;
+        }
+
         localStorage.removeItem('guest_practice_session');
 
         const cacheVersion = 'v1.2';
@@ -288,7 +297,7 @@ function PracticeContent() {
         }
 
         loadQuestions();
-    }, [limit, level, type, source, book, chapter, mode]);
+    }, [limit, level, type, source, book, chapter, mode, router]);
 
     // Save session state
     useEffect(() => {
@@ -609,6 +618,47 @@ function PracticeContent() {
                         )}
                     </div>
                 )}
+
+                {showRegisterPrompt && !user && (
+                    <div className="fixed inset-0 z-[120] flex items-center justify-center p-4" role="dialog" aria-modal="true" aria-labelledby="guest-register-title">
+                        <button
+                            type="button"
+                            className="absolute inset-0 bg-black/65 backdrop-blur-sm"
+                            aria-label="Tutup ajakan daftar"
+                            onClick={() => setShowRegisterPrompt(false)}
+                        />
+                        <div className={`${theme === 'dark' ? 'bg-neutral-900 border-white/10 text-white' : 'bg-white border-gray-200 text-gray-900'} relative w-full max-w-sm rounded-2xl border p-6 text-center shadow-2xl animate-in fade-in zoom-in duration-200`}>
+                            <button
+                                type="button"
+                                onClick={() => setShowRegisterPrompt(false)}
+                                className={`absolute right-3 top-3 rounded-lg p-2 text-lg leading-none transition-colors ${theme === 'dark' ? 'text-gray-400 hover:bg-white/10 hover:text-white' : 'text-gray-500 hover:bg-gray-100 hover:text-gray-900'}`}
+                                aria-label="Tutup"
+                            >
+                                ×
+                            </button>
+                            <div className="mb-3 text-4xl" aria-hidden="true">📚</div>
+                            <h2 id="guest-register-title" className="mb-2 text-xl font-black">Simpan progres latihanmu</h2>
+                            <p className={`mb-6 text-sm leading-relaxed ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`}>
+                                Sesi guest ini tersimpan di perangkat ini. Daftar agar progres latihan berikutnya tersimpan di akunmu.
+                            </p>
+                            <div className="flex gap-3">
+                                <button
+                                    type="button"
+                                    onClick={() => setShowRegisterPrompt(false)}
+                                    className={`flex-1 rounded-xl px-4 py-3 text-sm font-bold transition-colors ${theme === 'dark' ? 'bg-white/10 text-white hover:bg-white/15' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
+                                >
+                                    Nanti
+                                </button>
+                                <Link
+                                    href="/login"
+                                    className="flex-1 rounded-xl bg-blue-600 px-4 py-3 text-sm font-bold text-white transition-colors hover:bg-blue-700"
+                                >
+                                    Masuk / Daftar
+                                </Link>
+                            </div>
+                        </div>
+                    </div>
+                )}
             </div>
         );
     }
@@ -750,7 +800,7 @@ function PracticeContent() {
 
                         {/* Onyomi & Kunyomi popup for Kanji questions */}
                         {currentQuestion.type === 'kanji' && currentQuestion.reading && (
-                         (showKanjiReadings && !isAnswered) || (isAnswered && !(mode === 'kakitori' ? results[currentIndex]?.is_correct : selectedOption?.is_correct))
+                         showKanjiReadings && !isAnswered
                         ) && (
                             <div className={`mt-2 mb-2 px-5 py-3 rounded-2xl border-2 border-dashed transition-all duration-300 animate-fade-in-up ${
                                 theme === 'dark' ? 'bg-blue-950/30 border-blue-800/40' : 'bg-blue-50/80 border-blue-200'
@@ -762,17 +812,17 @@ function PracticeContent() {
                                     const onReading = onMatch ? onMatch[1].trim() : null;
                                     const kunReading = kunMatch ? kunMatch[1].trim() : null;
                                     return (
-                                        <div className="flex flex-col sm:flex-row items-center gap-3 sm:gap-6">
+                                        <div className="flex w-full flex-row items-center justify-center gap-3 sm:gap-6">
                                             {onReading && onReading !== '-' && (
-                                                <div className="flex items-center gap-2">
+                                                <div className="flex min-w-0 flex-1 items-center justify-center gap-2">
                                                     <span className={`text-[10px] font-black uppercase tracking-widest ${theme === 'dark' ? 'text-red-400' : 'text-red-500'}`}>On</span>
-                                                    <span className={`text-lg md:text-xl font-bold font-japanese ${theme === 'dark' ? 'text-red-300' : 'text-red-600'}`}>{onReading}</span>
+                                                    <span className={`min-w-0 break-words text-lg md:text-xl font-bold font-japanese ${theme === 'dark' ? 'text-red-300' : 'text-red-600'}`}>{onReading}</span>
                                                 </div>
                                             )}
                                             {kunReading && kunReading !== '-' && (
-                                                <div className="flex items-center gap-2">
+                                                <div className="flex min-w-0 flex-1 items-center justify-center gap-2">
                                                     <span className={`text-[10px] font-black uppercase tracking-widest ${theme === 'dark' ? 'text-sky-400' : 'text-sky-600'}`}>Kun</span>
-                                                    <span className={`text-lg md:text-xl font-bold font-japanese ${theme === 'dark' ? 'text-sky-300' : 'text-sky-600'}`}>{kunReading}</span>
+                                                    <span className={`min-w-0 break-words text-lg md:text-xl font-bold font-japanese ${theme === 'dark' ? 'text-sky-300' : 'text-sky-600'}`}>{kunReading}</span>
                                                 </div>
                                             )}
                                         </div>
@@ -839,28 +889,6 @@ function PracticeContent() {
                     </div>
                 ) : (
                     <>
-                        {isAnswered && !selectedOption?.is_correct && (currentQuestion.reading || currentQuestion.meaning) && (
-                            <div className="mb-6 animate-fade-in-up">
-                                {currentQuestion.reading && currentQuestion.type !== 'kanji' && hasKanji(currentQuestion.character) && (
-                                    <div className="text-2xl text-blue-600 dark:text-blue-400 font-serif font-black mb-1 break-words">{sanitizeReading(currentQuestion.reading)}</div>
-                                )}
-                                {currentQuestion.meaning && (
-                                    <div className={`text-base font-bold italic transition-colors px-4 py-2 rounded-xl ${theme === 'dark' ? 'text-gray-300 bg-white/5' : 'text-gray-700 bg-gray-50'}`}>
-                                        💡 {currentQuestion.meaning}
-                                    </div>
-                                )}
-                            </div>
-                        )}
-
-                        {isAnswered && !selectedOption?.is_correct && currentQuestion.explanation && (
-                            <div className={`mb-6 p-5 rounded-[2rem] border-2 text-left text-sm transition-all duration-300 animate-fade-in-up ${
-                                theme === 'dark' ? 'bg-blue-950/20 border-blue-900/40 text-blue-200' : 'bg-blue-50 border-blue-100 text-blue-800'
-                            }`}>
-                                <strong className="block mb-1 text-xs uppercase tracking-widest font-black">💡 Penjelasan:</strong>
-                                {currentQuestion.explanation}
-                            </div>
-                        )}
-
                         <div className="grid gap-2.5 sm:gap-3 grid-cols-1 sm:grid-cols-2">
                             {currentQuestion.options.map((option, idx) => {
                                     let btnClass = "p-3 sm:p-4 text-sm sm:text-base md:text-lg font-black border-2 rounded-xl sm:rounded-2xl transition-all duration-300 relative break-words min-h-[50px] flex items-center justify-center text-center ";
@@ -900,33 +928,6 @@ function PracticeContent() {
                     </>
                 )}
 
-                {/* Verb conjugations (9 forms) */}
-                {isAnswered && (currentQuestion.type === 'vocab' || currentQuestion.type === 'kotoba') && (() => {
-                    const conjs = conjugateVerb(currentQuestion.character, currentQuestion.reading, currentQuestion.word_type);
-                    if (!conjs || conjs.length === 0) return null;
-                    return (
-                        <div className="mt-6 mb-2 text-left border-t border-dashed border-gray-200 dark:border-gray-800 pt-4 animate-fade-in-up">
-                            <h4 className={`text-[10px] font-black uppercase tracking-widest mb-3 flex items-center gap-2 transition-colors ${subTextColor}`}>
-                                <span className="w-1.5 h-1.5 rounded-full bg-blue-500 shadow-md shadow-blue-500/20"></span>
-                                Perubahan Kata Kerja (9 Bentuk)
-                            </h4>
-                            <div className="grid grid-cols-2 gap-2 text-xs">
-                                {conjs.map((conj, idx) => (
-                                    <div 
-                                        key={idx}
-                                        className={`p-2 px-3 rounded-xl border ${borderStyle} ${theme === 'dark' ? 'bg-blue-950/20 border-blue-900/20' : 'bg-blue-50/50'} flex flex-col justify-between`}
-                                    >
-                                        <span className="text-[8px] font-black text-blue-600 dark:text-blue-400 uppercase tracking-widest mb-0.5">{conj.form}</span>
-                                        <div className="flex justify-between items-baseline gap-1.5">
-                                            <span className={`font-black font-japanese text-sm ${textColor}`}>{conj.kanji}</span>
-                                            <span className={`text-[10px] font-bold ${subTextColor}`}>{conj.kana}</span>
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-                    );
-                })()}
             </div>
 
             {/* Next Button / Feedback */}

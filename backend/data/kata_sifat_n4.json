@@ -3994,6 +3994,577 @@
     "jlpt_level": 4,
     "examples": []
   },
+    {
+    "id": "k05-yuuryounosaabisu-001",
+    "word": "有料のサービスを使う",
+    "reading": "yuuryou no saabisu wo tsukau",
+    "furigana": "ゆう りょう つか",
+    "meaning": "Menggunakan layanan berbayar",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "k05-muryoudeireru-002",
+    "word": "無料に入れる",
+    "reading": "muryou de ireru",
+    "furigana": "む りょう はい",
+    "meaning": "Bisa masuk secara gratis",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "k05-tadadenomimono-003",
+    "word": "ただで飲み物をもらう",
+    "reading": "tada de nomimono wo morau",
+    "furigana": "の もの",
+    "meaning": "Mendapat minuman gratis",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "k05-oozeinohitoga-004",
+    "word": "大勢の人が集まる",
+    "reading": "oozei no hito ga atsumaru",
+    "furigana": "おお ぜい ひと あつ",
+    "meaning": "Banyak orang berkumpul",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "k05-wagashiwotsukuru-005",
+    "word": "和菓子を作る",
+    "reading": "wagashi wo tsukuru",
+    "furigana": "わ が し つく",
+    "meaning": "Membuat kue tradisional Jepang",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "k05-nedanwokuraberu-006",
+    "word": "値段を比べる",
+    "reading": "nedan wo kuraberu",
+    "furigana": "ね だん くら",
+    "meaning": "Membandingkan harga",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "k05-rejininarabu-007",
+    "word": "レジに並ぶ",
+    "reading": "reji ni narabu",
+    "furigana": "なら",
+    "meaning": "Mengantri di kasir",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "k05-otsuriwouketoru-008",
+    "word": "おつりを受け取る",
+    "reading": "otsuri wo uketoru",
+    "furigana": "う と",
+    "meaning": "Menerima uang kembalian",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "k05-reshiitowomorau-009",
+    "word": "レシートをもらう",
+    "reading": "reshiito wo morau",
+    "furigana": "",
+    "meaning": "Menerima struk",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "k05-ruuruwomamoru-010",
+    "word": "ルールを守る",
+    "reading": "ruuru wo mamoru",
+    "furigana": "まも",
+    "meaning": "Mematuhi aturan",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "k05-manaagawarui-011",
+    "word": "マナーが悪い",
+    "reading": "manaa ga warui",
+    "furigana": "わる",
+    "meaning": "(Memiliki) etika yang buruk",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "k05-shigotokankeigaaru-012",
+    "word": "仕事に関係がある",
+    "reading": "shigoto ni kankei ga aru",
+    "furigana": "し ごと かん けい",
+    "meaning": "Ada hubungan dengan pekerjaan",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "k05-otoshiyorinisekiwo-013",
+    "word": "お年寄りに席を譲る",
+    "reading": "otoshiyori ni seki wo yuzuru",
+    "furigana": "とし よ せき ゆず",
+    "meaning": "Memberikan tempat duduk kepada lansia",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "k05-koureishawotasukeru-014",
+    "word": "高齢者を助ける",
+    "reading": "koureisha wo tasukeru",
+    "furigana": "こう れい しゃ たす",
+    "meaning": "Membantu lansia",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "k05-magoniomochawo-015",
+    "word": "孫におもちゃを買う",
+    "reading": "mago ni omocha wo kau",
+    "furigana": "まご か",
+    "meaning": "Membelikan mainan untuk cucu",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "k05-otonademomuzukashii-016",
+    "word": "大人でも難しい",
+    "reading": "otona demo muzukashii",
+    "furigana": "おとな むずか",
+    "meaning": "Bagi orang dewasa pun sulit",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "k05-nakamatokyouryoku-017",
+    "word": "仲間と協力する",
+    "reading": "nakama to kyouryoku suru",
+    "furigana": "なか ま きょう りょく",
+    "meaning": "Bekerja sama dengan teman",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "k05-shiriaigaooi-018",
+    "word": "知り合いが多い",
+    "reading": "shiriai ga ooi",
+    "furigana": "し あ おお",
+    "meaning": "(Memiliki) banyak kenalan",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "k05-aitechiiminikatsu-019",
+    "word": "相手チームに勝つ",
+    "reading": "aite chiimu ni katsu",
+    "furigana": "あい て か",
+    "meaning": "Menang dari tim lawan",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "k05-kekkonaitewosagasu-020",
+    "word": "結婚相手を探す",
+    "reading": "kekkon aite wo sagasu",
+    "furigana": "けっ こん あい て さが",
+    "meaning": "Mencari pasangan/partner menikah",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+    {
+    "id": "i01-nyuusu-001",
+    "word": "ニュース",
+    "reading": "nyuusu",
+    "furigana": "",
+    "meaning": "berita",
+    "word_type": "noun",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "i01-emeeru-002",
+    "word": "Eメール",
+    "reading": "emeeru",
+    "furigana": "",
+    "meaning": "email",
+    "word_type": "noun",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "i01-fuutou-003",
+    "word": "封筒",
+    "reading": "fuutou",
+    "furigana": "ふう とう",
+    "meaning": "amplop",
+    "word_type": "noun",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "i01-kitte-004",
+    "word": "切手",
+    "reading": "kitte",
+    "furigana": "きって",
+    "meaning": "perangko",
+    "word_type": "noun",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "i01-ehagaki-005",
+    "word": "絵はがき",
+    "reading": "ehagaki",
+    "furigana": "え",
+    "meaning": "kartu pos bergambar",
+    "word_type": "noun",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "i01-yuubinbangou-006",
+    "word": "郵便番号を調べる",
+    "reading": "yuubin bangou wo shiraberu",
+    "furigana": "ゆう びん ばん ごう しら",
+    "meaning": "Mencari tahu kode pos",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "i01-kanagawaken-007",
+    "word": "神奈川県に住む",
+    "reading": "kanagawa ken ni sumu",
+    "furigana": "か な がわ けん す",
+    "meaning": "Tinggal di Prefektur Kanagawa",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "i01-tenkiyohou-008",
+    "word": "天気予報を見る",
+    "reading": "tenki yohou wo miru",
+    "furigana": "てん き よ ほう み",
+    "meaning": "Melihat prakiraan cuaca",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "i01-juushohenkou-009",
+    "word": "住所を変更する",
+    "reading": "juusho wo henkou suru",
+    "furigana": "じゅうしょ へんこう",
+    "meaning": "Mengubah alamat",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "i01-yokohamashi-010",
+    "word": "横浜市へ引っ越す",
+    "reading": "yokohama shi he hikkosu",
+    "furigana": "よこ はま し ひ こ",
+    "meaning": "Pindah ke Kota Yokohama",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "i01-hisashiburi-011",
+    "word": "久しぶりに会う",
+    "reading": "hisashiburi ni au",
+    "furigana": "ひさ あ",
+    "meaning": "Bertemu setelah sekian lama tidak bertemu",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "i01-adoresu-012",
+    "word": "アドレスを教える",
+    "reading": "adoresu wo oshieru",
+    "furigana": "おし",
+    "meaning": "Memberitahukan alamat (email)",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "i01-rusubandenwa-013",
+    "word": "留守番電話を残す",
+    "reading": "rusuban denwa wo nokosu",
+    "furigana": "る す ばん でん わ のこ",
+    "meaning": "Meninggalkan pesan suara",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "i01-atesaki-014",
+    "word": "宛先を確認する",
+    "reading": "atesaki wo kakunin suru",
+    "furigana": "あて さき かくにん",
+    "meaning": "Memastikan alamat tujuan",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "i01-jouhou-015",
+    "word": "情報を収集する",
+    "reading": "jouhou wo shuushuu suru",
+    "furigana": "じょうほう しゅうしゅう",
+    "meaning": "Mengumpulkan informasi",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "i01-tanakasama-016",
+    "word": "田中様を呼ぶ",
+    "reading": "tanaka sama wo yobu",
+    "furigana": "た なか さま よ",
+    "meaning": "Memanggil Tuan/Nyonya Tanaka",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "i01-ninenburi-017",
+    "word": "２年ぶりに会う",
+    "reading": "ni nen buri ni au",
+    "furigana": "ねん あ",
+    "meaning": "Bertemu lagi setelah 2 tahun",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+    {
+    "id": "i02-kenmeiwokaku-001",
+    "word": "件名を書く",
+    "reading": "kenmei wo kaku",
+    "furigana": "けん めい か",
+    "meaning": "Menulis subjek (email)",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "i02-fairuwotenpu-002",
+    "word": "ファイルを添付する",
+    "reading": "fairu wo tenpu suru",
+    "furigana": "てん ぷ",
+    "meaning": "Melampirkan file",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "i02-nitteiwokimeru-003",
+    "word": "日程を決める",
+    "reading": "nittei wo kimeru",
+    "furigana": "にっ てい き",
+    "meaning": "Menentukan jadwal/agenda",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "i02-hoterunishukuhaku-004",
+    "word": "ホテルに宿泊する",
+    "reading": "hoteru ni shukuhaku suru",
+    "furigana": "しゅく はく",
+    "meaning": "Menginap di hotel",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "i02-hoteruwamanshitsuda-005",
+    "word": "ホテルは満室だ",
+    "reading": "hoteru wa manshitsuda",
+    "furigana": "まん しつ",
+    "meaning": "Hotelnya penuh (kamarnya penuh)",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "i02-kuushitsuwosagasu-006",
+    "word": "空室を探す",
+    "reading": "kuushitsu wo sagasu",
+    "furigana": "くう しつ さが",
+    "meaning": "Mencari kamar kosong",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "i02-resutoranwamanseki-007",
+    "word": "レストランは満席だ",
+    "reading": "resutoran wa manseki da",
+    "furigana": "まん せき",
+    "meaning": "Restorannya penuh (kursinya penuh)",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "i02-kuusekigaaru-008",
+    "word": "空席がある",
+    "reading": "kuuseki ga aru",
+    "furigana": "くう せき",
+    "meaning": "Ada kursi kosong",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "i02-zasekiwoerabu-009",
+    "word": "座席を選ぶ",
+    "reading": "zaseki wo erabu",
+    "furigana": "ざ せき えら",
+    "meaning": "Memilih kursi/tempat duduk",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "i02-hitodeippaida-010",
+    "word": "人でいっぱいだ",
+    "reading": "hito de ippai da",
+    "furigana": "ひと",
+    "meaning": "Penuh dengan orang",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "i02-saabisuryouwoharau-011",
+    "word": "サービス料を払う",
+    "reading": "saabisu ryou wo harau",
+    "furigana": "りょう はら",
+    "meaning": "Membayar biaya layanan",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "i02-konomoetomodachini-012",
+    "word": "この前友達に会った",
+    "reading": "kono mae tomodachi ni atta",
+    "furigana": "まえ とも だち あ",
+    "meaning": "Tempo hari bertemu teman",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "i02-senjitsusenseini-013",
+    "word": "先日先生に相談した",
+    "reading": "senjitsu sensei ni soudan shita",
+    "furigana": "せん じつ せん せい そう だん",
+    "meaning": "Beberapa hari lalu konsultasi dengan guru",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "i02-kondowawatashi-014",
+    "word": "今度は私が払う",
+    "reading": "kondo wa watashi ga harau",
+    "furigana": "こん ど わたし はら",
+    "meaning": "Lain kali saya yang bayar",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "i02-kondonodoyoubi-015",
+    "word": "今度の土曜日は暇だ",
+    "reading": "kondo no doyoubi wa hima da",
+    "furigana": "こん ど ど よう び ひま",
+    "meaning": "Sabtu depan/berikutnya senggang",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "i02-mukashikokoni-016",
+    "word": "昔ここに住んでいた",
+    "reading": "mukashi koko ni sunde ita",
+    "furigana": "むかし す",
+    "meaning": "Dulu saya tinggal di sini",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "i02-nenreiwokakunin-017",
+    "word": "年齢を確認する",
+    "reading": "nenrei wo kakunin suru",
+    "furigana": "ねん れい かく にん",
+    "meaning": "Memastikan usia",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "i02-seinengappiwokiku-018",
+    "word": "生年月日を聞く",
+    "reading": "seinen gappi wo kiku",
+    "furigana": "せい ねん がっ ぴ き",
+    "meaning": "Menanyakan tanggal lahir",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "i02-goninijouno-019",
+    "word": "5人以上のグループ",
+    "reading": "go nin ijou no guruupu",
+    "furigana": "にん い じょう",
+    "meaning": "Grup lebih dari atau minimal 5 orang",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "i02-yonninikano-020",
+    "word": "4人以下のグループ",
+    "reading": "yon nin ika no guruupu",
+    "furigana": "にん い か",
+    "meaning": "Grup kurang dari atau minimal 4 orang",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  
   
    
 

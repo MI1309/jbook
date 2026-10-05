@@ -18,7 +18,7 @@ export default function PracticeConfig() {
     // JLPT states
     const [mode, setMode] = useState('choice'); // 'choice' or 'kakitori' or minna modes
     const [selectedTypes, setSelectedTypes] = useState(['kanji']);
-    const [selectedLevels, setSelectedLevels] = useState(['5', '4']); // Default N5 & N4
+    const [selectedLevels, setSelectedLevels] = useState([]); // Default semua level
 
     // Minna states
     const [selectedBook, setSelectedBook] = useState('1'); // '1', '2', or 'both'
@@ -216,22 +216,16 @@ export default function PracticeConfig() {
                             </button>
 
                             <button
-                                onClick={() => {
-                                    setSource('minna');
-                                    setMode('choice');
-                                }}
-                                className={`flex flex-col items-center justify-center p-4 sm:p-5 rounded-2xl border-2 transition-all duration-300 transform hover:scale-[1.02] cursor-pointer ${
-                                    source === 'minna'
-                                        ? 'bg-gradient-to-br from-blue-50 to-sky-50 dark:from-blue-950/30 dark:to-sky-950/10 border-blue-500 shadow-lg shadow-blue-500/20'
-                                        : `${cardBg} ${borderStyle} hover:border-blue-300 dark:hover:border-blue-800`
-                                }`}
+                                disabled
+                                aria-label="Minna no Nihongo dinonaktifkan sementara"
+                                className={`flex flex-col items-center justify-center p-4 sm:p-5 rounded-2xl border-2 ${cardBg} ${borderStyle} opacity-50 cursor-not-allowed grayscale`}
                             >
                                 <span className="text-2xl sm:text-3xl mb-1.5 sm:mb-2">🇯🇵</span>
-                                <span className={`font-black text-sm sm:text-base transition-colors ${source === 'minna' ? 'text-blue-700 dark:text-blue-400' : textColor}`}>
+                                <span className={`font-black text-sm sm:text-base transition-colors ${textColor}`}>
                                     Minna no Nihongo
                                 </span>
                                 <span className={`text-[10px] mt-1 uppercase font-medium transition-colors ${subTextColor}`}>
-                                    Soal Buku 1 & 2 per Bab
+                                    Dinonaktifkan sementara
                                 </span>
                             </button>
 
