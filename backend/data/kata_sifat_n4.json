@@ -4564,6 +4564,146 @@
     "jlpt_level": 4,
     "examples": []
   },
+    {
+    "id": "h06-tsumasaki-001",
+    "word": "つま先",
+    "reading": "tsumasaki",
+    "furigana": "さき",
+    "meaning": "ujung kaki",
+    "word_type": "noun",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "h06-kakato-002",
+    "word": "かかと",
+    "reading": "kakato",
+    "furigana": "",
+    "meaning": "tumit",
+    "word_type": "noun",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "h06-hiza-003",
+    "word": "ひざ",
+    "reading": "hiza",
+    "furigana": "",
+    "meaning": "lutut",
+    "word_type": "noun",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "h06-hiji-004",
+    "word": "ひじ",
+    "reading": "hiji",
+    "furigana": "",
+    "meaning": "siku",
+    "word_type": "noun",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "h06-koshi-005",
+    "word": "腰",
+    "reading": "koshi",
+    "furigana": "こし",
+    "meaning": "pinggang",
+    "word_type": "noun",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "h06-yoruwayokunemuru-006",
+    "word": "夜はよく眠る",
+    "reading": "yoru wa yoku nemuru",
+    "furigana": "よる ねむ",
+    "meaning": "Tidur nyenyak pada malam hari",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "h06-baransuwotoru-007",
+    "word": "バランスを取る",
+    "reading": "baransu wo toru",
+    "furigana": "と",
+    "meaning": "Menjaga keseimbangan",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "h06-kenkounotameniaruku-008",
+    "word": "健康のために歩く",
+    "reading": "kenkou no tame ni aruku",
+    "furigana": "けん こう ある",
+    "meaning": "Berjalan demi kesehatan",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "h06-shuumatsuwayukkuriyasumu-009",
+    "word": "週末はゆっくり休む",
+    "reading": "shuumatsu wa yukkuriyasumu",
+    "furigana": "しゅうまつ やす",
+    "meaning": "Istirahat santai di akhir pekan",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "h06-masukuwotsukeru-010",
+    "word": "マスクをつける",
+    "reading": "masuku wo tsukeru",
+    "furigana": "",
+    "meaning": "Memakai masker",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "h06-oshirigaitai-011",
+    "word": "お尻が痛い",
+    "reading": "oshiri ga itai",
+    "furigana": "しり いた",
+    "meaning": "Pantat terasa sakit",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "h06-kibungawarui-012",
+    "word": "気分が悪い",
+    "reading": "kibun ga warui",
+    "furigana": "き ぶん わる",
+    "meaning": "Merasa tidak enak badan",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "h06-choushigawarui-013",
+    "word": "調子が悪い",
+    "reading": "choushi ga warui",
+    "furigana": "ちょう し わる",
+    "meaning": "Kondisi badan memburuk",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "h06-guaigawarui-014",
+    "word": "具合が悪い",
+    "reading": "guai ga warui",
+    "furigana": "ぐ あい わる",
+    "meaning": "Kondisinya tidak baik",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
   
   
    
