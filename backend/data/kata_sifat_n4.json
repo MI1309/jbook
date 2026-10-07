@@ -4704,6 +4704,206 @@
     "jlpt_level": 4,
     "examples": []
   },
+    {
+    "id": "h06-kaoirogawarui-001",
+    "word": "顔色が悪い",
+    "reading": "kaoiro ga warui",
+    "furigana": "かお いろ わる",
+    "meaning": "Wajah terlihat buruk (pucat)",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "h06-hagaitai-002",
+    "word": "歯が痛い",
+    "reading": "ha ga itai",
+    "furigana": "は いた",
+    "meaning": "Sakit gigi",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "h06-mimigaitai-003",
+    "word": "耳が痛い",
+    "reading": "mimi ga itai",
+    "furigana": "みみ いた",
+    "meaning": "Sakit telinga",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "h06-nodogaitai-004",
+    "word": "のどが痛い",
+    "reading": "nodo ga itai",
+    "furigana": "いた",
+    "meaning": "Sakit tenggorokan",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "h06-atamagaitaijutsuu-005",
+    "word": "頭が痛い／頭痛",
+    "reading": "atama ga itai / zutsuu",
+    "furigana": "あたま いた ず つう",
+    "meaning": "Sakit kepala",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "h06-onakagaitaifukutsuu-006",
+    "word": "お腹が痛い／腹痛",
+    "reading": "onaka ga itai / fukutsuu",
+    "furigana": "なか いた ふく つう",
+    "meaning": "Sakit perut",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "h06-hokenshouwomotteiku-007",
+    "word": "保険証を持って行く",
+    "reading": "hokenshou wo motte iku",
+    "furigana": "ほ けん しょう も い",
+    "meaning": "Membawa (pergi) kartu asuransi",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "h06-kangoshisanwoyobu-008",
+    "word": "看護師さんを呼ぶ",
+    "reading": "kangoshi san wo yobu",
+    "furigana": "かん ご し よ",
+    "meaning": "Memanggil perawat",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "h06-kanjasanwomiru-009",
+    "word": "患者さんを診る",
+    "reading": "kanja san wo miru",
+    "furigana": "かん じゃ み",
+    "meaning": "Memeriksa pasien",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "h06-kusuriwomikkabunmorau-010",
+    "word": "薬を三日分もらう",
+    "reading": "kusuri wo mikka bun morau",
+    "furigana": "くすり みっ か ぶん",
+    "meaning": "Mendapat obat untuk tiga hari",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "h06-kapuseruwo-nomu-011",
+    "word": "カプセルを飲む",
+    "reading": "kapuseru wo nomu",
+    "furigana": "の",
+    "meaning": "Minum kapsul",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "h06-megusuriwosasu-012",
+    "word": "目薬をさす",
+    "reading": "megusuri wo sasu",
+    "furigana": "め ぐすり",
+    "meaning": "Meneteskan obat tetes mata",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "h06-kazegusuriwonomu-013",
+    "word": "風邪薬を飲む",
+    "reading": "kazegusuri wo nomu",
+    "furigana": "かぜ ぐすり の",
+    "meaning": "Minum obat flu",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "h06-byoukininaru-014",
+    "word": "病気になる",
+    "reading": "byouki ni naru",
+    "furigana": "びょう き",
+    "meaning": "Jatuh sakit/menjadi sakit",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "h06-mewotojiru-015",
+    "word": "目を閉じる",
+    "reading": "me wo tojiru",
+    "furigana": "め と",
+    "meaning": "Menutup mata",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "h06-mewoakeru-016",
+    "word": "目を開ける",
+    "reading": "me wo akeru",
+    "furigana": "め あ",
+    "meaning": "Membuka mata",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "h06-memaigasuru-017",
+    "word": "めまいがする",
+    "reading": "memai ga suru",
+    "furigana": "",
+    "meaning": "Merasa pusing",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "h06-hakikegasuru-018",
+    "word": "吐き気がする",
+    "reading": "hakike ga suru",
+    "furigana": "は け",
+    "meaning": "Merasa mual",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "h06-chuushawoutsu-019",
+    "word": "注射を打つ",
+    "reading": "chuusha wo utsu",
+    "furigana": "ちゅう しゃ う",
+    "meaning": "Menyuntik",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "h06-shinsatsuwoukeru-020",
+    "word": "診察を受ける",
+    "reading": "shinsatsu wo ukeru",
+    "furigana": "しん さつ う",
+    "meaning": "Menjalani pemeriksaan dokter",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
   
   
    
