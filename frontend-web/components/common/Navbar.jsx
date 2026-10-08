@@ -105,7 +105,7 @@ export default function Navbar() {
                             </Link>
 
                             {/* Desktop Nav Links */}
-                            <div className="hidden lg:ml-8 lg:flex lg:space-x-1 font-japanese">
+                            <div className="hidden xl:ml-8 xl:flex xl:space-x-1 font-japanese">
                                 {[
                                     { href: '/kanji', label: 'Kanji' },
                                     { href: '/bunpo', label: 'Tata Bahasa' },
@@ -132,7 +132,7 @@ export default function Navbar() {
                         </div>
 
                         {/* Desktop Auth */}
-                        <div className="hidden md:flex items-center space-x-2">
+                        <div className="hidden xl:flex items-center space-x-2">
                             {/* Theme toggle disabled (forced dark mode) */}
 
                             {!loading && (
@@ -172,7 +172,7 @@ export default function Navbar() {
                         </div>
 
                         {/* Mobile navigation toggle */}
-                        <div className="flex items-center gap-1 md:hidden">
+                        <div className="flex items-center gap-1 xl:hidden">
                             <button
                                 onClick={() => setIsMenuOpen(!isMenuOpen)}
                                 className="p-2 rounded-md text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-accent-blue/50"
@@ -191,7 +191,7 @@ export default function Navbar() {
 
                 <div
                     className={`
-                        md:hidden overflow-hidden
+                        xl:hidden overflow-hidden
                         transition-all duration-300 ease-in-out
                         ${isMenuOpen ? 'max-h-[500px] opacity-100' : 'max-h-0 opacity-0'}
                         ${!mounted ? 'bg-white border-gray-100' : (theme === 'dark' ? 'bg-[#0b0b0d] border-[#212127]' : 'bg-[#faf9f6] border-[#e5e5db]')} ${user ? 'border-t' : ''}

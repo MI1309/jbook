@@ -216,7 +216,7 @@ export default function KanjiDetailUI({ kanji: initialKanji, onClose }) {
                             <div className="absolute inset-x-0 bottom-0 top-12 bg-blue-600 rounded-[3rem] blur-3xl opacity-10 group-hover:opacity-20 transition-opacity"></div>
                             <div 
                                 onClick={handleHugeKanjiClick}
-                                className={`relative ${cardBg} border-4 ${borderStyle} rounded-[3rem] shadow-2xl p-12 w-[280px] h-[280px] lg:w-[360px] lg:h-[360px] flex items-center justify-center select-none overflow-hidden transition-all duration-300 ${textColor}`}
+                                className={`relative ${cardBg} border-4 ${borderStyle} rounded-[3rem] shadow-2xl p-6 sm:p-12 w-[min(280px,calc(100vw-3rem))] aspect-square lg:w-[360px] flex items-center justify-center select-none overflow-hidden transition-all duration-300 ${textColor}`}
                             >
                                 
                                 {isStrokeAnimating && kanjiSvg ? (
@@ -228,7 +228,7 @@ export default function KanjiDetailUI({ kanji: initialKanji, onClose }) {
                                         />
                                     </div>
                                 ) : (
-                                    <span className="text-[140px] lg:text-[180px] font-serif leading-none group-hover:scale-110 transition-transform duration-500">
+                                    <span className="text-[min(34vw,140px)] lg:text-[180px] font-serif leading-none group-hover:scale-110 transition-transform duration-500">
                                         {kanji.character}
                                     </span>
                                 )}
@@ -303,7 +303,7 @@ export default function KanjiDetailUI({ kanji: initialKanji, onClose }) {
                                 </div>
                             ) : (
                                 <>
-                                    <h1 className={`text-4xl md:text-5xl lg:text-7xl font-black mb-4 tracking-tight leading-tight transition-colors ${textColor}`}>
+                                    <h1 className={`text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-black mb-4 tracking-tight leading-tight transition-colors ${textColor}`}>
                                         {kanji.meaning}
                                     </h1>
                                     

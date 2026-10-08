@@ -3423,7 +3423,7 @@
     "word_type": "expression",
     "jlpt_level": 4,
     "examples": []
-  }.
+  },
     {
     "id": "p02-hudouwoaruku-001",
     "word": "歩道を歩く",
@@ -4904,8 +4904,376 @@
     "jlpt_level": 4,
     "examples": []
   },
-  
-  
+    {
+    "id": "a07-niji-001",
+    "word": "虹",
+    "reading": "niji",
+    "furigana": "にじ",
+    "meaning": "pelangi",
+    "word_type": "noun",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "a07-chikyuu-002",
+    "word": "地球",
+    "reading": "chikyuu",
+    "furigana": "ち きゅう",
+    "meaning": "bumi",
+    "word_type": "noun",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "a07-taiyou-003",
+    "word": "太陽",
+    "reading": "taiyou",
+    "furigana": "たい よう",
+    "meaning": "matahari",
+    "word_type": "noun",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "a07-tsuki-004",
+    "word": "月",
+    "reading": "tsuki",
+    "furigana": "つき",
+    "meaning": "bulan",
+    "word_type": "noun",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "a07-hoshi-005",
+    "word": "星",
+    "reading": "hoshi",
+    "furigana": "ほし",
+    "meaning": "bintang",
+    "word_type": "noun",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "a07-kuukiwosuu-006",
+    "word": "空気を吸う",
+    "reading": "kuuki wo suu",
+    "furigana": "くう き す",
+    "meaning": "Menghirup udara",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "a07-hikarigaataru-007",
+    "word": "光が当たる",
+    "reading": "hikari ga ataru",
+    "furigana": "ひかり あ",
+    "meaning": "Terkena sinar/cahaya",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "a07-uchuuwokansatsu-008",
+    "word": "宇宙を観察する",
+    "reading": "uchuu wo kansatsu suru",
+    "furigana": "う ちゅう かん さつ",
+    "meaning": "Mengamati luar angkasa",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "a07-shimanisumu-009",
+    "word": "島に住む",
+    "reading": "shima ni sumu",
+    "furigana": "しま す",
+    "meaning": "Tinggal di pulau",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "a07-kaminariganaru-010",
+    "word": "雷が鳴る",
+    "reading": "kaminari ga naru",
+    "furigana": "かみなり な",
+    "meaning": "Petir berbunyi/menggelegar",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "a07-mizuuminomawariwo-011",
+    "word": "湖の周りを走る",
+    "reading": "mizuumi no mawari wo hashiru",
+    "furigana": "みずうみ まわ はし",
+    "meaning": "Berlari di sekitar danau",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "a07-ishinouenisuwaru-012",
+    "word": "石の上に座る",
+    "reading": "ishi no ue ni suwaru",
+    "furigana": "いし うえ すわ",
+    "meaning": "Duduk di atas batu",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "a07-tsunamiwosakeru-013",
+    "word": "津波を避ける",
+    "reading": "tsunami wo sakeru",
+    "furigana": "つ なみ さ",
+    "meaning": "Menghindari tsunami",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "a07-hagaochiru-014",
+    "word": "葉が落ちる",
+    "reading": "ha ga ochiru",
+    "furigana": "は お",
+    "meaning": "Daun jatuh",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "a07-sekaiwotabisuru-015",
+    "word": "世界を旅する",
+    "reading": "sekai wo tabi suru",
+    "furigana": "せ かい たび",
+    "meaning": "Bepergian keliling dunia",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "a07-namagatakai-016",
+    "word": "波が高い",
+    "reading": "nami ga takai",
+    "furigana": "なみ たか",
+    "meaning": "Ombak tinggi",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "a07-hatakedeyasaiwo-017",
+    "word": "畑で野菜を育てる",
+    "reading": "hatake de yasai wo sodateru",
+    "furigana": "はたけ や さい そだ",
+    "meaning": "Merawat tanaman sayuran di ladang",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+    {
+    "id": "a07-onsennihairu-001",
+    "word": "温泉に入る",
+    "reading": "onsen ni hairu",
+    "furigana": "おん せん はい",
+    "meaning": "Mandi onsen/pemandian air panas",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "a07-keshikiwotanosumu-002",
+    "word": "景色を楽しむ",
+    "reading": "keshiki wo tanosumu",
+    "furigana": "け しき たの",
+    "meaning": "Menikmati pemandangan",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "a07-seibutsuwokenkyuu-003",
+    "word": "生物を研究する",
+    "reading": "seibutsu wo kenkyuu suru",
+    "furigana": "せい ぶつ けん きゅう",
+    "meaning": "Meneliti makhluk hidup (\"seibutsu\" istilah ilmiah)",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "a07-ikimonowomamoru-004",
+    "word": "いきものを守る",
+    "reading": "ikimono wo mamoru",
+    "furigana": "まも",
+    "meaning": "Melindungi makhluk hidup (\"ikimono\" istilah sehari-hari)",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "a07-shokubutsuwosodateru-005",
+    "word": "植物を育てる",
+    "reading": "shokubutsu wo sodateru",
+    "furigana": "しょく ぶつ そだ",
+    "meaning": "Merawat tanaman",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "a07-doubutsuwokau-006",
+    "word": "動物を飼う",
+    "reading": "doubutsu wo kau",
+    "furigana": "どう ぶつ か",
+    "meaning": "Memelihara hewan",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "a07-jikowofusegu-007",
+    "word": "事故を防ぐ",
+    "reading": "jiko wo fusegu",
+    "furigana": "じ こ ふせ",
+    "meaning": "Mencegah kecelakaan",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "a07-gen'inwoshiraberu-008",
+    "word": "原因を調べる",
+    "reading": "gen'in wo shiraberu",
+    "furigana": "げん いん しら",
+    "meaning": "Mencari tahu penyebab",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "a07-jishingaokiru-009",
+    "word": "地震が起きる",
+    "reading": "jishin ga okiru",
+    "furigana": "じ しん お",
+    "meaning": "Terjadi gempa bumi",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "a07-taifuugakuru-010",
+    "word": "台風が来る",
+    "reading": "taifuu ga kuru",
+    "furigana": "たい ふう く",
+    "meaning": "Angin topan datang",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "a07-kazangafunkasuru-011",
+    "word": "火山が噴火する",
+    "reading": "kazan ga funka suru",
+    "furigana": "か ざん ふん か",
+    "meaning": "Gunung berapi meletus",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "a07-kajigaokiru-012",
+    "word": "火事が起きる",
+    "reading": "kaji ga okiru",
+    "furigana": "か じ お",
+    "meaning": "Terjadi kebakaran",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "a07-shizennonakawoaruku-013",
+    "word": "自然の中を歩く",
+    "reading": "shizen no naka wo aruku",
+    "furigana": "し ぜん なか ある",
+    "meaning": "Berjalan di tengah alam",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "a07-asahiganoboru-014",
+    "word": "朝日が昇る",
+    "reading": "asahi ga noboru",
+    "furigana": "あさ ひ のぼ",
+    "meaning": "Matahari pagi naik/terbit",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "a07-yuuhigakireida-015",
+    "word": "夕日がきれいだ",
+    "reading": "yuuhi ga kirei da",
+    "furigana": "ゆう ひ",
+    "meaning": "Matahari terbenamnya indah",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "a07-kaiganwosanposuru-016",
+    "word": "海岸を散歩する",
+    "reading": "kaigan wo sanpo suru",
+    "furigana": "かい がん さん ぽ",
+    "meaning": "Jalan-jalan di pantai/pinggir laut",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "a07-tsuchiwohoru-017",
+    "word": "土を掘る",
+    "reading": "tsuchi wo horu",
+    "furigana": "つち ほ",
+    "meaning": "Menggali tanah",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "a07-kusagahaeru-018",
+    "word": "草が生える",
+    "reading": "kusa ga haeru",
+    "furigana": "くさ は",
+    "meaning": "Rumput tumbuh",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "a07-iibashowomitsukeru-019",
+    "word": "いい場所を見つける",
+    "reading": "ii basho wo mitsukeru",
+    "furigana": "ば しょ み",
+    "meaning": "Menemukan tempat yang bagus",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "a07-kiongasagaru-020",
+    "word": "気温が下がる",
+    "reading": "kion ga sagaru",
+    "furigana": "き おん さ",
+    "meaning": "Suhu udara turun",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  }
    
 
 ]

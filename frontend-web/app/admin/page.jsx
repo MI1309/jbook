@@ -72,7 +72,7 @@ export default function AdminDashboard() {
             {/* Header Section */}
             <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-8">
                 <div className="animate-in fade-in slide-in-from-left-6 duration-700">
-                    <h2 className="text-6xl font-black tracking-tighter text-white">
+                    <h2 className="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tighter text-white">
                         Admin <span className="text-red-600">Panel</span>
                     </h2>
                     <p className="mt-4 text-sm font-bold uppercase tracking-[0.2em] flex items-center gap-2 text-neutral-500">
@@ -116,7 +116,7 @@ export default function AdminDashboard() {
                             {stat.icon}
                         </div>
                         <h3 className="text-[10px] font-black uppercase tracking-[0.2em] opacity-80">{stat.label}</h3>
-                        <p className="text-6xl font-black mt-2 tracking-tighter">{stat.count}</p>
+                        <p className="text-4xl sm:text-5xl lg:text-6xl font-black mt-2 tracking-tighter">{stat.count}</p>
                         <div className="mt-8 flex items-center gap-2">
                             <div className="w-10 h-1 bg-white/30 rounded-full overflow-hidden">
                                 <div className="h-full bg-white w-2/3"></div>
@@ -129,8 +129,8 @@ export default function AdminDashboard() {
 
             {/* Search Engine - Glassmorphism UI */}
             <div className="backdrop-blur-xl border p-1 rounded-[3rem] transition-all duration-500 bg-white/5 border-white/5 shadow-2xl">
-                <div className="p-8 md:p-12">
-                    <div className="flex items-center gap-4 mb-10 ml-2">
+                <div className="p-4 sm:p-6 md:p-12">
+                    <div className="flex items-center gap-3 sm:gap-4 mb-6 sm:mb-10 sm:ml-2">
                         <div className="w-12 h-12 bg-red-600 rounded-2xl flex items-center justify-center shadow-lg shadow-red-500/20">
                             <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
@@ -145,12 +145,12 @@ export default function AdminDashboard() {
                     <div className="relative group">
                         <input
                             type="text"
-                            className="w-full p-8 pl-16 rounded-3xl transition-all text-2xl font-bold outline-none ring-0 bg-neutral-900/50 text-white placeholder-neutral-700 focus:bg-neutral-900 focus:ring-2 focus:ring-red-600/50"
+                            className="w-full min-w-0 p-4 sm:p-6 md:p-8 pl-12 sm:pl-16 rounded-3xl transition-all text-base sm:text-xl md:text-2xl font-bold outline-none ring-0 bg-neutral-900/50 text-white placeholder-neutral-700 focus:bg-neutral-900 focus:ring-2 focus:ring-red-600/50"
                             placeholder="Ketik Kanji, Bunpo, atau konten Blog..."
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
                         />
-                        <div className="absolute top-1/2 left-8 -translate-y-1/2 text-neutral-600 group-focus-within:text-red-500 transition-colors">
+                        <div className="absolute top-1/2 left-4 sm:left-8 -translate-y-1/2 text-neutral-600 group-focus-within:text-red-500 transition-colors">
                             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M12 11c0 3.517-1.009 6.799-2.753 9.571m-3.44-2.04l.054-.09A10.003 10.003 0 0012 20c4.478 0 8.268-2.943 9.542-7H12M12 4c2.21 0 4 1.79 4 4s-1.79 4-4 4-4-1.79-4-4 1.79-4 4-4z" />
                             </svg>

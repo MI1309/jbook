@@ -21,6 +21,7 @@ class WordType(models.TextChoices):
     PARTICLE = 'particle', 'Particle (Partikel)'
     SUFFIX = 'suffix', 'Suffix (Akhiran)'
     CONJUNCTION = 'conjunction', 'Conjunction (Kata Sambung)'
+    EXPRESSION = 'expression', 'Expression (Ungkapan)'
     INTERJECTION = 'interjection', 'Interjection (Kata Seru)'
     PRONOUN = 'pronoun', 'Pronoun (Kata Ganti)'
     COUNTER = 'counter', 'Counter (Kata Bantu Bilangan)'

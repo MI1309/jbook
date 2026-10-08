@@ -161,7 +161,7 @@ export default function AdminLayout({ children }) {
     }
 
     return (
-        <div className="flex h-screen overflow-hidden transition-colors duration-500 bg-[#020202] text-neutral-200">
+        <div className="flex h-dvh min-h-screen overflow-hidden transition-colors duration-500 bg-[#020202] text-neutral-200">
 
             {/* ── Desktop Sidebar ── */}
             <aside className="hidden md:flex md:flex-col w-72 border-r flex-shrink-0 z-20 border-white/5">
@@ -179,7 +179,7 @@ export default function AdminLayout({ children }) {
             {/* ── Mobile: Slide-out Drawer ── */}
             <aside
                 className={`
-                    fixed top-0 left-0 h-full w-80 shadow-2xl z-40 flex flex-col
+                    fixed top-0 left-0 h-full w-[min(20rem,calc(100vw-2rem))] shadow-2xl z-40 flex flex-col
                     transform transition-transform duration-500 cubic-bezier(0.4, 0, 0.2, 1) md:hidden
                     ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}
                     bg-[#050505]
@@ -227,7 +227,7 @@ export default function AdminLayout({ children }) {
                 </header>
 
                 {/* Page Content */}
-                <main className="flex-1 overflow-y-auto p-4 md:p-8">
+                <main className="flex-1 min-w-0 overflow-y-auto p-3 sm:p-4 md:p-8">
                     {children}
                 </main>
             </div>

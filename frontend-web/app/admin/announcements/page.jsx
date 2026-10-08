@@ -138,7 +138,7 @@ export default function AdminAnnouncements() {
                     <Link href="/admin" className="text-red-600 font-black text-xs uppercase tracking-widest hover:underline mb-2 block">
                         &larr; Kembali ke Dashboard
                     </Link>
-                    <h1 className={`text-5xl font-black tracking-tighter ${textColor}`}>
+                    <h1 className={`text-3xl sm:text-4xl lg:text-5xl font-black tracking-tighter ${textColor}`}>
                         Manajemen <span className="text-red-600">Pengumuman</span>
                     </h1>
                 </div>
