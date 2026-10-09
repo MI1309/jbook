@@ -6,6 +6,7 @@ import KanjiFilter from '@/components/kanji/KanjiFilter';
 import Link from 'next/link';
 import { useSearchParams, useRouter } from 'next/navigation';
 import KanjiDetailModal from '@/components/kanji/KanjiDetailModal';
+import Pagination from '@/components/common/Pagination';
 
 // JBook-themed level styles using CSS variables
 const levelStyles = {
@@ -181,14 +182,16 @@ function KanjiContent() {
                 </div>
             )}
 
-            <div className="flex justify-center items-center gap-6 mt-8">
-                {page > 1 && (
-                    <Link href={`?page=${page - 1}${level ? `&level=${level}` : ''}`} className="group flex items-center gap-2 bg-[var(--card-bg)] border-2 border-[var(--border-color)] text-gray-500 dark:text-gray-400 hover:text-accent-blue hover:border-accent-blue/30 px-6 py-3 rounded-2xl transition-all shadow-sm font-black text-sm active:scale-95">← Prev</Link>
-                )}
-                <span className="w-10 h-10 rounded-xl bg-gradient-to-br from-accent-blue to-accent-green text-white flex items-center justify-center font-black text-sm shadow-lg shadow-accent-blue/20 dark:shadow-accent-blue/10">{page}</span>
-                {hasMore && (
-                    <Link href={`?page=${page + 1}${level ? `&level=${level}` : ''}`} className="group flex items-center gap-2 bg-gradient-to-r from-accent-blue to-accent-green text-white border-2 border-accent-blue/50 hover:opacity-90 px-6 py-3 rounded-2xl transition-all shadow-xl shadow-accent-blue/20 dark:shadow-accent-blue/10 font-black text-sm active:scale-95">Next →</Link>
-                )}
+            <div className="mt-8">
+                <Pagination
+                    currentPage={page}
+                    totalPages={totalPages}
+                    getHref={(targetPage) => {
+                        const params = new URLSearchParams(searchParams.toString());
+                        params.set('page', String(targetPage));
+                        return `?${params.toString()}`;
+                    }}
+                />
             </div>
         </>
     );

@@ -5654,6 +5654,206 @@
     "jlpt_level": 4,
     "examples": []
   },
+    {
+    "id": "t08-majimenibenkyoushita-001",
+    "word": "まじめに勉強した",
+    "reading": "majime ni benkyou shita",
+    "furigana": "べん きょう",
+    "meaning": "Belajar dengan sungguh-sungguh",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "t08-wakaihitogaookatta-002",
+    "word": "若い人が多かった",
+    "reading": "wakai hito ga ookatta",
+    "furigana": "わか ひと おお",
+    "meaning": "Ada banyak anak muda",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "t08-atarashiiaideawoumu-003",
+    "word": "新しいアイデアを生む",
+    "reading": "atarashii aidea wo umu",
+    "furigana": "あたら う",
+    "meaning": "Menghasilkan/melahirkan ide baru",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "t08-kyouwatotemomushiatsui-004",
+    "word": "今日はとても蒸し暑い",
+    "reading": "kyou wa totemo mushiatsui",
+    "furigana": "きょう む あつ",
+    "meaning": "Hari ini sangat gerah (panas dengan kelembaban tinggi)",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "t08-imoutowaotonashiikoda-005",
+    "word": "妹はおとなしい子だ",
+    "reading": "imouto wa otonashii ko da",
+    "furigana": "いもうと こ",
+    "meaning": "Adik perempuanku adalah anak yang pendiam/nurut",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "t08-knoinuwaotonashii-006",
+    "word": "この犬はおとなしい",
+    "reading": "kono inu wa otonashii",
+    "furigana": "いぬ",
+    "meaning": "Anjing ini jinak/tidak berisik",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "t08-sanninkyoudainosuekko-007",
+    "word": "三人兄弟の末っ子",
+    "reading": "sannin kyoudai no suekko",
+    "furigana": "さん にん きょう だい すえ こ",
+    "meaning": "Anak bungsu dari tiga bersaudara",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "t08-choujotojijo-008",
+    "word": "長女と次女",
+    "reading": "choujo to jijo",
+    "furigana": "ちょう じょ じ じょ",
+    "meaning": "Anak perempuan sulung & kedua",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "t08-chounantojinan-009",
+    "word": "長男と次男",
+    "reading": "chounan to jinan",
+    "furigana": "ちょう なん じ なん",
+    "meaning": "Anak laki-laki sulung & kedua",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "t08-watashiwahitorikkoda-010",
+    "word": "私は一人っ子だ",
+    "reading": "watashi wa hitorikko da",
+    "furigana": "わたし ひとり こ",
+    "meaning": "Saya adalah anak tunggal",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "t08-chansu-011",
+    "word": "チャンス（＝機会）",
+    "reading": "chansu (= kikai)",
+    "furigana": "き かい",
+    "meaning": "Kesempatan",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "t08-ruuru-012",
+    "word": "ルール（＝規則）",
+    "reading": "ruuru (= kisoku)",
+    "furigana": "き そく",
+    "meaning": "Peraturan",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "t08-aidia-013",
+    "word": "アイディア（＝考え）",
+    "reading": "aidia (= kangae)",
+    "furigana": "かんが",
+    "meaning": "Ide, pemikiran",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "t08-nyuusubangumi-014",
+    "word": "ニュース番組",
+    "reading": "nyuusu bangumi",
+    "furigana": "ばん ぐみ",
+    "meaning": "Acara TV berita",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "t08-nettonyuusu-015",
+    "word": "ネット ニュース",
+    "reading": "netto nyuusu",
+    "furigana": "",
+    "meaning": "Berita online",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "t08-supootsukurabu-016",
+    "word": "スポーツ クラブ",
+    "reading": "supootsu kurabu",
+    "furigana": "",
+    "meaning": "Klub olahraga (Sports club)",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "t08-webusaitowotsukuru-017",
+    "word": "ウェブサイトを作る",
+    "reading": "webusaito wo tsukuru",
+    "furigana": "つく",
+    "meaning": "Membuat website",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "t08-eameerudeokuru-018",
+    "word": "エアメールで送る",
+    "reading": "eameeru de okuru",
+    "furigana": "おく",
+    "meaning": "Mengirim dengan pos udara",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "t08-arubamuwohiraku-019",
+    "word": "アルバムを開く",
+    "reading": "arubamu wo hiraku",
+    "furigana": "ひら",
+    "meaning": "Membuka album",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "t08-shanpuusuru-020",
+    "word": "シャンプーする",
+    "reading": "shanpuu suru",
+    "furigana": "",
+    "meaning": "Keramas, mencuci rambut",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
   
 
    

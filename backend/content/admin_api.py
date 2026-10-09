@@ -14,7 +14,8 @@ import os
 from datetime import datetime
 from django.http import HttpResponse
 from django.conf import settings
-from .models import Kanji, Grammar, Blog, JLPTLevel, Vocab, Particle, Announcement, MediaAttachment, FeatureSetting
+from .models import Kanji, Grammar, GrammarSentence, Blog, JLPTLevel, Vocab, WordType, Particle, Announcement, MediaAttachment, FeatureSetting
+from .grammar_relations import serialize_grammar, serialize_grammars
 from users.api import AuthBearer
 from core.decorators import rate_limit
 from django.db import transaction
@@ -475,26 +476,83 @@ def admin_list_bunpos(request, level: int = None, chapter: int = None, search: s
             Q(explanation__icontains=search)
         )
         
-    return list(query[:1000])  # grammar lists are usually small, safety cap
+    return serialize_grammars(query[:1000])  # grammar lists are usually small, safety cap
+
+
+def _save_bunpo_sentences(grammar, sentences):
+    prepared_sentences = []
+    for sentence in sentences:
+        expression_ids = sentence.get('expression_ids')
+        if expression_ids is None:
+            expression_ids = [item.get('id') for item in sentence.get('expressions', [])]
+        expression_ids = list(dict.fromkeys(expression_ids or []))
+
+        try:
+            expressions = list(Vocab.objects.filter(
+                id__in=expression_ids,
+                word_type=WordType.EXPRESSION,
+            ))
+        except (TypeError, ValueError):
+            raise HttpError(400, 'ID expression tidak valid.')
+
+        expressions_by_id = {str(expression.id): expression for expression in expressions}
+        if set(expression_ids) != set(expressions_by_id):
+            raise HttpError(400, 'Semua relasi harus menunjuk ke kosakata bertipe expression.')
+
+        prepared_sentences.append((sentence, expressions))
+
+    GrammarSentence.objects.filter(grammar=grammar).delete()
+    legacy_sentences = []
+    for order, (sentence, expressions) in enumerate(prepared_sentences):
+        japanese = sentence.get('jp') or sentence.get('ja') or ''
+        translation = sentence.get('id') or sentence.get('translation') or sentence.get('en') or ''
+        row = GrammarSentence.objects.create(
+            grammar=grammar,
+            order=order,
+            jp=japanese,
+            translation=translation,
+        )
+        row.expressions.set(expressions)
+        legacy_sentences.append({
+            key: value
+            for key, value in sentence.items()
+            if key not in {'expression_ids', 'expressions'}
+        })
+
+    grammar.sentences = legacy_sentences
+    grammar.save(update_fields=['sentences'])
+
+
+def _create_or_update_bunpo(grammar, payload):
+    data = payload.dict()
+    sentences = data.pop('sentences', [])
+    if grammar is None:
+        grammar = Grammar.objects.create(sentences=[], **data)
+    else:
+        for attr, value in data.items():
+            setattr(grammar, attr, value)
+        grammar.save()
+    _save_bunpo_sentences(grammar, sentences)
+    return grammar
 
 @router.post("/bunpo", auth=AdminAuth(), response=GrammarSchema)
 @rate_limit(key='user', rate='30/m')
 def admin_create_bunpo(request, payload: GrammarCreateSchema):
-    grammar = Grammar.objects.create(**payload.dict())
-    return grammar
+    with transaction.atomic():
+        grammar = _create_or_update_bunpo(None, payload)
+    return serialize_grammar(grammar)
 
 @router.get("/bunpo/{id}", auth=AdminAuth(), response=GrammarSchema)
 def admin_get_bunpo(request, id: str):
-    return get_object_or_404(Grammar, id=id)
+    return serialize_grammar(get_object_or_404(Grammar, id=id))
 
 @router.put("/bunpo/{id}", auth=AdminAuth(), response=GrammarSchema)
 @rate_limit(key='user', rate='30/m')
 def admin_update_bunpo(request, id: str, payload: GrammarCreateSchema):
     grammar = get_object_or_404(Grammar, id=id)
-    for attr, value in payload.dict().items():
-        setattr(grammar, attr, value)
-    grammar.save()
-    return grammar
+    with transaction.atomic():
+        grammar = _create_or_update_bunpo(grammar, payload)
+    return serialize_grammar(grammar)
 
 @router.delete("/bunpo/{id}", auth=AdminAuth())
 @rate_limit(key='user', rate='10/m')
@@ -541,13 +599,16 @@ class VocabSchema(VocabCreateSchema):
 # Vocab CRUD
 @router.get("/kotoba", auth=AdminAuth(), response=List[VocabSchema])
 @router.get("/vocab", auth=AdminAuth(), response=List[VocabSchema])
-def admin_list_vocabs(request, level: int = None, search: str = None, limit: int = 200):
+def admin_list_vocabs(request, level: int = None, search: str = None, word_type: str = None, limit: int = 200):
     from utils.kana import to_kana
     
     query = Vocab.objects.all().order_by('jlpt_level', 'word')
 
     if level is not None:
         query = query.filter(jlpt_level=level)
+
+    if word_type:
+        query = query.filter(word_type=word_type)
         
     if search:
         search_kana = to_kana(search)

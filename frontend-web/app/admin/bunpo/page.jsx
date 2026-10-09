@@ -10,6 +10,7 @@ import Cookies from 'js-cookie';
 import { cacheGet, cacheSet } from '@/lib/cache-store';
 import { toast } from 'react-toastify';
 import ConfirmationModal from '@/components/common/ConfirmationModal';
+import Pagination from '@/components/common/Pagination';
 
 export default function BunpoAdmin() {
     const { user } = useAuth();
@@ -19,6 +20,7 @@ export default function BunpoAdmin() {
     const [filterChapter, setFilterChapter] = useState('');
     const [search, setSearch] = useState('');
     const [page, setPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(1);
     const LIMIT = 20;
     const [pendingDelete, setPendingDelete] = useState(null);
     const router = useRouter();
@@ -92,6 +94,7 @@ export default function BunpoAdmin() {
 
         const totalItems = filtered.length;
         const totalPages = Math.max(1, Math.ceil(totalItems / LIMIT));
+        setTotalPages(totalPages);
         const safePage = Math.min(page, totalPages);
         
         if (safePage !== page) {
@@ -356,35 +359,15 @@ export default function BunpoAdmin() {
                         {!loading && (
                             <div className="px-6 py-5 border-t bg-neutral-900/50 border-white/5">
                                 <div className="flex items-center justify-between gap-4">
-                                    <div className="text-xs font-bold text-neutral-500">Halaman <span className="text-gray-900 dark:text-white">{page}</span> dari <span className="text-gray-900 dark:text-white">{Math.max(1, Math.ceil(allBunpos.length / LIMIT))}</span>
+                                    <div className="text-xs font-bold text-neutral-500">Halaman <span className="text-gray-900 dark:text-white">{page}</span> dari <span className="text-gray-900 dark:text-white">{totalPages}</span>
                                     </div>
-                                    <div className="flex items-center gap-2">
-                                        <button
-                                            onClick={() => setPage(p => Math.max(1, p - 1))}
-                                            disabled={page === 1}
-                                            className={`p-2 rounded-xl border text-sm font-bold transition-all ${
-                                                page === 1 ? 'opacity-30 cursor-not-allowed' : `bg-neutral-800 border-white/10 text-white hover:bg-neutral-700 active:scale-95`
-                                            }`}
-                                        >
-                                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-                                            </svg>
-                                        </button>
-                                        <span className="px-4 py-2 rounded-xl border text-sm font-black bg-red-600/20 border-red-500/30 text-red-400">
-                                            {page}
-                                        </span>
-                                        <button
-                                            onClick={() => setPage(p => p + 1)}
-                                            disabled={bunpos.length < LIMIT}
-                                            className={`p-2 rounded-xl border text-sm font-bold transition-all ${
-                                                bunpos.length < LIMIT ? 'opacity-30 cursor-not-allowed' : `bg-neutral-800 border-white/10 text-white hover:bg-neutral-700 active:scale-95`
-                                            }`}
-                                        >
-                                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                                            </svg>
-                                        </button>
-                                    </div>
+                                    <Pagination
+                                        currentPage={page}
+                                        totalPages={totalPages}
+                                        onPageChange={setPage}
+                                        activeClassName="bg-red-600/20 border-red-500/30 text-red-400"
+                                        buttonClassName="bg-neutral-800 border-white/10 text-white hover:bg-neutral-700"
+                                    />
                                 </div>
                             </div>
                         )}

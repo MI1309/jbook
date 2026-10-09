@@ -6,6 +6,7 @@ import KotobaFilter from '@/components/kotoba/KotobaFilter';
 import Link from 'next/link';
 import { useSearchParams, useRouter } from 'next/navigation';
 import KotobaDetailModal from '@/components/kotoba/KotobaDetailModal';
+import Pagination from '@/components/common/Pagination';
 
 import { getScriptTypes } from '@/lib/utils';
 import { useTheme } from '@/context/ThemeContext';
@@ -499,10 +500,8 @@ function KotobaContent({ onRefreshRequest, refreshKey }) {
                 </div>
             )}
 
-            <div className="flex justify-center items-center gap-6 mt-8">
-                {page > 1 && <Link href={getPageHref(page - 1)} className="bg-white dark:bg-[var(--card-bg)] border-2 border-gray-100 dark:border-[var(--border-color)] text-gray-500 dark:text-gray-400 hover:text-accent-blue dark:hover:text-accent-blue hover:border-accent-blue/20 px-6 py-3 rounded-2xl font-black text-sm transition-all shadow-sm active:scale-95">← Prev</Link>}
-                <span className="w-10 h-10 rounded-xl bg-gradient-to-br from-accent-blue to-accent-green text-white flex items-center justify-center font-black text-sm shadow-lg shadow-accent-blue/20 dark:shadow-accent-blue/10 transition-colors">{page}</span>
-                {hasMore && <Link href={getPageHref(page + 1)} className="bg-gradient-to-r from-accent-blue to-accent-green text-white border-2 border-accent-blue/50 hover:opacity-90 px-6 py-3 rounded-2xl font-black text-sm transition-all shadow-xl shadow-accent-blue/20 dark:shadow-accent-blue/10 active:scale-95">Next →</Link>}
+            <div className="mt-8">
+                <Pagination currentPage={page} totalPages={totalPages} getHref={getPageHref} />
             </div>
         </>
     );

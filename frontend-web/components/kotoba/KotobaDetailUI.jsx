@@ -29,6 +29,7 @@ const WORD_TYPES = [
     { value: 'particle', label: 'Particle (Partikel)' },
     { value: 'suffix', label: 'Suffix (Akhiran)' },
     { value: 'conjunction', label: 'Conjunction (Kata Sambung)' },
+    { value: 'expression', label: 'Expression (Ungkapan)' },
     { value: 'interjection', label: 'Interjection (Kata Seru)' },
     { value: 'pronoun', label: 'Pronoun (Kata Ganti)' },
     { value: 'counter', label: 'Counter (Kata Bantu Bilangan)' },

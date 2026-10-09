@@ -9,6 +9,7 @@ import Cookies from 'js-cookie';
 import { cacheGet, cacheSet } from '@/lib/cache-store';
 import { toast } from 'react-toastify';
 import ConfirmationModal from '@/components/common/ConfirmationModal';
+import Pagination from '@/components/common/Pagination';
 
 export default function KotobaAdmin() {
     const { user } = useAuth();
@@ -465,37 +466,13 @@ export default function KotobaAdmin() {
                             <div className="text-xs font-bold text-neutral-500">
                                 Halaman <span className="text-gray-900 dark:text-white">{pagination.page}</span> dari <span className="text-gray-900 dark:text-white">{pagination.pages}</span> ({pagination.total} hasil)
                             </div>
-                            <div className="flex items-center gap-2">
-                                <button
-                                    onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
-                                    disabled={currentPage === 1}
-                                    className={`p-2 rounded-xl border text-sm font-bold transition-all ${
-                                        currentPage === 1 
-                                            ? 'opacity-30 cursor-not-allowed' 
-                                            : `bg-neutral-800 border-white/10 text-white hover:bg-neutral-700 active:scale-95`
-                                    }`}
-                                >
-                                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-                                    </svg>
-                                </button>
-                                <span className="px-4 py-2 rounded-xl border text-sm font-black bg-red-600/20 border-red-500/30 text-red-400">
-                                    {currentPage}
-                                </span>
-                                <button
-                                    onClick={() => setCurrentPage(p => Math.min(pagination.pages, p + 1))}
-                                    disabled={currentPage === pagination.pages}
-                                    className={`p-2 rounded-xl border text-sm font-bold transition-all ${
-                                        currentPage === pagination.pages 
-                                            ? 'opacity-30 cursor-not-allowed' 
-                                            : `bg-neutral-800 border-white/10 text-white hover:bg-neutral-700 active:scale-95`
-                                    }`}
-                                >
-                                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                                    </svg>
-                                </button>
-                            </div>
+                            <Pagination
+                                currentPage={currentPage}
+                                totalPages={pagination.pages}
+                                onPageChange={setCurrentPage}
+                                activeClassName="bg-red-600/20 border-red-500/30 text-red-400"
+                                buttonClassName="bg-neutral-800 border-white/10 text-white hover:bg-neutral-700"
+                            />
                         </div>
                     </div>
                 )}

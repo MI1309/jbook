@@ -6,6 +6,7 @@ import { API_URL } from '@/lib/api';
 import Link from 'next/link';
 import Cookies from 'js-cookie';
 import { toast } from 'react-toastify';
+import ExpressionPicker from '@/components/bunpo/ExpressionPicker';
 
 export default function BunpoForm({ params }) {
     const router = useRouter();
@@ -22,7 +23,7 @@ export default function BunpoForm({ params }) {
         sentences: []
     });
     // Temporary state for a new sentence
-    const [newSentence, setNewSentence] = useState({ jp: '', id: '' });
+    const [newSentence, setNewSentence] = useState({ jp: '', id: '', expressions: [] });
 
     useEffect(() => {
         if (!isNew) {
@@ -45,7 +46,10 @@ export default function BunpoForm({ params }) {
                     explanation: data.explanation,
                     chapter: data.chapter,
                     jlpt_level: data.jlpt_level,
-                    sentences: data.sentences || []
+                    sentences: (data.sentences || []).map((sentence) => ({
+                        ...sentence,
+                        expressions: sentence.expressions || [],
+                    }))
                 });
             } else {
                 console.error("Fetch failed:", res.status, res.statusText);
@@ -61,19 +65,28 @@ export default function BunpoForm({ params }) {
 
     const handleAddSentence = () => {
         if (newSentence.jp && newSentence.id) {
-            setFormData({
-                ...formData,
-                sentences: [...formData.sentences, newSentence]
-            });
-            setNewSentence({ jp: '', id: '' });
+            setFormData((current) => ({
+                ...current,
+                sentences: [...current.sentences, newSentence]
+            }));
+            setNewSentence({ jp: '', id: '', expressions: [] });
         }
     };
 
+    const updateSentence = (index, updates) => {
+        setFormData((current) => ({
+            ...current,
+            sentences: current.sentences.map((sentence, sentenceIndex) =>
+                sentenceIndex === index ? { ...sentence, ...updates } : sentence
+            ),
+        }));
+    };
+
     const removeSentence = (index) => {
-        setFormData({
-            ...formData,
-            sentences: formData.sentences.filter((_, i) => i !== index)
-        });
+        setFormData((current) => ({
+            ...current,
+            sentences: current.sentences.filter((_, i) => i !== index)
+        }));
     };
 
     const handleSubmit = async (e) => {
@@ -83,7 +96,11 @@ export default function BunpoForm({ params }) {
             const payload = {
                 ...formData,
                 chapter: parseInt(formData.chapter),
-                jlpt_level: parseInt(formData.jlpt_level)
+                jlpt_level: parseInt(formData.jlpt_level),
+                sentences: formData.sentences.map(({ expressions = [], ...sentence }) => ({
+                    ...sentence,
+                    expression_ids: expressions.map((expression) => expression.id),
+                })),
             };
 
             const url = isNew
@@ -209,20 +226,39 @@ export default function BunpoForm({ params }) {
                     <div className="border-t border-gray-100 dark:border-white/5 pt-6 space-y-4">
                         <h3 className="text-sm font-black text-neutral-500 uppercase tracking-widest opacity-50">Contoh Kalimat</h3>
                         {formData.sentences.map((sent, idx) => (
-                            <div key={idx} className="p-4 rounded-xl flex items-start justify-between bg-white/5">
-                                <div className="space-y-1 flex-1">
-                                    <p className="font-black text-white">{sent.jp}</p>
-                                    <p className="text-sm font-bold text-neutral-400">{sent.id}</p>
+                            <div key={idx} className="space-y-4 rounded-xl border border-white/5 bg-white/5 p-4">
+                                <div className="flex items-start gap-3">
+                                    <div className="min-w-0 flex-1 space-y-2">
+                                        <input
+                                            type="text"
+                                            aria-label="Kalimat bahasa Jepang"
+                                            className="w-full rounded-lg border border-white/5 bg-black/20 p-3 text-sm font-bold text-white"
+                                            value={sent.jp || ''}
+                                            onChange={(event) => updateSentence(idx, { jp: event.target.value })}
+                                        />
+                                        <input
+                                            type="text"
+                                            aria-label="Terjemahan bahasa Indonesia"
+                                            className="w-full rounded-lg border border-white/5 bg-black/20 p-3 text-sm text-neutral-300"
+                                            value={sent.id || ''}
+                                            onChange={(event) => updateSentence(idx, { id: event.target.value })}
+                                        />
+                                    </div>
+                                    <button
+                                        type="button"
+                                        onClick={() => removeSentence(idx)}
+                                        aria-label="Hapus contoh kalimat"
+                                        className="p-2 rounded-lg transition-colors text-red-400 hover:bg-red-500/10"
+                                    >
+                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                        </svg>
+                                    </button>
                                 </div>
-                                <button
-                                    type="button"
-                                    onClick={() => removeSentence(idx)}
-                                    className="p-2 rounded-lg transition-colors text-red-400 hover:bg-red-500/10"
-                                >
-                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                                    </svg>
-                                </button>
+                                <ExpressionPicker
+                                    selected={sent.expressions || []}
+                                    onChange={(expressions) => updateSentence(idx, { expressions })}
+                                />
                             </div>
                         ))}
 
@@ -244,17 +280,15 @@ export default function BunpoForm({ params }) {
                                     onChange={(e) => setNewSentence({ ...newSentence, id: e.target.value })}
                                 />
                             </div>
+                            <div className="mb-3">
+                                <ExpressionPicker
+                                    selected={newSentence.expressions}
+                                    onChange={(expressions) => setNewSentence((current) => ({ ...current, expressions }))}
+                                />
+                            </div>
                             <button
                                 type="button"
-                                onClick={() => {
-                                    if (newSentence.jp && newSentence.id) {
-                                        setFormData({
-                                            ...formData,
-                                            sentences: [...formData.sentences, newSentence]
-                                        });
-                                        setNewSentence({ jp: '', id: '' });
-                                    }
-                                }}
+                                onClick={handleAddSentence}
                                 className="w-full px-6 py-3 rounded-xl font-bold transition-colors bg-white/5 text-white hover:bg-white/10"
                             >
                                 Tambah Kalimat

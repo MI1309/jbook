@@ -263,6 +263,7 @@ function FilterContent() {
                             <option value="suffix">Suffix (Akhiran)</option>
                             <option value="counter">Counter (Kata Bantu Bilangan)</option>
                             <option value="conjunction">Conjunction (Kata Sambung)</option>
+                            <option value="expression">Expression (Ungkapan)</option>
                             <option value="interjection">Interjection (Kata Seru)</option>
                             <option value="pronoun">Pronoun (Kata Ganti)</option>
                         </select>

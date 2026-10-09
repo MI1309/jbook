@@ -81,6 +81,22 @@ class Vocab(models.Model):
     def __str__(self):
         return self.word
 
+class GrammarSentence(models.Model):
+    grammar = models.ForeignKey(Grammar, on_delete=models.CASCADE, related_name='sentence_records')
+    order = models.PositiveIntegerField(default=0)
+    jp = models.TextField()
+    translation = models.TextField()
+    expressions = models.ManyToManyField(Vocab, blank=True, related_name='grammar_sentences')
+
+    class Meta:
+        ordering = ['order', 'id']
+        constraints = [
+            models.UniqueConstraint(fields=['grammar', 'order'], name='unique_grammar_sentence_order'),
+        ]
+
+    def __str__(self):
+        return self.jp
+
 class Particle(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     character = models.CharField(max_length=10, help_text="Karakter partikel (e.g. は, が, を)")

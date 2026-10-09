@@ -60,6 +60,20 @@ export default function BunpoDetailUI({ grammar, onClose }) {
                                 <div key={i} className={`p-5 rounded-2xl border-l-4 transition-colors ${theme === 'dark' ? 'bg-blue-950/10 border-blue-600' : 'bg-gray-50 border-blue-600'}`}>
                                     <p className={`text-xl font-bold mb-2 transition-colors ${textColor}`}>{sent.jp}</p>
                                     <p className={`font-bold italic transition-colors ${subTextColor}`}>{sent.id}</p>
+                                    {sent.expressions?.length > 0 && (
+                                        <div className="mt-4 flex flex-wrap gap-2">
+                                            {sent.expressions.map((expression) => (
+                                                <Link
+                                                    key={expression.id}
+                                                    href={`/kotoba/${expression.id}`}
+                                                    className={`rounded-lg border px-3 py-1.5 text-sm font-bold transition-colors ${theme === 'dark' ? 'border-blue-900/30 bg-blue-950/20 text-blue-200 hover:bg-blue-900/30' : 'border-blue-100 bg-white text-blue-700 hover:bg-blue-50'}`}
+                                                >
+                                                    {expression.word}
+                                                    {expression.meaning ? ` · ${expression.meaning}` : ''}
+                                                </Link>
+                                            ))}
+                                        </div>
+                                    )}
                                 </div>
                             ))
                         ) : (

@@ -5,6 +5,7 @@ from ninja.security import HttpBearer
 from core.decorators import rate_limit
 from django.conf import settings
 from .models import Kanji, Grammar, Blog, ContentSuggestion, Announcement, Vocab, FeatureSetting
+from .grammar_relations import serialize_grammar, serialize_grammars
 from django.shortcuts import get_object_or_404
 from django.db.models import F, Q
 from uuid import UUID
@@ -393,7 +394,7 @@ def list_grammar(request,
     offset = (params.page - 1) * params.limit
     
     return {
-        "items": list(qs[offset : offset + params.limit]),
+        "items": serialize_grammars(qs[offset : offset + params.limit]),
         "total": total,
         "page": params.page,
         "pages": pages
@@ -409,7 +410,8 @@ def get_grammar(request, grammar_id: str):
             grammar_id = str(uuid.UUID(grammar_id))
     except (ValueError, TypeError):
         pass
-    return get_object_or_404(Grammar, id=grammar_id)
+    grammar = get_object_or_404(Grammar, id=grammar_id)
+    return serialize_grammar(grammar)
 
 
 class VocabSchema(Schema):

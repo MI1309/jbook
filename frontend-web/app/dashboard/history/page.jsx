@@ -12,6 +12,7 @@ import BunpoDetailModal from '@/components/bunpo/BunpoDetailModal';
 import { toast } from 'react-toastify';
 import { diffStrings } from '@/lib/utils';
 import * as wanakana from 'wanakana';
+import Pagination from '@/components/common/Pagination';
 
 // fungsi untuk menampilkan history page
 export default function HistoryPage() {
@@ -497,35 +498,15 @@ export default function HistoryPage() {
                     Menampilkan {pageStart + 1}–{Math.min(pageStart + PAGE_SIZE, sorted.length)} dari {sorted.length}
                 </div>
 
-                <div className="flex items-center gap-2">
-                    <button
-                        onClick={() => setPage(p => Math.max(1, p - 1))}
-                        disabled={currentPage <= 1}
-                        className={`px-4 py-2 rounded-xl text-xs font-black transition-all border ${
-                            currentPage <= 1
-                                ? `${theme === 'dark' ? 'bg-blue-950/10 text-gray-600 border-blue-950/20' : 'bg-gray-100 text-gray-400 border-gray-200'} cursor-not-allowed opacity-70`
-                                : `${theme === 'dark' ? 'bg-blue-950/20 text-blue-200 border-blue-900/30 hover:bg-blue-950/35' : 'bg-white text-blue-700 border-gray-200 hover:bg-blue-50'}`
-                        }`}
-                    >
-                        ← Sebelumnya
-                    </button>
-
-                    <div className={`${theme === 'dark' ? 'bg-[#0a0a0a]' : 'bg-white'} border ${borderStyle} rounded-xl px-4 py-2 text-xs font-black`}>
-                        {currentPage}/{totalPages}
-                    </div>
-
-                    <button
-                        onClick={() => setPage(p => Math.min(totalPages, p + 1))}
-                        disabled={currentPage >= totalPages}
-                        className={`px-4 py-2 rounded-xl text-xs font-black transition-all border ${
-                            currentPage >= totalPages
-                                ? `${theme === 'dark' ? 'bg-blue-950/10 text-gray-600 border-blue-950/20' : 'bg-gray-100 text-gray-400 border-gray-200'} cursor-not-allowed opacity-70`
-                                : `${theme === 'dark' ? 'bg-blue-950/20 text-blue-200 border-blue-900/30 hover:bg-blue-950/35' : 'bg-white text-blue-700 border-gray-200 hover:bg-blue-50'}`
-                        }`}
-                    >
-                        Berikutnya →
-                    </button>
-                </div>
+                <Pagination
+                    currentPage={currentPage}
+                    totalPages={totalPages}
+                    onPageChange={setPage}
+                    buttonClassName={theme === 'dark'
+                        ? 'bg-blue-950/20 text-blue-200 border-blue-900/30 hover:bg-blue-950/35'
+                        : 'bg-white text-blue-700 border-gray-200 hover:bg-blue-50'}
+                    activeClassName="bg-blue-600 text-white border-blue-600"
+                />
             </div>
         )}
 
