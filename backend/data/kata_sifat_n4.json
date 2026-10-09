@@ -5087,7 +5087,7 @@
   {
     "id": "a07-keshikiwotanosumu-002",
     "word": "景色を楽しむ",
-    "reading": "keshiki wo tanosumu",
+    "reading": "keshiki wo tanoshimu",
     "furigana": "け しき たの",
     "meaning": "Menikmati pemandangan",
     "word_type": "expression",
@@ -5273,7 +5273,389 @@
     "word_type": "expression",
     "jlpt_level": 4,
     "examples": []
-  }
+  },
+    {
+    "id": "t08-korewafutaridake-001",
+    "word": "これは二人だけの秘密だ",
+    "reading": "kore wa futari dake no himitsu da",
+    "furigana": "ふたり ひ みつ",
+    "meaning": "Ini rahasia kita berdua",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "t08-yachinwoharau-002",
+    "word": "家賃を払う",
+    "reading": "yachin wo harau",
+    "furigana": "や ちん はら",
+    "meaning": "Membayar sewa rumah/kamar",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "t08-otoutowasuieiga-003",
+    "word": "弟は水泳が得意だ",
+    "reading": "otouto wa suiei ga tokui da",
+    "furigana": "おとうと すい えい とく い",
+    "meaning": "Adikku pandai berenang",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "t08-kaiginotouchuude-004",
+    "word": "会議の途中で電話がなった",
+    "reading": "kaigi no touchuu de denwa ga natta",
+    "furigana": "かい ぎ と ちゅう でん わ",
+    "meaning": "Telepon berdering di tengah rapat",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "t08-aniwamadadokushin-005",
+    "word": "兄はまだ独身だ",
+    "reading": "ani wa mada dokushin da",
+    "furigana": "あに どく しん",
+    "meaning": "Kakak laki-lakiku masih lajang",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "t08-katamichikippuwo-006",
+    "word": "片道切符を買った",
+    "reading": "katamichi kippu wo katta",
+    "furigana": "かた みち きっぷ か",
+    "meaning": "Membeli tiket sekali jalan",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "t08-koujinootoga-007",
+    "word": "工事の音がうるさい",
+    "reading": "kouji no oto ga urusai",
+    "furigana": "こう じ おと",
+    "meaning": "Suara berisik pekerjaan konstruksi/pembangunan (perbaikan jalan dll)",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "t08-nomimonowasanshurui-008",
+    "word": "飲み物は三種類ある",
+    "reading": "nomimono wa sanshurui aru",
+    "furigana": "の もの さん しゅるい",
+    "meaning": "Minumannya ada 3 jenis/macam",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "t08-neboushitegakkou-009",
+    "word": "寝坊して学校に遅れた",
+    "reading": "nebou shite gakkou ni okureta",
+    "furigana": "ね ぼう がっこう おく",
+    "meaning": "Karena kesiangan jadi terlambat ke sekolah",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "t08-terebidehousou-010",
+    "word": "テレビで放送された",
+    "reading": "terebi de housou sareta",
+    "furigana": "ほうそう",
+    "meaning": "Disiarkan di TV",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "t08-inakawakuukiga-011",
+    "word": "田舎は空気がきれいだ",
+    "reading": "inaka wa kuuki ga kirei da",
+    "furigana": "いなか くう き",
+    "meaning": "Di desa udaranya bersih",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "t08-taisetsunagakokoro-012",
+    "word": "大切な思い出",
+    "reading": "taisetsu na omoide",
+    "furigana": "たい せつ おも で",
+    "meaning": "Kenangan yang berharga/penting",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "t08-konomisewakin'en-013",
+    "word": "この店は禁煙だ",
+    "reading": "kono mise wa kin'en da",
+    "furigana": "みせ きん えん",
+    "meaning": "Toko ini dilarang merokok",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "t08-kurumawoseisan-014",
+    "word": "車を生産するところ",
+    "reading": "kuruma wo seisan suru tokoro",
+    "furigana": "くるま せい さん",
+    "meaning": "Tempat produksi mobil",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "t08-oufukuichijikan-015",
+    "word": "往復一時間かかる",
+    "reading": "oufuku ichijikan kakaru",
+    "furigana": "おう ふく いち じ かん",
+    "meaning": "Pulang pergi makan waktu 1 jam",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "t08-kitsuenshitsudetabako-016",
+    "word": "喫煙室でタバコを吸う",
+    "reading": "kitsuenshitsu de tabako wo suu",
+    "furigana": "きつ えん しつ す",
+    "meaning": "Merokok di ruangan boleh merokok",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "t08-kareigaiwaminna-017",
+    "word": "彼以外はみんな来た",
+    "reading": "kare igai wa minna kita",
+    "furigana": "かれ い がい き",
+    "meaning": "Semua orang datang selain dia",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "t08-yumegakanau-018",
+    "word": "夢がかなう",
+    "reading": "yume ga kanau",
+    "furigana": "ゆめ",
+    "meaning": "Impian/cita-cita terkabul",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+    {
+    "id": "t08-amegayamu-001",
+    "word": "雨がやむ",
+    "reading": "ame ga yamu",
+    "furigana": "あめ",
+    "meaning": "Hujan reda",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "t08-haridefukuwonutta-002",
+    "word": "針で服を縫った",
+    "reading": "hari de fuku wo nutta",
+    "furigana": "はり ふく ぬ",
+    "meaning": "Menjahit/menyulam baju dengan jarum",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "t08-noridekamiwohatta-003",
+    "word": "のりで紙を貼った",
+    "reading": "nori de kami wo hatta",
+    "furigana": "かみ は",
+    "meaning": "Menempelkan kertas dengan lem",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "t08-shashinniutsuru-004",
+    "word": "写真に写る",
+    "reading": "shashin ni utsuru",
+    "furigana": "しゃ しん うつ",
+    "meaning": "Terpotret (terlihat) di foto",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "t08-kagaminiutsuru-005",
+    "word": "鏡に映る",
+    "reading": "kagami ni utsuru",
+    "furigana": "かがみ うつ",
+    "meaning": "Terpantul (terlihat) di cermin",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "t08-itogakireta-006",
+    "word": "糸が切れた",
+    "reading": "ito ga kireta",
+    "furigana": "いと き",
+    "meaning": "Benangnya putus",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "t08-shinbunninoru-007",
+    "word": "新聞に載る",
+    "reading": "shinbun ni noru",
+    "furigana": "しん ぶん の",
+    "meaning": "Naik/dimuat di surat kabar",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "t08-massugususumuiku-008",
+    "word": "まっすぐ進む／行く",
+    "reading": "massugu susumu / iku",
+    "furigana": "すす い",
+    "meaning": "Maju lurus",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "t08-daijitaisetsunisuru-009",
+    "word": "大事／大切にする",
+    "reading": "daiji / taisetsu ni suru",
+    "furigana": "だい じ たい せつ",
+    "meaning": "Menjaga dengan baik (menganggapnya penting)",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "t08-purezentowokamide-010",
+    "word": "プレゼントを紙で包む",
+    "reading": "purezento wo kami de tsutsumu",
+    "furigana": "かみ つつ",
+    "meaning": "Membungkus hadiah dengan kertas",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "t08-yoruninarutohieru-011",
+    "word": "夜になると冷える",
+    "reading": "yoru ni naru to hieru",
+    "furigana": "よる ひ",
+    "meaning": "Kalau malam menjadi dingin",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "t08-kanojoniniaufuku-012",
+    "word": "彼女に似合う服",
+    "reading": "kanojo ni niau fuku",
+    "furigana": "かの じょ に あ ふく",
+    "meaning": "Baju yang cocok dengan dia",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "t08-atohitoritarinai-013",
+    "word": "あと一人足りない",
+    "reading": "ato hitori tarinai",
+    "furigana": "ひとり た",
+    "meaning": "Kurang 1 orang lagi",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "t08-konbininiyoru-014",
+    "word": "コンビニに寄る",
+    "reading": "konbini ni yoru",
+    "furigana": "よ",
+    "meaning": "Mampir ke minimarket",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "t08-mainichieigyoushiteiru-015",
+    "word": "毎日営業している",
+    "reading": "mainichi eigyou shite iru",
+    "furigana": "まい にち えい ぎょう",
+    "meaning": "Setiap hari buka/beroperasi",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "t08-pannibataawonuru-016",
+    "word": "パンにバターを塗る",
+    "reading": "pan ni bataa wo nuru",
+    "furigana": "ぬ",
+    "meaning": "Mengoleskan mentega di roti",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "t08-enryoshinaidekudasai-017",
+    "word": "遠慮しないでください",
+    "reading": "enryo shinai de kudasai",
+    "furigana": "えん りょ",
+    "meaning": "Tidak usah merasa sungkan/merasa tidak enak",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "t08-tomodachitonagakushaberu-018",
+    "word": "友達と長くしゃべる",
+    "reading": "tomodachi to nagaku shaberu",
+    "furigana": "とも だち なが",
+    "meaning": "Mengobrol lama dengan teman",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "t08-nikonikoshitehanasu-019",
+    "word": "にこにこして話す",
+    "reading": "nikoniko shite hanasu",
+    "furigana": "はな",
+    "meaning": "Berbicara dengan tersenyum",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "t08-amegazaazaafutta-020",
+    "word": "雨がざあざあ降った",
+    "reading": "ame ga zaazaa futta",
+    "furigana": "あめ ふ",
+    "meaning": "Hujan turun dengan deras",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  
+
    
 
 ]
