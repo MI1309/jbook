@@ -10,37 +10,18 @@ Aplikasi ini adalah platform belajar bahasa Jepang yang mencakup Kanji, Bunpo (T
 
 ## Cara Menjalankan Aplikasi
 
+Panduan lengkap setup backend, termasuk perintah Windows CMD, tersedia di [docs/backend_setup.md](docs/backend_setup.md).
+
 ### Prasyarat
-- Python 3.10 ke atas
+- Python 3.12 ke atas
 - Node.js 18 ke atas
 - PostgreSQL (Opsional, saat ini menggunakan SQLite default)
 
 ### 1. Menjalankan Backend (API)
 
-```bash
-cd backend
+Ikuti [Panduan Setup Backend](docs/backend_setup.md) untuk membuat virtual environment, menyiapkan `backend/.env` (termasuk Windows CMD), memasang dependencies, menjalankan migrasi, dan memulai server.
 
-# 1. Buat virtual environment (jika belum)
-python3 -m venv venv
-
-# 2. Aktifkan virtual environment
-# Linux/Mac:
-source venv/bin/activate
-# Windows:
-# venv\Scripts\activate
-
-# 3. Install dependencies
-pip install -r requirements.txt
-
-# 4. Jalankan migrasi database
-python manage.py migrate
-
-# 5. Jalankan server
-python manage.py runserver
-```
-
-Server backend akan berjalan di `http://localhost:8000`.
-Dokumentasi API (Swagger UI) dapat diakses di `http://localhost:8000/api/docs`.
+Server backend lokal berjalan di `http://localhost:8000`; dokumentasi API (Swagger UI) ada di `http://localhost:8000/api/docs`.
 
 ### 2. Menjalankan Frontend (Web)
 

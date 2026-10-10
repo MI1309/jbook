@@ -4,6 +4,8 @@ Selamat datang di dokumentasi API JBook. API ini dibangun menggunakan **Django N
 
 Untuk inventaris fitur lengkap backend, web, dan mobile, lihat [Inventaris Fitur JBook](fitur-aplikasi.md).
 
+Untuk menjalankan Django backend secara lokal, ikuti [Panduan Setup Backend](backend_setup.md), termasuk perintah Windows CMD.
+
 ## Base URL
 Semua endpoint di bawah ini memiliki prefix:
 `https://[domain-anda]/api`
