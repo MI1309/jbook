@@ -5854,7 +5854,806 @@
     "jlpt_level": 4,
     "examples": []
   },
-  
+    {
+    "id": "t08-saabisugaii-001",
+    "word": "サービスがいい",
+    "reading": "saabisu ga ii",
+    "furigana": "",
+    "meaning": "Pelayanannya bagus",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "t08-kamiwokattosuru-002",
+    "word": "髪をカットする",
+    "reading": "kami wo katto suru",
+    "furigana": "かみ",
+    "meaning": "Memotong rambut",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "t08-botanwokurikkusuru-003",
+    "word": "ボタンをクリックする",
+    "reading": "botan wo kurikku suru",
+    "furigana": "",
+    "meaning": "Mengklik tombol",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "t08-chippuwoageru-004",
+    "word": "チップをあげる",
+    "reading": "chippu wo ageru",
+    "furigana": "",
+    "meaning": "Memberikan uang tip",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "t08-aironwokakeru-005",
+    "word": "アイロンをかける",
+    "reading": "airon wo kakeru",
+    "furigana": "",
+    "meaning": "Menyetrika",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "t08-sairenganaru-006",
+    "word": "サイレンが鳴る",
+    "reading": "sairen ga naru",
+    "furigana": "な",
+    "meaning": "Sirene berbunyi",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "t08-gamuwokamu-007",
+    "word": "ガムをかむ",
+    "reading": "gamu wo kamu",
+    "furigana": "",
+    "meaning": "Mengunyah permen karet",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "t08-kyanserusuru-008",
+    "word": "キャンセルする",
+    "reading": "kyanseru suru",
+    "furigana": "",
+    "meaning": "Membatalkan (reservasi dll)",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "t08-infurueruzanikakaru-009",
+    "word": "インフルエンザにかかる",
+    "reading": "infuruenza ni kakaru",
+    "furigana": "",
+    "meaning": "Terkena influenza",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "t08-kuriiningunidasu-010",
+    "word": "クリーニングに出す",
+    "reading": "kuriiningu ni dasu",
+    "furigana": "だ",
+    "meaning": "Membawa pakaian ke tempat laundry",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "t08-sandaruwohaku-011",
+    "word": "サンダルをはく",
+    "reading": "sandaru wo haku",
+    "furigana": "",
+    "meaning": "Memakai sandal",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "t08-manaawomamoru-012",
+    "word": "マナーを守る",
+    "reading": "manaa wo mamoru",
+    "furigana": "まも",
+    "meaning": "Mematuhi tata krama, menjaga etika",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "t08-daiettosuru-013",
+    "word": "ダイエットする",
+    "reading": "daietto suru",
+    "furigana": "",
+    "meaning": "Diet, berdiet",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "t08-seetaawokiru-014",
+    "word": "セーターを着る",
+    "reading": "seetaa wo kiru",
+    "furigana": "き",
+    "meaning": "Memakai sweater",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "t08-furontouketsuke-015",
+    "word": "フロント（＝受付）",
+    "reading": "furonto (= uketsuke)",
+    "furigana": "うけ つけ",
+    "meaning": "Front desk, resepsionis",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "t08-boonasugaderu-016",
+    "word": "ボーナスが出る",
+    "reading": "boonasu ga deru",
+    "furigana": "で",
+    "meaning": "Bonus keluar/turun",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "t08-ranchichuushoku-017",
+    "word": "ランチ（＝昼食）",
+    "reading": "ranchi (= chuushoku)",
+    "furigana": "ちゅう しょく",
+    "meaning": "Makan siang",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "t08-ryukkuwoseou-018",
+    "word": "リュックを背負う",
+    "reading": "ryukku wo seou",
+    "furigana": "せ お",
+    "meaning": "Memakai/memikul tas punggung",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "t08-deetawokopiisuru-019",
+    "word": "データをコピーする",
+    "reading": "deeta wo kopii suru",
+    "furigana": "",
+    "meaning": "Menyalin data",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "t08-sutaatokaishi-020",
+    "word": "スタートする（＝開始する）",
+    "reading": "sutaato suru (= kaishi suru)",
+    "furigana": "かい し",
+    "meaning": "Memulai",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+    {
+    "id": "kat-001",
+    "word": "マフラー",
+    "reading": "mafuraa",
+    "furigana": "",
+    "meaning": "Syal",
+    "word_type": "noun",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "kat-002",
+    "word": "スカート",
+    "reading": "sukaato",
+    "furigana": "",
+    "meaning": "Rok",
+    "word_type": "noun",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "kat-003",
+    "word": "タオル",
+    "reading": "taoru",
+    "furigana": "",
+    "meaning": "Handuk",
+    "word_type": "noun",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "kat-004",
+    "word": "バスタオル",
+    "reading": "basutaoru",
+    "furigana": "",
+    "meaning": "Handuk mandi",
+    "word_type": "noun",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "kat-005",
+    "word": "カーテン",
+    "reading": "kaaten",
+    "furigana": "",
+    "meaning": "Tirai, gorden",
+    "word_type": "noun",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "kat-006",
+    "word": "エプロン",
+    "reading": "epuron",
+    "furigana": "",
+    "meaning": "Apron",
+    "word_type": "noun",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "kat-007",
+    "word": "アルコール",
+    "reading": "arukooru",
+    "furigana": "",
+    "meaning": "Alkohol",
+    "word_type": "noun",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "kat-008",
+    "word": "サイン",
+    "reading": "sain",
+    "furigana": "",
+    "meaning": "Tanda, tanda tangan",
+    "word_type": "noun",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "kat-009",
+    "word": "コップ",
+    "reading": "koppu",
+    "furigana": "",
+    "meaning": "Gelas (bening biasa)",
+    "word_type": "noun",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "kat-010",
+    "word": "カップ",
+    "reading": "kappu",
+    "furigana": "",
+    "meaning": "Cangkir",
+    "word_type": "noun",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "kat-011",
+    "word": "ガラス",
+    "reading": "garasu",
+    "furigana": "",
+    "meaning": "Kaca",
+    "word_type": "noun",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "kat-012",
+    "word": "ワイングラス",
+    "reading": "waingurasu",
+    "furigana": "",
+    "meaning": "Wine glass (tidak ada pegangannya)",
+    "word_type": "noun",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "kat-013",
+    "word": "ペットボトル",
+    "reading": "pettobotoru",
+    "furigana": "",
+    "meaning": "Botol plastik (minuman)",
+    "word_type": "noun",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "kat-014",
+    "word": "センチ",
+    "reading": "senchi",
+    "furigana": "",
+    "meaning": "Sentimeter (cm)",
+    "word_type": "noun",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "kat-015",
+    "word": "メートル",
+    "reading": "meetoru",
+    "furigana": "",
+    "meaning": "Meter (m)",
+    "word_type": "noun",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "kat-016",
+    "word": "キロ",
+    "reading": "kiro",
+    "furigana": "",
+    "meaning": "Kilogram (kg), Kilometer (km)",
+    "word_type": "noun",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "kat-017",
+    "word": "グラム",
+    "reading": "guramu",
+    "furigana": "",
+    "meaning": "Gram (g)",
+    "word_type": "noun",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "kat-018",
+    "word": "ゲームセンター",
+    "reading": "geemusentaa",
+    "furigana": "",
+    "meaning": "game center",
+    "word_type": "noun",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "kat-019",
+    "word": "ハンカチ",
+    "reading": "hankachi",
+    "furigana": "",
+    "meaning": "Sapu tangan",
+    "word_type": "noun",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "kat-020",
+    "word": "ベビー服",
+    "reading": "bebiifuku",
+    "furigana": "ふく",
+    "meaning": "Baju bayi",
+    "word_type": "noun",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "kat-021",
+    "word": "ベビーカー",
+    "reading": "bebiikaa",
+    "furigana": "",
+    "meaning": "Kereta dorong bayi",
+    "word_type": "noun",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "kat-022",
+    "word": "リーダー",
+    "reading": "riidaa",
+    "furigana": "",
+    "meaning": "Pemimpin",
+    "word_type": "noun",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "kat-023",
+    "word": "スリッパ",
+    "reading": "surippa",
+    "furigana": "",
+    "meaning": "slipper (sandal rumah)",
+    "word_type": "noun",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "kat-024",
+    "word": "ウイスキー",
+    "reading": "uisukii",
+    "furigana": "",
+    "meaning": "Wiski",
+    "word_type": "noun",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "kat-025",
+    "word": "オートバイ／バイク",
+    "reading": "ootobai / baiku",
+    "furigana": "",
+    "meaning": "sepeda motor",
+    "word_type": "noun",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "kat-026",
+    "word": "キッチン",
+    "reading": "kichin",
+    "furigana": "",
+    "meaning": "Dapur",
+    "word_type": "noun",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "kat-027",
+    "word": "ケーキ",
+    "reading": "keeki",
+    "furigana": "",
+    "meaning": "Kue (cake)",
+    "word_type": "noun",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "kat-028",
+    "word": "クッキー",
+    "reading": "kukkii",
+    "furigana": "",
+    "meaning": "Kue kering (cookies)",
+    "word_type": "noun",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "kat-029",
+    "word": "コピー機",
+    "reading": "kopiiki",
+    "furigana": "き",
+    "meaning": "Mesin fotokopi",
+    "word_type": "noun",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "kat-030",
+    "word": "スキー場",
+    "reading": "sukiijou",
+    "furigana": "じょう",
+    "meaning": "Tempat bermain ski",
+    "word_type": "noun",
+    "jlpt_level": 4,
+    "examples": []
+  },
+    {
+    "id": "kat-031",
+    "word": "ショートヘア",
+    "reading": "shootohea",
+    "furigana": "",
+    "meaning": "Rambut pendek",
+    "word_type": "noun",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "kat-032",
+    "word": "ロングヘア",
+    "reading": "ronguhea",
+    "furigana": "",
+    "meaning": "Rambut panjang",
+    "word_type": "noun",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "kat-033",
+    "word": "ヘアスタイル",
+    "reading": "heasutairu",
+    "furigana": "",
+    "meaning": "Gaya rambut",
+    "word_type": "noun",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "kat-034",
+    "word": "スケジュール",
+    "reading": "sukejuuru",
+    "furigana": "",
+    "meaning": "Jadwal",
+    "word_type": "noun",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "kat-035",
+    "word": "スーツ",
+    "reading": "suutsu",
+    "furigana": "",
+    "meaning": "Jas (setelan)",
+    "word_type": "noun",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "kat-036",
+    "word": "ステーキ",
+    "reading": "suteeki",
+    "furigana": "",
+    "meaning": "Steak",
+    "word_type": "noun",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "kat-037",
+    "word": "スマホ",
+    "reading": "sumaho",
+    "furigana": "",
+    "meaning": "Smartphone",
+    "word_type": "noun",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "kat-038",
+    "word": "セール／バーゲン",
+    "reading": "seeru / baagen",
+    "furigana": "",
+    "meaning": "Sale, obral, diskon besar",
+    "word_type": "noun",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "kat-039",
+    "word": "ソックス",
+    "reading": "sokkusu",
+    "furigana": "",
+    "meaning": "Kaus kaki",
+    "word_type": "noun",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "kat-040",
+    "word": "シーズン",
+    "reading": "shiizun",
+    "furigana": "",
+    "meaning": "Musim",
+    "word_type": "noun",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "kat-041",
+    "word": "シングルベッド",
+    "reading": "shingurubeddo",
+    "furigana": "",
+    "meaning": "Single bed (kamar 1 kasur)",
+    "word_type": "noun",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "kat-042",
+    "word": "ダブルベッド",
+    "reading": "daburubeddo",
+    "furigana": "",
+    "meaning": "Double bed (kamar 1 kasur besar)",
+    "word_type": "noun",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "kat-043",
+    "word": "ツインベッド",
+    "reading": "tsuinbeddo",
+    "furigana": "",
+    "meaning": "Twin bed (kamar 2 kasur)",
+    "word_type": "noun",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "kat-044",
+    "word": "チャレンジ",
+    "reading": "charenji",
+    "furigana": "",
+    "meaning": "Tantangan",
+    "word_type": "noun",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "kat-045",
+    "word": "テスト中",
+    "reading": "tesutochuu",
+    "furigana": "ちゅう",
+    "meaning": "Sedang ujian",
+    "word_type": "noun",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "kat-046",
+    "word": "ドライバー",
+    "reading": "doraibaa",
+    "furigana": "",
+    "meaning": "Pengemudi, obeng",
+    "word_type": "noun",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "kat-047",
+    "word": "ドライブする",
+    "reading": "doraibu suru",
+    "furigana": "",
+    "meaning": "Pergi jalan-jalan dengan naik mobil",
+    "word_type": "expression",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "kat-048",
+    "word": "ビニール袋",
+    "reading": "biniirubukuro",
+    "furigana": "ぶくろ",
+    "meaning": "Kantong plastik",
+    "word_type": "noun",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "kat-049",
+    "word": "ファイル",
+    "reading": "fairu",
+    "furigana": "",
+    "meaning": "File, map",
+    "word_type": "noun",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "kat-050",
+    "word": "プロ選手",
+    "reading": "purosenshu",
+    "furigana": "せんしゅ",
+    "meaning": "Atlet profesional",
+    "word_type": "noun",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "kat-051",
+    "word": "ホームシック",
+    "reading": "hoomushikku",
+    "furigana": "",
+    "meaning": "Homesick (rindu rumah)",
+    "word_type": "noun",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "kat-052",
+    "word": "ボランティア",
+    "reading": "borantia",
+    "furigana": "",
+    "meaning": "Sukarelawan",
+    "word_type": "noun",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "kat-053",
+    "word": "マンション",
+    "reading": "manshon",
+    "furigana": "",
+    "meaning": "Apartemen",
+    "word_type": "noun",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "kat-054",
+    "word": "アパート",
+    "reading": "apaato",
+    "furigana": "",
+    "meaning": "Rumah/kamar kontrakan",
+    "word_type": "noun",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "kat-055",
+    "word": "ライブ",
+    "reading": "raibu",
+    "furigana": "",
+    "meaning": "Pertunjukan langsung (konser)",
+    "word_type": "noun",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "kat-056",
+    "word": "ラッシュ",
+    "reading": "rasshu",
+    "furigana": "",
+    "meaning": "Jam sibuk",
+    "word_type": "noun",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "kat-057",
+    "word": "リサイクル",
+    "reading": "risaikuru",
+    "furigana": "",
+    "meaning": "Daur ulang",
+    "word_type": "noun",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "kat-058",
+    "word": "リンス",
+    "reading": "rinsu",
+    "furigana": "",
+    "meaning": "Kondisioner rambut",
+    "word_type": "noun",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "kat-059",
+    "word": "ペットショップ",
+    "reading": "pettoshoppu",
+    "furigana": "",
+    "meaning": "Toko hewan peliharaan",
+    "word_type": "noun",
+    "jlpt_level": 4,
+    "examples": []
+  },
+  {
+    "id": "kat-060",
+    "word": "レインコート",
+    "reading": "reinkooto",
+    "furigana": "",
+    "meaning": "Jas hujan",
+    "word_type": "noun",
+    "jlpt_level": 4,
+    "examples": []
+  }
 
    
 
