@@ -205,7 +205,8 @@ def generate_quiz(request, limit: int = 10, level: Optional[str] = None, type: s
         else:
             continue
 
-        if requested_levels:
+        particles_only = requested_types == ['particle']
+        if requested_levels and not particles_only:
             qs = qs.filter(jlpt_level__in=requested_levels)
         
         # Optimize: select only needed fields and limit pool for distractors

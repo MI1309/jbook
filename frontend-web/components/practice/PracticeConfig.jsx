@@ -157,7 +157,8 @@ export default function PracticeConfig() {
             const activeLevels = selectedLevels.filter(level => isLevelEnabledForSelection(level, activeTypes));
             if (selectedLevels.length > 0 && activeLevels.length === 0) return;
             params.append('type', activeTypes.join(','));
-            if (activeLevels.length > 0) {
+            const particlesOnly = activeTypes.length === 1 && activeTypes[0] === 'particle';
+            if (!particlesOnly && activeLevels.length > 0) {
                 params.append('level', activeLevels.join(','));
             }
             params.append('mode', mode);
@@ -508,7 +509,7 @@ export default function PracticeConfig() {
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
                         {/* JLPT Levels - Hide if not JLPT source */}
-                        {source === 'jlpt' && (
+                        {source === 'jlpt' && !(selectedTypes.length === 1 && selectedTypes[0] === 'particle') && (
                             <div>
                                 <label className={`block text-sm font-black uppercase tracking-widest mb-4 transition-colors ${subTextColor}`}>
                                     JLPT Level

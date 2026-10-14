@@ -765,7 +765,7 @@ function PracticeContent() {
                         <span className={`text-[10px] font-black uppercase tracking-[0.2em] mb-3 sm:mb-4 block transition-colors ${subTextColor}`}>
                             {source === 'minna' 
                                 ? `Minna ${mode === 'fill_blank' ? 'Isi Kosong' : mode === 'context_match' ? 'Context Match' : 'Latihan'} • Bab ${currentQuestion.chapter}`
-                                : (currentQuestion.type === 'kanji' ? 'Kanji' : currentQuestion.type === 'vocab' ? 'Kosakata' : currentQuestion.type === 'kana' ? 'Kana' : 'Tata Bahasa')
+                                : (currentQuestion.type === 'kanji' ? 'Kanji' : currentQuestion.type === 'vocab' ? 'Kosakata' : currentQuestion.type === 'kana' ? 'Kana' : currentQuestion.type === 'particle' ? 'Partikel' : 'Tata Bahasa')
                             }
                         </span>
 
