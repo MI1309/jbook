@@ -45,9 +45,7 @@ try {
 Backend JBook (Django) kini menggunakan sistem konfigurasi standard bawaan Python `logging` (via `LOGGING` dict di `core/settings.py`).
 
 ### Cara Kerjanya
-Log dikonfigurasi untuk diarahkan ke dua tempat (Handler):
-1. **Console**: Dicetak ke terminal saat server Django berjalan.
-2. **File Handler (`backend/logs/django.log`)**: Log berlevel `WARNING` ke atas (termasuk `ERROR` dan `CRITICAL`) akan ditulis ke dalam file log tersebut. Mekanismenya menggunakan `RotatingFileHandler`, sehingga ketika file log mencapai 5 MB, Django akan otomatis membuat file baru (menyimpan 5 file backup). Ini mencegah file log menghabiskan ruang penyimpanan di server.
+Log Django diarahkan ke **console/stderr**. Pada server seperti PythonAnywhere, log tersebut tersedia di error log web app. Backend tidak menulis log ke file lokal, sehingga tidak bergantung pada rotasi file yang dapat menyebabkan `OSError: [Errno 116] Stale file handle` pada filesystem server.
 
 ### Cara Penggunaan di Backend (Python/Django)
 Di file mana saja di Backend (misalnya di `main.py` atau *views/endpoints*), Anda cukup menggunakan modul standar `logging`:
@@ -64,12 +62,12 @@ def my_api_view(request):
         # Lakukan sesuatu
         pass
     except Exception as e:
-        logger.error(f"Terjadi kesalahan di my_api_view: {e}", exc_info=True) 
-        # Akan masuk terminal DAN file backend/logs/django.log
+        logger.error(f"Terjadi kesalahan di my_api_view: {e}", exc_info=True)
+        # Akan masuk ke console/error log platform
 ```
 
 ## Kesimpulan
 
 Gunakan selalu standar ini setiap kali menambahkan fitur baru, agar:
 - Di Vercel, *console* pengunjung bersih.
-- Di backend PythonAnywhere / Server, *error* tercatat rapi di dalam file `logs/django.log` yang sewaktu-waktu dapat kita inspeksi jika terjadi *server crash*.
+- Di backend PythonAnywhere / Server, log tersedia melalui error log platform tanpa handler file yang rawan stale.
