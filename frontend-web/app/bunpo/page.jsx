@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, Suspense } from 'react';
-import { getGrammarList } from '@/lib/api';
+import { getCurriculumUnit, getCurriculumUnitMaterials, getGrammarList } from '@/lib/api';
 import BunpoFilter from '@/components/bunpo/BunpoFilter';
 import Link from 'next/link';
 import { useSearchParams, useRouter } from 'next/navigation';
@@ -16,11 +16,14 @@ function BunpoContent() {
     const detailId = searchParams.get('detail');
     const [data, setData] = useState({ items: [], total: 0, pages: 1 });
     const [loading, setLoading] = useState(true);
+    const [selectedUnit, setSelectedUnit] = useState(null);
+    const [unitMaterials, setUnitMaterials] = useState(null);
 
     const page = parseInt(searchParams.get('page')) || 1;
     const level = searchParams.get('level');
     const search = searchParams.get('search');
     const chapter = searchParams.get('chapter');
+    const unit = searchParams.get('unit');
     const limit = 30;
 
     useEffect(() => {
@@ -28,7 +31,7 @@ function BunpoContent() {
             setLoading(true);
             console.info(`[jbook-client] Memulai pengambilan data Bunpo untuk Page ${page}...`);
             try {
-                const result = await getGrammarList({ level, search, chapter, limit, page });
+                const result = await getGrammarList({ level: unit ? null : level, search, chapter: unit ? null : chapter, unit, limit, page });
                 setData(result || { items: [], total: 0, pages: 1 });
             } catch (err) {
                 console.error('[jbook-client] Gagal memuat Bunpo:', err.message);
@@ -37,23 +40,28 @@ function BunpoContent() {
             }
         }
         fetchData();
-    }, [page, level, search, chapter]);
+    }, [page, level, search, chapter, unit]);
+
+    useEffect(() => {
+        if (!unit) {
+            setSelectedUnit(null);
+            setUnitMaterials(null);
+            return;
+        }
+        Promise.all([getCurriculumUnit(unit), getCurriculumUnitMaterials(unit)])
+            .then(([unitData, materials]) => {
+                setSelectedUnit(unitData);
+                setUnitMaterials(materials);
+            })
+            .catch(() => {
+                setSelectedUnit(null);
+                setUnitMaterials(null);
+            });
+    }, [unit]);
 
     const items = data.items || [];
     const totalPages = data.pages || 1;
-    const hasMore = page < totalPages;
     const totalCount = data.total || 0;
-
-    const getLevelColor = (level) => {
-        switch (level) {
-            case 1: return 'text-blue-600 dark:text-blue-400';
-            case 2: return 'text-orange-600 dark:text-orange-400';
-            case 3: return 'text-yellow-600 dark:text-yellow-400';
-            case 4: return 'text-teal-600 dark:text-teal-400';
-            case 5: return 'text-green-600 dark:text-green-400';
-            default: return 'text-gray-600 dark:text-gray-400';
-        }
-    };
 
     if (loading) return <div className="py-32 text-center animate-pulse text-gray-400 dark:text-gray-600 font-black transition-colors">🏮 Memuat Bunpo...</div>;
 
@@ -67,6 +75,27 @@ function BunpoContent() {
                 <span>Total: {totalCount} Pola</span>
                 <span>Halaman {page} dari {totalPages}</span>
             </div>
+
+            {selectedUnit && (
+                <section className="mb-8 rounded-2xl border border-[var(--border-color)] bg-[var(--card-bg)] p-5 sm:p-7">
+                    <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                        <div>
+                            <p className="text-xs font-black uppercase tracking-widest text-accent-blue">{selectedUnit.jlpt_level} · Bab asli {selectedUnit.original_unit_number}</p>
+                            <h2 className="mt-1 text-2xl font-black text-foreground">{selectedUnit.display_title || `Bab ${selectedUnit.original_unit_number}`}</h2>
+                            {selectedUnit.description && <p className="mt-2 text-sm text-foreground/70">{selectedUnit.description}</p>}
+                        </div>
+                    </div>
+                    <div className="mt-5 border-t border-[var(--border-color)] pt-4">
+                        <h3 className="text-sm font-black text-foreground">Sumber Referensi</h3>
+                        <p className="mt-1 font-bold text-foreground">{selectedUnit.reference_book.title}</p>
+                        {selectedUnit.reference_book.original_title && <p className="text-sm text-foreground/70">{selectedUnit.reference_book.original_title}</p>}
+                        <p className="mt-1 text-xs text-foreground/60">
+                            {[selectedUnit.reference_book.publisher, selectedUnit.reference_book.edition, selectedUnit.reference_book.author, selectedUnit.reference_book.isbn && `ISBN ${selectedUnit.reference_book.isbn}`].filter(Boolean).join(' · ') || 'Detail bibliografi belum diverifikasi.'}
+                        </p>
+                        {selectedUnit.reference_book.source_url && <a className="mt-2 inline-block text-sm font-bold text-accent-blue underline" href={selectedUnit.reference_book.source_url} target="_blank" rel="noreferrer">Sumber bibliografi</a>}
+                    </div>
+                </section>
+            )}
 
             {items.length > 0 ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16 px-1 transition-all">
@@ -100,6 +129,26 @@ function BunpoContent() {
                     <h2 className={`text-2xl font-black mb-2 transition-colors ${textColor}`}>Bunpo tidak ditemukan</h2>
                     <p className={`font-bold mb-8 transition-colors ${subTextColor}`}>Silakan coba filter atau pencarian lain.</p>
                 </div>
+            )}
+
+            {unit && unitMaterials && (
+                <section className="mb-12 space-y-6">
+                    {[
+                        ['Kosakata', unitMaterials.vocab, item => `${item.word}${item.reading ? ` (${item.reading})` : ''} · ${item.meaning}`],
+                        ['Kanji', unitMaterials.kanji, item => `${item.character} · ${item.meaning}`],
+                        ['Partikel', unitMaterials.particles, item => `${item.character} · ${item.meaning}`],
+                    ].filter(([, entries]) => entries?.length > 0).map(([title, entries, label]) => (
+                        <div key={title}>
+                            <h2 className="mb-3 text-lg font-black text-foreground">{title}</h2>
+                            <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3">
+                                {entries.map(item => <div key={item.id} className="rounded-xl border border-[var(--border-color)] bg-[var(--card-bg)] px-4 py-3 text-sm font-semibold text-foreground">{label(item)}</div>)}
+                            </div>
+                        </div>
+                    ))}
+                    {items.length === 0 && !unitMaterials.vocab?.length && !unitMaterials.kanji?.length && !unitMaterials.particles?.length && (
+                        <div className="rounded-xl border border-dashed border-[var(--border-color)] px-5 py-8 text-center text-sm font-semibold text-foreground/60">Belum ada materi yang dipetakan ke unit ini.</div>
+                    )}
+                </section>
             )}
 
             <div className="mt-8">

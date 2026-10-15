@@ -1,10 +1,11 @@
 from ninja import Router, Schema, Query
+from ninja.errors import HttpError
 from typing import List, Optional
 from pydantic import BaseModel, Field, field_validator
 from ninja.security import HttpBearer
 from core.decorators import rate_limit
 from django.conf import settings
-from .models import Kanji, Grammar, Blog, ContentSuggestion, Announcement, Vocab, FeatureSetting
+from .models import Kanji, Grammar, Blog, ContentSuggestion, Announcement, Vocab, FeatureSetting, CurriculumLevel, ReferenceBook, CurriculumUnit
 from .grammar_relations import serialize_grammar, serialize_grammars
 from django.shortcuts import get_object_or_404
 from django.db.models import F, Q
@@ -33,6 +34,127 @@ def get_disabled_vocab_levels():
     if not setting or not isinstance(setting.value, dict):
         return set()
     return {level for level in setting.value.get('disabled_levels', []) if level in range(1, 6)}
+
+def get_disabled_bunpo_levels():
+    setting = FeatureSetting.objects.filter(key='bunpo_visibility').first()
+    if not setting or not isinstance(setting.value, dict):
+        return set()
+    return {level for level in setting.value.get('disabled_levels', []) if level in range(1, 6)}
+
+@router.get("/bunpo/visibility")
+def bunpo_visibility(request):
+    disabled_levels = sorted(get_disabled_bunpo_levels())
+    return {
+        "disabled_levels": disabled_levels,
+        "enabled_levels": [level for level in range(1, 6) if level not in disabled_levels],
+    }
+
+
+def serialize_curriculum_book(book):
+    return {
+        "id": str(book.id),
+        "title": book.title,
+        "original_title": book.original_title,
+        "publisher": book.publisher,
+        "edition": book.edition,
+        "author": book.author,
+        "isbn": book.isbn,
+        "source_url": book.source_url,
+        "notes": book.notes,
+        "jlpt_levels": list(book.jlpt_levels.order_by("display_order").values_list("code", flat=True)),
+    }
+
+
+def serialize_curriculum_unit(unit):
+    return {
+        "id": str(unit.id),
+        "jlpt_level": unit.jlpt_level.code,
+        "reference_book_id": str(unit.reference_book_id),
+        "reference_book_title": unit.reference_book.title,
+        "original_unit_number": unit.original_unit_number,
+        "display_title": unit.display_title,
+        "description": unit.description,
+        "display_order": unit.display_order,
+    }
+
+
+@router.get("/curriculum/levels")
+def curriculum_levels(request):
+    return list(CurriculumLevel.objects.values("id", "code", "name", "display_order"))
+
+
+@router.get("/curriculum/books")
+def curriculum_books(request, level: Optional[str] = None):
+    books = ReferenceBook.objects.prefetch_related("jlpt_levels").all()
+    if level:
+        curriculum_level = CurriculumLevel.objects.filter(code=level.upper()).first()
+        if curriculum_level is None:
+            raise HttpError(404, "Level kurikulum tidak ditemukan")
+        books = books.filter(jlpt_levels=curriculum_level)
+    return [serialize_curriculum_book(book) for book in books.distinct()]
+
+
+@router.get("/curriculum/books/{book_id}")
+def curriculum_book_detail(request, book_id: UUID):
+    book = get_object_or_404(ReferenceBook.objects.prefetch_related("jlpt_levels"), id=book_id)
+    return serialize_curriculum_book(book)
+
+
+@router.get("/curriculum/units")
+def curriculum_units(request, book: Optional[UUID] = None, level: Optional[str] = None):
+    units = CurriculumUnit.objects.select_related("jlpt_level", "reference_book")
+    if level:
+        curriculum_level = CurriculumLevel.objects.filter(code=level.upper()).first()
+        if curriculum_level is None:
+            raise HttpError(404, "Level kurikulum tidak ditemukan")
+        units = units.filter(jlpt_level=curriculum_level)
+    if book:
+        if not ReferenceBook.objects.filter(id=book).exists():
+            raise HttpError(404, "Buku referensi tidak ditemukan")
+        units = units.filter(reference_book_id=book)
+    else:
+        return []
+    return [serialize_curriculum_unit(unit) for unit in units]
+
+
+@router.get("/curriculum/units/{unit_id}")
+def curriculum_unit_detail(request, unit_id: UUID):
+    unit = get_object_or_404(
+        CurriculumUnit.objects.select_related("jlpt_level", "reference_book"),
+        id=unit_id,
+    )
+    return {
+        **serialize_curriculum_unit(unit),
+        "reference_book": serialize_curriculum_book(unit.reference_book),
+    }
+
+
+@router.get("/curriculum/units/{unit_id}/materials")
+def curriculum_unit_materials(request, unit_id: UUID):
+    unit = get_object_or_404(CurriculumUnit, id=unit_id)
+    grammar = unit.grammar_items.all().order_by("title")
+    vocab = unit.vocab_items.all().order_by("word")
+    kanji = unit.kanji_items.all().order_by("character")
+    particles = unit.particle_items.all().order_by("character")
+    return {
+        "unit_id": str(unit.id),
+        "grammar": [
+            {"id": str(item.id), "title": item.title, "structure": item.structure, "explanation": item.explanation}
+            for item in grammar
+        ],
+        "vocab": [
+            {"id": str(item.id), "word": item.word, "reading": item.reading, "meaning": item.meaning}
+            for item in vocab
+        ],
+        "kanji": [
+            {"id": str(item.id), "character": item.character, "meaning": item.meaning, "jlpt_level": item.jlpt_level}
+            for item in kanji
+        ],
+        "particles": [
+            {"id": str(item.id), "character": item.character, "meaning": item.meaning, "explanation": item.explanation}
+            for item in particles
+        ],
+    }
 
 @router.get("/vocab/visibility")
 @router.get("/kotoba/visibility")
@@ -363,13 +485,16 @@ def get_kanji(request, kanji_id: str):
 
 class GrammarListQuerySchema(ListQuerySchema):
     chapter: Optional[int] = None
+    unit: Optional[UUID] = None
 
 @router.get("/bunpo", response=GrammarListResponse)
 @router.get("/grammar", response=GrammarListResponse)
 @rate_limit(key='ip', rate='200/m')  # Max 200 list grammar per IP per minute
 def list_grammar(request, 
                  params: GrammarListQuerySchema = Query(...)):
-    qs = Grammar.objects.all()
+    qs = Grammar.objects.exclude(jlpt_level__in=get_disabled_bunpo_levels())
+    if params.unit:
+        qs = qs.filter(curriculum_units__id=params.unit)
     if params.level:
         levels = parse_levels(params.level)
         if levels:
@@ -410,7 +535,10 @@ def get_grammar(request, grammar_id: str):
             grammar_id = str(uuid.UUID(grammar_id))
     except (ValueError, TypeError):
         pass
-    grammar = get_object_or_404(Grammar, id=grammar_id)
+    grammar = get_object_or_404(
+        Grammar.objects.exclude(jlpt_level__in=get_disabled_bunpo_levels()),
+        id=grammar_id,
+    )
     return serialize_grammar(grammar)
 
 

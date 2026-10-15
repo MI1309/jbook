@@ -169,3 +169,12 @@ python manage.py migrate
 - **Frontend mendapat CORS error**: periksa `DEBUG=True` dan `CORS_ALLOWED_ORIGINS` di `backend/.env`, pastikan origin tepat `http://localhost:3000`, lalu restart backend.
 - **Port 8000 sedang dipakai**: jalankan `python manage.py runserver 8001`, lalu sesuaikan `NEXT_PUBLIC_API_URL` menjadi `http://localhost:8001/api` dan restart frontend.
 - **Jangan jadikan konfigurasi contoh lokal sebagai konfigurasi production**: production wajib memakai `DEBUG=False`, secret key kuat, host eksplisit, dan origin CORS yang sesuai domain deployment. Ikuti [panduan testing dan deployment](testing_deployment.md) untuk deployment.
+
+cd /home/japan/jbook/backend
+workon jbook-env
+
+# Buat .env hanya jika belum ada, agar konfigurasi lama tidak tertimpa
+test -f .env || cp .env.example .env
+
+python -c 'from django.core.management.utils import get_random_secret_key; print(get_random_secret_key())'
+nano .env

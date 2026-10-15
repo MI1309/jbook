@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useTheme } from '@/context/ThemeContext';
-import { getDoukaiCount, getKanjiLevelVisibility, getVocabLevelVisibility } from '@/lib/api';
+import { getBunpoLevelVisibility, getDoukaiCount, getKanjiLevelVisibility, getVocabLevelVisibility } from '@/lib/api';
 
 export default function PracticeConfig() {
     const { theme, mounted } = useTheme();
@@ -29,6 +29,7 @@ export default function PracticeConfig() {
     const [doukaiCount, setDoukaiCount] = useState(null);
     const [kanjiEnabledLevels, setKanjiEnabledLevels] = useState([4, 5]);
     const [vocabEnabledLevels, setVocabEnabledLevels] = useState([1, 2, 3, 4, 5]);
+    const [bunpoEnabledLevels, setBunpoEnabledLevels] = useState([1, 2, 3, 4, 5]);
     const jlptLevels = [
         { id: '5', label: 'N5' },
         { id: '4', label: 'N4' },
@@ -38,52 +39,61 @@ export default function PracticeConfig() {
     ];
     const kanjiAvailable = kanjiEnabledLevels.length > 0;
     const vocabAvailable = vocabEnabledLevels.length > 0;
+    const bunpoAvailable = bunpoEnabledLevels.length > 0;
 
-    const isLevelEnabledForSelection = (levelId, types = selectedTypes) => {
+    const isLevelEnabledForSelection = (levelId, types = selectedTypes, enabled = {
+        kanji: kanjiEnabledLevels,
+        vocab: vocabEnabledLevels,
+        bunpo: bunpoEnabledLevels,
+    }) => {
         const level = Number(levelId);
-        const hasUnrestrictedType = types.some(t => ['grammar', 'particle', 'kana'].includes(t));
+        const hasUnrestrictedType = types.some(t => ['particle', 'kana'].includes(t));
         if (hasUnrestrictedType) return true;
 
-        const kanjiSelected = types.includes('kanji');
-        const vocabSelected = types.includes('vocab');
-        if (kanjiSelected && vocabSelected) {
-            return kanjiEnabledLevels.includes(level) || vocabEnabledLevels.includes(level);
-        }
-        if (kanjiSelected) return kanjiEnabledLevels.includes(level);
-        if (vocabSelected) return vocabEnabledLevels.includes(level);
-        return true;
+        const allowedLevels = [];
+        if (types.includes('kanji')) allowedLevels.push(...enabled.kanji);
+        if (types.includes('vocab')) allowedLevels.push(...enabled.vocab);
+        if (types.includes('grammar')) allowedLevels.push(...enabled.bunpo);
+        return allowedLevels.length === 0 || allowedLevels.includes(level);
     };
 
     const syncVisibility = () => {
-        return Promise.all([getKanjiLevelVisibility(), getVocabLevelVisibility()]).then(([kanjiData, vocabData]) => {
+        return Promise.all([getKanjiLevelVisibility(), getVocabLevelVisibility(), getBunpoLevelVisibility()]).then(([kanjiData, vocabData, bunpoData]) => {
             const kanjiEnabled = (kanjiData.enabled_levels || [4, 5]).map(Number);
             const vocabEnabled = (vocabData.enabled_levels || [1, 2, 3, 4, 5]).map(Number);
+            const bunpoEnabled = (bunpoData.enabled_levels || [1, 2, 3, 4, 5]).map(Number);
             setKanjiEnabledLevels(kanjiEnabled);
             setVocabEnabledLevels(vocabEnabled);
+            setBunpoEnabledLevels(bunpoEnabled);
 
             setSelectedTypes(current => {
-                const next = current.filter(type => (type !== 'kanji' || kanjiEnabled.length > 0) && (type !== 'vocab' || vocabEnabled.length > 0));
+                const next = current.filter(type =>
+                    (type !== 'kanji' || kanjiEnabled.length > 0) &&
+                    (type !== 'vocab' || vocabEnabled.length > 0) &&
+                    (type !== 'grammar' || bunpoEnabled.length > 0)
+                );
                 if (next.length === 0) {
                     const fallbackType = ['kanji', 'vocab', 'grammar', 'particle', 'kana'].find(t =>
-                        (t !== 'kanji' || kanjiEnabled.length > 0) && (t !== 'vocab' || vocabEnabled.length > 0)
+                        (t !== 'kanji' || kanjiEnabled.length > 0) &&
+                        (t !== 'vocab' || vocabEnabled.length > 0) &&
+                        (t !== 'grammar' || bunpoEnabled.length > 0)
                     );
                     return [fallbackType || 'grammar'];
                 }
                 return next;
             });
             setSelectedLevels(current => current.filter(level => {
-                const types = selectedTypes.filter(type => (type !== 'kanji' || kanjiEnabled.length > 0) && (type !== 'vocab' || vocabEnabled.length > 0));
+                const types = selectedTypes.filter(type =>
+                    (type !== 'kanji' || kanjiEnabled.length > 0) &&
+                    (type !== 'vocab' || vocabEnabled.length > 0) &&
+                    (type !== 'grammar' || bunpoEnabled.length > 0)
+                );
                 const resolvedTypes = types.length > 0 ? types : ['grammar'];
-                const hasUnrestrictedType = resolvedTypes.some(t => ['grammar', 'particle', 'kana'].includes(t));
-                if (hasUnrestrictedType) return true;
-                const kanjiSelected = resolvedTypes.includes('kanji');
-                const vocabSelected = resolvedTypes.includes('vocab');
-                if (kanjiSelected && vocabSelected) {
-                    return kanjiEnabled.includes(Number(level)) || vocabEnabled.includes(Number(level));
-                }
-                if (kanjiSelected) return kanjiEnabled.includes(Number(level));
-                if (vocabSelected) return vocabEnabled.includes(Number(level));
-                return true;
+                return isLevelEnabledForSelection(level, resolvedTypes, {
+                    kanji: kanjiEnabled,
+                    vocab: vocabEnabled,
+                    bunpo: bunpoEnabled,
+                });
             }));
         });
     };
@@ -110,6 +120,7 @@ export default function PracticeConfig() {
     const toggleType = (id) => {
         if (id === 'kanji' && !kanjiAvailable) return;
         if (id === 'vocab' && !vocabAvailable) return;
+        if (id === 'grammar' && !bunpoAvailable) return;
         setSelectedTypes(prev => {
             const next = prev.includes(id)
                 ? (prev.length > 1 ? prev.filter(t => t !== id) : prev)
@@ -152,7 +163,11 @@ export default function PracticeConfig() {
             params.append('chapter', chapters.join(','));
             params.append('mode', mode);
         } else {
-            const activeTypes = selectedTypes.filter(type => type !== 'kanji' || kanjiAvailable);
+            const activeTypes = selectedTypes.filter(type =>
+                (type !== 'kanji' || kanjiAvailable) &&
+                (type !== 'vocab' || vocabAvailable) &&
+                (type !== 'grammar' || bunpoAvailable)
+            );
             if (activeTypes.length === 0) return;
             const activeLevels = selectedLevels.filter(level => isLevelEnabledForSelection(level, activeTypes));
             if (selectedLevels.length > 0 && activeLevels.length === 0) return;
@@ -264,7 +279,7 @@ export default function PracticeConfig() {
                                 </label>
                                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2.5 sm:gap-4">
                                     {types.map(t => {
-                                        const featureDisabled = (t.id === 'kanji' && !kanjiAvailable) || (t.id === 'vocab' && !vocabAvailable);
+                                        const featureDisabled = (t.id === 'kanji' && !kanjiAvailable) || (t.id === 'vocab' && !vocabAvailable) || (t.id === 'grammar' && !bunpoAvailable);
                                         const kakitoriDisabled = mode === 'kakitori' && (!['vocab'].includes(t.id) || !vocabAvailable);
                                         const typeDisabled = kakitoriDisabled || featureDisabled;
                                         const isSelected = selectedTypes.includes(t.id) && !typeDisabled;
@@ -272,6 +287,8 @@ export default function PracticeConfig() {
                                             ? 'Kanji dinonaktifkan oleh admin'
                                             : (t.id === 'vocab' && !vocabAvailable)
                                                 ? 'Kotoba dinonaktifkan oleh admin'
+                                                : (t.id === 'grammar' && !bunpoAvailable)
+                                                    ? 'Semua level Bunpo dinonaktifkan oleh admin'
                                                 : kakitoriDisabled
                                                     ? 'Tidak tersedia untuk mode Kakitori'
                                                     : '';
@@ -551,7 +568,7 @@ export default function PracticeConfig() {
                         )}
 
                         {/* Limits and Time */}
-                        <div className={`space-y-6 ${source === 'minna' ? 'col-span-2' : ''}`}>
+                        <div className={`space-y-6 ${source === 'minna' || (source === 'jlpt' && selectedTypes.length === 1 && selectedTypes[0] === 'particle') ? 'col-span-2' : ''}`}>
                             <div className="flex items-center justify-between gap-4">
                                 <div className="flex-1">
                                     <label className={`block text-sm font-black uppercase tracking-widest mb-2 transition-colors ${subTextColor}`}>

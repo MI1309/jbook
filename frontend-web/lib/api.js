@@ -7,6 +7,9 @@ let kanjiVisibilityRequest = null;
 let vocabVisibilityCache = null;
 let vocabVisibilityExpiresAt = 0;
 let vocabVisibilityRequest = null;
+let bunpoVisibilityCache = null;
+let bunpoVisibilityExpiresAt = 0;
+let bunpoVisibilityRequest = null;
 import Cookies from 'js-cookie';
 import { fetchWithCache } from '@/lib/cache-store';
 import { dbGetAll, dbHasData, dbGet } from '@/lib/offline-db';
@@ -216,10 +219,14 @@ export function invalidateVisibilityCache() {
     vocabVisibilityCache = null;
     vocabVisibilityExpiresAt = 0;
     vocabVisibilityRequest = null;
+    bunpoVisibilityCache = null;
+    bunpoVisibilityExpiresAt = 0;
+    bunpoVisibilityRequest = null;
     if (typeof window !== 'undefined') {
         try {
             localStorage.removeItem('jbook_vocab_visibility');
             localStorage.removeItem('jbook_kanji_visibility');
+            localStorage.removeItem('jbook_bunpo_visibility');
         } catch {}
         window.dispatchEvent(new CustomEvent('jbook:visibility-updated'));
     }
@@ -252,6 +259,21 @@ export function setVocabVisibilityCache(disabledLevels) {
             localStorage.setItem('jbook_vocab_visibility', JSON.stringify(vocabVisibilityCache));
         } catch {}
         window.dispatchEvent(new CustomEvent('jbook:visibility-updated', { detail: { type: 'vocab', cache: vocabVisibilityCache } }));
+    }
+}
+
+export function setBunpoVisibilityCache(disabledLevels) {
+    const disabled = (Array.isArray(disabledLevels) ? disabledLevels : [])
+        .map(Number)
+        .filter(level => Number.isInteger(level) && level >= 1 && level <= 5);
+    const enabled = [1, 2, 3, 4, 5].filter(level => !disabled.includes(level));
+    bunpoVisibilityCache = { disabled_levels: disabled, enabled_levels: enabled };
+    bunpoVisibilityExpiresAt = Date.now() + 5 * 60 * 1000;
+    if (typeof window !== 'undefined') {
+        try {
+            localStorage.setItem('jbook_bunpo_visibility', JSON.stringify(bunpoVisibilityCache));
+        } catch {}
+        window.dispatchEvent(new CustomEvent('jbook:visibility-updated', { detail: { type: 'bunpo', cache: bunpoVisibilityCache } }));
     }
 }
 
@@ -369,6 +391,57 @@ export async function getVocabLevelVisibility() {
     }
 }
 
+export async function getBunpoLevelVisibility() {
+    if (bunpoVisibilityCache && Date.now() < bunpoVisibilityExpiresAt) {
+        return bunpoVisibilityCache;
+    }
+    if (bunpoVisibilityRequest) return bunpoVisibilityRequest;
+
+    bunpoVisibilityRequest = fetch(`${API_URL}/content/bunpo/visibility`, { cache: 'no-store' })
+        .then(res => {
+            if (!res.ok) throw new Error('Bunpo visibility request failed');
+            return res.json();
+        })
+        .then(data => {
+            const disabledLevels = (Array.isArray(data.disabled_levels) ? data.disabled_levels : [])
+                .map(Number)
+                .filter(level => Number.isInteger(level) && level >= 1 && level <= 5);
+            const enabledLevels = (Array.isArray(data.enabled_levels) ? data.enabled_levels : [1, 2, 3, 4, 5])
+                .map(Number)
+                .filter(level => Number.isInteger(level) && level >= 1 && level <= 5)
+                .sort((a, b) => a - b);
+            bunpoVisibilityCache = { disabled_levels: disabledLevels, enabled_levels: enabledLevels };
+            bunpoVisibilityExpiresAt = Date.now() + 5 * 60 * 1000;
+            if (typeof window !== 'undefined') {
+                try {
+                    localStorage.setItem('jbook_bunpo_visibility', JSON.stringify(bunpoVisibilityCache));
+                } catch {}
+            }
+            return bunpoVisibilityCache;
+        })
+        .catch(() => {
+            if (typeof window !== 'undefined') {
+                try {
+                    const cached = JSON.parse(localStorage.getItem('jbook_bunpo_visibility') || 'null');
+                    if (Array.isArray(cached?.enabled_levels)) {
+                        bunpoVisibilityCache = cached;
+                        bunpoVisibilityExpiresAt = Date.now() + 60 * 1000;
+                        return cached;
+                    }
+                } catch {}
+            }
+            const fallback = { disabled_levels: [], enabled_levels: [1, 2, 3, 4, 5] };
+            bunpoVisibilityCache = fallback;
+            bunpoVisibilityExpiresAt = Date.now() + 60 * 1000;
+            return fallback;
+        })
+        .finally(() => {
+            bunpoVisibilityRequest = null;
+        });
+
+    return bunpoVisibilityRequest;
+}
+
 export async function getKanjiList({ level, search, radical, limit = 50, page = 1 } = {}) {
     const visibility = await getKanjiLevelVisibility();
     const enabledLevels = (visibility.enabled_levels || [4, 5]).map(Number);
@@ -464,11 +537,44 @@ export async function getKanjiDetail(id) {
     return handleNetworkError('getKanjiDetail', new Error('Offline'), null);
 }
 
-export async function getGrammarList({ level, search, chapter, limit = 50, page = 1 } = {}) {
+export async function getCurriculumLevels() {
+    const res = await fetch(`${API_URL}/content/curriculum/levels`, { cache: 'no-store' });
+    return handleResponse(res, 'getCurriculumLevels');
+}
+
+export async function getCurriculumBooks(level) {
+    const params = new URLSearchParams();
+    if (level) params.set('level', level);
+    const res = await fetch(`${API_URL}/content/curriculum/books?${params.toString()}`, { cache: 'no-store' });
+    return handleResponse(res, 'getCurriculumBooks');
+}
+
+export async function getCurriculumUnits({ level, book } = {}) {
+    const params = new URLSearchParams();
+    if (level) params.set('level', level);
+    if (book) params.set('book', book);
+    const res = await fetch(`${API_URL}/content/curriculum/units?${params.toString()}`, { cache: 'no-store' });
+    return handleResponse(res, 'getCurriculumUnits');
+}
+
+export async function getCurriculumUnit(id) {
+    const res = await fetch(`${API_URL}/content/curriculum/units/${id}`, { cache: 'no-store' });
+    if (res.status === 404) return null;
+    return handleResponse(res, 'getCurriculumUnit');
+}
+
+export async function getCurriculumUnitMaterials(id) {
+    const res = await fetch(`${API_URL}/content/curriculum/units/${id}/materials`, { cache: 'no-store' });
+    if (res.status === 404) return null;
+    return handleResponse(res, 'getCurriculumUnitMaterials');
+}
+
+export async function getGrammarList({ level, search, chapter, unit, limit = 50, page = 1 } = {}) {
     const queryParams = new URLSearchParams();
     if (level) queryParams.append('level', level);
     if (search) queryParams.append('search', search);
     if (chapter) queryParams.append('chapter', chapter);
+    if (unit) queryParams.append('unit', unit);
     if (limit) queryParams.append('limit', limit);
     if (page) queryParams.append('page', page);
 
@@ -485,6 +591,7 @@ export async function getGrammarList({ level, search, chapter, limit = 50, page 
                 return data;
             });
         } catch (error) {
+            if (unit) return { items: [], total: 0, page, pages: 1 };
             // Jika API Gagal (misal: timeout), coba fallback ke Offline
             if (typeof window !== 'undefined') {
                 const offline = await serveFromDb('grammar', { level, search, chapter, page, limit });
@@ -496,6 +603,7 @@ export async function getGrammarList({ level, search, chapter, limit = 50, page 
 
     // 2. Jika Benar-benar Offline: Ambil dari Database Lokal
     if (typeof window !== 'undefined') {
+        if (unit) return { items: [], total: 0, page, pages: 1 };
         const offline = await serveFromDb('grammar', { level, search, chapter, page, limit });
         if (offline && offline.items.length > 0) return offline;
     }
@@ -566,9 +674,11 @@ async function sanitizePracticeSelection({ type, level }) {
     const requestedTypes = String(type || 'kanji').split(',').map(t => t.trim().toLowerCase()).filter(Boolean);
     const needsKanji = requestedTypes.includes('kanji');
     const needsVocab = requestedTypes.some(t => t === 'vocab' || t === 'kotoba');
+    const needsBunpo = requestedTypes.some(t => t === 'grammar' || t === 'bunpo');
 
     let kanjiEnabled = [4, 5];
     let vocabEnabled = [1, 2, 3, 4, 5];
+    let bunpoEnabled = [1, 2, 3, 4, 5];
     if (needsKanji) {
         const vis = await getKanjiLevelVisibility();
         kanjiEnabled = (vis.enabled_levels || [4, 5]).map(Number);
@@ -578,20 +688,32 @@ async function sanitizePracticeSelection({ type, level }) {
         vocabEnabled = (vis.enabled_levels || [1, 2, 3, 4, 5]).map(Number);
     }
 
-    const safeTypes = requestedTypes.filter(t => (t !== 'kanji' || kanjiEnabled.length > 0) && (!['vocab', 'kotoba'].includes(t) || vocabEnabled.length > 0));
+    if (needsBunpo) {
+        const vis = await getBunpoLevelVisibility();
+        bunpoEnabled = (vis.enabled_levels || [1, 2, 3, 4, 5]).map(Number);
+    }
+
+    const safeTypes = requestedTypes.filter(t =>
+        (t !== 'kanji' || kanjiEnabled.length > 0) &&
+        (!['vocab', 'kotoba'].includes(t) || vocabEnabled.length > 0) &&
+        (!['grammar', 'bunpo'].includes(t) || bunpoEnabled.length > 0)
+    );
     if (!safeTypes.length) return { type: '', level: null };
 
     if (!level) return { type: safeTypes.join(','), level: null };
 
     const levels = String(level).split(',').map(l => l.trim()).filter(Boolean);
-    const unrestricted = safeTypes.some(t => ['grammar', 'particle', 'kana'].includes(t));
+    const unrestricted = safeTypes.some(t => ['particle', 'kana'].includes(t));
     const filteredLevels = unrestricted ? levels : levels.filter(l => {
         const n = Number(l);
         const kanjiSelected = safeTypes.includes('kanji');
         const vocabSelected = safeTypes.includes('vocab') || safeTypes.includes('kotoba');
-        if (kanjiSelected && vocabSelected) return kanjiEnabled.includes(n) || vocabEnabled.includes(n);
-        if (kanjiSelected) return kanjiEnabled.includes(n);
-        if (vocabSelected) return vocabEnabled.includes(n);
+        const bunpoSelected = safeTypes.includes('grammar') || safeTypes.includes('bunpo');
+        if (kanjiSelected || vocabSelected || bunpoSelected) {
+            return (kanjiSelected && kanjiEnabled.includes(n)) ||
+                (vocabSelected && vocabEnabled.includes(n)) ||
+                (bunpoSelected && bunpoEnabled.includes(n));
+        }
         return true;
     });
 
@@ -599,7 +721,7 @@ async function sanitizePracticeSelection({ type, level }) {
     return { type: safeTypes.join(','), level: filteredLevels.join(',') };
 }
 
-export async function getPracticeQuestions({ limit = 10, level = null, type = 'kanji' } = {}) {
+export async function getPracticeQuestions({ limit = 10, level = null, type = 'kanji', unit = null } = {}) {
     const sanitized = await sanitizePracticeSelection({ type, level });
     if (!sanitized.type) return [];
 
@@ -610,6 +732,7 @@ export async function getPracticeQuestions({ limit = 10, level = null, type = 'k
     if (limit) params.append('limit', limit);
     if (level) params.append('level', level);
     if (type) params.append('type', type);
+    if (unit) params.append('unit', unit);
 
     const cacheKey = `practice-questions-${params.toString()}`;
 
@@ -622,6 +745,7 @@ export async function getPracticeQuestions({ limit = 10, level = null, type = 'k
                 return handleResponse(res, 'getPracticeQuestions');
             }, 24 * 60 * 60 * 1000); 
         } catch (error) {
+            if (unit) return [];
             console.warn(`[jbook-api] API Gagal, mencoba membuat soal Latihan secara lokal...`);
             if (typeof window !== 'undefined') {
                 const questions = await generateOfflineQuestions({ limit, level, type });
@@ -632,6 +756,7 @@ export async function getPracticeQuestions({ limit = 10, level = null, type = 'k
     }
 
     // 2. Jika Offline: Buat soal Latihan secara Lokal (Simulator)
+    if (unit) return [];
     console.info(`[jbook-api] Offline: Membuat soal Latihan secara lokal (Database Download)...`);
     if (typeof window !== 'undefined') {
         const questions = await generateOfflineQuestions({ limit, level, type });

@@ -4,71 +4,71 @@ import { Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import { useDebounce } from 'use-debounce';
-import { useTheme } from '@/context/ThemeContext';
+import { getCurriculumBooks, getCurriculumLevels, getCurriculumUnits } from '@/lib/api';
 
 function FilterContent() {
-    const { theme, mounted } = useTheme();
     const router = useRouter();
     const searchParams = useSearchParams();
 
     // Initialize state from URL params
     const initialSearch = searchParams.get('search') || '';
-    const initialLevels = searchParams.get('level')?.split(',').filter(Boolean) || [];
-    const initialChapter = searchParams.get('chapter') || '';
-
     const [searchTerm, setSearchTerm] = useState(initialSearch);
-    const [selectedLevels, setSelectedLevels] = useState(initialLevels);
-    const [selectedChapter, setSelectedChapter] = useState(initialChapter);
+    const [levels, setLevels] = useState([]);
+    const [booksState, setBooksState] = useState({ level: '', items: [] });
+    const [unitsState, setUnitsState] = useState({ book: '', items: [] });
+    const [curriculumLevel, setCurriculumLevel] = useState(searchParams.get('curriculum_level') || '');
+    const [bookId, setBookId] = useState(searchParams.get('book') || '');
+    const [unitId, setUnitId] = useState(searchParams.get('unit') || '');
 
     // Debounce search term to avoid too many URL updates
     const [debouncedSearch] = useDebounce(searchTerm, 500);
-    const [debouncedChapter] = useDebounce(selectedChapter, 500);
+    useEffect(() => {
+        getCurriculumLevels().then(setLevels).catch(() => setLevels([]));
+    }, []);
 
-    // Update URL when filters change
+    useEffect(() => {
+        if (!curriculumLevel) return;
+        getCurriculumBooks(curriculumLevel)
+            .then(items => setBooksState({ level: curriculumLevel, items }))
+            .catch(() => setBooksState({ level: curriculumLevel, items: [] }));
+    }, [curriculumLevel]);
+
+    useEffect(() => {
+        if (!bookId) return;
+        getCurriculumUnits({ level: curriculumLevel, book: bookId })
+            .then(items => setUnitsState({ book: bookId, items }))
+            .catch(() => setUnitsState({ book: bookId, items: [] }));
+    }, [curriculumLevel, bookId]);
+
     useEffect(() => {
         const params = new URLSearchParams(searchParams.toString());
-
-        if (debouncedSearch) {
-            params.set('search', debouncedSearch);
-        } else {
-            params.delete('search');
-        }
-
-        if (selectedLevels.length) {
-            params.set('level', selectedLevels.join(','));
-        } else {
-            params.delete('level');
-        }
-
-        if (debouncedChapter) {
-            params.set('chapter', debouncedChapter);
-        } else {
-            params.delete('chapter');
-        }
-
-        // Reset page when filter changes, IF search/level/chapter changed
-        const currentSearch = searchParams.get('search') || '';
-        const currentLevel = searchParams.get('level') || '';
-        const currentChapter = searchParams.get('chapter') || '';
-
-        if (debouncedSearch !== currentSearch || selectedLevels.join(',') !== currentLevel || debouncedChapter !== currentChapter) {
-            params.delete('page'); // Reset pagination
+        if (debouncedSearch) params.set('search', debouncedSearch);
+        else params.delete('search');
+        if (debouncedSearch !== (searchParams.get('search') || '')) {
+            params.delete('page');
             router.push(`/bunpo?${params.toString()}`, { scroll: false });
         }
+    }, [debouncedSearch, router, searchParams]);
 
-    }, [debouncedSearch, selectedLevels, debouncedChapter, router, searchParams]);
-
-    const handleLevelClick = (level) => {
-        const stringLevel = level.toString();
-        if (selectedLevels.includes(stringLevel)) {
-            setSelectedLevels(selectedLevels.filter(l => l !== stringLevel));
-        } else {
-            setSelectedLevels([...selectedLevels, stringLevel]);
-        }
+    const updateSelection = (nextLevel, nextBook, nextUnit) => {
+        const params = new URLSearchParams(searchParams.toString());
+        if (nextLevel) params.set('curriculum_level', nextLevel);
+        else params.delete('curriculum_level');
+        if (nextBook) params.set('book', nextBook);
+        else params.delete('book');
+        if (nextUnit) params.set('unit', nextUnit);
+        else params.delete('unit');
+        params.delete('chapter');
+        params.delete('level');
+        params.delete('page');
+        setCurriculumLevel(nextLevel);
+        setBookId(nextBook);
+        setUnitId(nextUnit);
+        router.push(`/bunpo?${params.toString()}`, { scroll: false });
     };
 
-    const textColor = !mounted ? 'text-black' : (theme === 'dark' ? 'text-white' : 'text-black');
-    const subTextColor = !mounted ? 'text-black/50' : (theme === 'dark' ? 'text-white/50' : 'text-black/50');
+    const books = booksState.level === curriculumLevel ? booksState.items : [];
+    const units = unitsState.book === bookId ? unitsState.items : [];
 
     return (
         <div className="bg-[var(--card-bg)] p-6 rounded-[2.5rem] border border-[var(--border-color)] shadow-xl shadow-accent-blue/5 transition-all duration-300 w-full">
@@ -97,56 +97,28 @@ function FilterContent() {
                     </div>
                 </div>
 
-                {/* Level Filter: 3-2 Grid */}
-                <div className="sm:col-span-1 lg:col-span-4">
-                    <label className="block font-black mb-2 uppercase text-[11px] tracking-widest text-gray-500 dark:text-gray-400 text-center sm:text-left">
-                        Filter Level JLPT
-                    </label>
-                    <div className="grid grid-cols-6 gap-1.5 w-full">
-                        {[5, 4, 3, 2, 1].map((level) => {
-                            const isSelected = selectedLevels.includes(level.toString());
-                            const spanClass = [5, 4, 3].includes(level) ? 'col-span-2' : 'col-span-3';
-                            return (
-                                <button
-                                    key={level}
-                                    type="button"
-                                    onClick={() => handleLevelClick(level)}
-                                    className={`${spanClass} py-2 rounded-xl border font-black text-xs transition-all duration-200 flex items-center justify-center ${
-                                        isSelected
-                                            ? 'bg-gradient-to-r from-accent-blue to-accent-green text-white border-transparent shadow-md shadow-accent-blue/20 scale-[1.02]'
-                                            : 'bg-[var(--background)] text-gray-600 dark:text-gray-400 border-[var(--border-color)] hover:border-accent-blue/40 hover:text-accent-blue hover:bg-accent-blue/5'
-                                    }`}
-                                >
-                                    N{level}
-                                </button>
-                            );
-                        })}
-                    </div>
+                <div className="sm:col-span-1 lg:col-span-2">
+                    <label className="block font-black mb-2 uppercase text-[11px] tracking-widest text-gray-500 dark:text-gray-400">Level JLPT</label>
+                    <select value={curriculumLevel} onChange={e => updateSelection(e.target.value, '', '')} className="w-full px-4 py-2.5 bg-[var(--background)] text-[var(--foreground)] border border-[var(--border-color)] rounded-2xl text-sm font-semibold">
+                        <option value="">Pilih level</option>
+                        {levels.map(level => <option key={level.id} value={level.code}>{level.code}</option>)}
+                    </select>
                 </div>
-
-                {/* Chapter Filter */}
                 <div className="sm:col-span-1 lg:col-span-3">
-                    <label className="block font-black mb-2 uppercase text-[11px] tracking-widest text-gray-500 dark:text-gray-400 text-center sm:text-left">
-                        Filter Chapter
-                    </label>
-                    <div className="relative group">
-                        <input
-                            type="number"
-                            min="1"
-                            placeholder="Contoh: 1"
-                            className="w-full px-4 py-2.5 bg-[var(--background)] text-[var(--foreground)] border border-[var(--border-color)] focus:outline-none focus:ring-2 focus:ring-accent-blue/40 focus:border-accent-blue transition-all group-hover:border-accent-blue/30 rounded-2xl text-sm font-semibold"
-                            value={selectedChapter}
-                            onChange={(e) => setSelectedChapter(e.target.value)}
-                        />
-                        {selectedChapter && (
-                            <button
-                                onClick={() => setSelectedChapter('')}
-                                className="absolute right-3 top-1/2 -translate-y-1/2 w-6 h-6 rounded-full flex items-center justify-center text-xs text-gray-400 hover:text-red-500 hover:bg-gray-200 dark:hover:bg-gray-800 transition-all"
-                            >
-                                ✕
-                            </button>
-                        )}
-                    </div>
+                    <label className="block font-black mb-2 uppercase text-[11px] tracking-widest text-gray-500 dark:text-gray-400">Buku Referensi</label>
+                    <select value={bookId} disabled={!curriculumLevel} onChange={e => updateSelection(curriculumLevel, e.target.value, '')} className="w-full px-4 py-2.5 bg-[var(--background)] text-[var(--foreground)] border border-[var(--border-color)] rounded-2xl text-sm font-semibold disabled:opacity-50">
+                        <option value="">{curriculumLevel ? (books.length ? 'Pilih buku' : 'Belum ada buku') : 'Pilih level dahulu'}</option>
+                        {books.map(book => <option key={book.id} value={book.id}>{book.title}</option>)}
+                    </select>
+                    {curriculumLevel && books.length === 0 && <p className="mt-2 text-xs font-semibold text-gray-500">Belum ada buku referensi untuk level ini.</p>}
+                </div>
+                <div className="sm:col-span-2 lg:col-span-2">
+                    <label className="block font-black mb-2 uppercase text-[11px] tracking-widest text-gray-500 dark:text-gray-400">Bab / Unit</label>
+                    <select value={unitId} disabled={!bookId} onChange={e => updateSelection(curriculumLevel, bookId, e.target.value)} className="w-full px-4 py-2.5 bg-[var(--background)] text-[var(--foreground)] border border-[var(--border-color)] rounded-2xl text-sm font-semibold disabled:opacity-50">
+                        <option value="">{bookId ? (units.length ? 'Pilih unit' : 'Belum ada unit') : 'Pilih buku dahulu'}</option>
+                        {units.map(unit => <option key={unit.id} value={unit.id}>{unit.display_title || `Bab ${unit.original_unit_number}`} (asli {unit.original_unit_number})</option>)}
+                    </select>
+                    {bookId && units.length === 0 && <p className="mt-2 text-xs font-semibold text-gray-500">Belum ada bab/unit untuk buku ini.</p>}
                 </div>
             </div>
         </div>

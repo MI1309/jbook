@@ -3,7 +3,7 @@ from django.contrib import admin
 from django.db.models import Count
 from django.http import HttpResponse
 from django.urls import path, reverse
-from .models import Kanji, Vocab, Grammar, Blog, Particle, Announcement, MinnaQuestion, DoukaiPassage, DoukaiQuestion, FeatureSetting
+from .models import Kanji, Vocab, Grammar, Blog, Particle, Announcement, MinnaQuestion, DoukaiPassage, DoukaiQuestion, FeatureSetting, CurriculumLevel, ReferenceBook, CurriculumUnit
 
 @admin.action(description="Export selected items as CSV")
 def export_as_csv(modeladmin, request, queryset):
@@ -47,12 +47,34 @@ class DoukaiQuestionAdmin(admin.ModelAdmin):
     raw_id_fields = ('passage',)
 
 
+@admin.register(CurriculumLevel)
+class CurriculumLevelAdmin(admin.ModelAdmin):
+    list_display = ('code', 'name', 'display_order')
+    ordering = ('display_order',)
+
+
+@admin.register(ReferenceBook)
+class ReferenceBookAdmin(admin.ModelAdmin):
+    list_display = ('title', 'publisher', 'edition')
+    search_fields = ('title', 'original_title', 'publisher', 'isbn')
+    filter_horizontal = ('jlpt_levels',)
+
+
+@admin.register(CurriculumUnit)
+class CurriculumUnitAdmin(admin.ModelAdmin):
+    list_display = ('display_title', 'jlpt_level', 'reference_book', 'original_unit_number', 'display_order')
+    list_filter = ('jlpt_level', 'reference_book')
+    search_fields = ('display_title', 'description', 'reference_book__title')
+    ordering = ('jlpt_level__display_order', 'reference_book', 'display_order')
+
+
 @admin.register(Kanji)
 class KanjiAdmin(admin.ModelAdmin):
     list_display = ('character', 'meaning', 'jlpt_level', 'strokes')
     list_filter = ('jlpt_level',)
     search_fields = ('character', 'meaning')
     ordering = ('jlpt_level', 'character')
+    filter_horizontal = ('curriculum_units',)
     actions = [export_as_csv, 'delete_duplicate_kanji']
 
     def get_urls(self):
@@ -107,6 +129,7 @@ class VocabAdmin(admin.ModelAdmin):
     list_filter = ('word_type', 'jlpt_level')
     search_fields = ('word', 'reading', 'meaning')
     ordering = ('jlpt_level', 'word')
+    filter_horizontal = ('curriculum_units',)
     actions = [export_as_csv, 'delete_duplicate_vocab']
 
     def get_urls(self):
@@ -163,6 +186,7 @@ class GrammarAdmin(admin.ModelAdmin):
     list_filter = ('jlpt_level', 'chapter')
     search_fields = ('title', 'structure', 'explanation')
     ordering = ('chapter', 'title')
+    filter_horizontal = ('curriculum_units',)
     actions = [export_as_csv]
 
 @admin.register(Blog)
@@ -177,6 +201,7 @@ class ParticleAdmin(admin.ModelAdmin):
     list_display = ('character', 'meaning', 'jlpt_level')
     list_filter = ('jlpt_level',)
     search_fields = ('character', 'meaning', 'explanation')
+    filter_horizontal = ('curriculum_units',)
 
 @admin.register(Announcement)
 class AnnouncementAdmin(admin.ModelAdmin):

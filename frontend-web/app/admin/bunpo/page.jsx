@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/context/AuthContext';
-import { API_URL } from '@/lib/api';
+import { API_URL, setBunpoVisibilityCache } from '@/lib/api';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useDebounce } from 'use-debounce';
@@ -23,6 +23,8 @@ export default function BunpoAdmin() {
     const [totalPages, setTotalPages] = useState(1);
     const LIMIT = 20;
     const [pendingDelete, setPendingDelete] = useState(null);
+    const [disabledLevels, setDisabledLevels] = useState([]);
+    const [savingVisibility, setSavingVisibility] = useState(false);
     const router = useRouter();
 
     const [allBunpos, setAllBunpos] = useState([]);
@@ -32,7 +34,51 @@ export default function BunpoAdmin() {
 
     useEffect(() => { setPage(1); }, [filterLevel, debouncedChapter, debouncedSearch]);
     
-    useEffect(() => { fetchAllBunpos(); }, []);
+    useEffect(() => {
+        fetchAllBunpos();
+        fetchVisibility();
+    }, []);
+
+    const fetchVisibility = async () => {
+        try {
+            const token = Cookies.get('access_token');
+            const res = await fetch(`${API_URL}/admin/bunpo/visibility`, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            if (res.ok) {
+                const data = await res.json();
+                setDisabledLevels(data.disabled_levels || []);
+            }
+        } catch (error) {
+            console.error('Failed to fetch Bunpo visibility', error);
+        }
+    };
+
+    const toggleVisibility = async (level) => {
+        const nextDisabledLevels = disabledLevels.includes(level)
+            ? disabledLevels.filter(item => item !== level)
+            : [...disabledLevels, level].sort((a, b) => a - b);
+        setSavingVisibility(true);
+        try {
+            const token = Cookies.get('access_token');
+            const res = await fetch(`${API_URL}/admin/bunpo/visibility`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({ disabled_levels: nextDisabledLevels })
+            });
+            if (!res.ok) throw new Error('Visibility update failed');
+            setDisabledLevels(nextDisabledLevels);
+            setBunpoVisibilityCache(nextDisabledLevels);
+            toast.success(`Bunpo N${level} ${nextDisabledLevels.includes(level) ? 'dinonaktifkan' : 'diaktifkan'}`);
+        } catch {
+            toast.error('Gagal mengubah visibilitas level Bunpo.');
+        } finally {
+            setSavingVisibility(false);
+        }
+    };
 
     useEffect(() => {
         applyFiltersAndPagination();
@@ -192,6 +238,34 @@ export default function BunpoAdmin() {
                     </svg>
                     Tambah Bunpo Baru
                 </Link>
+            </div>
+
+            <div className="p-6 rounded-[2rem] border backdrop-blur-xl bg-white/5 border-white/5 shadow-2xl">
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                    <div>
+                        <h2 className="text-sm font-black uppercase tracking-widest text-white">Visibilitas Bunpo</h2>
+                        <p className="text-xs text-neutral-500 mt-2">Atur level Bunpo yang tersedia di publik dan latihan. Perubahan tersimpan otomatis.</p>
+                    </div>
+                    <div className="flex flex-wrap gap-2">
+                        {[5, 4, 3, 2, 1].map(level => {
+                            const isDisabled = disabledLevels.includes(level);
+                            return (
+                                <button
+                                    key={level}
+                                    type="button"
+                                    disabled={savingVisibility}
+                                    onClick={() => toggleVisibility(level)}
+                                    className={`px-4 py-2 rounded-xl border text-xs font-black transition-all cursor-pointer ${isDisabled
+                                        ? 'bg-red-600/20 border-red-500/40 text-red-300'
+                                        : 'bg-emerald-600/20 border-emerald-500/40 text-emerald-300'
+                                    } disabled:opacity-50`}
+                                >
+                                    N{level} {isDisabled ? 'OFF' : 'ON'}
+                                </button>
+                            );
+                        })}
+                    </div>
+                </div>
             </div>
 
             {/* Filters & Search */}

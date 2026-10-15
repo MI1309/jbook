@@ -5,7 +5,7 @@ from django.shortcuts import get_object_or_404
 from django.contrib.auth import get_user_model
 from .models import QuizAttempt, UserProgress
 from .tts_logic import CrosswordGenerator
-from content.models import Kanji, Vocab, Grammar, Particle, MinnaQuestion, DoukaiPassage, DoukaiQuestion, FeatureSetting
+from content.models import Kanji, Vocab, Grammar, Particle, MinnaQuestion, DoukaiPassage, DoukaiQuestion, FeatureSetting, CurriculumUnit
 from core.decorators import rate_limit
 import random
 import uuid
@@ -157,13 +157,15 @@ class ImportDataSchema(Schema):
     progress: List[UserProgressExportSchema] = Field(default_factory=list, max_length=5000)
 
 @router.get("/practice/generate", response=List[QuestionSchema])
-def generate_quiz(request, limit: int = 10, level: Optional[str] = None, type: str = 'kanji'):
+def generate_quiz(request, limit: int = 10, level: Optional[str] = None, type: str = 'kanji', unit: Optional[uuid.UUID] = None):
     # Cap the limit to a reasonable high value for full level review
     limit = min(max(1, limit), 2000)
 
     # Support multiple types and levels (comma separated)
     requested_types = [t.strip().lower() for t in type.split(',')]
     requested_levels = [int(l.strip()) for l in level.split(',') if l.strip().isdigit()] if level else []
+    if unit:
+        get_object_or_404(CurriculumUnit, id=unit)
 
     questions = []
     
@@ -185,7 +187,9 @@ def generate_quiz(request, limit: int = 10, level: Optional[str] = None, type: s
             qs = Vocab.objects.exclude(jlpt_level__in=disabled_levels)
             d_type = 'vocab'
         elif t in ['grammar', 'bunpo']:
-            qs = Grammar.objects.all()
+            setting = FeatureSetting.objects.filter(key='bunpo_visibility').first()
+            value = setting.value if setting and isinstance(setting.value, dict) else {'disabled_levels': []}
+            qs = Grammar.objects.exclude(jlpt_level__in=value.get('disabled_levels', []))
             d_type = 'grammar'
         elif t == 'particle':
             qs = Particle.objects.all()
@@ -206,6 +210,8 @@ def generate_quiz(request, limit: int = 10, level: Optional[str] = None, type: s
             continue
 
         particles_only = requested_types == ['particle']
+        if unit:
+            qs = qs.filter(curriculum_units__id=unit).distinct()
         if requested_levels and not particles_only:
             qs = qs.filter(jlpt_level__in=requested_levels)
         

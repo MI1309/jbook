@@ -129,6 +129,26 @@ def admin_update_vocab_visibility(request, data: VocabVisibilitySchema):
     setting.save(update_fields=['value', 'updated_at'])
     return {'disabled_levels': disabled_levels}
 
+class BunpoVisibilitySchema(Schema):
+    disabled_levels: List[int] = Field(default_factory=list)
+
+@router.get("/bunpo/visibility", auth=AdminAuth())
+def admin_get_bunpo_visibility(request):
+    setting = FeatureSetting.objects.filter(key='bunpo_visibility').first()
+    value = setting.value if setting and isinstance(setting.value, dict) else {'disabled_levels': []}
+    return {'disabled_levels': value.get('disabled_levels', [])}
+
+@router.put("/bunpo/visibility", auth=AdminAuth())
+@rate_limit(key='user', rate='30/m')
+def admin_update_bunpo_visibility(request, data: BunpoVisibilitySchema):
+    disabled_levels = sorted(set(data.disabled_levels))
+    if any(level not in range(1, 6) for level in disabled_levels):
+        raise HttpError(400, "Level Bunpo harus berada di antara 1 dan 5")
+    setting, _ = FeatureSetting.objects.get_or_create(key='bunpo_visibility')
+    setting.value = {'disabled_levels': disabled_levels}
+    setting.save(update_fields=['value', 'updated_at'])
+    return {'disabled_levels': disabled_levels}
+
 # Admin Dashboard Stats
 @router.get("/stats", auth=AdminAuth(), response=dict)
 def admin_get_stats(request):

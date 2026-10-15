@@ -27,6 +27,57 @@ class WordType(models.TextChoices):
     COUNTER = 'counter', 'Counter (Kata Bantu Bilangan)'
     OTHER = 'other', 'Lain-lain'
 
+
+class CurriculumLevel(models.Model):
+    code = models.CharField(max_length=2, unique=True)
+    name = models.CharField(max_length=100)
+    display_order = models.PositiveSmallIntegerField(unique=True)
+
+    class Meta:
+        ordering = ['display_order']
+
+    def __str__(self):
+        return self.code
+
+
+class ReferenceBook(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    title = models.CharField(max_length=255)
+    original_title = models.CharField(max_length=255, blank=True)
+    publisher = models.CharField(max_length=255, blank=True)
+    edition = models.CharField(max_length=100, blank=True)
+    author = models.CharField(max_length=255, blank=True)
+    isbn = models.CharField(max_length=20, blank=True)
+    source_url = models.URLField(blank=True)
+    notes = models.TextField(blank=True)
+    jlpt_levels = models.ManyToManyField(CurriculumLevel, related_name='reference_books', blank=True)
+
+    class Meta:
+        ordering = ['title']
+
+    def __str__(self):
+        return self.title
+
+
+class CurriculumUnit(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    jlpt_level = models.ForeignKey(CurriculumLevel, on_delete=models.CASCADE, related_name='units')
+    reference_book = models.ForeignKey(ReferenceBook, on_delete=models.CASCADE, related_name='units')
+    original_unit_number = models.PositiveSmallIntegerField()
+    display_title = models.CharField(max_length=255, blank=True)
+    description = models.TextField(blank=True)
+    display_order = models.PositiveSmallIntegerField()
+
+    class Meta:
+        ordering = ['display_order', 'original_unit_number', 'id']
+        constraints = [
+            models.UniqueConstraint(fields=['jlpt_level', 'reference_book', 'original_unit_number'], name='unique_curriculum_original_unit'),
+            models.UniqueConstraint(fields=['jlpt_level', 'reference_book', 'display_order'], name='unique_curriculum_display_order_per_book'),
+        ]
+
+    def __str__(self):
+        return self.display_title or f'{self.reference_book.title} - Unit {self.original_unit_number}'
+
 class Kanji(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     character = models.CharField(max_length=1)
@@ -38,6 +89,7 @@ class Kanji(models.Model):
     radical = models.CharField(max_length=5, blank=True, null=True, help_text="Radikal utama")
     word_type = models.CharField(max_length=20, choices=WordType.choices, blank=True, null=True, help_text="Tipe kata utama jika ada")
     examples = models.JSONField(default=list, help_text="List of words using this Kanji with Indonesian meanings")
+    curriculum_units = models.ManyToManyField('CurriculumUnit', related_name='kanji_items', blank=True)
     
     # 🌟 TAMBAHAN BARU: Field untuk menyimpan data teks mentah SVG dari KanjiVG
     svg_data = models.TextField(blank=True, null=True, help_text="Data mentah file SVG dari KanjiVG")
@@ -61,6 +113,7 @@ class Grammar(models.Model):
     chapter = models.IntegerField(default=0, help_text="Bab / Chapter number")
     jlpt_level = models.IntegerField(choices=JLPTLevel.choices)
     sentences = models.JSONField(default=list, help_text="Contoh kalimat dengan terjemahan Bahasa Indonesia")
+    curriculum_units = models.ManyToManyField('CurriculumUnit', related_name='grammar_items', blank=True)
 
     def __str__(self):
         return self.title
@@ -75,6 +128,7 @@ class Vocab(models.Model):
     kanji_rel = models.ManyToManyField(Kanji, related_name='vocab', blank=True)
     jlpt_level = models.IntegerField(choices=JLPTLevel.choices, default=JLPTLevel.N5)
     examples = models.JSONField(default=list, help_text="Contoh kalimat")
+    curriculum_units = models.ManyToManyField('CurriculumUnit', related_name='vocab_items', blank=True)
     # Per-character furigana mapping (list aligned with `word` characters)
     furigana_map = models.JSONField(default=list, help_text="List of furigana segments aligned per character in `word`")
 
@@ -104,6 +158,7 @@ class Particle(models.Model):
     explanation = models.TextField(help_text="Penjelasan penggunaan")
     jlpt_level = models.IntegerField(choices=JLPTLevel.choices, default=JLPTLevel.N5)
     sentences = models.JSONField(default=list, help_text="Contoh kalimat dengan placeholder ( ) dan terjemahan")
+    curriculum_units = models.ManyToManyField('CurriculumUnit', related_name='particle_items', blank=True)
 
     def __str__(self):
         return self.character

@@ -44,6 +44,7 @@ function PracticeContent() {
     const limit = searchParams.get('limit') ? parseInt(searchParams.get('limit')) : 10;
     const level = searchParams.get('level') || null;
     const type = searchParams.get('type') || 'kanji';
+    const unit = searchParams.get('unit') || null;
     const mode = searchParams.get('mode') || 'choice';
     const source = searchParams.get('source') || 'jlpt';
     const book = searchParams.get('book') || null;
@@ -250,7 +251,7 @@ function PracticeContent() {
                 if (source === 'minna') {
                     data = await getMinnaQuestions({ limit, book, chapter, type: mode });
                 } else {
-                    data = await getPracticeQuestions({ limit, level, type });
+                    data = await getPracticeQuestions({ limit, level, type, unit });
                 }
                 setQuestions(data);
             } catch (error) {
@@ -297,7 +298,7 @@ function PracticeContent() {
         }
 
         loadQuestions();
-    }, [limit, level, type, source, book, chapter, mode, router]);
+    }, [limit, level, type, unit, source, book, chapter, mode, router]);
 
     // Save session state
     useEffect(() => {
