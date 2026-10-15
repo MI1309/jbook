@@ -15,6 +15,17 @@ class ParticlePracticeTests(TestCase):
 		self.assertEqual(response.status_code, 200)
 		self.assertEqual({question['character'] for question in response.json()}, {'は', 'まで'})
 
+	def test_kana_practice_has_four_unique_choices_and_no_level(self):
+		response = self.client.get('/api/learning/practice/generate?type=kana&limit=10', secure=True)
+
+		self.assertEqual(response.status_code, 200)
+		self.assertTrue(response.json())
+		for question in response.json():
+			choice_texts = [option['text'] for option in question['options']]
+			self.assertEqual(len(choice_texts), 4)
+			self.assertEqual(len(set(choice_texts)), 4)
+			self.assertIsNone(question['level'])
+
 
 class BunpoPracticeVisibilityTests(TestCase):
 	def test_practice_excludes_disabled_bunpo_levels(self):

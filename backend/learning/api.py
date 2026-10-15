@@ -204,7 +204,7 @@ def generate_quiz(request, limit: int = 10, level: Optional[str] = None, type: s
                 distractor_romaji = random.sample(all_romaji, 3)
                 options = [{"text": romaji, "is_correct": True}, *[{"text": dr, "is_correct": False} for dr in distractor_romaji]]
                 random.shuffle(options)
-                questions.append({"id": f"kana_{kana}", "character": kana, "type": "kana", "options": options, "reading": romaji, "meaning": f"Karakter Kana: {kana}", "level": 0})
+                questions.append({"id": f"kana_{kana}", "character": kana, "type": "kana", "options": options, "reading": romaji, "meaning": f"Karakter Kana: {kana}"})
             continue
         else:
             continue

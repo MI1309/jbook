@@ -825,20 +825,27 @@ async function generateOfflineQuestions({ limit, level, type }) {
 
         return selected.map(({ item, type, originalPool }) => {
             // Find distractors from the same category pool
-            const distractors = originalPool
-                .filter(p => p.id !== item.id)
-                .sort(() => 0.5 - Math.random())
-                .slice(0, 3);
-                
             let options = [];
             if (type === 'kana') {
-                options = [item.romaji, ...distractors.map(d => d.romaji)];
-            } else if (type === 'kanji') {
-                options = [item.meaning, ...distractors.map(d => d.meaning)];
-            } else if (type === 'vocab') {
-                options = [item.meaning, ...distractors.map(d => d.meaning)];
+                const distractorReadings = [...new Set(originalPool
+                    .filter(candidate => candidate.kana !== item.kana)
+                    .map(candidate => candidate.romaji)
+                    .filter(reading => reading && reading !== item.romaji))]
+                    .sort(() => 0.5 - Math.random())
+                    .slice(0, 3);
+                options = [item.romaji, ...distractorReadings];
             } else {
-                options = [item.explanation, ...distractors.map(d => d.explanation)];
+                const distractors = originalPool
+                    .filter(p => p.id !== item.id)
+                    .sort(() => 0.5 - Math.random())
+                    .slice(0, 3);
+                if (type === 'kanji') {
+                options = [item.meaning, ...distractors.map(d => d.meaning)];
+                } else if (type === 'vocab') {
+                    options = [item.meaning, ...distractors.map(d => d.meaning)];
+                } else {
+                    options = [item.explanation, ...distractors.map(d => d.explanation)];
+                }
             }
 
             const formattedOptions = options.map((opt, idx) => ({

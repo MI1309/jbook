@@ -16,6 +16,7 @@ function FilterContent() {
     const [levels, setLevels] = useState([]);
     const [booksState, setBooksState] = useState({ level: '', items: [] });
     const [unitsState, setUnitsState] = useState({ book: '', items: [] });
+    const [jlptLevel, setJlptLevel] = useState(searchParams.get('level') || '');
     const [curriculumLevel, setCurriculumLevel] = useState(searchParams.get('curriculum_level') || '');
     const [bookId, setBookId] = useState(searchParams.get('book') || '');
     const [unitId, setUnitId] = useState(searchParams.get('unit') || '');
@@ -59,11 +60,19 @@ function FilterContent() {
         if (nextUnit) params.set('unit', nextUnit);
         else params.delete('unit');
         params.delete('chapter');
-        params.delete('level');
         params.delete('page');
         setCurriculumLevel(nextLevel);
         setBookId(nextBook);
         setUnitId(nextUnit);
+        router.push(`/bunpo?${params.toString()}`, { scroll: false });
+    };
+
+    const updateJlptLevel = (nextLevel) => {
+        const params = new URLSearchParams(searchParams.toString());
+        if (nextLevel) params.set('level', nextLevel);
+        else params.delete('level');
+        params.delete('page');
+        setJlptLevel(nextLevel);
         router.push(`/bunpo?${params.toString()}`, { scroll: false });
     };
 
@@ -74,7 +83,7 @@ function FilterContent() {
         <div className="bg-[var(--card-bg)] p-6 rounded-[2.5rem] border border-[var(--border-color)] shadow-xl shadow-accent-blue/5 transition-all duration-300 w-full">
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-5 items-start">
                 {/* Search Bunpo */}
-                <div className="sm:col-span-2 lg:col-span-5">
+                <div className="sm:col-span-2 lg:col-span-4">
                     <label className="block font-black mb-2 flex items-center gap-1.5 text-[11px] uppercase tracking-widest text-gray-500 dark:text-gray-400">
                         <span>🔍</span> Cari Bunpo
                     </label>
@@ -99,12 +108,19 @@ function FilterContent() {
 
                 <div className="sm:col-span-1 lg:col-span-2">
                     <label className="block font-black mb-2 uppercase text-[11px] tracking-widest text-gray-500 dark:text-gray-400">Level JLPT</label>
+                    <select value={jlptLevel} onChange={e => updateJlptLevel(e.target.value)} className="w-full px-4 py-2.5 bg-[var(--background)] text-[var(--foreground)] border border-[var(--border-color)] rounded-2xl text-sm font-semibold">
+                        <option value="">Semua level</option>
+                        {[1, 2, 3, 4, 5].map(level => <option key={level} value={level}>N{level}</option>)}
+                    </select>
+                </div>
+                <div className="sm:col-span-1 lg:col-span-2">
+                    <label className="block font-black mb-2 uppercase text-[11px] tracking-widest text-gray-500 dark:text-gray-400">Level Kurikulum</label>
                     <select value={curriculumLevel} onChange={e => updateSelection(e.target.value, '', '')} className="w-full px-4 py-2.5 bg-[var(--background)] text-[var(--foreground)] border border-[var(--border-color)] rounded-2xl text-sm font-semibold">
-                        <option value="">Pilih level</option>
+                        <option value="">Pilih kurikulum</option>
                         {levels.map(level => <option key={level.id} value={level.code}>{level.code}</option>)}
                     </select>
                 </div>
-                <div className="sm:col-span-1 lg:col-span-3">
+                <div className="sm:col-span-1 lg:col-span-2">
                     <label className="block font-black mb-2 uppercase text-[11px] tracking-widest text-gray-500 dark:text-gray-400">Buku Referensi</label>
                     <select value={bookId} disabled={!curriculumLevel} onChange={e => updateSelection(curriculumLevel, e.target.value, '')} className="w-full px-4 py-2.5 bg-[var(--background)] text-[var(--foreground)] border border-[var(--border-color)] rounded-2xl text-sm font-semibold disabled:opacity-50">
                         <option value="">{curriculumLevel ? (books.length ? 'Pilih buku' : 'Belum ada buku') : 'Pilih level dahulu'}</option>

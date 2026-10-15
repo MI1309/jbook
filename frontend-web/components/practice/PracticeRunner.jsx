@@ -715,7 +715,7 @@ function PracticeContent() {
                 {mode === 'kakitori' ? (
                     <div className="mb-4 sm:mb-8 relative p-2 sm:p-4 flex flex-col items-center group transition-all duration-300">
                         <span className={`text-[10px] font-black uppercase tracking-[0.2em] mb-3 sm:mb-4 block transition-colors ${subTextColor}`}>
-                            Kakitori (Latihan Dikte) • N{currentQuestion.level || '5'}
+                            {currentQuestion.type === 'kana' ? 'Kana' : `Kakitori (Latihan Dikte) • N${currentQuestion.level || '5'}`}
                         </span>
 
                         <div className="flex flex-col items-center justify-center p-4 sm:p-6 bg-blue-500/5 rounded-2xl sm:rounded-3xl border border-dashed border-blue-500/20 max-w-sm mx-auto mb-4 w-full">
