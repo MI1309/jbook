@@ -9,7 +9,7 @@ import Link from 'next/link';
 import KanjiDetailModal from '@/components/kanji/KanjiDetailModal';
 import KotobaDetailModal from '@/components/kotoba/KotobaDetailModal';
 import BunpoDetailModal from '@/components/bunpo/BunpoDetailModal';
-import { toast } from 'react-toastify';
+import { appToast as toast } from '@/components/common/AppMessage';
 import { diffStrings } from '@/lib/utils';
 import * as wanakana from 'wanakana';
 import Pagination from '@/components/common/Pagination';

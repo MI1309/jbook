@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useTheme } from '@/context/ThemeContext';
 import { getBunpoLevelVisibility, getDoukaiCount, getKanjiLevelVisibility, getVocabLevelVisibility } from '@/lib/api';
+import AppMessage from '@/components/common/AppMessage';
 
 export default function PracticeConfig() {
     const { theme, mounted } = useTheme();
@@ -19,6 +20,7 @@ export default function PracticeConfig() {
     const [mode, setMode] = useState('choice'); // 'choice' or 'kakitori' or minna modes
     const [selectedTypes, setSelectedTypes] = useState(['kanji']);
     const [selectedLevels, setSelectedLevels] = useState([]); // Default semua level
+    const [selectionWarning, setSelectionWarning] = useState(false);
 
     // Minna states
     const [selectedBook, setSelectedBook] = useState('1'); // '1', '2', or 'both'
@@ -40,6 +42,7 @@ export default function PracticeConfig() {
     const kanjiAvailable = kanjiEnabledLevels.length > 0;
     const vocabAvailable = vocabEnabledLevels.length > 0;
     const bunpoAvailable = bunpoEnabledLevels.length > 0;
+    const unrestrictedOnly = selectedTypes.length === 1 && ['particle', 'kana'].includes(selectedTypes[0]);
 
     const isLevelEnabledForSelection = (levelId, types = selectedTypes, enabled = {
         kanji: kanjiEnabledLevels,
@@ -72,7 +75,7 @@ export default function PracticeConfig() {
                     (type !== 'vocab' || vocabEnabled.length > 0) &&
                     (type !== 'grammar' || bunpoEnabled.length > 0)
                 );
-                if (next.length === 0) {
+                if (current.length > 0 && next.length === 0) {
                     const fallbackType = ['kanji', 'vocab', 'grammar', 'particle', 'kana'].find(t =>
                         (t !== 'kanji' || kanjiEnabled.length > 0) &&
                         (t !== 'vocab' || vocabEnabled.length > 0) &&
@@ -121,9 +124,10 @@ export default function PracticeConfig() {
         if (id === 'kanji' && !kanjiAvailable) return;
         if (id === 'vocab' && !vocabAvailable) return;
         if (id === 'grammar' && !bunpoAvailable) return;
+        setSelectionWarning(false);
         setSelectedTypes(prev => {
             const next = prev.includes(id)
-                ? (prev.length > 1 ? prev.filter(t => t !== id) : prev)
+                ? prev.filter(t => t !== id)
                 : [...prev, id];
             setSelectedLevels(current => current.filter(level => isLevelEnabledForSelection(level, next)));
             return next;
@@ -138,6 +142,12 @@ export default function PracticeConfig() {
     };
 
     const handleStart = () => {
+        if (source === 'jlpt' && selectedTypes.length === 0) {
+            setSelectionWarning(true);
+            return;
+        }
+
+        setSelectionWarning(false);
         sessionStorage.removeItem('guest_practice_session');
 
         // Parse and validate inputs before starting
@@ -168,9 +178,15 @@ export default function PracticeConfig() {
                 (type !== 'vocab' || vocabAvailable) &&
                 (type !== 'grammar' || bunpoAvailable)
             );
-            if (activeTypes.length === 0) return;
-            const activeLevels = selectedLevels.filter(level => isLevelEnabledForSelection(level, activeTypes));
-            if (selectedLevels.length > 0 && activeLevels.length === 0) return;
+            if (activeTypes.length === 0) {
+                setSelectionWarning(true);
+                return;
+            }
+            const unrestrictedOnly = activeTypes.length === 1 && ['particle', 'kana'].includes(activeTypes[0]);
+            const activeLevels = unrestrictedOnly
+                ? []
+                : selectedLevels.filter(level => isLevelEnabledForSelection(level, activeTypes));
+            if (!unrestrictedOnly && selectedLevels.length > 0 && activeLevels.length === 0) return;
             params.append('type', activeTypes.join(','));
             const particlesOnly = activeTypes.length === 1 && activeTypes[0] === 'particle';
             if (!particlesOnly && activeLevels.length > 0) {
@@ -526,7 +542,7 @@ export default function PracticeConfig() {
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
                         {/* JLPT Levels - Hide if not JLPT source */}
-                        {source === 'jlpt' && !(selectedTypes.length === 1 && selectedTypes[0] === 'particle') && (
+                        {source === 'jlpt' && !unrestrictedOnly && (
                             <div>
                                 <label className={`block text-sm font-black uppercase tracking-widest mb-4 transition-colors ${subTextColor}`}>
                                     JLPT Level
@@ -568,7 +584,7 @@ export default function PracticeConfig() {
                         )}
 
                         {/* Limits and Time */}
-                        <div className={`space-y-6 ${source === 'minna' || (source === 'jlpt' && selectedTypes.length === 1 && selectedTypes[0] === 'particle') ? 'col-span-2' : ''}`}>
+                        <div className={`space-y-6 ${source === 'minna' || (source === 'jlpt' && unrestrictedOnly) ? 'col-span-2' : ''}`}>
                             <div className="flex items-center justify-between gap-4">
                                 <div className="flex-1">
                                     <label className={`block text-sm font-black uppercase tracking-widest mb-2 transition-colors ${subTextColor}`}>
@@ -617,9 +633,15 @@ export default function PracticeConfig() {
                     </div>
                 </div>
 
+                {source === 'jlpt' && selectionWarning && (
+                    <AppMessage variant="warning" className="mt-8">
+                        Pilih minimal satu materi latihan sebelum memulai.
+                    </AppMessage>
+                )}
+
                 <button
                     onClick={handleStart}
-                    className="w-full mt-12 relative overflow-hidden bg-gradient-to-r from-blue-600 to-sky-600 hover:from-blue-500 hover:to-sky-500 text-white font-black py-5 rounded-2xl text-xl shadow-[0_0_40px_rgba(37,99,235,0.28)] transition-all transform hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center gap-3 group border border-white/20"
+                    className="w-full mt-6 relative overflow-hidden bg-gradient-to-r from-blue-600 to-sky-600 hover:from-blue-500 hover:to-sky-500 text-white font-black py-5 rounded-2xl text-xl shadow-[0_0_40px_rgba(37,99,235,0.28)] transition-all transform hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center gap-3 group border border-white/20"
                 >
                     <span className="relative z-10">Mulai Latihan Sekarang</span>
                     <span className="text-2xl transition-transform group-hover:translate-x-2 relative z-10">→</span>

@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { useTheme } from '@/context/ThemeContext';
 import Link from 'next/link';
+import AppMessage from '@/components/common/AppMessage';
 
 export default function ForgotPasswordPage() {
     const [email, setEmail] = useState('');
@@ -68,31 +69,23 @@ export default function ForgotPasswordPage() {
                 
                 <form className="mt-10 space-y-6" onSubmit={handleSubmit}>
                     {error && (
-                        <div className={`p-4 rounded-2xl text-xs font-black uppercase tracking-widest border animate-shake transition-colors ${
-                            isDark ? 'bg-red-950/20 border-red-900/50 text-red-400' : 'bg-red-50 border-red-200 text-red-600'
-                        }`} role="alert">
-                            <span className="flex items-center gap-2">
-                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                                {error}
-                            </span>
-                        </div>
+                        <AppMessage variant="warning" className="animate-shake text-xs font-black uppercase tracking-widest">
+                            {error}
+                        </AppMessage>
                     )}
                     
                     {successMessage && (
-                        <div className={`p-4 rounded-2xl text-xs font-black uppercase tracking-widest border transition-colors ${
-                            isDark ? 'bg-emerald-950/20 border-emerald-900/50 text-emerald-400' : 'bg-emerald-50 border-emerald-200 text-emerald-600'
-                        }`} role="alert">
-                            <span className="flex items-center gap-2 mb-2">
-                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" /></svg>
+                        <AppMessage variant="success" className="text-xs font-black uppercase tracking-widest">
+                            <div>
                                 {successMessage}
-                            </span>
-                            {debugResetLink && (
-                                <div className={`mt-4 p-3 rounded-xl border transition-colors ${isDark ? 'bg-black/50 border-emerald-900/30' : 'bg-white/50 border-emerald-200'}`}>
-                                    <p className={`text-[10px] font-black uppercase tracking-widest mb-1 ${isDark ? 'text-emerald-800' : 'text-emerald-400'}`}>Debug Link:</p>
-                                    <a href={debugResetLink} className="text-red-600 underline break-all text-[10px] font-bold" target="_blank" rel="noopener noreferrer">{debugResetLink}</a>
-                                </div>
-                            )}
-                        </div>
+                                {debugResetLink && (
+                                    <div className="mt-4 rounded-xl border border-emerald-500/20 bg-black/5 p-3 dark:bg-black/20">
+                                        <p className="mb-1 text-[10px] font-black uppercase tracking-widest opacity-70">Debug Link:</p>
+                                        <a href={debugResetLink} className="break-all text-[10px] font-bold text-blue-700 underline dark:text-blue-300" target="_blank" rel="noopener noreferrer">{debugResetLink}</a>
+                                    </div>
+                                )}
+                            </div>
+                        </AppMessage>
                     )}
 
                     <div className="space-y-5">

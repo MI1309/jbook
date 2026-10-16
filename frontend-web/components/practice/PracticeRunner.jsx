@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback, useRef, Suspense } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import { usePractice } from '@/context/PracticeContext';
@@ -14,7 +15,7 @@ import KotobaDetailModal from '@/components/kotoba/KotobaDetailModal';
 import BunpoDetailModal from '@/components/bunpo/BunpoDetailModal';
 import { hasKanji } from '@/lib/utils';
 import * as wanakana from 'wanakana';
-import { toast } from 'react-toastify';
+import { appToast as toast } from '@/components/common/AppMessage';
 import { Volume2 } from 'lucide-react';
 
 /**
@@ -526,6 +527,18 @@ function PracticeContent() {
                         <div className="text-6xl mb-2">🎉</div>
                         <h2 className={`text-3xl font-black mb-1 transition-colors ${textColor}`}>Latihan Selesai!</h2>
                         <p className={`text-sm transition-colors ${subTextColor}`}>Kerja bagus hari ini!</p>
+                        {user && (
+                            <div className="mt-4 inline-flex items-center gap-3 rounded-full border border-blue-600/15 bg-blue-600/5 py-1.5 pl-1.5 pr-4">
+                                <div className="relative h-10 w-10 overflow-hidden rounded-full bg-blue-600/10">
+                                    {user.profile_image ? (
+                                        <Image src={user.profile_image} alt={`Foto profil ${user.username}`} fill sizes="40px" unoptimized className="object-cover" />
+                                    ) : (
+                                        <span className="flex h-full w-full items-center justify-center font-black text-blue-600">{user.username?.[0]?.toUpperCase()}</span>
+                                    )}
+                                </div>
+                                <span className={`text-sm font-bold ${textColor}`}>{user.username}</span>
+                            </div>
+                        )}
                         {mode === 'kakitori' && (
                             <div className={`mt-3 text-xs px-3 py-2 rounded-lg font-bold ${theme === 'dark' ? 'bg-blue-950/30 border border-blue-900/40 text-blue-300' : 'bg-blue-50 border border-blue-100 text-blue-700'}`}>
                                 🎧 Sesi Kakitori telah dicatat ke statistik dikte kamu.
@@ -549,7 +562,7 @@ function PracticeContent() {
                         <h3 className={`text-lg font-black mb-4 flex items-center gap-2 transition-colors ${textColor}`}>
                             <span>📋</span> Ringkasan Jawaban
                         </h3>
-                        <div className="space-y-3 max-h-[350px] overflow-y-auto pr-2 custom-scrollbar">
+                        <div className="space-y-3 pr-2">
                             {results.map((res, idx) => (
                                 <div
                                     key={idx}
@@ -711,7 +724,7 @@ function PracticeContent() {
             </div>
 
             {/* Question Card */}
-            <div className={`${theme === 'dark' ? 'bg-[#0a0a0a]/70' : 'bg-white/70'} backdrop-blur-2xl rounded-2xl sm:rounded-[3rem] shadow-[0_8px_30px_rgb(0,0,0,0.08)] p-4 sm:p-6 md:p-8 mb-4 sm:mb-8 text-center border ${theme === 'dark' ? 'border-white/5' : 'border-white/60'} relative flex-grow flex flex-col justify-center max-h-[75dvh] overflow-y-auto custom-scrollbar transition-all`}>
+            <div className={`${theme === 'dark' ? 'bg-[#0a0a0a]/70' : 'bg-white/70'} backdrop-blur-2xl rounded-2xl sm:rounded-[3rem] shadow-[0_8px_30px_rgb(0,0,0,0.08)] p-4 sm:p-6 md:p-8 mb-4 sm:mb-8 text-center border ${theme === 'dark' ? 'border-white/5' : 'border-white/60'} relative flex-grow flex flex-col justify-center transition-all`}>
                 {mode === 'kakitori' ? (
                     <div className="mb-4 sm:mb-8 relative p-2 sm:p-4 flex flex-col items-center group transition-all duration-300">
                         <span className={`text-[10px] font-black uppercase tracking-[0.2em] mb-3 sm:mb-4 block transition-colors ${subTextColor}`}>
@@ -890,7 +903,12 @@ function PracticeContent() {
                     </div>
                 ) : (
                     <>
-                        <div className="grid gap-2.5 sm:gap-3 grid-cols-1 sm:grid-cols-2">
+                        {currentQuestion.type === 'kana' && (
+                            <p className={`mb-3 text-xs font-black uppercase tracking-widest ${subTextColor}`}>
+                                Pilih cara baca yang benar
+                            </p>
+                        )}
+                        <div className={`mx-auto grid w-full gap-2.5 sm:gap-3 ${currentQuestion.type === 'kana' ? 'max-w-xl grid-cols-2' : 'grid-cols-1 sm:grid-cols-2'}`}>
                             {currentQuestion.options.map((option, idx) => {
                                     let btnClass = "p-3 sm:p-4 text-sm sm:text-base md:text-lg font-black border-2 rounded-xl sm:rounded-2xl transition-all duration-300 relative break-words min-h-[50px] flex items-center justify-center text-center ";
 

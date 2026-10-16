@@ -222,6 +222,44 @@ export function AuthProvider({ children }) {
         }
     };
 
+    const updateProfile = async (profile) => {
+        const token = Cookies.get('access_token');
+        if (!token) throw new Error('Sesi login tidak ditemukan. Silakan masuk kembali.');
+
+        const res = await fetch(`${API_URL}/auth/me/profile`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`,
+            },
+            body: JSON.stringify(profile),
+        });
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok) throw new Error(data.detail || data.message || 'Gagal memperbarui profil.');
+
+        setUser(data);
+        return data;
+    };
+
+    const claimTtsPoints = async (sessionId, points) => {
+        const token = Cookies.get('access_token');
+        if (!token) throw new Error('Sesi login tidak ditemukan. Silakan masuk kembali.');
+
+        const res = await fetch(`${API_URL}/auth/me/tts-points`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`,
+            },
+            body: JSON.stringify({ session_id: sessionId, points }),
+        });
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok) throw new Error(data.detail || data.message || 'Gagal menyimpan poin TTS.');
+
+        setUser(data);
+        return data;
+    };
+
     // Internal logout — redirect is optional
     const doLogout = (redirect = true) => {
         clearAuthCookies();
@@ -238,7 +276,7 @@ export function AuthProvider({ children }) {
         <AuthContext.Provider value={{
             user, loading,
             login, register,
-            logout, forgotPassword, resetPassword,
+            logout, forgotPassword, resetPassword, updateProfile, claimTtsPoints,
         }}>
             {children}
         </AuthContext.Provider>

@@ -5,7 +5,7 @@ import { API_URL } from '@/lib/api';
 import { useSearchParams } from 'next/navigation';
 import Cookies from 'js-cookie';
 import Link from 'next/link';
-import { toast } from 'react-toastify';
+import { appToast as toast } from '@/components/common/AppMessage';
 
 function ExportContent() {
     const searchParams = useSearchParams();

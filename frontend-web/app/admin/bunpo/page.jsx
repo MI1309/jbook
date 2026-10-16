@@ -8,7 +8,7 @@ import { useRouter } from 'next/navigation';
 import { useDebounce } from 'use-debounce';
 import Cookies from 'js-cookie';
 import { cacheGet, cacheSet } from '@/lib/cache-store';
-import { toast } from 'react-toastify';
+import { appToast as toast } from '@/components/common/AppMessage';
 import ConfirmationModal from '@/components/common/ConfirmationModal';
 import Pagination from '@/components/common/Pagination';
 

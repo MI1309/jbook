@@ -12,43 +12,36 @@ export default function Footer() {
     if (!mounted) return null;
 
     return (
-        <footer className="bg-[var(--card-bg)] border-t-4 border-t-[var(--border-color)] transition-colors duration-500">
-            <div className="container mx-auto px-6 py-12 max-w-5xl">
-                <div className="flex flex-col md:flex-row justify-between items-center gap-8">
+        <footer className="w-full bg-[var(--card-bg)] border-t border-[var(--border-color)] transition-colors duration-500">
+            <div className="mx-auto grid w-full max-w-7xl grid-cols-1 items-center gap-7 px-4 py-8 sm:grid-cols-2 sm:px-6 lg:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] lg:gap-10 lg:px-8">
                     {/* Brand Section */}
-                    <div className="text-center md:text-left">
-                        <Link href="/" className="inline-flex items-center gap-2 group">
-                            <span className="text-2xl">🏮</span>
-                            <span className="text-xl font-black tracking-tighter transition-colors text-foreground font-japanese">
+                    <div className="min-w-0 text-center sm:text-left">
+                        <Link href="/" className="inline-flex items-center group">
+                            <span className="text-xl font-black text-foreground font-japanese">
                                 J<span className="text-accent-blue">BOOK</span>
                             </span>
                         </Link>
-                        <p className="mt-3 text-xs font-bold uppercase tracking-[0.2em] transition-colors text-gray-500 dark:text-gray-400">
-                            Kamus & Referensi Bahasa Jepang
+                        <p className="mt-2 text-xs font-semibold uppercase text-gray-500 dark:text-gray-400">
+                            Kamus & Latihan Bahasa Jepang
                         </p>
                     </div>
 
                     {/* Links Section */}
-                    <div className="flex gap-8 text-xs font-black uppercase tracking-widest text-gray-500 dark:text-gray-400 font-japanese">
+                    <nav aria-label="Navigasi footer" className="grid grid-cols-2 justify-items-center gap-x-6 gap-y-4 text-sm font-bold uppercase text-gray-500 dark:text-gray-400 font-japanese sm:col-span-2 sm:flex sm:flex-wrap sm:gap-x-6 sm:gap-y-3 lg:col-span-1">
                         <Link href="/kanji" className="hover:text-accent-blue transition-colors">Kanji</Link>
                         <Link href="/kotoba" className="hover:text-accent-blue transition-colors">Kotoba</Link>
                         <Link href="/bunpo" className="hover:text-accent-blue transition-colors">Bunpo</Link>
                         <Link href={user ? '/dashboard' : '/practice'} className="hover:text-accent-blue transition-colors">
                             {user ? 'Dashboard' : 'Latihan'}
                         </Link>
-                    </div>
+                    </nav>
 
                     {/* Copyright Section */}
-                    <div className="text-center md:text-right">
-                        <p className="text-[10px] font-black tracking-widest transition-colors text-gray-500 dark:text-gray-400">
-                            &copy; {currentYear} JBOOK INDONESIA.
+                    <div className="text-center text-xs font-semibold text-gray-500 dark:text-gray-400 sm:col-span-2 lg:col-span-1 lg:text-right">
+                        <p>
+                            &copy; {currentYear} JBOOK.
                         </p>
-                        <div className="mt-2 flex items-center justify-center md:justify-end gap-1">
-                            <div className="w-4 h-2 bg-accent-blue rounded-sm shadow-sm shadow-accent-blue/20"></div>
-                            <div className="w-4 h-2 bg-[var(--background)] border border-[var(--border-color)] rounded-sm"></div>
-                        </div>
                     </div>
-                </div>
             </div>
         </footer>
     );

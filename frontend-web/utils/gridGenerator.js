@@ -81,9 +81,12 @@ export function selectWordSeeds(kotobaList, useKanji = false, limit = 10) {
 
 export function generateCrosswordGrid(kotobaList, width = 10, height = 10, levelStr = '5', useKanji = false, options = {}) {
   const config = { ...DEFAULT_OPTIONS, ...options };
-  const component = findLargestConnectedComponent(buildWordGraph(kotobaList, useKanji))
+  const connectedWords = findLargestConnectedComponent(buildWordGraph(kotobaList, useKanji))
     .filter(node => node.text.length <= Math.max(width, height))
     .sort((left, right) => right.neighbors.size - left.neighbors.size);
+  const component = Number.isFinite(config.candidateLimit)
+    ? connectedWords.slice(0, config.candidateLimit)
+    : connectedWords;
   let best = { cells: createEmptyGrid(width, height), words: [] };
   let attempts = 0;
 
@@ -95,6 +98,7 @@ export function generateCrosswordGrid(kotobaList, width = 10, height = 10, level
     const col = Math.floor((width - seed.text.length) / 2);
     placeWord(state.cells, state.words, seed.kotoba, row, col, 'across', useKanji);
     searchPlacements(state, component, new Set([seed.index]), width, height, useKanji, config, best);
+    if (config.stopAtMinWords && best.words.length >= config.minWords) break;
     if (best.words.length >= config.maxWords) break;
   }
 
@@ -119,6 +123,7 @@ function searchPlacements(state, candidates, usedIndexes, width, height, useKanj
     best.cells = cloneCells(state.cells);
     best.words = state.words.map(word => ({ ...word }));
   }
+  if (config.stopAtMinWords && best.words.length >= config.minWords) return;
   if (state.words.length >= config.maxWords) return;
 
   const placedCharacters = new Set(state.words.flatMap(word => [...word.text]));
@@ -131,9 +136,15 @@ function searchPlacements(state, candidates, usedIndexes, width, height, useKanj
       return rightOverlap - leftOverlap || right.neighbors.size - left.neighbors.size;
     });
 
-  for (const candidate of nextCandidates) {
+  const candidateBranch = Number.isFinite(config.maxCandidateBranch)
+    ? nextCandidates.slice(0, config.maxCandidateBranch)
+    : nextCandidates;
+  for (const candidate of candidateBranch) {
     const placements = findValidPlacements(state.cells, candidate.kotoba, width, height, useKanji, state.words);
-    for (const placement of placements) {
+    const placementBranch = Number.isFinite(config.maxPlacementsPerWord)
+      ? placements.slice(0, config.maxPlacementsPerWord)
+      : placements;
+    for (const placement of placementBranch) {
       placeWord(state.cells, state.words, candidate.kotoba, placement.row, placement.col, placement.direction, useKanji);
       usedIndexes.add(candidate.index);
       searchPlacements(state, candidates, usedIndexes, width, height, useKanji, config, best);

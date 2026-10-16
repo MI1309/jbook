@@ -6,8 +6,40 @@ import { usePathname } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import { usePractice } from '@/context/PracticeContext';
 import { useTheme } from '@/context/ThemeContext';
-import { toast } from 'react-toastify';
+import { appToast as toast } from '@/components/common/AppMessage';
 import ConfirmationModal from '@/components/common/ConfirmationModal';
+import Image from 'next/image';
+
+const avatarKana = ['あ', 'き', 'す', 'ね', 'ふ', 'ま', 'ゆ', 'り', 'を', 'ん'];
+const avatarStyles = [
+    'bg-rose-100 text-rose-700',
+    'bg-amber-100 text-amber-800',
+    'bg-emerald-100 text-emerald-800',
+    'bg-cyan-100 text-cyan-800',
+    'bg-pink-100 text-pink-800',
+    'bg-lime-100 text-lime-800',
+    'bg-orange-100 text-orange-800',
+    'bg-teal-100 text-teal-800',
+    'bg-yellow-100 text-yellow-800',
+    'bg-sky-100 text-sky-800',
+];
+
+function ProfileAvatar({ user, size = 'desktop' }) {
+    const seed = String(user.id || user.username || 'jbook');
+    const hash = Array.from(seed).reduce((value, character) => (value * 31 + character.charCodeAt(0)) >>> 0, 7);
+    const avatarIndex = hash % avatarKana.length;
+    const dimensions = size === 'mobile' ? 'h-9 w-9 text-lg' : 'h-10 w-10 text-xl';
+
+    return (
+        <span className={`relative flex shrink-0 items-center justify-center overflow-hidden rounded-full ring-2 ring-white/70 dark:ring-white/10 ${dimensions} ${!user.profile_image ? avatarStyles[avatarIndex] : 'bg-gray-100'}`}>
+            {user.profile_image ? (
+                <Image src={user.profile_image} alt="" fill sizes={size === 'mobile' ? '36px' : '40px'} unoptimized className="object-cover" />
+            ) : (
+                <span aria-hidden="true" className="font-japanese font-black leading-none">{avatarKana[avatarIndex]}</span>
+            )}
+        </span>
+    );
+}
 
 export default function Navbar() {
     const { user, logout, loading } = useAuth();
@@ -38,7 +70,7 @@ export default function Navbar() {
     const getLinkClass = (path, mobile = false) => {
         const baseClass = mobile
             ? "block px-3 py-2 rounded-md text-base font-bold transition-all duration-200"
-            : "px-3 py-2 rounded-md text-sm font-bold transition-all duration-200";
+            : "px-3 py-2 rounded-md text-base font-bold transition-all duration-200";
 
         if (!mounted) return `${baseClass} text-gray-400`;
 
@@ -108,7 +140,7 @@ export default function Navbar() {
                             <div className="hidden xl:ml-8 xl:flex xl:space-x-1 font-japanese">
                                 {[
                                     { href: '/kanji', label: 'Kanji' },
-                                    { href: '/bunpo', label: 'Tata Bahasa' },
+                                    { href: '/bunpo', label: 'Bunpo' },
                                     { href: '/kana', label: 'Kana' },
                                     { href: '/kotoba', label: 'Kotoba' },
                                     { href: '/tts', label: 'TTS' },
@@ -139,14 +171,23 @@ export default function Navbar() {
                                 user ? (
                                     <div className="flex items-center space-x-2">
                                         {(user.email === 'imronm1309@gmail.com' || user.is_staff) && (
-                                            <Link href="/admin" className="text-accent-blue hover:text-accent-blue/80 font-bold px-3 py-2 rounded-md text-sm transition-all duration-200 hover:bg-accent-blue/10" onClick={(e) => handleNavClick(e, '/admin')}>
+                                            <Link href="/admin" className="text-accent-blue hover:text-accent-blue/80 font-bold px-3 py-2 rounded-md text-base transition-all duration-200 hover:bg-accent-blue/10" onClick={(e) => handleNavClick(e, '/admin')}>
                                                 Admin
                                             </Link>
                                         )}
-                                        <Link href="/dashboard" className={`font-bold px-3 py-2 rounded-md text-sm transition-all duration-200 ${
+                                        <Link href="/dashboard" className={`font-bold px-3 py-2 rounded-md text-base transition-all duration-200 ${
                                             theme === 'dark' ? 'text-gray-300 hover:text-accent-blue hover:bg-accent-blue/10' : 'text-accent-blue hover:bg-accent-blue/10'
                                         }`} onClick={(e) => handleNavClick(e, '/dashboard')}>
                                             Dashboard
+                                        </Link>
+                                        <Link
+                                            href="/profile"
+                                            onClick={(event) => handleNavClick(event, '/profile')}
+                                            className="flex min-w-0 items-center gap-2 rounded-full py-1 pl-1 pr-2 transition-colors hover:bg-blue-600/10"
+                                            aria-label={`Profil ${user.username}`}
+                                        >
+                                            <ProfileAvatar user={user} />
+                                            <span className={`max-w-28 truncate text-sm font-bold ${theme === 'dark' ? 'text-gray-200' : 'text-gray-700'}`}>{user.username}</span>
                                         </Link>
                                         <span className={`text-sm font-black px-2 ${theme === 'dark' ? 'text-gray-500' : 'text-gray-300'}`}>|</span>
                                         <button
@@ -158,7 +199,7 @@ export default function Navbar() {
                                                 logout();
                                                 toast.info('Kamu telah keluar akun.', { theme: theme === 'dark' ? 'dark' : 'colored' });
                                             }}
-                                            className={`px-3 py-2 rounded-md text-sm font-bold transition-all duration-200 ${
+                                            className={`px-3 py-2 rounded-md text-base font-bold transition-all duration-200 ${
                                                 theme === 'dark' ? 'text-gray-400 hover:text-accent-blue hover:bg-accent-blue/10' : 'text-gray-600 hover:text-accent-blue hover:bg-accent-blue/10'
                                             }`}
                                         >
@@ -191,16 +232,16 @@ export default function Navbar() {
 
                 <div
                     className={`
-                        xl:hidden overflow-hidden
+                        xl:hidden overflow-y-auto overscroll-contain
                         transition-all duration-300 ease-in-out
-                        ${isMenuOpen ? 'max-h-[500px] opacity-100' : 'max-h-0 opacity-0'}
+                        ${isMenuOpen ? 'max-h-[calc(100dvh-4rem)] opacity-100' : 'max-h-0 opacity-0'}
                         ${!mounted ? 'bg-white border-gray-100' : (theme === 'dark' ? 'bg-[#0b0b0d] border-[#212127]' : 'bg-[#faf9f6] border-[#e5e5db]')} ${user ? 'border-t' : ''}
                     `}
                 >
                     <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
                         {[
                             { href: '/kanji', label: 'Kanji' },
-                            { href: '/bunpo', label: 'Tata Bahasa' },
+                            { href: '/bunpo', label: 'Bunpo' },
                             { href: '/kana', label: 'Kana' },
                             { href: '/kotoba', label: 'Kotoba' },
                             { href: '/tts', label: 'TTS' },
@@ -223,14 +264,17 @@ export default function Navbar() {
                         <div className={`pt-3 pb-4 border-t ${!mounted ? 'border-gray-100' : (theme === 'dark' ? 'border-[#212127]' : 'border-gray-100')}`}>
                             <div className="px-5 space-y-2">
                                     <div className={`flex items-center py-2`}>
-                                        <div className={`w-8 h-8 rounded-full flex items-center justify-center mr-3 ${!mounted ? 'bg-gray-100' : (theme === 'dark' ? 'bg-accent-blue/10' : 'bg-gray-100')}`}>
-                                            <span className={`text-sm font-bold ${!mounted ? 'text-gray-400' : (theme === 'dark' ? 'text-accent-blue' : 'text-gray-600')}`}>{user.username?.[0]?.toUpperCase()}</span>
-                                        </div>
+                                        <Link href="/profile" className="mr-3" aria-label="Buka profil" onClick={(event) => handleNavClick(event, '/profile')}>
+                                            <ProfileAvatar user={user} size="mobile" />
+                                        </Link>
                                         <div>
                                             <div className={`text-sm font-semibold transition-colors ${!mounted ? 'text-gray-800' : (theme === 'dark' ? 'text-gray-200' : 'text-gray-900')}`}>{user.username}</div>
                                             <div className={`text-xs transition-colors ${!mounted ? 'text-gray-500' : (theme === 'dark' ? 'text-gray-500' : 'text-gray-600')}`}>{user.email}</div>
                                         </div>
                                     </div>
+                                    <Link href="/profile" className="block px-3 py-2 rounded-md text-sm font-medium text-gray-300 hover:text-accent-blue hover:bg-white/5 transition-all duration-200" onClick={(e) => handleNavClick(e, '/profile')}>
+                                        Profil
+                                    </Link>
                                     {(user.email === 'imronm1309@gmail.com' || user.is_staff) && (
                                         <Link href="/admin" className="block px-3 py-2 rounded-md text-sm font-medium text-accent-blue hover:bg-accent-blue/10 transition-all duration-200" onClick={(e) => handleNavClick(e, '/admin')}>
                                             Admin Dashboard

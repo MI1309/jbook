@@ -27,6 +27,18 @@ test('generates five or more kanji entries with real across/down crossings', () 
   });
 });
 
+test('stops searching once the requested minimum crossword size is reached', () => {
+  const grid = generateCrosswordGrid(kanjiWords, 20, 20, '5', true, {
+    minWords: 5,
+    maxWords: 10,
+    maxNodes: 5000,
+    stopAtMinWords: true
+  });
+
+  assert.equal(grid.words.length, 5);
+  assert.ok(grid.words.some(word => word.direction === 'down'));
+});
+
 test('uses reading as the hiragana grid answer', () => {
   const words = ['かな', 'なに', 'にほん', 'ほんや', 'やま', 'まど', 'どこ']
     .map((reading, index) => ({ id: String(index), word: `漢${index}`, reading, meaning: reading }));

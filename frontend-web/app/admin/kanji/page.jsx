@@ -7,7 +7,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import Cookies from 'js-cookie';
 import { cacheGet, cacheSet } from '@/lib/cache-store';
-import { toast } from 'react-toastify';
+import { appToast as toast } from '@/components/common/AppMessage';
 import ConfirmationModal from '@/components/common/ConfirmationModal';
 
 export default function KanjiAdmin() {

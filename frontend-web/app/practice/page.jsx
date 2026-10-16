@@ -11,7 +11,7 @@ import PracticeRunner from '@/components/practice/PracticeRunner';
 import KanjiDetailModal from '@/components/kanji/KanjiDetailModal';
 import KotobaDetailModal from '@/components/kotoba/KotobaDetailModal';
 import BunpoDetailModal from '@/components/bunpo/BunpoDetailModal';
-import { toast } from 'react-toastify';
+import { appToast as toast } from '@/components/common/AppMessage';
 
 function PracticePageContent() {
     const { theme, mounted } = useTheme();

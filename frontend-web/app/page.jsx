@@ -52,7 +52,7 @@ export default function Home() {
     const hasResults = searchResults.kanji.length > 0 || searchResults.grammar.length > 0 || searchResults.vocab.length > 0;
 
     return (
-        <div className="relative w-full min-h-screen washi-texture bg-background text-foreground transition-colors duration-300 pb-20 overflow-hidden">
+        <div className="relative flex min-h-[calc(100svh-4rem)] w-full flex-col overflow-hidden bg-background pb-4 text-foreground transition-colors duration-300 xl:pb-8 washi-texture">
             
             {/* Side calligraphy elements - Cozy Japanese aesthetic */}
             <div className="hidden xl:flex flex-col absolute left-8 top-1/4 space-y-8 select-none text-[#212127]/20 dark:text-[#f2f2f7]/5 font-japanese text-3xl font-black tracking-widest pointer-events-none">
@@ -63,22 +63,28 @@ export default function Home() {
                 <span className="writing-vertical">練習問題</span>
                 <span className="text-xl">学習</span>
             </div>
+            <div aria-hidden="true" className="pointer-events-none absolute left-2 top-[12%] z-0 select-none font-japanese text-xl font-black text-[#212127]/20 dark:text-[#f2f2f7]/5 xl:hidden">
+                <span className="writing-vertical">日本語辞典</span>
+            </div>
+            <div aria-hidden="true" className="pointer-events-none absolute bottom-5 right-2 z-0 select-none font-japanese text-xl font-black text-[#212127]/20 dark:text-[#f2f2f7]/5 xl:hidden">
+                <span className="writing-vertical">練習問題</span>
+            </div>
 
             {/* Container */}
-            <div className="container mx-auto w-full max-w-5xl px-4 sm:px-6 relative z-10 pt-10 md:pt-16">
+            <div className="container relative z-10 mx-auto flex w-full max-w-5xl flex-1 flex-col justify-center px-4 pt-4 xl:justify-between xl:px-6 xl:pt-16">
                 
                 {/* HERO SECTION */}
-                <header className="w-full flex flex-col items-center text-center space-y-6 mb-12">
+                <header className="mb-4 flex w-full flex-col items-center space-y-5 text-center xl:mb-12 xl:space-y-6">
                     <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-[var(--border-color)] bg-[var(--card-bg)] text-xs font-bold tracking-widest uppercase text-accent-blue shadow-sm">
                         <Search className="w-4 h-4 text-accent-blue" />
                         Kamus & Latihan Online
                     </div>
 
-                    <h1 className="text-4xl md:text-6xl font-japanese font-black tracking-tight leading-tight max-w-3xl mt-4">
+                    <h1 className="mt-4 max-w-3xl whitespace-nowrap text-2xl font-japanese font-black leading-tight tracking-tight xl:text-6xl">
                         JBook <span className="text-accent-blue dark:text-accent-blue drop-shadow-[0_0_15px_rgba(56,189,248,0.15)]">Kamus Jepang</span>
                     </h1>
 
-                    <p className="text-base md:text-lg text-gray-500 dark:text-gray-400 max-w-2xl font-light mt-4">
+                    <p className="mt-4 max-w-2xl text-base font-light text-gray-500 dark:text-gray-400 xl:text-lg">
                         Kamus bahasa jepang disertai latihan soal dan game teka-teki silang .
                     </p>
 
@@ -96,8 +102,8 @@ export default function Home() {
                                     setShowSuggestions(true);
                                 }}
                                 onFocus={() => setShowSuggestions(true)}
-                                placeholder="Cari topik bahasa Jepang, kanji, tata bahasa..."
-                                className="w-full min-w-0 py-4 pl-12 pr-4 bg-[var(--card-bg)] border border-[var(--border-color)] rounded-[1.5rem] focus-glow shadow-md hover:shadow-lg transition-all duration-300 placeholder-gray-400 text-sm md:text-base"
+                                placeholder="Cari materi bahasa Jepang..."
+                                className="w-full min-w-0 rounded-[1.5rem] border border-[var(--border-color)] bg-[var(--card-bg)] py-4 pl-12 pr-4 text-sm text-foreground shadow-md transition-all duration-300 placeholder-gray-400 hover:shadow-lg focus-glow xl:text-base"
                             />
                             {searchQuery && (
                                 <button
@@ -219,17 +225,17 @@ export default function Home() {
 
 
                 {/* QUICK LINKS */}
-                <nav aria-label="Navigasi utama" className="mb-16 flex justify-center gap-x-8 gap-y-3 flex-wrap">
-                    <Link href="/kanji" className="flex items-center gap-2 py-2 text-sm font-bold text-gray-500 hover:text-accent-blue transition-colors">
+                <nav aria-label="Navigasi utama" className="mb-4 grid w-full grid-cols-2 justify-items-center gap-x-4 gap-y-1 xl:mt-auto xl:mb-8 xl:flex xl:flex-wrap xl:justify-center xl:gap-x-8">
+                    <Link href="/kanji" className="flex items-center justify-center gap-2 py-3 text-sm font-bold text-gray-500 transition-colors hover:text-accent-blue xl:py-2">
                         <span className="text-accent-blue">漢字</span> Kanji
                     </Link>
-                    <Link href="/kotoba" className="flex items-center gap-2 py-2 text-sm font-bold text-gray-500 hover:text-accent-blue transition-colors">
+                    <Link href="/kotoba" className="flex items-center justify-center gap-2 py-3 text-sm font-bold text-gray-500 transition-colors hover:text-accent-blue xl:py-2">
                         <span className="text-accent-blue">語彙</span> Kotoba
                     </Link>
-                    <Link href="/bunpo" className="flex items-center gap-2 py-2 text-sm font-bold text-gray-500 hover:text-accent-blue transition-colors">
+                    <Link href="/bunpo" className="flex items-center justify-center gap-2 py-3 text-sm font-bold text-gray-500 transition-colors hover:text-accent-blue xl:py-2">
                         <span className="text-accent-blue">文法</span> Bunpo
                     </Link>
-                    <Link href="/practice" className="flex items-center gap-2 py-2 text-sm font-bold text-accent-blue hover:text-accent-blue/75 transition-colors">
+                    <Link href="/practice" className="flex items-center justify-center gap-2 py-3 text-sm font-bold text-accent-blue transition-colors hover:text-accent-blue/75 xl:py-2">
                         Latihan <ArrowRight className="w-4 h-4" />
                     </Link>
                 </nav>

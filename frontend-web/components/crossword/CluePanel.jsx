@@ -3,7 +3,7 @@ import { useGameStore } from '../../stores/gameStore';
 import { clsx } from 'clsx';
 import { Volume2 } from 'lucide-react';
 import { twMerge } from 'tailwind-merge';
-import { toast } from 'react-toastify';
+import { appToast as toast } from '@/components/common/AppMessage';
 
 export const CluePanel = () => {
   const { gameState, selectCell, inputChar } = useGameStore();

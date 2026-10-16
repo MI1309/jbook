@@ -4,7 +4,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useGameStore } from '../../stores/gameStore';
 import { CrosswordCell } from './CrosswordCell';
 import * as wanakana from 'wanakana';
-import { toast } from 'react-toastify';
+import { appToast as toast } from '@/components/common/AppMessage';
 import { Keyboard, Sparkles } from 'lucide-react';
 
 export const CrosswordGrid = () => {

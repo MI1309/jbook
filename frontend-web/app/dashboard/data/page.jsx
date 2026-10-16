@@ -3,9 +3,10 @@
 import { useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { useTheme } from '@/context/ThemeContext';
+import AppMessage from '@/components/common/AppMessage';
 import { exportPracticeData, importPracticeData } from '@/lib/api';
 import { getGuestAnalytics } from '@/lib/local-analytics';
-import { toast } from 'react-toastify';
+import { appToast as toast } from '@/components/common/AppMessage';
 
 export default function DataManagementPage() {
     const { user, loading } = useAuth();
@@ -116,14 +117,13 @@ export default function DataManagementPage() {
             </div>
 
             {actionError && (
-                <div className="bg-blue-50 border border-blue-200 text-blue-800 p-4 rounded-lg flex items-start gap-3" role="alert">
-                    <span className="text-xl">⚠️</span>
-                    <div>
+                <AppMessage variant="warning" className="items-center">
+                    <div className="min-w-0 flex-1">
                         <div className="font-bold">Terjadi Kendala</div>
                         <div className="text-sm">{actionError}</div>
                     </div>
-                    <button onClick={() => setActionError(null)} className="ml-auto text-blue-500 hover:text-blue-700">&times;</button>
-                </div>
+                    <button type="button" onClick={() => setActionError(null)} className="font-bold text-red-700 hover:text-red-900 dark:text-red-200" aria-label="Tutup pesan">&times;</button>
+                </AppMessage>
             )}
 
             <div className={`rounded-2xl border-2 overflow-hidden transition-colors ${cardBase}`}>

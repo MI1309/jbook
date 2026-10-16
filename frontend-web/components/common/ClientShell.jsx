@@ -11,7 +11,7 @@ export default function ClientShell({ children }) {
     return (
         <>
             {!isAdminRoute && <Navbar />}
-            <main className="flex-grow">
+            <main className={pathname === '/' ? '' : 'flex-grow'}>
                 {children}
             </main>
             {!isAdminRoute && <Footer />}

@@ -6,6 +6,7 @@ import { useTheme } from '@/context/ThemeContext';
 import { getUserAnalytics } from '@/lib/api';
 import { getGuestAnalytics } from '@/lib/local-analytics';
 import Link from 'next/link';
+import AppMessage from '@/components/common/AppMessage';
 
 export default function DashboardOverviewPage() {
     const { user, loading } = useAuth();
@@ -81,7 +82,7 @@ export default function DashboardOverviewPage() {
     return (
         <div className="space-y-8 animate-in fade-in duration-500">
             {!user && (
-                <div className="bg-blue-600/10 border-2 border-blue-600/20 rounded-2xl p-6 flex flex-col md:flex-row items-center justify-between gap-4">
+                <AppMessage variant="info" className="flex-col items-center justify-between md:flex-row">
                     <div className="flex items-center gap-4 text-center md:text-left">
                         <div className="w-12 h-12 bg-blue-600 rounded-2xl flex items-center justify-center text-white text-2xl shadow-lg shadow-blue-500/20">
                             👤
@@ -91,13 +92,13 @@ export default function DashboardOverviewPage() {
                             <p className="text-xs text-blue-600/80 font-bold uppercase tracking-wider">Data hanya tersimpan di browser ini</p>
                         </div>
                     </div>
-                </div>
+                </AppMessage>
             )}
 
             {error && (
-                <div className="bg-blue-50 text-blue-700 p-4 rounded-lg" role="alert">
+                <AppMessage variant="warning">
                     {error}
-                </div>
+                </AppMessage>
             )}
 
             {/* Overview Cards */}

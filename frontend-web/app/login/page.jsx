@@ -5,6 +5,7 @@ import { useAuth } from '@/context/AuthContext';
 import { useTheme } from '@/context/ThemeContext';
 import Link from 'next/link';
 import Image from 'next/image';
+import AppMessage from '@/components/common/AppMessage';
 
 export default function LoginPage() {
     const [email, setEmail] = useState('');
@@ -59,14 +60,9 @@ export default function LoginPage() {
                 
                 <form className="mt-8 space-y-5" onSubmit={handleSubmit}>
                     {error && (
-                        <div className={`p-4 rounded-2xl text-xs font-black uppercase tracking-widest border animate-shake transition-colors ${
-                            isDark ? 'bg-red-950/20 border-red-900/50 text-red-400' : 'bg-red-50 border-red-200 text-red-600'
-                        }`} role="alert">
-                            <span className="flex items-center gap-2">
-                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                                {error}
-                            </span>
-                        </div>
+                        <AppMessage variant="warning" className="animate-shake text-xs font-black uppercase tracking-widest">
+                            {error}
+                        </AppMessage>
                     )}
                     
                     <div className="space-y-5">

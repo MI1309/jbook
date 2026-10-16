@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { API_URL } from '@/lib/api';
 import Link from 'next/link';
 import Cookies from 'js-cookie';
-import { toast } from 'react-toastify';
+import { appToast as toast } from '@/components/common/AppMessage';
 
 export default function KanjiForm({ params }) {
     const router = useRouter();

@@ -10,7 +10,7 @@ import { getRadicalInfo } from '@/lib/radicals';
 import { useTheme } from '@/context/ThemeContext';
 import { Volume2, Edit2, Check, X, Trash } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
-import { toast } from 'react-toastify';
+import { appToast as toast } from '@/components/common/AppMessage';
 import Cookies from 'js-cookie';
 import { conjugateVerbComplete } from '@/utils/conjugation';
 import KanjiStrokeViewer from '@/components/kanji/KanjiStrokeViewer';

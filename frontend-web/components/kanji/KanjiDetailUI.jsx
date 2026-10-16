@@ -11,7 +11,7 @@ import KanjiStrokeViewer from './KanjiStrokeViewer';
 import { useAuth } from '@/context/AuthContext';
 import { Edit2, Check, X, Trash } from 'lucide-react';
 import Cookies from 'js-cookie';
-import { toast } from 'react-toastify';
+import { appToast as toast } from '@/components/common/AppMessage';
 
 export default function KanjiDetailUI({ kanji: initialKanji, onClose }) {
     const router = useRouter();

@@ -1,15 +1,24 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useGameStore } from '../../stores/gameStore';
+import { useAuth } from '../../context/AuthContext';
+import AppMessage from '../common/AppMessage';
 import { Trophy, RotateCcw, X } from 'lucide-react';
 
 export const CompletionModal = () => {
   const { gameState, resetGame } = useGameStore();
+  const { user, claimTtsPoints } = useAuth();
+  const submittedSessionRef = useRef(null);
+  const [pointsStatus, setPointsStatus] = useState('idle');
 
   useEffect(() => {
-    if (!gameState.isCompleted) return undefined;
-    const timer = window.setTimeout(resetGame, 2500);
-    return () => window.clearTimeout(timer);
-  }, [gameState.isCompleted, resetGame]);
+    if (!gameState.isCompleted || !user || !gameState.ttsSessionId) return;
+    if (submittedSessionRef.current === gameState.ttsSessionId) return;
+
+    submittedSessionRef.current = gameState.ttsSessionId;
+    claimTtsPoints(gameState.ttsSessionId, gameState.score)
+      .then(() => setPointsStatus('saved'))
+      .catch(() => setPointsStatus('failed'));
+  }, [gameState.isCompleted, gameState.ttsSessionId, gameState.score, user, claimTtsPoints]);
 
   if (!gameState.isCompleted) return null;
 
@@ -21,6 +30,7 @@ export const CompletionModal = () => {
           <button 
             onClick={resetGame}
             className="absolute top-4 right-4 text-white/70 hover:text-white"
+            aria-label="Tutup hasil TTS"
           >
             <X size={24} />
           </button>
@@ -29,7 +39,7 @@ export const CompletionModal = () => {
             <Trophy size={40} className="text-yellow-300" />
           </div>
           <h2 className="text-3xl font-black mb-1">Luar Biasa!</h2>
-          <p className="text-red-100">Kamu berhasil menyelesaikan teka-teki kanji.</p>
+          <p className="text-red-100">Kamu berhasil menyelesaikan teka-teki kata.</p>
         </div>
 
         <div className="p-8">
@@ -43,6 +53,27 @@ export const CompletionModal = () => {
               <div className="text-3xl font-black text-green-600 dark:text-green-400">{gameState.completedWordIds.length}</div>
             </div>
           </div>
+
+          {user && (
+            <AppMessage variant={pointsStatus === 'failed' ? 'warning' : 'info'} className="mb-5 text-left">
+              {(pointsStatus === 'idle' || pointsStatus === 'saving') && 'Menyimpan poin ke akun...'}
+              {pointsStatus === 'saved' && 'Poin sesi ini sudah ditambahkan ke akunmu.'}
+              {pointsStatus === 'failed' && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setPointsStatus('saving');
+                    claimTtsPoints(gameState.ttsSessionId, gameState.score)
+                      .then(() => setPointsStatus('saved'))
+                      .catch(() => setPointsStatus('failed'));
+                  }}
+                  className="font-bold text-blue-600 hover:underline"
+                >
+                  Gagal menyimpan poin. Ketuk untuk mencoba lagi.
+                </button>
+              )}
+            </AppMessage>
+          )}
 
           <button
             onClick={resetGame}

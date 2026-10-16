@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { API_URL } from '@/lib/api';
 import Link from 'next/link';
 import Cookies from 'js-cookie';
+import AppMessage from '@/components/common/AppMessage';
 
 export default function KotobaForm({ params }) {
     const { id } = use(params);
@@ -113,10 +114,9 @@ export default function KotobaForm({ params }) {
             </div>
 
             {error && (
-                <div className="p-6 rounded-[2rem] border bg-red-900/30 border-red-500/30 text-red-400 flex items-center gap-3" role="alert">
-                    <span className="text-2xl">❌</span>
+                <AppMessage variant="warning" className="p-6 text-base">
                     <span className="font-bold">{error}</span>
-                </div>
+                </AppMessage>
             )}
 
             <form onSubmit={handleSubmit} className="rounded-[2rem] border overflow-hidden bg-neutral-900/30 border-white/5 space-y-6 p-8">

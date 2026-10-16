@@ -5,6 +5,7 @@ import { useAuth } from '@/context/AuthContext';
 import { useTheme } from '@/context/ThemeContext';
 import { useSearchParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
+import AppMessage from '@/components/common/AppMessage';
 
 function ResetPasswordForm() {
     const [password, setPassword] = useState('');
@@ -59,29 +60,27 @@ function ResetPasswordForm() {
 
     if (!uid || !token) {
         return (
-            <div className={`border px-4 py-3 rounded-xl text-sm font-medium transition-colors ${isDark ? 'bg-red-950/20 border-red-900/50 text-red-400' : 'bg-red-50 border-red-200 text-red-600'}`} role="alert">
+            <AppMessage variant="warning">
                 <span className="block">Link reset password tidak valid. Silakan minta link baru.</span>
                 <div className="mt-4 text-center">
-                    <Link href="/forgot-password" className="text-xs font-black uppercase tracking-widest text-red-600 hover:text-red-500 transition-colors">
+                    <Link href="/forgot-password" className="text-xs font-black uppercase tracking-widest text-red-700 transition-colors hover:text-red-500 dark:text-red-300">
                         Minta Link Baru
                     </Link>
                 </div>
-            </div>
+            </AppMessage>
         );
     }
 
     return (
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
             {error && (
-                <div className={`border px-4 py-3 rounded-xl text-sm font-medium transition-colors ${isDark ? 'bg-red-950/20 border-red-900/50 text-red-400' : 'bg-red-50 border-red-200 text-red-600'}`} role="alert">
-                    <span>{error}</span>
-                </div>
+                <AppMessage variant="warning">{error}</AppMessage>
             )}
             {successMessage && (
-                <div className={`border px-4 py-3 rounded-xl text-sm font-medium transition-colors ${isDark ? 'bg-emerald-950/20 border-emerald-900/50 text-emerald-400' : 'bg-emerald-50 border-emerald-200 text-emerald-600'}`} role="alert">
+                <AppMessage variant="success">
                     <span className="block">{successMessage}</span>
                     <p className="mt-2 text-xs font-bold">Mengalihkan ke halaman login...</p>
-                </div>
+                </AppMessage>
             )}
             <div className="space-y-4">
                 <div>

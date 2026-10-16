@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { resetPracticeProgress } from '@/lib/api';
-import { toast } from 'react-toastify';
+import { appToast as toast } from '@/components/common/AppMessage';
 import { useTheme } from '@/context/ThemeContext';
 import ConfirmationModal from '@/components/ConfirmationModal';
 

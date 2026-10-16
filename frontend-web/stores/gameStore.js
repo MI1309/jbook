@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import * as wanakana from 'wanakana';
-import { toast } from 'react-toastify';
+import { appToast as toast } from '@/components/common/AppMessage';
 import { getKanjiList, getVocabList, submitPracticeResults } from '@/lib/api';
 import { generateCrosswordGrid } from '../utils/gridGenerator';
 import { isHiragana, isValidJapanese } from '../utils/japaneseValidators';
@@ -21,6 +21,7 @@ const initialGameState = {
   score: 0,
   hintsUsed: 0,
   isCompleted: false,
+  ttsSessionId: null,
   completedWordIds: [],
   gameHistory: [],
   level: '5'
@@ -48,17 +49,16 @@ export const useGameStore = create(
       
       // 1. Fetch more words if necessary
       const fetchDepth = mode === 'all' ? 3 : 10;
-      const minPoolSize = mode === 'all' ? 50 : 200;
+      const minPoolSize = mode === 'kanji' ? 900 : mode === 'hiragana' ? 300 : 50;
       
       if (kotobaList.length < minPoolSize) {
         for (let p = 1; p <= fetchDepth; p++) {
           if (p === 1) continue;
           try {
-            const res = await getVocabList({ level, page: p });
+            const res = await getVocabList({ level, limit: 300, page: p });
             if (res.items && res.items.length > 0) {
                kotobaList.push(...res.items);
-               // Stop if we have enough potential candidates
-               if (kotobaList.length > 300) break;
+              if (kotobaList.length >= minPoolSize) break;
             } else if (p > 10) {
               // If we reached deep pages and getting empty results, stop
               break;
@@ -119,8 +119,12 @@ export const useGameStore = create(
       const grid = generateCrosswordGrid(validWords, gridSize, gridSize, level, mode === 'kanji', {
         minWords: 5,
         maxWords: 10,
-        maxAttempts: 5,
-        maxNodes: 5000,
+        maxAttempts: 8,
+        maxNodes: 300,
+        stopAtMinWords: true,
+        candidateLimit: mode === 'kanji' ? 40 : undefined,
+        maxCandidateBranch: mode === 'kanji' ? 8 : undefined,
+        maxPlacementsPerWord: mode === 'kanji' ? 8 : undefined,
         choiceBank: mode === 'kanji' ? [...(kanjiCharacters || [])] : hiraganaChoiceBank,
         choiceBankLimit: mode === 'kanji' ? 12 : null
       });
@@ -139,6 +143,7 @@ export const useGameStore = create(
           selectedKanjiAnswer: null,
           kanjiAnswered: false,
           level,
+          ttsSessionId: globalThis.crypto?.randomUUID?.() || `${Date.now()}-${Math.random().toString(36).slice(2)}`,
           selectedCell: findFirstCell(grid),
           selectedDirection: 'across',
           isCompleted: false,

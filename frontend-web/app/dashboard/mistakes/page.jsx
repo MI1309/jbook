@@ -8,7 +8,7 @@ import { getGuestAnalytics } from '@/lib/local-analytics';
 import KanjiDetailModal from '@/components/kanji/KanjiDetailModal';
 import KotobaDetailModal from '@/components/kotoba/KotobaDetailModal';
 import BunpoDetailModal from '@/components/bunpo/BunpoDetailModal';
-import { toast } from 'react-toastify';
+import { appToast as toast } from '@/components/common/AppMessage';
 import Link from 'next/link';
 
 export default function MistakesPage() {
