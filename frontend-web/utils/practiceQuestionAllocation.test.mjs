@@ -26,3 +26,15 @@ test('redistributes unused quota when one selected type has a smaller pool', () 
   assert.equal(selected.filter(entry => entry.type === 'kana').length, 1);
   assert.equal(selected.filter(entry => entry.type === 'particle').length, 9);
 });
+
+test('caps and balances an older API response that returns the limit for each type', () => {
+  const oldApiResponse = [
+    ...Array.from({ length: 10 }, (_, index) => ({ type: 'kana', id: `kana-${index}` })),
+    ...Array.from({ length: 10 }, (_, index) => ({ type: 'kanji', id: `kanji-${index}` })),
+  ];
+  const selected = allocateQuestionsByType(oldApiResponse, ['kana', 'kanji'], 10);
+
+  assert.equal(selected.length, 10);
+  assert.equal(selected.filter(question => question.type === 'kana').length, 5);
+  assert.equal(selected.filter(question => question.type === 'kanji').length, 5);
+});

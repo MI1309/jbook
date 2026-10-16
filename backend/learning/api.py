@@ -162,8 +162,17 @@ def generate_quiz(request, limit: int = 10, level: Optional[str] = None, type: s
     limit = min(max(1, limit), 2000)
 
     # Support multiple types and levels (comma separated)
-    requested_types = [t.strip().lower() for t in type.split(',')]
+    requested_types = list(dict.fromkeys(
+        t.strip().lower() for t in type.split(',') if t.strip() and t.strip().lower() != 'particle'
+    ))
     requested_levels = [int(l.strip()) for l in level.split(',') if l.strip().isdigit()] if level else []
+    per_type_limits = {}
+    if requested_types:
+        base_limit, extra_questions = divmod(limit, len(requested_types))
+        per_type_limits = {
+            question_type: base_limit + (index < extra_questions)
+            for index, question_type in enumerate(requested_types)
+        }
     if unit:
         get_object_or_404(CurriculumUnit, id=unit)
 
@@ -199,7 +208,7 @@ def generate_quiz(request, limit: int = 10, level: Optional[str] = None, type: s
             from utils.kana import ROMAJI_MAP
             items = list(ROMAJI_MAP.items())
             random.shuffle(items)
-            for romaji, kana in items[:limit]:
+            for romaji, kana in items[:per_type_limits.get(t, 0)]:
                 all_romaji = [k for k, v in items if k != romaji]
                 distractor_romaji = random.sample(all_romaji, 3)
                 options = [{"text": romaji, "is_correct": True}, *[{"text": dr, "is_correct": False} for dr in distractor_romaji]]
@@ -209,10 +218,9 @@ def generate_quiz(request, limit: int = 10, level: Optional[str] = None, type: s
         else:
             continue
 
-        particles_only = requested_types == ['particle']
         if unit:
             qs = qs.filter(curriculum_units__id=unit).distinct()
-        if requested_levels and not particles_only:
+        if requested_levels and t not in ['particle', 'kana']:
             qs = qs.filter(jlpt_level__in=requested_levels)
         
         # Optimize: select only needed fields and limit pool for distractors
@@ -221,7 +229,7 @@ def generate_quiz(request, limit: int = 10, level: Optional[str] = None, type: s
         if not type_items: continue
         
         # Sample items for questions
-        sample_size = min(len(type_items), limit)
+        sample_size = min(len(type_items), per_type_limits.get(t, 0))
         selected_items = random.sample(type_items, sample_size)
         
         for item in selected_items:
@@ -236,7 +244,7 @@ def generate_quiz(request, limit: int = 10, level: Optional[str] = None, type: s
 
     # Shuffle the combined pool from all types
     random.shuffle(item_pool)
-    final_selection = item_pool[:limit]
+    final_selection = item_pool[:max(0, limit - len(questions))]
     
     from utils.kana import format_reading, to_kana
 
@@ -295,6 +303,7 @@ def generate_quiz(request, limit: int = 10, level: Optional[str] = None, type: s
             "word_type": getattr(item, 'word_type', None)
         })
         
+    random.shuffle(questions)
     return questions
 
 @router.get("/practice/minna/generate", response=List[MinnaQuestionSchema])

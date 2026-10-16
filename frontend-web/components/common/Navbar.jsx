@@ -136,35 +136,35 @@ export default function Navbar() {
                                 JBOOK
                             </Link>
 
-                            {/* Desktop Nav Links */}
-                            <div className="hidden xl:ml-8 xl:flex xl:space-x-1 font-japanese">
-                                {[
-                                    { href: '/kanji', label: 'Kanji' },
-                                    { href: '/bunpo', label: 'Bunpo' },
-                                    { href: '/kana', label: 'Kana' },
-                                    { href: '/kotoba', label: 'Kotoba' },
-                                    { href: '/tts', label: 'TTS' },
+                        </div>
 
-                                    { href: '/about', label: 'Tentang Kami' },
-                                    ...(!loading && !user ? [{ href: '/practice', label: 'Latihan' }] : [])
-                                ].map(({ href, label }) => (
-                                    <Link
-                                        key={href}
-                                        href={href}
-                                        className={getLinkClass(href)}
-                                        onClick={(e) => handleNavClick(e, href)}
-                                    >
-                                        {label}
-                                        {isActive(href) && (
-                                            <span className="block h-0.5 bg-accent-blue rounded-full mt-0.5 animate-[expandWidth_0.2s_ease-out]" />
-                                        )}
-                                    </Link>
-                                ))}
-                            </div>
+                        {/* Desktop Nav Links */}
+                        <div className="hidden xl:ml-auto xl:flex xl:space-x-1 font-japanese">
+                            {[
+                                { href: '/kanji', label: 'Kanji' },
+                                { href: '/bunpo', label: 'Bunpo' },
+                                { href: '/kana', label: 'Kana' },
+                                { href: '/kotoba', label: 'Kotoba' },
+                                { href: '/tts', label: 'TTS' },
+                                { href: '/about', label: 'Tentang Kami' },
+                                ...(!loading && !user ? [{ href: '/practice', label: 'Latihan' }] : [])
+                            ].map(({ href, label }) => (
+                                <Link
+                                    key={href}
+                                    href={href}
+                                    className={getLinkClass(href)}
+                                    onClick={(e) => handleNavClick(e, href)}
+                                >
+                                    {label}
+                                    {isActive(href) && (
+                                        <span className="block h-0.5 bg-accent-blue rounded-full mt-0.5 animate-[expandWidth_0.2s_ease-out]" />
+                                    )}
+                                </Link>
+                            ))}
                         </div>
 
                         {/* Desktop Auth */}
-                        <div className="hidden xl:flex items-center space-x-2">
+                        <div className="hidden xl:ml-6 xl:flex items-center space-x-2">
                             {/* Theme toggle disabled (forced dark mode) */}
 
                             {!loading && (

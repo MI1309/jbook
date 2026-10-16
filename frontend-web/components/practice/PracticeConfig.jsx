@@ -121,6 +121,7 @@ export default function PracticeConfig() {
     ];
 
     const toggleType = (id) => {
+        if (id === 'particle') return;
         if (id === 'kanji' && !kanjiAvailable) return;
         if (id === 'vocab' && !vocabAvailable) return;
         if (id === 'grammar' && !bunpoAvailable) return;
@@ -174,6 +175,7 @@ export default function PracticeConfig() {
             params.append('mode', mode);
         } else {
             const activeTypes = selectedTypes.filter(type =>
+                type !== 'particle' &&
                 (type !== 'kanji' || kanjiAvailable) &&
                 (type !== 'vocab' || vocabAvailable) &&
                 (type !== 'grammar' || bunpoAvailable)
@@ -295,7 +297,8 @@ export default function PracticeConfig() {
                                 </label>
                                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2.5 sm:gap-4">
                                     {types.map(t => {
-                                        const featureDisabled = (t.id === 'kanji' && !kanjiAvailable) || (t.id === 'vocab' && !vocabAvailable) || (t.id === 'grammar' && !bunpoAvailable);
+                                        const temporarilyDisabled = t.id === 'particle';
+                                        const featureDisabled = temporarilyDisabled || (t.id === 'kanji' && !kanjiAvailable) || (t.id === 'vocab' && !vocabAvailable) || (t.id === 'grammar' && !bunpoAvailable);
                                         const kakitoriDisabled = mode === 'kakitori' && (!['vocab'].includes(t.id) || !vocabAvailable);
                                         const typeDisabled = kakitoriDisabled || featureDisabled;
                                         const isSelected = selectedTypes.includes(t.id) && !typeDisabled;
@@ -305,6 +308,8 @@ export default function PracticeConfig() {
                                                 ? 'Kotoba dinonaktifkan oleh admin'
                                                 : (t.id === 'grammar' && !bunpoAvailable)
                                                     ? 'Semua level Bunpo dinonaktifkan oleh admin'
+                                                    : temporarilyDisabled
+                                                        ? 'Latihan Partikel dinonaktifkan sementara'
                                                 : kakitoriDisabled
                                                     ? 'Tidak tersedia untuk mode Kakitori'
                                                     : '';
@@ -329,7 +334,7 @@ export default function PracticeConfig() {
                                                     {t.label}
                                                 </span>
                                                 <span className={`text-[9px] sm:text-[10px] mt-0.5 uppercase font-medium transition-colors ${subTextColor} text-center`}>
-                                                    {featureDisabled ? 'Dinonaktifkan' : kakitoriDisabled ? 'Tidak tersedia' : t.sub}
+                                                    {temporarilyDisabled ? 'Dinonaktifkan sementara' : featureDisabled ? 'Dinonaktifkan' : kakitoriDisabled ? 'Tidak tersedia' : t.sub}
                                                 </span>
                                             </button>
                                         );

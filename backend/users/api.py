@@ -1,9 +1,11 @@
 from ninja import Router
 from ninja_jwt.tokens import RefreshToken
 from django.contrib.auth import authenticate, get_user_model
-from django.db import IntegrityError
+from django.db import IntegrityError, transaction
+from django.db.models import F
 from pydantic import BaseModel, EmailStr, Field, field_validator
 from typing import Optional
+from uuid import UUID
 from google.oauth2 import id_token
 from google.auth.transport import requests
 from django.conf import settings
@@ -18,6 +20,7 @@ from django.core.cache import cache
 import random
 import string
 from core.decorators import rate_limit
+from .models import TTSPointSession
 
 router = Router()
 User = get_user_model()
@@ -32,6 +35,8 @@ class UserSchema(BaseModel):
     email: EmailStr
     level_target: int = Field(..., ge=1, le=5)
     is_staff: bool = False
+    profile_image: str = ""
+    tts_points: int = 0
     
     model_config = {"from_attributes": True}
 
@@ -44,6 +49,24 @@ class RegisterSchema(BaseModel):
 class LoginSchema(BaseModel):
     identifier: str = Field(..., min_length=1, max_length=255)
     password: str = Field(..., min_length=1)
+
+
+class ProfileUpdateSchema(BaseModel):
+    profile_image: Optional[str] = Field(default=None, max_length=500)
+
+    @field_validator("profile_image")
+    @classmethod
+    def validate_profile_image(cls, value):
+        if value in (None, ""):
+            return value or ""
+        if not value.startswith("https://"):
+            raise ValueError("Profile image URL must use HTTPS")
+        return value
+
+
+class TTSPointsClaimSchema(BaseModel):
+    session_id: UUID
+    points: int = Field(..., ge=0, le=5000)
 
 
 class GoogleAuthSchema(BaseModel):
@@ -178,6 +201,30 @@ def google_auth(request, data: GoogleAuthSchema):
 @router.get("/me", response=UserSchema, auth=JWTAuth())
 @rate_limit(key='user', rate='120/m')  # Max 120 req per user per menit
 def me(request):
+    return request.auth
+
+
+@router.patch("/me/profile", response=UserSchema, auth=JWTAuth())
+@rate_limit(key='user', rate='30/m')
+def update_profile(request, data: ProfileUpdateSchema):
+    request.auth.profile_image = data.profile_image or ""
+    request.auth.save(update_fields=["profile_image"])
+    return request.auth
+
+
+@router.post("/me/tts-points", response=UserSchema, auth=JWTAuth())
+@rate_limit(key='user', rate='30/m')
+def claim_tts_points(request, data: TTSPointsClaimSchema):
+    with transaction.atomic():
+        _, created = TTSPointSession.objects.get_or_create(
+            user=request.auth,
+            session_id=data.session_id,
+            defaults={"points": data.points},
+        )
+        if created and data.points:
+            type(request.auth).objects.filter(pk=request.auth.pk).update(tts_points=F("tts_points") + data.points)
+
+    request.auth.refresh_from_db(fields=["tts_points"])
     return request.auth
 
 def _generate_otp(length: int = 6) -> str:

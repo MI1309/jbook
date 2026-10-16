@@ -695,6 +695,7 @@ async function sanitizePracticeSelection({ type, level }) {
     }
 
     const safeTypes = requestedTypes.filter(t =>
+        t !== 'particle' &&
         (t !== 'kanji' || kanjiEnabled.length > 0) &&
         (!['vocab', 'kotoba'].includes(t) || vocabEnabled.length > 0) &&
         (!['grammar', 'bunpo'].includes(t) || bunpoEnabled.length > 0)
@@ -736,7 +737,7 @@ export async function getPracticeQuestions({ limit = 10, level = null, type = 'k
     if (type) params.append('type', type);
     if (unit) params.append('unit', unit);
 
-    const cacheKey = `practice-questions-v2-${params.toString()}`;
+    const cacheKey = `practice-questions-v3-${params.toString()}`;
 
     // 1. Jika Online: Ambil dari API (Selalu Prioritas Utama)
     if (typeof window === 'undefined' || (typeof navigator !== 'undefined' && navigator.onLine)) {
@@ -744,7 +745,8 @@ export async function getPracticeQuestions({ limit = 10, level = null, type = 'k
         try {
             return await fetchWithCache(cacheKey, async () => {
                 const res = await fetch(`${API_URL}/learning/practice/generate?${params.toString()}`);
-                return handleResponse(res, 'getPracticeQuestions');
+                const questions = await handleResponse(res, 'getPracticeQuestions');
+                return allocateQuestionsByType(questions, type.split(','), limit);
             }, 24 * 60 * 60 * 1000); 
         } catch (error) {
             if (unit) return [];

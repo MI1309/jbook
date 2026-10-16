@@ -6,14 +6,25 @@ from content.models import CurriculumLevel, CurriculumUnit, FeatureSetting, Gram
 
 
 class ParticlePracticeTests(TestCase):
-	def test_particle_only_practice_ignores_requested_jlpt_level(self):
+	def test_particle_only_practice_is_temporarily_disabled(self):
 		Particle.objects.create(character='は', meaning='Topik', explanation='Penanda topik.', jlpt_level=5)
 		Particle.objects.create(character='まで', meaning='Sampai', explanation='Penanda batas.', jlpt_level=2)
 
 		response = self.client.get('/api/learning/practice/generate?type=particle&level=5', secure=True)
 
 		self.assertEqual(response.status_code, 200)
-		self.assertEqual({question['character'] for question in response.json()}, {'は', 'まで'})
+		self.assertEqual(response.json(), [])
+
+	def test_disabled_particle_type_is_excluded_from_mixed_practice(self):
+		for character, level in [('は', 5), ('が', 4), ('を', 3), ('に', 2), ('で', 1), ('へ', 5)]:
+			Particle.objects.create(character=character, meaning=f'Makna {character}', explanation=f'Penjelasan {character}', jlpt_level=level)
+
+		response = self.client.get('/api/learning/practice/generate?type=kana,particle&limit=10&level=5', secure=True)
+
+		self.assertEqual(response.status_code, 200)
+		questions = response.json()
+		self.assertEqual(len(questions), 10)
+		self.assertEqual({question['type'] for question in questions}, {'kana'})
 
 	def test_kana_practice_has_four_unique_choices_and_no_level(self):
 		response = self.client.get('/api/learning/practice/generate?type=kana&limit=10', secure=True)
