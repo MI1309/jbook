@@ -42,7 +42,7 @@ export default function PracticeConfig() {
     const kanjiAvailable = kanjiEnabledLevels.length > 0;
     const vocabAvailable = vocabEnabledLevels.length > 0;
     const bunpoAvailable = bunpoEnabledLevels.length > 0;
-    const unrestrictedOnly = selectedTypes.length === 1 && ['particle', 'kana'].includes(selectedTypes[0]);
+    const unrestrictedOnly = selectedTypes.length > 0 && selectedTypes.every(type => ['particle', 'kana'].includes(type));
 
     const isLevelEnabledForSelection = (levelId, types = selectedTypes, enabled = {
         kanji: kanjiEnabledLevels,
@@ -182,7 +182,7 @@ export default function PracticeConfig() {
                 setSelectionWarning(true);
                 return;
             }
-            const unrestrictedOnly = activeTypes.length === 1 && ['particle', 'kana'].includes(activeTypes[0]);
+            const unrestrictedOnly = activeTypes.length > 0 && activeTypes.every(type => ['particle', 'kana'].includes(type));
             const activeLevels = unrestrictedOnly
                 ? []
                 : selectedLevels.filter(level => isLevelEnabledForSelection(level, activeTypes));
@@ -585,8 +585,8 @@ export default function PracticeConfig() {
 
                         {/* Limits and Time */}
                         <div className={`space-y-6 ${source === 'minna' || (source === 'jlpt' && unrestrictedOnly) ? 'col-span-2' : ''}`}>
-                            <div className="flex items-center justify-between gap-4">
-                                <div className="flex-1">
+                            <div className="grid grid-cols-1 items-start gap-5 sm:grid-cols-2 sm:gap-6">
+                                <div className="min-w-0">
                                     <label className={`block text-sm font-black uppercase tracking-widest mb-2 transition-colors ${subTextColor}`}>
                                         Jumlah Soal
                                     </label>
@@ -596,12 +596,12 @@ export default function PracticeConfig() {
                                             value={limit}
                                             onChange={(e) => setLimit(e.target.value)}
                                             placeholder="10"
-                                            className={`w-full ${inputBg} border-2 ${borderStyle} rounded-xl px-4 py-3 font-bold transition-all outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/20 ${textColor}`}
+                                            className={`h-12 w-full ${inputBg} border-2 ${borderStyle} rounded-xl px-4 font-bold transition-all outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/20 ${textColor}`}
                                         />
                                         <span className={`font-bold transition-colors ${subTextColor}`}>Soal</span>
                                     </div>
                                 </div>
-                                <div className="flex-1">
+                                <div className="min-w-0">
                                     <label className={`block text-sm font-black uppercase tracking-widest mb-2 transition-colors ${subTextColor}`}>
                                         Waktu
                                     </label>
@@ -613,7 +613,7 @@ export default function PracticeConfig() {
                                                 onChange={(e) => setTimer(e.target.value)}
                                                 disabled={isUnlimitedTime}
                                                 placeholder="5"
-                                                className={`w-full ${inputBg} border-2 ${borderStyle} rounded-xl px-4 py-3 font-bold transition-all outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/20 ${textColor}`}
+                                                className={`h-12 w-full ${inputBg} border-2 ${borderStyle} rounded-xl px-4 font-bold transition-all outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/20 ${textColor}`}
                                             />
                                             <span className={`font-bold transition-colors ${subTextColor}`}>Menit</span>
                                         </div>

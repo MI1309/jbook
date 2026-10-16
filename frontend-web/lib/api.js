@@ -14,6 +14,7 @@ import Cookies from 'js-cookie';
 import { fetchWithCache } from '@/lib/cache-store';
 import { dbGetAll, dbHasData, dbGet } from '@/lib/offline-db';
 import { hasKanji, extractKanji, getScriptTypes } from '@/lib/utils';
+import { allocateQuestionsByType } from '@/utils/practiceQuestionAllocation';
 import { 
     hiraganaGojuon, hiraganaDakuon, hiraganaYoon, 
     katakanaGojuon, katakanaDakuon, katakanaYoon 
@@ -703,8 +704,9 @@ async function sanitizePracticeSelection({ type, level }) {
     if (!level) return { type: safeTypes.join(','), level: null };
 
     const levels = String(level).split(',').map(l => l.trim()).filter(Boolean);
-    const unrestricted = safeTypes.some(t => ['particle', 'kana'].includes(t));
-    const filteredLevels = unrestricted ? levels : levels.filter(l => {
+    const hasJlptScopedTypes = safeTypes.some(t => !['particle', 'kana'].includes(t));
+    if (!hasJlptScopedTypes) return { type: safeTypes.join(','), level: null };
+    const filteredLevels = levels.filter(l => {
         const n = Number(l);
         const kanjiSelected = safeTypes.includes('kanji');
         const vocabSelected = safeTypes.includes('vocab') || safeTypes.includes('kotoba');
@@ -734,7 +736,7 @@ export async function getPracticeQuestions({ limit = 10, level = null, type = 'k
     if (type) params.append('type', type);
     if (unit) params.append('unit', unit);
 
-    const cacheKey = `practice-questions-${params.toString()}`;
+    const cacheKey = `practice-questions-v2-${params.toString()}`;
 
     // 1. Jika Online: Ambil dari API (Selalu Prioritas Utama)
     if (typeof window === 'undefined' || (typeof navigator !== 'undefined' && navigator.onLine)) {
@@ -775,7 +777,7 @@ export async function getPracticeQuestions({ limit = 10, level = null, type = 'k
  */
 async function generateOfflineQuestions({ limit, level, type }) {
     try {
-        const requestedTypes = type.split(',').map(t => t.trim());
+        const requestedTypes = [...new Set(type.split(',').map(t => t.trim()).filter(Boolean))];
         let fullPool = [];
 
         // Fetch pool for each type
@@ -819,9 +821,7 @@ async function generateOfflineQuestions({ limit, level, type }) {
 
         if (!fullPool || fullPool.length < 4) return [];
 
-        // Shuffle pool
-        const shuffled = [...fullPool].sort(() => 0.5 - Math.random());
-        const selected = shuffled.slice(0, Math.min(limit, shuffled.length));
+        const selected = allocateQuestionsByType(fullPool, requestedTypes, limit);
 
         return selected.map(({ item, type, originalPool }) => {
             // Find distractors from the same category pool
