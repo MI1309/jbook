@@ -21,6 +21,8 @@ Panduan lengkap setup backend, termasuk perintah Windows CMD, tersedia di [docs/
 
 Ikuti [Panduan Setup Backend](docs/backend_setup.md) untuk membuat virtual environment, menyiapkan `backend/.env` (termasuk Windows CMD), memasang dependencies, menjalankan migrasi, dan memulai server.
 
+Password akun baru menggunakan Argon2id. Hash password lama tetap dapat digunakan dan akan diperbarui otomatis setelah login berhasil.
+
 Server backend lokal berjalan di `http://localhost:8000`; dokumentasi API (Swagger UI) ada di `http://localhost:8000/api/docs`.
 
 ### 2. Menjalankan Frontend (Web)

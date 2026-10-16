@@ -65,6 +65,8 @@ python -m pip install --upgrade pip
 pip install -r requirements.txt
 ```
 
+Password akun baru di-hash menggunakan **Argon2id** melalui hasher bawaan Django. Hasher sebelumnya tetap diaktifkan untuk memverifikasi hash akun lama; setelah login berhasil, Django otomatis menyimpan ulang hash tersebut menggunakan Argon2id. Tidak perlu reset password atau migrasi database.
+
 ## 4. Buat Konfigurasi Lokal
 
 Backend memuat file `backend/.env`. Salin template lalu buka file tersebut untuk diedit.
