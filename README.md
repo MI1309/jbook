@@ -1,12 +1,11 @@
-# JBook - Aplikasi Belajar Bahasa Jepang
+# JBook — Aplikasi Belajar Bahasa Jepang
 
-Aplikasi ini adalah platform belajar bahasa Jepang yang mencakup Kanji, Bunpo (Tata Bahasa), dan Kotoba (Kosakata), lengkap dengan dukungan PWA (Progressive Web App).
+Platform pembelajaran bahasa Jepang yang mencakup Kanji, Bunpo (tata bahasa), dan Kotoba (kosakata) dengan dukungan PWA (Progressive Web App).
 
 ## Struktur Proyek
 
 - **backend/**: DJango + Django Ninja (API Server)
 - **frontend-web/**: Next.js + TailwindCSS (Web Client & PWA)
-- **mobile-app/**: Expo (React Native) - *Dalam pengembangan*
 
 ## Cara Menjalankan Aplikasi
 
