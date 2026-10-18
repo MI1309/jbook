@@ -126,17 +126,15 @@ function Sidebar({ onClose }) {
 export default function AdminLayout({ children }) {
     const { user, loading } = useAuth();
     const router = useRouter();
-    const [isAuthorized, setIsAuthorized] = useState(false);
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+    const isAuthorized = !loading && !!user?.is_staff;
 
     useEffect(() => {
         if (!loading) {
             if (!user) {
                 router.push('/login');
-            } else if (user.email !== 'imronm1309@gmail.com' && !user.is_staff) {
+            } else if (!user.is_staff) {
                 router.push('/');
-            } else {
-                setIsAuthorized(true);
             }
         }
     }, [user, loading, router]);

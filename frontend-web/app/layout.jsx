@@ -133,6 +133,7 @@ export default function RootLayout({ children }) {
                                 position="bottom-right"
                                 autoClose={3000}
                                 hideProgressBar={false}
+                                closeButton={false}
                                 newestOnTop
                                 closeOnClick
                                 rtl={false}

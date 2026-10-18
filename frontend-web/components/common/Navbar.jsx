@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
@@ -9,6 +9,16 @@ import { useTheme } from '@/context/ThemeContext';
 import { appToast as toast } from '@/components/common/AppMessage';
 import ConfirmationModal from '@/components/common/ConfirmationModal';
 import Image from 'next/image';
+import { ChevronDown, LayoutDashboard, LogOut, Menu, X } from 'lucide-react';
+
+const baseNavItems = [
+    { href: '/kanji', label: 'Kanji' },
+    { href: '/bunpo', label: 'Bunpo' },
+    { href: '/kotoba', label: 'Kotoba' },
+    { href: '/kana', label: 'Kana' },
+    { href: '/tts', label: 'TTS' },
+    { href: '/about', label: 'Tentang Kami' },
+];
 
 const avatarKana = ['あ', 'き', 'す', 'ね', 'ふ', 'ま', 'ゆ', 'り', 'を', 'ん'];
 const avatarStyles = [
@@ -44,11 +54,16 @@ function ProfileAvatar({ user, size = 'desktop' }) {
 export default function Navbar() {
     const { user, logout, loading } = useAuth();
     const { isPracticing } = usePractice();
-    const { theme, toggleTheme, mounted } = useTheme();
+    const { theme, mounted } = useTheme();
     const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
     const [scrolled, setScrolled] = useState(false);
     const [pendingNav, setPendingNav] = useState(null);
+    const profileMenuRef = useRef(null);
     const pathname = usePathname();
+    const navItems = !loading && !user
+        ? [...baseNavItems, { href: '/practice', label: 'Latihan' }]
+        : baseNavItems;
 
     // Detect scroll for opacity effect
     useEffect(() => {
@@ -57,10 +72,25 @@ export default function Navbar() {
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
 
-    // Close menu on route change
     useEffect(() => {
-        setIsMenuOpen(false);
-    }, [pathname]);
+        if (!isProfileMenuOpen) return undefined;
+
+        const closeOnOutsideClick = (event) => {
+            if (!profileMenuRef.current?.contains(event.target)) {
+                setIsProfileMenuOpen(false);
+            }
+        };
+        const closeOnEscape = (event) => {
+            if (event.key === 'Escape') setIsProfileMenuOpen(false);
+        };
+
+        document.addEventListener('pointerdown', closeOnOutsideClick);
+        document.addEventListener('keydown', closeOnEscape);
+        return () => {
+            document.removeEventListener('pointerdown', closeOnOutsideClick);
+            document.removeEventListener('keydown', closeOnEscape);
+        };
+    }, [isProfileMenuOpen]);
 
     const isActive = (path) => {
         if (path === '/') return pathname === '/';
@@ -69,14 +99,12 @@ export default function Navbar() {
 
     const getLinkClass = (path, mobile = false) => {
         const baseClass = mobile
-            ? "block px-3 py-2 rounded-md text-base font-bold transition-all duration-200"
-            : "px-3 py-2 rounded-md text-base font-bold transition-all duration-200";
+            ? 'block rounded-lg px-3 py-2.5 text-[15px] font-semibold transition-colors duration-200'
+            : 'rounded-lg px-2.5 py-2 text-sm font-semibold transition-colors duration-200';
 
         if (!mounted) return `${baseClass} text-gray-400`;
 
-        const activeClass = theme === 'dark' 
-            ? "text-accent-blue bg-accent-blue/10" 
-            : "text-accent-blue bg-accent-blue/10";
+        const activeClass = 'text-accent-blue bg-accent-blue/10';
         
         const inactiveClass = theme === 'dark'
             ? "text-gray-400 hover:text-accent-blue hover:bg-white/5"
@@ -94,10 +122,15 @@ export default function Navbar() {
         setIsMenuOpen(false);
     };
 
-    const confirmNavigation = () => {
-        if (pendingNav) {
-            window.location.href = pendingNav;
+    const handleLogout = () => {
+        setIsProfileMenuOpen(false);
+        if (isPracticing) {
+            setPendingNav('logout');
+            return;
         }
+        logout();
+        setIsMenuOpen(false);
+        toast.info('Kamu telah keluar akun.', { theme: theme === 'dark' ? 'dark' : 'colored' });
     };
 
     return (
@@ -115,23 +148,23 @@ export default function Navbar() {
                 `}
             >
                 <div className="container mx-auto px-4">
-                    <div className="flex justify-between items-center h-16">
+                    <div className="flex h-16 items-center justify-between gap-3">
                         <div className="flex items-center">
                             <Link
                                 href="/"
-                                className={`flex items-center gap-3 text-2xl font-japanese font-black tracking-widest transition-all duration-200 ${
+                                className={`flex shrink-0 items-center gap-2.5 text-xl font-japanese font-black transition-colors duration-200 sm:text-2xl ${
                                     !mounted ? 'text-accent-blue' : 
                                     theme === 'dark' ? 'text-accent-blue drop-shadow-[0_0_8px_rgba(56,189,248,0.25)]' : 'text-accent-blue'
                                 }`}
                                 onClick={(e) => handleNavClick(e, '/')}
                             >
-                                {/* Logo dari file icon-32.png di public */}
-                                <img 
-                                    src="/icon-192.png" 
+                                <Image
+                                    src="/icon-192.png"
                                     alt="Logo JBook" 
-                                    width="48" 
-                                    height="48" 
-                                    className="flex-shrink-0 rounded-2xl w-12 h-12 object-cover"
+                                    width={40}
+                                    height={40}
+                                    priority
+                                    className="h-10 w-10 shrink-0 rounded-xl object-cover transition-transform duration-300 group-hover:rotate-[-4deg] group-hover:scale-105 motion-reduce:transition-none motion-reduce:transform-none"
                                 />
                                 JBOOK
                             </Link>
@@ -139,75 +172,95 @@ export default function Navbar() {
                         </div>
 
                         {/* Desktop Nav Links */}
-                        <div className="hidden xl:ml-auto xl:flex xl:space-x-1 font-japanese">
-                            {[
-                                { href: '/kanji', label: 'Kanji' },
-                                { href: '/bunpo', label: 'Bunpo' },
-                                { href: '/kana', label: 'Kana' },
-                                { href: '/kotoba', label: 'Kotoba' },
-                                { href: '/tts', label: 'TTS' },
-                                { href: '/about', label: 'Tentang Kami' },
-                                ...(!loading && !user ? [{ href: '/practice', label: 'Latihan' }] : [])
-                            ].map(({ href, label }) => (
+                        <div className="hidden min-w-0 flex-1 items-center justify-center gap-0.5 font-japanese xl:flex">
+                            {navItems.map(({ href, label }) => (
                                 <Link
                                     key={href}
                                     href={href}
-                                    className={getLinkClass(href)}
+                                    className={`${getLinkClass(href)} group relative transition-transform hover:-translate-y-0.5 motion-reduce:transform-none`}
                                     onClick={(e) => handleNavClick(e, href)}
                                 >
                                     {label}
-                                    {isActive(href) && (
-                                        <span className="block h-0.5 bg-accent-blue rounded-full mt-0.5 animate-[expandWidth_0.2s_ease-out]" />
-                                    )}
+                                    <span
+                                        aria-hidden="true"
+                                        className={`absolute bottom-1 left-1/2 h-0.5 w-[calc(100%-1.25rem)] -translate-x-1/2 origin-center rounded-full bg-accent-blue transition-transform duration-300 ease-out motion-reduce:transition-none ${isActive(href) ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100 group-focus-visible:scale-x-100'}`}
+                                    />
                                 </Link>
                             ))}
                         </div>
 
                         {/* Desktop Auth */}
-                        <div className="hidden xl:ml-6 xl:flex items-center space-x-2">
+                        <div className="hidden shrink-0 items-center gap-1.5 xl:flex">
                             {/* Theme toggle disabled (forced dark mode) */}
 
                             {!loading && (
                                 user ? (
-                                    <div className="flex items-center space-x-2">
-                                        {(user.email === 'imronm1309@gmail.com' || user.is_staff) && (
-                                            <Link href="/admin" className="text-accent-blue hover:text-accent-blue/80 font-bold px-3 py-2 rounded-md text-base transition-all duration-200 hover:bg-accent-blue/10" onClick={(e) => handleNavClick(e, '/admin')}>
+                                    <div className="flex items-center gap-1">
+                                        {user.is_staff && (
+                                            <Link href="/admin" className={`rounded-lg px-2.5 py-2 text-sm font-semibold transition-colors hover:bg-accent-blue/10 ${theme === 'dark' ? 'text-accent-blue' : 'text-accent-blue'}`} onClick={(e) => handleNavClick(e, '/admin')}>
                                                 Admin
                                             </Link>
                                         )}
-                                        <Link href="/dashboard" className={`font-bold px-3 py-2 rounded-md text-base transition-all duration-200 ${
-                                            theme === 'dark' ? 'text-gray-300 hover:text-accent-blue hover:bg-accent-blue/10' : 'text-accent-blue hover:bg-accent-blue/10'
-                                        }`} onClick={(e) => handleNavClick(e, '/dashboard')}>
-                                            Dashboard
-                                        </Link>
-                                        <Link
-                                            href="/profile"
-                                            onClick={(event) => handleNavClick(event, '/profile')}
-                                            className="flex min-w-0 items-center gap-2 rounded-full py-1 pl-1 pr-2 transition-colors hover:bg-blue-600/10"
-                                            aria-label={`Profil ${user.username}`}
-                                        >
-                                            <ProfileAvatar user={user} />
-                                            <span className={`max-w-28 truncate text-sm font-bold ${theme === 'dark' ? 'text-gray-200' : 'text-gray-700'}`}>{user.username}</span>
-                                        </Link>
-                                        <span className={`text-sm font-black px-2 ${theme === 'dark' ? 'text-gray-500' : 'text-gray-300'}`}>|</span>
-                                        <button
-                                            onClick={() => {
-                                                if (isPracticing) {
-                                                    setPendingNav('logout');
-                                                    return;
-                                                }
-                                                logout();
-                                                toast.info('Kamu telah keluar akun.', { theme: theme === 'dark' ? 'dark' : 'colored' });
-                                            }}
-                                            className={`px-3 py-2 rounded-md text-base font-bold transition-all duration-200 ${
-                                                theme === 'dark' ? 'text-gray-400 hover:text-accent-blue hover:bg-accent-blue/10' : 'text-gray-600 hover:text-accent-blue hover:bg-accent-blue/10'
-                                            }`}
-                                        >
-                                            Keluar
-                                        </button>
+                                        <div className="relative" ref={profileMenuRef}>
+                                            <button
+                                                type="button"
+                                                onClick={() => setIsProfileMenuOpen((open) => !open)}
+                                                className={`flex min-w-0 items-center gap-2 rounded-full py-1 pl-1 pr-2 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-blue/60 ${theme === 'dark' ? 'hover:bg-white/10' : 'hover:bg-black/5'}`}
+                                                aria-label={`Menu akun ${user.username}`}
+                                                aria-haspopup="menu"
+                                                aria-expanded={isProfileMenuOpen}
+                                                aria-controls="profile-account-menu"
+                                                title="Menu akun"
+                                            >
+                                                <ProfileAvatar user={user} />
+                                                <span className={`max-w-28 truncate text-sm font-bold ${theme === 'dark' ? 'text-gray-200' : 'text-gray-700'}`}>{user.username}</span>
+                                                <ChevronDown size={15} aria-hidden="true" className={`shrink-0 transition-transform ${isProfileMenuOpen ? 'rotate-180' : ''}`} />
+                                            </button>
+                                            {isProfileMenuOpen && (
+                                                <div
+                                                    id="profile-account-menu"
+                                                    role="menu"
+                                                    aria-label="Menu akun"
+                                                    className={`absolute right-0 top-full z-[60] mt-2 w-64 overflow-hidden rounded-xl border py-1 shadow-xl animate-in fade-in slide-in-from-top-2 zoom-in-95 duration-150 motion-reduce:animate-none ${theme === 'dark' ? 'border-white/10 bg-[#151519] text-gray-100 shadow-black/40' : 'border-gray-200 bg-white text-gray-900 shadow-black/10'}`}
+                                                >
+                                                    <div className={`border-b px-4 py-3 ${theme === 'dark' ? 'border-white/10' : 'border-gray-100'}`}>
+                                                        <p className="truncate text-sm font-bold">{user.username}</p>
+                                                        <p className={`truncate text-xs ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>{user.email}</p>
+                                                    </div>
+                                                    <Link
+                                                        href="/dashboard"
+                                                        role="menuitem"
+                                                        onClick={(event) => {
+                                                            handleNavClick(event, '/dashboard');
+                                                            setIsProfileMenuOpen(false);
+                                                        }}
+                                                        className={`flex items-center gap-3 px-4 py-3 text-sm font-semibold transition-colors ${theme === 'dark' ? 'hover:bg-white/5' : 'hover:bg-gray-50'}`}
+                                                    >
+                                                        <LayoutDashboard size={17} aria-hidden="true" className="text-accent-blue" />
+                                                        Dashboard
+                                                    </Link>
+                                                    <button
+                                                        type="button"
+                                                        role="menuitem"
+                                                        onClick={handleLogout}
+                                                        className={`flex w-full items-center gap-3 px-4 py-3 text-left text-sm font-semibold transition-colors ${theme === 'dark' ? 'text-red-300 hover:bg-red-400/10' : 'text-red-700 hover:bg-red-50'}`}
+                                                    >
+                                                        <LogOut size={17} aria-hidden="true" />
+                                                        Sign out
+                                                    </button>
+                                                </div>
+                                            )}
+                                        </div>
                                     </div>
                                 ) : (
-                                    null
+                                    <div className="flex items-center gap-2">
+                                        <Link href="/login" onClick={(e) => handleNavClick(e, '/login')} className={getLinkClass('/login')}>
+                                            Masuk
+                                        </Link>
+                                        <Link href="/register" onClick={(e) => handleNavClick(e, '/register')} className="rounded-lg bg-accent-blue px-3.5 py-2 text-sm font-bold text-white shadow-sm transition-colors hover:bg-accent-blue/90">
+                                            Daftar
+                                        </Link>
+                                    </div>
                                 )
                             )}
                         </div>
@@ -215,45 +268,41 @@ export default function Navbar() {
                         {/* Mobile navigation toggle */}
                         <div className="flex items-center gap-1 xl:hidden">
                             <button
-                                onClick={() => setIsMenuOpen(!isMenuOpen)}
-                                className="p-2 rounded-md text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-accent-blue/50"
-                                aria-label="Toggle menu"
+                                onClick={() => setIsMenuOpen((open) => !open)}
+                                className={`inline-flex h-10 w-10 items-center justify-center rounded-lg transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-blue/60 ${theme === 'dark' ? 'text-gray-300 hover:bg-white/10' : 'text-gray-700 hover:bg-black/5'}`}
+                                aria-label={isMenuOpen ? 'Tutup menu' : 'Buka menu'}
+                                aria-expanded={isMenuOpen}
+                                aria-controls="mobile-navigation"
+                                title={isMenuOpen ? 'Tutup menu' : 'Buka menu'}
                             >
-                                {/* Animated hamburger → X */}
-                                <div className="w-5 h-4 flex flex-col justify-between">
-                                    <span className={`block h-0.5 bg-current rounded-full transition-all duration-300 origin-center ${isMenuOpen ? 'rotate-45 translate-y-[7px]' : ''}`} />
-                                    <span className={`block h-0.5 bg-current rounded-full transition-all duration-300 ${isMenuOpen ? 'opacity-0 scale-x-0' : ''}`} />
-                                    <span className={`block h-0.5 bg-current rounded-full transition-all duration-300 origin-center ${isMenuOpen ? '-rotate-45 -translate-y-[9px]' : ''}`} />
-                                </div>
+                                {isMenuOpen ? <X size={21} aria-hidden="true" /> : <Menu size={21} aria-hidden="true" />}
                             </button>
                         </div>
                     </div>
                 </div>
 
                 <div
+                    id="mobile-navigation"
+                    inert={!isMenuOpen}
+                    aria-hidden={!isMenuOpen}
                     className={`
-                        xl:hidden overflow-y-auto overscroll-contain
-                        transition-all duration-300 ease-in-out
-                        ${isMenuOpen ? 'max-h-[calc(100dvh-4rem)] opacity-100' : 'max-h-0 opacity-0'}
-                        ${!mounted ? 'bg-white border-gray-100' : (theme === 'dark' ? 'bg-[#0b0b0d] border-[#212127]' : 'bg-[#faf9f6] border-[#e5e5db]')} ${user ? 'border-t' : ''}
+                        xl:hidden overflow-y-auto overscroll-contain transition-all duration-200 ease-out
+                        ${isMenuOpen ? 'visible max-h-[calc(100dvh-4rem)] opacity-100' : 'invisible max-h-0 opacity-0'}
+                        ${!mounted ? 'bg-white border-gray-100' : (theme === 'dark' ? 'bg-[#0b0b0d] border-[#212127]' : 'bg-[#faf9f6] border-[#e5e5db]')} ${isMenuOpen ? 'border-t' : ''}
                     `}
                 >
-                    <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-                        {[
-                            { href: '/kanji', label: 'Kanji' },
-                            { href: '/bunpo', label: 'Bunpo' },
-                            { href: '/kana', label: 'Kana' },
-                            { href: '/kotoba', label: 'Kotoba' },
-                            { href: '/tts', label: 'TTS' },
-                            { href: '/about', label: 'Tentang Kami' },
-                            ...(!loading && !user ? [{ href: '/practice', label: 'Latihan' }] : []),
-                        ].map(({ href, label }, i) => (
+                    <div className="space-y-1 px-3 pb-3 pt-2 sm:px-5">
+                        {navItems.map(({ href, label }, i) => (
                             <Link
                                 key={href}
                                 href={href}
-                                className={getLinkClass(href, true)}
+                                className={`${getLinkClass(href, true)} transition-[opacity,transform,background-color,color] duration-200 motion-reduce:transition-none`}
                                 onClick={(e) => handleNavClick(e, href)}
-                                style={{ transitionDelay: isMenuOpen ? `${i * 40}ms` : '0ms' }}
+                                style={{
+                                    transitionDelay: isMenuOpen ? `${Math.min(i, 5) * 25}ms` : '0ms',
+                                    opacity: isMenuOpen ? 1 : 0,
+                                    transform: isMenuOpen ? 'translateY(0)' : 'translateY(-4px)',
+                                }}
                             >
                                 {label}
                             </Link>
@@ -262,41 +311,44 @@ export default function Navbar() {
 
                     {!loading && user && (
                         <div className={`pt-3 pb-4 border-t ${!mounted ? 'border-gray-100' : (theme === 'dark' ? 'border-[#212127]' : 'border-gray-100')}`}>
-                            <div className="px-5 space-y-2">
-                                    <div className={`flex items-center py-2`}>
-                                        <Link href="/profile" className="mr-3" aria-label="Buka profil" onClick={(event) => handleNavClick(event, '/profile')}>
+                            <div className="space-y-1 px-4 pb-4 sm:px-6">
+                                    <div className="flex min-w-0 items-center gap-3 py-2">
+                                        <Link href="/profile" aria-label="Buka profil" onClick={(event) => handleNavClick(event, '/profile')}>
                                             <ProfileAvatar user={user} size="mobile" />
                                         </Link>
-                                        <div>
-                                            <div className={`text-sm font-semibold transition-colors ${!mounted ? 'text-gray-800' : (theme === 'dark' ? 'text-gray-200' : 'text-gray-900')}`}>{user.username}</div>
-                                            <div className={`text-xs transition-colors ${!mounted ? 'text-gray-500' : (theme === 'dark' ? 'text-gray-500' : 'text-gray-600')}`}>{user.email}</div>
+                                        <div className="min-w-0">
+                                            <div className={`truncate text-sm font-semibold ${theme === 'dark' ? 'text-gray-100' : 'text-gray-900'}`}>{user.username}</div>
+                                            <div className={`truncate text-xs ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`}>{user.email}</div>
                                         </div>
                                     </div>
-                                    <Link href="/profile" className="block px-3 py-2 rounded-md text-sm font-medium text-gray-300 hover:text-accent-blue hover:bg-white/5 transition-all duration-200" onClick={(e) => handleNavClick(e, '/profile')}>
+                                    <Link href="/profile" className={getLinkClass('/profile', true)} onClick={(e) => handleNavClick(e, '/profile')}>
                                         Profil
                                     </Link>
-                                    {(user.email === 'imronm1309@gmail.com' || user.is_staff) && (
-                                        <Link href="/admin" className="block px-3 py-2 rounded-md text-sm font-medium text-accent-blue hover:bg-accent-blue/10 transition-all duration-200" onClick={(e) => handleNavClick(e, '/admin')}>
+                                    {user.is_staff && (
+                                        <Link href="/admin" className={getLinkClass('/admin', true)} onClick={(e) => handleNavClick(e, '/admin')}>
                                             Admin Dashboard
                                         </Link>
                                     )}
-                                    <Link href="/dashboard" className="block px-3 py-2 rounded-md text-sm font-medium text-gray-300 hover:text-accent-blue hover:bg-white/5 transition-all duration-200" onClick={(e) => handleNavClick(e, '/dashboard')}>
+                                    <Link href="/dashboard" className={getLinkClass('/dashboard', true)} onClick={(e) => handleNavClick(e, '/dashboard')}>
                                         Dashboard
                                     </Link>
                                     <button
-                                        onClick={() => {
-                                            if (isPracticing) {
-                                                setPendingNav('logout');
-                                                return;
-                                            }
-                                            logout();
-                                            setIsMenuOpen(false);
-                                        }}
-                                        className="block w-full text-left px-3 py-2 rounded-md text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-200"
+                                        onClick={handleLogout}
+                                        className={`block w-full rounded-lg px-3 py-2.5 text-left text-[15px] font-semibold transition-colors ${theme === 'dark' ? 'text-gray-400 hover:bg-white/5 hover:text-gray-100' : 'text-gray-600 hover:bg-black/5 hover:text-gray-900'}`}
                                     >
                                         Keluar
                                     </button>
                             </div>
+                        </div>
+                    )}
+                    {!loading && !user && (
+                        <div className={`grid grid-cols-2 gap-2 border-t px-4 py-4 sm:px-6 ${theme === 'dark' ? 'border-[#212127]' : 'border-gray-200'}`}>
+                            <Link href="/login" onClick={(e) => handleNavClick(e, '/login')} className={`rounded-lg border px-4 py-2.5 text-center text-sm font-bold transition-colors ${theme === 'dark' ? 'border-white/10 text-gray-200 hover:bg-white/5' : 'border-gray-200 text-gray-800 hover:bg-black/5'}`}>
+                                Masuk
+                            </Link>
+                            <Link href="/register" onClick={(e) => handleNavClick(e, '/register')} className="rounded-lg bg-accent-blue px-4 py-2.5 text-center text-sm font-bold text-white transition-colors hover:bg-accent-blue/90">
+                                Daftar
+                            </Link>
                         </div>
                     )}
                 </div>

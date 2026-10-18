@@ -118,6 +118,15 @@ const productionSecurityHeaders = [
 /** @type {import('next').NextConfig} */
 const nextConfig = {
     turbopack: {},
+    async redirects() {
+        return [
+            {
+                source: "/blog/:path*",
+                destination: "/",
+                permanent: false,
+            },
+        ];
+    },
     async headers() {
         return [
             {

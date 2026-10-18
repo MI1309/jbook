@@ -6,11 +6,13 @@ import { useTheme } from '@/context/ThemeContext';
 import Link from 'next/link';
 import Image from 'next/image';
 import AppMessage from '@/components/common/AppMessage';
+import { Eye, EyeOff } from 'lucide-react';
 
 export default function RegisterPage() {
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [showPassword, setShowPassword] = useState(false);
     const [error, setError] = useState('');
     const { register } = useAuth();
     const { theme, mounted } = useTheme();
@@ -105,20 +107,32 @@ export default function RegisterPage() {
 
                         <div className="group">
                             <label htmlFor="password" className={`block text-[10px] font-black uppercase tracking-[0.2em] mb-2 ml-1 transition-colors ${isDark ? 'text-neutral-600 group-focus-within:text-red-500' : 'text-gray-400 group-focus-within:text-red-600'}`}>Password</label>
-                            <input
-                                id="password"
-                                name="password"
-                                type="password"
-                                required
-                                className={`appearance-none block w-full px-5 py-4 border rounded-2xl font-bold transition-all focus:outline-none focus:ring-2 focus:ring-red-500/50 sm:text-sm ${
-                                    isDark 
-                                        ? 'bg-neutral-900/50 border-neutral-800 text-white placeholder-neutral-700 hover:bg-neutral-900' 
-                                        : 'bg-gray-50 border-gray-100 text-gray-900 placeholder-gray-400 hover:bg-white'
-                                }`}
-                                placeholder="Minimal 8 karakter"
-                                value={password}
-                                onChange={(e) => setPassword(e.target.value)}
-                            />
+                            <div className="relative">
+                                <input
+                                    id="password"
+                                    name="password"
+                                    type={showPassword ? 'text' : 'password'}
+                                    required
+                                    className={`appearance-none block w-full rounded-2xl border py-4 pl-5 pr-12 font-bold transition-all focus:outline-none focus:ring-2 focus:ring-red-500/50 sm:text-sm ${
+                                        isDark
+                                            ? 'bg-neutral-900/50 border-neutral-800 text-white placeholder-neutral-700 hover:bg-neutral-900'
+                                            : 'bg-gray-50 border-gray-100 text-gray-900 placeholder-gray-400 hover:bg-white'
+                                    }`}
+                                    placeholder="Minimal 8 karakter"
+                                    value={password}
+                                    onChange={(e) => setPassword(e.target.value)}
+                                />
+                                <button
+                                    type="button"
+                                    onMouseDown={(event) => event.preventDefault()}
+                                    onClick={() => setShowPassword((visible) => !visible)}
+                                    className={`absolute inset-y-0 right-2 inline-flex w-10 items-center justify-center rounded-xl transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500/60 ${isDark ? 'text-neutral-400 hover:bg-white/5 hover:text-white' : 'text-gray-500 hover:bg-black/5 hover:text-gray-900'}`}
+                                    aria-label={showPassword ? 'Sembunyikan password' : 'Tampilkan password'}
+                                    aria-pressed={showPassword}
+                                >
+                                    {showPassword ? <EyeOff size={18} aria-hidden="true" /> : <Eye size={18} aria-hidden="true" />}
+                                </button>
+                            </div>
                         </div>
                     </div>
 

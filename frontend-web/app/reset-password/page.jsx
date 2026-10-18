@@ -1,15 +1,18 @@
 'use client';
 
-import { useState, Suspense, useEffect } from 'react';
+import { useState, Suspense } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { useTheme } from '@/context/ThemeContext';
 import { useSearchParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import AppMessage from '@/components/common/AppMessage';
+import { Eye, EyeOff } from 'lucide-react';
 
 function ResetPasswordForm() {
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
+    const [showPassword, setShowPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const [error, setError] = useState('');
     const [successMessage, setSuccessMessage] = useState('');
     const [isLoading, setIsLoading] = useState(false);
@@ -85,37 +88,61 @@ function ResetPasswordForm() {
             <div className="space-y-4">
                 <div>
                     <label htmlFor="password" className={`block text-xs font-black uppercase tracking-widest mb-1 ml-1 ${isDark ? 'text-gray-500' : 'text-gray-400'}`}>Password Baru</label>
-                    <input
-                        id="password"
-                        name="password"
-                        type="password"
-                        required
-                        className={`appearance-none relative block w-full px-4 py-3 border rounded-xl font-medium transition-all focus:outline-none focus:ring-2 focus:ring-red-500 sm:text-sm ${
-                            isDark 
-                                ? 'bg-black border-red-950/30 text-white placeholder-gray-700' 
-                                : 'bg-gray-50 border-gray-200 text-gray-900 placeholder-gray-400'
-                        }`}
-                        placeholder="••••••••"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                    />
+                    <div className="relative">
+                        <input
+                            id="password"
+                            name="password"
+                            type={showPassword ? 'text' : 'password'}
+                            required
+                            className={`appearance-none relative block w-full rounded-xl border py-3 pl-4 pr-12 font-medium transition-all focus:outline-none focus:ring-2 focus:ring-red-500 sm:text-sm ${
+                                isDark
+                                    ? 'bg-black border-red-950/30 text-white placeholder-gray-700'
+                                    : 'bg-gray-50 border-gray-200 text-gray-900 placeholder-gray-400'
+                            }`}
+                            placeholder="••••••••"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                        />
+                        <button
+                            type="button"
+                            onMouseDown={(event) => event.preventDefault()}
+                            onClick={() => setShowPassword((visible) => !visible)}
+                            className={`absolute inset-y-0 right-2 inline-flex w-9 items-center justify-center rounded-lg transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500/60 ${isDark ? 'text-gray-400 hover:bg-white/5 hover:text-white' : 'text-gray-500 hover:bg-black/5 hover:text-gray-900'}`}
+                            aria-label={showPassword ? 'Sembunyikan password baru' : 'Tampilkan password baru'}
+                            aria-pressed={showPassword}
+                        >
+                            {showPassword ? <EyeOff size={17} aria-hidden="true" /> : <Eye size={17} aria-hidden="true" />}
+                        </button>
+                    </div>
                 </div>
                 <div>
                     <label htmlFor="confirmPassword" className={`block text-xs font-black uppercase tracking-widest mb-1 ml-1 ${isDark ? 'text-gray-500' : 'text-gray-400'}`}>Konfirmasi Password</label>
-                    <input
-                        id="confirmPassword"
-                        name="confirmPassword"
-                        type="password"
-                        required
-                        className={`appearance-none relative block w-full px-4 py-3 border rounded-xl font-medium transition-all focus:outline-none focus:ring-2 focus:ring-red-500 sm:text-sm ${
-                            isDark 
-                                ? 'bg-black border-red-950/30 text-white placeholder-gray-700' 
-                                : 'bg-gray-50 border-gray-200 text-gray-900 placeholder-gray-400'
-                        }`}
-                        placeholder="••••••••"
-                        value={confirmPassword}
-                        onChange={(e) => setConfirmPassword(e.target.value)}
-                    />
+                    <div className="relative">
+                        <input
+                            id="confirmPassword"
+                            name="confirmPassword"
+                            type={showConfirmPassword ? 'text' : 'password'}
+                            required
+                            className={`appearance-none relative block w-full rounded-xl border py-3 pl-4 pr-12 font-medium transition-all focus:outline-none focus:ring-2 focus:ring-red-500 sm:text-sm ${
+                                isDark
+                                    ? 'bg-black border-red-950/30 text-white placeholder-gray-700'
+                                    : 'bg-gray-50 border-gray-200 text-gray-900 placeholder-gray-400'
+                            }`}
+                            placeholder="••••••••"
+                            value={confirmPassword}
+                            onChange={(e) => setConfirmPassword(e.target.value)}
+                        />
+                        <button
+                            type="button"
+                            onMouseDown={(event) => event.preventDefault()}
+                            onClick={() => setShowConfirmPassword((visible) => !visible)}
+                            className={`absolute inset-y-0 right-2 inline-flex w-9 items-center justify-center rounded-lg transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500/60 ${isDark ? 'text-gray-400 hover:bg-white/5 hover:text-white' : 'text-gray-500 hover:bg-black/5 hover:text-gray-900'}`}
+                            aria-label={showConfirmPassword ? 'Sembunyikan konfirmasi password' : 'Tampilkan konfirmasi password'}
+                            aria-pressed={showConfirmPassword}
+                        >
+                            {showConfirmPassword ? <EyeOff size={17} aria-hidden="true" /> : <Eye size={17} aria-hidden="true" />}
+                        </button>
+                    </div>
                 </div>
             </div>
 

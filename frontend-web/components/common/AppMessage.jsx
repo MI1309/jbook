@@ -7,7 +7,7 @@ const variants = {
     info: {
         role: 'status',
         Icon: Info,
-        style: 'border-blue-200 bg-blue-50 text-blue-900 dark:border-blue-800/70 dark:bg-blue-950/40 dark:text-blue-100',
+        style: 'border-blue-300 bg-blue-50 text-blue-950 dark:border-blue-600/80 dark:bg-blue-950/75 dark:text-blue-50',
     },
     warning: {
         role: 'alert',
@@ -29,9 +29,9 @@ export default function AppMessage({ variant = 'info', children, className = '',
         <div
             role={role || messageVariant.role}
             aria-live={messageVariant.role === 'alert' ? 'assertive' : 'polite'}
-            className={`flex items-start gap-3 rounded-xl border ${compact ? 'px-3 py-2.5 text-sm' : 'px-4 py-3 text-sm'} font-semibold shadow-sm ${messageVariant.style} ${className}`}
+            className={`flex items-center gap-3 rounded-xl border ${compact ? 'min-h-12 w-full px-4 py-2.5 text-sm' : 'px-4 py-3 text-sm'} font-semibold shadow-sm ${messageVariant.style} ${className}`}
         >
-            <Icon aria-hidden="true" className="mt-0.5 h-4 w-4 shrink-0" />
+            <Icon aria-hidden="true" className="h-[18px] w-[18px] shrink-0" />
             <div className="min-w-0 flex-1">{children}</div>
         </div>
     );
@@ -51,8 +51,8 @@ function createToast(variant, message, options = {}) {
             ...toastOptions,
             theme: theme || 'dark',
             icon: icon ?? false,
-            className: `${className || ''} !bg-transparent !p-0 !shadow-none`,
-            bodyClassName: `${bodyClassName || ''} !p-0`,
+            className: `${className || ''} !w-[min(22rem,calc(100vw-2rem))] !overflow-hidden !rounded-2xl !bg-transparent !p-0 !shadow-none`,
+            bodyClassName: `${bodyClassName || ''} !m-0 !w-full !min-w-0 !p-0`,
         }
     );
 }

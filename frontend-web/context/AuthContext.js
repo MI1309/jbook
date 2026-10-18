@@ -144,7 +144,18 @@ export function AuthProvider({ children }) {
                 body: JSON.stringify({ identifier: email, password }),
             });
 
-            const data = await res.json();
+            const responseText = await res.text();
+            let data;
+            try {
+                data = JSON.parse(responseText);
+            } catch {
+                const responseType = res.headers.get('content-type')?.includes('text/html')
+                    ? 'HTML'
+                    : 'non-JSON';
+                throw new Error(
+                    `Server API mengembalikan ${responseType} (HTTP ${res.status}). Periksa NEXT_PUBLIC_API_URL dan status backend.`
+                );
+            }
             if (!res.ok) throw new Error(data.detail || data.message || 'Login gagal.');
 
             setAuthCookies(data.access, data.refresh);

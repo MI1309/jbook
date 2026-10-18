@@ -82,7 +82,7 @@ function BunpoContent() {
                     ))}
                 </div>
             ) : (
-                <div className={`text-center py-32 rounded-[3rem] border-4 border-dashed max-w-2xl mx-auto shadow-inner transition-colors bg-[var(--card-bg)] border-[var(--border-color)]`}>
+                <div className="w-full min-w-0 rounded-3xl border-2 border-dashed border-[var(--border-color)] bg-[var(--card-bg)] px-4 py-20 text-center shadow-inner transition-colors sm:rounded-[2.5rem] sm:border-4 sm:px-8 sm:py-28 lg:py-32">
                     <div className="text-7xl mb-6 grayscale opacity-20 dark:opacity-40 transition-opacity">🛸</div>
                     <h2 className={`text-2xl font-black mb-2 transition-colors ${textColor}`}>Bunpo tidak ditemukan</h2>
                     <p className={`font-bold mb-8 transition-colors ${subTextColor}`}>Silakan coba filter atau pencarian lain.</p>
@@ -110,11 +110,11 @@ export default function BunpoPage() {
     const subTextColor = !mounted ? 'text-black/50' : (theme === 'dark' ? 'text-white/50' : 'text-black/50');
 
     return (
-        <div className="container mx-auto max-w-7xl px-4 py-6 transition-colors duration-300 sm:px-6 sm:py-12">
-            <header className="mb-6 flex min-w-0 flex-col justify-between gap-5 border-b border-[var(--border-color)] pb-6 text-center transition-colors sm:mb-12 sm:gap-8 sm:pb-12 2xl:flex-row 2xl:items-center 2xl:text-left">
-                <div className="shrink-0 2xl:max-w-xs">
+        <div className="mx-auto w-full px-4 py-6 transition-colors duration-300 sm:px-6 sm:py-10 lg:px-8 2xl:px-10">
+            <header className="mb-6 flex min-w-0 flex-col justify-between gap-5 border-b border-[var(--border-color)] pb-6 text-left transition-colors sm:mb-10 sm:gap-8 sm:pb-10 lg:flex-row lg:items-center">
+                <div className="w-full shrink-0 lg:w-64 xl:w-72">
                     <h1 className={`text-5xl font-japanese font-black tracking-tight leading-none transition-colors ${textColor}`}>文法 <span className="text-transparent bg-clip-text bg-gradient-to-r from-accent-blue to-accent-green ml-2">Bunpo</span></h1>
-                    <div className="h-1 w-16 bg-gradient-to-r from-accent-blue to-accent-green rounded-full mt-3 mb-1 mx-auto lg:mx-0" />
+                    <div className="h-1 w-16 bg-gradient-to-r from-accent-blue to-accent-green rounded-full mt-3 mb-1" />
                     <p className={`font-black mt-2 tracking-wide uppercase text-xs transition-colors ${subTextColor}`}>Kuasai tata bahasa Jepang dengan mudah</p>
                 </div>
                 <div className="w-full min-w-0 flex-1">

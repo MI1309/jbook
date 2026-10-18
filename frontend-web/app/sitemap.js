@@ -1,16 +1,6 @@
-import { getBlogList, API_URL } from '@/lib/api';
+import { API_URL } from '@/lib/api';
 
 const BASE_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://jbook-five.vercel.app';
-
-async function safeFetch(fn, fallback = []) {
-  try {
-    const result = await fn();
-    return Array.isArray(result) ? result : (result?.items || fallback);
-  } catch (e) {
-    console.warn('[sitemap] fetch failed:', e.message);
-    return fallback;
-  }
-}
 
 // Fetch helper via direct fetch for kanji/bunpo/kotoba list
 async function fetchList(endpoint, limit = 500) {
@@ -36,20 +26,9 @@ async function fetchAllKanji() {
 }
 
 export default async function sitemap() {
-  const blogs = await safeFetch(getBlogList, []);
   const kanjis = await fetchAllKanji();
   const bunpos = await fetchList('/content/grammar', 300);
   const kotobas = await fetchList('/content/vocab', 300);
-
-  const fmtDate = (d) => {
-    try {
-      const dt = new Date(d);
-      if (isNaN(dt.getTime())) return new Date().toISOString();
-      return dt.toISOString();
-    } catch {
-      return new Date().toISOString();
-    }
-  };
 
   const today = new Date().toISOString();
 
@@ -65,12 +44,6 @@ export default async function sitemap() {
       lastModified: today,
       changeFrequency: 'monthly',
       priority: 0.7,
-    },
-    {
-      url: `${BASE_URL}/blog`,
-      lastModified: blogs.length > 0 ? fmtDate(blogs[0].updated_at || blogs[0].created_at) : today,
-      changeFrequency: 'daily',
-      priority: 0.95,
     },
     {
       url: `${BASE_URL}/kanji`,
@@ -110,14 +83,6 @@ export default async function sitemap() {
     },
   ];
 
-  // Blog detail pages
-  const blogPages = blogs.map((blog) => ({
-    url: `${BASE_URL}/blog/${blog.slug}`,
-    lastModified: fmtDate(blog.updated_at || blog.created_at),
-    changeFrequency: 'monthly',
-    priority: 0.9,
-  }));
-
   // Include every Kanji detail page, including levels hidden from the catalogue.
   const kanjiPages = kanjis.map((k) => ({
     url: `${BASE_URL}/kanji/${k.id}`,
@@ -144,7 +109,6 @@ export default async function sitemap() {
 
   return [
     ...staticPages,
-    ...blogPages,
     ...kanjiPages,
     ...bunpoPages,
     ...kotobaPages,

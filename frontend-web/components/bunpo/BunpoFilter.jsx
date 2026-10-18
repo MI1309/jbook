@@ -45,17 +45,17 @@ function FilterContent() {
 
     return (
         <div className="w-full rounded-2xl border border-[var(--border-color)] bg-[var(--card-bg)] p-4 shadow-xl shadow-accent-blue/5 transition-all duration-300 sm:rounded-3xl sm:p-6">
-            <div className="grid grid-cols-1 items-start justify-items-center gap-4 sm:grid-cols-[minmax(0,2fr)_minmax(10rem,1fr)] sm:gap-5 lg:grid-cols-12 lg:justify-items-stretch">
+            <div className="grid grid-cols-1 items-start gap-4 sm:grid-cols-[minmax(0,2fr)_minmax(10rem,1fr)] sm:gap-5 lg:grid-cols-12">
                 {/* Search Bunpo */}
-                <div className="w-full sm:col-span-1 lg:col-span-9">
-                    <label className="mb-2 flex items-center justify-center gap-1.5 text-center text-[11px] font-black uppercase tracking-widest text-gray-500 dark:text-gray-400 sm:justify-start sm:text-left">
+                <div className="w-full min-w-0 sm:col-span-1 lg:col-span-7">
+                    <label className="mb-2 flex items-center gap-1.5 text-left text-[11px] font-black uppercase tracking-widest text-gray-500 dark:text-gray-400">
                         <span>🔍</span> Cari Bunpo
                     </label>
                     <div className="relative group">
                         <input
                             type="text"
                             placeholder="Cari struktur, judul, atau penjelasan..."
-                            className="w-full rounded-2xl border border-[var(--border-color)] bg-[var(--background)] px-4 py-2.5 text-center text-sm font-semibold text-[var(--foreground)] transition-all group-hover:border-accent-blue/30 focus:border-accent-blue focus:outline-none focus:ring-2 focus:ring-accent-blue/40 sm:text-left"
+                            className="w-full rounded-2xl border border-[var(--border-color)] bg-[var(--background)] px-4 py-2.5 text-left text-sm font-semibold text-[var(--foreground)] transition-all group-hover:border-accent-blue/30 focus:border-accent-blue focus:outline-none focus:ring-2 focus:ring-accent-blue/40"
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
                         />
@@ -70,9 +70,9 @@ function FilterContent() {
                     </div>
                 </div>
 
-                <div className="w-full sm:col-span-1 lg:col-span-3">
-                    <label className="mb-2 block text-center text-[11px] font-black uppercase tracking-widest text-gray-500 dark:text-gray-400 sm:text-left">Level JLPT</label>
-                    <select value={jlptLevel} onChange={e => updateJlptLevel(e.target.value)} className="w-full rounded-2xl border border-[var(--border-color)] bg-[var(--background)] px-4 py-2.5 text-center text-sm font-semibold text-[var(--foreground)] sm:text-left">
+                <div className="w-full min-w-0 sm:col-span-1 lg:col-span-5">
+                    <label className="mb-2 block text-left text-[11px] font-black uppercase tracking-widest text-gray-500 dark:text-gray-400">Level JLPT</label>
+                    <select value={jlptLevel} onChange={e => updateJlptLevel(e.target.value)} className="w-full rounded-2xl border border-[var(--border-color)] bg-[var(--background)] px-4 py-2.5 text-left text-sm font-semibold text-[var(--foreground)]">
                         <option value="">Semua level</option>
                         {[1, 2, 3, 4, 5].map(level => <option key={level} value={level}>N{level}</option>)}
                     </select>

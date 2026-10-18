@@ -61,6 +61,11 @@ SECRET_KEY = _require_env(
 if not DEBUG and len(SECRET_KEY) < 50:
     raise ValueError("Production SECRET_KEY must be at least 50 characters")
 
+EMAIL_ENCRYPTION_KEY = _require_env(
+    "EMAIL_ENCRYPTION_KEY",
+    dev_default=SECRET_KEY,
+)
+
 # Production: strict list. Dev: allow localhost + wildcard for flexibility.
 _ALLOWED_HOSTS_DEFAULT = (
     "japan.pythonanywhere.com,localhost,127.0.0.1"

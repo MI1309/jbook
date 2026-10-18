@@ -517,7 +517,7 @@ export default function KotobaPage() {
     const textColor = !mounted ? 'text-black' : (theme === 'dark' ? 'text-white' : 'text-black');
     const subTextColor = !mounted ? 'text-black/50' : (theme === 'dark' ? 'text-white/50' : 'text-black/50');
 
-    const isStaff = user?.is_staff || user?.email === 'imronm1309@gmail.com';
+    const isStaff = user?.is_staff;
 
     const handleSuccess = () => {
         setRefreshKey(k => k + 1);

@@ -21,6 +21,7 @@ import random
 import string
 from core.decorators import rate_limit
 from .models import TTSPointSession
+from .privacy import email_lookup_digest, mask_email
 
 router = Router()
 User = get_user_model()
@@ -32,7 +33,7 @@ class AuthBearer(JWTAuth):
 class UserSchema(BaseModel):
     id: int
     username: str = Field(..., min_length=3, max_length=150)
-    email: EmailStr
+    email: str
     level_target: int = Field(..., ge=1, le=5)
     is_staff: bool = False
     profile_image: str = ""
@@ -97,10 +98,22 @@ def get_tokens_for_user(user):
         'access': str(refresh.access_token),
     }
 
+
+def serialize_user(user):
+    return {
+        "id": user.id,
+        "username": user.username,
+        "email": mask_email(user.get_private_email()),
+        "level_target": user.level_target,
+        "is_staff": user.is_staff,
+        "profile_image": user.profile_image,
+        "tts_points": user.tts_points,
+    }
+
 @router.post("/register", response=AuthResponse)
 @rate_limit(key='ip', rate='10/h')  # Max 10 registrasi per IP per jam
 def register(request, data: RegisterSchema):
-    if User.objects.filter(email=data.email).exists():
+    if User.objects.filter(email_lookup_hash=email_lookup_digest(data.email)).exists():
         raise HttpError(400, "Email already registered")
     if User.objects.filter(username=data.username).exists():
         raise HttpError(400, "Username already taken")
@@ -116,14 +129,17 @@ def register(request, data: RegisterSchema):
         raise HttpError(400, "Registration failed")
     
     tokens = get_tokens_for_user(user)
-    return {**tokens, "user": user}
+    return {**tokens, "user": serialize_user(user)}
 
 @router.post("/login", response=AuthResponse)
 @rate_limit(key='ip', rate='30/m')  # Max 30 login per IP per menit
 def login(request, data: LoginSchema):
     # Authenticate using email or username
     from django.db.models import Q
-    user = User.objects.filter(Q(email=data.identifier) | Q(username=data.identifier)).first()
+    email_hash = email_lookup_digest(data.identifier) if "@" in data.identifier else None
+    user = User.objects.filter(
+        Q(email_lookup_hash=email_hash) | Q(username=data.identifier)
+    ).first()
     if user is None:
         raise HttpError(400, "User not found")
     
@@ -132,7 +148,7 @@ def login(request, data: LoginSchema):
         raise HttpError(400, "Incorrect password")
         
     tokens = get_tokens_for_user(user)
-    return {**tokens, "user": user}
+    return {**tokens, "user": serialize_user(user)}
 
 @router.post("/google", response=AuthResponse)
 @rate_limit(key='ip', rate='20/h')  # Max 20 google auth per IP per jam
@@ -172,7 +188,7 @@ def google_auth(request, data: GoogleAuthSchema):
         name = id_info.get('name', email.split('@')[0])
 
         # Check if user exists
-        user = User.objects.filter(email=email).first()
+        user = User.objects.filter(email_lookup_hash=email_lookup_digest(email)).first()
 
         if not user:
             # Create new user
@@ -191,7 +207,7 @@ def google_auth(request, data: GoogleAuthSchema):
             )
 
         tokens = get_tokens_for_user(user)
-        return {**tokens, "user": user}
+        return {**tokens, "user": serialize_user(user)}
 
     except HttpError:
         raise
@@ -201,7 +217,7 @@ def google_auth(request, data: GoogleAuthSchema):
 @router.get("/me", response=UserSchema, auth=JWTAuth())
 @rate_limit(key='user', rate='120/m')  # Max 120 req per user per menit
 def me(request):
-    return request.auth
+    return serialize_user(request.auth)
 
 
 @router.patch("/me/profile", response=UserSchema, auth=JWTAuth())
@@ -209,7 +225,7 @@ def me(request):
 def update_profile(request, data: ProfileUpdateSchema):
     request.auth.profile_image = data.profile_image or ""
     request.auth.save(update_fields=["profile_image"])
-    return request.auth
+    return serialize_user(request.auth)
 
 
 @router.post("/me/tts-points", response=UserSchema, auth=JWTAuth())
@@ -225,7 +241,7 @@ def claim_tts_points(request, data: TTSPointsClaimSchema):
             type(request.auth).objects.filter(pk=request.auth.pk).update(tts_points=F("tts_points") + data.points)
 
     request.auth.refresh_from_db(fields=["tts_points"])
-    return request.auth
+    return serialize_user(request.auth)
 
 def _generate_otp(length: int = 6) -> str:
     return ''.join(random.choices(string.digits, k=length))
@@ -233,7 +249,8 @@ def _generate_otp(length: int = 6) -> str:
 @router.post("/password-reset")
 @rate_limit(key='ip', rate='5/h')  # Max 5 password reset request per IP per jam
 def password_reset_request(request, data: PasswordResetRequestSchema):
-    user = User.objects.filter(email=data.email).first()
+    email_hash = email_lookup_digest(data.email)
+    user = User.objects.filter(email_lookup_hash=email_hash).first()
     if user:
         # Generate token and uid for direct link
         uid = urlsafe_base64_encode(force_bytes(user.pk))
@@ -259,7 +276,7 @@ def password_reset_request(request, data: PasswordResetRequestSchema):
 
         # Also generate OTP for backward compatibility
         otp = _generate_otp(6)
-        cache.set(f"otp_reset_{data.email}", otp, timeout=600)  # 10 menit
+        cache.set(f"otp_reset_{email_hash}", otp, timeout=600)  # 10 menit
 
         subject = "JBook - Reset Password"
         message = (
@@ -276,15 +293,15 @@ def password_reset_request(request, data: PasswordResetRequestSchema):
                     subject,
                     message,
                     getattr(settings, 'DEFAULT_FROM_EMAIL', 'noreply@localhost'),
-                    [user.email],
+                    [user.get_private_email()],
                     fail_silently=True,
                 )
             except Exception:
                 pass
         elif settings.DEBUG:
             # In dev, print to console as fallback
-            print(f"\n[PASSWORD RESET - DEV MODE] Reset link for {user.email}: {reset_link}")
-            print(f"[PASSWORD RESET - DEV MODE] OTP for {user.email}: {otp}\n")
+            print(f"\n[PASSWORD RESET - DEV MODE] Reset link generated for user {user.pk}")
+            print(f"[PASSWORD RESET - DEV MODE] OTP: {otp}\n")
 
     # ALWAYS return generic message. NEVER return reset_link or indicate if user exists — prevents email enumeration
     return {
@@ -294,15 +311,16 @@ def password_reset_request(request, data: PasswordResetRequestSchema):
 @router.post("/password-reset-otp")
 @rate_limit(key='ip', rate='10/m')  # Max 10 otp confirm per IP per menit
 def password_reset_otp_confirm(request, data: PasswordResetOtpConfirmSchema):
-    stored_otp = cache.get(f"otp_reset_{data.email}")
+    email_hash = email_lookup_digest(data.email)
+    stored_otp = cache.get(f"otp_reset_{email_hash}")
     if stored_otp is None or stored_otp != data.otp.strip():
         raise HttpError(400, "OTP invalid or expired.")
-    user = User.objects.filter(email=data.email).first()
+    user = User.objects.filter(email_lookup_hash=email_hash).first()
     if not user:
         raise HttpError(400, "Invalid request.")
     user.set_password(data.new_password)
     user.save()
-    cache.delete(f"otp_reset_{data.email}")
+    cache.delete(f"otp_reset_{email_hash}")
     return {"message": "Password has been reset successfully."}
 
 @router.post("/password-reset-confirm")

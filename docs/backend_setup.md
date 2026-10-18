@@ -97,6 +97,7 @@ Ubah nilai terkait development lokal seperti di bawah. Pertahankan variabel lain
 ```env
 DEBUG=True
 SECRET_KEY=isi_dengan_secret_key_lokal
+EMAIL_ENCRYPTION_KEY=isi_dengan_kunci_enkripsi_lokal
 ALLOWED_HOSTS=localhost,127.0.0.1
 CORS_ALLOWED_ORIGINS=http://localhost:3000,http://127.0.0.1:3000
 CSRF_TRUSTED_ORIGINS=http://localhost:3000,http://127.0.0.1:3000
@@ -112,6 +113,18 @@ python -c "from django.core.management.utils import get_random_secret_key; print
 ```
 
 Salin hasil command ke `SECRET_KEY` di `.env`. Untuk development, `SECRET_KEY` dapat memakai default lokal dari Django, tetapi lebih baik mengisi key yang dihasilkan sendiri. Jangan gunakan key development pada production dan jangan commit file `.env`.
+
+Production juga wajib memiliki `EMAIL_ENCRYPTION_KEY` yang terpisah dari database dan `SECRET_KEY`. Buat sekali, misalnya dengan `openssl rand -hex 32`, lalu simpan sebagai secret environment di PythonAnywhere dan backup rahasia di luar database. Jangan mengganti atau kehilangan key tersebut karena diperlukan untuk login berbasis email dan pengiriman reset password.
+
+Sebelum deploy migrasi privasi email, hentikan sementara perubahan akun, buat backup database, pasang dependencies terbaru, set `EMAIL_ENCRYPTION_KEY`, lalu jalankan `python manage.py migrate` dan verifikasi login/reset password sebelum reload aplikasi. Migrasi akan berhenti jika menemukan email duplikat dan tidak mencetak alamatnya. Setelah migrasi, akun admin khusus yang sebelumnya diberi akses hanya melalui email perlu diberi `is_staff=True` satu kali menggunakan `python scripts/update_admin.py` dalam environment yang tersambung ke database production; perintah meminta email secara interaktif. Backup lama dan salinan database yang dibuat sebelum migrasi mungkin tetap berisi email plaintext, jadi amankan atau hapus sesuai kebijakan retensi.
+
+Untuk production, set `EMAIL_ENCRYPTION_KEY` sebagai secret environment terpisah dari database dan `SECRET_KEY`. Contoh membuat nilai acak dari terminal:
+
+```bash
+openssl rand -hex 32
+```
+
+Simpan kunci yang sama secara permanen di PythonAnywhere dan di backup rahasia di luar database. Jangan menggantinya: kunci ini diperlukan untuk mendekripsi email dan menjalankan login/reset password. Sebelum migrasi privasi email, backup database; setelah key tersedia dan dependency terbaru terpasang, jalankan `python manage.py migrate`, verifikasi aplikasi, lalu reload web app. Backup database yang dibuat sebelum migrasi masih dapat berisi email plaintext dan harus diamankan atau dihapus sesuai kebijakan retensi.
 
 Dengan `DATABASE_URL` kosong, Django memakai `backend/db.sqlite3`; tidak perlu memasang atau menjalankan PostgreSQL untuk setup lokal. SMTP dan Google OAuth juga opsional. Tanpa kredensialnya, email reset password dan Google sign-in tidak aktif, tetapi backend tetap dapat dijalankan.
 

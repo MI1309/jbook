@@ -2,6 +2,8 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 import uuid
 
+from .privacy import decrypt_email, email_lookup_digest, encrypt_email
+
 class User(AbstractUser):
     class JLPTLevel(models.IntegerChoices):
         N5 = 5, 'N5'
@@ -13,6 +15,24 @@ class User(AbstractUser):
     level_target = models.IntegerField(choices=JLPTLevel.choices, default=JLPTLevel.N5)
     profile_image = models.URLField(blank=True, max_length=500)
     tts_points = models.PositiveIntegerField(default=0)
+    email_ciphertext = models.TextField(blank=True, default="")
+    email_lookup_hash = models.CharField(max_length=64, unique=True, null=True, blank=True)
+
+    def save(self, *args, **kwargs):
+        if self.email and not self.email.endswith("@privacy.invalid"):
+            normalized_email = self.email.strip().casefold()
+            self.email_ciphertext = encrypt_email(normalized_email)
+            self.email_lookup_hash = email_lookup_digest(normalized_email)
+            self.email = f"private+{uuid.uuid4().hex}@privacy.invalid"
+            update_fields = kwargs.get("update_fields")
+            if update_fields is not None:
+                kwargs["update_fields"] = set(update_fields) | {
+                    "email", "email_ciphertext", "email_lookup_hash"
+                }
+        super().save(*args, **kwargs)
+
+    def get_private_email(self):
+        return decrypt_email(self.email_ciphertext)
 
 
 class TTSPointSession(models.Model):

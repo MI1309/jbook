@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { ArrowLeft, Database, LockKeyhole, ShieldCheck, UserRoundCheck } from 'lucide-react';
+import { ArrowLeft, Database, EyeOff, Fingerprint, KeyRound, LockKeyhole, ShieldCheck, UserRoundCheck } from 'lucide-react';
 
 const sections = [
   {
@@ -13,9 +13,24 @@ const sections = [
     text: 'Kredensial akun diproses melalui sistem autentikasi aplikasi. Jangan membagikan password atau token sesi kepada siapa pun. Gunakan password yang unik dan segera ubah jika merasa akun tidak aman.'
   },
   {
+    icon: KeyRound,
+    title: 'Perlindungan alamat email',
+    text: 'Alamat email asli dienkripsi sebelum disimpan. Database memakai alamat pengganti dan indeks HMAC berkunci untuk pencarian akun; kunci enkripsi disimpan terpisah dari database. Backend hanya mendekripsi alamat saat diperlukan, misalnya untuk mengirim tautan reset password.'
+  },
+  {
+    icon: EyeOff,
+    title: 'Email di aplikasi',
+    text: 'API aplikasi hanya mengirim email tersamarkan, misalnya p***@contoh.com. Penyedia email tetap memproses alamat tujuan saat email reset dikirim.'
+  },
+  {
     icon: UserRoundCheck,
     title: 'Kontrol pengguna',
     text: 'Pengguna dapat keluar dari akun, menghapus progres latihan melalui fitur yang tersedia, dan menghubungi tim JBook untuk pertanyaan atau permintaan terkait data akun.'
+  },
+  {
+    icon: Fingerprint,
+    title: 'Kunci dan cadangan data',
+    text: 'Kunci enkripsi harus dijaga sebagai rahasia dan tidak boleh berubah tanpa proses re-enkripsi. Kehilangan kunci membuat alamat email tersimpan tidak dapat dipulihkan. Cadangan database lama yang dibuat sebelum perlindungan ini mungkin masih berisi email asli dan perlu diamankan atau dihapus sesuai kebijakan retensi.'
   }
 ];
 
