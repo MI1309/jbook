@@ -269,13 +269,22 @@ export default function Navbar() {
                         <div className="flex items-center gap-1 xl:hidden">
                             <button
                                 onClick={() => setIsMenuOpen((open) => !open)}
-                                className={`inline-flex h-10 w-10 items-center justify-center rounded-lg transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-blue/60 ${theme === 'dark' ? 'text-gray-300 hover:bg-white/10' : 'text-gray-700 hover:bg-black/5'}`}
+                                className={`group relative inline-flex h-10 w-10 items-center justify-center rounded-xl transition-[background-color,color,box-shadow] duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-blue/60 ${theme === 'dark' ? 'text-gray-300 hover:bg-white/10' : 'text-gray-700 hover:bg-black/5'} ${isMenuOpen ? 'bg-accent-blue/10 text-accent-blue' : ''}`}
                                 aria-label={isMenuOpen ? 'Tutup menu' : 'Buka menu'}
                                 aria-expanded={isMenuOpen}
                                 aria-controls="mobile-navigation"
                                 title={isMenuOpen ? 'Tutup menu' : 'Buka menu'}
                             >
-                                {isMenuOpen ? <X size={21} aria-hidden="true" /> : <Menu size={21} aria-hidden="true" />}
+                                <Menu
+                                    size={21}
+                                    aria-hidden="true"
+                                    className={`absolute transition-[transform,opacity] duration-300 ease-out motion-reduce:transition-none ${isMenuOpen ? 'rotate-[-90deg] scale-50 opacity-0' : 'rotate-0 scale-100 opacity-100'}`}
+                                />
+                                <X
+                                    size={21}
+                                    aria-hidden="true"
+                                    className={`absolute transition-[transform,opacity] duration-300 ease-out motion-reduce:transition-none ${isMenuOpen ? 'rotate-0 scale-100 opacity-100' : 'rotate-90 scale-50 opacity-0'}`}
+                                />
                             </button>
                         </div>
                     </div>
@@ -286,8 +295,8 @@ export default function Navbar() {
                     inert={!isMenuOpen}
                     aria-hidden={!isMenuOpen}
                     className={`
-                        xl:hidden overflow-y-auto overscroll-contain transition-all duration-200 ease-out
-                        ${isMenuOpen ? 'visible max-h-[calc(100dvh-4rem)] opacity-100' : 'invisible max-h-0 opacity-0'}
+                        xl:hidden overflow-y-auto overscroll-contain origin-top transition-[max-height,opacity,transform] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none
+                        ${isMenuOpen ? 'visible max-h-[calc(100dvh-4rem)] translate-y-0 opacity-100' : 'invisible max-h-0 -translate-y-2 opacity-0'}
                         ${!mounted ? 'bg-white border-gray-100' : (theme === 'dark' ? 'bg-[#0b0b0d] border-[#212127]' : 'bg-[#faf9f6] border-[#e5e5db]')} ${isMenuOpen ? 'border-t' : ''}
                     `}
                 >

@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useTheme } from '@/context/ThemeContext';
-import { getBunpoLevelVisibility, getDoukaiCount, getKanjiLevelVisibility, getVocabLevelVisibility } from '@/lib/api';
+import { getBunpoLevelVisibility, getKanjiLevelVisibility, getVocabLevelVisibility } from '@/lib/api';
 import AppMessage from '@/components/common/AppMessage';
 
 export default function PracticeConfig() {
@@ -13,22 +13,12 @@ export default function PracticeConfig() {
     const [timer, setTimer] = useState(5); // Default 5 minutes
     const [isUnlimitedTime, setIsUnlimitedTime] = useState(false);
     
-    // Source: 'jlpt' or 'minna'
-    const [source, setSource] = useState('jlpt');
-    
     // JLPT states
-    const [mode, setMode] = useState('choice'); // 'choice' or 'kakitori' or minna modes
+    const [mode, setMode] = useState('choice');
     const [selectedTypes, setSelectedTypes] = useState(['kanji']);
     const [selectedLevels, setSelectedLevels] = useState([]); // Default semua level
     const [selectionWarning, setSelectionWarning] = useState(false);
 
-    // Minna states
-    const [selectedBook, setSelectedBook] = useState('1'); // '1', '2', or 'both'
-    const [chapterStart, setChapterStart] = useState(1);
-    const [chapterEnd, setChapterEnd] = useState(25);
-
-    // Doukai state
-    const [doukaiCount, setDoukaiCount] = useState(null);
     const [kanjiEnabledLevels, setKanjiEnabledLevels] = useState([4, 5]);
     const [vocabEnabledLevels, setVocabEnabledLevels] = useState([1, 2, 3, 4, 5]);
     const [bunpoEnabledLevels, setBunpoEnabledLevels] = useState([1, 2, 3, 4, 5]);
@@ -102,7 +92,6 @@ export default function PracticeConfig() {
     };
 
     useEffect(() => {
-        getDoukaiCount().then(setDoukaiCount);
         syncVisibility();
 
         const handleVisibilityUpdated = () => {
@@ -143,7 +132,7 @@ export default function PracticeConfig() {
     };
 
     const handleStart = () => {
-        if (source === 'jlpt' && selectedTypes.length === 0) {
+        if (selectedTypes.length === 0) {
             setSelectionWarning(true);
             return;
         }
@@ -158,44 +147,28 @@ export default function PracticeConfig() {
         const params = new URLSearchParams();
         params.append('limit', finalLimit);
         
-        if (source === 'minna') {
-            params.append('source', 'minna');
-            params.append('book', selectedBook === 'both' ? '1,2' : selectedBook);
-            
-            // Validate chapter range
-            const start = Math.min(Math.max(1, parseInt(chapterStart) || 1), 50);
-            const end = Math.min(Math.max(1, parseInt(chapterEnd) || 25), 50);
-            const minCh = Math.min(start, end);
-            const maxCh = Math.max(start, end);
-            const chapters = [];
-            for (let i = minCh; i <= maxCh; i++) {
-                chapters.push(i);
-            }
-            params.append('chapter', chapters.join(','));
-            params.append('mode', mode);
-        } else {
-            const activeTypes = selectedTypes.filter(type =>
-                type !== 'particle' &&
-                (type !== 'kanji' || kanjiAvailable) &&
-                (type !== 'vocab' || vocabAvailable) &&
-                (type !== 'grammar' || bunpoAvailable)
-            );
-            if (activeTypes.length === 0) {
-                setSelectionWarning(true);
-                return;
-            }
-            const unrestrictedOnly = activeTypes.length > 0 && activeTypes.every(type => ['particle', 'kana'].includes(type));
-            const activeLevels = unrestrictedOnly
-                ? []
-                : selectedLevels.filter(level => isLevelEnabledForSelection(level, activeTypes));
-            if (!unrestrictedOnly && selectedLevels.length > 0 && activeLevels.length === 0) return;
-            params.append('type', activeTypes.join(','));
-            const particlesOnly = activeTypes.length === 1 && activeTypes[0] === 'particle';
-            if (!particlesOnly && activeLevels.length > 0) {
-                params.append('level', activeLevels.join(','));
-            }
-            params.append('mode', mode);
+        const activeTypes = selectedTypes.filter(type =>
+            type !== 'particle' &&
+            (type !== 'kanji' || kanjiAvailable) &&
+            (type !== 'vocab' || vocabAvailable) &&
+            (type !== 'grammar' || bunpoAvailable)
+        );
+        if (activeTypes.length === 0) {
+            setSelectionWarning(true);
+            return;
         }
+
+        const unrestrictedOnly = activeTypes.length > 0 && activeTypes.every(type => ['particle', 'kana'].includes(type));
+        const activeLevels = unrestrictedOnly
+            ? []
+            : selectedLevels.filter(level => isLevelEnabledForSelection(level, activeTypes));
+        if (!unrestrictedOnly && selectedLevels.length > 0 && activeLevels.length === 0) return;
+        params.append('type', activeTypes.join(','));
+        const particlesOnly = activeTypes.length === 1 && activeTypes[0] === 'particle';
+        if (!particlesOnly && activeLevels.length > 0) {
+            params.append('level', activeLevels.join(','));
+        }
+        params.append('mode', mode);
         
         if (!isUnlimitedTime) params.append('timer', finalTimer);
         params.append('play', 'true');
@@ -223,73 +196,7 @@ export default function PracticeConfig() {
                 <p className={`mb-6 sm:mb-10 text-sm sm:text-base md:text-lg transition-colors ${subTextColor}`}>Pilih materi, level, dan target waktu kuis hari ini.</p>
 
                 <div className="space-y-6 sm:space-y-10">
-                    {/* Sumber Soal Selection */}
-                    <div>
-                        <label className={`block text-xs sm:text-sm font-black uppercase tracking-widest mb-3 sm:mb-4 transition-colors ${subTextColor}`}>
-                            Sumber Soal
-                        </label>
-                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
-                            <button
-                                onClick={() => {
-                                    setSource('jlpt');
-                                    setMode('choice');
-                                }}
-                                className={`flex flex-col items-center justify-center p-4 sm:p-5 rounded-2xl border-2 transition-all duration-300 transform hover:scale-[1.02] cursor-pointer ${
-                                    source === 'jlpt'
-                                        ? 'bg-gradient-to-br from-blue-50 to-sky-50 dark:from-blue-950/30 dark:to-sky-950/10 border-blue-500 shadow-lg shadow-blue-500/20'
-                                        : `${cardBg} ${borderStyle} hover:border-blue-300 dark:hover:border-blue-800`
-                                }`}
-                            >
-                                <span className="text-2xl sm:text-3xl mb-1.5 sm:mb-2">📚</span>
-                                <span className={`font-black text-sm sm:text-base transition-colors ${source === 'jlpt' ? 'text-blue-700 dark:text-blue-400' : textColor}`}>
-                                    JLPT Level
-                                </span>
-                                <span className={`text-[10px] mt-1 uppercase font-medium transition-colors ${subTextColor}`}>
-                                    Materi N5 s.d N1
-                                </span>
-                            </button>
-
-                            <button
-                                disabled
-                                aria-label="Minna no Nihongo dinonaktifkan sementara"
-                                className={`flex flex-col items-center justify-center p-4 sm:p-5 rounded-2xl border-2 ${cardBg} ${borderStyle} opacity-50 cursor-not-allowed grayscale`}
-                            >
-                                <span className="text-2xl sm:text-3xl mb-1.5 sm:mb-2">🇯🇵</span>
-                                <span className={`font-black text-sm sm:text-base transition-colors ${textColor}`}>
-                                    Minna no Nihongo
-                                </span>
-                                <span className={`text-[10px] mt-1 uppercase font-medium transition-colors ${subTextColor}`}>
-                                    Dinonaktifkan sementara
-                                </span>
-                            </button>
-
-                            <button
-                                onClick={() => {
-                                    if (doukaiCount > 0) {
-                                        router.push('/doukai');
-                                    }
-                                }}
-                                disabled={doukaiCount === 0}
-                                className={`flex flex-col items-center justify-center p-4 sm:p-5 rounded-2xl border-2 transition-all duration-300 transform ${
-                                    doukaiCount === 0 
-                                        ? 'opacity-50 cursor-not-allowed grayscale' 
-                                        : 'hover:scale-[1.02] hover:border-blue-300 dark:hover:border-blue-800 cursor-pointer'
-                                } ${cardBg} ${borderStyle}`}
-                            >
-                                <span className="text-2xl sm:text-3xl mb-1.5 sm:mb-2">{doukaiCount === 0 ? '🔒' : '📖'}</span>
-                                <span className={`font-black text-sm sm:text-base transition-colors ${textColor}`}>
-                                    Doukai (読解)
-                                </span>
-                                <span className={`text-[10px] mt-1 uppercase font-medium transition-colors ${subTextColor}`}>
-                                    {doukaiCount === 0 ? 'Segera Hadir' : 'Latihan Pemahaman Bacaan'}
-                                </span>
-                            </button>
-                        </div>
-                    </div>
-
                     {/* JLPT Specific Fields */}
-                    {source === 'jlpt' && (
-                        <>
                             {/* Materi Selection */}
                             <div>
                                 <label className={`block text-xs sm:text-sm font-black uppercase tracking-widest mb-3 sm:mb-4 transition-colors ${subTextColor}`}>
@@ -395,159 +302,9 @@ export default function PracticeConfig() {
                                     </button>
                                 </div>
                             </div>
-                        </>
-                    )}
-
-                    {/* Minna Specific Fields */}
-                    {source === 'minna' && (
-                        <>
-                            {/* Pilihan Buku */}
-                            <div>
-                                <label className={`block text-sm font-black uppercase tracking-widest mb-4 transition-colors ${subTextColor}`}>
-                                    Pilih Buku Minna
-                                </label>
-                                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 sm:gap-4">
-                                    <button
-                                        onClick={() => {
-                                            setSelectedBook('1');
-                                            setChapterStart(1);
-                                            setChapterEnd(25);
-                                        }}
-                                        className={`p-3.5 sm:p-4 rounded-2xl border-2 text-xs sm:text-sm font-black transition-all duration-300 transform hover:scale-[1.02] cursor-pointer ${
-                                            selectedBook === '1'
-                                                ? 'bg-gradient-to-br from-blue-50 to-sky-50 dark:from-blue-950/30 dark:to-sky-950/10 border-blue-500 shadow-md'
-                                                : `${cardBg} ${borderStyle} ${textColor}`
-                                        }`}
-                                    >
-                                        Minna 1 (Bab 1-25)
-                                    </button>
-                                    <button
-                                        onClick={() => {
-                                            setSelectedBook('2');
-                                            setChapterStart(26);
-                                            setChapterEnd(50);
-                                        }}
-                                        className={`p-3.5 sm:p-4 rounded-2xl border-2 text-xs sm:text-sm font-black transition-all duration-300 transform hover:scale-[1.02] cursor-pointer ${
-                                            selectedBook === '2'
-                                                ? 'bg-gradient-to-br from-blue-50 to-sky-50 dark:from-blue-950/30 dark:to-sky-950/10 border-blue-500 shadow-md'
-                                                : `${cardBg} ${borderStyle} ${textColor}`
-                                        }`}
-                                    >
-                                        Minna 2 (Bab 26-50)
-                                    </button>
-                                    <button
-                                        onClick={() => {
-                                            setSelectedBook('both');
-                                            setChapterStart(1);
-                                            setChapterEnd(50);
-                                        }}
-                                        className={`p-3.5 sm:p-4 rounded-2xl border-2 text-xs sm:text-sm font-black transition-all duration-300 transform hover:scale-[1.02] cursor-pointer ${
-                                            selectedBook === 'both'
-                                                ? 'bg-gradient-to-br from-blue-50 to-sky-50 dark:from-blue-950/30 dark:to-sky-950/10 border-blue-500 shadow-md'
-                                                : `${cardBg} ${borderStyle} ${textColor}`
-                                        }`}
-                                    >
-                                        Keduanya (Bab 1-50)
-                                    </button>
-                                </div>
-                            </div>
-
-                            {/* Range Bab */}
-                            <div>
-                                <label className={`block text-sm font-black uppercase tracking-widest mb-4 transition-colors ${subTextColor}`}>
-                                    Rentang Bab (Chapter)
-                                </label>
-                                <div className="flex items-center gap-4">
-                                    <div className="flex-1">
-                                        <span className={`block text-xs font-bold mb-1 ${subTextColor}`}>Mulai Bab</span>
-                                        <input
-                                            type="number"
-                                            value={chapterStart}
-                                            onChange={(e) => setChapterStart(Math.max(1, parseInt(e.target.value) || 1))}
-                                            className={`w-full ${inputBg} border-2 ${borderStyle} rounded-xl px-4 py-3 font-bold transition-all outline-none focus:border-blue-500 ${textColor}`}
-                                            min="1"
-                                            max="50"
-                                        />
-                                    </div>
-                                    <span className={`text-xl font-bold mt-5 ${textColor}`}>s/d</span>
-                                    <div className="flex-1">
-                                        <span className={`block text-xs font-bold mb-1 ${subTextColor}`}>Hingga Bab</span>
-                                        <input
-                                            type="number"
-                                            value={chapterEnd}
-                                            onChange={(e) => setChapterEnd(Math.max(1, parseInt(e.target.value) || 1))}
-                                            className={`w-full ${inputBg} border-2 ${borderStyle} rounded-xl px-4 py-3 font-bold transition-all outline-none focus:border-blue-500 ${textColor}`}
-                                            min="1"
-                                            max="50"
-                                        />
-                                    </div>
-                                </div>
-                            </div>
-
-                            {/* Mode Latihan Minna */}
-                            <div>
-                                <label className={`block text-sm font-black uppercase tracking-widest mb-4 transition-colors ${subTextColor}`}>
-                                    Tipe / Mode Latihan Minna
-                                </label>
-                                <div className="grid grid-cols-2 gap-4">
-                                    <button
-                                        onClick={() => setMode('choice')}
-                                        className={`flex items-center gap-4 p-4 rounded-2xl border-2 transition-all duration-300 transform hover:scale-[1.01] ${
-                                            mode === 'choice'
-                                                ? 'bg-gradient-to-br from-blue-50 to-sky-50 dark:from-blue-950/30 dark:to-sky-950/10 border-blue-500 shadow-md'
-                                                : `${cardBg} ${borderStyle} hover:border-blue-300 dark:hover:border-blue-800`
-                                        }`}
-                                    >
-                                        <span className="text-3xl">🔠</span>
-                                        <div className="text-left">
-                                            <span className={`block font-bold transition-colors ${mode === 'choice' ? 'text-blue-700 dark:text-blue-400' : textColor}`}>
-                                                Pilihan Ganda
-                                            </span>
-                                            <span className={`text-[10px] uppercase font-medium transition-colors ${subTextColor}`}>Pilihan Ganda Kalimat</span>
-                                        </div>
-                                    </button>
-
-                                    <button
-                                        onClick={() => setMode('fill_blank')}
-                                        className={`flex items-center gap-4 p-4 rounded-2xl border-2 transition-all duration-300 transform hover:scale-[1.01] ${
-                                            mode === 'fill_blank'
-                                                ? 'bg-gradient-to-br from-blue-50 to-sky-50 dark:from-blue-950/30 dark:to-sky-950/10 border-blue-500 shadow-md'
-                                                : `${cardBg} ${borderStyle} hover:border-blue-300 dark:hover:border-blue-800`
-                                        }`}
-                                    >
-                                        <span className="text-3xl">📝</span>
-                                        <div className="text-left">
-                                            <span className={`block font-bold transition-colors ${mode === 'fill_blank' ? 'text-blue-700 dark:text-blue-400' : textColor}`}>
-                                                Isi Kosong (Fill Blank)
-                                            </span>
-                                            <span className={`text-[10px] uppercase font-medium transition-colors ${subTextColor}`}>Isi partikel/kosakata rumpang</span>
-                                        </div>
-                                    </button>
-
-                                    <button
-                                        onClick={() => setMode('context_match')}
-                                        className={`flex items-center gap-4 p-4 rounded-2xl border-2 transition-all duration-300 transform hover:scale-[1.01] ${
-                                            mode === 'context_match'
-                                                ? 'bg-gradient-to-br from-blue-50 to-sky-50 dark:from-blue-950/30 dark:to-sky-950/10 border-blue-500 shadow-md'
-                                                : `${cardBg} ${borderStyle} hover:border-blue-300 dark:hover:border-blue-800`
-                                        }`}
-                                    >
-                                        <span className="text-3xl">🔄</span>
-                                        <div className="text-left">
-                                            <span className={`block font-bold transition-colors ${mode === 'context_match' ? 'text-blue-700 dark:text-blue-400' : textColor}`}>
-                                                Context Match
-                                            </span>
-                                            <span className={`text-[10px] uppercase font-medium transition-colors ${subTextColor}`}>Cocokkan kalimat dengan arti</span>
-                                        </div>
-                                    </button>
-                                </div>
-                            </div>
-                        </>
-                    )}
-
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-                        {/* JLPT Levels - Hide if not JLPT source */}
-                        {source === 'jlpt' && !unrestrictedOnly && (
+                        {/* JLPT Levels */}
+                        {!unrestrictedOnly && (
                             <div>
                                 <label className={`block text-sm font-black uppercase tracking-widest mb-4 transition-colors ${subTextColor}`}>
                                     JLPT Level
@@ -589,7 +346,7 @@ export default function PracticeConfig() {
                         )}
 
                         {/* Limits and Time */}
-                        <div className={`space-y-6 ${source === 'minna' || (source === 'jlpt' && unrestrictedOnly) ? 'col-span-2' : ''}`}>
+                        <div className={`space-y-6 ${unrestrictedOnly ? 'col-span-2' : ''}`}>
                             <div className="grid grid-cols-1 items-start gap-5 sm:grid-cols-2 sm:gap-6">
                                 <div className="min-w-0">
                                     <label className={`block text-sm font-black uppercase tracking-widest mb-2 transition-colors ${subTextColor}`}>
@@ -638,7 +395,7 @@ export default function PracticeConfig() {
                     </div>
                 </div>
 
-                {source === 'jlpt' && selectionWarning && (
+                {selectionWarning && (
                     <AppMessage variant="warning" className="mt-8">
                         Pilih minimal satu materi latihan sebelum memulai.
                     </AppMessage>

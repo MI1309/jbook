@@ -202,7 +202,13 @@ export function AuthProvider({ children }) {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email }),
             });
-            const data = await res.json();
+            const responseText = await res.text();
+            let data;
+            try {
+                data = JSON.parse(responseText);
+            } catch {
+                throw new Error(`Server gagal memproses reset password (HTTP ${res.status}). Periksa error log backend.`);
+            }
             if (!res.ok) throw new Error(data.detail || data.message || 'Gagal meminta reset password.');
             return { success: true, message: data.message, reset_link: data.reset_link };
         } catch (error) {
