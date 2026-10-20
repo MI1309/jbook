@@ -105,6 +105,29 @@ class PrivateEmailTests(TestCase):
 		self.assertIn("Email storage audit passed.", output.getvalue())
 		self.assertNotIn(self.email, output.getvalue())
 
+	def test_email_storage_audit_can_show_one_selected_ciphertext_and_plaintext(self):
+		output = StringIO()
+		stored = get_user_model().objects.values("email_ciphertext").get(pk=self.user.pk)
+
+		call_command(
+			"audit_email_storage",
+			username="private-email-user",
+			reveal=True,
+			stdout=output,
+		)
+
+		self.assertIn(f"Encrypted email_ciphertext: {stored['email_ciphertext']}", output.getvalue())
+		self.assertIn(f"Decrypted email: {self.email}", output.getvalue())
+		self.assertIn("Integrity check: PASSED", output.getvalue())
+
+	def test_email_storage_audit_requires_explicit_single_user_reveal(self):
+		output = StringIO()
+
+		with self.assertRaises(CommandError):
+			call_command("audit_email_storage", reveal=True, stdout=output)
+
+		self.assertNotIn(self.email, output.getvalue())
+
 	def test_email_storage_audit_fails_for_plaintext_without_exposing_it(self):
 		User = get_user_model()
 		User.objects.filter(pk=self.user.pk).update(email=self.email)

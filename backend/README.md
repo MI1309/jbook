@@ -1,12 +1,5 @@
----
-title: JBook Backend
-emoji: 📚
-colorFrom: red
-colorTo: indigo
-sdk: docker
-app_port: 7860
----
-
 # JBook Backend API
 
-This is the Django backend for the JBook application, running on Hugging Face Spaces with Docker.
+Backend API JBook dibangun dengan Django dan Django Ninja. Deployment production menggunakan PythonAnywhere dengan konfigurasi WSGI manual; panduannya tersedia di [docs/testing_deployment.md](../docs/testing_deployment.md).
+
+Untuk setup lokal, ikuti [docs/backend_setup.md](../docs/backend_setup.md).

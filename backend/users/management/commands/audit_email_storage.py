@@ -17,9 +17,25 @@ class Command(BaseCommand):
             default="default",
             help="Database alias to audit (default: default)",
         )
+        parser.add_argument(
+            "--username",
+            help="Inspect one account by username (requires --reveal)",
+        )
+        parser.add_argument(
+            "--reveal",
+            action="store_true",
+            help="Print the selected account's ciphertext and decrypted email",
+        )
 
     def handle(self, *args, **options):
         database = options["database"]
+        username = options["username"]
+        reveal = options["reveal"]
+        if reveal and not username:
+            raise CommandError("--reveal requires --username to select exactly one account")
+        if username and not reveal:
+            raise CommandError("--username requires --reveal to display email details")
+
         user_model = get_user_model()
         connection = connections[database]
         with connection.cursor() as cursor:
@@ -35,6 +51,37 @@ class Command(BaseCommand):
                 "Email privacy schema is not installed on this database. "
                 "Apply users migration 0004_private_email_storage, then rerun the audit."
             )
+
+        if username:
+            record = user_model.objects.using(database).filter(username=username).values(
+                "email", "email_ciphertext", "email_lookup_hash"
+            ).first()
+            if record is None:
+                raise CommandError("No account found for that username.")
+
+            try:
+                decrypted_email = decrypt_email(record["email_ciphertext"])
+            except ImproperlyConfigured as exc:
+                raise CommandError(
+                    "Could not decrypt this account's email; verify EMAIL_ENCRYPTION_KEY."
+                ) from exc
+
+            expected_hash = email_lookup_digest(decrypted_email)
+            verified = (
+                bool(decrypted_email)
+                and record["email"].endswith("@privacy.invalid")
+                and hmac.compare_digest(expected_hash or "", record["email_lookup_hash"] or "")
+                and normalize_email(decrypted_email) == decrypted_email
+            )
+
+            self.stdout.write(f"Username: {username}")
+            self.stdout.write(f"Database email field: {record['email']}")
+            self.stdout.write(f"Encrypted email_ciphertext: {record['email_ciphertext']}")
+            self.stdout.write(f"Decrypted email: {decrypted_email}")
+            self.stdout.write(f"Integrity check: {'PASSED' if verified else 'FAILED'}")
+            if not verified:
+                raise CommandError("Email data failed verification.")
+            return
 
         rows = user_model.objects.using(database).values_list(
             "email", "email_ciphertext", "email_lookup_hash"
