@@ -2,14 +2,29 @@ import { API_URL } from '@/lib/api';
 
 const BASE_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://jbook-five.vercel.app';
 
-// Fetch helper via direct fetch for kanji/bunpo/kotoba list
+// Fetch every page so large vocab and grammar catalogues are not truncated.
 async function fetchList(endpoint, limit = 500) {
   try {
-    const res = await fetch(`${API_URL}${endpoint}?limit=${limit}`, { next: { revalidate: 86400 } });
-    if (!res.ok) return [];
-    const data = await res.json();
-    return Array.isArray(data) ? data : (data?.items || []);
-  } catch (e) {
+    const firstRes = await fetch(`${API_URL}${endpoint}?limit=${limit}&page=1`, { next: { revalidate: 86400 } });
+    if (!firstRes.ok) return [];
+
+    const firstPage = await firstRes.json();
+    if (Array.isArray(firstPage)) return firstPage;
+
+    const items = [...(firstPage?.items || [])];
+    const pages = Math.max(1, Number(firstPage?.pages) || 1);
+
+    for (let page = 2; page <= pages; page += 1) {
+      const res = await fetch(`${API_URL}${endpoint}?limit=${limit}&page=${page}`, { next: { revalidate: 86400 } });
+      if (!res.ok) return [];
+
+      const data = await res.json();
+      if (Array.isArray(data)) return [...items, ...data];
+      items.push(...(data?.items || []));
+    }
+
+    return items;
+  } catch {
     return [];
   }
 }
@@ -20,7 +35,7 @@ async function fetchAllKanji() {
     if (!res.ok) return [];
     const data = await res.json();
     return Array.isArray(data) ? data : [];
-  } catch (e) {
+  } catch {
     return [];
   }
 }
@@ -92,7 +107,7 @@ export default async function sitemap() {
   }));
 
   // Bunpo detail pages
-  const bunpoPages = bunpos.slice(0, 300).map((b) => ({
+  const bunpoPages = bunpos.map((b) => ({
     url: `${BASE_URL}/bunpo/${b.id}`,
     lastModified: today,
     changeFrequency: 'yearly',
@@ -100,7 +115,7 @@ export default async function sitemap() {
   }));
 
   // Kotoba detail pages
-  const kotobaPages = kotobas.slice(0, 300).map((v) => ({
+  const kotobaPages = kotobas.map((v) => ({
     url: `${BASE_URL}/kotoba/${v.id}`,
     lastModified: today,
     changeFrequency: 'yearly',
