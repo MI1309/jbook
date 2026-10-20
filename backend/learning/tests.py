@@ -1,6 +1,13 @@
-from django.test import TestCase
+import json
+from datetime import timedelta
 
-from content.models import CurriculumLevel, CurriculumUnit, FeatureSetting, Grammar, Particle, ReferenceBook
+from django.contrib.auth import get_user_model
+from django.test import TestCase, override_settings
+from django.utils import timezone
+from ninja_jwt.tokens import RefreshToken
+
+from content.models import CurriculumLevel, CurriculumUnit, FeatureSetting, Grammar, Particle, ReferenceBook, Vocab
+from .models import StudyLog, UserVocabulary
 
 # Create your tests here.
 
@@ -63,3 +70,124 @@ class CurriculumPracticeTests(TestCase):
 
 		self.assertEqual(response.status_code, 200)
 		self.assertEqual([question['character'] for question in response.json()], ['Assigned'])
+
+
+@override_settings(EMAIL_ENCRYPTION_KEY="test-email-encryption-key")
+class VocabularySrsApiTests(TestCase):
+	def setUp(self):
+		self.user = get_user_model().objects.create_user(
+			username="srs-user",
+			email="srs@example.com",
+			password="test-password-123",
+		)
+		self.other_user = get_user_model().objects.create_user(
+			username="other-srs-user",
+			email="other-srs@example.com",
+			password="test-password-123",
+		)
+		access_token = str(RefreshToken.for_user(self.user).access_token)
+		self.auth_headers = {"HTTP_AUTHORIZATION": f"Bearer {access_token}"}
+		self.vocabulary = Vocab.objects.create(
+			word="食べる",
+			reading="たべる",
+			meaning="makan",
+			jlpt_level=5,
+			examples=[{"sentence": "ご飯を食べる", "meaning": "Makan nasi"}],
+		)
+
+	def test_vocabulary_search_filters_by_level_and_term(self):
+		Vocab.objects.create(word="水", reading="みず", meaning="air", jlpt_level=4)
+		response = self.client.get(
+			"/api/learning/vocabulary?jlpt_level=5&search=食べる",
+			secure=True,
+		)
+
+		self.assertEqual(response.status_code, 200)
+		self.assertEqual([item["word"] for item in response.json()], ["食べる"])
+
+	def test_user_can_add_review_and_view_own_vocabulary(self):
+		add_response = self.client.post(
+			"/api/learning/my-vocabulary",
+			data=json.dumps({"vocabulary_id": str(self.vocabulary.id)}),
+			content_type="application/json",
+			secure=True,
+			**self.auth_headers,
+		)
+
+		self.assertEqual(add_response.status_code, 200)
+		entry_id = add_response.json()["id"]
+		self.assertEqual(add_response.json()["vocabulary"]["word"], "食べる")
+		self.assertEqual(add_response.json()["status"], UserVocabulary.Status.NEW)
+
+		review_response = self.client.post(
+			f"/api/learning/my-vocabulary/{entry_id}/review",
+			data=json.dumps({"correct": True}),
+			content_type="application/json",
+			secure=True,
+			**self.auth_headers,
+		)
+		self.assertEqual(review_response.status_code, 200)
+		self.assertEqual(review_response.json()["box_level"], 1)
+		self.assertEqual(review_response.json()["times_reviewed"], 1)
+		self.assertEqual(
+			review_response.json()["next_review_date"],
+			(timezone.localdate() + timedelta(days=1)).isoformat(),
+		)
+
+		list_response = self.client.get(
+			"/api/learning/my-vocabulary",
+			secure=True,
+			**self.auth_headers,
+		)
+		self.assertEqual(list_response.status_code, 200)
+		self.assertEqual(len(list_response.json()), 1)
+		self.assertEqual(StudyLog.objects.filter(user=self.user).count(), 2)
+
+	def test_collection_and_dashboard_require_authentication(self):
+		collection_response = self.client.get("/api/learning/my-vocabulary", secure=True)
+		stats_response = self.client.get("/api/learning/dashboard/stats", secure=True)
+
+		self.assertEqual(collection_response.status_code, 401)
+		self.assertEqual(stats_response.status_code, 401)
+
+	def test_user_cannot_read_or_update_another_users_collection_entry(self):
+		entry = UserVocabulary.objects.create(user=self.other_user, vocabulary=self.vocabulary)
+		response = self.client.patch(
+			f"/api/learning/my-vocabulary/{entry.id}",
+			data=json.dumps({"status": "mastered"}),
+			content_type="application/json",
+			secure=True,
+			**self.auth_headers,
+		)
+
+		self.assertEqual(response.status_code, 404)
+		entry.refresh_from_db()
+		self.assertEqual(entry.status, UserVocabulary.Status.NEW)
+
+	def test_dashboard_returns_user_scoped_totals_and_thirty_day_activity(self):
+		UserVocabulary.objects.create(user=self.user, vocabulary=self.vocabulary)
+		StudyLog.objects.create(
+			user=self.user,
+			activity_type=StudyLog.ActivityType.VOCABULARY_REVIEW,
+			items_studied=3,
+		)
+		other_vocab = Vocab.objects.create(
+			word="水", reading="みず", meaning="air", jlpt_level=5
+		)
+		UserVocabulary.objects.create(
+			user=self.other_user,
+			vocabulary=other_vocab,
+			status=UserVocabulary.Status.MASTERED,
+		)
+
+		response = self.client.get(
+			"/api/learning/dashboard/stats",
+			secure=True,
+			**self.auth_headers,
+		)
+
+		self.assertEqual(response.status_code, 200)
+		self.assertEqual(response.json()["total_saved"], 1)
+		self.assertEqual(response.json()["mastered"], 0)
+		self.assertEqual(len(response.json()["daily_activity"]), 30)
+		self.assertEqual(response.json()["daily_activity"][-1]["items_studied"], 3)

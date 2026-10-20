@@ -934,3 +934,8 @@ def import_practice_data(request, payload: ImportDataSchema):
             "progress_updated": 0,
             "message": f"Proses impor selesai. Data yang berhasil diimpor: 0. Detail error (untuk debug): {str(e)}"
         }
+
+
+from .views import router as vocabulary_router
+
+router.add_router("", vocabulary_router)

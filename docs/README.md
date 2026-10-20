@@ -6,6 +6,8 @@ Untuk inventaris fitur lengkap backend, web, dan mobile, lihat [Inventaris Fitur
 
 Untuk menjalankan Django backend secara lokal, ikuti [Panduan Setup Backend](backend_setup.md), termasuk perintah Windows CMD.
 
+Untuk alur pengembangan menyeluruh, arsitektur, SRS flashcard, testing, dan deployment, lihat [Panduan Pengembangan JBook](dev.md).
+
 ## Base URL
 Semua endpoint di bawah ini memiliki prefix:
 `https://[domain-anda]/api`

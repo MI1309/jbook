@@ -28,6 +28,75 @@ class UserProgress(models.Model):
             models.Index(fields=["content_type", "object_id"]),
         ]
 
+
+class UserVocabulary(models.Model):
+    class Status(models.TextChoices):
+        NEW = "new", "New"
+        LEARNING = "learning", "Learning"
+        MASTERED = "mastered", "Mastered"
+
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="saved_vocabularies",
+    )
+    vocabulary = models.ForeignKey(
+        "content.Vocab",
+        on_delete=models.CASCADE,
+        related_name="saved_by_users",
+    )
+    status = models.CharField(max_length=10, choices=Status.choices, default=Status.NEW)
+    box_level = models.PositiveSmallIntegerField(default=0)
+    next_review_date = models.DateField(null=True, blank=True)
+    times_reviewed = models.PositiveIntegerField(default=0)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=["user", "vocabulary"],
+                name="unique_user_saved_vocabulary",
+            ),
+            models.CheckConstraint(
+                condition=models.Q(box_level__lte=5),
+                name="user_vocabulary_box_level_lte_5",
+            ),
+        ]
+        ordering = ["next_review_date", "created_at"]
+        indexes = [models.Index(fields=["user", "next_review_date"]) ]
+
+    def __str__(self):
+        return f"{self.user_id}: {self.vocabulary_id} ({self.status})"
+
+
+class StudyLog(models.Model):
+    class ActivityType(models.TextChoices):
+        VOCABULARY_ADDED = "vocabulary_added", "Vocabulary added"
+        VOCABULARY_REVIEW = "vocabulary_review", "Vocabulary review"
+
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="study_logs",
+    )
+    activity_type = models.CharField(max_length=32, choices=ActivityType.choices)
+    items_studied = models.PositiveIntegerField(default=0)
+    date = models.DateField(default=timezone.localdate)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=["user", "activity_type", "date"],
+                name="unique_user_study_activity_per_day",
+            ),
+        ]
+        ordering = ["-date", "activity_type"]
+        indexes = [models.Index(fields=["user", "date"]) ]
+
+    def __str__(self):
+        return f"{self.user_id}: {self.activity_type} on {self.date}"
+
 class QuizAttempt(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)

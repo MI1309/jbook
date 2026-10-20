@@ -1,75 +1,173 @@
-from rest_framework import viewsets, status
-from rest_framework.decorators import action
-from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated
-from django.db.models import Count, Q
-from .models import QuizAttempt
-from content.models import Kanji
-import random
+from datetime import timedelta
+from typing import List, Optional
 
-class PracticeKanjiViewSet(viewsets.ViewSet):
-    permission_classes = [IsAuthenticated]
+from django.db import transaction
+from django.db.models import F, Q, Sum
+from django.shortcuts import get_object_or_404
+from django.utils import timezone
+from ninja import Router
+from ninja.errors import HttpError
+from ninja_jwt.authentication import JWTAuth
 
-    @action(detail=False, methods=['get'])
-    def generate(self, request):
-        # Get 10 random Kanji
-        # In a real app, this should specific logic (e.g. SRS based)
-        items = list(Kanji.objects.all())
-        if len(items) < 4:
-             return Response({"error": "Not enough Kanji content"}, status=400)
-        
-        selected_kanji = random.sample(items, min(len(items), 5)) # Take 5 for now
-        
-        questions = []
-        for kanji in selected_kanji:
-            # Get 3 distractors
-            distractors = random.sample([k for k in items if k.id != kanji.id], 3)
-            options = [
-                {"text": kanji.meaning, "is_correct": True},
-                *[{"text": d.meaning, "is_correct": False} for d in distractors]
-            ]
-            random.shuffle(options)
-            
-            questions.append({
-                "kanji_id": kanji.id,
-                "character": kanji.character,
-                "options": options
-            })
-            
-        return Response(questions)
+from content.models import FeatureSetting, Vocab
+from .models import StudyLog, UserVocabulary
+from .serializers import (
+    UserDashboardStatsSchema,
+    UserVocabularyCreateSchema,
+    UserVocabularySchema,
+    UserVocabularyUpdateSchema,
+    VocabularyReviewSchema,
+    VocabularySchema,
+)
 
-    @action(detail=False, methods=['post'])
-    def submit(self, request):
-        user = request.user
-        results = request.data.get('results', [])
-        
-        attempts = []
-        for res in results:
-            attempts.append(QuizAttempt(
-                user=user,
-                kanji_id=res['kanji_id'],
-                is_correct=res['is_correct'],
-                answer_given=res.get('answer_given')
-            ))
-            
-        QuizAttempt.objects.bulk_create(attempts)
-        return Response({"status": "saved", "count": len(attempts)})
+router = Router()
 
-    @action(detail=False, methods=['get'])
-    def analytics(self, request):
-        user = request.user
-        qs = QuizAttempt.objects.filter(user=user)
-        
-        total_attempts = qs.count()
-        correct_count = qs.filter(is_correct=True).count()
-        accuracy = (correct_count / total_attempts * 100) if total_attempts > 0 else 0
-        
-        # Top 5 mistaken kanji
-        wrong_stats = qs.filter(is_correct=False).values('kanji__character')\
-            .annotate(count=Count('id')).order_by('-count')[:5]
-            
-        return Response({
-            "total_attempts": total_attempts,
-            "accuracy": round(accuracy, 1),
-            "wrong_stats": wrong_stats
-        })
+
+def _public_vocabulary_queryset():
+    setting = FeatureSetting.objects.filter(key="vocab_visibility").only("value").first()
+    value = setting.value if setting and isinstance(setting.value, dict) else {}
+    disabled_levels = [
+        level for level in value.get("disabled_levels", [])
+        if isinstance(level, int) and level in range(1, 6)
+    ]
+    return Vocab.objects.exclude(jlpt_level__in=disabled_levels)
+
+
+def _record_activity(user, activity_type, count=1):
+    today = timezone.localdate()
+    log, created = StudyLog.objects.get_or_create(
+        user=user,
+        activity_type=activity_type,
+        date=today,
+        defaults={"items_studied": count},
+    )
+    if not created:
+        StudyLog.objects.filter(pk=log.pk).update(items_studied=F("items_studied") + count)
+
+
+@router.get("/vocabulary", response=List[VocabularySchema])
+def list_vocabulary(request, jlpt_level: Optional[int] = None, search: Optional[str] = None):
+    queryset = _public_vocabulary_queryset().order_by("jlpt_level", "word")
+    if jlpt_level is not None:
+        if jlpt_level not in range(1, 6):
+            raise HttpError(422, "jlpt_level harus bernilai 1 sampai 5")
+        queryset = queryset.filter(jlpt_level=jlpt_level)
+    if search:
+        term = search.strip()[:100]
+        if term:
+            queryset = queryset.filter(
+                Q(word__icontains=term)
+                | Q(reading__icontains=term)
+                | Q(meaning__icontains=term)
+            )
+    return queryset
+
+
+@router.get("/my-vocabulary", response=List[UserVocabularySchema], auth=JWTAuth())
+def list_user_vocabulary(request):
+    return UserVocabulary.objects.filter(user=request.auth).select_related("vocabulary")
+
+
+@router.post("/my-vocabulary", response=UserVocabularySchema, auth=JWTAuth())
+def add_user_vocabulary(request, payload: UserVocabularyCreateSchema):
+    vocabulary = get_object_or_404(_public_vocabulary_queryset(), id=payload.vocabulary_id)
+    with transaction.atomic():
+        entry, created = UserVocabulary.objects.get_or_create(
+            user=request.auth,
+            vocabulary=vocabulary,
+        )
+        if not created:
+            raise HttpError(409, "Kosakata sudah ada di koleksi")
+        _record_activity(request.auth, StudyLog.ActivityType.VOCABULARY_ADDED)
+    return entry
+
+
+@router.patch("/my-vocabulary/{entry_id}", response=UserVocabularySchema, auth=JWTAuth())
+def update_user_vocabulary(request, entry_id: int, payload: UserVocabularyUpdateSchema):
+    entry = get_object_or_404(
+        UserVocabulary.objects.select_related("vocabulary"),
+        id=entry_id,
+        user=request.auth,
+    )
+    updates = payload.model_dump(exclude_unset=True)
+    for field, value in updates.items():
+        setattr(entry, field, value)
+
+    if updates.get("status") == UserVocabulary.Status.MASTERED:
+        entry.box_level = 5
+    elif updates.get("box_level") == 5:
+        entry.status = UserVocabulary.Status.MASTERED
+
+    entry.save()
+    return entry
+
+
+@router.delete("/my-vocabulary/{entry_id}", auth=JWTAuth())
+def delete_user_vocabulary(request, entry_id: int):
+    entry = get_object_or_404(UserVocabulary, id=entry_id, user=request.auth)
+    entry.delete()
+    return {"deleted": True}
+
+
+@router.post(
+    "/my-vocabulary/{entry_id}/review",
+    response=UserVocabularySchema,
+    auth=JWTAuth(),
+)
+def review_user_vocabulary(request, entry_id: int, payload: VocabularyReviewSchema):
+    intervals_days = {1: 1, 2: 3, 3: 7, 4: 14, 5: 30}
+    with transaction.atomic():
+        entry = get_object_or_404(
+            UserVocabulary.objects.select_for_update().select_related("vocabulary"),
+            id=entry_id,
+            user=request.auth,
+        )
+        entry.times_reviewed += 1
+        if payload.correct:
+            entry.box_level = min(entry.box_level + 1, 5)
+            entry.status = (
+                UserVocabulary.Status.MASTERED
+                if entry.box_level == 5
+                else UserVocabulary.Status.LEARNING
+            )
+            entry.next_review_date = timezone.localdate() + timedelta(
+                days=intervals_days[entry.box_level]
+            )
+        else:
+            entry.box_level = 0
+            entry.status = UserVocabulary.Status.LEARNING
+            entry.next_review_date = timezone.localdate() + timedelta(days=1)
+        entry.save()
+        _record_activity(request.auth, StudyLog.ActivityType.VOCABULARY_REVIEW)
+    return entry
+
+
+@router.get("/dashboard/stats", response=UserDashboardStatsSchema, auth=JWTAuth())
+def user_dashboard_stats(request):
+    user_vocab = UserVocabulary.objects.filter(user=request.auth)
+    today = timezone.localdate()
+    start_date = today - timedelta(days=29)
+    logs = StudyLog.objects.filter(user=request.auth, date__gte=start_date, date__lte=today)
+    activity_by_date = {
+        row["date"]: row["items_studied"]
+        for row in logs.values("date").annotate(items_studied=Sum("items_studied"))
+    }
+    daily_activity = [
+        {
+            "date": start_date + timedelta(days=offset),
+            "items_studied": activity_by_date.get(start_date + timedelta(days=offset), 0),
+        }
+        for offset in range(30)
+    ]
+    activity_breakdown = logs.values("activity_type").annotate(
+        items_studied=Sum("items_studied")
+    ).order_by("activity_type")
+
+    return {
+        "total_saved": user_vocab.count(),
+        "mastered": user_vocab.filter(status=UserVocabulary.Status.MASTERED).count(),
+        "learning": user_vocab.filter(status=UserVocabulary.Status.LEARNING).count(),
+        "new": user_vocab.filter(status=UserVocabulary.Status.NEW).count(),
+        "daily_activity": daily_activity,
+        "activity_breakdown": list(activity_breakdown),
+    }
