@@ -92,8 +92,9 @@ export default function KotobaAdmin() {
         if (typeof navigator !== 'undefined' && !navigator.onLine) {
             const cached = cacheGet(cacheKey);
             if (cached) {
-                setVocabs(Array.isArray(cached) ? cached : cached.items);
-                if (!Array.isArray(cached)) setPagination(cached);
+                const result = normalizeKotobaPage(cached, currentPage, 50);
+                setVocabs(result.items);
+                setPagination(result.pagination);
                 setLoading(false);
                 return;
             }
@@ -113,12 +114,10 @@ export default function KotobaAdmin() {
             
             if (res.ok) {
                 const data = await res.json();
-                const fetchedItems = Array.isArray(data) ? data : (data.items || []);
-                setVocabs(fetchedItems);
-                if (!Array.isArray(data)) {
-                    setPagination(data);
-                    if (data.page !== currentPage) setCurrentPage(data.page);
-                }
+                const result = normalizeKotobaPage(data, currentPage, 50);
+                setVocabs(result.items);
+                setPagination(result.pagination);
+                if (result.pagination.page !== currentPage) setCurrentPage(result.pagination.page);
                 // Save to offline cache
                 cacheSet(cacheKey, data);
             } else {
@@ -129,7 +128,12 @@ export default function KotobaAdmin() {
                 } else if (res.status === 500) {
                     // Try cache as fallback on 500
                     const cached = cacheGet(cacheKey);
-                    if (cached) { setVocabs(Array.isArray(cached) ? cached : cached.items); return; }
+                    if (cached) {
+                        const result = normalizeKotobaPage(cached, currentPage, 50);
+                        setVocabs(result.items);
+                        setPagination(result.pagination);
+                        return;
+                    }
                     toast.error(`Server Error 500. Silakan pastikan server PythonAnywhere sudah diperbarui.`);
                 } else {
                     toast.error(`Gagal mengambil data: ${res.status} ${res.statusText}`);
@@ -140,7 +144,9 @@ export default function KotobaAdmin() {
             // On network error, try cache
             const cached = cacheGet(cacheKey);
             if (cached) {
-                setVocabs(Array.isArray(cached) ? cached : cached.items);
+                const result = normalizeKotobaPage(cached, currentPage, 50);
+                setVocabs(result.items);
+                setPagination(result.pagination);
                 return;
             }
             toast.error(`Terjadi kesalahan jaringan: ${error.message}`);
@@ -586,4 +592,22 @@ export default function KotobaAdmin() {
             </div>
         </div>
     );
+}
+
+function normalizeKotobaPage(data, page, limit) {
+    if (!Array.isArray(data)) {
+        return {
+            items: data.items || [],
+            pagination: data,
+        };
+    }
+
+    const total = data.length;
+    const pages = Math.max(1, Math.ceil(total / limit));
+    const safePage = Math.min(Math.max(page, 1), pages);
+    const start = (safePage - 1) * limit;
+    return {
+        items: data.slice(start, start + limit),
+        pagination: { total, pages, page: safePage, limit },
+    };
 }

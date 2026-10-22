@@ -88,8 +88,9 @@ export default function BunpoAdmin() {
         if (typeof navigator !== 'undefined' && !navigator.onLine) {
             const cached = cacheGet(cacheKey);
             if (cached) {
-                setBunpos(Array.isArray(cached) ? cached : cached.items);
-                if (!Array.isArray(cached)) setPagination(cached);
+                const result = normalizeBunpoPage(cached, page, LIMIT);
+                setBunpos(result.items);
+                setPagination(result.pagination);
                 setLoading(false);
                 return;
             }
@@ -108,22 +109,30 @@ export default function BunpoAdmin() {
             const res = await fetch(url, { headers: { 'Authorization': `Bearer ${token}` } });
             if (res.ok) {
                 const data = await res.json();
-                const items = Array.isArray(data) ? data : (data.items || []);
-                setBunpos(items);
-                if (!Array.isArray(data)) {
-                    setPagination(data);
-                    if (data.page !== page) setPage(data.page);
-                }
+                const result = normalizeBunpoPage(data, page, LIMIT);
+                setBunpos(result.items);
+                setPagination(result.pagination);
+                if (result.pagination.page !== page) setPage(result.pagination.page);
                 cacheSet(cacheKey, data);
             } else {
                 const cached = cacheGet(cacheKey);
-                if (cached) { setBunpos(Array.isArray(cached) ? cached : cached.items); return; }
+                if (cached) {
+                    const result = normalizeBunpoPage(cached, page, LIMIT);
+                    setBunpos(result.items);
+                    setPagination(result.pagination);
+                    return;
+                }
                 toast.error(`Gagal mengambil data Bunpo: ${res.status} ${res.statusText}`);
             }
         } catch (error) {
             console.error("Failed to fetch bunpos", error);
             const cached = cacheGet(cacheKey);
-            if (cached) { setBunpos(Array.isArray(cached) ? cached : cached.items); return; }
+            if (cached) {
+                const result = normalizeBunpoPage(cached, page, LIMIT);
+                setBunpos(result.items);
+                setPagination(result.pagination);
+                return;
+            }
             toast.error(`Terjadi kesalahan jaringan.`);
         } finally {
             setLoading(false);
@@ -440,4 +449,22 @@ export default function BunpoAdmin() {
             />
         </div>
     );
+}
+
+function normalizeBunpoPage(data, page, limit) {
+    if (!Array.isArray(data)) {
+        return {
+            items: data.items || [],
+            pagination: data,
+        };
+    }
+
+    const total = data.length;
+    const pages = Math.max(1, Math.ceil(total / limit));
+    const safePage = Math.min(Math.max(page, 1), pages);
+    const start = (safePage - 1) * limit;
+    return {
+        items: data.slice(start, start + limit),
+        pagination: { total, pages, page: safePage, limit },
+    };
 }

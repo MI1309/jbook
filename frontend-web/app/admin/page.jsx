@@ -10,6 +10,7 @@ import Link from 'next/link';
 export default function AdminDashboard() {
     const [isSearching, setIsSearching] = useState(false);
     const [stats, setStats] = useState({ kanji_count: 0, bunpo_count: 0, blog_count: 0 });
+        const [stats, setStats] = useState({ kanji_count: 0, bunpo_count: 0 });
     const [searchQuery, setSearchQuery] = useState('');
     const [searchResults, setSearchResults] = useState([]);
     const router = useRouter();
@@ -102,11 +103,10 @@ export default function AdminDashboard() {
             </div>
 
             {/* Stats Grid - Vibrant & High Contrast */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {[
                     { label: 'Total Kanji', count: stats.kanji_count, icon: '🉐', color: 'from-blue-600 to-indigo-700', shadow: 'shadow-blue-500/20' },
                     { label: 'Total Bunpo', count: stats.bunpo_count, icon: '📚', color: 'from-red-600 to-rose-700', shadow: 'shadow-red-500/20' },
-                    { label: 'Total Blog', count: stats.blog_count, icon: '✍️', color: 'from-amber-500 to-orange-600', shadow: 'shadow-amber-500/20' }
                 ].map((stat, idx) => (
                     <div 
                         key={idx}
