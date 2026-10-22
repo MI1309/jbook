@@ -10,6 +10,7 @@ import { cacheGet, cacheSet } from '@/lib/cache-store';
 import { appToast as toast } from '@/components/common/AppMessage';
 import ConfirmationModal from '@/components/common/ConfirmationModal';
 import Pagination from '@/components/common/Pagination';
+import { useDebounce } from 'use-debounce';
 
 export default function KotobaAdmin() {
     const { user } = useAuth();
@@ -17,12 +18,11 @@ export default function KotobaAdmin() {
     const [pagination, setPagination] = useState({ total: 0, page: 1, pages: 1 });
     const [loading, setLoading] = useState(true);
     const [search, setSearch] = useState('');
+    const [debouncedSearch] = useDebounce(search, 400);
     const [level, setLevel] = useState('');
     const [currentPage, setCurrentPage] = useState(1);
-    const [serverLevel, setServerLevel] = useState(null);
     const router = useRouter();
 
-    const [allVocabs, setAllVocabs] = useState([]);
     const [duplicates, setDuplicates] = useState([]);
     const [bulkDeleting, setBulkDeleting] = useState(false);
     const [bulkDeleteProgress, setBulkDeleteProgress] = useState(0);
@@ -35,10 +35,13 @@ export default function KotobaAdmin() {
         setCurrentPage(1);
     }, [search, level]);
 
-    useEffect(() => { 
-        fetchAllVocabs();
+    useEffect(() => {
         fetchVisibility();
     }, []);
+
+    useEffect(() => {
+        fetchVocabs();
+    }, [debouncedSearch, level, currentPage]);
 
     const fetchVisibility = async () => {
         try {
@@ -81,18 +84,16 @@ export default function KotobaAdmin() {
         }
     };
 
-    useEffect(() => {
-        applyFiltersAndPagination();
-    }, [allVocabs, search, level, currentPage]);
-
-    const fetchAllVocabs = async () => {
+    const fetchVocabs = async () => {
         setLoading(true);
+        const cacheKey = `admin-vocab-${level || 'all'}-${debouncedSearch || 'all'}-${currentPage}`;
 
         // If offline, try cache first
         if (typeof navigator !== 'undefined' && !navigator.onLine) {
-            const cached = cacheGet('admin-vocab-all');
+            const cached = cacheGet(cacheKey);
             if (cached) {
-                setAllVocabs(cached);
+                setVocabs(Array.isArray(cached) ? cached : cached.items);
+                if (!Array.isArray(cached)) setPagination(cached);
                 setLoading(false);
                 return;
             }
@@ -103,17 +104,23 @@ export default function KotobaAdmin() {
 
         try {
             const token = Cookies.get('access_token');
-            const res = await fetch(`${API_URL}/admin/vocab?limit=10000`, { 
+            const queryParams = new URLSearchParams({ page: String(currentPage), limit: '50' });
+            if (level) queryParams.append('level', level);
+            if (debouncedSearch) queryParams.append('search', debouncedSearch);
+            const res = await fetch(`${API_URL}/admin/vocab?${queryParams.toString()}`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             
             if (res.ok) {
                 const data = await res.json();
                 const fetchedItems = Array.isArray(data) ? data : (data.items || []);
-                setAllVocabs(fetchedItems);
-                setServerLevel(data.debug_level || null);
+                setVocabs(fetchedItems);
+                if (!Array.isArray(data)) {
+                    setPagination(data);
+                    if (data.page !== currentPage) setCurrentPage(data.page);
+                }
                 // Save to offline cache
-                cacheSet('admin-vocab-all', fetchedItems);
+                cacheSet(cacheKey, data);
             } else {
                 const errorData = await res.json().catch(() => ({}));
                 console.error("Fetch failed:", res.status, errorData);
@@ -121,8 +128,8 @@ export default function KotobaAdmin() {
                     toast.error("Admin access denied. Please login with admin account (imronm1309@gmail.com)");
                 } else if (res.status === 500) {
                     // Try cache as fallback on 500
-                    const cached = cacheGet('admin-vocab-all');
-                    if (cached) { setAllVocabs(cached); return; }
+                    const cached = cacheGet(cacheKey);
+                    if (cached) { setVocabs(Array.isArray(cached) ? cached : cached.items); return; }
                     toast.error(`Server Error 500. Silakan pastikan server PythonAnywhere sudah diperbarui.`);
                 } else {
                     toast.error(`Gagal mengambil data: ${res.status} ${res.statusText}`);
@@ -131,51 +138,15 @@ export default function KotobaAdmin() {
         } catch (error) {
             console.error("Failed to fetch vocabs", error);
             // On network error, try cache
-            const cached = cacheGet('admin-vocab-all');
+            const cached = cacheGet(cacheKey);
             if (cached) {
-                setAllVocabs(cached);
+                setVocabs(Array.isArray(cached) ? cached : cached.items);
                 return;
             }
             toast.error(`Terjadi kesalahan jaringan: ${error.message}`);
         } finally {
             setLoading(false);
         }
-    };
-
-    const applyFiltersAndPagination = () => {
-        const pageSize = 50;
-        let filtered = [...allVocabs];
-
-        if (level) {
-            filtered = filtered.filter(v => v.jlpt_level == level);
-        }
-
-        if (search) {
-            const searchLower = search.toLowerCase();
-            filtered = filtered.filter(v => 
-                (v.word && v.word.toLowerCase().includes(searchLower)) ||
-                (v.reading && v.reading.toLowerCase().includes(searchLower)) ||
-                (v.meaning && v.meaning.toLowerCase().includes(searchLower))
-            );
-        }
-
-        const totalItems = filtered.length;
-        const totalPages = Math.max(1, Math.ceil(totalItems / pageSize));
-        const safePage = Math.min(currentPage, totalPages);
-        
-        if (safePage !== currentPage) {
-            setCurrentPage(safePage);
-        }
-
-        const offset = (safePage - 1) * pageSize;
-        const paginatedItems = filtered.slice(offset, offset + pageSize);
-
-        setVocabs(paginatedItems);
-        setPagination({
-            total: totalItems,
-            page: safePage,
-            pages: totalPages
-        });
     };
 
     const handleDelete = (e, id) => {
@@ -193,7 +164,7 @@ export default function KotobaAdmin() {
             });
             if (res.ok) {
                 toast.success('Vocabulary deleted successfully');
-                fetchAllVocabs();
+                fetchVocabs();
             } else {
                 toast.error('Failed to delete');
             }
@@ -236,19 +207,15 @@ export default function KotobaAdmin() {
     };
 
     const checkDuplicates = () => {
-        const map = {};
-        allVocabs.forEach(v => {
-            const key = `${v.word}||${v.meaning}`;
-            if (!map[key]) map[key] = [];
-            map[key].push(v);
-        });
-        const dups = Object.entries(map).filter(([, arr]) => arr.length > 1).map(([k, arr]) => ({ key: k, items: arr }));
-        setDuplicates(dups);
-        if (!dups || dups.length === 0) {
-            toast.info('No duplicate kotoba found');
-        } else {
-            toast.info(`${dups.length} duplicate groups found`);
-        }
+        const token = Cookies.get('access_token');
+        fetch(`${API_URL}/admin/kotoba/duplicates`, {
+            headers: { 'Authorization': `Bearer ${token}` }
+        }).then(async (res) => {
+            if (!res.ok) throw new Error('Gagal memeriksa duplikat');
+            const data = await res.json();
+            setDuplicates(data);
+            toast.info(data.length ? `${data.length} grup duplikat ditemukan` : 'Tidak ada kotoba duplikat');
+        }).catch((error) => toast.error(error.message || 'Gagal memeriksa duplikat'));
     };
 
     const levelColor = (level) => {
@@ -515,7 +482,7 @@ export default function KotobaAdmin() {
                                                     } finally {
                                                         setBulkDeleting(false);
                                                         setBulkDeleteProgress(0);
-                                                        fetchAllVocabs();
+                                                        fetchVocabs();
                                                         setDuplicates([]);
                                                     }
                                                 }}
@@ -606,7 +573,7 @@ export default function KotobaAdmin() {
                                 const txt = await del.text().catch(() => del.statusText);
                                 toast.error(`Delete failed: ${del.status} ${txt}`);
                             }
-                            fetchAllVocabs();
+                            fetchVocabs();
                             setDuplicates([]);
                         } catch (e) {
                             console.error(e);

@@ -15,19 +15,17 @@ import Pagination from '@/components/common/Pagination';
 export default function BunpoAdmin() {
     const { user } = useAuth();
     const [bunpos, setBunpos] = useState([]);
+    const [pagination, setPagination] = useState({ total: 0, page: 1, pages: 1 });
     const [loading, setLoading] = useState(true);
     const [filterLevel, setFilterLevel] = useState('');
     const [filterChapter, setFilterChapter] = useState('');
     const [search, setSearch] = useState('');
     const [page, setPage] = useState(1);
-    const [totalPages, setTotalPages] = useState(1);
     const LIMIT = 20;
     const [pendingDelete, setPendingDelete] = useState(null);
     const [disabledLevels, setDisabledLevels] = useState([]);
     const [savingVisibility, setSavingVisibility] = useState(false);
     const router = useRouter();
-
-    const [allBunpos, setAllBunpos] = useState([]);
 
     const [debouncedChapter] = useDebounce(filterChapter, 500);
     const [debouncedSearch] = useDebounce(search, 500);
@@ -35,9 +33,12 @@ export default function BunpoAdmin() {
     useEffect(() => { setPage(1); }, [filterLevel, debouncedChapter, debouncedSearch]);
     
     useEffect(() => {
-        fetchAllBunpos();
         fetchVisibility();
     }, []);
+
+    useEffect(() => {
+        fetchBunpos();
+    }, [filterLevel, debouncedChapter, debouncedSearch, page]);
 
     const fetchVisibility = async () => {
         try {
@@ -80,16 +81,18 @@ export default function BunpoAdmin() {
         }
     };
 
-    useEffect(() => {
-        applyFiltersAndPagination();
-    }, [allBunpos, filterLevel, debouncedChapter, debouncedSearch, page]);
-
-    const fetchAllBunpos = async () => {
+    const fetchBunpos = async () => {
         setLoading(true);
+        const cacheKey = `admin-bunpo-${filterLevel || 'all'}-${debouncedChapter || 'all'}-${debouncedSearch || 'all'}-${page}`;
 
         if (typeof navigator !== 'undefined' && !navigator.onLine) {
-            const cached = cacheGet('admin-bunpo-all');
-            if (cached) { setAllBunpos(cached); setLoading(false); return; }
+            const cached = cacheGet(cacheKey);
+            if (cached) {
+                setBunpos(Array.isArray(cached) ? cached : cached.items);
+                if (!Array.isArray(cached)) setPagination(cached);
+                setLoading(false);
+                return;
+            }
             toast.error('Tidak ada koneksi internet dan data admin belum tersedia secara offline.');
             setLoading(false);
             return;
@@ -97,58 +100,34 @@ export default function BunpoAdmin() {
 
         try {
             const token = Cookies.get('access_token');
-            const url = `${API_URL}/admin/grammar`;
+            const queryParams = new URLSearchParams({ page: String(page), limit: String(LIMIT) });
+            if (filterLevel) queryParams.append('level', filterLevel);
+            if (debouncedChapter) queryParams.append('chapter', debouncedChapter);
+            if (debouncedSearch) queryParams.append('search', debouncedSearch);
+            const url = `${API_URL}/admin/grammar?${queryParams.toString()}`;
             const res = await fetch(url, { headers: { 'Authorization': `Bearer ${token}` } });
             if (res.ok) {
                 const data = await res.json();
                 const items = Array.isArray(data) ? data : (data.items || []);
-                setAllBunpos(items);
-                cacheSet('admin-bunpo-all', items);
+                setBunpos(items);
+                if (!Array.isArray(data)) {
+                    setPagination(data);
+                    if (data.page !== page) setPage(data.page);
+                }
+                cacheSet(cacheKey, data);
             } else {
-                const cached = cacheGet('admin-bunpo-all');
-                if (cached) { setAllBunpos(cached); return; }
+                const cached = cacheGet(cacheKey);
+                if (cached) { setBunpos(Array.isArray(cached) ? cached : cached.items); return; }
                 toast.error(`Gagal mengambil data Bunpo: ${res.status} ${res.statusText}`);
             }
         } catch (error) {
             console.error("Failed to fetch bunpos", error);
-            const cached = cacheGet('admin-bunpo-all');
-            if (cached) { setAllBunpos(cached); return; }
+            const cached = cacheGet(cacheKey);
+            if (cached) { setBunpos(Array.isArray(cached) ? cached : cached.items); return; }
             toast.error(`Terjadi kesalahan jaringan.`);
         } finally {
             setLoading(false);
         }
-    };
-
-    const applyFiltersAndPagination = () => {
-        let filtered = [...allBunpos];
-
-        if (filterLevel) {
-            filtered = filtered.filter(b => b.jlpt_level == filterLevel);
-        }
-        if (debouncedChapter && !isNaN(parseInt(debouncedChapter))) {
-            const ch = parseInt(debouncedChapter);
-            filtered = filtered.filter(b => b.chapter === ch);
-        }
-        if (debouncedSearch) {
-            const ls = debouncedSearch.toLowerCase();
-            filtered = filtered.filter(b => 
-                (b.title && b.title.toLowerCase().includes(ls)) ||
-                (b.structure && b.structure.toLowerCase().includes(ls)) ||
-                (b.explanation && b.explanation.toLowerCase().includes(ls))
-            );
-        }
-
-        const totalItems = filtered.length;
-        const totalPages = Math.max(1, Math.ceil(totalItems / LIMIT));
-        setTotalPages(totalPages);
-        const safePage = Math.min(page, totalPages);
-        
-        if (safePage !== page) {
-            setPage(safePage);
-        }
-
-        const offset = (safePage - 1) * LIMIT;
-        setBunpos(filtered.slice(offset, offset + LIMIT));
     };
 
     const handleDelete = (e, id) => {
@@ -166,7 +145,7 @@ export default function BunpoAdmin() {
             });
             if (res.ok) {
                 toast.success('Grammar deleted successfully');
-                fetchAllBunpos();
+                fetchBunpos();
             } else {
                 toast.error('Failed to delete');
             }
@@ -433,11 +412,11 @@ export default function BunpoAdmin() {
                         {!loading && (
                             <div className="px-6 py-5 border-t bg-neutral-900/50 border-white/5">
                                 <div className="flex items-center justify-between gap-4">
-                                    <div className="text-xs font-bold text-neutral-500">Halaman <span className="text-gray-900 dark:text-white">{page}</span> dari <span className="text-gray-900 dark:text-white">{totalPages}</span>
+                                    <div className="text-xs font-bold text-neutral-500">Halaman <span className="text-gray-900 dark:text-white">{pagination.page}</span> dari <span className="text-gray-900 dark:text-white">{pagination.pages}</span> ({pagination.total} hasil)
                                     </div>
                                     <Pagination
                                         currentPage={page}
-                                        totalPages={totalPages}
+                                        totalPages={pagination.pages}
                                         onPageChange={setPage}
                                         activeClassName="bg-red-600/20 border-red-500/30 text-red-400"
                                         buttonClassName="bg-neutral-800 border-white/10 text-white hover:bg-neutral-700"

@@ -1,4 +1,4 @@
-from typing import List, Optional
+from typing import List, Optional, Union
 from uuid import UUID
 from django.db.models import Q
 from django.shortcuts import get_object_or_404
@@ -364,20 +364,56 @@ class KanjiSchema(KanjiCreateSchema):
 class DeleteIdsSchema(BaseModel):
     ids: List[UUID]
 
+
+class KanjiPageSchema(BaseModel):
+    items: List[KanjiSchema]
+    total: int
+    page: int
+    pages: int
+    limit: int
+
+
+def _admin_page(query, page: int, limit: int):
+    total = query.count()
+    limit = min(max(limit, 1), 100)
+    pages = max(1, (total + limit - 1) // limit)
+    page = min(max(page, 1), pages)
+    start = (page - 1) * limit
+    return {
+        "items": list(query[start:start + limit]),
+        "total": total,
+        "page": page,
+        "pages": pages,
+        "limit": limit,
+    }
+
+
 # Kanji CRUD
-@router.get("/kanji", auth=AdminAuth(), response=List[KanjiSchema])
-def admin_list_kanjis(request, level: int = None):
+@router.get("/kanji", auth=AdminAuth(), response=Union[List[KanjiSchema], KanjiPageSchema])
+def admin_list_kanjis(request, level: int = None, search: str = None, page: int = None, limit: int = 10000):
     query = Kanji.objects.all().order_by('jlpt_level', 'id')
     if level:
         query = query.filter(jlpt_level=level)
-    
-    results = list(query)
+    if search:
+        query = query.filter(
+            Q(character__icontains=search) | Q(meaning__icontains=search)
+        )
+
+    if page is not None:
+        results = _admin_page(query, page, limit)
+        items = results["items"]
+    else:
+        items = list(query[:min(max(limit, 1), 10000)])
+
     from utils.kana import to_kana, to_katakana
-    for k in results:
+    for k in items:
         k.onyomi = [to_katakana(r.lower()) for r in k.onyomi]
         k.kunyomi = [to_kana(r.lower()) for r in k.kunyomi]
-        
-    return results
+
+    if page is not None:
+        results["items"] = items
+        return results
+    return items
 
 @router.post("/kanji", auth=AdminAuth(), response=KanjiSchema)
 @rate_limit(key='user', rate='30/m')
@@ -477,10 +513,19 @@ class GrammarSchema(GrammarCreateSchema):
     id: UUID
     model_config = {"from_attributes": True}
 
+
+class GrammarPageSchema(BaseModel):
+    items: List[GrammarSchema]
+    total: int
+    page: int
+    pages: int
+    limit: int
+
+
 # Bunpo CRUD
-@router.get("/bunpo", auth=AdminAuth(), response=List[GrammarSchema])
-@router.get("/grammar", auth=AdminAuth(), response=List[GrammarSchema])
-def admin_list_bunpos(request, level: int = None, chapter: int = None, search: str = None):
+@router.get("/bunpo", auth=AdminAuth(), response=Union[List[GrammarSchema], GrammarPageSchema])
+@router.get("/grammar", auth=AdminAuth(), response=Union[List[GrammarSchema], GrammarPageSchema])
+def admin_list_bunpos(request, level: int = None, chapter: int = None, search: str = None, page: int = None, limit: int = 1000):
     query = Grammar.objects.all().order_by('chapter', 'jlpt_level', 'id')
     
     if level:
@@ -495,7 +540,11 @@ def admin_list_bunpos(request, level: int = None, chapter: int = None, search: s
             Q(explanation__icontains=search)
         )
         
-    return serialize_grammars(query[:1000])  # grammar lists are usually small, safety cap
+    if page is not None:
+        results = _admin_page(query, page, limit)
+        results["items"] = serialize_grammars(results["items"])
+        return results
+    return serialize_grammars(query[:min(max(limit, 1), 1000)])
 
 
 def _save_bunpo_sentences(grammar, sentences):
@@ -615,10 +664,19 @@ class VocabSchema(VocabCreateSchema):
     id: UUID
     model_config = {"from_attributes": True}
 
+
+class VocabPageSchema(BaseModel):
+    items: List[VocabSchema]
+    total: int
+    page: int
+    pages: int
+    limit: int
+
+
 # Vocab CRUD
-@router.get("/kotoba", auth=AdminAuth(), response=List[VocabSchema])
-@router.get("/vocab", auth=AdminAuth(), response=List[VocabSchema])
-def admin_list_vocabs(request, level: int = None, search: str = None, word_type: str = None, limit: int = 200):
+@router.get("/kotoba", auth=AdminAuth(), response=Union[List[VocabSchema], VocabPageSchema])
+@router.get("/vocab", auth=AdminAuth(), response=Union[List[VocabSchema], VocabPageSchema])
+def admin_list_vocabs(request, level: int = None, search: str = None, word_type: str = None, page: int = None, limit: int = 200):
     from utils.kana import to_kana
     
     query = Vocab.objects.all().order_by('jlpt_level', 'word')
@@ -638,15 +696,20 @@ def admin_list_vocabs(request, level: int = None, search: str = None, word_type:
             Q(reading__icontains=search_kana)
         )
         
-    limit = min(max(int(limit), 1), 300)
-    items = list(query[:limit])
+    if page is not None:
+        results = _admin_page(query, page, limit)
+        items = results["items"]
+    else:
+        limit = min(max(int(limit), 1), 300)
+        items = list(query[:limit])
     from utils.kana import to_kana
     for v in items:
         if v.reading:
             v.reading = to_kana(v.reading.lower())
-        if v.reading:
-            v.reading = to_kana(v.reading.lower())
-        
+
+    if page is not None:
+        results["items"] = items
+        return results
     return items
 
 @router.post("/kotoba", auth=AdminAuth(), response=VocabSchema)

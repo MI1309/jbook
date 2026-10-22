@@ -6,9 +6,11 @@ import { API_URL, setKanjiVisibilityCache } from '@/lib/api';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import Cookies from 'js-cookie';
+import { useDebounce } from 'use-debounce';
 import { cacheGet, cacheSet } from '@/lib/cache-store';
 import { appToast as toast } from '@/components/common/AppMessage';
 import ConfirmationModal from '@/components/common/ConfirmationModal';
+import Pagination from '@/components/common/Pagination';
 
 export default function KanjiAdmin() {
     const { user } = useAuth();
@@ -21,15 +23,20 @@ export default function KanjiAdmin() {
     const [loading, setLoading] = useState(true);
     const [filterLevel, setFilterLevel] = useState('');
     const [search, setSearch] = useState('');
+    const [debouncedSearch] = useDebounce(search, 400);
+    const [page, setPage] = useState(1);
+    const [pagination, setPagination] = useState({ total: 0, pages: 1, page: 1 });
     const [pendingDelete, setPendingDelete] = useState(null);
     const [disabledLevels, setDisabledLevels] = useState([1, 2, 3]);
     const [savingVisibility, setSavingVisibility] = useState(false);
     const router = useRouter();
 
+    useEffect(() => { setPage(1); }, [filterLevel, debouncedSearch]);
+
     useEffect(() => { 
         setMounted(true);
         fetchKanjis(); 
-    }, [filterLevel, search]);
+    }, [filterLevel, debouncedSearch, page]);
 
     useEffect(() => {
         fetchVisibility();
@@ -78,10 +85,16 @@ export default function KanjiAdmin() {
 
     const fetchKanjis = async () => {
         setLoading(true);
+        const cacheKey = `admin-kanji-${filterLevel || 'all'}-${debouncedSearch || 'all'}-${page}`;
 
         if (typeof navigator !== 'undefined' && !navigator.onLine) {
-            const cached = cacheGet('admin-kanji-all');
-            if (cached) { setKanjiList(cached); setLoading(false); return; }
+            const cached = cacheGet(cacheKey);
+            if (cached) {
+                setKanjiList(Array.isArray(cached) ? cached : cached.items);
+                if (!Array.isArray(cached)) setPagination(cached);
+                setLoading(false);
+                return;
+            }
             toast.error('Tidak ada koneksi internet dan data admin belum tersedia secara offline.');
             setLoading(false);
             return;
@@ -89,14 +102,10 @@ export default function KanjiAdmin() {
 
         try {
             const token = Cookies.get('access_token');
-            let url = `${API_URL}/admin/kanji?limit=10000`;
-
-            const queryParams = new URLSearchParams();
+            const queryParams = new URLSearchParams({ page: String(page), limit: '50' });
             if (filterLevel && filterLevel !== 'all') queryParams.append('level', filterLevel);
-            if (search) queryParams.append('search', search);
-
-            const queryString = queryParams.toString();
-            if (queryString) url += `?${queryString}`;
+            if (debouncedSearch) queryParams.append('search', debouncedSearch);
+            const url = `${API_URL}/admin/kanji?${queryParams.toString()}`;
 
             const res = await fetch(url, {
                 headers: { 'Authorization': `Bearer ${token}` }
@@ -104,35 +113,39 @@ export default function KanjiAdmin() {
 
             if (res.ok) {
                 const data = await res.json();
-                setKanjiList(data);
-                if (!filterLevel && !search) cacheSet('admin-kanji-all', data);
+                const items = Array.isArray(data) ? data : data.items || [];
+                setKanjiList(items);
+                if (!Array.isArray(data)) {
+                    setPagination(data);
+                    if (data.page !== page) setPage(data.page);
+                }
+                cacheSet(cacheKey, data);
             } else {
-                const cached = cacheGet('admin-kanji-all');
-                if (cached) { setKanjiList(cached); return; }
+                const cached = cacheGet(cacheKey);
+                if (cached) { setKanjiList(Array.isArray(cached) ? cached : cached.items); return; }
                 toast.error(`Gagal mengambil data Kanji: ${res.status} ${res.statusText}`);
             }
         } catch (error) {
             console.error("Failed to fetch", error);
-            const cached = cacheGet('admin-kanji-all');
-            if (cached) { setKanjiList(cached); return; }
+            const cached = cacheGet(cacheKey);
+            if (cached) { setKanjiList(Array.isArray(cached) ? cached : cached.items); return; }
         } finally {
             setLoading(false);
         }
     };
 
-    const checkDuplicates = () => {
-        const map = {};
-        kanjiList.forEach(k => {
-            const key = k.character;
-            if (!map[key]) map[key] = [];
-            map[key].push(k);
-        });
-        const dups = Object.entries(map).filter(([, arr]) => arr.length > 1).map(([char, arr]) => ({ character: char, items: arr }));
-        setDuplicates(dups);
-        if (!dups || dups.length === 0) {
-            toast.info('No duplicate kanji found');
-        } else {
-            toast.info(`${dups.length} duplicate groups found`);
+    const checkDuplicates = async () => {
+        try {
+            const token = Cookies.get('access_token');
+            const res = await fetch(`${API_URL}/admin/kanji/duplicates`, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            if (!res.ok) throw new Error('Gagal memeriksa duplikat');
+            const data = await res.json();
+            setDuplicates(data);
+            toast.info(data.length ? `${data.length} grup duplikat ditemukan` : 'Tidak ada kanji duplikat');
+        } catch (error) {
+            toast.error(error.message || 'Gagal memeriksa duplikat');
         }
     };
 
@@ -200,7 +213,7 @@ export default function KanjiAdmin() {
                     <h1 className="text-5xl font-black tracking-tighter text-white">
                         Kanji <span className="text-red-600">Management</span>
                     </h1>
-                    <p className="text-xs font-bold text-neutral-500 uppercase tracking-[0.2em] mt-3">Total: {kanjiList.length} Entitas</p>
+                    <p className="text-xs font-bold text-neutral-500 uppercase tracking-[0.2em] mt-3">Total: {pagination.total} Entitas</p>
                 </div>
                 <Link 
                     href="/admin/kanji/new" 
@@ -401,6 +414,19 @@ export default function KanjiAdmin() {
                     </>
                 )}
             </div>
+
+            {!loading && pagination.pages > 1 && (
+                <div className="flex flex-col sm:flex-row items-center justify-between gap-4 rounded-2xl border border-white/5 bg-white/5 px-5 py-4">
+                    <p className="text-xs font-bold text-neutral-500">Halaman {pagination.page} dari {pagination.pages} ({pagination.total} hasil)</p>
+                    <Pagination
+                        currentPage={page}
+                        totalPages={pagination.pages}
+                        onPageChange={setPage}
+                        activeClassName="bg-red-600/20 border-red-500/30 text-red-400"
+                        buttonClassName="bg-neutral-800 border-white/10 text-white hover:bg-neutral-700"
+                    />
+                </div>
+            )}
 
             <ConfirmationModal
                 isOpen={!!pendingDelete}
