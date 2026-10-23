@@ -10,7 +10,6 @@ import Link from 'next/link';
 export default function AdminDashboard() {
     const [isSearching, setIsSearching] = useState(false);
     const [stats, setStats] = useState({ kanji_count: 0, bunpo_count: 0, blog_count: 0 });
-        const [stats, setStats] = useState({ kanji_count: 0, bunpo_count: 0 });
     const [searchQuery, setSearchQuery] = useState('');
     const [searchResults, setSearchResults] = useState([]);
     const router = useRouter();
