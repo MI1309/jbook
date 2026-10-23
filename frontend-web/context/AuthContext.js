@@ -210,7 +210,13 @@ export function AuthProvider({ children }) {
                 throw new Error(`Server gagal memproses reset password (HTTP ${res.status}). Periksa error log backend.`);
             }
             if (!res.ok) throw new Error(data.detail || data.message || 'Gagal meminta reset password.');
-            return { success: true, message: data.message, reset_link: data.reset_link };
+            return {
+                success: true,
+                account_exists: data.account_exists,
+                email_sent: data.email_sent,
+                message: data.message,
+                reset_link: data.reset_link,
+            };
         } catch (error) {
             console.error("Forgot password error:", error);
             const message = error.message === 'Failed to fetch' 

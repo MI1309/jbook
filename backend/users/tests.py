@@ -5,6 +5,7 @@ from django.core import mail
 from django.core.management import call_command, CommandError
 from django.test import TestCase, override_settings
 from django.contrib.auth import get_user_model
+from unittest.mock import patch
 from ninja_jwt.tokens import RefreshToken
 from users.privacy import email_lookup_digest
 
@@ -179,5 +180,42 @@ class PrivateEmailTests(TestCase):
 
 		self.assertEqual(response.status_code, 200)
 		self.assertNotIn(self.email, response.content.decode())
+		self.assertTrue(response.json()["account_exists"])
+		self.assertTrue(response.json()["email_sent"])
+		self.assertEqual(response.json()["message"], "Link reset sudah dikirim ke email Anda.")
 		self.assertEqual(len(mail.outbox), 1)
 		self.assertEqual(mail.outbox[0].to, [self.email])
+
+	def test_password_reset_reports_when_email_is_not_registered(self):
+		unknown_email = "unknown@example.com"
+		response = self.client.post(
+			"/api/auth/password-reset",
+			data=json.dumps({"email": unknown_email}),
+			content_type="application/json",
+			secure=True,
+		)
+
+		self.assertEqual(response.status_code, 200)
+		self.assertFalse(response.json()["account_exists"])
+		self.assertFalse(response.json()["email_sent"])
+		self.assertEqual(response.json()["message"], "Email tersebut belum terdaftar.")
+		self.assertNotIn(unknown_email, response.content.decode())
+		self.assertEqual(len(mail.outbox), 0)
+
+	@patch("users.api.send_mail", side_effect=OSError("SMTP unavailable"))
+	def test_password_reset_reports_mail_delivery_failure(self, send_mail_mock):
+		response = self.client.post(
+			"/api/auth/password-reset",
+			data=json.dumps({"email": self.email}),
+			content_type="application/json",
+			secure=True,
+		)
+
+		self.assertEqual(response.status_code, 200)
+		self.assertTrue(response.json()["account_exists"])
+		self.assertFalse(response.json()["email_sent"])
+		self.assertEqual(
+			response.json()["message"],
+			"Email belum berhasil dikirim. Silakan hubungi admin.",
+		)
+		send_mail_mock.assert_called_once()

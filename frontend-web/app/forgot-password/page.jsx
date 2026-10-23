@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { useTheme } from '@/context/ThemeContext';
 import Link from 'next/link';
@@ -10,6 +10,8 @@ export default function ForgotPasswordPage() {
     const [email, setEmail] = useState('');
     const [error, setError] = useState('');
     const [successMessage, setSuccessMessage] = useState('');
+    const [accountExists, setAccountExists] = useState(null);
+    const [emailSent, setEmailSent] = useState(null);
     const [debugResetLink, setDebugResetLink] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const { forgotPassword } = useAuth();
@@ -19,6 +21,8 @@ export default function ForgotPasswordPage() {
         e.preventDefault();
         setError('');
         setSuccessMessage('');
+        setAccountExists(null);
+        setEmailSent(null);
         setIsLoading(true);
 
         const res = await forgotPassword(email);
@@ -26,6 +30,8 @@ export default function ForgotPasswordPage() {
             setError(res.error || 'Something went wrong. Please try again.');
         } else {
             setSuccessMessage(res.message || 'Check your email for a password reset link.');
+            setAccountExists(res.account_exists);
+            setEmailSent(res.email_sent);
             if (res.reset_link) {
                 setDebugResetLink(res.reset_link);
             }
@@ -75,7 +81,7 @@ export default function ForgotPasswordPage() {
                     )}
                     
                     {successMessage && (
-                        <AppMessage variant="success" className="text-xs font-black uppercase tracking-widest">
+                        <AppMessage variant={accountExists === false || emailSent === false ? 'warning' : 'success'} className="text-xs font-black uppercase tracking-widest">
                             <div>
                                 {successMessage}
                                 {debugResetLink && (

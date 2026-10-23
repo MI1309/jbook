@@ -17,6 +17,7 @@ from django.utils.encoding import force_bytes, force_str
 from django.contrib.auth.tokens import default_token_generator
 from django.template.loader import render_to_string
 from django.core.cache import cache
+import logging
 import random
 import string
 from core.decorators import rate_limit
@@ -25,6 +26,7 @@ from .privacy import email_lookup_digest, mask_email
 
 router = Router()
 User = get_user_model()
+logger = logging.getLogger(__name__)
 
 class AuthBearer(JWTAuth):
     pass
@@ -251,6 +253,7 @@ def _generate_otp(length: int = 6) -> str:
 def password_reset_request(request, data: PasswordResetRequestSchema):
     email_hash = email_lookup_digest(data.email)
     user = User.objects.filter(email_lookup_hash=email_hash).first()
+    email_sent = False
     if user:
         # Generate token and uid for direct link
         uid = urlsafe_base64_encode(force_bytes(user.pk))
@@ -286,26 +289,33 @@ def password_reset_request(request, data: PasswordResetRequestSchema):
             f"Jika Anda tidak meminta reset password, abaikan email ini."
         )
 
-        # Only try to send email if credentials are actually configured
         if getattr(settings, 'EMAIL_HOST_USER', None) and getattr(settings, 'EMAIL_HOST_PASSWORD', None):
             try:
-                send_mail(
+                email_sent = send_mail(
                     subject,
                     message,
                     getattr(settings, 'DEFAULT_FROM_EMAIL', 'noreply@localhost'),
                     [user.get_private_email()],
-                    fail_silently=True,
-                )
+                    fail_silently=False,
+                ) == 1
             except Exception:
-                pass
+                logger.exception("Password reset email delivery failed")
         elif settings.DEBUG:
             # In dev, print to console as fallback
             print(f"\n[PASSWORD RESET - DEV MODE] Reset link generated for user {user.pk}")
             print(f"[PASSWORD RESET - DEV MODE] OTP: {otp}\n")
 
-    # ALWAYS return generic message. NEVER return reset_link or indicate if user exists — prevents email enumeration
+    # Never include account details or reset tokens in the response.
     return {
-        "message": "Jika akun dengan email tersebut ada, link reset sudah dikirim ke email Anda."
+        "account_exists": user is not None,
+        "email_sent": bool(email_sent),
+        "message": (
+            "Link reset sudah dikirim ke email Anda."
+            if email_sent
+            else "Email belum berhasil dikirim. Silakan hubungi admin."
+            if user
+            else "Email tersebut belum terdaftar."
+        ),
     }
 
 @router.post("/password-reset-otp")
