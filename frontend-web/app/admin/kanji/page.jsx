@@ -185,32 +185,66 @@ export default function KanjiAdmin() {
         }
     };
 
-    const handleExport = async () => {
+    const handleExportPdf = async () => {
+        const printWindow = window.open('', '_blank');
+        if (!printWindow) {
+            toast.error('Izinkan pop-up untuk membuat materi PDF.');
+            return;
+        }
+
         try {
             const token = Cookies.get('access_token');
             const queryParams = new URLSearchParams();
             if (filterLevel && filterLevel !== 'all') queryParams.append('level', filterLevel);
             if (search) queryParams.append('search', search);
-            
+
+            const res = await fetch(`${API_URL}/admin/kanji?${queryParams.toString()}`, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+
+            if (!res.ok) throw new Error('Gagal mengambil data kanji untuk PDF.');
+            const kanjiItems = await res.json();
+            if (!Array.isArray(kanjiItems) || kanjiItems.length === 0) {
+                throw new Error('Tidak ada kanji yang dapat diekspor.');
+            }
+
+            printWindow.addEventListener('load', () => printWindow.print(), { once: true });
+            printWindow.document.open();
+            printWindow.document.write(buildKanjiWorkbookHtml(kanjiItems, filterLevel, search));
+            printWindow.document.close();
+            printWindow.document.title = `JBook - Materi Kanji${filterLevel ? ` N${filterLevel}` : ''}`;
+            printWindow.focus();
+        } catch (error) {
+            console.error("Export failed", error);
+            printWindow.close();
+            toast.error(error.message || 'Gagal membuat materi PDF.');
+        }
+    };
+
+    const handleExportCsv = async () => {
+        try {
+            const token = Cookies.get('access_token');
+            const queryParams = new URLSearchParams();
+            if (filterLevel && filterLevel !== 'all') queryParams.append('level', filterLevel);
+            if (search) queryParams.append('search', search);
+
             const res = await fetch(`${API_URL}/admin/kanji/export/csv?${queryParams.toString()}`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
-            
-            if (res.ok) {
-                const blob = await res.blob();
-                const url = window.URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = `kanji_export_${new Date().toISOString().split('T')[0]}.csv`;
-                document.body.appendChild(a);
-                a.click();
-                a.remove();
-                window.URL.revokeObjectURL(url);
-            } else {
-                toast.error("Gagal mengekspor data.");
-            }
+            if (!res.ok) throw new Error('Gagal mengekspor data.');
+
+            const blob = await res.blob();
+            const url = window.URL.createObjectURL(blob);
+            const anchor = document.createElement('a');
+            anchor.href = url;
+            anchor.download = `kanji_export_${new Date().toISOString().split('T')[0]}.csv`;
+            document.body.appendChild(anchor);
+            anchor.click();
+            anchor.remove();
+            window.URL.revokeObjectURL(url);
         } catch (error) {
             console.error("Export failed", error);
+            toast.error(error.message || 'Gagal mengekspor data.');
         }
     };
 
@@ -286,12 +320,21 @@ export default function KanjiAdmin() {
                             {[5, 4, 3, 2, 1].map(l => <option key={l} value={l}>N{l}</option>)}
                         </select>
                         
-                        <button 
-                            onClick={handleExport}
-                            className="p-4 rounded-2xl transition-all active:scale-95 bg-emerald-600/10 text-emerald-500 border border-emerald-500/20"
-                            title="Export to CSV"
+                        <button
+                            onClick={handleExportPdf}
+                            className="p-4 rounded-2xl transition-all active:scale-95 bg-red-600/10 text-red-400 border border-red-500/20"
+                            title="Ekspor materi JBook sebagai PDF"
+                            aria-label="Ekspor materi JBook sebagai PDF"
                         >
-                            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg>
+                            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v12m0 0 4-4m-4 4-4-4M5 17v3h14v-3" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 3h5l3 3v4" /></svg>
+                        </button>
+                        <button
+                            onClick={handleExportCsv}
+                            className="p-4 rounded-2xl transition-all active:scale-95 bg-emerald-600/10 text-emerald-500 border border-emerald-500/20"
+                            title="Ekspor data CSV"
+                            aria-label="Ekspor data CSV"
+                        >
+                            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4-4 4m0 0l-4-4m4 4V4" /></svg>
                         </button>
                         <button
                             onClick={checkDuplicates}
@@ -576,6 +619,34 @@ export default function KanjiAdmin() {
         </div>
         </div>
     );
+}
+
+function buildKanjiWorkbookHtml(items, selectedLevel, selectedSearch) {
+    const safe = (value) => String(value ?? '').replace(/[&<>"']/g, (character) => ({
+        '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;',
+    })[character]);
+    const list = (values) => Array.isArray(values) && values.length
+        ? values.map((value) => safe(value)).join('、')
+        : 'Belum tersedia';
+    const levels = [...new Set(items.map((item) => item.jlpt_level))].sort((a, b) => b - a);
+    const levelLabel = selectedLevel ? `N${safe(selectedLevel)}` : levels.map((level) => `N${level}`).join(', ');
+    const dateLabel = new Intl.DateTimeFormat('id-ID', { dateStyle: 'long' }).format(new Date());
+    const entries = items.map((item, index) => {
+        const examples = Array.isArray(item.examples) && item.examples.length
+            ? `<ul>${item.examples.map((example) => `<li><strong lang="ja">${safe(example.word)}</strong><span class="reading">${safe(example.reading || '')}</span><span>${safe(example.meaning || '')}</span></li>`).join('')}</ul>`
+            : '<p class="muted">Belum ada contoh kata.</p>';
+        return `<article class="kanji-entry">
+            <div class="entry-top"><span>JBOOK KANJI WORKBOOK</span><span>${String(index + 1).padStart(2, '0')} / ${items.length}</span></div>
+            <div class="entry-heading"><div class="character" lang="ja">${safe(item.character)}</div><div><p class="eyebrow">KANJI • JLPT N${safe(item.jlpt_level)}</p><h2>${safe(item.meaning)}</h2><p class="meta">${item.strokes ? `${safe(item.strokes)} goresan` : 'Goresan tidak dicatat'}${item.radical ? ` · Radikal ${safe(item.radical)}` : ''}${item.word_type ? ` · ${safe(item.word_type)}` : ''}</p></div></div>
+            <div class="reading-grid"><section><h3>Onyomi · 音読み</h3><p lang="ja">${list(item.onyomi)}</p></section><section><h3>Kunyomi · 訓読み</h3><p lang="ja">${list(item.kunyomi)}</p></section></div>
+            <section class="examples"><h3>Contoh kata</h3>${examples}</section>
+            <section class="practice"><h3>Latihan menulis</h3><p>Tulis kanji ini sambil mengingat arti dan bacaannya.</p><div class="writing-grid">${Array.from({ length: 6 }, () => '<span lang="ja">&nbsp;</span>').join('')}</div></section>
+        </article>`;
+    }).join('');
+
+    return `<!doctype html><html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>JBook - Materi Kanji ${levelLabel}</title><style>
+        @page{size:A4;margin:16mm 15mm 18mm}*{box-sizing:border-box}body{margin:0;color:#202a2b;font:12px/1.55 Arial,"Noto Sans JP","Yu Gothic",Meiryo,sans-serif;-webkit-print-color-adjust:exact;print-color-adjust:exact}.cover{min-height:255mm;display:flex;flex-direction:column;justify-content:space-between;border-top:9px solid #bd342b;padding:16mm 3mm 8mm;page-break-after:always}.brand{font-size:12px;font-weight:800;letter-spacing:2px;color:#bd342b}.cover h1{font:700 42px/1.1 Georgia,"Yu Mincho",serif;margin:8px 0 14px;color:#1d2929}.cover .subtitle{font-size:17px;color:#576363}.cover-block{max-width:145mm}.cover-meta{border-top:1px solid #cbd2ce;padding-top:12px;color:#465352}.cover-meta strong{color:#1d2929}.cover-note{background:#f1f4ef;border-left:4px solid #94a899;padding:12px 16px;margin-top:28px}.entries{display:block}.kanji-entry{page-break-inside:avoid;break-inside:avoid;border-bottom:1px solid #cbd2ce;padding:0 0 9mm;margin:0 0 9mm}.entry-top{display:flex;justify-content:space-between;color:#7c8986;font-size:9px;font-weight:700;letter-spacing:1.2px;border-bottom:1px solid #dce1dc;padding-bottom:7px}.entry-heading{display:flex;align-items:center;gap:20px;padding:13px 0}.character{font:80px/1.1 "Noto Serif CJK JP","Yu Mincho",serif;color:#bd342b;min-width:90px;text-align:center}.eyebrow{font-size:9px;letter-spacing:1.2px;color:#bd342b;font-weight:700;margin:0 0 4px}.entry-heading h2{font:700 24px/1.2 Georgia,"Yu Mincho",serif;margin:0}.meta,.muted{color:#687471;margin:5px 0 0}.reading-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.reading-grid section,.examples,.practice{border-top:1px solid #cbd2ce;padding:9px 0}.kanji-entry h3{font-size:10px;letter-spacing:.7px;text-transform:uppercase;margin:0 0 7px;color:#51605c}.reading-grid p{font-size:15px;margin:0}.examples ul{list-style:none;margin:0;padding:0}.examples li{display:grid;grid-template-columns:1.1fr 1fr 1.6fr;gap:8px;padding:5px 0;border-bottom:1px solid #edf0ec}.examples li strong{font-size:15px;font-weight:600}.reading{color:#66736f}.practice p{margin:0 0 7px;color:#687471}.writing-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:7px}.writing-grid span{height:27mm;border:1px solid #cbd2ce;background-image:linear-gradient(90deg,transparent calc(50% - .5px),#e4e9e4 50%,transparent calc(50% + .5px)),linear-gradient(transparent calc(50% - .5px),#e4e9e4 50%,transparent calc(50% + .5px));display:grid;place-items:center;font:42px/1 "Noto Serif CJK JP","Yu Mincho",serif;color:#d7ddda}.footer{margin-top:10px;color:#75817d;font-size:9px}@media screen{body{max-width:210mm;margin:20px auto;padding:18mm 15mm;box-shadow:0 2px 24px #0002}.cover{min-height:245mm}}@media print{.kanji-entry{page-break-inside:avoid;break-inside:avoid}.footer{position:fixed;bottom:-12mm;left:0}}
+    </style></head><body><section class="cover"><div class="brand">JBOOK <span style="color:#293a38">/ BELAJAR BAHASA JEPANG</span></div><div class="cover-block"><p class="eyebrow">MATERI BELAJAR · KANJI</p><h1>Kanji ${levelLabel}</h1><p class="subtitle">Kumpulan kanji untuk memahami arti, mengenali cara baca, dan berlatih menulis.</p><div class="cover-note"><strong>Urutan belajar</strong><br>Kenali bentuk dan arti kanji, baca onyomi serta kunyomi, pelajari contoh kata, lalu tulis ulang pada kotak latihan.</div></div><div class="cover-meta"><strong>${items.length} kanji</strong><br>Disusun ${dateLabel}<br><span class="footer">Materi administrasi JBook${selectedSearch ? ` · Hasil pencarian: ${safe(selectedSearch)}` : ''}</span></div></section><main class="entries">${entries}</main></body></html>`;
 }
 
 function normalizeKanjiPage(data, page, limit) {
