@@ -168,8 +168,14 @@ def vocab_visibility(request):
 @router.get("/kanji/sitemap")
 def kanji_sitemap(request):
     return [
-        {"id": str(kanji.id)}
-        for kanji in Kanji.objects.all().only('id')
+        {
+            "id": str(kanji.id),
+            "character": kanji.character,
+            "meaning": kanji.meaning,
+            "onyomi": kanji.onyomi,
+            "kunyomi": kanji.kunyomi,
+        }
+        for kanji in Kanji.objects.all().only('id', 'character', 'meaning', 'onyomi', 'kunyomi')
     ]
 
 

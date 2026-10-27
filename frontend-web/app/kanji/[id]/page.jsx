@@ -1,15 +1,25 @@
-import { getKanjiDetail } from '@/lib/api';
-import Link from 'next/link';
-import { toHiragana, toKatakana } from 'wanakana';
-import { hasKanji } from '@/lib/utils';
-import { notFound } from 'next/navigation';
+import { notFound, permanentRedirect } from 'next/navigation';
 import KanjiDetailUI from '@/components/kanji/KanjiDetailUI';
+import { getKanjiDetail, getKanjiList } from '@/lib/api';
+import { getKanjiHref, getKanjiSearchTerm, getKanjiSlug } from '@/lib/kanji-route';
+
+const isDatabaseId = value => /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(value)
+    || /^[0-9a-f]{32}$/i.test(value);
+
+async function findKanji(routeValue) {
+    if (isDatabaseId(routeValue)) return getKanjiDetail(routeValue);
+
+    const { items = [] } = await getKanjiList({ search: getKanjiSearchTerm(routeValue), limit: 300 });
+    const matchingKanji = items.find(kanji => getKanjiSlug(kanji) === routeValue);
+    return matchingKanji ? getKanjiDetail(matchingKanji.id) : null;
+}
 
 export async function generateMetadata({ params }) {
-    const { id } = await params;
+    const { id: routeValue } = await params;
     try {
-        const kanji = await getKanjiDetail(id);
+        const kanji = await findKanji(routeValue);
         if (!kanji) return { title: 'Kanji Detail - JBook' };
+        const canonical = getKanjiHref(kanji);
         
         return {
             title: `Kanji ${kanji.character} (${kanji.meaning}) - JBook`,
@@ -22,11 +32,11 @@ export async function generateMetadata({ params }) {
                 kanji.kunyomi?.join(' '),
                 'belajar kanji Jepang',
             ].filter(Boolean),
-            alternates: { canonical: `/kanji/${id}` },
+            alternates: { canonical },
             openGraph: {
                 title: `Kanji ${kanji.character}: ${kanji.meaning}`,
                 description: `Pelajari arti dan cara baca Kanji ${kanji.character} di JBook.`,
-                url: `/kanji/${id}`,
+                url: canonical,
                 type: 'article',
             },
         };
@@ -36,13 +46,13 @@ export async function generateMetadata({ params }) {
 }
 
 export default async function KanjiDetailPage({ params }) {
-    const { id } = await params;
+    const { id: routeValue } = await params;
     
     let kanji = null;
     let isError = false;
 
     try {
-        kanji = await getKanjiDetail(id);
+        kanji = await findKanji(routeValue);
     } catch (error) {
         console.error('[jbook-server-error] Backend API hancur atau return 500:', error);
         isError = true;
@@ -53,6 +63,11 @@ export default async function KanjiDetailPage({ params }) {
         notFound();
     }
 
+    const canonical = getKanjiHref(kanji);
+    if (routeValue !== getKanjiSlug(kanji)) {
+        permanentRedirect(canonical);
+    }
+
     const jsonLd = {
         '@context': 'https://schema.org',
         '@type': 'LearningResource',
@@ -60,7 +75,7 @@ export default async function KanjiDetailPage({ params }) {
         description: `Materi belajar Kanji ${kanji.character} dengan arti ${kanji.meaning}.`,
         educationalLevel: `JLPT N${kanji.jlpt_level}`,
         inLanguage: ['id', 'ja'],
-        url: `https://jbook-five.vercel.app/kanji/${id}`,
+        url: `https://jbook-five.vercel.app${canonical}`,
         learningResourceType: 'Kanji lesson',
         isPartOf: { '@type': 'WebSite', name: 'JBook', url: 'https://jbook-five.vercel.app' },
     };
@@ -70,7 +85,7 @@ export default async function KanjiDetailPage({ params }) {
         itemListElement: [
             { '@type': 'ListItem', position: 1, name: 'Beranda', item: 'https://jbook-five.vercel.app' },
             { '@type': 'ListItem', position: 2, name: 'Kanji', item: 'https://jbook-five.vercel.app/kanji' },
-            { '@type': 'ListItem', position: 3, name: `Kanji ${kanji.character}`, item: `https://jbook-five.vercel.app/kanji/${id}` },
+            { '@type': 'ListItem', position: 3, name: `Kanji ${kanji.character}`, item: `https://jbook-five.vercel.app${canonical}` },
         ],
     };
 

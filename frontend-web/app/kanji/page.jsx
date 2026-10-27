@@ -6,6 +6,7 @@ import KanjiFilter from '@/components/kanji/KanjiFilter';
 import Link from 'next/link';
 import { useSearchParams, useRouter } from 'next/navigation';
 import KanjiDetailModal from '@/components/kanji/KanjiDetailModal';
+import { getKanjiHref } from '@/lib/kanji-route';
 import Pagination from '@/components/common/Pagination';
 
 // JBook-themed level styles using CSS variables
@@ -126,7 +127,7 @@ function KanjiContent() {
                         return (
                             <Link
                                 key={kanji.id}
-                                href={`/kanji/${kanji.id}`}
+                                href={getKanjiHref(kanji)}
                                 onClick={(e) => {
                                     if (typeof navigator !== 'undefined' && !navigator.onLine) {
                                         e.preventDefault();

@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { getKanjiHref } from '@/lib/kanji-route';
 import { useDebounce } from 'use-debounce';
 import { getKanjiList, getGrammarList, getVocabList } from '@/lib/api';
 import { 
@@ -135,7 +136,7 @@ export default function Home() {
                                                 {searchResults.kanji.map((item) => (
                                                     <Link 
                                                         key={item.id} 
-                                                        href={`/kanji/${item.id}`}
+                                                        href={getKanjiHref(item)}
                                                         className="flex items-center justify-between p-2 rounded-xl hover:bg-white/5 transition-colors border border-transparent hover:border-[var(--border-color)]"
                                                     >
                                                         <div className="flex items-center gap-3">

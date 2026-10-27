@@ -4,7 +4,8 @@ import { useState, useEffect, useMemo } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { hasKanji, extractKanji, generateFuriganaMap } from '@/lib/utils';
-import { resolveContentId } from '@/lib/api';
+import { resolveContentId, getKanjiDetail } from '@/lib/api';
+import { getKanjiHref } from '@/lib/kanji-route';
 import { getRadicalInfo } from '@/lib/radicals';
 
 import { useTheme } from '@/context/ThemeContext';
@@ -253,7 +254,8 @@ export default function KotobaDetailUI({ vocab: initialVocab, onClose }) {
     const navigateToKanji = async (char) => {
         const id = await resolveContentId('kanji', char);
         if (id) {
-            router.push(`/kanji/${id}`);
+            const kanji = await getKanjiDetail(id);
+            router.push(kanji ? getKanjiHref(kanji) : `/kanji/${id}`);
         } else {
             router.push(`/kanji?search=${encodeURIComponent(char)}`);
         }

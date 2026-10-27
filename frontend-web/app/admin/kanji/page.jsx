@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { API_URL, setKanjiVisibilityCache } from '@/lib/api';
 import Link from 'next/link';
+import { getKanjiHref } from '@/lib/kanji-route';
 import { useRouter } from 'next/navigation';
 import Cookies from 'js-cookie';
 import { useDebounce } from 'use-debounce';
@@ -393,7 +394,7 @@ export default function KanjiAdmin() {
                                             <td className="px-6 py-4 whitespace-nowrap text-right">
                                                 <div className="flex items-center justify-end gap-2">
                                                     <Link 
-                                                        href={`/kanji/${k.id}`} 
+                                                        href={getKanjiHref(k)} 
                                                         target="_blank" 
                                                         className="p-2 rounded-xl transition-colors text-emerald-400 hover:bg-emerald-500/10"
                                                         title="Lihat Publik"
@@ -428,7 +429,7 @@ export default function KanjiAdmin() {
                                 <div key={k.id} className="divide-white/5">
                                     <div
                                         className="flex items-center gap-4 px-5 py-4 active:bg-black/5 dark:active:bg-white/5 transition-colors cursor-pointer"
-                                        onClick={() => router.push(`/kanji/${k.id}`)}
+                                        onClick={() => router.push(getKanjiHref(k))}
                                     >
                                         <div className="text-4xl font-black text-white">{k.character}</div>
                                         <div className="flex-1 min-w-0">

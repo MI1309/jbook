@@ -1,4 +1,5 @@
 import { API_URL } from '@/lib/api';
+import { getKanjiHref } from '@/lib/kanji-route';
 
 const BASE_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://jbook-five.vercel.app';
 
@@ -100,7 +101,7 @@ export default async function sitemap() {
 
   // Include every Kanji detail page, including levels hidden from the catalogue.
   const kanjiPages = kanjis.map((k) => ({
-    url: `${BASE_URL}/kanji/${k.id}`,
+    url: `${BASE_URL}${getKanjiHref(k)}`,
     lastModified: today,
     changeFrequency: 'yearly',
     priority: 0.65,

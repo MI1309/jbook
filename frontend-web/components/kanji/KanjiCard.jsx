@@ -3,6 +3,7 @@ import Link from 'next/link';
 import PropTypes from 'prop-types';
 
 import { toHiragana, toKatakana } from 'wanakana';
+import { getKanjiHref } from '@/lib/kanji-route';
 
 export default function KanjiCard({ id, character, meaning, onyomi, kunyomi, level }) {
     // Convert readings
@@ -16,7 +17,7 @@ export default function KanjiCard({ id, character, meaning, onyomi, kunyomi, lev
     };
 
     return (
-        <Link href={`/kanji/${id}`} className="block h-full">
+        <Link href={getKanjiHref({ id, character, meaning, onyomi, kunyomi })} className="block h-full">
             <div className="border border-[var(--border-color)] rounded-[2rem] p-6 hover:-translate-y-1 hover:shadow-xl hover:shadow-accent-blue/10 hover:border-accent-blue/30 transition-all bg-[var(--card-bg)] text-center h-full flex flex-col justify-between">
                 <div>
                     <div className="text-5xl font-japanese font-bold mb-4 text-foreground">{character}</div>
