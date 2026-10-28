@@ -21,7 +21,7 @@ import logging
 import random
 import string
 from core.decorators import rate_limit
-from .models import TTSPointSession
+from .models import TTSPointSession, UserProfile
 from .privacy import email_lookup_digest, mask_email
 
 router = Router()
@@ -239,8 +239,15 @@ def claim_tts_points(request, data: TTSPointsClaimSchema):
             session_id=data.session_id,
             defaults={"points": data.points},
         )
+        profile, _ = UserProfile.objects.get_or_create(
+            user=request.auth,
+            defaults={"total_tts_points": request.auth.tts_points},
+        )
         if created and data.points:
             type(request.auth).objects.filter(pk=request.auth.pk).update(tts_points=F("tts_points") + data.points)
+            UserProfile.objects.filter(pk=profile.pk).update(
+                total_tts_points=F("total_tts_points") + data.points
+            )
 
     request.auth.refresh_from_db(fields=["tts_points"])
     return serialize_user(request.auth)

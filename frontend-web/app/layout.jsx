@@ -110,8 +110,13 @@ export const viewport = {
 
 export default function RootLayout({ children }) {
     return (
-        <html lang="id-ID" suppressHydrationWarning className="dark preload">
+        <html lang="id-ID" suppressHydrationWarning className="preload">
             <head>
+                <script
+                    dangerouslySetInnerHTML={{
+                        __html: "try { if (localStorage.getItem('jbook-theme') === 'dark') document.documentElement.classList.add('dark'); } catch {}",
+                    }}
+                />
                 <link rel="icon" href="/favicon.ico" />
                 <link rel="icon" type="image/png" sizes="32x32" href="/icon-32.png" />
                 <link rel="icon" type="image/png" sizes="16x16" href="/icon-16.png" />

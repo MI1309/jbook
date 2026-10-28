@@ -35,6 +35,16 @@ class User(AbstractUser):
         return decrypt_email(self.email_ciphertext)
 
 
+class UserProfile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="profile")
+    total_tts_points = models.PositiveIntegerField(default=0)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"Profile for {self.user.username}"
+
+
 class TTSPointSession(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="tts_point_sessions")
     session_id = models.UUIDField(default=uuid.uuid4)

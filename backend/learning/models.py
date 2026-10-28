@@ -70,6 +70,57 @@ class UserVocabulary(models.Model):
         return f"{self.user_id}: {self.vocabulary_id} ({self.status})"
 
 
+class LearningPathStage(models.Model):
+    class Availability(models.TextChoices):
+        AVAILABLE = "available", "Available"
+        BETA = "beta", "Beta"
+
+    code = models.SlugField(max_length=32, unique=True)
+    title = models.CharField(max_length=100)
+    description = models.TextField(blank=True)
+    display_order = models.PositiveSmallIntegerField(unique=True)
+    availability = models.CharField(
+        max_length=10,
+        choices=Availability.choices,
+        default=Availability.AVAILABLE,
+    )
+
+    class Meta:
+        ordering = ["display_order"]
+
+    def __str__(self):
+        return self.title
+
+
+class UserStageProgress(models.Model):
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="learning_stage_progress",
+    )
+    stage = models.ForeignKey(
+        LearningPathStage,
+        on_delete=models.CASCADE,
+        related_name="user_progress",
+    )
+    completion_percent = models.PositiveSmallIntegerField(default=0)
+    completed_at = models.DateTimeField(null=True, blank=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=["user", "stage"], name="unique_user_stage_progress"),
+            models.CheckConstraint(
+                condition=models.Q(completion_percent__lte=100),
+                name="user_stage_progress_percent_lte_100",
+            ),
+        ]
+        ordering = ["stage__display_order"]
+
+    def __str__(self):
+        return f"{self.user_id}: {self.stage.code} ({self.completion_percent}%)"
+
+
 class StudyLog(models.Model):
     class ActivityType(models.TextChoices):
         VOCABULARY_ADDED = "vocabulary_added", "Vocabulary added"

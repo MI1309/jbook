@@ -10,14 +10,16 @@ from ninja.errors import HttpError
 from ninja_jwt.authentication import JWTAuth
 
 from content.models import FeatureSetting, Vocab
-from .models import StudyLog, UserVocabulary
+from .models import LearningPathStage, StudyLog, UserStageProgress, UserVocabulary
 from .serializers import (
     UserDashboardStatsSchema,
+    LearningPathStageSchema,
     UserVocabularyCreateSchema,
     UserVocabularySchema,
     UserVocabularyUpdateSchema,
     VocabularyReviewSchema,
     VocabularySchema,
+    UserStageProgressUpdateSchema,
 )
 
 router = Router()
@@ -145,6 +147,20 @@ def review_user_vocabulary(request, entry_id: int, payload: VocabularyReviewSche
 @router.get("/dashboard/stats", response=UserDashboardStatsSchema, auth=JWTAuth())
 def user_dashboard_stats(request):
     user_vocab = UserVocabulary.objects.filter(user=request.auth)
+    profile = getattr(request.auth, "profile", None)
+    roadmap_progress = {
+        progress.stage_id: progress.completion_percent
+        for progress in UserStageProgress.objects.filter(user=request.auth)
+    }
+    roadmap = [
+        {
+            "stage_code": stage.code,
+            "title": stage.title,
+            "is_available": stage.availability == LearningPathStage.Availability.AVAILABLE,
+            "completion_percentage": roadmap_progress.get(stage.id, 0),
+        }
+        for stage in LearningPathStage.objects.all()
+    ]
     today = timezone.localdate()
     start_date = today - timedelta(days=29)
     logs = StudyLog.objects.filter(user=request.auth, date__gte=start_date, date__lte=today)
@@ -164,10 +180,58 @@ def user_dashboard_stats(request):
     ).order_by("activity_type")
 
     return {
+        "username": request.auth.username,
+        "total_tts_points": profile.total_tts_points if profile else request.auth.tts_points,
+        "tts_games_played": request.auth.tts_point_sessions.count(),
         "total_saved": user_vocab.count(),
         "mastered": user_vocab.filter(status=UserVocabulary.Status.MASTERED).count(),
         "learning": user_vocab.filter(status=UserVocabulary.Status.LEARNING).count(),
         "new": user_vocab.filter(status=UserVocabulary.Status.NEW).count(),
         "daily_activity": daily_activity,
         "activity_breakdown": list(activity_breakdown),
+        "roadmap": roadmap,
+    }
+
+
+@router.get("/roadmap", response=List[LearningPathStageSchema], auth=JWTAuth())
+def learning_roadmap(request):
+    progress_by_stage = {
+        progress.stage_id: progress
+        for progress in UserStageProgress.objects.filter(user=request.auth)
+    }
+    return [
+        {
+            "id": stage.id,
+            "code": stage.code,
+            "title": stage.title,
+            "description": stage.description,
+            "display_order": stage.display_order,
+            "availability": stage.availability,
+            "completion_percent": getattr(progress_by_stage.get(stage.id), "completion_percent", 0),
+            "completed_at": getattr(progress_by_stage.get(stage.id), "completed_at", None),
+        }
+        for stage in LearningPathStage.objects.all()
+    ]
+
+
+@router.put(
+    "/roadmap/{stage_id}/progress",
+    response=LearningPathStageSchema,
+    auth=JWTAuth(),
+)
+def update_learning_stage_progress(request, stage_id: int, payload: UserStageProgressUpdateSchema):
+    stage = get_object_or_404(LearningPathStage, id=stage_id)
+    progress, _ = UserStageProgress.objects.get_or_create(user=request.auth, stage=stage)
+    progress.completion_percent = payload.completion_percent
+    progress.completed_at = timezone.now() if payload.completion_percent == 100 else None
+    progress.save()
+    return {
+        "id": stage.id,
+        "code": stage.code,
+        "title": stage.title,
+        "description": stage.description,
+        "display_order": stage.display_order,
+        "availability": stage.availability,
+        "completion_percent": progress.completion_percent,
+        "completed_at": progress.completed_at,
     }

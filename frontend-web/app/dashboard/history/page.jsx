@@ -373,7 +373,7 @@ export default function HistoryPage() {
                                         </div>
                                         
                                         {/* Character icon - dynamic width */}
-                                        <div className={`h-10 sm:h-12 px-2 min-w-[2.5rem] sm:min-w-[3rem] rounded-xl sm:rounded-2xl ${typeIconBg} text-white flex items-center justify-center font-black flex-shrink-0 shadow-md shadow-blue-500/20 group-hover:rotate-3 transition-transform ${
+                                        <div className={`h-10 sm:h-12 px-2 min-w-[2.5rem] sm:min-w-[3rem] rounded-xl sm:rounded-2xl ${typeIconBg} ${theme === 'dark' ? 'text-white' : mistake.type === 'kanji' ? 'text-purple-950' : mistake.type === 'vocab' || mistake.type === 'kotoba' ? 'text-green-950' : mistake.type === 'grammar' || mistake.type === 'bunpo' ? 'text-yellow-950' : 'text-blue-950'} flex items-center justify-center font-black flex-shrink-0 shadow-md shadow-blue-500/20 group-hover:rotate-3 transition-transform ${
                                             (mistake.character?.length || 0) > 4 ? 'text-xs' : (mistake.character?.length || 0) > 2 ? 'text-sm' : 'text-lg'
                                         }`}>
                                             {mistake.character || '?'}

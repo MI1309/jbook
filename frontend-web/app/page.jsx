@@ -85,7 +85,7 @@ export default function Home() {
                         JBook <span className="text-accent-blue dark:text-accent-blue drop-shadow-[0_0_15px_rgba(56,189,248,0.15)]">Kamus Jepang</span>
                     </h1>
 
-                    <p className="mt-4 max-w-2xl text-base font-light text-gray-500 dark:text-gray-400 xl:text-lg">
+                    <p className="mt-4 max-w-2xl text-base font-medium text-gray-500 dark:text-gray-400 xl:text-lg">
                         Kamus bahasa jepang disertai latihan soal dan game teka-teki silang .
                     </p>
 

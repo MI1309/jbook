@@ -7,7 +7,8 @@ from django.utils import timezone
 from ninja_jwt.tokens import RefreshToken
 
 from content.models import CurriculumLevel, CurriculumUnit, FeatureSetting, Grammar, Particle, ReferenceBook, Vocab
-from .models import StudyLog, UserVocabulary
+from users.models import TTSPointSession
+from .models import LearningPathStage, StudyLog, UserStageProgress, UserVocabulary
 
 # Create your tests here.
 
@@ -143,6 +144,33 @@ class VocabularySrsApiTests(TestCase):
 		self.assertEqual(len(list_response.json()), 1)
 		self.assertEqual(StudyLog.objects.filter(user=self.user).count(), 2)
 
+	def test_roadmap_returns_seeded_stages_and_beta_status(self):
+		response = self.client.get(
+			"/api/learning/roadmap",
+			secure=True,
+			**self.auth_headers,
+		)
+
+		self.assertEqual(response.status_code, 200)
+		stages = response.json()
+		self.assertEqual([stage["code"] for stage in stages], ["hiragana", "katakana", "n5", "n4", "n3", "n2", "n1"])
+		self.assertEqual([stage["code"] for stage in stages if stage["availability"] == "beta"], ["n3", "n2", "n1"])
+
+	def test_user_can_update_only_own_roadmap_progress(self):
+		stage = LearningPathStage.objects.get(code="n5")
+		response = self.client.put(
+			f"/api/learning/roadmap/{stage.id}/progress",
+			data=json.dumps({"completion_percent": 100}),
+			content_type="application/json",
+			secure=True,
+			**self.auth_headers,
+		)
+
+		self.assertEqual(response.status_code, 200)
+		self.assertEqual(response.json()["completion_percent"], 100)
+		self.assertTrue(UserStageProgress.objects.get(user=self.user, stage=stage).completed_at)
+		self.assertFalse(UserStageProgress.objects.filter(user=self.other_user, stage=stage).exists())
+
 	def test_collection_and_dashboard_require_authentication(self):
 		collection_response = self.client.get("/api/learning/my-vocabulary", secure=True)
 		stats_response = self.client.get("/api/learning/dashboard/stats", secure=True)
@@ -179,6 +207,9 @@ class VocabularySrsApiTests(TestCase):
 			vocabulary=other_vocab,
 			status=UserVocabulary.Status.MASTERED,
 		)
+		self.user.profile.total_tts_points = 120
+		self.user.profile.save(update_fields=["total_tts_points", "updated_at"])
+		TTSPointSession.objects.create(user=self.user, points=20)
 
 		response = self.client.get(
 			"/api/learning/dashboard/stats",
@@ -189,5 +220,10 @@ class VocabularySrsApiTests(TestCase):
 		self.assertEqual(response.status_code, 200)
 		self.assertEqual(response.json()["total_saved"], 1)
 		self.assertEqual(response.json()["mastered"], 0)
+		self.assertEqual(response.json()["username"], self.user.username)
+		self.assertEqual(response.json()["total_tts_points"], 120)
+		self.assertEqual(response.json()["tts_games_played"], 1)
+		self.assertEqual(response.json()["roadmap"][0]["stage_code"], "hiragana")
+		self.assertIn("completion_percentage", response.json()["roadmap"][0])
 		self.assertEqual(len(response.json()["daily_activity"]), 30)
 		self.assertEqual(response.json()["daily_activity"][-1]["items_studied"], 3)

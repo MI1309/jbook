@@ -51,9 +51,35 @@ class ActivityBreakdownSchema(Schema):
 
 
 class UserDashboardStatsSchema(Schema):
+    username: str
+    total_tts_points: int
+    tts_games_played: int
     total_saved: int
     mastered: int
     learning: int
     new: int
     daily_activity: List[DailyActivitySchema]
     activity_breakdown: List[ActivityBreakdownSchema]
+    roadmap: List["DashboardRoadmapStageSchema"]
+
+
+class DashboardRoadmapStageSchema(Schema):
+    stage_code: str
+    title: str
+    is_available: bool
+    completion_percentage: int
+
+
+class LearningPathStageSchema(Schema):
+    id: int
+    code: str
+    title: str
+    description: str
+    display_order: int
+    availability: Literal["available", "beta"]
+    completion_percent: int = 0
+    completed_at: Optional[datetime] = None
+
+
+class UserStageProgressUpdateSchema(Schema):
+    completion_percent: int = Field(..., ge=0, le=100)

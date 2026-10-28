@@ -1,7 +1,7 @@
 import { notFound, permanentRedirect } from 'next/navigation';
 import KanjiDetailUI from '@/components/kanji/KanjiDetailUI';
-import { getKanjiDetail, getKanjiList } from '@/lib/api';
-import { getKanjiHref, getKanjiSearchTerm, getKanjiSlug } from '@/lib/kanji-route';
+import { API_URL, getKanjiDetail, getKanjiList } from '@/lib/api';
+import { getCharacterKanjiSlug, getKanjiHref, getKanjiReadingSlug, getKanjiSearchTerm, getKanjiSlug, getLegacyKanjiSlug } from '@/lib/kanji-route';
 
 const isDatabaseId = value => /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(value)
     || /^[0-9a-f]{32}$/i.test(value);
@@ -9,8 +9,47 @@ const isDatabaseId = value => /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-
 async function findKanji(routeValue) {
     if (isDatabaseId(routeValue)) return getKanjiDetail(routeValue);
 
-    const { items = [] } = await getKanjiList({ search: getKanjiSearchTerm(routeValue), limit: 300 });
-    const matchingKanji = items.find(kanji => getKanjiSlug(kanji) === routeValue);
+    let matchingKanji = null;
+    try {
+        const response = await fetch(`${API_URL}/content/kanji/sitemap`, {
+            next: { revalidate: 86400 },
+        });
+        if (response.ok) {
+            const kanjiIndex = await response.json();
+            matchingKanji = kanjiIndex.find(kanji => getKanjiSlug(kanji) === routeValue);
+
+            if (!matchingKanji) {
+                matchingKanji = kanjiIndex.find(kanji => getLegacyKanjiSlug(kanji) === routeValue);
+            }
+
+            if (!matchingKanji) {
+                matchingKanji = kanjiIndex.find(kanji => getCharacterKanjiSlug(kanji) === routeValue);
+            }
+
+            if (!matchingKanji) {
+                const legacyMatches = kanjiIndex.filter(kanji => getKanjiReadingSlug(kanji) === routeValue);
+                if (legacyMatches.length === 1) matchingKanji = legacyMatches[0];
+            }
+        }
+    } catch (error) {
+        console.warn('[kanji-route] Sitemap lookup failed; trying list search.', error);
+    }
+
+    if (!matchingKanji) {
+        const { items = [] } = await getKanjiList({ search: getKanjiSearchTerm(routeValue), limit: 300 });
+        matchingKanji = items.find(kanji => getKanjiSlug(kanji) === routeValue);
+        if (!matchingKanji) {
+            matchingKanji = items.find(kanji => getLegacyKanjiSlug(kanji) === routeValue);
+        }
+        if (!matchingKanji) {
+            matchingKanji = items.find(kanji => getCharacterKanjiSlug(kanji) === routeValue);
+        }
+        if (!matchingKanji) {
+            const legacyMatches = items.filter(kanji => getKanjiReadingSlug(kanji) === routeValue);
+            if (legacyMatches.length === 1) matchingKanji = legacyMatches[0];
+        }
+    }
+
     return matchingKanji ? getKanjiDetail(matchingKanji.id) : null;
 }
 

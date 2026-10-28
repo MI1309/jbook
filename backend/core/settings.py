@@ -359,10 +359,10 @@ SILENCED_SYSTEM_CHECKS = ['django_ratelimit.E003', 'django_ratelimit.W001']
 from datetime import timedelta
 
 # Access token: short-lived (15 minutes is industry standard)
-# Refresh token: long-lived (7 days) with rotation + blacklist
+# Refresh token: long-lived (30 days) with rotation + blacklist
 NINJA_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=int(os.environ.get('JWT_ACCESS_MINUTES', 15))),
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=int(os.environ.get('JWT_REFRESH_DAYS', 7))),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=int(os.environ.get('JWT_REFRESH_DAYS', 30))),
     'ROTATE_REFRESH_TOKENS': True,
     'BLACKLIST_AFTER_ROTATION': True,
     'AUTH_HEADER_TYPES': ('Bearer',),
@@ -376,7 +376,7 @@ if _JWK_URL:
     NINJA_JWT['JWK_URL'] = _JWK_URL
 
 # Session settings
-SESSION_COOKIE_AGE = 60 * 60 * 24 * int(os.environ.get('SESSION_DAYS', 7))  # 7 days
+SESSION_COOKIE_AGE = 60 * 60 * 24 * int(os.environ.get('SESSION_DAYS', 30))  # 30 days
 SESSION_EXPIRE_AT_BROWSER_CLOSE = False
 
 # Cookie security (production-only hardening)

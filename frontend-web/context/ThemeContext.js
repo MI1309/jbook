@@ -1,30 +1,46 @@
 'use client';
 
-import { createContext, useContext, useEffect, useState } from 'react';
+import { createContext, useContext, useEffect, useState, useSyncExternalStore } from 'react';
 
 const ThemeContext = createContext();
+const listeners = new Set();
+
+function subscribeToTheme(listener) {
+    listeners.add(listener);
+    return () => listeners.delete(listener);
+}
+
+function getThemeSnapshot() {
+    return localStorage.getItem('jbook-theme') === 'dark' ? 'dark' : 'light';
+}
+
+function getServerThemeSnapshot() {
+    return 'light';
+}
 
 export function ThemeProvider({ children }) {
-    const [theme, setTheme] = useState('dark');
+    const theme = useSyncExternalStore(subscribeToTheme, getThemeSnapshot, getServerThemeSnapshot);
     const [mounted, setMounted] = useState(false);
 
     useEffect(() => {
-        setTheme('dark');
-        document.documentElement.classList.add('dark');
-        localStorage.setItem('theme', 'dark');
-        setMounted(true);
+        document.documentElement.classList.toggle('dark', theme === 'dark');
+        const frame = requestAnimationFrame(() => setMounted(true));
 
         // Remove preload class to re-enable transitions after initial render completes
-        setTimeout(() => {
+        const timeout = setTimeout(() => {
             document.documentElement.classList.remove('preload');
         }, 50);
-    }, []);
+
+        return () => {
+            cancelAnimationFrame(frame);
+            clearTimeout(timeout);
+        };
+    }, [theme]);
 
     const toggleTheme = () => {
-        // Feature disabled: force dark mode
-        setTheme('dark');
-        localStorage.setItem('theme', 'dark');
-        document.documentElement.classList.add('dark');
+        const nextTheme = theme === 'dark' ? 'light' : 'dark';
+        localStorage.setItem('jbook-theme', nextTheme);
+        listeners.forEach((listener) => listener());
     };
 
     return (

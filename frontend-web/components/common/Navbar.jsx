@@ -9,7 +9,7 @@ import { useTheme } from '@/context/ThemeContext';
 import { appToast as toast } from '@/components/common/AppMessage';
 import ConfirmationModal from '@/components/common/ConfirmationModal';
 import Image from 'next/image';
-import { ChevronDown, LayoutDashboard, LogOut, Menu, X } from 'lucide-react';
+import { ChevronDown, LayoutDashboard, LogOut, Menu, Moon, Sun, X } from 'lucide-react';
 
 const baseNavItems = [
     { href: '/kanji', label: 'Kanji' },
@@ -54,7 +54,7 @@ function ProfileAvatar({ user, size = 'desktop' }) {
 export default function Navbar() {
     const { user, logout, loading } = useAuth();
     const { isPracticing } = usePractice();
-    const { theme, mounted } = useTheme();
+    const { theme, toggleTheme, mounted } = useTheme();
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
     const [scrolled, setScrolled] = useState(false);
@@ -191,7 +191,16 @@ export default function Navbar() {
 
                         {/* Desktop Auth */}
                         <div className="hidden shrink-0 items-center gap-1.5 xl:flex">
-                            {/* Theme toggle disabled (forced dark mode) */}
+                            <button
+                                type="button"
+                                onClick={toggleTheme}
+                                className={`inline-flex h-10 w-10 items-center justify-center rounded-xl transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-blue/60 ${theme === 'dark' ? 'text-amber-200 hover:bg-white/10' : 'text-accent-blue hover:bg-black/5'}`}
+                                aria-label={`Aktifkan tema ${theme === 'dark' ? 'terang' : 'gelap'}`}
+                                aria-pressed={theme === 'dark'}
+                                title={`Tema ${theme === 'dark' ? 'terang' : 'gelap'}`}
+                            >
+                                {theme === 'dark' ? <Sun size={19} aria-hidden="true" /> : <Moon size={18} aria-hidden="true" />}
+                            </button>
 
                             {!loading && (
                                 user ? (
@@ -268,6 +277,16 @@ export default function Navbar() {
                         {/* Mobile navigation toggle */}
                         <div className="flex items-center gap-1 xl:hidden">
                             <button
+                                type="button"
+                                onClick={toggleTheme}
+                                className={`inline-flex h-10 w-10 items-center justify-center rounded-xl transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-blue/60 ${theme === 'dark' ? 'text-amber-200 hover:bg-white/10' : 'text-accent-blue hover:bg-black/5'}`}
+                                aria-label={`Aktifkan tema ${theme === 'dark' ? 'terang' : 'gelap'}`}
+                                aria-pressed={theme === 'dark'}
+                                title={`Tema ${theme === 'dark' ? 'terang' : 'gelap'}`}
+                            >
+                                {theme === 'dark' ? <Sun size={19} aria-hidden="true" /> : <Moon size={18} aria-hidden="true" />}
+                            </button>
+                            <button
                                 onClick={() => setIsMenuOpen((open) => !open)}
                                 className={`group relative inline-flex h-10 w-10 items-center justify-center rounded-xl transition-[background-color,color,box-shadow] duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-blue/60 ${theme === 'dark' ? 'text-gray-300 hover:bg-white/10' : 'text-gray-700 hover:bg-black/5'} ${isMenuOpen ? 'bg-accent-blue/10 text-accent-blue' : ''}`}
                                 aria-label={isMenuOpen ? 'Tutup menu' : 'Buka menu'}
@@ -278,12 +297,12 @@ export default function Navbar() {
                                 <Menu
                                     size={21}
                                     aria-hidden="true"
-                                    className={`absolute transition-[transform,opacity] duration-300 ease-out motion-reduce:transition-none ${isMenuOpen ? 'rotate-[-90deg] scale-50 opacity-0' : 'rotate-0 scale-100 opacity-100'}`}
+                                    className={`absolute transition-[transform,opacity] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none ${isMenuOpen ? 'rotate-[-90deg] scale-50 opacity-0' : 'rotate-0 scale-100 opacity-100'}`}
                                 />
                                 <X
                                     size={21}
                                     aria-hidden="true"
-                                    className={`absolute transition-[transform,opacity] duration-300 ease-out motion-reduce:transition-none ${isMenuOpen ? 'rotate-0 scale-100 opacity-100' : 'rotate-90 scale-50 opacity-0'}`}
+                                    className={`absolute transition-[transform,opacity] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none ${isMenuOpen ? 'rotate-0 scale-100 opacity-100' : 'rotate-90 scale-50 opacity-0'}`}
                                 />
                             </button>
                         </div>

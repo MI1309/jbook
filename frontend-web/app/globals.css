@@ -6,9 +6,9 @@
   --foreground: #1c1c1f;
   --card-bg: #ffffff;
   --border-color: #e5e5db;
-  --brand-red: #0f4c81; /* Blue instead of Crimson */
-  --brand-red-light: #f0f7ff;
-  --accent-blue: #0f4c81; /* Indigo Sea Blue */
+  --brand-red: #e43b35;
+  --brand-red-light: #fff1ef;
+  --accent-blue: #263b91;
   --accent-green: #2d5a27; /* Bamboo Green */
   --accent-gold: #c69214; /* Tatami Gold */
 }
@@ -18,9 +18,9 @@
   --foreground: #f2f2f7;
   --card-bg: #131317; /* Cozy Washi Card */
   --border-color: #212127; /* Thin Washi divider */
-  --brand-red: #38bdf8; /* Blue instead of Sakura Red */
-  --brand-red-light: #0d1a2b;
-  --accent-blue: #38bdf8; /* Serene Sea Blue */
+  --brand-red: #ff746d;
+  --brand-red-light: #321817;
+  --accent-blue: #9aabff;
   --accent-green: #34d399; /* Calm Bamboo Green */
   --accent-gold: #fbbf24; /* Warm Glow Gold */
 }
@@ -54,6 +54,38 @@ body {
   min-height: 100vh;
   position: relative;
   overflow-x: hidden;
+}
+
+html.preload,
+html.preload *,
+html.preload *::before,
+html.preload *::after {
+  transition: none !important;
+}
+
+:root:not(.dark) .text-gray-300 {
+  color: #6b7280;
+}
+
+:root:not(.dark) .text-gray-400 {
+  color: #4b5563;
+}
+
+:root:not(.dark) .text-gray-500 {
+  color: #374151;
+}
+
+:root:not(.dark) .text-gray-600 {
+  color: #1f2937;
+}
+
+:root:not(.dark) .text-gray-700 {
+  color: #111827;
+}
+
+:root:not(.dark) .placeholder-gray-400::placeholder {
+  color: #4b5563;
+  opacity: 1;
 }
 
 /* Washi Paper texture effect */

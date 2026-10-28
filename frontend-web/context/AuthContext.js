@@ -9,9 +9,8 @@ const AuthContext = createContext();
 const base_url = process.env.NEXT_PUBLIC_API_URL || 'https://japan.pythonanywhere.com/api';
 const API_URL = base_url.endsWith('/') ? base_url.slice(0, -1) : base_url;
 
-// Cookie expires aligned with backend JWT refresh token lifetime (default 7 days)
-// Backend default: REFRESH_TOKEN_LIFETIME = 7 days, SESSION_COOKIE_AGE = 7 days
-const COOKIE_EXPIRES_DAYS = Number(process.env.NEXT_PUBLIC_COOKIE_DAYS || 7);
+// Keep auth cookies aligned with the backend's 30-day refresh token lifetime.
+const COOKIE_EXPIRES_DAYS = Number(process.env.NEXT_PUBLIC_COOKIE_DAYS || 30);
 
 const cookieOptions = {
     expires: COOKIE_EXPIRES_DAYS,
@@ -59,8 +58,7 @@ export function AuthProvider({ children }) {
 
             if (res.ok) {
                 const data = await res.json();
-                // Re-set both tokens with fresh 90-day expiry
-                setAuthCookies(data.access, refreshToken);
+                setAuthCookies(data.access, data.refresh || refreshToken);
                 return data.access;
             }
         } catch (error) {

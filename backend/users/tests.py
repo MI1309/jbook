@@ -8,6 +8,7 @@ from django.contrib.auth import get_user_model
 from unittest.mock import patch
 from ninja_jwt.tokens import RefreshToken
 from users.privacy import email_lookup_digest
+from users.models import UserProfile
 
 
 @override_settings(EMAIL_ENCRYPTION_KEY="test-email-encryption-key")
@@ -70,6 +71,10 @@ class ProfileImageApiTests(TestCase):
 		self.assertEqual(second_response.json()["tts_points"], 35)
 		self.user.refresh_from_db()
 		self.assertEqual(self.user.tts_points, 35)
+		self.assertEqual(self.user.profile.total_tts_points, 35)
+
+	def test_user_profile_is_created_automatically(self):
+		self.assertTrue(UserProfile.objects.filter(user=self.user).exists())
 
 
 @override_settings(

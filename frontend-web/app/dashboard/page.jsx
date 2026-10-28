@@ -7,6 +7,7 @@ import { getUserAnalytics } from '@/lib/api';
 import { getGuestAnalytics } from '@/lib/local-analytics';
 import Link from 'next/link';
 import AppMessage from '@/components/common/AppMessage';
+import Dashboard from './Dashboard';
 
 export default function DashboardOverviewPage() {
     const { user, loading } = useAuth();
@@ -15,28 +16,26 @@ export default function DashboardOverviewPage() {
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
 
-    const fetchAnalytics = async () => {
-        setIsLoading(true);
-        try {
-            if (user) {
-                const data = await getUserAnalytics();
-                setAnalytics(data);
-            } else {
-                const data = getGuestAnalytics();
-                setAnalytics(data);
-            }
-        } catch (err) {
-            console.error("Error fetching analytics:", err);
-            setError("Gagal memuat data latihan. Coba lagi nanti.");
-        } finally {
-            setIsLoading(false);
-        }
-    };
-
     useEffect(() => {
-        if (!loading) {
-            fetchAnalytics();
+        if (loading) return;
+
+        let isCurrent = true;
+        async function fetchAnalytics() {
+            setIsLoading(true);
+            setError(null);
+            try {
+                const data = user ? await getUserAnalytics() : getGuestAnalytics();
+                if (isCurrent) setAnalytics(data);
+            } catch (err) {
+                console.error("Error fetching analytics:", err);
+                if (isCurrent) setError("Gagal memuat data latihan. Coba lagi nanti.");
+            } finally {
+                if (isCurrent) setIsLoading(false);
+            }
         }
+
+        fetchAnalytics();
+        return () => { isCurrent = false; };
     }, [user, loading]);
 
     if (loading || (isLoading && !analytics)) {
@@ -81,6 +80,7 @@ export default function DashboardOverviewPage() {
 
     return (
         <div className="space-y-8 animate-in fade-in duration-500">
+            {user && <Dashboard />}
             {!user && (
                 <AppMessage variant="info" className="flex-col items-center justify-between md:flex-row">
                     <div className="flex items-center gap-4 text-center md:text-left">
