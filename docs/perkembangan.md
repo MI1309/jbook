@@ -1,6 +1,6 @@
 # Perkembangan JBook
 
-Dokumen ini merangkum perkembangan JBook berdasarkan riwayat Git yang tersedia saat dibuat. Riwayat mencakup **269 commit**, dari 11 Februari sampai 27 Oktober 2026. Hash dan pesan commit di bawah mengikuti Git; pesan yang terlalu umum seperti `update`, `modif`, atau `p` dipertahankan apa adanya dan tidak ditafsirkan sebagai rincian teknis. Untuk memeriksa rincian file pada commit tersebut, gunakan `git show <hash>`.
+Dokumen ini merangkum perkembangan JBook berdasarkan riwayat Git yang tersedia saat dibuat. Riwayat yang dicatat mencakup 11 Februari sampai 2 November 2026. Hash dan pesan commit di bawah mengikuti Git; pesan yang terlalu umum seperti `update`, `modif`, atau `p` dipertahankan apa adanya dan tidak ditafsirkan sebagai rincian teknis. Untuk memeriksa rincian file pada commit tersebut, gunakan `git show <hash>`.
 
 ## Ringkasan Milestone
 
@@ -13,6 +13,7 @@ Dokumen ini merangkum perkembangan JBook berdasarkan riwayat Git yang tersedia s
 - **Agustus 2026:** fitur pemeriksaan duplikat konten dan pengelolaan data diperbaiki. Penanganan furigana, ruby, peta furigana, dan normalisasi Unicode disempurnakan.
 - **September 2026:** perubahan berfokus pada keamanan, filter Kotoba, dependensi, dan migrasi jenis kata yang idempoten.
 - **Oktober 2026:** konfigurasi domain API, keamanan email, dan alur latihan responsif diperbarui. Relasi ekspresi-Bunpo, soal partikel, Argon2id, foto profil, poin TTS, SRS flashcard, paginasi admin, impor Kanji OpenJLPT N3, status pengiriman email reset password, route detail Kanji berbasis judul, serta fondasi roadmap belajar personal dikembangkan.
+- **November 2026:** generator crossword TTS backend diperbaiki agar kata awal tidak selalu menjadi kata terpanjang pertama; kandidat yang dapat masuk grid difilter dan kata pembuka dipilih acak. Dashboard statistik personal diverifikasi kembali. Tes regresi lokal ditambahkan. Catatan handoff menandai bahwa game `/tts` utama menggunakan generator JavaScript frontend, sehingga variasi seed di jalur utama masih perlu diverifikasi/diperbaiki.
 
 ## Riwayat Setiap Commit
 
@@ -314,31 +315,34 @@ Daftar berikut kronologis dari commit tertua ke terbaru. Pesan commit dipakai se
 - `4baeb85` (2026-10-27): `feat : route link kanji detail judul`
 - `57fd413` (2026-10-27): `p`
 
-## Perubahan Belum Di-commit
+### November 2026
 
-Saat dokumen ini dibuat, working tree berisi perubahan lokal yang belum masuk ke commit. Perubahan tema terang/gelap JBook dan peningkatan kontras teks juga masih berupa perubahan lokal. Perubahan tersebut sengaja tidak dicampurkan ke daftar riwayat commit di atas.
+- `90ec941` (2026-11-02): `Auto backup : 2026-11-02 12:13:28`
+- `9ccb097` (2026-11-02): `perbaikan tts logic` — memilih kata pembuka crossword backend secara acak dari kandidat dengan panjang mendekati maksimum, serta mengabaikan kata kosong atau yang lebih panjang dari grid.
 
-### 27 Oktober 2026: Fondasi Learning Companion
+## Snapshot Pengembangan 2 November 2026
 
-- Menambahkan model `UserProfile` one-to-one untuk menyimpan total poin TTS. Signal `post_save` membuat profil otomatis saat user baru terdaftar; migration turut membuat profil untuk user lama dengan menyalin poin yang sudah terkumpul.
-- Menyelaraskan klaim poin TTS yang sudah ada agar `total_tts_points` ikut diperbarui. Pencatatan sesi tetap idempotent sehingga satu sesi tidak dihitung dua kali.
-- Mempertahankan model dan endpoint koleksi vocab SRS yang telah tersedia (`UserVocabulary`), termasuk status hafalan, level kotak, dan jadwal review; tidak membuat model duplikat.
-- Menambahkan model tahap roadmap (`LearningPathStage`) dan progres per-user (`UserStageProgress`), dengan batas progres 0–100 dan constraint satu progres per user per tahap.
-- Migration menginisialisasi tahap Hiragana, Katakana, N5, N4, N3, N2, dan N1. Tahap N3–N1 ditandai `beta`.
-- Menambahkan endpoint JWT-authenticated `GET /api/learning/roadmap` untuk membaca roadmap dan progres milik user, serta `PUT /api/learning/roadmap/{stage_id}/progress` untuk memperbarui progres sendiri.
-- Validasi: Django system check bersih, `makemigrations --check --dry-run` tidak menemukan perubahan migration yang tertinggal, dan 11 tes terfokus untuk roadmap, SRS, profil, dan klaim poin TTS lulus.
+Bagian ini merangkum keadaan fitur saat dokumentasi diperbarui; ini bukan pengganti `git status` atau `git diff`.
 
-Untuk melihat daftar perubahan terbaru sebelum membuat commit:
+### Learning Companion dan Dashboard
 
-```bash
-git status --short
-git diff
-```
+- `UserProfile` menyimpan total poin TTS; signal membuat profile untuk user baru, dan migration mengisi profile bagi user lama.
+- Klaim poin TTS memperbarui nilai total; sesi dicatat idempotent agar satu sesi tidak dihitung dua kali.
+- Model `UserVocabulary` menyediakan status koleksi SRS, box level, serta jadwal review. `LearningPathStage` dan `UserStageProgress` menyediakan progress roadmap per user dengan batas 0-100 dan constraint unik user-stage.
+- Migration `learning/migrations/0010_learningpathstage_userstageprogress.py` membuat tahap Hiragana, Katakana, N5, N4, N3, N2, N1. N3-N1 berstatus beta.
+- Endpoint JWT `GET /api/learning/roadmap` membaca roadmap; `PUT /api/learning/roadmap/{stage_id}/progress` memperbarui progress milik user.
+- Endpoint statistik `GET /api/learning/dashboard/stats` menggabungkan username, poin TTS, jumlah sesi, total kosakata tersimpan, ringkasan status koleksi, aktivitas 30 hari, serta roadmap user yang login.
+- Widget `frontend-web/app/dashboard/Dashboard.jsx` menampilkan sambutan, poin, metrik kosakata/game, roadmap progress bar, label Coming Soon, loading, error, dan tombol coba lagi.
+- Pada validasi 2 November, 12 tes `learning.tests` lulus; ESLint terarah untuk komponen dashboard lulus.
+
+### Perbaikan Crossword TTS
+
+- Commit `9ccb097` mengubah `backend/learning/tts_logic.py`: generator mengabaikan kata kosong/di luar batas ukuran grid dan mengambil kata pertama secara acak dari kandidat yang panjangnya mendekati kata maksimum. Kata lain tetap diurutkan menurun berdasarkan panjang untuk membantu kepadatan crossword.
+- Tes regresi `backend/learning/test_tts_logic.py` mengontrol `random.choice` untuk memverifikasi kata pembuka berubah. Tes ini lulus; bersama `learning.tests`, total 13 tes lulus.
+- Batasan penting: halaman utama `/tts` memakai generator JavaScript di `frontend-web/utils/gridGenerator.js`, dipanggil melalui `frontend-web/stores/gameStore.js`. Perubahan generator Python hanya memengaruhi endpoint `/api/learning/tts/generate`, sehingga variasi kata awal pada game frontend masih harus diverifikasi. Detail ada di [handoff AI](ai-handoff.md).
+
+Saat pemeriksaan sebelum pembaruan dokumen ini, `HEAD` adalah `9ccb097` (`master` dan `origin/master`), dan `backend/learning/test_tts_logic.py` merupakan file baru yang belum terlacak. Periksa `git status --short` sebelum melanjutkan; status ini dapat berubah.
 
 ## Memperbarui Kronologi
 
-Tambahkan entri baru di bawah bulan yang sesuai setiap kali ada commit. Gunakan hash pendek, tanggal commit, dan pesan asli. Untuk pesan commit yang generik, tambahkan ringkasan berdasarkan diff agar perubahan tetap dapat dipahami.
-
-```bash
-git log --date=short --pretty=format:'- `%h` (%ad): `%s`' -- docs frontend-web backend
-```
+Tambahkan entri baru di bawah bulan yang sesuai setiap kali ada commit. Gunakan hash pendek, tanggal commit, dan pesan asli. Untuk pesan commit yang generik, tambahkan ringkasan berdasarkan diff agar perubahan tetap dapat dipahami. Untuk status kerja yang belum di-commit, perbarui bagian Snapshot Pengembangan dengan tanggal dan bukti validasi.

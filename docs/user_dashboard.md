@@ -53,3 +53,28 @@ graph TD
   - Melakukan validasi format JSON.
   - Untuk pengguna masuk, mengirimkan payload JSON ke API Server (`importPracticeData`).
   - Untuk Guest, melakukan penulisan ulang ke `localStorage` setelah memastikan atribut minimal (seperti `kakitori_stats` dan `total_attempts`) sudah valid.
+
+---
+
+## 4. Dashboard Personal dan Roadmap
+
+Widget dashboard personal ditampilkan di halaman overview untuk pengguna yang login. Komponen berada di `frontend-web/app/dashboard/Dashboard.jsx`; halaman induknya adalah `frontend-web/app/dashboard/page.jsx`. Widget ini terpisah dari analitik latihan overview yang mendukung guest.
+
+### Endpoint statistik
+
+`GET /api/learning/dashboard/stats` didefinisikan di `backend/learning/views.py` dengan Django Ninja dan `JWTAuth()`. Router view digabungkan ke `learning/api.py`, lalu dipasang pada prefix `/api/learning` melalui `core/api.py` dan `core/urls.py`.
+
+Endpoint hanya membaca data milik `request.auth` dan mengembalikan:
+
+- `username`, `total_tts_points`, dan `tts_games_played`.
+- `total_saved` serta jumlah vocab berstatus `mastered`, `learning`, dan `new`.
+- Aktivitas belajar harian 30 hari dan breakdown jenis aktivitas.
+- `roadmap`, dengan `stage_code`, `title`, `is_available`, dan `completion_percentage`.
+
+Poin diambil dari `UserProfile.total_tts_points` dengan fallback ke `User.tts_points`; sesi game dihitung dari relasi `User.tts_point_sessions`. Progress model disimpan sebagai `UserStageProgress.completion_percent`, lalu diserialisasi sebagai `completion_percentage`. Stage `beta` dianggap belum tersedia dan ditampilkan “Coming Soon”.
+
+### Tampilan dan kegagalan request
+
+Komponen mengirim token sebagai `Authorization: Bearer <token>`, memakai `API_URL` dari `frontend-web/lib/api.js`, dan meminta data tanpa cache. UI menangani status loading, 401/akses, kegagalan umum, dan menyediakan aksi coba lagi. Access token utama aplikasi disimpan pada cookie oleh `AuthContext`; pembacaan localStorage di widget hanya fallback migrasi lama.
+
+Detail file terkait, migration, test, dan langkah melanjutkan perbaikan variasi seed TTS tersedia di [AI Handoff](ai-handoff.md).

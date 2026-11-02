@@ -2,8 +2,26 @@ const DEFAULT_OPTIONS = {
   minWords: 5,
   maxWords: 10,
   maxAttempts: 5,
-  maxNodes: 5000
+  maxNodes: 5000,
+  seedDegreeWindow: 2,
+  seedPoolSize: 6
 };
+
+export function shuffleInPlace(array, rng = Math.random) {
+  for (let index = array.length - 1; index > 0; index--) {
+    const swapIndex = Math.floor(rng() * (index + 1));
+    [array[index], array[swapIndex]] = [array[swapIndex], array[index]];
+  }
+  return array;
+}
+
+function pickRandomSeeds(component, limit, rng = Math.random, window = DEFAULT_OPTIONS.seedDegreeWindow) {
+  if (component.length === 0) return [];
+  const maxDegree = component[0].neighbors.size;
+  const candidates = component.filter(node => node.neighbors.size >= maxDegree - window);
+  const pool = candidates.length > 0 ? candidates : component.slice(0, 1);
+  return shuffleInPlace([...pool], rng).slice(0, limit);
+}
 
 function createEmptyGrid(width, height) {
   return Array.from({ length: height }, (_, row) => (
@@ -71,17 +89,18 @@ export function findLargestConnectedComponent(graph) {
   return largest;
 }
 
-export function selectWordSeeds(kotobaList, useKanji = false, limit = 10) {
+export function selectWordSeeds(kotobaList, useKanji = false, limit = 10, rng = Math.random) {
   const component = findLargestConnectedComponent(buildWordGraph(kotobaList, useKanji));
-  return component
-    .sort((left, right) => right.neighbors.size - left.neighbors.size)
-    .slice(0, limit)
+  const sortedComponent = [...component]
+    .sort((left, right) => right.neighbors.size - left.neighbors.size);
+  return pickRandomSeeds(sortedComponent, limit, rng)
     .map(node => node.kotoba);
 }
 
 export function generateCrosswordGrid(kotobaList, width = 10, height = 10, levelStr = '5', useKanji = false, options = {}) {
   const config = { ...DEFAULT_OPTIONS, ...options };
-  const connectedWords = findLargestConnectedComponent(buildWordGraph(kotobaList, useKanji))
+  const rng = config.rng || Math.random;
+  const connectedWords = [...findLargestConnectedComponent(buildWordGraph(kotobaList, useKanji))]
     .filter(node => node.text.length <= Math.max(width, height))
     .sort((left, right) => right.neighbors.size - left.neighbors.size);
   const component = Number.isFinite(config.candidateLimit)
@@ -91,7 +110,13 @@ export function generateCrosswordGrid(kotobaList, width = 10, height = 10, level
   let attempts = 0;
 
   // Try several hubs because the most connected word can still produce poor geometry.
-  for (const seed of component.slice(0, config.maxAttempts)) {
+  const seeds = pickRandomSeeds(
+    component,
+    Math.min(config.maxAttempts, config.seedPoolSize),
+    rng,
+    config.seedDegreeWindow
+  );
+  for (const seed of seeds) {
     attempts += 1;
     const state = { cells: createEmptyGrid(width, height), words: [], nodes: 0 };
     const row = Math.floor(height / 2);
@@ -108,7 +133,7 @@ export function generateCrosswordGrid(kotobaList, width = 10, height = 10, level
     height,
     cells: best.cells,
     words: best.words,
-    choiceBank: buildChoiceBank(best.words, component, options.choiceBank, options.choiceBankLimit),
+    choiceBank: buildChoiceBank(best.words, component, options.choiceBank, options.choiceBankLimit, rng),
     level: levelStr,
     attempts,
     generatedAt: new Date().toISOString()
@@ -258,14 +283,14 @@ function unplaceWord(cells, words, kotoba, startRow, startCol, direction, useKan
   if (wordIndex >= 0) words.splice(wordIndex, 1);
 }
 
-function buildChoiceBank(words, candidates, suppliedBank, choiceBankLimit) {
+function buildChoiceBank(words, candidates, suppliedBank, choiceBankLimit, rng = Math.random) {
   const used = new Set(words.flatMap(word => [...word.text]));
   const pool = suppliedBank || candidates.flatMap(candidate => [...candidate.text]);
-  const distractors = [...new Set(pool)].filter(char => !used.has(char)).sort(() => Math.random() - 0.5);
+  const distractors = shuffleInPlace([...new Set(pool)].filter(char => !used.has(char)), rng);
   const extras = Number.isFinite(choiceBankLimit)
     ? distractors.slice(0, Math.max(0, choiceBankLimit - used.size))
     : distractors;
-  return [...used, ...extras].sort(() => Math.random() - 0.5);
+  return shuffleInPlace([...used, ...extras], rng);
 }
 
 function cloneCells(cells) {

@@ -3,7 +3,7 @@ import { persist } from 'zustand/middleware';
 import * as wanakana from 'wanakana';
 import { appToast as toast } from '@/components/common/AppMessage';
 import { getKanjiList, getVocabList, submitPracticeResults } from '@/lib/api';
-import { generateCrosswordGrid } from '../utils/gridGenerator';
+import { generateCrosswordGrid, shuffleInPlace } from '../utils/gridGenerator';
 import { isHiragana, isValidJapanese } from '../utils/japaneseValidators';
 import { hiraganaDakuon, hiraganaGojuon, hiraganaYoon } from '@/data/kana';
 
@@ -113,8 +113,8 @@ export const useGameStore = create(
         );
       }
 
-      // Shuffle the level pool first; graph degree still selects the best hub from this random sample.
-      validWords = validWords.sort(() => Math.random() - 0.5);
+      // Shuffle the level pool before selecting a high-connectivity seed.
+      shuffleInPlace(validWords);
       const gridSize = mode === 'kanji' ? 20 : 12;
       const grid = generateCrosswordGrid(validWords, gridSize, gridSize, level, mode === 'kanji', {
         minWords: 5,

@@ -8,6 +8,10 @@ import { getKanjiList, getGrammarList, getVocabList } from '@/lib/api';
 import { 
     Search, 
     ArrowRight, 
+    BookOpen,
+    Brain,
+    Gamepad2,
+    Languages,
 } from 'lucide-react';
 
 export default function Home() {
@@ -75,22 +79,39 @@ export default function Home() {
             <div className="container relative z-10 mx-auto flex w-full max-w-5xl flex-1 flex-col justify-center px-4 pt-4 xl:justify-between xl:px-6 xl:pt-16">
                 
                 {/* HERO SECTION */}
-                <header className="mb-4 flex w-full flex-col items-center space-y-5 text-center xl:mb-12 xl:space-y-6">
-                    <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-[var(--border-color)] bg-[var(--card-bg)] text-xs font-bold tracking-widest uppercase text-accent-blue shadow-sm">
-                        <Search className="w-4 h-4 text-accent-blue" />
-                        Kamus & Latihan Online
+                <header className="mb-8 flex w-full flex-col items-center space-y-5 text-center xl:mb-10 xl:space-y-6">
+                    <div className="inline-flex items-center gap-2 rounded-full border border-[var(--border-color)] bg-[var(--card-bg)] px-4 py-1.5 text-xs font-bold uppercase text-accent-blue shadow-sm">
+                        <span className="font-japanese text-base" aria-hidden="true">日本語辞典</span>
+                        <span aria-hidden="true">·</span>
+                        <span>辞書</span>
                     </div>
 
-                    <h1 className="mt-4 max-w-3xl whitespace-nowrap text-2xl font-japanese font-black leading-tight tracking-tight xl:text-6xl">
-                        JBook <span className="text-accent-blue dark:text-accent-blue drop-shadow-[0_0_15px_rgba(56,189,248,0.15)]">Kamus Jepang</span>
+                    <h1 className="max-w-4xl text-3xl font-japanese font-black leading-tight text-foreground sm:text-4xl xl:text-6xl">
+                        <span className="block">Kamus Bahasa Jepang</span>
+                        <span className="mt-1 block text-accent-blue">Latihan &amp; Game TTS</span>
                     </h1>
-
-                    <p className="mt-4 max-w-2xl text-base font-medium text-gray-500 dark:text-gray-400 xl:text-lg">
-                        Kamus bahasa jepang disertai latihan soal dan game teka-teki silang .
+    
+                    <p className="max-w-2xl text-base font-medium leading-relaxed text-gray-600 dark:text-gray-300 sm:text-lg">
+                        Dari Kana sampai N1. Kamus interaktif, latihan soal, game teka-teki silang Kanji & kotoba, dan SRS flashcard untuk belajar bahasa Jepang dalam satu tempat.
                     </p>
 
+                    <div className="flex w-full flex-col justify-center gap-3 pt-1 sm:w-auto sm:flex-row">
+                        <Link
+                            href="/practice"
+                            className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-accent-blue px-6 py-3 text-sm font-bold text-white shadow-lg shadow-accent-blue/20 transition hover:brightness-110 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-blue"
+                        >
+                            Mulai Belajar <ArrowRight aria-hidden="true" className="h-4 w-4" />
+                        </Link>
+                        <Link
+                            href="/tts"
+                            className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl border border-[var(--border-color)] bg-[var(--card-bg)] px-6 py-3 text-sm font-bold text-foreground transition hover:border-accent-green hover:text-accent-green focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-green"
+                        >
+                            <Gamepad2 aria-hidden="true" className="h-4 w-4" /> Main TTS
+                        </Link>
+                    </div>
+
                     {/* SEARCH INTERACTIVE */}
-                    <div className="w-full min-w-0 max-w-xl relative mt-4">
+                    <div className="relative mt-2 w-full min-w-0 max-w-xl">
                         <div className="relative group">
                             <span className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-400 group-focus-within:text-accent-blue transition-colors duration-200">
                                 <Search className="w-5 h-5" />
@@ -225,21 +246,58 @@ export default function Home() {
 
 
 
-                {/* QUICK LINKS */}
-                <nav aria-label="Navigasi utama" className="mb-4 grid w-full grid-cols-2 justify-items-center gap-x-4 gap-y-1 xl:mt-auto xl:mb-8 xl:flex xl:flex-wrap xl:justify-center xl:gap-x-8">
-                    <Link href="/kanji" className="flex items-center justify-center gap-2 py-3 text-sm font-bold text-gray-500 transition-colors hover:text-accent-blue xl:py-2">
-                        <span className="text-accent-blue">漢字</span> Kanji
+                <section aria-label="Jelajahi fitur JBook" className="mb-5 w-full">
+                    <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">
+                        <Link href="/kana" className="group rounded-lg border border-[var(--border-color)] bg-[var(--card-bg)] p-4 text-left transition hover:-translate-y-0.5 hover:border-accent-blue/50 hover:shadow-lg hover:shadow-accent-blue/5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-blue">
+                            <div className="mb-3 flex h-9 w-9 items-center justify-center rounded-lg bg-accent-blue/10 text-accent-blue">
+                                <Languages aria-hidden="true" className="h-5 w-5" />
+                            </div>
+                            <h2 className="text-sm font-bold text-foreground">Huruf Jepang</h2>
+                            <p className="mt-1 text-xs leading-relaxed text-gray-600 dark:text-gray-400">Kenali Hiragana dan Katakana lewat tabel interaktif.</p>
+                            <span className="mt-3 inline-flex items-center gap-1 text-xs font-bold text-accent-blue">Kana <ArrowRight aria-hidden="true" className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" /></span>
+                        </Link>
+
+                        <Link href="/kotoba" className="group rounded-lg border border-[var(--border-color)] bg-[var(--card-bg)] p-4 text-left transition hover:-translate-y-0.5 hover:border-accent-green/50 hover:shadow-lg hover:shadow-accent-green/5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-green">
+                            <div className="mb-3 flex h-9 w-9 items-center justify-center rounded-lg bg-accent-green/10 text-accent-green">
+                                <BookOpen aria-hidden="true" className="h-5 w-5" />
+                            </div>
+                            <h2 className="text-sm font-bold text-foreground">Kamus &amp; Kosakata</h2>
+                            <p className="mt-1 text-xs leading-relaxed text-gray-600 dark:text-gray-400">Cari arti, bacaan, dan contoh kosakata Jepang.</p>
+                            <span className="mt-3 inline-flex items-center gap-1 text-xs font-bold text-accent-green">Kotoba + Kanji <ArrowRight aria-hidden="true" className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" /></span>
+                        </Link>
+
+                        <Link href="/practice" className="group rounded-lg border border-[var(--border-color)] bg-[var(--card-bg)] p-4 text-left transition hover:-translate-y-0.5 hover:border-accent-gold/60 hover:shadow-lg hover:shadow-accent-gold/5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-gold">
+                            <div className="mb-3 flex h-9 w-9 items-center justify-center rounded-lg bg-accent-gold/10 text-accent-gold">
+                                <Brain aria-hidden="true" className="h-5 w-5" />
+                            </div>
+                            <h2 className="text-sm font-bold text-foreground">Latihan Soal</h2>
+                            <p className="mt-1 text-xs leading-relaxed text-gray-600 dark:text-gray-400">Uji pemahaman Kanji, Kotoba, dan Bunpo.</p>
+                            <span className="mt-3 inline-flex items-center gap-1 text-xs font-bold text-accent-gold">Mulai Latihan <ArrowRight aria-hidden="true" className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" /></span>
+                        </Link>
+
+                        <Link href="/tts" className="group rounded-lg border border-[var(--border-color)] bg-[var(--card-bg)] p-4 text-left transition hover:-translate-y-0.5 hover:border-rose-500/50 hover:shadow-lg hover:shadow-rose-500/5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rose-500">
+                            <div className="mb-3 flex h-9 w-9 items-center justify-center rounded-lg bg-rose-500/10 text-rose-600 dark:text-rose-400">
+                                <Gamepad2 aria-hidden="true" className="h-5 w-5" />
+                            </div>
+                            <h2 className="text-sm font-bold text-foreground">Game TTS</h2>
+                            <p className="mt-1 text-xs leading-relaxed text-gray-600 dark:text-gray-400">Susun jawaban di teka-teki silang interaktif.</p>
+                            <span className="mt-3 inline-flex items-center gap-1 text-xs font-bold text-rose-600 dark:text-rose-400">Main TTS <ArrowRight aria-hidden="true" className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" /></span>
+                        </Link>
+                    </div>
+                </section>
+
+                <aside className="mb-4 flex w-full flex-col gap-2 rounded-lg border border-accent-gold/30 bg-accent-gold/5 px-4 py-3 text-left sm:flex-row sm:items-center sm:justify-between">
+                    <div className="flex items-center gap-2">
+                        <span className="font-japanese text-lg text-accent-gold" aria-hidden="true">漢字</span>
+                        <div>
+                            <p className="text-xs font-bold uppercase text-accent-gold">Materi populer</p>
+                            <p className="text-sm font-semibold text-foreground">Mulai mengenal Kanji lewat kamus interaktif</p>
+                        </div>
+                    </div>
+                    <Link href="/kanji" className="inline-flex items-center gap-1 self-start text-sm font-bold text-accent-blue transition hover:gap-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-blue sm:self-auto">
+                        Jelajahi Kanji <ArrowRight aria-hidden="true" className="h-4 w-4" />
                     </Link>
-                    <Link href="/kotoba" className="flex items-center justify-center gap-2 py-3 text-sm font-bold text-gray-500 transition-colors hover:text-accent-blue xl:py-2">
-                        <span className="text-accent-blue">語彙</span> Kotoba
-                    </Link>
-                    <Link href="/bunpo" className="flex items-center justify-center gap-2 py-3 text-sm font-bold text-gray-500 transition-colors hover:text-accent-blue xl:py-2">
-                        <span className="text-accent-blue">文法</span> Bunpo
-                    </Link>
-                    <Link href="/practice" className="flex items-center justify-center gap-2 py-3 text-sm font-bold text-accent-blue transition-colors hover:text-accent-blue/75 xl:py-2">
-                        Latihan <ArrowRight className="w-4 h-4" />
-                    </Link>
-                </nav>
+                </aside>
 
             </div>
         </div>
