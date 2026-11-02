@@ -151,10 +151,10 @@ html.preload *::after {
     opacity: 0;
   }
   10% {
-    opacity: 0.6;
+    opacity: 0.78;
   }
   90% {
-    opacity: 0.4;
+    opacity: 0.58;
   }
   100% {
     transform: translateY(105vh) translateX(100px) rotate(360deg);
@@ -164,11 +164,15 @@ html.preload *::after {
 
 .sakura-petal {
   position: absolute;
-  background: linear-gradient(135deg, #fbcfe8 0%, #fda4af 100%);
+  background: linear-gradient(135deg, #db2777 0%, #fb7185 100%);
   border-radius: 99% 0 99% 50% / 99% 0 99% 50%;
   pointer-events: none;
   z-index: 1;
   opacity: 0;
+}
+
+.dark .sakura-petal {
+  background: linear-gradient(135deg, #fbcfe8 0%, #fda4af 100%);
 }
 
 /* Subtle transitions */
