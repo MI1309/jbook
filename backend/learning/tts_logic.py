@@ -12,14 +12,24 @@ class CrosswordGenerator:
         self.placed_words = [] # list of dicts {'word', 'row', 'col', 'dir', 'meaning', 'id'}
 
     def generate(self):
-        # Sort words by length descending to place longer words first
-        available_words = sorted(self.words_data, key=lambda x: len(x['word']), reverse=True)
+        available_words = [
+            word for word in self.words_data
+            if 0 < len(word['word']) <= self.size
+        ]
         
         if not available_words:
             return self.grid, []
 
-        # Place the first word in the middle
-        first = available_words.pop(0)
+        max_length = max(len(word['word']) for word in available_words)
+        min_start_length = max(2, max_length - 2)
+        starting_words = [
+            word for word in available_words
+            if len(word['word']) >= min_start_length
+        ] or available_words
+        first = random.choice(starting_words)
+        available_words.remove(first)
+        available_words.sort(key=lambda x: len(x['word']), reverse=True)
+
         start_row = self.size // 2
         start_col = (self.size - len(first['word'])) // 2
         self._place_word(first, start_row, start_col, 'H')
