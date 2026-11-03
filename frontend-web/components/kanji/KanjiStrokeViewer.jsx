@@ -17,14 +17,14 @@ export default function KanjiStrokeViewer({ svgContent, size = 80, isAnimating =
 
     return (
         <div 
-            className={`relative border border-dashed border-gray-300 dark:border-blue-950/40 rounded-xl p-1 bg-white dark:bg-zinc-900 group/stroke cursor-pointer overflow-hidden transition-all hover:border-blue-500 ${isAnimating ? 'is-active' : ''}`}
+            className={`relative border border-dashed border-[var(--border-color)] rounded-xl p-1 bg-[var(--card-bg)] group/stroke cursor-pointer overflow-hidden transition-all hover:border-blue-500 ${isAnimating ? 'is-active' : ''}`}
             style={{ width: size, height: size }}
             title="Klik atau arahkan kursor untuk melihat urutan goresan"
         >
             {/* Grid background tradisional jepang (opsional tapi keren) */}
-            <div className="absolute inset-0 pointer-events-none border-t border-b border-l border-r border-gray-100 dark:border-zinc-800/50 m-auto w-full h-full flex items-center justify-center">
-                <div className="w-full h-0 border-t border-dashed border-gray-200 dark:border-zinc-800"></div>
-                <div className="h-full w-0 border-l border-dashed border-gray-200 dark:border-zinc-800 absolute"></div>
+            <div className="absolute inset-0 pointer-events-none border border-[var(--border-color)] m-auto w-full h-full flex items-center justify-center">
+                <div className="w-full h-0 border-t border-dashed border-[var(--border-color)]"></div>
+                <div className="h-full w-0 border-l border-dashed border-[var(--border-color)] absolute"></div>
             </div>
 
             {/* Inject SVG Mentah & Inject CSS secara dinamis untuk animasi goresan */}
