@@ -56,12 +56,6 @@ export default async function sitemap() {
       priority: 1,
     },
     {
-      url: `${BASE_URL}/about`,
-      lastModified: today,
-      changeFrequency: 'monthly',
-      priority: 0.7,
-    },
-    {
       url: `${BASE_URL}/kanji`,
       lastModified: today,
       changeFrequency: 'weekly',

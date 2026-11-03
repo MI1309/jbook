@@ -1,13 +1,11 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { useGameStore } from '../../stores/gameStore';
-import { useAuth } from '../../context/AuthContext';
 import { BookOpen, Keyboard, MousePointerClick, Play, Trophy } from 'lucide-react';
 import { clsx } from 'clsx';
 
 export const LevelSelector = () => {
   const { gameState, startGame } = useGameStore();
-  const { user } = useAuth();
   const [selectedMode, setSelectedMode] = useState('kanji');
   const [selectedLevel, setSelectedLevel] = useState('5');
   const [isLoading, setIsLoading] = useState(false);
@@ -90,31 +88,6 @@ export const LevelSelector = () => {
               ))}
             </div>
           </fieldset>
-
-          <div className="mt-5 rounded-lg border border-accent-gold/30 bg-accent-gold/5 px-3 py-2.5 text-sm">
-            {user ? (
-              <div className="flex items-center gap-2 text-foreground">
-                <Trophy aria-hidden="true" className="h-4 w-4 shrink-0 text-accent-gold" />
-                {user.total_tts_points !== undefined ? (
-                  <span className="font-bold">Poin Anda: {Number(user.total_tts_points).toLocaleString('id-ID')}</span>
-                ) : (
-                  <>
-                    <span>Poin tersimpan di </span>
-                    <Link href="/dashboard" className="font-bold text-accent-blue underline-offset-2 hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-blue">
-                      dashboard →
-                    </Link>
-                  </>
-                )}
-              </div>
-            ) : (
-              <div className="flex flex-wrap items-center gap-x-1.5 gap-y-1 text-gray-700 dark:text-gray-300">
-                <span>Main sebagai tamu · Masuk untuk menyimpan poin:</span>
-                <Link href="/login" className="font-bold text-accent-blue underline-offset-2 hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-blue">Masuk</Link>
-                <span aria-hidden="true">/</span>
-                <Link href="/register" className="font-bold text-accent-blue underline-offset-2 hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-blue">Daftar</Link>
-              </div>
-            )}
-          </div>
 
           <button
             type="button"

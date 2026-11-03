@@ -17,7 +17,6 @@ const baseNavItems = [
     { href: '/kotoba', label: 'Kotoba' },
     { href: '/kana', label: 'Kana' },
     { href: '/tts', label: 'TTS' },
-    { href: '/about', label: 'Tentang Kami' },
 ];
 
 const avatarKana = ['あ', 'き', 'す', 'ね', 'ふ', 'ま', 'ゆ', 'り', 'を', 'ん'];

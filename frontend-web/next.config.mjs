@@ -1,4 +1,8 @@
 import withPWAInit from "@ducanh2912/next-pwa";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+
+const appDirectory = path.dirname(fileURLToPath(import.meta.url));
 
 const withPWA = withPWAInit({
     dest: "public",
@@ -117,6 +121,7 @@ const productionSecurityHeaders = [
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+    outputFileTracingRoot: appDirectory,
     turbopack: {},
     async redirects() {
         return [

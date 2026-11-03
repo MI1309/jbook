@@ -98,14 +98,7 @@ export const CompletionModal = () => {
             Main Lagi / Ganti Level
           </button>
 
-          {user ? (
-            <Link
-              href="/dashboard"
-              className="mt-2 inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-xl border border-[var(--border-color)] px-4 py-2 text-sm font-bold text-foreground transition hover:border-accent-blue hover:text-accent-blue focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-blue"
-            >
-              Lihat Poin Saya <ArrowRight aria-hidden="true" className="h-4 w-4" />
-            </Link>
-          ) : (
+          {!user && (
             <Link
               href="/login"
               className="mt-2 inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-xl border border-[var(--border-color)] px-4 py-2 text-sm font-bold text-foreground transition hover:border-accent-blue hover:text-accent-blue focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-blue"

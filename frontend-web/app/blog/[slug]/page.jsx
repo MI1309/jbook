@@ -1,7 +1,6 @@
 import { getBlogDetailBySlug, getBlogList, API_URL } from '@/lib/api';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import ShareButtons from './ShareButtons';
 
 const BASE_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://jbook-five.vercel.app';
 
@@ -74,7 +73,7 @@ export async function generateMetadata({ params }) {
             title: `${blog.title} - Tips Belajar Bahasa Jepang | JBook Blog`,
             description: cleanDesc,
             keywords: keywords,
-            authors: [{ name: 'Tim JBook', url: `${BASE_URL}/about` }],
+            authors: [{ name: 'Tim JBook', url: BASE_URL }],
             creator: 'Tim JBook',
             publisher: 'JBook',
             alternates: {
@@ -503,7 +502,7 @@ export default async function BlogDetailPage({ params }) {
                 author: {
                     '@type': 'Organization',
                     name: 'Tim JBook',
-                    url: `${BASE_URL}/about`,
+                    url: BASE_URL,
                 },
                 publisher: {
                     '@type': 'Organization',
@@ -669,15 +668,6 @@ export default async function BlogDetailPage({ params }) {
                     <article className="prose prose-lg prose-red max-w-none">
                         {renderBlogContent(blog.content)}
                     </article>
-
-                    {/* Social Share & Copy Link Section */}
-                    <div className="mt-16 pt-8 border-t-2 border-gray-100 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
-                        <div>
-                            <h3 className="text-xl font-black text-gray-900 mb-1">Suka dengan artikel ini?</h3>
-                            <p className="text-sm text-gray-500 font-medium">Bagikan tips ini ke teman belajar bahasa Jepang kamu!</p>
-                        </div>
-                        <ShareButtons title={blog.title} url={postUrl} />
-                    </div>
 
                     {/* CTA Banner: Learn Japanese with JBook */}
                     <div className="mt-16 p-8 md:p-10 bg-gradient-to-br from-red-600 via-red-700 to-pink-700 rounded-3xl text-white shadow-xl shadow-red-500/20">
