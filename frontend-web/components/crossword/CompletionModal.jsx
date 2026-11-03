@@ -1,8 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
+import Link from 'next/link';
 import { useGameStore } from '../../stores/gameStore';
 import { useAuth } from '../../context/AuthContext';
 import AppMessage from '../common/AppMessage';
-import { Trophy, RotateCcw, X } from 'lucide-react';
+import { ArrowRight, Trophy, RotateCcw, X } from 'lucide-react';
 
 export const CompletionModal = () => {
   const { gameState, resetGame } = useGameStore();
@@ -56,8 +57,8 @@ export const CompletionModal = () => {
 
           {user && (
             <AppMessage variant={pointsStatus === 'failed' ? 'warning' : 'info'} className="mb-5 text-left">
-              {(pointsStatus === 'idle' || pointsStatus === 'saving') && 'Menyimpan poin ke akun...'}
-              {pointsStatus === 'saved' && 'Poin sesi ini sudah ditambahkan ke akunmu.'}
+              {(pointsStatus === 'idle' || pointsStatus === 'saving') && 'Menyimpan poin...'}
+              {pointsStatus === 'saved' && `+${gameState.score} poin ditambahkan ke akunmu.`}
               {pointsStatus === 'failed' && (
                 <button
                   type="button"
@@ -75,13 +76,43 @@ export const CompletionModal = () => {
             </AppMessage>
           )}
 
+          {!user && (
+            <AppMessage variant="info" className="mb-5 text-left">
+              Ingin menyimpan poin?{' '}
+              <Link href="/login" className="font-bold text-blue-700 underline-offset-2 hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700">
+                Masuk
+              </Link>
+              {' atau '}
+              <Link href="/register" className="font-bold text-blue-700 underline-offset-2 hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700">
+                daftar
+              </Link>
+              .
+            </AppMessage>
+          )}
+
           <button
             onClick={resetGame}
-            className="w-full flex items-center justify-center gap-2 bg-gray-900 dark:bg-white text-white dark:text-gray-900 hover:bg-gray-800 dark:hover:bg-gray-100 py-4 rounded-xl font-bold text-lg transition-transform active:scale-95"
+            className="flex min-h-12 w-full items-center justify-center gap-2 rounded-xl bg-gray-900 py-3 font-bold text-white transition-transform hover:bg-gray-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-blue active:scale-[0.99] dark:bg-white dark:text-gray-900 dark:hover:bg-gray-100"
           >
-            <RotateCcw size={20} />
-            Main Lagi
+            <RotateCcw aria-hidden="true" size={18} />
+            Main Lagi / Ganti Level
           </button>
+
+          {user ? (
+            <Link
+              href="/dashboard"
+              className="mt-2 inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-xl border border-[var(--border-color)] px-4 py-2 text-sm font-bold text-foreground transition hover:border-accent-blue hover:text-accent-blue focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-blue"
+            >
+              Lihat Poin Saya <ArrowRight aria-hidden="true" className="h-4 w-4" />
+            </Link>
+          ) : (
+            <Link
+              href="/login"
+              className="mt-2 inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-xl border border-[var(--border-color)] px-4 py-2 text-sm font-bold text-foreground transition hover:border-accent-blue hover:text-accent-blue focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-blue"
+            >
+              Masuk untuk Simpan Progres <ArrowRight aria-hidden="true" className="h-4 w-4" />
+            </Link>
+          )}
         </div>
 
       </div>
