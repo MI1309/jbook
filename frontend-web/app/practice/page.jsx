@@ -42,7 +42,7 @@ function PracticePageContent() {
         if (!isPlaying) fetchStats();
     }, [user, isPlaying]);
 
-    const textColor = !mounted ? 'text-black' : (theme === 'dark' ? 'text-white' : 'text-black');
+    const textColor = !mounted ? 'text-gray-900' : (theme === 'dark' ? 'text-white' : 'text-gray-900');
 
     // Resolve character → ID (online: from API, offline: from IndexedDB)
     const handleOpenMistake = async (mistake) => {

@@ -281,7 +281,14 @@ function PracticeContent() {
             try {
                 const session = JSON.parse(savedSession);
                 const now = Date.now();
-                if (now - session.timestamp < 3600 * 1000 && !session.finished) {
+                const sessionMatches =
+                    session.type === type &&
+                    session.mode === mode &&
+                    (session.level || null) === (level || null) &&
+                    (session.unit || null) === (unit || null) &&
+                    (session.source || 'jlpt') === (source || 'jlpt');
+
+                if (now - session.timestamp < 3600 * 1000 && !session.finished && sessionMatches) {
                     setQuestions(session.questions);
                     setCurrentIndex(session.currentIndex);
                     setScore(session.score);
@@ -311,11 +318,16 @@ function PracticeContent() {
                 results,
                 timeLeft,
                 timestamp: Date.now(),
-                finished: false
+                finished: false,
+                type,
+                mode,
+                level,
+                unit,
+                source
             };
             sessionStorage.setItem('guest_practice_session', JSON.stringify(session));
         }
-    }, [questions, currentIndex, score, results, timeLeft, loading, finished]);
+    }, [questions, currentIndex, score, results, timeLeft, loading, finished, type, mode, level, unit, source]);
 
     // Set practice state on mount
     useEffect(() => {
@@ -478,7 +490,7 @@ function PracticeContent() {
         }, delay);
     };
 
-    const textColor = !mounted ? 'text-black' : (theme === 'dark' ? 'text-white' : 'text-black');
+    const textColor = !mounted ? 'text-gray-900' : (theme === 'dark' ? 'text-white' : 'text-gray-900');
     const subTextColor = !mounted ? 'text-gray-400' : (theme === 'dark' ? 'text-gray-500' : 'text-gray-400');
 
     const inputBg = !mounted ? 'bg-gray-50' : (theme === 'dark' ? 'bg-black/40' : 'bg-gray-50');
@@ -498,7 +510,10 @@ function PracticeContent() {
                         Coba Lagi
                     </button>
                     <button
-                        onClick={() => router.push('/practice')}
+                        onClick={() => {
+                            sessionStorage.removeItem('guest_practice_session');
+                            router.push(type ? `/practice?type=${type}` : '/practice');
+                        }}
                         className={`font-bold hover:underline transition-colors ${subTextColor}`}
                     >
                         Kembali
@@ -602,7 +617,7 @@ function PracticeContent() {
                     </div>
 
                     <button
-                        onClick={() => router.push(user ? '/dashboard' : '/practice')}
+                        onClick={() => router.push(user ? '/dashboard' : (type ? `/practice?type=${type}` : '/practice'))}
                         className="w-full bg-gray-900 hover:bg-black text-white px-6 py-4 rounded-xl font-bold transition-all transform hover:scale-[1.02] shadow-xl"
                     >
                         Kembali ke {user ? 'Dashboard' : 'Halaman Latihan'}
@@ -684,7 +699,10 @@ function PracticeContent() {
                 <h3 className={`text-2xl font-black mb-2 transition-colors ${textColor}`}>Tidak ada soal ditemukan</h3>
                 <p className={`mb-6 transition-colors ${subTextColor}`}>Coba ubah filter level atau materi latihan.</p>
                 <button
-                    onClick={() => router.push('/practice')}
+                    onClick={() => {
+                        sessionStorage.removeItem('guest_practice_session');
+                        router.push(type ? `/practice?type=${type}` : '/practice');
+                    }}
                     className="text-blue-600 font-bold hover:underline"
                 >
                     &larr; Kembali
@@ -727,8 +745,8 @@ function PracticeContent() {
             <div className={`${theme === 'dark' ? 'bg-[#0a0a0a]/70' : 'bg-white/70'} backdrop-blur-2xl rounded-2xl sm:rounded-[3rem] shadow-[0_8px_30px_rgb(0,0,0,0.08)] p-4 sm:p-6 md:p-8 mb-4 sm:mb-8 text-center border ${theme === 'dark' ? 'border-white/5' : 'border-white/60'} relative flex-grow flex flex-col justify-center transition-all`}>
                 {mode === 'kakitori' ? (
                     <div className="mb-4 sm:mb-8 relative p-2 sm:p-4 flex flex-col items-center group transition-all duration-300">
-                        <span className={`text-[10px] font-black uppercase tracking-[0.2em] mb-3 sm:mb-4 block transition-colors ${subTextColor}`}>
-                            {currentQuestion.type === 'kana' ? 'Kana' : `Kakitori (Latihan Dikte) • N${currentQuestion.level || '5'}`}
+                        <span className={`text-[10px] font-black uppercase tracking-[0.2em] mb-3 sm:mb-4 block transition-colors ${currentQuestion.type === 'kana' ? 'text-blue-600 dark:text-blue-400 font-bold' : subTextColor}`}>
+                            {currentQuestion.type === 'kana' ? 'Latihan Kana' : `Kakitori (Latihan Dikte) • N${currentQuestion.level || '5'}`}
                         </span>
 
                         <div className="flex flex-col items-center justify-center p-4 sm:p-6 bg-blue-500/5 rounded-2xl sm:rounded-3xl border border-dashed border-blue-500/20 max-w-sm mx-auto mb-4 w-full">
@@ -756,7 +774,7 @@ function PracticeContent() {
                         {isAnswered && (
                             <div className="mt-4 sm:mt-6 animate-fade-in-up">
                                 <div className="text-[10px] font-black uppercase tracking-widest text-blue-600 mb-1">Jawaban Yang Benar</div>
-                                <div className={`text-3xl sm:text-4xl font-japanese font-black ${textColor}`}>{currentQuestion.character}</div>
+                                <div className={`text-3xl sm:text-4xl font-japanese font-black ${currentQuestion.type === 'kana' ? 'text-blue-600 dark:text-blue-400' : textColor}`}>{currentQuestion.character}</div>
                                 {currentQuestion.reading && (
                                     <div className="text-lg sm:text-xl text-blue-600 dark:text-blue-400 font-black mt-1">{sanitizeReading(currentQuestion.reading)}</div>
                                 )}
@@ -776,10 +794,10 @@ function PracticeContent() {
                         }}
                         className={`mb-4 sm:mb-8 relative p-2 sm:p-4 flex flex-col items-center group transition-all duration-300 ${!isAnswered ? 'cursor-pointer hover:bg-blue-500/5 rounded-2xl sm:rounded-3xl' : ''}`}
                     >
-                        <span className={`text-[10px] font-black uppercase tracking-[0.2em] mb-3 sm:mb-4 block transition-colors ${subTextColor}`}>
+                        <span className={`text-[10px] font-black uppercase tracking-[0.2em] mb-3 sm:mb-4 block transition-colors ${currentQuestion.type === 'kana' ? 'text-blue-600 dark:text-blue-400 font-bold' : subTextColor}`}>
                             {source === 'minna' 
                                 ? `Minna ${mode === 'fill_blank' ? 'Isi Kosong' : mode === 'context_match' ? 'Context Match' : 'Latihan'} • Bab ${currentQuestion.chapter}`
-                                : (currentQuestion.type === 'kanji' ? 'Kanji' : currentQuestion.type === 'vocab' ? 'Kosakata' : currentQuestion.type === 'kana' ? 'Kana' : currentQuestion.type === 'particle' ? 'Partikel' : 'Tata Bahasa')
+                                : (currentQuestion.type === 'kanji' ? 'Kanji' : currentQuestion.type === 'vocab' ? 'Kosakata' : currentQuestion.type === 'kana' ? 'Latihan Kana' : currentQuestion.type === 'particle' ? 'Partikel' : 'Tata Bahasa')
                             }
                         </span>
 
@@ -798,7 +816,7 @@ function PracticeContent() {
                                 (currentQuestion.character?.length || 0) > 5 ? 'text-lg sm:text-xl md:text-2xl' :
                                 currentQuestion.type === 'grammar' || currentQuestion.type === 'particle' ? 'text-xl sm:text-3xl md:text-4xl' :
                                 'text-4xl sm:text-6xl md:text-7xl lg:text-[5.5rem]'
-                            } leading-tight font-black select-none pb-2 break-words transition-colors ${textColor}`}>
+                            } leading-tight font-black select-none pb-2 break-words transition-colors ${currentQuestion.type === 'kana' ? 'text-blue-600 dark:text-blue-400' : textColor}`}>
                                 <ruby className="transition-colors">
                                     {currentQuestion.character}
                                     {currentQuestion.type === 'vocab' &&
@@ -904,7 +922,7 @@ function PracticeContent() {
                 ) : (
                     <>
                         {currentQuestion.type === 'kana' && (
-                            <p className={`mb-3 text-xs font-black uppercase tracking-widest ${subTextColor}`}>
+                            <p className="mb-3 text-xs font-black uppercase tracking-widest text-blue-600 dark:text-blue-400">
                                 Pilih cara baca yang benar
                             </p>
                         )}

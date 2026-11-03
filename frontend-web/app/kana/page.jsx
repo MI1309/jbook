@@ -109,7 +109,15 @@ export default function KanaPage() {
                     Tabel referensi lengkap huruf Jepang dasar. Klik pada huruf untuk melihat animasi cara tulisnya.
                 </p>
                 <div className="mt-5 flex flex-wrap justify-center gap-3">
-                    <Link href="/practice" className={`inline-flex min-h-11 items-center gap-2 rounded-lg bg-accent-blue px-4 py-2.5 text-sm font-bold text-white transition-colors hover:brightness-110 dark:text-[#0b0b0d] ${focusRing}`}>
+                    <Link
+                        href="/practice?type=kana&mode=choice&limit=10&timer=5&play=true"
+                        onClick={() => {
+                            if (typeof window !== 'undefined') {
+                                sessionStorage.removeItem('guest_practice_session');
+                            }
+                        }}
+                        className={`inline-flex min-h-11 items-center gap-2 rounded-lg bg-blue-600 hover:bg-blue-700 px-4 py-2.5 text-sm font-bold text-white transition-all shadow-md shadow-blue-500/20 hover:scale-[1.02] active:scale-95 ${focusRing}`}
+                    >
                         <BookOpenCheck aria-hidden="true" className="h-4 w-4" /> Latihan Kana
                     </Link>
                     <Link href="/tts" className={`inline-flex min-h-11 items-center gap-2 rounded-lg border border-[var(--border-color)] bg-[var(--card-bg)] px-4 py-2.5 text-sm font-bold text-foreground transition-colors hover:border-accent-blue hover:text-accent-blue ${focusRing}`}>
@@ -129,7 +137,7 @@ export default function KanaPage() {
                         tabIndex={activeTab === 'hiragana' ? 0 : -1}
                         onClick={() => setActiveTab('hiragana')}
                         onKeyDown={handleTabKeyDown}
-                        className={`min-h-11 flex-1 rounded-lg px-3 py-2 text-sm font-bold transition-colors ${focusRing} ${activeTab === 'hiragana' ? 'bg-[var(--card-bg)] text-accent-blue shadow-sm' : 'text-gray-600 hover:text-foreground dark:text-gray-300'}`}
+                        className={`min-h-11 flex-1 rounded-lg px-3 py-2 text-sm font-black transition-colors ${focusRing} ${activeTab === 'hiragana' ? 'bg-[var(--card-bg)] text-blue-600 dark:text-blue-400 shadow-md ring-1 ring-blue-500/20' : 'text-gray-500 hover:text-foreground dark:text-gray-400'}`}
                     >
                         Hiragana <span className="opacity-60">(ひらがな)</span>
                     </button>
@@ -142,7 +150,7 @@ export default function KanaPage() {
                         tabIndex={activeTab === 'katakana' ? 0 : -1}
                         onClick={() => setActiveTab('katakana')}
                         onKeyDown={handleTabKeyDown}
-                        className={`min-h-11 flex-1 rounded-lg px-3 py-2 text-sm font-bold transition-colors ${focusRing} ${activeTab === 'katakana' ? 'bg-[var(--card-bg)] text-accent-green shadow-sm' : 'text-gray-600 hover:text-foreground dark:text-gray-300'}`}
+                        className={`min-h-11 flex-1 rounded-lg px-3 py-2 text-sm font-black transition-colors ${focusRing} ${activeTab === 'katakana' ? 'bg-[var(--card-bg)] text-emerald-600 dark:text-emerald-400 shadow-md ring-1 ring-emerald-500/20' : 'text-gray-500 hover:text-foreground dark:text-gray-400'}`}
                     >
                         Katakana <span className="opacity-60">(カタカナ)</span>
                     </button>

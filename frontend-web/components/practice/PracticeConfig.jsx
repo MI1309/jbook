@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useTheme } from '@/context/ThemeContext';
 import { getBunpoLevelVisibility, getKanjiLevelVisibility, getVocabLevelVisibility } from '@/lib/api';
 import AppMessage from '@/components/common/AppMessage';
@@ -9,13 +9,25 @@ import AppMessage from '@/components/common/AppMessage';
 export default function PracticeConfig() {
     const { theme, mounted } = useTheme();
     const router = useRouter();
-    const [limit, setLimit] = useState(10);
-    const [timer, setTimer] = useState(5); // Default 5 minutes
+    const searchParams = useSearchParams();
+    const urlType = searchParams ? searchParams.get('type') : null;
+    const urlMode = searchParams ? searchParams.get('mode') : null;
+    const urlLimit = searchParams ? searchParams.get('limit') : null;
+    const urlTimer = searchParams ? searchParams.get('timer') : null;
+
+    const [limit, setLimit] = useState(() => (urlLimit ? parseInt(urlLimit) || 10 : 10));
+    const [timer, setTimer] = useState(() => (urlTimer ? parseInt(urlTimer) || 5 : 5));
     const [isUnlimitedTime, setIsUnlimitedTime] = useState(false);
     
     // JLPT states
-    const [mode, setMode] = useState('choice');
-    const [selectedTypes, setSelectedTypes] = useState(['kanji']);
+    const [mode, setMode] = useState(() => (urlMode || 'choice'));
+    const [selectedTypes, setSelectedTypes] = useState(() => {
+        if (urlType) {
+            const parsed = urlType.split(',').map(t => t.trim().toLowerCase()).filter(Boolean);
+            if (parsed.length > 0) return parsed;
+        }
+        return ['kanji'];
+    });
     const [selectedLevels, setSelectedLevels] = useState([]); // Default semua level
     const [selectionWarning, setSelectionWarning] = useState(false);
 
@@ -176,7 +188,7 @@ export default function PracticeConfig() {
         router.push(`?${params.toString()}`);
     };
 
-    const textColor = !mounted ? 'text-black' : (theme === 'dark' ? 'text-white' : 'text-black');
+    const textColor = !mounted ? 'text-gray-900' : (theme === 'dark' ? 'text-white' : 'text-gray-900');
     const subTextColor = !mounted ? 'text-gray-400' : (theme === 'dark' ? 'text-gray-500' : 'text-gray-400');
     const cardBg = !mounted ? 'bg-white' : (theme === 'dark' ? 'bg-[#0a0a0a]' : 'bg-white');
     const glassBg = !mounted ? 'bg-white/60' : (theme === 'dark' ? 'bg-[#0a0a0a]/60' : 'bg-white/60');
