@@ -116,7 +116,7 @@ export const useGameStore = create(
       // Shuffle the level pool before selecting a high-connectivity seed.
       shuffleInPlace(validWords);
       const gridSize = mode === 'kanji' ? 20 : 12;
-      const grid = generateCrosswordGrid(validWords, gridSize, gridSize, level, mode === 'kanji', {
+      const gridOptions = {
         minWords: 5,
         maxWords: 10,
         maxAttempts: 8,
@@ -127,7 +127,19 @@ export const useGameStore = create(
         maxPlacementsPerWord: mode === 'kanji' ? 8 : undefined,
         choiceBank: mode === 'kanji' ? [...(kanjiCharacters || [])] : hiraganaChoiceBank,
         choiceBankLimit: mode === 'kanji' ? 12 : null
-      });
+      };
+      let grid = generateCrosswordGrid(validWords, gridSize, gridSize, level, mode === 'kanji', gridOptions);
+
+      for (let retry = 0; mode === 'kanji' && (!grid || grid.words.length < 5) && retry < 3; retry++) {
+        grid = generateCrosswordGrid(validWords, gridSize, gridSize, level, true, {
+          ...gridOptions,
+          maxAttempts: 12,
+          maxNodes: 5000,
+          candidateLimit: 100,
+          maxCandidateBranch: 20,
+          maxPlacementsPerWord: 20
+        });
+      }
       
       if (!grid || grid.words.length < 5) {
         throw new Error("Gagal membuat minimal 5 soal kanji. Silakan coba lagi.");

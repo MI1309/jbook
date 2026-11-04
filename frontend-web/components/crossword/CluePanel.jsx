@@ -127,13 +127,12 @@ export const CluePanel = () => {
         onClick={() => selectCell(word.startRow, word.startCol)}
         className={twMerge(clsx(
           "flex items-start gap-2 p-2 rounded-lg cursor-pointer transition-colors text-sm",
-          isActive ? "bg-accent-blue/10" : "hover:bg-[var(--background)]",
-          isCompleted ? "opacity-60" : ""
+          isActive ? "bg-accent-blue/10" : isCompleted ? "bg-accent-green/5" : "hover:bg-[var(--background)]"
         ))}
       >
-        <div className="font-bold min-w-[24px] text-gray-500">{cellNum}.</div>
+        <div className="font-bold min-w-[24px] text-gray-600 dark:text-gray-400">{cellNum}.</div>
         <div className={clsx("flex-1", isCompleted && "line-through font-medium")}>
-          <div className="text-foreground font-bold">{word.clue}</div>
+          <div className={clsx("font-bold", isCompleted ? "text-gray-600 dark:text-gray-400" : "text-foreground")}>{word.clue}</div>
           <div className="flex items-center gap-2 mt-1">
             {gameState.mode !== 'kanji' && hasKanji && (
               <span 
@@ -154,13 +153,13 @@ export const CluePanel = () => {
                 {word.word}
               </span>
             )}
-            <span className="text-gray-400 text-[10px]">({word.text.length} kotak)</span>
+            <span className="text-gray-600 dark:text-gray-400 text-[10px]">({word.text.length} kotak)</span>
           </div>
         </div>
         {hasKanji && (
           <button 
             onClick={(e) => handleTTS(word, e)}
-            className="p-1 text-gray-400 hover:text-blue-500 transition-colors"
+            className="p-1 text-gray-600 dark:text-gray-400 hover:text-accent-blue transition-colors"
             title="Dengarkan pengucapan Kanji"
           >
             <Volume2 size={16} />

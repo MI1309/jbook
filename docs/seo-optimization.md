@@ -7,14 +7,23 @@ Panduan ini menyatukan implementasi SEO yang ada dan pola kode untuk pengembanga
 - Metadata global, Open Graph, Twitter Card, canonical, dan `robots.txt` tersedia di Next.js.
 - Detail kanji, bunpo, dan kotoba dirender oleh server Next.js, memiliki metadata dinamis, `LearningResource`, dan breadcrumb JSON-LD.
 - Sitemap Next.js mengambil seluruh kanji dan memaginasi grammar serta vocab, tidak berhenti pada 300 entri pertama.
-- Model Django memakai UUID untuk vocab/grammar/kanji; vocab dan grammar belum memiliki slug. URL frontend aktif ialah `/kotoba/[id]`, `/bunpo/[id]`, dan `/kanji/[id]`.
+- Model Django tetap memakai UUID untuk vocab/grammar/kanji. URL frontend Bunpo memakai `/bunpo`, `/bunpo/[level]`, dan `/bunpo/[level]/[slug]`; route UUID lama diarahkan permanen ke slug.
 - Django belum menjadi renderer HTML SEO. Endpoint quiz saat ini menghasilkan soal latihan, bukan quiz publik permanen yang otomatis layak diindeks.
 
 ## 1. Programmatic SEO dan URL
 
 ### Pilihan untuk deployment sekarang
 
-Jangan membuat halaman Django kedua pada URL materi yang sama. Pertahankan halaman publik di Next.js dan gunakan API Django sebagai sumber data. Jika ingin URL lebih mudah diingat, tambahkan slug sebagai alamat kanonis secara bertahap; UUID tetap menjadi primary key dan identifier API.
+Jangan membuat halaman Django kedua pada URL materi yang sama. Pertahankan halaman publik di Next.js dan gunakan API Django sebagai sumber data. UUID tetap menjadi primary key dan identifier API, sementara slug editorial di frontend menjadi URL kanonis Bunpo.
+
+### Route Bunpo
+
+- `/bunpo` adalah roadmap N5 sampai N1 dengan pencarian lintas level.
+- `/bunpo/[level]` menampilkan semua pola level terkait tanpa paginasi atau kolom pencarian.
+- `/bunpo/[level]/[slug]` adalah halaman detail pola yang memiliki metadata dan breadcrumb terstruktur.
+- Slug kurasi disimpan permanen di `frontend-web/data/bunpoSlugs.js`; UUID lama dipetakan ke level dan slug di `frontend-web/data/bunpoIdToSlug.js`.
+- `frontend-web/middleware.js` mengirim redirect HTTP 301 dari URL UUID lama ke URL slug. UUID yang tidak dikenal diarahkan ke `/bunpo`.
+- API grammar menerima level numerik (`?level=5` untuk N5), bukan label `N5`. Sitemap publik Next.js mencantumkan landing, lima halaman level, dan seluruh detail berpola slug.
 
 Slug perlu diisi dan diperiksa unik sebelum route dipublikasikan. Jangan mengandalkan slugify untuk mengubah kana menjadi romaji: simpan slug editorial/romaji yang stabil, misalnya `taberu`, dan fallback ke UUID bila transliterasi tidak tersedia. Kanji boleh menggunakan karakter Unicode di segmen URL; encode ketika URL dibentuk.
 
@@ -133,12 +142,7 @@ class Command(BaseCommand):
                 jlpt_level__in=disabled_levels("kanji_visibility", default=(1, 2, 3))
             ).only("id", "jlpt_level")
         ]
-        entries += [
-            (f"{base}/bunpo/{obj.pk}", None)
-            for obj in Grammar.objects.exclude(
-                jlpt_level__in=disabled_levels("bunpo_visibility")
-            ).only("id", "jlpt_level")
-        ]
+        # Bunpo URLs are emitted by the Next.js sitemap using the editorial slug map.
         entries += [
             (f"{base}/kotoba/{obj.pk}", None)
             for obj in Vocab.objects.exclude(

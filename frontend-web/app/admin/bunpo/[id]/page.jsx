@@ -202,12 +202,12 @@ export default function BunpoForm({ params }) {
                                 value={formData.chapter}
                                 onChange={(e) => {
                                     const val = parseInt(e.target.value);
-                                    if (e.target.value === '' || (!isNaN(val) && val >= 1)) {
+                                    if (e.target.value === '' || (!isNaN(val) && val >= 0)) {
                                         setFormData({ ...formData, chapter: e.target.value });
                                     }
                                 }}
                                 required
-                                min={1}
+                                min={0}
                             />
                         </div>
                         <div className="space-y-2">

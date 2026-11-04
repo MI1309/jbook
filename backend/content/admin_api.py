@@ -505,12 +505,13 @@ class GrammarCreateSchema(BaseModel):
     title: str = Field(..., max_length=255)
     structure: str = Field(..., max_length=500)
     explanation: str = Field(..., max_length=10000)
-    chapter: int = Field(..., ge=1)
+    chapter: int = Field(..., ge=0)
     jlpt_level: int = Field(..., ge=1, le=5)
     sentences: List[dict] = Field(default_factory=list)
 
 class GrammarSchema(GrammarCreateSchema):
     id: UUID
+    source_data: Optional[dict] = None
     model_config = {"from_attributes": True}
 
 
@@ -612,7 +613,7 @@ def admin_create_bunpo(request, payload: GrammarCreateSchema):
 
 @router.get("/bunpo/{id}", auth=AdminAuth(), response=GrammarSchema)
 def admin_get_bunpo(request, id: str):
-    return serialize_grammar(get_object_or_404(Grammar, id=id))
+    return serialize_grammar(get_object_or_404(Grammar, id=id), include_source_data=True)
 
 @router.put("/bunpo/{id}", auth=AdminAuth(), response=GrammarSchema)
 @rate_limit(key='user', rate='30/m')

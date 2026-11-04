@@ -1,5 +1,7 @@
 import { API_URL } from '@/lib/api';
 import { getKanjiHref } from '@/lib/kanji-route';
+import { BUNPO_LEVELS } from '@/data/bunpoLevels';
+import { getBunpoSlug } from '@/data/bunpoSlugs';
 
 const BASE_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://jbook-five.vercel.app';
 
@@ -67,6 +69,12 @@ export default async function sitemap() {
       changeFrequency: 'weekly',
       priority: 0.95,
     },
+    ...BUNPO_LEVELS.map(({ level }) => ({
+      url: `${BASE_URL}/bunpo/${level}`,
+      lastModified: today,
+      changeFrequency: 'weekly',
+      priority: 0.85,
+    })),
     {
       url: `${BASE_URL}/kotoba`,
       lastModified: today,
@@ -102,12 +110,16 @@ export default async function sitemap() {
   }));
 
   // Bunpo detail pages
-  const bunpoPages = bunpos.map((b) => ({
-    url: `${BASE_URL}/bunpo/${b.id}`,
-    lastModified: today,
-    changeFrequency: 'yearly',
-    priority: 0.65,
-  }));
+  const bunpoPages = bunpos.map((b) => {
+    const slug = getBunpoSlug(b.title);
+    if (!slug) return null;
+    return {
+      url: `${BASE_URL}/bunpo/n${b.jlpt_level}/${slug}`,
+      lastModified: today,
+      changeFrequency: 'yearly',
+      priority: 0.65,
+    };
+  }).filter(Boolean);
 
   // Kotoba detail pages
   const kotobaPages = kotobas.map((v) => ({

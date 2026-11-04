@@ -1,3 +1,10 @@
+import json
+import tempfile
+from io import StringIO
+from pathlib import Path
+
+from django.core.management import call_command
+from django.core.management.base import CommandError
 from django.test import TestCase
 
 from .models import FeatureSetting, Vocab, Kanji, Grammar, GrammarSentence, WordType, CurriculumLevel, ReferenceBook, CurriculumUnit, Particle
@@ -70,6 +77,79 @@ class BunpoVisibilityTests(TestCase):
         response = self.client.get(f'/api/content/bunpo/{self.disabled_grammar.id}', secure=True)
 
         self.assertEqual(response.status_code, 404)
+
+
+class BunpoSourceDataTests(TestCase):
+    def setUp(self):
+        self.source_record = {
+            'kelompok': 'Bentuk Kata Kerja',
+            'pola': '～てみる',
+            'arti': 'Mencoba melakukan sesuatu.',
+            'url': 'https://bunpou.jepang.org/materi/test',
+            'detail': {
+                'judul_halaman': '～てみる',
+                'bagian': [{'judul': 'Contoh', 'isi': ['試してみる。', 'Mencoba.']}],
+            },
+        }
+
+    def _write_source(self, records):
+        temporary_file = tempfile.NamedTemporaryFile(mode='w', encoding='utf-8', suffix='.json', delete=False)
+        with temporary_file:
+            json.dump(records, temporary_file, ensure_ascii=False)
+        self.addCleanup(Path(temporary_file.name).unlink, missing_ok=True)
+        return temporary_file.name
+
+    def test_import_preserves_source_data_and_is_idempotent(self):
+        source_path = self._write_source([self.source_record])
+        first_output = StringIO()
+        second_output = StringIO()
+
+        call_command('import_bunpo_source', source_path, stdout=first_output, no_color=True)
+        call_command('import_bunpo_source', source_path, stdout=second_output, no_color=True)
+
+        grammar = Grammar.objects.get(title=self.source_record['pola'])
+        self.assertEqual(grammar.source_data, self.source_record)
+        self.assertEqual(grammar.structure, self.source_record['pola'])
+        self.assertEqual(grammar.explanation, self.source_record['arti'])
+        self.assertEqual(grammar.chapter, 0)
+        self.assertEqual(grammar.jlpt_level, 3)
+        self.assertEqual(first_output.getvalue().strip(), 'Import finished. Created: 1, already imported: 0.')
+        self.assertEqual(second_output.getvalue().strip(), 'Import finished. Created: 0, already imported: 1.')
+
+    def test_import_conflict_does_not_partially_create_records(self):
+        Grammar.objects.create(
+            title=self.source_record['pola'],
+            structure='Existing structure',
+            explanation='Existing explanation',
+            chapter=1,
+            jlpt_level=3,
+        )
+        another_record = {**self.source_record, 'pola': '～ながら', 'url': 'https://bunpou.jepang.org/materi/another'}
+        source_path = self._write_source([another_record, self.source_record])
+
+        with self.assertRaises(CommandError):
+            call_command('import_bunpo_source', source_path)
+
+        self.assertFalse(Grammar.objects.filter(title='～ながら').exists())
+        self.assertEqual(Grammar.objects.count(), 1)
+
+    def test_detail_api_returns_source_but_list_api_does_not(self):
+        grammar = Grammar.objects.create(
+            title=self.source_record['pola'],
+            structure=self.source_record['pola'],
+            explanation=self.source_record['arti'],
+            chapter=0,
+            jlpt_level=3,
+            source_data=self.source_record,
+        )
+
+        detail = self.client.get(f'/api/content/bunpo/{grammar.id}', secure=True)
+        listing = self.client.get('/api/content/bunpo?limit=30&page=1', secure=True)
+
+        self.assertEqual(detail.status_code, 200)
+        self.assertEqual(detail.json()['source_data'], self.source_record)
+        self.assertEqual(listing.status_code, 200)
+        self.assertIsNone(listing.json()['items'][0].get('source_data'))
 
 
 class CurriculumApiTests(TestCase):

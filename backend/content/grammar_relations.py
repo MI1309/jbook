@@ -1,7 +1,7 @@
 from django.db.models import prefetch_related_objects
 
 
-def serialize_grammar(grammar):
+def serialize_grammar(grammar, include_source_data=False):
     prefetch_related_objects([grammar], 'sentence_records__expressions')
     legacy_sentences = grammar.sentences if isinstance(grammar.sentences, list) else []
     sentence_rows = list(grammar.sentence_records.all())
@@ -30,7 +30,7 @@ def serialize_grammar(grammar):
     else:
         sentences = legacy_sentences
 
-    return {
+    serialized = {
         'id': grammar.id,
         'title': grammar.title,
         'structure': grammar.structure,
@@ -39,6 +39,9 @@ def serialize_grammar(grammar):
         'jlpt_level': grammar.jlpt_level,
         'sentences': sentences,
     }
+    if include_source_data:
+        serialized['source_data'] = grammar.source_data
+    return serialized
 
 
 def serialize_grammars(grammars):

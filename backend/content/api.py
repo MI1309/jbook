@@ -345,9 +345,10 @@ class GrammarSchema(Schema):
     title: str = Field(..., max_length=255)
     structure: str = Field(..., max_length=500)
     explanation: str = Field(..., max_length=10000)
-    chapter: int = Field(..., ge=1)
+    chapter: int = Field(..., ge=0)
     jlpt_level: int = Field(..., ge=1, le=5)
     sentences: List[dict] = Field(default_factory=list)
+    source_data: Optional[dict] = None
 
 class KanjiListResponse(BaseModel):
     items: List[KanjiSchema]
@@ -545,7 +546,7 @@ def get_grammar(request, grammar_id: str):
         Grammar.objects.exclude(jlpt_level__in=get_disabled_bunpo_levels()),
         id=grammar_id,
     )
-    return serialize_grammar(grammar)
+    return serialize_grammar(grammar, include_source_data=True)
 
 
 class VocabSchema(Schema):

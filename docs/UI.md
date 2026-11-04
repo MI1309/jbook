@@ -174,8 +174,9 @@ Navbar (Admin) → Admin Dashboard → Pilih menu (Kanji/Kotoba/Bunpo/Blog/Pengu
 | `/` (app/page.jsx)                    | Homepage dengan global search, quick links, widget "Kotoba Hari Ini"     |
 | `/kanji`                              | Daftar kanji dengan filter (level, pencarian), modal/detail kanji        |
 | `/kanji/[id]`                         | Detail kanji dengan animasi goresan, contoh kata                         |
-| `/bunpo`                              | Daftar tata bahasa                                                        |
-| `/bunpo/[id]`                         | Detail tata bahasa                                                        |
+| `/bunpo`                              | Roadmap tata bahasa N5 sampai N1 dengan pencarian                          |
+| `/bunpo/[level]`                      | Daftar pola per level JLPT                                                 |
+| `/bunpo/[level]/[slug]`               | Detail pola dengan URL slug permanen                                       |
 | `/kotoba`                             | Daftar kosakata                                                           |
 | `/kotoba/[id]`                        | Detail kosakata dengan konjugasi                                          |
 | `/practice`                           | Latihan interaktif + analitik                                             |

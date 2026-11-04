@@ -84,7 +84,7 @@ Dokumen ini mencatat fitur yang ditemukan pada source code backend dan client JB
 | `/` | Home dan pencarian/akses cepat materi |
 | `/kanji`, `/kanji/[id]`, `/kanji/add` | Katalog, detail, dan form Kanji |
 | `/kotoba`, `/kotoba/[id]` | Katalog dan detail kosakata |
-| `/bunpo`, `/bunpo/[id]`, `/bunpo/add` | Katalog, detail, dan form Bunpo |
+| `/bunpo`, `/bunpo/[level]`, `/bunpo/[level]/[slug]`, `/bunpo/add` | Roadmap, daftar level, detail pola, dan form Bunpo |
 | `/kana` | Materi dan latihan Kana |
 | `/practice`, `/practice/custom`, `/practice/custom/[id]` | Latihan umum dan modul kustom |
 | `/doukai`, `/doukai/[id]` | Daftar bacaan dan latihan Doukai |

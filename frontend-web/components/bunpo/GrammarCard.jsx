@@ -1,10 +1,12 @@
 
 import Link from 'next/link';
 import PropTypes from 'prop-types';
+import { getBunpoSlug } from '@/data/bunpoSlugs';
 
-export default function GrammarCard({ id, title, structure, level, chapter }) {
+export default function GrammarCard({ title, structure, level, chapter }) {
+    const slug = getBunpoSlug(title);
     return (
-        <Link href={`/bunpo/${id}`} className="block h-full">
+        <Link href={slug ? `/bunpo/n${level}/${slug}` : `/bunpo/n${level}`} className="block h-full">
             <div className="border border-[var(--border-color)] rounded-[2rem] p-6 hover:-translate-y-1 hover:shadow-xl hover:shadow-accent-green/10 hover:border-accent-green/30 transition-all bg-[var(--card-bg)] h-full flex flex-col justify-between">
                 <div>
                     <div className="flex justify-between items-start mb-4">
@@ -29,7 +31,6 @@ export default function GrammarCard({ id, title, structure, level, chapter }) {
 }
 
 GrammarCard.propTypes = {
-    id: PropTypes.string.isRequired,
     title: PropTypes.string.isRequired,
     structure: PropTypes.string.isRequired,
     level: PropTypes.number.isRequired,

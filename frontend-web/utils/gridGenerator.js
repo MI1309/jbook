@@ -15,12 +15,25 @@ export function shuffleInPlace(array, rng = Math.random) {
   return array;
 }
 
+/**
+ * Original implementation retained for backward compatibility; used when a degree‑window bias is desired.
+ */
 function pickRandomSeeds(component, limit, rng = Math.random, window = DEFAULT_OPTIONS.seedDegreeWindow) {
   if (component.length === 0) return [];
   const maxDegree = component[0].neighbors.size;
   const candidates = component.filter(node => node.neighbors.size >= maxDegree - window);
   const pool = candidates.length > 0 ? candidates : component.slice(0, 1);
   return shuffleInPlace([...pool], rng).slice(0, limit);
+}
+
+/**
+ * Pick random seeds uniformly from the provided component, ignoring degree bias.
+ * This function is used by the updated generation algorithm to ensure true
+ * variation of the initial seed word when a custom RNG is supplied.
+ */
+function pickRandomSeedsUniform(component, limit, rng = Math.random) {
+  if (component.length === 0) return [];
+  return shuffleInPlace([...component], rng).slice(0, limit);
 }
 
 function createEmptyGrid(width, height) {
@@ -93,7 +106,7 @@ export function selectWordSeeds(kotobaList, useKanji = false, limit = 10, rng = 
   const component = findLargestConnectedComponent(buildWordGraph(kotobaList, useKanji));
   const sortedComponent = [...component]
     .sort((left, right) => right.neighbors.size - left.neighbors.size);
-  return pickRandomSeeds(sortedComponent, limit, rng)
+  return pickRandomSeedsUniform(sortedComponent, limit, rng)
     .map(node => node.kotoba);
 }
 
@@ -110,11 +123,10 @@ export function generateCrosswordGrid(kotobaList, width = 10, height = 10, level
   let attempts = 0;
 
   // Try several hubs because the most connected word can still produce poor geometry.
-  const seeds = pickRandomSeeds(
+  const seeds = pickRandomSeedsUniform(
     component,
     Math.min(config.maxAttempts, config.seedPoolSize),
-    rng,
-    config.seedDegreeWindow
+    rng
   );
   for (const seed of seeds) {
     attempts += 1;
@@ -219,7 +231,6 @@ function canPlace(cells, chars, placement, width, height, wordsForPlacement) {
       return existingWord?.direction === direction;
     })) return false;
 
-    // Keep parallel words visually separated unless this cell is the crossing point.
     if (cell.isBlock) {
       const sideA = direction === 'across' ? [currentRow - 1, currentCol] : [currentRow, currentCol - 1];
       const sideB = direction === 'across' ? [currentRow + 1, currentCol] : [currentRow, currentCol + 1];

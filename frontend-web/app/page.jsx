@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { getKanjiHref } from '@/lib/kanji-route';
+import { getBunpoSlug } from '@/data/bunpoSlugs';
 import AboutSections, { learners } from '@/components/home/hero';
 import { useDebounce } from 'use-debounce';
 import { getKanjiList, getGrammarList, getVocabList } from '@/lib/api';
@@ -356,7 +357,7 @@ export default function Home() {
                                         {searchResults.grammar.length > 0 && (
                                             <ResultGroup title="文法 Tata Bahasa" titleClass="text-accent-gold">
                                                 {searchResults.grammar.map((item) => (
-                                                    <Link key={item.id} href={`/bunpo/${item.id}`} role="option" className={resultRow}>
+                                                            <Link key={item.id} href={getBunpoSlug(item.title) ? `/bunpo/n${item.jlpt_level}/${getBunpoSlug(item.title)}` : `/bunpo/n${item.jlpt_level}`} role="option" className={resultRow}>
                                                         <div className="flex min-w-0 items-center gap-3">
                                                             <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-accent-gold/10 font-japanese text-base font-bold text-accent-gold">文</span>
                                                             <div className="min-w-0">

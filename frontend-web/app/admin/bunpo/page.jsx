@@ -11,6 +11,7 @@ import { cacheGet, cacheSet } from '@/lib/cache-store';
 import { appToast as toast } from '@/components/common/AppMessage';
 import ConfirmationModal from '@/components/common/ConfirmationModal';
 import Pagination from '@/components/common/Pagination';
+import { getBunpoSlug } from '@/data/bunpoSlugs';
 
 export default function BunpoAdmin() {
     const { user } = useAuth();
@@ -337,7 +338,7 @@ export default function BunpoAdmin() {
                                             <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                                 <div className="flex items-center justify-end gap-2">
                                                     <Link
-                                                        href={`/bunpo/${b.id}`} target="_blank"
+                                                        href={getBunpoSlug(b.title) ? `/bunpo/n${b.jlpt_level}/${getBunpoSlug(b.title)}` : `/bunpo/n${b.jlpt_level}`} target="_blank"
                                                         className="p-2 rounded-xl transition-colors text-emerald-400 hover:bg-emerald-500/10"
                                                         title="Lihat"
                                                     >
@@ -378,7 +379,7 @@ export default function BunpoAdmin() {
                                 <div key={b.id} className="divide-white/5">
                                     <div
                                         className="flex items-center gap-4 px-5 py-4 active:bg-black/5 dark:active:bg-white/5 transition-colors cursor-pointer"
-                                        onClick={() => router.push(`/bunpo/${b.id}`)}
+                                        onClick={() => router.push(getBunpoSlug(b.title) ? `/bunpo/n${b.jlpt_level}/${getBunpoSlug(b.title)}` : `/bunpo/n${b.jlpt_level}`)}
                                     >
                                         <div className="flex-1 min-w-0">
                                             <div className="font-black text-lg text-white">{b.title}</div>

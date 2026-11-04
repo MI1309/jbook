@@ -110,6 +110,7 @@ class Grammar(models.Model):
     title = models.CharField(max_length=255)
     structure = models.CharField(max_length=255)
     explanation = models.TextField(help_text="Penjelasan detail dalam Bahasa Indonesia")
+    source_data = models.JSONField(blank=True, null=True)
     chapter = models.IntegerField(default=0, help_text="Bab / Chapter number")
     jlpt_level = models.IntegerField(choices=JLPTLevel.choices)
     sentences = models.JSONField(default=list, help_text="Contoh kalimat dengan terjemahan Bahasa Indonesia")
