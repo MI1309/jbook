@@ -56,19 +56,24 @@ export default function BunpoLanding({ patterns }) {
 
     return (
         <main className="washi-texture min-h-screen bg-[var(--background)] text-[var(--foreground)]">
-            <div className="mx-auto w-full max-w-5xl px-4 pb-16 pt-8 sm:px-6 sm:pt-12 lg:px-8">
-                <header className="border-b border-[var(--border-color)] pb-8 sm:pb-10">
-                    <span className="inline-flex items-center rounded-full border border-accent-blue/25 bg-accent-blue/10 px-3 py-1 text-xs font-bold text-accent-blue">
-                        文法 · ぶんぽう
-                    </span>
-                    <h1 className="mt-4 font-japanese text-3xl font-black leading-tight sm:text-4xl xl:text-5xl">
-                        文法 Bunpo
-                    </h1>
-                    <p className="mt-3 max-w-2xl text-base leading-relaxed text-gray-600 dark:text-gray-300 sm:text-lg">
-                        Kuasai tata bahasa Jepang, dari N5 sampai N1.
-                    </p>
+            <div className="relative z-10 mx-auto w-full max-w-7xl px-4 pb-16 pt-6 sm:px-6 sm:pt-8 lg:px-8 lg:pt-10">
+                <header className="grid gap-6 border-b border-[var(--border-color)] pb-8 sm:pb-10 lg:grid-cols-[minmax(0,1fr)_minmax(22rem,0.82fr)] lg:items-center lg:gap-10">
+                    <div className="min-w-0">
+                        <span className="inline-flex items-center rounded-full border border-accent-blue/25 bg-accent-blue/10 px-3 py-1 text-xs font-bold text-accent-blue">
+                            文法 · ぶんぽう
+                        </span>
+                        <h1 className="mt-4 break-words font-japanese text-3xl font-black leading-tight sm:text-4xl xl:text-5xl">
+                            文法 Bunpo
+                        </h1>
+                        <p className="mt-3 max-w-2xl text-base leading-relaxed text-gray-600 dark:text-gray-300 sm:text-lg">
+                            Kuasai tata bahasa Jepang, dari N5 sampai N1.
+                        </p>
+                        <p className="mt-3 text-sm text-gray-500">
+                            {patterns.length} pola · 5 level · N5 → N1
+                        </p>
+                    </div>
 
-                    <div ref={searchRef} className="relative mt-6 max-w-2xl">
+                    <div ref={searchRef} className="relative min-w-0 w-full">
                         <form onSubmit={handleSubmit} role="search">
                             <div className="group relative">
                                 <Search aria-hidden="true" className="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-gray-400 transition-colors group-focus-within:text-accent-blue" />
@@ -95,7 +100,7 @@ export default function BunpoLanding({ patterns }) {
                                         }}
                                         aria-label="Hapus pencarian"
                                         title="Hapus pencarian"
-                                        className={`absolute right-3 top-1/2 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full text-gray-500 transition hover:bg-[var(--background)] hover:text-foreground ${focusRing}`}
+                                        className={`absolute right-3 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full text-gray-500 transition hover:bg-[var(--background)] hover:text-foreground ${focusRing}`}
                                     >
                                         <X aria-hidden="true" className="h-4 w-4" />
                                     </button>
@@ -104,7 +109,7 @@ export default function BunpoLanding({ patterns }) {
                         </form>
 
                         {showSuggestions && debouncedQuery.trim().length >= 2 && (
-                            <div id="bunpo-suggestions" role="listbox" aria-label="Saran pola bunpo" className="absolute left-0 right-0 top-[calc(100%+0.5rem)] z-30 max-h-[min(70vh,28rem)] overflow-y-auto rounded-xl border border-[var(--border-color)] bg-[var(--card-bg)] p-2 text-left shadow-2xl">
+                            <div id="bunpo-suggestions" role="listbox" aria-label="Saran pola bunpo" className="absolute left-0 right-0 top-[calc(100%+0.5rem)] z-30 max-h-[min(70vh,28rem)] overflow-x-hidden overflow-y-auto rounded-xl border border-[var(--border-color)] bg-[var(--card-bg)] p-2 text-left shadow-2xl">
                                 {suggestions.length > 0 ? suggestions.map((pattern) => {
                                     const level = `n${pattern.jlpt_level}`;
                                     const slug = getBunpoSlug(pattern.title);
@@ -134,9 +139,6 @@ export default function BunpoLanding({ patterns }) {
                         )}
                     </div>
 
-                    <p className="mt-3 text-sm text-gray-500">
-                        {patterns.length} pola · 5 level · N5 → N1
-                    </p>
                 </header>
 
                 <section aria-labelledby="roadmap-heading" className="pt-8 sm:pt-10">

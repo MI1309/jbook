@@ -1,0 +1,27 @@
+// Placeholder untuk langkah 2 — isi konten di sini besok.
+export const BUNPO_SECTIONS_PILOT = {
+    id: '',
+    title: '〜は〜です',
+    structure: '',
+    explanation: '',
+    chapter: 0,
+    jlpt_level: 5,
+    sentences: [],
+    slug: 'wa-desu',
+    tags: [],
+    sections: {
+        mainFunction: { summary: '', points: [] },
+        sentencePattern: { formula: '', variations: [], notes: [] },
+        examples: [],
+        comparison: { summary: '', items: [] },
+        nuance: { summary: '', points: [] },
+        coreExplanation: { summary: '', text: '' },
+        commonMistakes: [],
+        faq: [],
+        miniPractice: [],
+        conceptMap: { summary: '', nodes: [], edges: [] },
+    },
+    relatedPatterns: [],
+    source: { url: '', name: '', license: '' },
+    metadata: { createdAt: '', updatedAt: '', version: '', isComplete: false },
+};
