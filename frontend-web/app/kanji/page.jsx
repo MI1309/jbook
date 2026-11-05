@@ -1,238 +1,89 @@
-'use client';
+import KanjiLanding from '@/components/kanji/KanjiLanding';
+import { API_URL, getKanjiLevelVisibility } from '@/lib/api';
 
-import { useState, useEffect, Suspense } from 'react';
-import { getKanjiList } from '@/lib/api';
-import KanjiFilter from '@/components/kanji/KanjiFilter';
-import Link from 'next/link';
-import { useSearchParams, useRouter } from 'next/navigation';
-import KanjiDetailModal from '@/components/kanji/KanjiDetailModal';
-import { getKanjiHref } from '@/lib/kanji-route';
-import Pagination from '@/components/common/Pagination';
+export const dynamic = 'force-dynamic';
 
-// JBook-themed level styles using CSS variables
-const levelStyles = {
-    1: { badge: 'bg-blue-500 text-white', accent: 'from-blue-500/10 to-transparent', border: 'hover:border-blue-400/40' },
-    2: { badge: 'bg-amber-500 text-white', accent: 'from-amber-500/10 to-transparent', border: 'hover:border-amber-400/40' },
-    3: { badge: 'bg-yellow-500 text-white', accent: 'from-yellow-500/10 to-transparent', border: 'hover:border-yellow-400/40' },
-    4: { badge: 'bg-cyan-500 text-white', accent: 'from-cyan-500/10 to-transparent', border: 'hover:border-cyan-400/40' },
-    5: { badge: 'bg-emerald-500 text-white', accent: 'from-emerald-500/10 to-transparent', border: 'hover:border-emerald-400/40' },
+export const metadata = {
+    title: 'Kanji — Belajar Kanji Jepang N5 sampai N1 | JBook',
+    description: 'Kuasai kanji Jepang dari N5 sampai N1. 249+ materi kanji dengan arti, onyomi, kunyomi, urutan coretan, dan 214 filter radikal.',
+    alternates: { canonical: '/kanji' },
+    openGraph: {
+        title: 'Kanji — Belajar Kanji Jepang N5 sampai N1 | JBook',
+        description: 'Kuasai kanji Jepang dari N5 sampai N1. Pelajari arti, bacaan onyomi/kunyomi, animasi coretan, dan filter radikal interaktif di JBook.',
+        type: 'website',
+        url: '/kanji',
+    },
 };
 
-import { getScriptTypes, to_kana, to_katakana } from '@/lib/utils';
+const BASE_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://jbook-five.vercel.app';
+const safeJson = (value) => JSON.stringify(value).replace(/</g, '\\u003c');
 
-function firstReading(readings) {
-    return Array.isArray(readings)
-        ? readings.find((reading) => typeof reading === 'string' && reading.trim())?.trim() || ''
-        : '';
-}
+export default async function KanjiPage() {
+    let kanjiIndex = [];
+    const counts = { n5: 80, n4: 169, n3: 0, n2: 0, n1: 0 };
 
-function toHiraganaReading(reading) {
-    return Array.from(to_kana(reading), (character) => {
-        const codePoint = character.codePointAt(0);
-        return codePoint >= 0x30a1 && codePoint <= 0x30f6
-            ? String.fromCodePoint(codePoint - 0x60)
-            : character;
-    }).join('');
-}
+    try {
+        const [sitemapRes, , n5Res, n4Res] = await Promise.all([
+            fetch(`${API_URL}/content/kanji/sitemap`, { next: { revalidate: 86400 } }).catch(() => null),
+            getKanjiLevelVisibility().catch(() => null),
+            fetch(`${API_URL}/content/kanji?level=5&limit=1`, { next: { revalidate: 3600 } }).catch(() => null),
+            fetch(`${API_URL}/content/kanji?level=4&limit=1`, { next: { revalidate: 3600 } }).catch(() => null),
+        ]);
 
-function getKanjiCardReading(kanji) {
-    const kunyomi = firstReading(kanji.kunyomi);
-    if (kunyomi) return toHiraganaReading(kunyomi);
-
-    const onyomi = firstReading(kanji.onyomi);
-    return onyomi ? to_katakana(onyomi) : '-';
-}
-
-function HighlightText({ text, query, active = true }) {
-    if (text === null || text === undefined) return null;
-    const textStr = String(text);
-    const trimmedQuery = String(query || '').trim();
-    if (!trimmedQuery || !active) return <span>{textStr}</span>;
-    // Escape special regex characters in query to prevent crash
-    const escapedQuery = trimmedQuery.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
-    if (!escapedQuery) return <span>{textStr}</span>;
-    const parts = textStr.split(new RegExp(`(${escapedQuery})`, 'gi'));
-    return (
-        <span>
-            {parts.map((part, i) =>
-                part.toLowerCase() === trimmedQuery.toLowerCase() ?
-                <mark key={i} className="bg-accent-gold/30 dark:bg-accent-gold/20 text-gray-900 dark:text-accent-gold rounded px-0.5 no-underline">{part}</mark> :
-                part
-            )}
-        </span>
-    );
-}
-
-import { useTheme } from '@/context/ThemeContext';
-
-function KanjiContent() {
-    const { theme, mounted } = useTheme();
-    const searchParams = useSearchParams();
-    const router = useRouter();
-    const detailId = searchParams.get('detail');
-    const [data, setData] = useState({ items: [], total: 0, pages: 1 });
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
-
-    const page = parseInt(searchParams.get('page')) || 1;
-    const level = searchParams.get('level');
-    const search = searchParams.get('search');
-    const radical = searchParams.get('radical');
-    const limit = 30;
-
-    const scriptTypes = getScriptTypes(search);
-
-    useEffect(() => {
-        async function fetchData() {
-            setLoading(true);
-            try {
-                const result = await getKanjiList({ level, search, radical, limit, page });
-                setData(result || { items: [], total: 0, pages: 1 });
-            } catch (err) {
-                console.error('[jbook-client] Gagal memuat data:', err.message);
-                setError(err.message);
-            } finally {
-                setLoading(false);
+        if (sitemapRes?.ok) {
+            const fullList = await sitemapRes.json();
+            if (Array.isArray(fullList)) {
+                kanjiIndex = fullList.map(({ id, character, meaning, onyomi, kunyomi, jlpt_level }) => ({
+                    id,
+                    character,
+                    meaning,
+                    onyomi,
+                    kunyomi,
+                    jlpt_level: jlpt_level || 5,
+                }));
             }
         }
-        fetchData();
-    }, [page, level, search, radical]);
 
-    const kanjiList = data.items || [];
-    const totalPages = data.pages || 1;
-    const hasMore = page < totalPages;
-    const totalCount = data.total || 0;
+        if (n5Res?.ok) {
+            const data5 = await n5Res.json();
+            if (data5?.total !== undefined) counts.n5 = data5.total;
+        }
 
-    if (loading) {
-        return (
-            <div className="flex flex-col items-center justify-center py-32 text-gray-400 dark:text-gray-600 font-black">
-                <div className="text-6xl mb-4 animate-bounce">漢</div>
-                <p className="tracking-widest uppercase text-sm animate-pulse">Sedang memuat Kanji...</p>
-            </div>
-        );
+        if (n4Res?.ok) {
+            const data4 = await n4Res.json();
+            if (data4?.total !== undefined) counts.n4 = data4.total;
+        }
+    } catch (err) {
+        console.error('[kanji-landing] Gagal memuat data index kanji:', err.message);
     }
+
+    const collectionJsonLd = {
+        '@context': 'https://schema.org',
+        '@type': 'CollectionPage',
+        name: 'Daftar Kanji Jepang N5 sampai N1',
+        description: 'Kuasai kanji Jepang dari N5 sampai N1 dengan arti, onyomi, kunyomi, coretan, dan 214 radikal.',
+        url: `${BASE_URL}/kanji`,
+        isPartOf: {
+            '@type': 'WebSite',
+            name: 'JBook',
+            url: BASE_URL,
+        },
+        hasPart: [
+            { '@type': 'WebPage', name: 'Kanji N5', url: `${BASE_URL}/kanji/n5` },
+            { '@type': 'WebPage', name: 'Kanji N4', url: `${BASE_URL}/kanji/n4` },
+            { '@type': 'WebPage', name: 'Kanji N3', url: `${BASE_URL}/kanji/n3` },
+            { '@type': 'WebPage', name: 'Kanji N2', url: `${BASE_URL}/kanji/n2` },
+            { '@type': 'WebPage', name: 'Kanji N1', url: `${BASE_URL}/kanji/n1` },
+        ],
+    };
 
     return (
         <>
-            {detailId && <KanjiDetailModal id={detailId} />}
-            <div className="flex justify-between items-center mb-6 text-[10px] font-black uppercase tracking-[0.2em] text-gray-500 dark:text-gray-500">
-                <span>Total: {totalCount} Kanji</span>
-                <span>Halaman {page} dari {totalPages}</span>
-            </div>
-
-            {kanjiList.length > 0 ? (
-                <div className="grid grid-cols-2 xs:grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-8 gap-4 mb-16">
-                    {kanjiList.map((kanji) => {
-                        const s = levelStyles[kanji.jlpt_level] ?? levelStyles[5];
-                        return (
-                            <Link
-                                key={kanji.id}
-                                href={getKanjiHref(kanji)}
-                                onClick={(e) => {
-                                    if (typeof navigator !== 'undefined' && !navigator.onLine) {
-                                        e.preventDefault();
-                                        const params = new URLSearchParams(searchParams.toString());
-                                        params.set('detail', kanji.id);
-                                        router.push(`?${params.toString()}`);
-                                    }
-                                }}
-                                className={`group flex flex-col items-center justify-start bg-[var(--card-bg)] rounded-[2rem] border-2 border-[var(--border-color)] ${s.border} px-4 pt-3 pb-5 min-h-[220px] shadow-sm hover:shadow-2xl hover:shadow-accent-blue/10 dark:hover:shadow-black/60 hover:-translate-y-2 active:scale-95 transition-all duration-300 ease-out relative overflow-hidden`}
-                            >
-                                {/* Level accent glow */}
-                                <div className={`absolute inset-0 bg-gradient-to-b ${s.accent} opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none`} />
-
-                                {/* Top badges */}
-                                <div className="relative z-10 self-end flex gap-1 items-center mb-1">
-                                    {scriptTypes.map(type => (
-                                        <span key={type} className="text-[7px] font-black px-1.5 py-0.5 rounded-md uppercase tracking-tighter bg-[var(--background)] border border-[var(--border-color)] text-gray-500">
-                                            {type}
-                                        </span>
-                                    ))}
-                                    <span className={`text-[10px] font-black px-2 py-0.5 rounded-xl ${s.badge} shadow-sm`}>N{kanji.jlpt_level}</span>
-                                </div>
-
-                                {/* Main character */}
-                                <span className="relative z-10 text-6xl font-serif leading-none group-hover:scale-110 transition-all duration-300 -mt-0.5 text-[var(--foreground)]">
-                                    <HighlightText text={kanji.character} query={search} active={kanji._matchTarget === 'word'} />
-                                </span>
-
-                                {/* Meaning & reading */}
-                                <div className="relative z-10 w-full text-center mt-auto">
-                                    <div className="text-sm font-black px-1 leading-tight text-[var(--foreground)]">
-                                        {kanji._isSmartMatch ? (
-                                            <div className="text-[10px] text-accent-blue bg-accent-blue/10 border border-accent-blue/20 rounded-lg py-1 px-2 mb-1 inline-block">
-                                                ★ <HighlightText text={kanji._smartContext} query={search} />
-                                            </div>
-                                        ) : (
-                                            <HighlightText text={kanji.meaning} query={search} active={kanji._matchTarget === 'meaning'} />
-                                        )}
-                                    </div>
-                                    <div className="text-[10px] font-bold mt-1 tracking-tight uppercase text-gray-500 dark:text-gray-500 group-hover:text-accent-blue/70 transition-colors">
-                                        <HighlightText text={getKanjiCardReading(kanji)} query={search} active={kanji._matchTarget === 'reading'} />
-                                    </div>
-                                </div>
-                            </Link>
-                        );
-                    })}
-                </div>
-            ) : (
-                <div className="text-center py-32 bg-[var(--card-bg)] rounded-[3rem] border-4 border-dashed border-[var(--border-color)] max-w-2xl mx-auto shadow-inner">
-                    <div className="text-7xl mb-6 grayscale opacity-20 dark:opacity-40">📡</div>
-                    <h2 className="text-2xl font-black mb-2 text-[var(--foreground)]">Kanji Tidak Ditemukan</h2>
-                    <p className="font-bold mb-8 uppercase text-[10px] tracking-widest leading-loose text-gray-500">Data tidak ditemukan di database lokal maupun API.<br/>Gunakan kata kunci bahasa Indonesia, Romaji, atau Kanji.</p>
-                </div>
-            )}
-
-            <div className="mt-8">
-                <Pagination
-                    currentPage={page}
-                    totalPages={totalPages}
-                    getHref={(targetPage) => {
-                        const params = new URLSearchParams(searchParams.toString());
-                        params.set('page', String(targetPage));
-                        return `?${params.toString()}`;
-                    }}
-                />
-            </div>
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: safeJson(collectionJsonLd) }}
+            />
+            <KanjiLanding kanjiIndex={kanjiIndex} counts={counts} />
         </>
-    );
-}
-
-export default function KanjiPage() {
-    const { theme, mounted } = useTheme();
-
-    return (
-        <div className="relative min-h-screen bg-[var(--background)] overflow-hidden transition-colors duration-300">
-            {/* Sakura petals are now rendered globally via layout.jsx */}
-
-            {/* Side calligraphy - same as homepage */}
-            <div className="hidden xl:flex flex-col absolute left-8 top-1/4 space-y-8 select-none text-[#212127]/20 dark:text-[#f2f2f7]/5 font-japanese text-3xl font-black tracking-widest pointer-events-none z-0">
-                <span>漢字学習</span>
-                <span className="text-xl">一文字</span>
-            </div>
-            <div className="hidden xl:flex flex-col absolute right-8 top-1/4 space-y-8 select-none text-[#212127]/20 dark:text-[#f2f2f7]/5 font-japanese text-3xl font-black tracking-widest pointer-events-none z-0">
-                <span>書き方</span>
-                <span className="text-xl">読み方</span>
-            </div>
-
-            <div className="container mx-auto px-6 py-12 max-w-7xl relative z-10">
-                <header className="mb-12 text-center lg:text-left flex flex-col lg:flex-row lg:items-center justify-between gap-8 border-b border-[var(--border-color)] pb-12 relative z-20">
-                    <div className="shrink-0 lg:max-w-xs">
-                        <h1 className="text-5xl font-japanese font-black tracking-tight leading-none text-[var(--foreground)]">漢字 <span className="text-transparent bg-clip-text bg-gradient-to-r from-accent-blue to-accent-green ml-2">Kanji</span></h1>
-                        <div className="h-1 w-16 bg-gradient-to-r from-accent-blue to-accent-green rounded-full mt-3 mb-1 mx-auto lg:mx-0" />
-                        <p className="font-black mt-2 tracking-wide uppercase text-xs text-gray-500 dark:text-gray-500">Jelajahi karakter Jepang & maknanya</p>
-                    </div>
-                    <div className="flex-1 w-full">
-                        <Suspense fallback={<div className="h-28 w-full bg-[var(--card-bg)] rounded-[2.5rem] animate-pulse" />}>
-                            <KanjiFilter />
-                        </Suspense>
-                    </div>
-                </header>
-
-                <Suspense fallback={<div className="py-32 text-center animate-pulse text-gray-500">Memuat...</div>}>
-                    <KanjiContent />
-                </Suspense>
-            </div>
-        </div>
     );
 }

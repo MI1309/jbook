@@ -120,11 +120,7 @@ export function AuthProvider({ children }) {
             }
         } catch (error) {
             console.error("Auth check failed", error);
-            // Only logout if it's NOT a network error. 
-            // If offline or fetch fails due to connection, keep current user state.
-            if (typeof navigator !== 'undefined' && !navigator.onLine) {
-                return;
-            }
+            // Preserve the current session when the request fails at the network layer.
             if (error instanceof TypeError && (error.message === 'Failed to fetch' || error.message.includes('NetworkError'))) {
                 return;
             }

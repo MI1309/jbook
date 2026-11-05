@@ -139,6 +139,13 @@ html.preload *::after {
   background: var(--accent-blue);
 }
 
+.bunpo-section-nav-list {
+  scrollbar-width: none;
+}
+.bunpo-section-nav-list::-webkit-scrollbar {
+  display: none;
+}
+
 /* Calligraphy font specific styling */
 .font-japanese {
   font-family: 'Kaisei Tokumin', serif;

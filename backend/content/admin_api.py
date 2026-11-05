@@ -512,6 +512,9 @@ class GrammarCreateSchema(BaseModel):
 class GrammarSchema(GrammarCreateSchema):
     id: UUID
     source_data: Optional[dict] = None
+    slug: Optional[str] = None
+    sections: Optional[dict] = None
+    tags: List[str] = Field(default_factory=list)
     model_config = {"from_attributes": True}
 
 

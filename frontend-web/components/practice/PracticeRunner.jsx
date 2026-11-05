@@ -9,7 +9,6 @@ import { usePractice } from '@/context/PracticeContext';
 import { useTheme } from '@/context/ThemeContext';
 import { saveGuestResults } from '@/lib/local-analytics';
 import { submitPracticeResults, getPracticeQuestions, getMinnaQuestions } from '@/lib/api';
-import { enqueueResults, syncPendingResults, pendingCount } from '@/lib/offline-queue';
 import KanjiDetailModal from '@/components/kanji/KanjiDetailModal';
 import KotobaDetailModal from '@/components/kotoba/KotobaDetailModal';
 import BunpoDetailModal from '@/components/bunpo/BunpoDetailModal';
@@ -73,8 +72,6 @@ function PracticeContent() {
     const lastAutoplayedIndex = useRef(-1);
     const nextTimeoutRef = useRef(null);
     const timerIdRef = useRef(null);
-
-    const [pendingSyncs, setPendingSyncs] = useState(0);
 
     const setAudioPlayingState = (val) => {
         audioPlayingRef.current = val;
@@ -143,26 +140,6 @@ function PracticeContent() {
         }
     }, [currentIndex, questions, loading, finished, mode, playQuestionAudio]);
 
-    // Sync offline queue when back online
-    useEffect(() => {
-        const handleOnline = async () => {
-            if (!user) return;
-            const count = await syncPendingResults(submitPracticeResults);
-            if (count > 0) {
-                setPendingSyncs(0);
-                console.log(`[offline-queue] Synced ${count} pending result batch(es).`);
-            }
-        };
-        window.addEventListener('online', handleOnline);
-        if (navigator.onLine && user) handleOnline();
-        return () => window.removeEventListener('online', handleOnline);
-    }, [user]);
-
-    // Show pending count badge
-    useEffect(() => {
-        setPendingSyncs(pendingCount());
-    }, []);
-
     const handleFinish = useCallback(async (finalResultsOverride) => {
         if (submitting || finished) return;
 
@@ -184,19 +161,7 @@ function PracticeContent() {
 
         try {
             if (user) {
-                if (!navigator.onLine) {
-                    enqueueResults(resultsToSubmit);
-                    setPendingSyncs(pendingCount());
-                    console.log('[offline-queue] Results queued for later sync.');
-                } else {
-                    try {
-                        await submitPracticeResults(resultsToSubmit);
-                    } catch (submitErr) {
-                        enqueueResults(resultsToSubmit);
-                        setPendingSyncs(pendingCount());
-                        console.warn('[offline-queue] Submit failed, queued:', submitErr.message);
-                    }
-                }
+                await submitPracticeResults(resultsToSubmit);
             } else {
                 saveGuestResults(resultsToSubmit);
             }
@@ -557,11 +522,6 @@ function PracticeContent() {
                         {mode === 'kakitori' && (
                             <div className={`mt-3 text-xs px-3 py-2 rounded-lg font-bold ${theme === 'dark' ? 'bg-blue-950/30 border border-blue-900/40 text-blue-300' : 'bg-blue-50 border border-blue-100 text-blue-700'}`}>
                                 🎧 Sesi Kakitori telah dicatat ke statistik dikte kamu.
-                            </div>
-                        )}
-                        {pendingSyncs > 0 && (
-                            <div className="mt-3 bg-blue-600/10 border border-blue-600/20 text-blue-600 dark:text-blue-400 text-xs px-3 py-2 rounded-lg font-bold">
-                                ⏳ {pendingSyncs} sesi latihan menunggu sinkronisasi ke server.
                             </div>
                         )}
                     </div>

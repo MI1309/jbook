@@ -6,9 +6,117 @@ from pathlib import Path
 from django.core.management import call_command
 from django.core.management.base import CommandError
 from django.test import TestCase
+from django.contrib.auth import get_user_model
+from ninja_jwt.tokens import RefreshToken
 
 from .models import FeatureSetting, Vocab, Kanji, Grammar, GrammarSentence, WordType, CurriculumLevel, ReferenceBook, CurriculumUnit, Particle
 from .admin_api import _save_bunpo_sentences
+
+
+class BunpoBulkImportTests(TestCase):
+    endpoint = '/api/content/grammar/bulk-import'
+
+    def setUp(self):
+        self.admin = get_user_model().objects.create_user(username='bunpo-import-admin', is_staff=True)
+        self.regular_user = get_user_model().objects.create_user(username='bunpo-import-user')
+
+    def auth_headers(self, user):
+        token = RefreshToken.for_user(user).access_token
+        return {'HTTP_AUTHORIZATION': f'Bearer {token}'}
+
+    def make_item(self, title, slug, level=5):
+        return {
+            'title': title,
+            'slug': slug,
+            'jlpt_level': level,
+            'structure': 'N1 は N2 です',
+            'explanation': 'Pernyataan nominal sopan.',
+            'sections': {
+                'mainFunction': {'summary': 'Fungsi', 'points': ['Poin']},
+                'sentencePattern': {'formula': 'N1 は N2 です。', 'variations': [], 'notes': []},
+                'examples': [],
+                'comparison': {'summary': '', 'items': []},
+                'nuance': {'summary': '', 'points': []},
+                'coreExplanation': {'summary': '', 'text': ''},
+                'commonMistakes': [],
+                'faq': [],
+                'miniPractice': [],
+                'conceptMap': {
+                    'summary': '',
+                    'nodes': [{'id': 'topic', 'label': 'Topik', 'type': 'noun'}],
+                    'edges': [{'from': 'topic', 'to': 'topic', 'label': 'ditandai'}],
+                },
+            },
+        }
+
+    def test_staff_imports_batch_and_public_grammar_contains_sections(self):
+        single_response = self.client.post(
+            self.endpoint,
+            data=json.dumps([self.make_item('～は～です', 'wa-desu')], ensure_ascii=False),
+            content_type='application/json',
+            secure=True,
+            **self.auth_headers(self.admin),
+        )
+        self.assertEqual(single_response.status_code, 200, single_response.content)
+        original_id = Grammar.objects.get(slug='wa-desu').id
+
+        items = [
+            self.make_item('～は～です', 'wa-desu'),
+            self.make_item('～も～です', 'mo-desu'),
+            self.make_item('～ではありません', 'ja-arimasen'),
+        ]
+        response = self.client.post(
+            self.endpoint,
+            data=json.dumps(items, ensure_ascii=False),
+            content_type='application/json',
+            secure=True,
+            **self.auth_headers(self.admin),
+        )
+
+        self.assertEqual(response.status_code, 200, response.content)
+        self.assertEqual(response.json()['count'], 3)
+        record = Grammar.objects.get(slug='wa-desu')
+        self.assertEqual(record.id, original_id)
+        self.assertEqual(record.sections['mainFunction']['summary'], 'Fungsi')
+        self.assertEqual(record.sections['conceptMap']['edges'][0]['from'], 'topic')
+        self.assertEqual(record.tags, [])
+
+        public_response = self.client.get('/api/content/grammar?limit=30&page=1', secure=True)
+        public_record = next(item for item in public_response.json()['items'] if item['slug'] == 'wa-desu')
+        self.assertEqual(public_record['sections']['mainFunction']['summary'], 'Fungsi')
+
+    def test_invalid_item_rejects_entire_batch_with_indexed_errors(self):
+        valid_item = self.make_item('～は～です', 'wa-desu')
+        invalid_item = self.make_item('～も～です', 'mo-desu')
+        invalid_item['jlpt_level'] = 'N5'
+        invalid_item['sections']['fungsUtama'] = invalid_item['sections'].pop('mainFunction')
+
+        response = self.client.post(
+            self.endpoint,
+            data=json.dumps([valid_item, invalid_item], ensure_ascii=False),
+            content_type='application/json',
+            secure=True,
+            **self.auth_headers(self.admin),
+        )
+
+        self.assertEqual(response.status_code, 422)
+        detail = response.json()['detail']
+        self.assertIn("Data ke-2", detail)
+        self.assertIn("jlpt_level", detail)
+        self.assertIn("fungsUtama", detail)
+        self.assertEqual(Grammar.objects.count(), 0)
+
+    def test_non_staff_user_cannot_import(self):
+        response = self.client.post(
+            self.endpoint,
+            data=json.dumps([self.make_item('～は～です', 'wa-desu')], ensure_ascii=False),
+            content_type='application/json',
+            secure=True,
+            **self.auth_headers(self.regular_user),
+        )
+
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(Grammar.objects.count(), 0)
 
 
 class VocabListApiTests(TestCase):

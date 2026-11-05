@@ -1,6 +1,6 @@
 # Arsitektur & Logika Utama JBook Frontend
 
-> **Dokumen ini adalah referensi teknis lengkap** untuk semua logika, algoritma, dan alur kerja pada aplikasi JBook (frontend-web Next.js). Diperbarui terakhir: April 2026.
+> **Dokumen ini adalah referensi teknis lengkap** untuk semua logika, algoritma, dan alur kerja pada aplikasi JBook (frontend-web Next.js). Diperbarui terakhir: November 2026.
 
 ---
 
@@ -10,18 +10,15 @@
 2. [Struktur Direktori](#2-struktur-direktori)
 3. [Sistem Autentikasi (AuthContext)](#3-sistem-autentikasi-authcontext)
 4. [Sistem Tema (ThemeContext)](#4-sistem-tema-themecontext)
-5. [Konteks Latihan (PracticeContext)](#5-konteks-latihan-practicecontext)
-6. [Lapisan Data & API (lib/api.js)](#6-lapisan-data--api-libapiJS)
-7. [Sistem Cache (lib/cache-store.js)](#7-sistem-cache-libcache-storeJS)
-8. [Database Offline (lib/offline-db.js + IndexedDB)](#8-database-offline-liboffline-dbjs--indexeddb)
-9. [Antrean Offline (lib/offline-queue.js)](#9-antrean-offline-liboffline-queuejs)
+6. [Konteks Latihan (PracticeContext)](#6-konteks-latihan-practicecontext)
+7. [Lapisan Data & API (lib/api.js)](#7-lapisan-data--api-libapi-js)
 10. [Analitik Tamu (lib/local-analytics.js)](#10-analitik-tamu-liblocal-analyticsjs)
 11. [Utilitas Teks Jepang (lib/utils.js)](#11-utilitas-teks-jepang-libutilsjs)
-12. [Modul Latihan (PracticeRunner)](#12-modul-latihan-practicerunner)
-13. [Routing & Halaman Utama](#13-routing--halaman-utama)
-14. [Ketergantungan Data Antar Modul](#14-ketergantungan-data-antar-modul)
-15. [Alur Prioritas Data (Online vs Offline)](#15-alur-prioritas-data-online-vs-offline)
-16. [PWA & Service Worker](#16-pwa--service-worker)
+13. [Modul Latihan (PracticeRunner)](#13-modul-latihan-practicerunner)
+14. [Routing & Halaman Utama](#14-routing--halaman-utama)
+15. [Ketergantungan Data Antar Modul](#15-ketergantungan-data-antar-modul)
+16. [Alur Data Online](#16-alur-data-online)
+17. [Admin Bunpo & Data Editorial](#17-admin-bunpo--data-editorial)
 
 ---
 
@@ -33,12 +30,10 @@
 | Styling | Tailwind CSS v4 |
 | State Management | React Context API |
 | Auth Token | `js-cookie` (HttpOnly-like via Lax SameSite) |
-| Offline DB | IndexedDB via custom wrapper (`lib/offline-db.js`) |
-| Offline Cache | `localStorage` via `lib/cache-store.js` |
-| PWA | `@ducanh2912/next-pwa` + Workbox |
+| Data konten | Diambil langsung dari backend; tidak tersedia offline |
 | Auth Sosial | Google OAuth via `@react-oauth/google` |
 | Wanakana | `wanakana` untuk konversi romaji ↔ hiragana/katakana |
-| Backend API | Django REST Framework (PythonAnywhere) |
+| Backend API | Django Ninja (PythonAnywhere) |
 
 ---
 
@@ -56,7 +51,7 @@ Untuk pemahaman mendalam pada sistem tertentu, silakan baca dokumen berikut:
 
 ---
 
-## 2. Struktur Direktori
+### Struktur Folder Frontend
 
 ```
 frontend-web/
@@ -75,7 +70,6 @@ frontend-web/
 │   ├── forgot-password/    → Halaman lupa password
 │   ├── reset-password/     → Halaman reset password
 │   ├── kana/               → Referensi tabel Hiragana/Katakana
-│   ├── offline/            → Halaman fallback saat offline
 │   └── admin/              → Panel admin (akses terbatas)
 │
 ├── components/             → Komponen React reusable
@@ -95,7 +89,6 @@ frontend-web/
 │   ├── BunpoDetailModal.jsx→ Modal wrapper untuk BunpoDetailUI
 │   ├── PracticeConfig.jsx  → Konfigurasi kuis latihan
 │   ├── PracticeRunner.jsx  → Mesin kuis latihan (soal, timer, hasil)
-│   ├── OfflineIndicator.jsx→ Indikator status koneksi
 │   └── ResetProgressButton.jsx → Tombol reset progres latihan
 │
 ├── context/
@@ -104,10 +97,7 @@ frontend-web/
 │   └── PracticeContext.js  → Flag sedang-latihan global
 │
 └── lib/
-    ├── api.js              → Semua pemanggilan API (dengan fallback offline)
-    ├── cache-store.js      → Cache localStorage dengan TTL
-    ├── offline-db.js       → IndexedDB wrapper (CRUD)
-    ├── offline-queue.js    → Antrean sinkronisasi hasil latihan saat offline
+    ├── api.js              → Pemanggilan API online dan normalisasi response
     ├── local-analytics.js  → Analitik latihan untuk mode tamu (localStorage)
     └── utils.js            → Deteksi & ekstraksi karakter Jepang (Kanji, Hiragana, Katakana)
 ```
@@ -220,25 +210,9 @@ Menyimpan state global `isPracticing` (boolean). Digunakan untuk menyembunyikan 
 **File:** `lib/api.js`  
 **Base URL:** `process.env.NEXT_PUBLIC_API_URL` (default: `https://japan.pythonanywhere.com/api`)
 
-### Pola Prioritas Data
+### Akses Konten Online
 
-Hampir semua fungsi API mengikuti pola ini:
-
-```
-Panggil fungsi (misal getKanjiList)
-    │
-    ├─ Online (navigator.onLine = true)?
-    │   ├─ Ya → fetchWithCache(cacheKey, fetchFn)
-    │   │           ├─ Berhasil → cache ke localStorage, return data
-    │   │           └─ Gagal → coba serveFromDb (IndexedDB)
-    │   │                       └─ Masih gagal → throw error
-    │   │
-    │   └─ Tidak (Offline) → serveFromDb(storeName, filters)
-    │                         ├─ Ada data → return data (filtered + paginated)
-    │                         └─ Tidak ada → throw / return empty
-    │
-    └─ Di SSR (typeof window === 'undefined') → fetch API langsung (no cache)
-```
+Data Kanji, vocab, grammar, dan latihan diminta langsung dari API. Cache IndexedDB/localStorage untuk penyediaan konten offline dan fallback client-side telah dihapus. Cache in-memory singkat untuk request visibility hanya menghindari request berulang selama sesi; itu bukan penyimpanan offline.
 
 ### Fungsi-Fungsi API
 
@@ -267,113 +241,16 @@ Panggil fungsi (misal getKanjiList)
 #### Utilitas
 | Fungsi | Deskripsi |
 |---|---|
-| `findIdByString(storeName, value)` | Cari ID di IndexedDB berdasarkan `character`, `word`, atau `title` |
+| `resolveContentId(type, character)` | Mencari ID kanji/vocab/grammar melalui API untuk navigasi relasi konten |
 | `suggestContent(payload)` | Kirim saran konten ke admin |
 
-### `serveFromDb()` — Client-Side Filter & Pagination
-
-Fungsi private yang memproses data IndexedDB secara manual di browser:
-- Filter: `level`, `search`, `chapter`, `word_type`, `radical`
-- Pencarian cerdas Kanji: jika cari "hari", cari di vocab meanings → ekstrak Kanji dari vocab yang cocok → tambahkan ke hasil
-- Paginasi: `slice((page-1)*limit, page*limit)`
-
 ---
 
-## 7. Sistem Cache (lib/cache-store.js)
+### Data Online
 
-**File:** `lib/cache-store.js`  
-**Storage:** `localStorage` dengan prefix `jbook_cache:`
+Data materi, detail, latihan, dan analitik akun diambil langsung dari API. API response tidak disimpan di browser untuk penggunaan offline; hasil latihan akun harus berhasil dikirim ke server.
 
-### Skema Entry Cache
-```json
-{
-  "data": { ... },
-  "expires": 1234567890000  // timestamp Unix ms
-}
-```
-
-### TTL Default
-- **7 hari** untuk list API (kanji, vocab, grammar)
-- **24 jam** untuk soal latihan (`getPracticeQuestions`)
-
-### Fungsi
-| Fungsi | Deskripsi |
-|---|---|
-| `cacheSet(key, data, ttlMs)` | Simpan data + expiry ke localStorage |
-| `cacheGet(key)` | Baca data, hapus otomatis jika expired |
-| `cacheClear(key)` | Hapus entry spesifik |
-| `fetchWithCache(key, fn, ttl)` | Fetch data + auto-cache dengan fallback ke cache jika network error |
-
----
-
-## 8. Database Offline (lib/offline-db.js + IndexedDB)
-
-**File:** `lib/offline-db.js`  
-**DB Name:** `jbook-offline` (IndexedDB)  
-**DB Version:** 1
-
-### Object Stores
-| Store | KeyPath | Isi |
-|---|---|---|
-| `vocab` | `id` | Semua data kosakata |
-| `kanji` | `id` | Semua data kanji |
-| `grammar` | `id` | Semua data tata bahasa |
-| `practice` | `id` | Soal latihan yang di-cache |
-| `meta` | `id` | Metadata: `downloadedAt`, `version` |
-
-### Proteksi Error Fatal
-```
-openDB()
-    │
-    ├─ _isDBBroken = true? → Reject langsung (cegah loop)
-    ├─ UnknownError / QuotaExceededError / VersionError → set _isDBBroken = true
-    └─ Berhasil → cache _db instance (singleton)
-```
-
-### Fungsi CRUD
-| Fungsi | Deskripsi |
-|---|---|
-| `dbPutAll(store, items)` | Hapus semua + simpan array baru (atomic replace) |
-| `dbGetAll(store)` | Ambil semua item dari store |
-| `dbGet(store, id)` | Ambil satu item by ID |
-| `dbHasData(store)` | Cek apakah store memiliki data (boolean) |
-| `dbCount(store)` | Hitung jumlah item |
-| `dbSetMeta(key, val)` | Simpan metadata key-value |
-| `dbGetMeta(key)` | Baca metadata |
-| `dbClearAll()` | Hapus semua data di semua store |
-| `dbGetStats()` | Ringkasan: jumlah vocab, kanji, grammar + timestamp download |
-
----
-
-## 9. Antrean Offline (lib/offline-queue.js)
-
-**File:** `lib/offline-queue.js`  
-**Storage Key:** `offline_practice_queue` (localStorage)
-
-### Alur Saat Offline
-
-```
-User selesai kuis (offline, sudah login)
-    │
-    └─ enqueueResults(results)
-        │
-        └─ queue.push({ results, timestamp }) → simpan ke localStorage
-```
-
-### Alur Sinkronisasi Saat Online Kembali
-
-```
-navigator 'online' event fired (atau mount saat already online)
-    │
-    └─ syncPendingResults(submitFn)
-        │
-        ├─ Baca queue dari localStorage
-        ├─ Untuk setiap batch:
-        │   ├─ submitFn(batch.results) → coba submit ke server
-        │   ├─ Berhasil → catat sebagai synced
-        │   └─ Gagal → simpan ke array 'failed'
-        └─ Tulis kembali hanya batch yang masih gagal ke localStorage
-```
+Cache IndexedDB/API persisten dan antrean submit latihan telah dihapus. Browser yang pernah memakai versi lama membersihkan service worker/cache/data legacy saat dibuka; submit latihan akun yang gagal perlu dicoba ulang saat koneksi tersedia.
 
 ---
 
@@ -487,24 +364,13 @@ Mount PracticeContent
     │   └─ Jika versi lama → hapus session cache
     ├─ Ada savedSession di sessionStorage?
     │   ├─ Ya + valid (< 1 jam, belum selesai) → restore session (soal, index, skor, timer)
-    │   └─ Tidak → loadQuestions() dari API/IndexedDB
+    │   └─ Tidak → loadQuestions() dari API
     └─ setIsPracticing(true)
 ```
 
-#### 2. generateOfflineQuestions (mode offline)
+#### 2. Pembuatan Soal
 
-```
-Input: { limit, level, type }
-    │
-    ├─ Split 'type' by comma (support mixed types: "kanji,grammar")
-    ├─ Untuk setiap type:
-    │   ├─ Ambil pool data dari IndexedDB (storeName: kanji, vocab, grammar)
-    │   ├─ Filter by level(s) jika ada (support "4,5")
-    │   └─ Tag setiap item dengan properti 'type' aslinya
-    ├─ Gabungkan semua pool menjadi pool raksasa
-    ├─ Minimal 4 item → shuffle pool → pilih 'limit' item
-    ├─ Untuk setiap item:
-    │   ├─ Pilih 3 distractor acak dari context pool aslinya (type yang sama)
+Soal latihan dibuat oleh backend melalui `GET /learning/practice/generate`. Frontend menormalisasi pilihan level/tipe, lalu menata alokasi hasil untuk UI. Tidak ada generator soal lokal berbasis IndexedDB.
     │   ├─ Buat options: [correct, ...3 wrong] → shuffle
     │   └─ Format: { id, character, type, options, reading, meaning }
     └─ Return array soal
@@ -582,11 +448,12 @@ initialTimer (dari URL param 'timer', dalam detik)
 |---|---|---|
 | `/` | Public | Halaman home |
 | `/kanji` | Public | Daftar + filter Kanji |
-| `/kanji/[id]` | Public | Detail Kanji (via URL langsung) |
+| `/kanji/[level]/[slug]` | Public | Detail Kanji melalui level dan slug |
 | `/kotoba` | Public | Daftar + filter Kosakata |
 | `/kotoba/[id]` | Public | Detail Kosakata |
 | `/bunpo` | Public | Daftar + filter Tata Bahasa |
 | `/bunpo/[id]` | Public | Detail Tata Bahasa |
+| `/bunpo/[level]/[slug]` | Public | Detail Bunpo dengan slug tersimpan dan fallback editorial pilot |
 | `/kana` | Public | Tabel Hiragana/Katakana referensi |
 | `/practice` | Public | Konfigurasi + Runner kuis latihan |
 | `/dashboard` | Login Required | Statistik + kesalahan teratas |
@@ -597,17 +464,20 @@ initialTimer (dari URL param 'timer', dalam detik)
 | `/register` | Public | Halaman daftar |
 | `/forgot-password` | Public | Lupa password |
 | `/reset-password` | Public | Reset password via link email |
-| `/offline` | Public | Fallback PWA ketika navigasi offline |
-| `/admin/*` | Admin Only | Panel administrasi konten |
+| `/admin/bunpo` | Admin Only | Daftar Bunpo, visibilitas, form satuan, dan bulk JSON import |
+| `/admin/*` | Admin Only | Panel administrasi konten lainnya |
 
-### Modal Detail (Client-Side Navigation)
+### Detail Bunpo
 
-Kanji, Kotoba, dan Bunpo detail diimplementasikan sebagai **modal overlay** (bukan navigasi halaman penuh) di 3 konteks:
+Route `/bunpo/[level]/[slug]` memuat record grammar dari catalog dan detail API. Slug `Grammar.slug` menjadi kunci URL utama; mapping judul lama masih dipakai sebagai fallback untuk record yang belum memiliki slug. Detail publik menggunakan `sections` dari database bila terisi, dan memakai `BUNPO_SECTIONS_PILOT` sebagai fallback sementara bila sections database kosong.
 
-1. **Dari halaman daftar** → push URL ke `/kanji/[id]` (intercept dengan modal)
-2. **Dari hasil kuis** → state `detailView` di `PracticeRunner` → modal tanpa navigasi
-3. **Dari dashboard** → state `detailView` di `DashboardPage` → modal tanpa navigasi
-4. **Dari halaman history** → state `detailView` di `HistoryPage` → modal tanpa navigasi
+Record `Grammar` menyimpan field legacy (`title`, `structure`, `explanation`, `chapter`, `jlpt_level`, `sentences`) bersama `slug` unik nullable, `sections` JSON nullable, dan `tags` JSON. Serializer grammar menyertakan field editorial tersebut pada response publik dan admin.
+
+### Import Konten Bunpo Admin
+
+`app/admin/bunpo/page.jsx` menampilkan [`BunpoImportPanel.jsx`](../app/admin/bunpo/BunpoImportPanel.jsx), dengan form satuan dan bulk JSON/file. Frontend memeriksa array, field wajib, section wajib, dan key tidak dikenal sebelum mengirim request ke `POST /api/content/grammar/bulk-import` dengan Bearer token.
+
+Endpoint di `backend/content/api.py` menggunakan schema Pydantic strict (`extra="forbid"`) untuk record dan 10 section editorial. Semua item divalidasi terlebih dahulu; error menyebut indeks data, field/key yang salah, dan saran typo bila tersedia. Batch valid (maksimum 500 record) disimpan secara atomik menggunakan `update_or_create` berdasarkan slug. Endpoint hanya mengizinkan staff/superuser dan sections/tags ikut disimpan ke model `Grammar`.
 
 ### Export CSV (Direct)
 Halaman Histori menyediakan tombol **Ekspor Csv Histori** yang merender data tabel langsung di client-side menjadi format CSV, mencakup:
@@ -634,82 +504,58 @@ PracticeContext ──────────────────→ Navbar
     │           (isPracticing)          (sembunyikan elemen)
     │
 lib/api.js
-    ├── cache-store.js  (fetchWithCache)
-    ├── offline-db.js   (serveFromDb, findIdByString)
-    └── offline-queue.js (enqueue jika offline)
+    ├── Backend content API (Kanji, Kotoba, Bunpo)
+    └── Backend learning API (latihan dan analytics)
 
 PracticeRunner
     ├── lib/api.js          (getPracticeQuestions, submitPracticeResults)
-    ├── lib/offline-queue.js (enqueueResults, syncPendingResults)
     └── lib/local-analytics.js (saveGuestResults jika tamu)
 
 KotobaDetailUI
-    ├── lib/api.js      (findIdByString → navigasi ke detail Kanji)
-    └── lib/offline-db.js (dbGetAll('kanji') → data bedah kanji penyusun)
+    └── lib/api.js      (resolveContentId → cari detail Kanji melalui API)
+
+Bunpo admin
+    ├── app/admin/bunpo/BunpoImportPanel.jsx
+    └── POST /api/content/grammar/bulk-import (Bearer JWT admin)
 ```
 
 ---
 
-## 16. Alur Prioritas Data (Online vs Offline)
+## 16. Alur Data Online
 
-### Diagram Keputusan Fetch Data
-
-```
-                    ┌─────────────────────────────┐
-                    │  Request Data (misal Kanji)  │
-                    └──────────────┬──────────────┘
-                                   │
-                    ┌──────────────▼──────────────┐
-                    │   navigator.onLine = true?   │
-                    └──────────┬──────────┬────────┘
-                               │ Ya       │ Tidak
-                    ┌──────────▼──┐  ┌────▼──────────────┐
-                    │ fetchWithCache│  │  serveFromDb()    │
-                    │ (localStorage)│  │  (IndexedDB)      │
-                    └──────┬───────┘  └────────┬──────────┘
-                           │ Berhasil           │ Ada data
-                    ┌──────▼───────┐   ┌────────▼──────────┐
-                    │ Simpan cache │   │ Filter + Paginate  │
-                    │ 7 hari       │   │ Lokal (manual)     │
-                    └──────┬───────┘   └────────┬──────────┘
-                           │ Gagal              │ Tidak ada data
-                    ┌──────▼───────┐   ┌────────▼──────────┐
-                    │ Fallback ke  │   │  Return empty /    │
-                    │ IndexedDB    │   │  throw error       │
-                    └──────────────┘   └───────────────────┘
-```
-
-### Tiga Lapis Penyimpanan
-
-| Layer | Storage | TTL | Kapan Dipakai |
-|---|---|---|---|
-| 1. Cache API | `localStorage` (jbook_cache:*) | 7 hari | Fallback online cepat, navigasi berulang |
-| 2. IndexedDB | Browser DB permanen | ∞ (dihapus manual) | Mode offline penuh, setelah download |
-| 3. Session | `sessionStorage` | 1 jam / per sesi | Restore kuis yang terinterupsi |
+Data materi dan latihan diminta langsung dari backend. Jika request gagal, UI menampilkan kondisi gagal atau meminta pengguna mencoba lagi; konten API tidak dipulihkan dari IndexedDB/cache offline. Hasil latihan akun juga tidak diantrekan secara lokal ketika submit gagal. `sessionStorage` masih dipakai secara terbatas untuk memulihkan sesi latihan yang sedang berlangsung.
 
 ---
 
-## 17. PWA & Service Worker
+## 17. Admin Bunpo & Data Editorial
 
-**File:** `next.config.mjs`  
-**Library:** `@ducanh2912/next-pwa` + Workbox
+### Model dan response
 
-### Strategi Caching Workbox
+`content.Grammar` menyimpan field legacy (`title`, `structure`, `explanation`, `chapter`, `jlpt_level`, `sentences`) serta:
 
-| Route Pattern | Strategi | Expiry |
+| Field | Bentuk | Kegunaan |
 |---|---|---|
-| `/blog/*` | NetworkFirst (timeout 3s) | 1 menit, max 10 entries |
-| Halaman non-blog/non-api | NetworkFirst (timeout 10s) | 30 hari, max 32 entries |
-| `/api/*` (same-origin) | NetworkFirst (timeout 10s) | 30 hari, max 64 entries |
-| `japan.pythonanywhere.com/api/*` | NetworkFirst (timeout 10s) | 30 hari, max 128 entries |
+| `slug` | Slug unik, nullable | URL publik `/bunpo/<level>/<slug>` dan kunci upsert import. |
+| `sections` | JSON nullable | Isi editorial 10 bagian materi Bunpo. |
+| `tags` | JSON array | Tag editorial pola Bunpo. |
 
-### Offline Fallback
-- Jika navigasi ke halaman apapun gagal saat offline → redirect ke `/offline`
-- Konfigurasi: `fallbacks.document: "/offline"`
+Migration `0027_grammar_sections_grammar_slug_grammar_tags` menambahkan field tersebut. `serialize_grammar()` menyertakan slug, sections, dan tags pada response content/admin.
 
-### PWA On/Off
-- Di **development**: PWA dinonaktifkan (`disable: NODE_ENV === 'development'`)
-- Di **production** (Vercel): PWA aktif, generate `sw.js` di `/public`
+### Payload editorial
+
+Setiap `sections` berisi `mainFunction`, `sentencePattern`, `examples`, `comparison`, `nuance`, `coreExplanation`, `commonMistakes`, `faq`, `miniPractice`, dan `conceptMap`. Bentuk field per bagian didokumentasikan dan dinormalisasi di `lib/bunpo-schema.js`. Route detail memakai data database jika tersedia; `BUNPO_SECTIONS_PILOT` menjadi fallback untuk pola pilot lama yang sections-nya belum tersimpan.
+
+### Alur bulk import
+
+1. Admin membuka `/admin/bunpo`; akses halaman diperiksa oleh `app/admin/layout.jsx`.
+2. `BunpoImportPanel.jsx` menerima satu record lewat form atau array JSON melalui textarea/file.
+3. Frontend memeriksa JSON, array, field wajib, nama section, dan key yang tidak dikenal.
+4. Panel mengirim Bearer token ke `POST /api/content/grammar/bulk-import`.
+5. Backend memakai Pydantic strict schemas (`extra="forbid"`) dan autentikasi staff/superuser. Maksimum 500 record per batch.
+6. Backend memvalidasi semua item sebelum transaksi. Jika ada satu invalid, HTTP 422 mengembalikan error per indeks dan tidak ada record yang berubah.
+7. Batch valid dijalankan atomik dengan `update_or_create` berdasarkan slug. Respons berisi jumlah serta status created/updated per slug.
+
+Endpoint bulk berada di `backend/content/api.py`; schema model publik/admin dan serializer juga mengirim field editorial. Panel tetap menggunakan endpoint ini untuk input satuan maupun bulk agar validasi server konsisten.
 
 ---
 
@@ -720,19 +566,15 @@ KotobaDetailUI
 2. Cek console untuk log `[AuthContext]`
 3. Jika `401`: refresh token mungkin expired → harus login ulang
 
-### Masalah Data Offline Tidak Muncul
-1. DevTools → Application → IndexedDB → `jbook-offline`
-2. Cek apakah store `vocab/kanji/grammar` ada isinya
+### Masalah Request Konten Bunpo
+1. Periksa response `GET /api/content/grammar` dan `GET /api/content/grammar/<id>`.
+2. Pastikan record memiliki `slug` yang sesuai level; record legacy tanpa slug memakai mapping judul frontend.
+3. Jika record belum memiliki `sections`, halaman pilot dapat memakai fallback `BUNPO_SECTIONS_PILOT`.
 
-### Masalah Cache Lama / Data Stale
-1. DevTools → Application → Local Storage
-2. Cari key dengan prefix `jbook_cache:`
-3. Hapus manual atau tunggu TTL 7 hari berlalu
-
-### Masalah Hasil Latihan Tidak Tersync
-1. Cek `localStorage` key `offline_practice_queue`
-2. Pastikan user sudah login kembali dan koneksi online
-3. Sync terjadi otomatis saat event `online` terdeteksi
+### Masalah Import Bunpo
+1. Pastikan user memiliki `is_staff=True` atau `is_superuser=True` dan cookie `access_token` masih valid.
+2. Periksa format JSON serta pesan error per indeks dari `POST /api/content/grammar/bulk-import`.
+3. Pastikan semua 10 section ada dan key-nya tepat; satu error membatalkan seluruh batch.
 
 ### Masalah Flash of Wrong Theme (FOWT)
 1. Pastikan semua komponen menggunakan pola `!mounted ? 'default' : (theme === 'dark' ? ... : ...)`
@@ -741,4 +583,4 @@ KotobaDetailUI
 
 ---
 
-*Dokumen ini mencerminkan state kode per April 2026. Perbarui setiap ada perubahan arsitektur signifikan.*
+*Dokumen ini mencerminkan state kode per November 2026. Perbarui setiap ada perubahan arsitektur signifikan.*

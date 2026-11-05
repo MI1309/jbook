@@ -6,43 +6,35 @@ import Link from 'next/link';
 import { toHiragana, toKatakana } from 'wanakana';
 import { hasKanji } from '@/lib/utils';
 import { resolveContentId } from '@/lib/api';
-import { useTheme } from '@/context/ThemeContext';
-import KanjiStrokeViewer from './KanjiStrokeViewer'; 
+import KanjiStrokeViewer from './KanjiStrokeViewer';
 import { useAuth } from '@/context/AuthContext';
-import { Edit2, Check, X, Trash } from 'lucide-react';
+import { Edit2, Check, X, Trash, ArrowLeft, BookOpen, Layers, Sparkles } from 'lucide-react';
 import Cookies from 'js-cookie';
 import { appToast as toast } from '@/components/common/AppMessage';
+import { getRadicalInfo } from '@/lib/radicals';
 
-export default function KanjiDetailUI({ kanji: initialKanji, onClose }) {
+export default function KanjiDetailUI({ kanji: initialKanji, level = 'n5', backHref, backLabel }) {
     const router = useRouter();
-    const { theme, mounted } = useTheme();
     const { user } = useAuth();
     const [kanji, setKanji] = useState(initialKanji);
     const [isStrokeAnimating, setIsStrokeAnimating] = useState(false);
     const [fetchedSvg, setFetchedSvg] = useState(null);
 
-    // Edit state
+    // Edit state untuk Admin
     const [isEditing, setIsEditing] = useState(false);
     const [editData, setEditData] = useState({
         meaning: initialKanji?.meaning || '',
         onyomi: initialKanji?.onyomi || [],
         kunyomi: initialKanji?.kunyomi || [],
         strokes: initialKanji?.strokes || 0,
-        jlpt_level: initialKanji?.jlpt_level || 5
+        jlpt_level: initialKanji?.jlpt_level || 5,
     });
     const [saving, setSaving] = useState(false);
     const [deleting, setDeleting] = useState(false);
 
-    const isAdmin = user?.is_staff || user?.is_superuser;
+    const isAdmin = Boolean(user?.is_staff || user?.is_superuser);
 
-    console.log('[jbook-debug] Admin check:', {
-        user: user?.username,
-        is_staff: user?.is_staff,
-        is_superuser: user?.is_superuser,
-        isAdmin
-    });
-
-    // Ambil string data SVG dari database backend kamu
+    // Data SVG kanji (dari database atau fallback)
     const kanjiSvg = fetchedSvg || kanji?.svg_data || kanji?.kanjivg || '';
 
     useEffect(() => {
@@ -52,29 +44,26 @@ export default function KanjiDetailUI({ kanji: initialKanji, onClose }) {
             onyomi: initialKanji?.onyomi || [],
             kunyomi: initialKanji?.kunyomi || [],
             strokes: initialKanji?.strokes || 0,
-            jlpt_level: initialKanji?.jlpt_level || 5
+            jlpt_level: initialKanji?.jlpt_level || 5,
         });
     }, [initialKanji]);
 
-    // Fallback: Jika data SVG tidak ada, coba ambil langsung dari KanjiVG GitHub
+    // Fallback: Jika data SVG tidak ada di API, ambil langsung dari KanjiVG GitHub
     useEffect(() => {
         if (!kanjiSvg && kanji?.character) {
             const unicodeHex = kanji.character.charCodeAt(0).toString(16).padStart(5, '0');
             const fallbackUrl = `https://raw.githubusercontent.com/KanjiVG/kanjivg/master/kanji/${unicodeHex}.svg`;
-            
-            console.log(`[jbook-debug] SVG data kosong, mencoba fallback ke: ${fallbackUrl}`);
-            
+
             fetch(fallbackUrl)
-                .then(res => {
+                .then((res) => {
                     if (res.ok) return res.text();
-                    throw new Error("Failed to fetch from KanjiVG");
+                    throw new Error('Failed to fetch from KanjiVG');
                 })
-                .then(svgText => {
-                    console.log(`[jbook-debug] Berhasil mengambil SVG dari fallback!`);
+                .then((svgText) => {
                     setFetchedSvg(svgText);
                 })
-                .catch(err => {
-                    console.warn(`[jbook-debug] Fallback gagal:`, err.message);
+                .catch(() => {
+                    // Fallback gagal, silent
                 });
         }
     }, [kanji?.character, kanjiSvg]);
@@ -89,41 +78,25 @@ export default function KanjiDetailUI({ kanji: initialKanji, onClose }) {
         }
     };
 
-    // Logger untuk mengecek interaksi klik pada kartu kanji besar
-    const handleHugeKanjiClick = () => {
-        console.log(`[jbook-debug] Kanji "${kanji?.character}" ditekan! Memicu interaksi.`);
-        console.log(`[jbook-debug] kanjiSvg length: ${kanjiSvg?.length || 0}`);
-        if (kanjiSvg) {
-            setIsStrokeAnimating(prev => !prev);
-        } else {
-            console.warn("[jbook-debug] kanjiSvg is empty, cannot animate.");
-        }
-    };
-
     const handleDelete = async () => {
         if (!confirm('Hapus Kanji ini? Tindakan ini tidak bisa dibatalkan.')) return;
         setDeleting(true);
         try {
-            const baseUrl = (process.env.NEXT_PUBLIC_API_URL || 'https://japan.pythonanywhere.com/api')
-                .replace(/\/$/, '');
+            const baseUrl = (process.env.NEXT_PUBLIC_API_URL || 'https://japan.pythonanywhere.com/api').replace(/\/$/, '');
             const token = Cookies.get('access_token');
             const res = await fetch(`${baseUrl}/content/kanji/${kanji.id}`, {
                 method: 'DELETE',
                 headers: {
-                    'Authorization': `Bearer ${token}`
-                }
+                    Authorization: `Bearer ${token}`,
+                },
             });
             if (res.ok) {
                 toast.success('Kanji berhasil dihapus.');
-                if (onClose) {
-                    onClose();
-                } else {
-                    router.push('/kanji');
-                }
+                router.push(backHref || `/kanji/${level}`);
             } else {
                 toast.error('Gagal menghapus Kanji. Pastikan Anda memiliki hak akses.');
             }
-        } catch (err) {
+        } catch {
             toast.error('Terjadi kesalahan jaringan saat menghapus.');
         } finally {
             setDeleting(false);
@@ -131,7 +104,6 @@ export default function KanjiDetailUI({ kanji: initialKanji, onClose }) {
     };
 
     const handleSave = async () => {
-        // Safeguard: Prevent saving error messages or extremely long HTML-like strings
         if (editData.meaning.includes('Error 500') || editData.meaning.includes('<!DOCTYPE html>')) {
             toast.error('Format arti tidak valid. Harap periksa kembali.');
             return;
@@ -139,17 +111,16 @@ export default function KanjiDetailUI({ kanji: initialKanji, onClose }) {
 
         setSaving(true);
         try {
-            const baseUrl = (process.env.NEXT_PUBLIC_API_URL || 'https://japan.pythonanywhere.com/api')
-                .replace(/\/$/, '');
+            const baseUrl = (process.env.NEXT_PUBLIC_API_URL || 'https://japan.pythonanywhere.com/api').replace(/\/$/, '');
             const token = Cookies.get('access_token');
 
             const res = await fetch(`${baseUrl}/content/kanji/${kanji.id}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
+                    Authorization: `Bearer ${token}`,
                 },
-                body: JSON.stringify(editData)
+                body: JSON.stringify(editData),
             });
 
             if (res.ok) {
@@ -160,278 +131,364 @@ export default function KanjiDetailUI({ kanji: initialKanji, onClose }) {
             } else {
                 toast.error('Gagal memperbarui data. Pastikan Anda Admin.');
             }
-        } catch (err) {
+        } catch {
             toast.error('Terjadi kesalahan jaringan.');
         } finally {
             setSaving(false);
         }
     };
 
-    // Tema & Styling Tokit (dari blueprint aslimu)
-    const textColor = !mounted ? 'text-black' : (theme === 'dark' ? 'text-white' : 'text-black');
-    const subTextColor = !mounted ? 'text-gray-400' : (theme === 'dark' ? 'text-gray-500' : 'text-gray-400');
-    const cardBg = !mounted ? 'bg-white' : (theme === 'dark' ? 'bg-[#0a0a0a]' : 'bg-white');
-    const sectionBg = !mounted ? 'bg-blue-50' : (theme === 'dark' ? 'bg-blue-950/10' : 'bg-blue-50');
-    const borderStyle = !mounted ? 'border-gray-100' : (theme === 'dark' ? 'border-blue-950/20' : 'border-gray-100');
+    const currentLevel = String(kanji?.jlpt_level || level || '5').replace(/^n/i, '');
+    const radicalInfo = kanji?.radical ? getRadicalInfo(kanji.radical) : null;
+    const safeBackHref = backHref || `/kanji/n${currentLevel}`;
+    const safeBackLabel = backLabel || `Kembali ke daftar N${currentLevel}`;
 
     return (
-        <div className={`${cardBg} min-h-screen transition-colors duration-300`}>
-            {/* Premium Header / Hero Section */}
-            <div className={`bg-gradient-to-b ${theme === 'dark' ? 'from-black to-[#0a0a0a]' : 'from-gray-50 to-white'} pt-12 pb-20 border-b ${borderStyle}`}>
-                <div className="container mx-auto px-6 max-w-5xl">
-                    <button onClick={() => onClose ? onClose() : router.back()} className={`inline-flex items-center gap-2 text-sm font-black transition-all mb-12 group active:scale-95 ${subTextColor} hover:text-blue-600`}>
-                        <span className="group-hover:-translate-x-1 transition-transform">←</span> Kembali
-                    </button>
+        <main className="washi-texture min-h-screen bg-[var(--background)] text-[var(--foreground)]">
+            <div className="relative z-10 mx-auto w-full max-w-7xl px-4 py-6 sm:px-6 sm:py-8 lg:px-8 lg:py-10">
+                {/* Breadcrumb Navigation */}
+                <nav aria-label="Breadcrumb" className="mb-6 flex flex-wrap items-center text-xs sm:text-sm text-gray-500">
+                    <Link href="/" className="font-semibold hover:text-accent-blue hover:underline">
+                        Beranda
+                    </Link>
+                    <span aria-hidden="true" className="px-2">/</span>
+                    <Link href="/kanji" className="font-semibold hover:text-accent-blue hover:underline">
+                        Kanji
+                    </Link>
+                    <span aria-hidden="true" className="px-2">/</span>
+                    <Link href={safeBackHref} className="font-semibold hover:text-accent-blue hover:underline">
+                        N{currentLevel}
+                    </Link>
+                    <span aria-hidden="true" className="px-2">/</span>
+                    <span aria-current="page" className="font-bold font-japanese text-[var(--foreground)]">
+                        {kanji?.character}
+                    </span>
+                </nav>
 
-                    <div className="flex flex-col md:flex-row items-center md:items-start gap-12 lg:gap-20">
-                        {/* Huge Character Card & Stroke Viewer Integrated */}
-                        <div 
-                            className="relative group flex flex-col items-center gap-4 cursor-pointer"
-                        >
-                            {/* Admin Edit Button */}
-                            {isAdmin && (
-                                <div className="absolute -top-4 right-0 sm:-right-4 md:top-0 md:right-auto md:-left-20 z-30 flex gap-2">
-                                    <button
-                                        onClick={(e) => { e.stopPropagation(); setIsEditing(!isEditing); }}
-                                        className={`p-3 rounded-2xl transition-all ${
-                                            isEditing 
-                                                ? 'bg-red-500 text-white shadow-lg shadow-red-500/20' 
-                                                : 'bg-blue-600 text-white hover:bg-blue-700 shadow-lg shadow-blue-500/20'
-                                        }`}
-                                        title={isEditing ? "Batal Edit" : "Edit Kanji (Admin)"}
-                                    >
-                                        {isEditing ? <X className="w-5 h-5" /> : <Edit2 className="w-5 h-5" />}
-                                    </button>
-                                    <button
-                                        onClick={(e) => { e.stopPropagation(); handleDelete(); }}
-                                        className="p-3 rounded-2xl bg-red-600 text-white hover:bg-red-700 shadow-lg shadow-red-500/20 transition-all"
-                                        title="Hapus Kanji"
-                                        disabled={deleting || saving}
-                                    >
-                                        <Trash className="w-5 h-5" />
-                                    </button>
-                                </div>
-                            )}
-
-                            <div className="absolute inset-x-0 bottom-0 top-12 bg-blue-600 rounded-[3rem] blur-3xl opacity-10 group-hover:opacity-20 transition-opacity"></div>
-                            <div 
-                                onClick={handleHugeKanjiClick}
-                                className={`relative ${cardBg} border-4 ${borderStyle} rounded-[3rem] shadow-2xl p-6 sm:p-12 w-[min(280px,calc(100vw-3rem))] aspect-square lg:w-[360px] flex items-center justify-center select-none overflow-hidden transition-all duration-300 ${textColor}`}
+                {/* Hero / Header Card */}
+                <header className="rounded-3xl border border-[var(--border-color)] bg-[var(--card-bg)] p-6 sm:p-8 lg:p-10 shadow-sm relative overflow-hidden mb-8">
+                    {/* Admin Action Buttons */}
+                    {isAdmin && (
+                        <div className="absolute top-6 right-6 z-30 flex items-center gap-2">
+                            <button
+                                type="button"
+                                onClick={() => setIsEditing(!isEditing)}
+                                className={`p-2.5 rounded-xl transition ${
+                                    isEditing
+                                        ? 'bg-rose-500 text-white'
+                                        : 'bg-[var(--background)] border border-[var(--border-color)] text-gray-600 dark:text-gray-300 hover:text-accent-blue'
+                                }`}
+                                title={isEditing ? 'Batal Edit' : 'Edit Kanji (Admin)'}
                             >
-                                
+                                {isEditing ? <X className="h-4 w-4" /> : <Edit2 className="h-4 w-4" />}
+                            </button>
+                            <button
+                                type="button"
+                                onClick={handleDelete}
+                                disabled={deleting || saving}
+                                className="p-2.5 rounded-xl border border-[var(--border-color)] bg-[var(--background)] text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-950/20 transition"
+                                title="Hapus Kanji"
+                            >
+                                <Trash className="h-4 w-4" />
+                            </button>
+                        </div>
+                    )}
+
+                    <div className="flex flex-col lg:flex-row items-center lg:items-start gap-8 lg:gap-12">
+                        {/* Huge Character Card & Stroke Animation Interactive */}
+                        <div className="flex flex-col items-center gap-3 shrink-0">
+                            <div
+                                onClick={() => kanjiSvg && setIsStrokeAnimating(!isStrokeAnimating)}
+                                className={`relative flex items-center justify-center rounded-3xl border-2 border-[var(--border-color)] bg-[var(--background)] p-6 shadow-md transition-all duration-300 w-48 h-48 sm:w-56 sm:h-56 lg:w-64 lg:h-64 select-none ${
+                                    kanjiSvg ? 'cursor-pointer hover:border-accent-blue/50 hover:shadow-xl' : ''
+                                }`}
+                                title={kanjiSvg ? 'Klik untuk memutar animasi coretan' : ''}
+                            >
                                 {isStrokeAnimating && kanjiSvg ? (
-                                    <div className="w-full h-full flex items-center justify-center animate-in fade-in zoom-in duration-300">
-                                        <KanjiStrokeViewer 
-                                            svgContent={kanjiSvg} 
-                                            size={mounted && window.innerWidth < 1024 ? 220 : 280} 
-                                            isAnimating={true} 
-                                        />
+                                    <div className="w-full h-full flex items-center justify-center animate-in fade-in zoom-in-95 duration-200">
+                                        <KanjiStrokeViewer svgContent={kanjiSvg} size={180} isAnimating={true} />
                                     </div>
                                 ) : (
-                                    <span className="text-[min(34vw,140px)] lg:text-[180px] font-serif leading-none group-hover:scale-110 transition-transform duration-500">
-                                        {kanji.character}
+                                    <span className="font-japanese text-7xl sm:text-8xl lg:text-9xl font-black text-[var(--foreground)] break-words">
+                                        {kanji?.character}
                                     </span>
                                 )}
 
-                                {/* Stroking count badge */}
-                                <div className="absolute bottom-6 right-6 bg-blue-600 text-white text-[10px] font-black px-4 py-2 rounded-full shadow-lg z-10">
+                                {/* Stroke Count Badge */}
+                                <div className="absolute bottom-3 right-3 rounded-full bg-accent-blue px-3 py-1 text-[10px] font-black uppercase text-white shadow-sm">
                                     {isEditing ? (
-                                        <input 
+                                        <input
                                             type="number"
                                             value={editData.strokes}
-                                            onChange={(e) => setEditData({...editData, strokes: parseInt(e.target.value)})}
-                                            className="bg-transparent w-8 text-center outline-none border-b border-white/30"
+                                            onChange={(e) => setEditData({ ...editData, strokes: parseInt(e.target.value, 10) || 0 })}
+                                            className="w-8 bg-transparent text-center outline-none border-b border-white"
                                         />
                                     ) : (
-                                        kanji.strokes || 0
-                                    )} STROKES
+                                        `${kanji?.strokes || 0} Coretan`
+                                    )}
                                 </div>
                             </div>
-                            
-                            {kanjiSvg ? (
-                                <div className="flex flex-col items-center gap-1">
-                                    <span className="text-[10px] font-black uppercase tracking-widest text-gray-400 group-hover:text-blue-600 transition-colors">
-                                        {isStrokeAnimating ? 'Klik untuk kembali ke teks' : 'Klik karakter untuk animasi'}
-                                    </span>
-                                </div>
-                            ) : null}
+
+                            {kanjiSvg && (
+                                <button
+                                    type="button"
+                                    onClick={() => setIsStrokeAnimating(!isStrokeAnimating)}
+                                    className="inline-flex items-center gap-1.5 text-xs font-bold text-accent-blue hover:underline cursor-pointer"
+                                >
+                                    <Sparkles className="h-3.5 w-3.5" />
+                                    <span>{isStrokeAnimating ? 'Tampilkan Karakter Statis' : 'Putar Animasi Coretan'}</span>
+                                </button>
+                            )}
                         </div>
 
-                        {/* Title & Core Info */}
-                        <div className="flex-1 text-center md:text-left py-4">
-                             <div className="inline-flex items-center gap-2.5 mb-6 flex-wrap justify-center md:justify-start">
-                                <span className="bg-blue-600 text-white text-xs font-black px-4 py-1.5 rounded-full shadow-lg shadow-blue-500/10">
+                        {/* Title & Core Details */}
+                        <div className="flex-1 text-center lg:text-left min-w-0 w-full">
+                            {/* Badges row */}
+                            <div className="flex flex-wrap items-center justify-center lg:justify-start gap-2 mb-4">
+                                <span className="rounded-full bg-accent-blue/15 border border-accent-blue/30 px-3.5 py-1 text-xs font-bold text-accent-blue">
                                     {isEditing ? (
-                                        <select 
+                                        <select
                                             value={editData.jlpt_level}
-                                            onChange={(e) => setEditData({...editData, jlpt_level: parseInt(e.target.value)})}
-                                            className="bg-transparent outline-none cursor-pointer"
+                                            onChange={(e) => setEditData({ ...editData, jlpt_level: parseInt(e.target.value, 10) })}
+                                            className="bg-transparent outline-none cursor-pointer text-foreground"
                                         >
-                                            {[1,2,3,4,5].map(l => <option key={l} value={l} className="text-black">JLPT N{l}</option>)}
+                                            {[1, 2, 3, 4, 5].map((l) => (
+                                                <option key={l} value={l} className="text-black">
+                                                    JLPT N{l}
+                                                </option>
+                                            ))}
                                         </select>
-                                    ) : `JLPT N${kanji.jlpt_level}`}
+                                    ) : (
+                                        `JLPT N${currentLevel}`
+                                    )}
                                 </span>
 
-                                {kanji.radical && (
-                                    <span className="bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/20 text-xs font-black px-4 py-1.5 rounded-full inline-flex items-center gap-1.5 shadow-sm">
-                                        <span className="text-[10px] font-black uppercase text-gray-400">部首 (Radikal):</span>
-                                        <span className="font-japanese font-black text-sm">{kanji.radical}</span>
-                                    </span>
+                                {kanji?.radical && (
+                                    <Link
+                                        href={`/kanji/n${currentLevel}?radical=${encodeURIComponent(kanji.radical)}`}
+                                        className="rounded-full border border-[var(--border-color)] bg-[var(--background)] px-3.5 py-1 text-xs font-bold text-[var(--foreground)] hover:border-accent-blue transition inline-flex items-center gap-1.5"
+                                        title={`Filter kanji dengan radikal ${kanji.radical}`}
+                                    >
+                                        <span className="text-gray-400">部首 (Radikal):</span>
+                                        <span className="font-japanese text-sm font-black text-accent-blue">{kanji.radical}</span>
+                                        {radicalInfo?.name && <span className="text-[11px] text-gray-500">({radicalInfo.name})</span>}
+                                    </Link>
                                 )}
-                             </div>
-                            
+                            </div>
+
+                            {/* Main Meaning (H1) */}
                             {isEditing ? (
-                                <div className="flex flex-col gap-4">
-                                    <textarea 
+                                <div className="space-y-3 my-3">
+                                    <textarea
                                         value={editData.meaning}
-                                        onChange={(e) => setEditData({...editData, meaning: e.target.value})}
-                                        className={`w-full text-3xl md:text-4xl lg:text-5xl font-black p-4 rounded-2xl border-2 ${borderStyle} ${cardBg} focus:border-blue-500 outline-none ${textColor}`}
+                                        onChange={(e) => setEditData({ ...editData, meaning: e.target.value })}
+                                        className="w-full text-2xl font-bold p-3 rounded-xl border border-[var(--border-color)] bg-[var(--background)] text-[var(--foreground)]"
                                         rows={2}
                                     />
                                     <button
+                                        type="button"
                                         onClick={handleSave}
                                         disabled={saving}
-                                        className="inline-flex items-center justify-center gap-2 bg-green-600 text-white px-8 py-4 rounded-2xl font-black shadow-lg shadow-green-600/20 hover:bg-green-700 transition-all active:scale-95 disabled:opacity-50"
+                                        className="inline-flex items-center gap-2 rounded-xl bg-accent-green px-5 py-2.5 text-xs font-bold text-white shadow-sm hover:bg-accent-green/90"
                                     >
-                                        {saving ? (
-                                            <span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                                        ) : (
-                                            <Check className="w-6 h-6" />
-                                        )}
-                                        Simpan Perubahan
+                                        <Check className="h-4 w-4" />
+                                        <span>Simpan Perubahan</span>
                                     </button>
                                 </div>
                             ) : (
                                 <>
-                                    <h1 className={`text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-black mb-4 tracking-tight leading-tight transition-colors ${textColor}`}>
-                                        {kanji.meaning}
+                                    <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight text-[var(--foreground)] break-words">
+                                        {kanji?.meaning}
                                     </h1>
-                                    
-                                    <p className={`${subTextColor} text-lg font-bold max-w-lg transition-colors`}>
-                                        Karakter dasar penting untuk level N{kanji.jlpt_level}. Pelajari cara baca dan penggunaannya di bawah.
+                                    <p className="mt-2 text-sm sm:text-base text-gray-600 dark:text-gray-300 leading-relaxed max-w-2xl">
+                                        Karakter kanji <span className="font-japanese font-bold text-[var(--foreground)]">{kanji?.character}</span> memiliki arti utama &quot;{kanji?.meaning}&quot; dan merupakan materi penting untuk JLPT level N{currentLevel}.
                                     </p>
                                 </>
                             )}
                         </div>
                     </div>
-                </div>
-            </div>
+                </header>
 
-            {/* Detailed Info Sections */}
-            <div className={`container mx-auto px-6 py-20 max-w-5xl transition-colors ${textColor}`}>
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
-                    {/* Read Alignments (On/Kun) & Radikal */}
-                    <div className="lg:col-span-1 space-y-8">
-                        {/* Radikal Info Card */}
-                        {kanji.radical && (
-                            <section className={`${sectionBg} rounded-3xl p-6 border ${borderStyle}`}>
-                                <h3 className={`text-xs font-black uppercase tracking-widest mb-4 flex items-center gap-2 ${subTextColor}`}>
-                                    <span className="w-1.5 h-1.5 rounded-full bg-blue-600"></span>
-                                    Radikal Utama (部首)
-                                </h3>
-                                {(() => {
-                                    return (
-                                        <div 
-                                            onClick={() => router.push(`/kanji?radical=${encodeURIComponent(kanji.radical)}`)}
-                                            className={`group flex items-center gap-4 ${cardBg} border ${borderStyle} hover:border-blue-600 p-4 rounded-2xl transition-all shadow-sm active:scale-95 cursor-pointer`}
-                                            title="Klik untuk filter kanji dengan radikal ini"
+                {/* Detail Information Sections (Grid 3 Kolom) */}
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8">
+                    {/* Kolom Kiri: Cara Baca (Onyomi, Kunyomi, Radikal) */}
+                    <div className="lg:col-span-1 space-y-6">
+                        {/* Onyomi Card */}
+                        <section className="rounded-3xl border border-[var(--border-color)] bg-[var(--card-bg)] p-6 shadow-sm">
+                            <h2 className="text-xs font-bold uppercase tracking-wider text-accent-blue mb-4 flex items-center gap-2">
+                                <span className="h-2 w-2 rounded-full bg-accent-blue" aria-hidden="true" />
+                                Onyomi (音読み · Cara Baca China)
+                            </h2>
+                            <div className="flex flex-wrap gap-2">
+                                {kanji?.onyomi && kanji.onyomi.length > 0 ? (
+                                    kanji.onyomi.map((r, i) => (
+                                        <span
+                                            key={i}
+                                            className="rounded-xl border border-[var(--border-color)] bg-[var(--background)] px-3.5 py-1.5 font-japanese text-base font-bold text-accent-blue shadow-xs"
                                         >
-                                            <span className="text-4xl font-japanese font-black text-blue-600 dark:text-blue-400 group-hover:scale-110 transition-transform w-12 text-center">
-                                                {kanji.radical}
-                                            </span>
-                                        </div>
-                                    );
-                                })()}
+                                            {toKatakana(String(r).toUpperCase())}
+                                        </span>
+                                    ))
+                                ) : (
+                                    <span className="italic text-xs text-gray-400">Tidak ada onyomi umum</span>
+                                )}
+                            </div>
+                        </section>
+
+                        {/* Kunyomi Card */}
+                        <section className="rounded-3xl border border-[var(--border-color)] bg-[var(--card-bg)] p-6 shadow-sm">
+                            <h2 className="text-xs font-bold uppercase tracking-wider text-accent-green mb-4 flex items-center gap-2">
+                                <span className="h-2 w-2 rounded-full bg-accent-green" aria-hidden="true" />
+                                Kunyomi (訓読み · Cara Baca Jepang)
+                            </h2>
+                            <div className="flex flex-wrap gap-2">
+                                {kanji?.kunyomi && kanji.kunyomi.length > 0 ? (
+                                    kanji.kunyomi.map((r, i) => (
+                                        <span
+                                            key={i}
+                                            className="rounded-xl border border-[var(--border-color)] bg-[var(--background)] px-3.5 py-1.5 font-japanese text-base font-bold text-[var(--foreground)] shadow-xs"
+                                        >
+                                            {toHiragana(String(r).toLowerCase())}
+                                        </span>
+                                    ))
+                                ) : (
+                                    <span className="italic text-xs text-gray-400">Tidak ada kunyomi umum</span>
+                                )}
+                            </div>
+                        </section>
+
+                        {/* Radikal Info Card */}
+                        {kanji?.radical && (
+                            <section className="rounded-3xl border border-[var(--border-color)] bg-[var(--card-bg)] p-6 shadow-sm">
+                                <h2 className="text-xs font-bold uppercase tracking-wider text-gray-500 mb-4 flex items-center gap-2">
+                                    <Layers className="h-4 w-4 text-accent-gold" />
+                                    Radikal Utama (部首)
+                                </h2>
+                                <Link
+                                    href={`/kanji/n${currentLevel}?radical=${encodeURIComponent(kanji.radical)}`}
+                                    className="group flex items-center gap-4 rounded-2xl border border-[var(--border-color)] bg-[var(--background)] p-4 transition hover:border-accent-blue hover:shadow-md"
+                                >
+                                    <span className="font-japanese text-3xl font-black text-accent-blue group-hover:scale-110 transition-transform w-10 text-center">
+                                        {kanji.radical}
+                                    </span>
+                                    <div className="min-w-0">
+                                        <span className="block text-sm font-bold text-[var(--foreground)]">
+                                            {radicalInfo?.name || 'Radikal'}
+                                        </span>
+                                        <span className="block text-xs text-gray-500 truncate">
+                                            {radicalInfo?.meaning || 'Komponen pembentuk kanji'}
+                                        </span>
+                                    </div>
+                                </Link>
                             </section>
                         )}
-
-                        {/* Onyomi */}
-                        <section className={`${sectionBg} rounded-3xl p-8 border ${borderStyle}`}>
-                            <h3 className={`text-xs font-black uppercase tracking-widest mb-6 flex items-center gap-2 ${subTextColor}`}>
-                                <span className="w-1.5 h-1.5 rounded-full bg-blue-600"></span>
-                                Onyomi (Cara Baca China)
-                            </h3>
-                            <div className="flex flex-wrap gap-2">
-                                {kanji.onyomi && kanji.onyomi.length > 0 ? (
-                                    kanji.onyomi.map((reading, index) => (
-                                        <div key={index} className={`${cardBg} ${borderStyle} border px-4 py-2 rounded-2xl shadow-sm text-lg font-black text-blue-600 dark:text-blue-400`}>
-                                            {toKatakana(reading.toUpperCase())}
-                                        </div>
-                                    ))
-                                ) : (
-                                    <span className={`font-bold italic ${subTextColor}`}>Bebas Onyomi</span>
-                                )}
-                            </div>
-                        </section>
- 
-                        {/* Kunyomi */}
-                        <section className={`${sectionBg} rounded-3xl p-8 border ${borderStyle}`}>
-                            <h3 className={`text-xs font-black uppercase tracking-widest mb-6 flex items-center gap-2 ${subTextColor}`}>
-                                <span className="w-1.5 h-1.5 rounded-full bg-gray-400"></span>
-                                Kunyomi (Cara Baca Jepang)
-                            </h3>
-                            <div className="flex flex-wrap gap-2">
-                                {kanji.kunyomi && kanji.kunyomi.length > 0 ? (
-                                    kanji.kunyomi.map((reading, index) => (
-                                        <div key={index} className={`${cardBg} ${borderStyle} border px-4 py-2 rounded-2xl shadow-sm text-lg font-black ${textColor}`}>
-                                            {toHiragana(reading.toLowerCase())}
-                                        </div>
-                                    ))
-                                ) : (
-                                    <span className={`font-bold italic ${subTextColor}`}>Bebas Kunyomi</span>
-                                )}
-                            </div>
-                        </section>
                     </div>
- 
-                    {/* Examples Section */}
-                    <div className="lg:col-span-2">
-                        <section className={`${cardBg} rounded-[2.5rem] border ${borderStyle} p-8 shadow-2xl shadow-blue-500/5 h-full transition-colors`}>
-                            <h3 className={`text-lg font-black mb-6 flex items-center gap-3 transition-colors ${textColor}`}>
-                                <span className="p-2.5 bg-blue-600 text-white rounded-xl text-sm">🔖</span>
-                                Contoh Kata (Kotoba)
-                            </h3>
-                            
-                            <div className="space-y-3">
-                                {kanji.examples && kanji.examples.length > 0 ? (
-                                    kanji.examples.slice(0, 4).map((ex, i) => (
-                                        <div 
-                                            key={i} 
-                                            onClick={() => handleExampleClick(ex.word)}
-                                            className={`group p-4 ${sectionBg} hover:${cardBg} rounded-2xl border ${theme === 'dark' ? 'border-blue-950/20' : 'border-gray-100'} hover:border-blue-600 transition-all cursor-pointer`}
-                                        >
-                                            <div className="flex justify-between items-center gap-3">
-                                                <div>
-                                                    <ruby className={`text-xl font-black transition-colors ${textColor} group-hover:text-blue-600`}>
-                                                        {ex.word}
-                                                        {hasKanji(ex.word) && (
-                                                            <rt className={`text-[10px] font-black pb-1 select-none ${theme === 'dark' ? 'text-blue-400' : 'text-blue-600'}`}>{ex.reading}</rt>
-                                                        )}
-                                                    </ruby>
-                                                    <p className={`mt-1 text-xs font-bold ${subTextColor}`}>{ex.meaning}</p>
-                                                </div>
-                                                <div className="opacity-0 group-hover:opacity-100 p-2 bg-blue-600 text-white rounded-xl transition-opacity active:scale-95 shadow-lg shadow-blue-500/20 font-black text-[10px] flex-shrink-0">
-                                                    Detail →
-                                                </div>
-                                            </div>
-                                        </div>
-                                    ))
-                                ) : (
-                                    <div className={`text-center py-12 ${sectionBg} rounded-3xl border-2 border-dashed ${borderStyle}`}>
-                                        <p className={`font-bold italic text-sm ${subTextColor}`}>Belum tersedia contoh kata.</p>
-                                    </div>
+
+                    {/* Kolom Kanan: Contoh Kata (Kotoba) & Contoh Kalimat */}
+                    <div className="lg:col-span-2 space-y-6">
+                        {/* Contoh Kosakata (Kotoba) */}
+                        <section className="rounded-3xl border border-[var(--border-color)] bg-[var(--card-bg)] p-6 sm:p-8 shadow-sm">
+                            <div className="flex items-center justify-between mb-6">
+                                <h2 className="text-base sm:text-lg font-bold text-[var(--foreground)] flex items-center gap-2">
+                                    <BookOpen className="h-5 w-5 text-accent-blue" />
+                                    Contoh Kosakata (Kotoba Terkait)
+                                </h2>
+                                {kanji?.examples?.length > 0 && (
+                                    <span className="text-xs text-gray-400 font-medium">
+                                        {kanji.examples.length} contoh
+                                    </span>
                                 )}
                             </div>
-                            {kanji.examples && kanji.examples.length > 4 && (
-                                <p className={`text-[10px] font-bold mt-4 text-center ${subTextColor}`}>
-                                    +{kanji.examples.length - 4} contoh lainnya tersedia di detail kotoba
-                                </p>
+
+                            {kanji?.examples && kanji.examples.length > 0 ? (
+                                <div className="space-y-3">
+                                    {kanji.examples.map((ex, i) => (
+                                        <div
+                                            key={i}
+                                            onClick={() => handleExampleClick(ex.word)}
+                                            className="group flex items-center justify-between gap-4 rounded-2xl border border-[var(--border-color)] bg-[var(--background)] p-4 transition hover:border-accent-blue/40 hover:shadow-md cursor-pointer"
+                                        >
+                                            <div className="min-w-0">
+                                                <ruby className="font-japanese text-xl font-bold text-[var(--foreground)] group-hover:text-accent-blue transition-colors">
+                                                    {ex.word}
+                                                    {hasKanji(ex.word) && ex.reading && (
+                                                        <rt className="text-[10px] font-bold text-accent-blue pb-0.5 select-none">
+                                                            {ex.reading}
+                                                        </rt>
+                                                    )}
+                                                </ruby>
+                                                <p className="mt-1 text-xs sm:text-sm text-gray-600 dark:text-gray-300 font-medium line-clamp-2">
+                                                    {ex.meaning}
+                                                </p>
+                                            </div>
+
+                                            <span className="shrink-0 rounded-xl bg-accent-blue/10 px-3 py-1.5 text-xs font-bold text-accent-blue opacity-80 group-hover:opacity-100 group-hover:bg-accent-blue group-hover:text-white transition">
+                                                Lihat Kotoba →
+                                            </span>
+                                        </div>
+                                    ))}
+                                </div>
+                            ) : (
+                                <div className="rounded-2xl border-2 border-dashed border-[var(--border-color)] p-8 text-center">
+                                    <p className="text-sm text-gray-400 italic">
+                                        Belum tersedia contoh kosakata spesifik untuk kanji ini di kurikulum.
+                                    </p>
+                                    <Link
+                                        href={`/kotoba?search=${encodeURIComponent(kanji?.character || '')}`}
+                                        className="mt-4 inline-flex items-center gap-1.5 text-xs font-bold text-accent-blue hover:underline"
+                                    >
+                                        Cari kata yang memuat &quot;{kanji?.character}&quot; di kamus Kotoba →
+                                    </Link>
+                                </div>
                             )}
+                        </section>
+
+                        {/* Bagian Coretan & Catatan Belajar */}
+                        <section className="rounded-3xl border border-[var(--border-color)] bg-[var(--card-bg)] p-6 sm:p-8 shadow-sm">
+                            <h2 className="text-base sm:text-lg font-bold text-[var(--foreground)] mb-3 flex items-center gap-2">
+                                <Sparkles className="h-5 w-5 text-accent-green" />
+                                Panduan Urutan Coretan (Kakijun)
+                            </h2>
+                            <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-300 leading-relaxed mb-4">
+                                Kanji <strong className="font-japanese">{kanji?.character}</strong> ditulis dalam{' '}
+                                <strong className="text-accent-blue">{kanji?.strokes || 1} coretan</strong>. Mengikuti aturan umum kanji: dari kiri ke kanan, atas ke bawah, dan goresan horizontal sebelum vertikal.
+                            </p>
+                            <div className="flex flex-wrap items-center gap-3">
+                                <button
+                                    type="button"
+                                    onClick={() => {
+                                        if (kanjiSvg) {
+                                            setIsStrokeAnimating(true);
+                                            window.scrollTo({ top: 0, behavior: 'smooth' });
+                                        }
+                                    }}
+                                    className="inline-flex min-h-11 items-center gap-2 rounded-xl border border-accent-blue/30 bg-accent-blue/10 px-4 py-2 text-xs font-bold text-accent-blue hover:bg-accent-blue hover:text-white transition"
+                                >
+                                    <span>Tonton Animasi Coretan di Atas</span>
+                                    <span>↑</span>
+                                </button>
+                                <Link
+                                    href={`/kanji/n${currentLevel}`}
+                                    className="inline-flex min-h-11 items-center gap-2 rounded-xl border border-[var(--border-color)] bg-[var(--background)] px-4 py-2 text-xs font-bold text-[var(--foreground)] hover:border-accent-blue/40 transition"
+                                >
+                                    <span>Lihat Kanji Lain di N{currentLevel}</span>
+                                </Link>
+                            </div>
                         </section>
                     </div>
                 </div>
+
+                {/* Footer Back Navigation */}
+                <div className="mt-10 border-t border-[var(--border-color)] pt-6">
+                    <Link
+                        href={safeBackHref}
+                        className="inline-flex min-h-11 items-center gap-2 rounded-xl font-semibold text-accent-blue hover:underline"
+                    >
+                        <ArrowLeft className="h-4 w-4" />
+                        <span>{safeBackLabel}</span>
+                    </Link>
+                </div>
             </div>
-            
-        </div>
+        </main>
     );
 }

@@ -4,7 +4,6 @@ import { AuthProvider } from "@/context/AuthContext";
 import { PracticeProvider } from "@/context/PracticeContext";
 import { ThemeProvider } from "@/context/ThemeContext";
 import ClientShell from "@/components/common/ClientShell";
-import OfflineIndicator from "@/components/common/OfflineIndicator";
 import AnnouncementPopup from "@/components/common/AnnouncementPopup";
 import SakuraBackground from "@/components/common/SakuraBackground";
 import { ToastContainer } from 'react-toastify';
@@ -40,7 +39,6 @@ export const metadata = {
     creator: "JBook Team",
     publisher: "JBook",
     category: "education",
-    manifest: "/manifest.json",
     icons: {
         icon: [
             { url: "/icon-16.png", sizes: "16x16", type: "image/png" },
@@ -132,7 +130,6 @@ export default function RootLayout({ children }) {
                                 <SakuraBackground />
                                 {children}
                             </ClientShell>
-                            <OfflineIndicator />
                             <AnnouncementPopup />
                             <ToastContainer 
                                 position="bottom-right"

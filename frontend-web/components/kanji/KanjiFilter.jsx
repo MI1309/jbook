@@ -132,7 +132,7 @@ function sanitizeLevels(rawLevels, allowedLevels) {
 const DEFAULT_ENABLED_LEVELS = [4, 5];
 
 function FilterContent() {
-    const { theme, mounted } = useTheme();
+    const { theme } = useTheme();
     const router = useRouter();
     const searchParams = useSearchParams();
 
@@ -142,8 +142,11 @@ function FilterContent() {
     const [searchTerm, setSearchTerm] = useState(initialSearch);
     const [selectedRadical, setSelectedRadical] = useState(initialRadical);
     const [selectedLevels, setSelectedLevels] = useState([]);
-    const [expandedGroup, setExpandedGroup] = useState(null);
-    const [showRadicals, setShowRadicals] = useState(false);
+    const [expandedGroup, setExpandedGroup] = useState(() => {
+        if (!initialRadical) return null;
+        return RADICALS_BY_STROKES.find(g => g.radicals.some(r => r.char === initialRadical))?.strokes || null;
+    });
+    const [showRadicals, setShowRadicals] = useState(() => Boolean(initialRadical));
     const [enabledLevels, setEnabledLevels] = useState(DEFAULT_ENABLED_LEVELS);
     const [visibilityReady, setVisibilityReady] = useState(false);
     const pendingRestoreQuery = useRef(null);
@@ -229,17 +232,6 @@ function FilterContent() {
     // Debounce search term to avoid too many URL updates (500ms delay)
     const [debouncedSearch] = useDebounce(searchTerm, 500);
 
-    // Open group if selected radical is inside it initially
-    useEffect(() => {
-        if (initialRadical) {
-            setShowRadicals(true);
-            const group = RADICALS_BY_STROKES.find(g => g.radicals.some(r => r.char === initialRadical));
-            if (group) {
-                setExpandedGroup(group.strokes);
-            }
-        }
-    }, [initialRadical]);
-
     // Update URL when filters change
     useEffect(() => {
         if (!visibilityReady) return;
@@ -323,9 +315,6 @@ function FilterContent() {
         }
     };
 
-    const textColor = !mounted ? 'text-black' : (theme === 'dark' ? 'text-white' : 'text-black');
-    const subTextColor = !mounted ? 'text-black/50' : (theme === 'dark' ? 'text-white/50' : 'text-black/50');
-
     return (
         <div className="bg-[var(--card-bg)] p-6 rounded-[2.5rem] border border-[var(--border-color)] shadow-xl shadow-accent-blue/5 transition-all duration-300 w-full relative z-30">
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-5 items-start mb-4">
@@ -352,7 +341,7 @@ function FilterContent() {
                             </button>
                         )}
                     </div>
-                    <p className="text-[10px] font-bold text-gray-400 mt-1.5 px-1">Contoh: "mizu", "みず", "air"</p>
+                    <p className="text-[10px] font-bold text-gray-400 mt-1.5 px-1">Contoh: &quot;mizu&quot;, &quot;みず&quot;, &quot;air&quot;</p>
                 </div>
 
                 {/* Level Filter: 3-2 Grid */}

@@ -12,7 +12,6 @@ export default function KanjiDetailModal({ id, onClose }) {
 
     useEffect(() => {
         let mounted = true;
-        setLoading(true);
         getKanjiDetail(id).then(data => {
             if (mounted) {
                 setKanji(data);
@@ -20,7 +19,7 @@ export default function KanjiDetailModal({ id, onClose }) {
             }
         }).catch(err => {
             if (mounted) {
-                console.error("Failed to fetch kanji offline", err);
+                console.error("Failed to fetch kanji detail", err);
                 setLoading(false);
             }
         });
@@ -39,7 +38,7 @@ export default function KanjiDetailModal({ id, onClose }) {
         return (
             <div className="fixed inset-0 z-[100] bg-white dark:bg-black flex flex-col items-center justify-center animate-pulse">
                 <div className="text-6xl mb-4">🏮</div>
-                <p className="text-gray-400 dark:text-gray-600 font-black tracking-widest uppercase text-sm">Sedang memuat Detail Offline...</p>
+                <p className="text-gray-400 dark:text-gray-600 font-black tracking-widest uppercase text-sm">Sedang memuat detail...</p>
             </div>
         );
     }
@@ -50,8 +49,8 @@ export default function KanjiDetailModal({ id, onClose }) {
                 <div className="p-6">
                     <button onClick={handleClose} className="mb-4 text-blue-600 dark:text-blue-400 font-bold transition-colors">← Kembali</button>
                     <div className="text-center py-32 bg-gray-50 dark:bg-card rounded-[3rem] transition-colors border-2 border-dashed border-gray-100 dark:border-gray-800">
-                        <h2 className="text-2xl font-black text-gray-900 dark:text-white mb-2">Data Offline Tidak Ditemukan</h2>
-                        <p className="text-gray-400 dark:text-gray-500 font-bold uppercase text-[10px] tracking-widest">Mungkin data ini belum kamu unduh secara utuh.</p>
+                        <h2 className="text-2xl font-black text-gray-900 dark:text-white mb-2">Detail tidak tersedia</h2>
+                        <p className="text-gray-400 dark:text-gray-500 font-bold uppercase text-[10px] tracking-widest">Periksa koneksi internet dan coba lagi.</p>
                     </div>
                 </div>
             </div>

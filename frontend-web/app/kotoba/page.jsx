@@ -4,7 +4,7 @@ import { useState, useEffect, Suspense, useRef } from 'react';
 import { getVocabList, API_URL } from '@/lib/api';
 import KotobaFilter from '@/components/kotoba/KotobaFilter';
 import Link from 'next/link';
-import { useSearchParams, useRouter } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import KotobaDetailModal from '@/components/kotoba/KotobaDetailModal';
 import Pagination from '@/components/common/Pagination';
 
@@ -297,7 +297,6 @@ function AddKotobaModal({ onClose, onSuccess, theme }) {
 function KotobaContent({ onRefreshRequest, refreshKey }) {
     const { theme, mounted } = useTheme();
     const searchParams = useSearchParams();
-    const router = useRouter();
     const detailId = searchParams.get('detail');
     const [data, setData] = useState({ items: [], total: 0, pages: 1 });
     const [loading, setLoading] = useState(true);
@@ -422,14 +421,6 @@ function KotobaContent({ onRefreshRequest, refreshKey }) {
                         <Link
                             key={vocab.id}
                             href={`/kotoba/${vocab.id}${searchParams.toString() ? `?${searchParams.toString()}` : ''}`}
-                            onClick={(e) => {
-                                if (typeof navigator !== 'undefined' && !navigator.onLine) {
-                                    e.preventDefault();
-                                    const params = new URLSearchParams(searchParams.toString());
-                                    params.set('detail', vocab.id);
-                                    router.push(`?${params.toString()}`);
-                                }
-                            }}
                             className="group flex flex-col p-6 bg-[var(--card-bg)] rounded-[2rem] border border-[var(--border-color)] transition-all duration-300 hover:shadow-xl hover:shadow-accent-blue/10 hover:border-accent-blue/30 active:scale-95 relative overflow-hidden h-full justify-between"
                         >
                             <div className="flex justify-between items-start mb-4 transition-colors">

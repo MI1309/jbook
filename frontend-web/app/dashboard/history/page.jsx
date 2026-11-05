@@ -26,7 +26,7 @@ export default function HistoryPage() {
     const [page, setPage] = useState(1);
     const PAGE_SIZE = 15;
 
-    // fungsi untuk mengembalikan ID dari character → ID (online: from API, offline: from IndexedDB)
+    // Resolve a content ID from its character using the API.
     const handleOpenMistake = async (mistake) => {
         try {
             const targetType = mistake.type === 'kakitori' ? 'vocab' : mistake.type;
@@ -44,7 +44,7 @@ export default function HistoryPage() {
             if (id) {
                 setDetailView({ id, type: targetType });
             } else {
-                toast.error(`Detail untuk "${mistake.character}" tidak ditemukan. Jika offline, pastikan kamu sudah mengunduh materi.`, {
+                toast.error(`Detail untuk "${mistake.character}" tidak ditemukan.`, {
                     position: "bottom-center",
                     theme: theme === 'dark' ? 'dark' : 'colored'
                 });
@@ -54,7 +54,7 @@ export default function HistoryPage() {
         }
     };
 
-    // fungsi untuk mengambil analytics dari API atau IndexedDB
+    // Fetch analytics from the API for logged-in users or local guest history.
     const fetchAnalytics = useCallback(async () => {
         setIsLoading(true);
         try {

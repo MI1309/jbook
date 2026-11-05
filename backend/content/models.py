@@ -108,8 +108,11 @@ class FeatureSetting(models.Model):
 class Grammar(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     title = models.CharField(max_length=255)
+    slug = models.SlugField(max_length=255, unique=True, null=True, blank=True)
     structure = models.CharField(max_length=255)
     explanation = models.TextField(help_text="Penjelasan detail dalam Bahasa Indonesia")
+    sections = models.JSONField(blank=True, null=True)
+    tags = models.JSONField(default=list, blank=True)
     source_data = models.JSONField(blank=True, null=True)
     chapter = models.IntegerField(default=0, help_text="Bab / Chapter number")
     jlpt_level = models.IntegerField(choices=JLPTLevel.choices)

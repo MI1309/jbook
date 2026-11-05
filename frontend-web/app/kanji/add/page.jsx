@@ -46,7 +46,7 @@ export default function AddKanjiPage() {
                 jlpt_level: '5',
                 radical: '',
             });
-        } catch (error) {
+        } catch {
             setStatus({ type: 'error', message: 'Gagal mengirim saran. Coba lagi nanti.' });
         } finally {
             setIsSubmitting(false);

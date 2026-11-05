@@ -7,11 +7,11 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useDebounce } from 'use-debounce';
 import Cookies from 'js-cookie';
-import { cacheGet, cacheSet } from '@/lib/cache-store';
 import { appToast as toast } from '@/components/common/AppMessage';
 import ConfirmationModal from '@/components/common/ConfirmationModal';
 import Pagination from '@/components/common/Pagination';
 import { getBunpoSlug } from '@/data/bunpoSlugs';
+import BunpoImportPanel from './BunpoImportPanel';
 
 export default function BunpoAdmin() {
     const { user } = useAuth();
@@ -84,22 +84,6 @@ export default function BunpoAdmin() {
 
     const fetchBunpos = async () => {
         setLoading(true);
-        const cacheKey = `admin-bunpo-${filterLevel || 'all'}-${debouncedChapter || 'all'}-${debouncedSearch || 'all'}-${page}`;
-
-        if (typeof navigator !== 'undefined' && !navigator.onLine) {
-            const cached = cacheGet(cacheKey);
-            if (cached) {
-                const result = normalizeBunpoPage(cached, page, LIMIT);
-                setBunpos(result.items);
-                setPagination(result.pagination);
-                setLoading(false);
-                return;
-            }
-            toast.error('Tidak ada koneksi internet dan data admin belum tersedia secara offline.');
-            setLoading(false);
-            return;
-        }
-
         try {
             const token = Cookies.get('access_token');
             const queryParams = new URLSearchParams({ page: String(page), limit: String(LIMIT) });
@@ -114,26 +98,11 @@ export default function BunpoAdmin() {
                 setBunpos(result.items);
                 setPagination(result.pagination);
                 if (result.pagination.page !== page) setPage(result.pagination.page);
-                cacheSet(cacheKey, data);
             } else {
-                const cached = cacheGet(cacheKey);
-                if (cached) {
-                    const result = normalizeBunpoPage(cached, page, LIMIT);
-                    setBunpos(result.items);
-                    setPagination(result.pagination);
-                    return;
-                }
                 toast.error(`Gagal mengambil data Bunpo: ${res.status} ${res.statusText}`);
             }
         } catch (error) {
             console.error("Failed to fetch bunpos", error);
-            const cached = cacheGet(cacheKey);
-            if (cached) {
-                const result = normalizeBunpoPage(cached, page, LIMIT);
-                setBunpos(result.items);
-                setPagination(result.pagination);
-                return;
-            }
             toast.error(`Terjadi kesalahan jaringan.`);
         } finally {
             setLoading(false);
@@ -221,13 +190,15 @@ export default function BunpoAdmin() {
                         Kelola tata bahasa Jepang
                     </p>
                 </div>
-                <Link href="/admin/bunpo/new" className="inline-flex items-center gap-2 bg-red-600 text-white px-6 py-3 rounded-2xl hover:bg-red-700 font-black text-sm shadow-lg shadow-red-500/20 transition-all active:scale-95">
+                <a href="#bunpo-import" className="inline-flex items-center gap-2 bg-red-600 text-white px-6 py-3 rounded-2xl hover:bg-red-700 font-black text-sm shadow-lg shadow-red-500/20 transition-all active:scale-95">
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
                     </svg>
-                    Tambah Bunpo Baru
-                </Link>
+                    Input / Import Bunpo
+                </a>
             </div>
+
+            <BunpoImportPanel onImported={fetchBunpos} />
 
             <div className="p-6 rounded-[2rem] border backdrop-blur-xl bg-white/5 border-white/5 shadow-2xl">
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -338,7 +309,7 @@ export default function BunpoAdmin() {
                                             <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                                 <div className="flex items-center justify-end gap-2">
                                                     <Link
-                                                        href={getBunpoSlug(b.title) ? `/bunpo/n${b.jlpt_level}/${getBunpoSlug(b.title)}` : `/bunpo/n${b.jlpt_level}`} target="_blank"
+                                                        href={b.slug || getBunpoSlug(b.title) ? `/bunpo/n${b.jlpt_level}/${b.slug || getBunpoSlug(b.title)}` : `/bunpo/n${b.jlpt_level}`} target="_blank"
                                                         className="p-2 rounded-xl transition-colors text-emerald-400 hover:bg-emerald-500/10"
                                                         title="Lihat"
                                                     >
@@ -379,7 +350,7 @@ export default function BunpoAdmin() {
                                 <div key={b.id} className="divide-white/5">
                                     <div
                                         className="flex items-center gap-4 px-5 py-4 active:bg-black/5 dark:active:bg-white/5 transition-colors cursor-pointer"
-                                        onClick={() => router.push(getBunpoSlug(b.title) ? `/bunpo/n${b.jlpt_level}/${getBunpoSlug(b.title)}` : `/bunpo/n${b.jlpt_level}`)}
+                                        onClick={() => router.push(b.slug || getBunpoSlug(b.title) ? `/bunpo/n${b.jlpt_level}/${b.slug || getBunpoSlug(b.title)}` : `/bunpo/n${b.jlpt_level}`)}
                                     >
                                         <div className="flex-1 min-w-0">
                                             <div className="font-black text-lg text-white">{b.title}</div>

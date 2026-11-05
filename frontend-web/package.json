@@ -11,7 +11,6 @@
     "test:grid": "node --test utils/gridGenerator.test.mjs"
   },
   "dependencies": {
-    "@ducanh2912/next-pwa": "^10.2.9",
     "@react-oauth/google": "^0.13.4",
     "@vercel/blob": "^2.8.0",
     "axios": "^1.16.0",

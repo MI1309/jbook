@@ -75,7 +75,7 @@ export const useGameStore = create(
         return { ...k, word: kanjiWord, hiragana: cleanReading };
       });
 
-      // The kanji endpoint can be empty because of visibility or offline cache filters.
+      // The kanji endpoint can be empty when level visibility filters all results.
       // Kotoba itself remains a reliable source for the characters used in this puzzle.
       if (mode === 'kanji') {
         const kotobaCharacters = normalizedKotoba.flatMap(k => (

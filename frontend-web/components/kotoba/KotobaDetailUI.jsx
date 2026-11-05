@@ -106,10 +106,8 @@ export default function KotobaDetailUI({ vocab: initialVocab, onClose }) {
                 const baseUrl = (process.env.NEXT_PUBLIC_API_URL || 'https://japan.pythonanywhere.com/api')
                     .replace(/\/$/, '');
 
-                // Langsung fetch semua dari API (tanpa cek IndexedDB)
                 const fetchPromises = uniqueKanjis.map(async (char) => {
                     try {
-                        // Coba resolveContentId dulu (IndexedDB id-map → API by id)
                         const id = await resolveContentId('kanji', char);
                         if (id) {
                             const res = await fetch(`${baseUrl}/content/kanji/${id}`);

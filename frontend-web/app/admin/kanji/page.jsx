@@ -8,7 +8,6 @@ import { getKanjiHref } from '@/lib/kanji-route';
 import { useRouter } from 'next/navigation';
 import Cookies from 'js-cookie';
 import { useDebounce } from 'use-debounce';
-import { cacheGet, cacheSet } from '@/lib/cache-store';
 import { appToast as toast } from '@/components/common/AppMessage';
 import ConfirmationModal from '@/components/common/ConfirmationModal';
 import Pagination from '@/components/common/Pagination';
@@ -86,21 +85,6 @@ export default function KanjiAdmin() {
 
     const fetchKanjis = async () => {
         setLoading(true);
-        const cacheKey = `admin-kanji-${filterLevel || 'all'}-${debouncedSearch || 'all'}-${page}`;
-
-        if (typeof navigator !== 'undefined' && !navigator.onLine) {
-            const cached = cacheGet(cacheKey);
-            if (cached) {
-                const result = normalizeKanjiPage(cached, page, 50);
-                setKanjiList(result.items);
-                setPagination(result.pagination);
-                setLoading(false);
-                return;
-            }
-            toast.error('Tidak ada koneksi internet dan data admin belum tersedia secara offline.');
-            setLoading(false);
-            return;
-        }
 
         try {
             const token = Cookies.get('access_token');
@@ -119,26 +103,12 @@ export default function KanjiAdmin() {
                 setKanjiList(result.items);
                 setPagination(result.pagination);
                 if (result.pagination.page !== page) setPage(result.pagination.page);
-                cacheSet(cacheKey, data);
             } else {
-                const cached = cacheGet(cacheKey);
-                if (cached) {
-                    const result = normalizeKanjiPage(cached, page, 50);
-                    setKanjiList(result.items);
-                    setPagination(result.pagination);
-                    return;
-                }
                 toast.error(`Gagal mengambil data Kanji: ${res.status} ${res.statusText}`);
             }
         } catch (error) {
             console.error("Failed to fetch", error);
-            const cached = cacheGet(cacheKey);
-            if (cached) {
-                const result = normalizeKanjiPage(cached, page, 50);
-                setKanjiList(result.items);
-                setPagination(result.pagination);
-                return;
-            }
+            toast.error('Terjadi kesalahan jaringan saat memuat Kanji.');
         } finally {
             setLoading(false);
         }

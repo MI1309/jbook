@@ -38,6 +38,9 @@ def serialize_grammar(grammar, include_source_data=False):
         'chapter': grammar.chapter,
         'jlpt_level': grammar.jlpt_level,
         'sentences': sentences,
+        'slug': grammar.slug,
+        'sections': grammar.sections,
+        'tags': grammar.tags,
     }
     if include_source_data:
         serialized['source_data'] = grammar.source_data

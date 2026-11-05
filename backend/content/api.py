@@ -1,7 +1,11 @@
+import json
+from difflib import get_close_matches
+from typing import Any
+from django.db import IntegrityError, transaction
 from ninja import Router, Schema, Query
 from ninja.errors import HttpError
 from typing import List, Optional
-from pydantic import BaseModel, Field, field_validator
+from pydantic import BaseModel, ConfigDict, Field, ValidationError, field_validator
 from ninja.security import HttpBearer
 from core.decorators import rate_limit
 from django.conf import settings
@@ -12,6 +16,7 @@ from django.db.models import F, Q
 from uuid import UUID
 from datetime import datetime
 from django.http import HttpResponse
+from users.api import AuthBearer
 
 router = Router()
 
@@ -349,6 +354,230 @@ class GrammarSchema(Schema):
     jlpt_level: int = Field(..., ge=1, le=5)
     sentences: List[dict] = Field(default_factory=list)
     source_data: Optional[dict] = None
+    slug: Optional[str] = None
+    sections: Optional[dict] = None
+    tags: List[str] = Field(default_factory=list)
+
+
+class StrictBunpoSchema(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+
+class BunpoMainFunctionSchema(StrictBunpoSchema):
+    summary: str
+    points: List[str]
+
+
+class BunpoVariationSchema(StrictBunpoSchema):
+    label: str
+    formula: str
+    example: str
+
+
+class BunpoSentencePatternSchema(StrictBunpoSchema):
+    formula: str
+    variations: List[BunpoVariationSchema]
+    notes: List[str]
+
+
+class BunpoExampleSchema(StrictBunpoSchema):
+    jp: str
+    id: str
+    reading: Optional[str] = None
+    level: Optional[str] = None
+    expressions: List[dict[str, Any]] = Field(default_factory=list)
+
+
+class BunpoComparisonItemSchema(StrictBunpoSchema):
+    vs: str
+    difference: str
+    example: str
+
+
+class BunpoComparisonSchema(StrictBunpoSchema):
+    summary: str
+    items: List[BunpoComparisonItemSchema]
+
+
+class BunpoNuanceSchema(StrictBunpoSchema):
+    summary: str
+    points: List[str]
+
+
+class BunpoCoreExplanationSchema(StrictBunpoSchema):
+    summary: str
+    text: str
+
+
+class BunpoMistakeSchema(StrictBunpoSchema):
+    wrong: str
+    correct: str
+    reason: str
+
+
+class BunpoFaqSchema(StrictBunpoSchema):
+    q: str
+    a: str
+
+
+class BunpoPracticeSchema(StrictBunpoSchema):
+    type: str
+    question: str
+    options: List[str] = Field(default_factory=list)
+    answer: str
+    explanation: str = ""
+
+
+class BunpoConceptNodeSchema(StrictBunpoSchema):
+    id: str
+    label: str
+    type: str
+
+
+class BunpoConceptEdgeSchema(StrictBunpoSchema):
+    from_: str = Field(alias="from")
+    to: str
+    label: str
+
+
+class BunpoConceptMapSchema(StrictBunpoSchema):
+    summary: str
+    nodes: List[BunpoConceptNodeSchema]
+    edges: List[BunpoConceptEdgeSchema]
+
+
+class BunpoSectionSchema(StrictBunpoSchema):
+    mainFunction: BunpoMainFunctionSchema
+    sentencePattern: BunpoSentencePatternSchema
+    examples: List[BunpoExampleSchema]
+    comparison: BunpoComparisonSchema
+    nuance: BunpoNuanceSchema
+    coreExplanation: BunpoCoreExplanationSchema
+    commonMistakes: List[BunpoMistakeSchema]
+    faq: List[BunpoFaqSchema]
+    miniPractice: List[BunpoPracticeSchema]
+    conceptMap: BunpoConceptMapSchema
+
+
+class BunpoImportSchema(StrictBunpoSchema):
+    title: str = Field(..., min_length=1, max_length=255)
+    jlpt_level: int = Field(..., ge=1, le=5, strict=True)
+    slug: str = Field(..., min_length=1, max_length=255, pattern=r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
+    structure: str = Field(default="", max_length=255)
+    explanation: str = ""
+    sections: BunpoSectionSchema
+    tags: List[str] = Field(default_factory=list)
+    chapter: Optional[int] = Field(default=None, ge=0, strict=True)
+    sentences: Optional[List[dict[str, Any]]] = None
+
+
+class BunpoStaffAuth(AuthBearer):
+    def authenticate(self, request, token):
+        user = super().authenticate(request, token)
+        if getattr(user, "is_staff", False) or getattr(user, "is_superuser", False):
+            return user
+        raise HttpError(403, "Import Bunpo hanya dapat dilakukan oleh admin.")
+
+
+_BUNPO_SECTION_MODELS = {
+    "mainFunction": BunpoMainFunctionSchema,
+    "sentencePattern": BunpoSentencePatternSchema,
+    "examples": BunpoExampleSchema,
+    "comparison": BunpoComparisonSchema,
+    "nuance": BunpoNuanceSchema,
+    "coreExplanation": BunpoCoreExplanationSchema,
+    "commonMistakes": BunpoMistakeSchema,
+    "faq": BunpoFaqSchema,
+    "miniPractice": BunpoPracticeSchema,
+    "conceptMap": BunpoConceptMapSchema,
+}
+
+
+def _bunpo_validation_message(error, index):
+    location = list(error.get("loc", ()))
+    error_type = error.get("type", "")
+    field = str(location[-1]) if location else "data"
+    parent = location[:-1]
+
+    if error_type == "extra_forbidden":
+        if parent == ["sections"]:
+            allowed = list(BunpoSectionSchema.model_fields)
+        elif len(parent) == 2 and parent[0] == "sections" and parent[1] in _BUNPO_SECTION_MODELS:
+            allowed = list(_BUNPO_SECTION_MODELS[parent[1]].model_fields)
+        else:
+            allowed = list(BunpoImportSchema.model_fields)
+        suggestion = get_close_matches(field, allowed, n=1, cutoff=0.55)
+        suffix = f" Maksud Anda '{suggestion[0]}'?" if suggestion else f" Key yang valid: {', '.join(allowed)}."
+        return f"Data ke-{index}: key '{field}' tidak dikenal.{suffix}"
+
+    if error_type == "missing":
+        return f"Data ke-{index}: field wajib '{field}' belum diisi."
+    if error_type in {"int_type", "int_parsing", "greater_than_equal", "less_than_equal"}:
+        return f"Data ke-{index}: '{field}' harus berupa angka bulat antara 1 sampai 5."
+    if error_type in {"string_type", "list_type", "dict_type", "model_type"}:
+        expected = {
+            "string_type": "teks",
+            "list_type": "array",
+            "dict_type": "object",
+            "model_type": "object",
+        }[error_type]
+        return f"Data ke-{index}: '{field}' harus berupa {expected}."
+    return f"Data ke-{index}: nilai '{field}' tidak valid ({error.get('msg', 'format salah')})."
+
+
+@router.post("/grammar/bulk-import", auth=BunpoStaffAuth())
+@rate_limit(key="user", rate="10/m")
+def bulk_import_bunpo(request):
+    try:
+        raw_items = json.loads(request.body)
+    except (json.JSONDecodeError, UnicodeDecodeError):
+        raise HttpError(400, "Body harus berupa JSON array yang valid.")
+
+    if not isinstance(raw_items, list) or not raw_items:
+        raise HttpError(400, "Payload harus berupa array berisi minimal satu data Bunpo.")
+    if len(raw_items) > 500:
+        raise HttpError(400, "Maksimal 500 data per batch.")
+
+    validated = []
+    errors = []
+    seen_slugs = set()
+    for index, item in enumerate(raw_items, start=1):
+        try:
+            parsed = BunpoImportSchema.model_validate(item)
+            if parsed.slug in seen_slugs:
+                errors.append(f"Data ke-{index}: slug '{parsed.slug}' duplikat di dalam batch.")
+            seen_slugs.add(parsed.slug)
+            validated.append(parsed)
+        except ValidationError as exc:
+            errors.extend(_bunpo_validation_message(error, index) for error in exc.errors())
+
+    if errors:
+        detail = "Batch tidak disimpan karena validasi gagal:\n" + "\n".join(errors)
+        raise HttpError(422, detail)
+
+    results = []
+    try:
+        with transaction.atomic():
+            for item in validated:
+                defaults = {
+                    "title": item.title,
+                    "jlpt_level": item.jlpt_level,
+                    "structure": item.structure,
+                    "explanation": item.explanation,
+                    "sections": item.sections.model_dump(by_alias=True),
+                    "tags": item.tags,
+                }
+                if item.chapter is not None:
+                    defaults["chapter"] = item.chapter
+                if item.sentences is not None:
+                    defaults["sentences"] = item.sentences
+
+                grammar, created = Grammar.objects.update_or_create(slug=item.slug, defaults=defaults)
+                results.append({"id": str(grammar.id), "slug": grammar.slug, "created": created})
+    except IntegrityError:
+        raise HttpError(409, "Import bentrok dengan data Bunpo yang baru saja diubah. Coba ulangi batch.")
+
+    return {"success": True, "count": len(results), "items": results}
 
 class KanjiListResponse(BaseModel):
     items: List[KanjiSchema]

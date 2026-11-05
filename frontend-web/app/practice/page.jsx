@@ -44,7 +44,7 @@ function PracticePageContent() {
 
     const textColor = !mounted ? 'text-gray-900' : (theme === 'dark' ? 'text-white' : 'text-gray-900');
 
-    // Resolve character → ID (online: from API, offline: from IndexedDB)
+    // Resolve a content ID from its character using the API.
     const handleOpenMistake = async (mistake) => {
         try {
             const id = await resolveContentId(mistake.type, mistake.character);
