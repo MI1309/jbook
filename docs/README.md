@@ -8,6 +8,10 @@ Untuk menjalankan Django backend secara lokal, ikuti [Panduan Setup Backend](bac
 
 Untuk alur pengembangan menyeluruh, arsitektur, SRS flashcard, testing, dan deployment, lihat [Panduan Pengembangan JBook](dev.md).
 
+Untuk struktur frontend dan penilaian penerapan SOLID saat ini, lihat [Arsitektur Frontend dan SOLID](frontend_architecture.md).
+
+Untuk struktur backend dan penilaian penerapan SOLID saat ini, lihat [Arsitektur Backend dan SOLID](backend_architecture.md).
+
 Untuk melanjutkan pekerjaan terbaru melalui agen AI, baca [AI Handoff: JBook Progress dan Crossword TTS](ai-handoff.md). Dokumen tersebut mencatat lokasi kode, kontrak dashboard, dua jalur generator TTS, validasi terakhir, dan pekerjaan lanjutan.
 
 ## Base URL

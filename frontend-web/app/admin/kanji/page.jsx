@@ -224,7 +224,7 @@ export default function KanjiAdmin() {
             {/* Page Header */}
             <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
                 <div>
-                    <h1 className="text-5xl font-black tracking-tighter text-white">
+                    <h1 className="text-5xl font-black tracking-tighter text-[var(--foreground)]">
                         Kanji <span className="text-red-600">Management</span>
                     </h1>
                     <p className="text-xs font-bold text-neutral-500 uppercase tracking-[0.2em] mt-3">Total: {pagination.total} Entitas</p>
@@ -237,11 +237,11 @@ export default function KanjiAdmin() {
                 </Link>
             </div>
 
-            <div className="p-6 rounded-[2rem] border backdrop-blur-xl bg-white/5 border-white/5 shadow-2xl">
+            <div className="admin-surface p-6 rounded-[2rem] border shadow-sm">
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                     <div>
-                        <h2 className="text-sm font-black uppercase tracking-widest text-white">Visibilitas Kanji</h2>
-                        <p className="text-xs text-neutral-500 mt-2">Klik level untuk mengatur data yang tampil di publik dan latihan Kanji. Perubahan tersimpan otomatis.</p>
+                        <h2 className="text-sm font-black uppercase tracking-widest text-[var(--foreground)]">Visibilitas Kanji</h2>
+                        <p className="mt-2 text-xs text-[var(--admin-muted)]">Klik level untuk mengatur data yang tampil di publik dan latihan Kanji. Perubahan tersimpan otomatis.</p>
                     </div>
                     <div className="flex flex-wrap gap-2">
                         {[5, 4, 3, 2, 1].map(level => {
@@ -266,13 +266,13 @@ export default function KanjiAdmin() {
             </div>
 
             {/* Filter & Actions Bar */}
-            <div className="p-6 rounded-[2rem] border backdrop-blur-xl transition-all bg-white/5 border-white/5 shadow-2xl">
+            <div className="admin-surface p-6 rounded-[2rem] border shadow-sm">
                 <div className="flex flex-col md:flex-row items-center gap-6">
                     <div className="relative flex-1 w-full">
                         <input 
                             type="text" 
                             placeholder="Cari berdasarkan karakter atau arti..." 
-                            className="w-full p-4 pl-12 rounded-2xl font-bold text-sm transition-all outline-none bg-neutral-900/50 text-white border-white/5 focus:bg-neutral-900 focus:ring-2 focus:ring-red-600/50"
+                            className="admin-control w-full p-4 pl-12 rounded-2xl border font-bold text-sm transition-all outline-none focus:ring-2 focus:ring-red-600/50"
                             value={search}
                             onChange={(e) => setSearch(e.target.value)}
                         />
@@ -283,7 +283,7 @@ export default function KanjiAdmin() {
 
                     <div className="flex items-center gap-4 w-full md:w-auto">
                         <select 
-                            className="flex-1 md:w-32 p-4 rounded-2xl font-bold text-sm outline-none cursor-pointer bg-neutral-900/50 text-white border-white/5"
+                            className="admin-control flex-1 md:w-32 p-4 rounded-2xl border font-bold text-sm outline-none cursor-pointer"
                             value={filterLevel} 
                             onChange={(e) => setFilterLevel(e.target.value)}
                         >
@@ -319,7 +319,7 @@ export default function KanjiAdmin() {
             </div>
 
             {/* Table Section */}
-            <div className="rounded-[2.5rem] border overflow-hidden transition-all bg-white/5 border-white/5">
+            <div className="admin-surface rounded-[2.5rem] border overflow-hidden transition-all">
                 {loading ? (
                     <div className="p-20 text-center">
                         <div className="w-12 h-12 border-4 border-red-600/20 border-t-red-600 rounded-full animate-spin mx-auto mb-4"></div>
@@ -336,26 +336,26 @@ export default function KanjiAdmin() {
                     <>
                         {/* Desktop Table */}
                         <div className="hidden md:block overflow-x-auto">
-                            <table className="min-w-full divide-y">
-                                <thead className={'bg-neutral-800/50'}>
+                            <table className="admin-table min-w-full divide-y">
+                                <thead className="admin-table-head">
                                     <tr>
-                                        <th className="px-6 py-4 text-left text-xs font-black text-neutral-500 uppercase tracking-widest">Karakter</th>
-                                        <th className="px-6 py-4 text-left text-xs font-black text-neutral-500 uppercase tracking-widest">Arti & Detail</th>
-                                        <th className="px-6 py-4 text-left text-xs font-black text-neutral-500 uppercase tracking-widest">Level</th>
-                                        <th className="px-6 py-4 text-right text-xs font-black text-neutral-500 uppercase tracking-widest">Aksi</th>
+                                        <th className="admin-table-heading px-6 py-4 text-left text-xs font-black uppercase tracking-widest">Karakter</th>
+                                        <th className="admin-table-heading px-6 py-4 text-left text-xs font-black uppercase tracking-widest">Arti & Detail</th>
+                                        <th className="admin-table-heading px-6 py-4 text-left text-xs font-black uppercase tracking-widest">Level</th>
+                                        <th className="admin-table-heading px-6 py-4 text-right text-xs font-black uppercase tracking-widest">Aksi</th>
                                     </tr>
                                 </thead>
-                                <tbody className="divide-y divide-white/5">
+                                <tbody className="admin-table-body divide-y">
                                     {kanjiList.map((k) => (
-                                        <tr key={k.id} className="transition-colors hover:bg-white/5">
+                                        <tr key={k.id} className="admin-table-row">
                                             <td className="px-6 py-4 whitespace-nowrap">
-                                                <div className="text-4xl font-black text-white">{k.character}</div>
+                                                <div className="text-4xl font-black text-[var(--foreground)]">{k.character}</div>
                                             </td>
                                             <td className="px-6 py-4">
-                                                <div className="font-black text-lg text-neutral-200">{k.meaning}</div>
+                                                <div className="font-black text-lg text-[var(--foreground)]">{k.meaning}</div>
                                                 <div className="flex flex-wrap gap-x-4 mt-1">
-                                                    <div className="text-xs font-bold text-neutral-500 uppercase tracking-widest"><span className="text-red-500">音:</span> {k.onyomi.join(', ')}</div>
-                                                    <div className="text-xs font-bold text-neutral-500 uppercase tracking-widest"><span className="text-blue-500">訓:</span> {k.kunyomi.join(', ')}</div>
+                                                    <div className="text-xs font-bold text-[var(--admin-muted)] uppercase tracking-widest"><span className="text-red-500">音:</span> {k.onyomi.join(', ')}</div>
+                                                    <div className="text-xs font-bold text-[var(--admin-muted)] uppercase tracking-widest"><span className="text-blue-500">訓:</span> {k.kunyomi.join(', ')}</div>
                                                 </div>
                                             </td>
                                             <td className="px-6 py-4 whitespace-nowrap">
@@ -396,17 +396,17 @@ export default function KanjiAdmin() {
                         {/* Mobile Cards */}
                         <div className="md:hidden divide-y">
                             {kanjiList.map((k) => (
-                                <div key={k.id} className="divide-white/5">
+                                <div key={k.id} className="divide-[var(--admin-divider)]">
                                     <div
-                                        className="flex items-center gap-4 px-5 py-4 active:bg-black/5 dark:active:bg-white/5 transition-colors cursor-pointer"
+                                        className="flex items-center gap-4 px-5 py-4 active:bg-[var(--admin-hover)] transition-colors cursor-pointer"
                                         onClick={() => router.push(getKanjiHref(k))}
                                     >
-                                        <div className="text-4xl font-black text-white">{k.character}</div>
+                                        <div className="text-4xl font-black text-[var(--foreground)]">{k.character}</div>
                                         <div className="flex-1 min-w-0">
-                                            <div className="font-black text-lg text-neutral-200">{k.meaning}</div>
+                                            <div className="font-black text-lg text-[var(--foreground)]">{k.meaning}</div>
                                             <div className="flex flex-wrap gap-x-2 mt-1">
-                                                <div className="text-xs font-bold text-neutral-500 uppercase tracking-widest"><span className="text-red-500">音:</span> {k.onyomi.join(', ')}</div>
-                                                <div className="text-xs font-bold text-neutral-500 uppercase tracking-widest"><span className="text-blue-500">訓:</span> {k.kunyomi.join(', ')}</div>
+                                                <div className="text-xs font-bold text-[var(--admin-muted)] uppercase tracking-widest"><span className="text-red-500">音:</span> {k.onyomi.join(', ')}</div>
+                                                <div className="text-xs font-bold text-[var(--admin-muted)] uppercase tracking-widest"><span className="text-blue-500">訓:</span> {k.kunyomi.join(', ')}</div>
                                             </div>
                                             <span className="inline-flex mt-2 px-3 py-1 text-xs font-black rounded-full bg-red-600/10 text-red-500 border border-red-500/20">N{k.jlpt_level}</span>
                                         </div>
@@ -414,7 +414,7 @@ export default function KanjiAdmin() {
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                                         </svg>
                                     </div>
-                                    <div className="flex items-center justify-between px-5 py-3 bg-neutral-900/30">
+                                    <div className="admin-control flex items-center justify-between px-5 py-3 border-t">
                                         <div className="flex items-center gap-2">
                                             <Link 
                                                 href={`/admin/kanji/${k.id}`} 

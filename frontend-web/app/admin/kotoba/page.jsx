@@ -191,13 +191,13 @@ export default function KotobaAdmin() {
 
     const levelColor = (level) => {
         const colors = {
-            5: 'bg-green-900/30 text-green-400',
-            4: 'bg-teal-900/30 text-teal-400',
-            3: 'bg-blue-900/30 text-blue-400',
-            2: 'bg-purple-900/30 text-purple-400',
-            1: 'bg-red-900/30 text-red-400'
+            5: 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400',
+            4: 'bg-teal-100 text-teal-800 dark:bg-teal-900/30 dark:text-teal-400',
+            3: 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400',
+            2: 'bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-400',
+            1: 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400'
         };
-        return colors[level] || ('bg-neutral-800 text-neutral-400');
+        return colors[level] || 'bg-neutral-100 text-neutral-700 dark:bg-neutral-800 dark:text-neutral-400';
     };
 
     return (
@@ -205,7 +205,7 @@ export default function KotobaAdmin() {
             {/* Header */}
             <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
                 <div>
-                    <h1 className="text-3xl font-black tracking-tight text-white">
+                    <h1 className="text-3xl font-black tracking-tight text-[var(--foreground)]">
                         Kotoba <span className="text-red-600">Management</span>
                     </h1>
                     <p className="mt-1 text-xs font-bold uppercase tracking-[0.2em] text-neutral-500">
@@ -224,8 +224,8 @@ export default function KotobaAdmin() {
             <div className="p-6 rounded-[2rem] border backdrop-blur-xl bg-white/5 border-white/5 shadow-2xl">
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                     <div>
-                        <h2 className="text-sm font-black uppercase tracking-widest text-white">Visibilitas Kotoba</h2>
-                        <p className="text-xs text-neutral-500 mt-2">Klik level untuk mengaktifkan atau menonaktifkan kosakata yang tampil di publik dan latihan. Perubahan tersimpan otomatis.</p>
+                        <h2 className="text-sm font-black uppercase tracking-widest text-[var(--foreground)]">Visibilitas Kotoba</h2>
+                        <p className="mt-2 text-xs text-[var(--admin-muted)]">Klik level untuk mengaktifkan atau menonaktifkan kosakata yang tampil di publik dan latihan. Perubahan tersimpan otomatis.</p>
                     </div>
                     <div className="flex flex-wrap gap-2">
                         {[5, 4, 3, 2, 1].map(lvl => {
@@ -250,11 +250,11 @@ export default function KotobaAdmin() {
             </div>
 
             {/* Filters & Search */}
-            <div className="p-6 rounded-3xl border bg-neutral-900/30 border-white/5">
+            <div className="admin-surface p-6 rounded-3xl border">
                 <div className="flex flex-col md:flex-row gap-4 items-stretch md:items-center justify-between">
                     <div className="flex flex-1 flex-col md:flex-row gap-3">
                         <select
-                            className="flex-1 px-4 py-3 rounded-2xl border text-sm font-bold focus:outline-none focus:ring-2 focus:ring-red-500/30 bg-neutral-800 border-white/10 text-white"
+                            className="admin-control flex-1 px-4 py-3 rounded-2xl border text-sm font-bold focus:outline-none focus:ring-2 focus:ring-red-500/30"
                             value={level}
                             onChange={(e) => setLevel(e.target.value)}
                         >
@@ -267,7 +267,7 @@ export default function KotobaAdmin() {
                         </select>
                         <input
                             type="text" placeholder="Cari kata, bacaan, atau arti..."
-                            className="flex-1 px-4 py-3 rounded-2xl border text-sm font-bold focus:outline-none focus:ring-2 focus:ring-red-500/30 bg-neutral-800 border-white/10 text-white placeholder-neutral-600"
+                            className="admin-control flex-1 px-4 py-3 rounded-2xl border text-sm font-bold placeholder:text-[var(--admin-muted)] focus:outline-none focus:ring-2 focus:ring-red-500/30"
                             value={search}
                             onChange={(e) => setSearch(e.target.value)}
                         />
@@ -288,7 +288,7 @@ export default function KotobaAdmin() {
             </div>
 
             {/* Content */}
-            <div className="rounded-3xl border overflow-hidden bg-neutral-900/30 border-white/5">
+            <div className="admin-surface rounded-3xl border overflow-hidden">
                 {loading ? (
                     <div className="p-12 text-center">
                         <div className="w-10 h-10 border-4 border-red-600/20 border-t-red-600 rounded-full animate-spin mx-auto"></div>
@@ -307,22 +307,22 @@ export default function KotobaAdmin() {
                     <>
                         {/* Desktop Table */}
                         <div className="hidden md:block overflow-x-auto">
-                            <table className="min-w-full divide-y">
-                                <thead className={'bg-neutral-800/50'}>
+                            <table className="admin-table min-w-full divide-y">
+                                <thead className="admin-table-head">
                                     <tr>
-                                        <th className="px-6 py-4 text-left text-xs font-black uppercase tracking-widest text-neutral-500">Kata</th>
-                                        <th className="px-6 py-4 text-left text-xs font-black uppercase tracking-widest text-neutral-500">Bacaan</th>
-                                        <th className="px-6 py-4 text-left text-xs font-black uppercase tracking-widest text-neutral-500">Arti</th>
-                                        <th className="px-6 py-4 text-left text-xs font-black uppercase tracking-widest text-neutral-500">Level</th>
-                                        <th className="px-6 py-4 text-right text-xs font-black uppercase tracking-widest text-neutral-500">Aksi</th>
+                                        <th className="admin-table-heading px-6 py-4 text-left text-xs font-black uppercase tracking-widest">Kata</th>
+                                        <th className="admin-table-heading px-6 py-4 text-left text-xs font-black uppercase tracking-widest">Bacaan</th>
+                                        <th className="admin-table-heading px-6 py-4 text-left text-xs font-black uppercase tracking-widest">Arti</th>
+                                        <th className="admin-table-heading px-6 py-4 text-left text-xs font-black uppercase tracking-widest">Level</th>
+                                        <th className="admin-table-heading px-6 py-4 text-right text-xs font-black uppercase tracking-widest">Aksi</th>
                                     </tr>
                                 </thead>
-                                <tbody className="divide-y divide-white/5">
+                                <tbody className="admin-table-body divide-y">
                                     {vocabs.map((v) => (
-                                        <tr key={v.id} className="hover:bg-white/5 transition-colors">
-                                            <td className="px-6 py-4 whitespace-nowrap text-lg font-black text-gray-900 dark:text-white">{v.word}</td>
-                                            <td className="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-600 dark:text-neutral-400">{v.reading}</td>
-                                            <td className="px-6 py-4 text-sm font-bold text-gray-600 dark:text-neutral-400 max-w-md truncate">{v.meaning}</td>
+                                        <tr key={v.id} className="admin-table-row">
+                                            <td className="px-6 py-4 whitespace-nowrap text-lg font-black text-[var(--foreground)]">{v.word}</td>
+                                            <td className="px-6 py-4 whitespace-nowrap text-sm font-bold text-[var(--foreground)]/75">{v.reading}</td>
+                                            <td className="px-6 py-4 text-sm font-bold text-[var(--foreground)]/75 max-w-md truncate">{v.meaning}</td>
                                             <td className="px-6 py-4 whitespace-nowrap">
                                                 <span className={`px-3 py-1 inline-flex text-xs font-black rounded-full ${levelColor(v.jlpt_level)}`}>
                                                     N{v.jlpt_level}
@@ -357,15 +357,15 @@ export default function KotobaAdmin() {
                         {/* Mobile Cards */}
                         <div className="md:hidden divide-y">
                             {vocabs.map((v) => (
-                                <div key={v.id} className="divide-white/5">
+                                <div key={v.id} className="divide-[var(--admin-divider)]">
                                     <div
-                                        className="flex items-center gap-4 px-5 py-4 active:bg-black/5 dark:active:bg-white/5 transition-colors cursor-pointer"
+                                        className="flex items-center gap-4 px-5 py-4 active:bg-[var(--admin-hover)] transition-colors cursor-pointer"
                                         onClick={() => router.push(`/kotoba/${v.id}`)}
                                     >
                                         <div className="flex-1 min-w-0">
-                                            <div className="text-xl font-black text-gray-900 dark:text-white">{v.word}</div>
-                                            <div className="text-sm font-bold text-gray-600 dark:text-neutral-400">{v.reading}</div>
-                                            <div className="mt-1 text-sm font-bold text-gray-700 dark:text-neutral-300 truncate">{v.meaning}</div>
+                                            <div className="text-xl font-black text-[var(--foreground)]">{v.word}</div>
+                                            <div className="text-sm font-bold text-[var(--foreground)]/75">{v.reading}</div>
+                                            <div className="mt-1 text-sm font-bold text-[var(--foreground)]/80 truncate">{v.meaning}</div>
                                             <span className={`inline-flex mt-2 px-2.5 py-1 text-xs font-black rounded-full ${levelColor(v.jlpt_level)}`}>
                                                 N{v.jlpt_level}
                                             </span>
@@ -374,7 +374,7 @@ export default function KotobaAdmin() {
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                                         </svg>
                                     </div>
-                                    <div className="flex items-center justify-between px-5 py-3 bg-neutral-900/30">
+                                    <div className="admin-control flex items-center justify-between px-5 py-3 border-t">
                                         <div className="flex items-center gap-2">
                                             <Link href={`/admin/kotoba/${v.id}`} className="p-2 rounded-xl transition-colors text-indigo-400 hover:bg-indigo-500/10" onClick={(e) => e.stopPropagation()}>
                                                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -399,7 +399,7 @@ export default function KotobaAdmin() {
 
                 {/* Pagination Controls */}
                 {!loading && pagination.pages > 1 && (
-                    <div className="px-6 py-5 border-t bg-neutral-900/50 border-white/5">
+                    <div className="admin-control px-6 py-5 border-t">
                         <div className="flex items-center justify-between gap-4">
                             <div className="text-xs font-bold text-neutral-500">
                                 Halaman <span className="text-gray-900 dark:text-white">{pagination.page}</span> dari <span className="text-gray-900 dark:text-white">{pagination.pages}</span> ({pagination.total} hasil)

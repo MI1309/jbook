@@ -11,6 +11,11 @@
   --accent-blue: #263b91;
   --accent-green: #2d5a27; /* Bamboo Green */
   --accent-gold: #c69214; /* Tatami Gold */
+  --admin-surface: #ffffff;
+  --admin-control: #f7f5f0;
+  --admin-muted: #59616d;
+  --admin-divider: #e5e5db;
+  --admin-hover: #f1f3f5;
   --auth-background: #f3f5f1;
   --auth-accent: #245a47;
   --auth-accent-hover: #1c493a;
@@ -31,6 +36,11 @@
   --accent-blue: #9aabff;
   --accent-green: #34d399; /* Calm Bamboo Green */
   --accent-gold: #fbbf24; /* Warm Glow Gold */
+  --admin-surface: #131317;
+  --admin-control: #0b0b0d;
+  --admin-muted: #a1a1aa;
+  --admin-divider: #29292f;
+  --admin-hover: #1c1c22;
   --auth-background: #101614;
   --auth-accent: #8ec6a5;
   --auth-accent-hover: #a4d8b7;
@@ -70,6 +80,43 @@ body {
   min-height: 100vh;
   position: relative;
   overflow-x: hidden;
+}
+
+.admin-surface {
+  background-color: var(--admin-surface);
+  border-color: var(--admin-divider);
+  color: var(--foreground);
+}
+
+.admin-control {
+  background-color: var(--admin-control);
+  border-color: var(--admin-divider);
+  color: var(--foreground);
+}
+
+.admin-table {
+  color: var(--foreground);
+}
+
+.admin-table-head {
+  background-color: var(--admin-control);
+}
+
+.admin-table-heading {
+  color: var(--admin-muted);
+}
+
+.admin-table-body {
+  border-color: var(--admin-divider);
+}
+
+.admin-table-row {
+  border-color: var(--admin-divider);
+  transition: background-color 150ms ease;
+}
+
+.admin-table-row:hover {
+  background-color: var(--admin-hover);
 }
 
 html.preload,
