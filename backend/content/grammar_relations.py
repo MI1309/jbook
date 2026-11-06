@@ -28,7 +28,10 @@ def serialize_grammar(grammar, include_source_data=False):
             })
             sentences.append(sentence)
     else:
-        sentences = legacy_sentences
+        sentences = [dict(sentence) for sentence in legacy_sentences if isinstance(sentence, dict)]
+
+    sections = grammar.sections if isinstance(grammar.sections, dict) else None
+    tags = grammar.tags if isinstance(grammar.tags, list) else []
 
     serialized = {
         'id': grammar.id,
@@ -39,8 +42,8 @@ def serialize_grammar(grammar, include_source_data=False):
         'jlpt_level': grammar.jlpt_level,
         'sentences': sentences,
         'slug': grammar.slug,
-        'sections': grammar.sections,
-        'tags': grammar.tags,
+        'sections': sections,
+        'tags': [tag for tag in tags if isinstance(tag, str)],
     }
     if include_source_data:
         serialized['source_data'] = grammar.source_data

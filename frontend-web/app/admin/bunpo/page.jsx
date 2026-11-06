@@ -18,6 +18,7 @@ export default function BunpoAdmin() {
     const [bunpos, setBunpos] = useState([]);
     const [pagination, setPagination] = useState({ total: 0, page: 1, pages: 1 });
     const [loading, setLoading] = useState(true);
+    const [fetchError, setFetchError] = useState('');
     const [filterLevel, setFilterLevel] = useState('');
     const [filterChapter, setFilterChapter] = useState('');
     const [search, setSearch] = useState('');
@@ -97,13 +98,18 @@ export default function BunpoAdmin() {
                 const result = normalizeBunpoPage(data, page, LIMIT);
                 setBunpos(result.items);
                 setPagination(result.pagination);
+                setFetchError('');
                 if (result.pagination.page !== page) setPage(result.pagination.page);
             } else {
-                toast.error(`Gagal mengambil data Bunpo: ${res.status} ${res.statusText}`);
+                setBunpos([]);
+                setFetchError(res.status === 401 || res.status === 403
+                    ? 'Akses ditolak. Pastikan Anda sudah login dengan akun Admin, lalu muat ulang halaman.'
+                    : 'Gagal memuat data Bunpo. Silakan coba lagi beberapa saat.');
             }
         } catch (error) {
             console.error("Failed to fetch bunpos", error);
-            toast.error(`Terjadi kesalahan jaringan.`);
+            setBunpos([]);
+            setFetchError('Tidak dapat terhubung ke server. Periksa koneksi lalu coba lagi.');
         } finally {
             setLoading(false);
         }
@@ -273,6 +279,17 @@ export default function BunpoAdmin() {
                         <p className="mt-4 text-xs font-bold uppercase tracking-widest text-neutral-500">
                             Memuat...
                         </p>
+                    </div>
+                ) : fetchError ? (
+                    <div className="p-10 text-center" role="alert">
+                        <p className="text-sm font-bold text-red-300">{fetchError}</p>
+                        <button
+                            type="button"
+                            onClick={fetchBunpos}
+                            className="mt-4 rounded-lg border border-white/15 px-4 py-2 text-sm font-bold text-white transition-colors hover:bg-white/10"
+                        >
+                            Coba lagi
+                        </button>
                     </div>
                 ) : bunpos.length === 0 ? (
                     <div className="p-12 text-center">

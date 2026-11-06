@@ -167,6 +167,57 @@ class GrammarListPaginationTests(TestCase):
         self.assertEqual(actual_ids, expected_ids)
 
 
+class AdminGrammarListTests(TestCase):
+    def test_paginated_admin_list_normalizes_legacy_json_fields(self):
+        admin = get_user_model().objects.create_user(username='grammar-list-admin', is_staff=True)
+        grammar = Grammar.objects.create(
+            title='Legacy grammar',
+            slug='legacy-grammar',
+            structure='N は N です',
+            explanation='Explanation',
+            chapter=1,
+            jlpt_level=5,
+            sections=['legacy malformed sections'],
+            tags=['valid', 5],
+            sentences=[None, 'legacy sentence', {'jp': 'これは本です。'}],
+        )
+        token = RefreshToken.for_user(admin).access_token
+
+        response = self.client.get(
+            '/api/admin/grammar?page=1&limit=20',
+            secure=True,
+            HTTP_AUTHORIZATION=f'Bearer {token}',
+        )
+
+        self.assertEqual(response.status_code, 200, response.content)
+        payload = response.json()
+        self.assertEqual(payload['total'], 1)
+        self.assertEqual(payload['items'][0]['id'], str(grammar.id))
+        self.assertIsNone(payload['items'][0]['sections'])
+        self.assertEqual(payload['items'][0]['tags'], ['valid'])
+        self.assertEqual(payload['items'][0]['sentences'], [{'jp': 'これは本です。'}])
+
+
+class AdminStatsTests(TestCase):
+    def test_stats_include_dashboard_counts(self):
+        admin = get_user_model().objects.create_user(username='stats-admin', is_staff=True)
+        TTSPointSession.objects.create(user=admin, points=1)
+        token = RefreshToken.for_user(admin).access_token
+
+        response = self.client.get(
+            '/api/admin/stats',
+            secure=True,
+            HTTP_AUTHORIZATION=f'Bearer {token}',
+        )
+
+        self.assertEqual(response.status_code, 200, response.content)
+        payload = response.json()
+        self.assertEqual(payload['user_count'], 1)
+        self.assertEqual(payload['vocab_count'], 0)
+        self.assertEqual(payload['kanji_count'], 0)
+        self.assertEqual(payload['tts_session_count'], 1)
+
+
 class KanjiListApiTests(TestCase):
     def setUp(self):
         FeatureSetting.objects.update_or_create(

@@ -5,7 +5,6 @@ import { PracticeProvider } from "@/context/PracticeContext";
 import { ThemeProvider } from "@/context/ThemeContext";
 import ClientShell from "@/components/common/ClientShell";
 import AnnouncementPopup from "@/components/common/AnnouncementPopup";
-import SakuraBackground from "@/components/common/SakuraBackground";
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -127,7 +126,6 @@ export default function RootLayout({ children }) {
                     <AuthProvider>
                         <PracticeProvider>
                             <ClientShell>
-                                <SakuraBackground />
                                 {children}
                             </ClientShell>
                             <AnnouncementPopup />

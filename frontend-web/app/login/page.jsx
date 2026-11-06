@@ -2,102 +2,65 @@
 
 import { useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
-import { useTheme } from '@/context/ThemeContext';
 import Link from 'next/link';
-import Image from 'next/image';
 import AppMessage from '@/components/common/AppMessage';
 import { Eye, EyeOff } from 'lucide-react';
+import AuthLayout, { authButtonClass, authIconButtonClass, authInputClass, authLabelClass } from '@/components/auth/AuthLayout';
 
 export default function LoginPage() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
     const [error, setError] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
     const { login } = useAuth();
-    const { theme, mounted } = useTheme();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError('');
-        const res = await login(email, password);
-        if (!res.success) {
-            setError(res.error);
+        setIsLoading(true);
+        try {
+            const res = await login(email, password);
+            if (!res.success) setError(res.error);
+        } catch {
+            setError('Tidak dapat terhubung. Silakan coba lagi.');
+        } finally {
+            setIsLoading(false);
         }
     };
 
-    if (!mounted) return null;
-
-    const isDark = theme === 'dark';
-
     return (
-        <div className={`min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 transition-all duration-500 relative overflow-hidden ${
-            isDark 
-                ? 'bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-neutral-900 via-black to-neutral-950' 
-                : 'bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-blue-50 via-gray-50 to-white'
-        }`}>
-            {/* Animated Background Elements */}
-            <div className={`absolute top-0 right-0 w-96 h-96 rounded-full blur-[100px] opacity-20 animate-pulse ${isDark ? 'bg-blue-900/40' : 'bg-blue-200'}`} />
-            <div className={`absolute bottom-0 left-0 w-96 h-96 rounded-full blur-[100px] opacity-10 animate-pulse delay-700 ${isDark ? 'bg-blue-800/30' : 'bg-blue-100'}`} />
-
-            <div className={`max-w-md w-full p-6 sm:p-10 rounded-[2.5rem] backdrop-blur-xl border transition-all duration-300 relative z-10 ${
-                isDark 
-                    ? 'bg-black/40 border-white/5 shadow-[0_0_50px_-12px_rgba(37,99,235,0.2)]' 
-                    : 'bg-white/80 border-gray-100 shadow-xl shadow-blue-500/5'
-            }`}>
-                <div className="text-center">
-                    <div className="inline-flex rounded-[1.75rem] bg-white p-2 shadow-xl shadow-blue-500/25 ring-1 ring-blue-100/80 transition-transform duration-300 hover:scale-105 dark:bg-neutral-900 dark:ring-white/10">
-                        <Image
-                            src="/icon-192.png"
-                            alt="Logo JBook"
-                            width="96"
-                            height="96"
-                            priority
-                            className="h-24 w-24 rounded-2xl object-cover"
-                        />
-                    </div>
-                    <h2 className={`text-4xl font-black tracking-tight transition-colors ${isDark ? 'text-white' : 'text-gray-900'}`}>
-                        Login
-                    </h2>
-                </div>
-                
+        <AuthLayout eyebrow="Selamat datang kembali" title="Masuk ke JBook" description="Lanjutkan belajar bahasa Jepang dari tempat terakhir kamu berhenti.">
                 <form className="mt-8 space-y-5" onSubmit={handleSubmit}>
                     {error && (
-                        <AppMessage variant="warning" className="animate-shake text-xs font-black uppercase tracking-widest">
+                        <AppMessage variant="warning" className="text-sm">
                             {error}
                         </AppMessage>
                     )}
                     
                     <div className="space-y-5">
                         <div className="group">
-                            <label htmlFor="email-address" className={`block text-[10px] font-black uppercase tracking-[0.2em] mb-2 ml-1 transition-colors ${isDark ? 'text-neutral-600 group-focus-within:text-blue-500' : 'text-gray-400 group-focus-within:text-blue-600'}`}>Email</label>
+                            <label htmlFor="email-address" className={authLabelClass}>Email</label>
                             <input
                                 id="email-address"
                                 name="email"
                                 type="email"
                                 required
-                                className={`appearance-none block w-full px-5 py-4 border rounded-2xl font-bold transition-all focus:outline-none focus:ring-2 focus:ring-blue-500/50 sm:text-sm ${
-                                    isDark 
-                                        ? 'bg-neutral-900/50 border-neutral-800 text-white placeholder-neutral-700 hover:bg-neutral-900' 
-                                        : 'bg-gray-50 border-gray-100 text-gray-900 placeholder-gray-400 hover:bg-white'
-                                }`}
+                                className={authInputClass}
                                 placeholder="nama@email.com"
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
                             />
                         </div>
                         <div className="group">
-                            <label htmlFor="password" className={`block text-[10px] font-black uppercase tracking-[0.2em] mb-2 ml-1 transition-colors ${isDark ? 'text-neutral-600 group-focus-within:text-blue-500' : 'text-gray-400 group-focus-within:text-blue-600'}`}>Password</label>
+                            <label htmlFor="password" className={authLabelClass}>Password</label>
                             <div className="relative">
                                 <input
                                     id="password"
                                     name="password"
                                     type={showPassword ? 'text' : 'password'}
                                     required
-                                    className={`appearance-none block w-full rounded-2xl border py-4 pl-5 pr-12 font-bold transition-all focus:outline-none focus:ring-2 focus:ring-blue-500/50 sm:text-sm ${
-                                        isDark
-                                            ? 'bg-neutral-900/50 border-neutral-800 text-white placeholder-neutral-700 hover:bg-neutral-900'
-                                            : 'bg-gray-50 border-gray-100 text-gray-900 placeholder-gray-400 hover:bg-white'
-                                    }`}
+                                    className={`${authInputClass} pr-12`}
                                     placeholder="••••••••"
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
@@ -106,7 +69,7 @@ export default function LoginPage() {
                                     type="button"
                                     onMouseDown={(event) => event.preventDefault()}
                                     onClick={() => setShowPassword((visible) => !visible)}
-                                    className={`absolute inset-y-0 right-2 inline-flex w-10 items-center justify-center rounded-xl transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/60 ${isDark ? 'text-neutral-400 hover:bg-white/5 hover:text-white' : 'text-gray-500 hover:bg-black/5 hover:text-gray-900'}`}
+                                    className={authIconButtonClass}
                                     aria-label={showPassword ? 'Sembunyikan password' : 'Tampilkan password'}
                                     aria-pressed={showPassword}
                                 >
@@ -117,40 +80,29 @@ export default function LoginPage() {
                     </div>
 
                     <div className="flex items-center justify-end pt-1">
-                        <Link href="/forgot-password" className="text-[10px] font-black uppercase tracking-widest text-blue-600 hover:text-blue-400 transition-all hover:scale-105">
+                        <Link href="/forgot-password" className="text-sm font-semibold text-[#39765d] hover:underline dark:text-[#8ec6a5]">
                             Lupa Password?
                         </Link>
                     </div>
 
                     <button
                         type="submit"
-                        className="w-full group relative flex justify-center py-4 px-4 border border-transparent text-xs font-black uppercase tracking-[0.2em] rounded-2xl text-white bg-blue-600 hover:bg-blue-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all shadow-xl shadow-blue-600/20 active:scale-[0.98] overflow-hidden"
+                        disabled={isLoading}
+                        className={authButtonClass}
                     >
-                        <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-white/0 via-white/20 to-white/0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 ease-in-out" />
-                        Masuk Sekarang
+                        {isLoading ? 'Memeriksa akun...' : 'Masuk Sekarang'}
                     </button>
                 </form>
 
-                <div className="text-center mt-8 space-y-5">
-                    <p className={`text-sm font-medium transition-colors ${isDark ? 'text-neutral-500' : 'text-gray-500'}`}>
+                <div className="mt-8 text-center">
+                    <p className="text-sm text-gray-500 dark:text-gray-300">
                         Belum punya akun?{' '}
-                        <Link href="/register" className="font-black text-blue-600 hover:text-blue-400 transition-colors">
+                        <Link href="/register" className="font-bold text-[#39765d] hover:underline dark:text-[#8ec6a5]">
                             Daftar
                         </Link>
                     </p>
-                    <div className="flex items-center justify-center gap-4 text-[10px] font-black uppercase tracking-widest">
-                        <Link href="/privacy-security" className={`transition-colors ${isDark ? 'text-neutral-600 hover:text-accent-blue' : 'text-gray-400 hover:text-blue-600'}`}>
-                            Privasi & Keamanan
-                        </Link>
-                        <span className={isDark ? 'text-neutral-700' : 'text-gray-300'} aria-hidden="true">•</span>
-                        <Link href="/" className={`inline-flex items-center gap-1.5 transition-all ${isDark ? 'text-neutral-600 hover:text-white' : 'text-gray-400 hover:text-gray-900'}`}>
-                            <svg className="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg>
-                            Beranda
-                        </Link>
-                    </div>
                 </div>
-            </div>
-        </div>
+        </AuthLayout>
     );
 }
 

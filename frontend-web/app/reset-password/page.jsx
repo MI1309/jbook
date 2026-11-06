@@ -2,11 +2,11 @@
 
 import { useState, Suspense } from 'react';
 import { useAuth } from '@/context/AuthContext';
-import { useTheme } from '@/context/ThemeContext';
 import { useSearchParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import AppMessage from '@/components/common/AppMessage';
 import { Eye, EyeOff } from 'lucide-react';
+import AuthLayout, { authButtonClass, authIconButtonClass, authInputClass, authLabelClass } from '@/components/auth/AuthLayout';
 
 function ResetPasswordForm() {
     const [password, setPassword] = useState('');
@@ -20,8 +20,6 @@ function ResetPasswordForm() {
     const searchParams = useSearchParams();
     const router = useRouter();
     const { resetPassword } = useAuth();
-    const { theme } = useTheme();
-    const isDark = theme === 'dark';
 
     const uid = searchParams.get('uid');
     const token = searchParams.get('token');
@@ -32,41 +30,45 @@ function ResetPasswordForm() {
         setSuccessMessage('');
 
         if (password !== confirmPassword) {
-            setError('Passwords do not match');
+            setError('Konfirmasi password belum sama.');
             return;
         }
 
         if (password.length < 8) {
-            setError('Password must be at least 8 characters long');
+            setError('Password harus terdiri dari minimal 8 karakter.');
             return;
         }
 
         if (!uid || !token) {
-            setError('Missing reset token or user ID. Invalid link.');
+            setError('Tautan reset tidak valid. Silakan minta tautan baru.');
             return;
         }
 
         setIsLoading(true);
 
-        const res = await resetPassword(uid, token, password);
-        if (!res.success) {
-            setError(res.error || 'Failed to reset password. The link might be expired.');
-        } else {
-            setSuccessMessage(res.message || 'Password has been reset successfully!');
-            setTimeout(() => {
-                router.push('/login');
-            }, 3000);
+        try {
+            const res = await resetPassword(uid, token, password);
+            if (!res.success) {
+                setError(res.error || 'Password gagal diperbarui. Tautan mungkin sudah kedaluwarsa.');
+            } else {
+                setSuccessMessage(res.message || 'Password berhasil diperbarui.');
+                setTimeout(() => {
+                    router.push('/login');
+                }, 3000);
+            }
+        } catch {
+            setError('Tidak dapat terhubung. Silakan coba lagi.');
+        } finally {
+            setIsLoading(false);
         }
-
-        setIsLoading(false);
     };
 
     if (!uid || !token) {
         return (
-            <AppMessage variant="warning">
+                <AppMessage variant="warning" className="text-sm">
                 <span className="block">Link reset password tidak valid. Silakan minta link baru.</span>
                 <div className="mt-4 text-center">
-                    <Link href="/forgot-password" className="text-xs font-black uppercase tracking-widest text-red-700 transition-colors hover:text-red-500 dark:text-red-300">
+                    <Link href="/forgot-password" className="text-sm font-bold text-[#39765d] transition-colors hover:underline dark:text-[#8ec6a5]">
                         Minta Link Baru
                     </Link>
                 </div>
@@ -87,18 +89,14 @@ function ResetPasswordForm() {
             )}
             <div className="space-y-4">
                 <div>
-                    <label htmlFor="password" className={`block text-xs font-black uppercase tracking-widest mb-1 ml-1 ${isDark ? 'text-gray-500' : 'text-gray-400'}`}>Password Baru</label>
+                    <label htmlFor="password" className={authLabelClass}>Password Baru</label>
                     <div className="relative">
                         <input
                             id="password"
                             name="password"
                             type={showPassword ? 'text' : 'password'}
                             required
-                            className={`appearance-none relative block w-full rounded-xl border py-3 pl-4 pr-12 font-medium transition-all focus:outline-none focus:ring-2 focus:ring-red-500 sm:text-sm ${
-                                isDark
-                                    ? 'bg-black border-red-950/30 text-white placeholder-gray-700'
-                                    : 'bg-gray-50 border-gray-200 text-gray-900 placeholder-gray-400'
-                            }`}
+                            className={`${authInputClass} pr-12`}
                             placeholder="••••••••"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
@@ -107,7 +105,7 @@ function ResetPasswordForm() {
                             type="button"
                             onMouseDown={(event) => event.preventDefault()}
                             onClick={() => setShowPassword((visible) => !visible)}
-                            className={`absolute inset-y-0 right-2 inline-flex w-9 items-center justify-center rounded-lg transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500/60 ${isDark ? 'text-gray-400 hover:bg-white/5 hover:text-white' : 'text-gray-500 hover:bg-black/5 hover:text-gray-900'}`}
+                            className={authIconButtonClass}
                             aria-label={showPassword ? 'Sembunyikan password baru' : 'Tampilkan password baru'}
                             aria-pressed={showPassword}
                         >
@@ -116,18 +114,14 @@ function ResetPasswordForm() {
                     </div>
                 </div>
                 <div>
-                    <label htmlFor="confirmPassword" className={`block text-xs font-black uppercase tracking-widest mb-1 ml-1 ${isDark ? 'text-gray-500' : 'text-gray-400'}`}>Konfirmasi Password</label>
+                    <label htmlFor="confirmPassword" className={authLabelClass}>Konfirmasi Password</label>
                     <div className="relative">
                         <input
                             id="confirmPassword"
                             name="confirmPassword"
                             type={showConfirmPassword ? 'text' : 'password'}
                             required
-                            className={`appearance-none relative block w-full rounded-xl border py-3 pl-4 pr-12 font-medium transition-all focus:outline-none focus:ring-2 focus:ring-red-500 sm:text-sm ${
-                                isDark
-                                    ? 'bg-black border-red-950/30 text-white placeholder-gray-700'
-                                    : 'bg-gray-50 border-gray-200 text-gray-900 placeholder-gray-400'
-                            }`}
+                            className={`${authInputClass} pr-12`}
                             placeholder="••••••••"
                             value={confirmPassword}
                             onChange={(e) => setConfirmPassword(e.target.value)}
@@ -136,7 +130,7 @@ function ResetPasswordForm() {
                             type="button"
                             onMouseDown={(event) => event.preventDefault()}
                             onClick={() => setShowConfirmPassword((visible) => !visible)}
-                            className={`absolute inset-y-0 right-2 inline-flex w-9 items-center justify-center rounded-lg transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500/60 ${isDark ? 'text-gray-400 hover:bg-white/5 hover:text-white' : 'text-gray-500 hover:bg-black/5 hover:text-gray-900'}`}
+                            className={authIconButtonClass}
                             aria-label={showConfirmPassword ? 'Sembunyikan konfirmasi password' : 'Tampilkan konfirmasi password'}
                             aria-pressed={showConfirmPassword}
                         >
@@ -150,7 +144,7 @@ function ResetPasswordForm() {
                 <button
                     type="submit"
                     disabled={isLoading || !!successMessage}
-                    className={`w-full flex justify-center py-3 px-4 border border-transparent text-sm font-black uppercase tracking-widest rounded-xl text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-all shadow-lg shadow-red-500/20 active:scale-[0.98] ${isLoading || successMessage ? 'opacity-50 cursor-not-allowed' : ''}`}
+                    className={authButtonClass}
                 >
                     {isLoading ? 'Mereset...' : 'Reset Password'}
                 </button>
@@ -160,52 +154,12 @@ function ResetPasswordForm() {
 }
 
 export default function ResetPasswordPage() {
-    const { theme, mounted } = useTheme();
-    
-    if (!mounted) return null;
-    const isDark = theme === 'dark';
-
     return (
-        <div className={`min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 transition-all duration-500 relative overflow-hidden ${
-            isDark 
-                ? 'bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-neutral-900 via-black to-neutral-950' 
-                : 'bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-red-50 via-gray-50 to-white'
-        }`}>
-            {/* Animated Background Elements */}
-            <div className={`absolute top-0 left-0 w-96 h-96 rounded-full blur-[100px] opacity-20 animate-pulse ${isDark ? 'bg-red-900' : 'bg-red-200'}`} />
-            <div className={`absolute bottom-0 right-0 w-96 h-96 rounded-full blur-[100px] opacity-10 animate-pulse delay-700 ${isDark ? 'bg-red-800' : 'bg-red-100'}`} />
-
-            <div className={`max-w-md w-full space-y-8 p-10 rounded-[2.5rem] backdrop-blur-xl border transition-all duration-300 relative z-10 ${
-                isDark 
-                    ? 'bg-black/40 border-white/5 shadow-[0_0_50px_-12px_rgba(220,38,38,0.2)]' 
-                    : 'bg-white/80 border-gray-100 shadow-xl shadow-red-500/5'
-            }`}>
-                <div className="text-center">
-                    <div className="inline-block p-4 rounded-3xl bg-red-600 shadow-lg shadow-red-500/40 mb-6 group transition-transform hover:scale-110">
-                        <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                        </svg>
-                    </div>
-                    <h2 className={`text-4xl font-black tracking-tight transition-colors ${isDark ? 'text-white' : 'text-gray-900'}`}>
-                        Password Baru
-                    </h2>
-                    <p className={`mt-3 text-sm font-bold tracking-wide uppercase transition-colors ${isDark ? 'text-neutral-500' : 'text-gray-400'}`}>
-                        Silakan Atur Kata Sandi Baru
-                    </p>
-                </div>
-
-                <Suspense fallback={<div className={`text-center py-10 font-black uppercase tracking-[0.2em] animate-pulse ${isDark ? 'text-neutral-700' : 'text-gray-300'}`}>Menyiapkan Form...</div>}>
+        <AuthLayout eyebrow="Keamanan akun" title="Atur password baru" description="Gunakan password minimal 8 karakter untuk melindungi akunmu.">
+                <Suspense fallback={<div className="py-10 text-center text-sm font-semibold text-gray-500">Menyiapkan form...</div>}>
                     <ResetPasswordForm />
                 </Suspense>
-
-                <div className="text-center mt-10 space-y-6">
-                    <Link href="/" className={`inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-widest transition-all ${isDark ? 'text-neutral-700 hover:text-white' : 'text-gray-400 hover:text-gray-900'}`}>
-                        <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg>
-                        Beranda
-                    </Link>
-                </div>
-            </div>
-        </div>
+        </AuthLayout>
     );
 }
 

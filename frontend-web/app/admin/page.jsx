@@ -86,7 +86,6 @@ export default function AdminDashboard() {
                         { id: 'kanji', icon: '🉐', label: 'Kanji', href: '/admin/kanji' },
                         { id: 'kotoba', icon: '🗣️', label: 'Kotoba', href: '/admin/kotoba' },
                         { id: 'bunpo', icon: '📚', label: 'Bunpo', href: '/admin/bunpo' },
-                        { id: 'particle', icon: '⚓', label: 'Partikel', href: '/admin/particle' },
                         { id: 'announcements', icon: '📢', label: 'Pengumuman', href: '/admin/announcements' }
                     ].map((item) => (
                         <Link 

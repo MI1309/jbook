@@ -15,6 +15,7 @@ from datetime import datetime
 from django.http import HttpResponse
 from django.conf import settings
 from .models import Kanji, Grammar, GrammarSentence, Blog, JLPTLevel, Vocab, WordType, Particle, Announcement, MediaAttachment, FeatureSetting
+from users.models import TTSPointSession
 from .grammar_relations import serialize_grammar, serialize_grammars
 from users.api import AuthBearer
 from core.decorators import rate_limit
@@ -152,8 +153,11 @@ def admin_update_bunpo_visibility(request, data: BunpoVisibilitySchema):
 @router.get("/stats", auth=AdminAuth(), response=dict)
 def admin_get_stats(request):
     return {
+        "user_count": request.auth.__class__.objects.count(),
+        "vocab_count": Vocab.objects.count(),
         "kanji_count": Kanji.objects.count(),
         "bunpo_count": Grammar.objects.count(),
+        "tts_session_count": TTSPointSession.objects.count(),
         "blog_count": Blog.objects.count(),
         "announcement_count": Announcement.objects.count(),
     }

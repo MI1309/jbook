@@ -4,10 +4,12 @@ import { useEffect } from 'react';
 import { usePathname } from 'next/navigation';
 import Navbar from '@/components/common/Navbar';
 import Footer from '@/components/common/Footer';
+import SakuraBackground from '@/components/common/SakuraBackground';
 
 export default function ClientShell({ children }) {
     const pathname = usePathname();
     const isAdminRoute = pathname?.startsWith('/admin');
+    const isAuthRoute = ['/login', '/register', '/forgot-password', '/reset-password'].includes(pathname);
 
     useEffect(() => {
         const cleanupLegacyOfflineData = async () => {
@@ -49,11 +51,12 @@ export default function ClientShell({ children }) {
 
     return (
         <>
-            {!isAdminRoute && <Navbar />}
-            <main className={pathname === '/' ? '' : 'flex-grow'}>
+            {!isAuthRoute && <SakuraBackground />}
+            {!isAdminRoute && !isAuthRoute && <Navbar />}
+            <main className={pathname === '/' || isAuthRoute ? '' : 'flex-grow'}>
                 {children}
             </main>
-            {!isAdminRoute && <Footer />}
+            {!isAdminRoute && !isAuthRoute && <Footer />}
         </>
     );
 }
