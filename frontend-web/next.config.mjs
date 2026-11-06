@@ -33,6 +33,18 @@ const productionSecurityHeaders = [
     },
 ];
 
+const developmentSecurityHeaders = productionSecurityHeaders
+    .filter(header => header.key !== "Strict-Transport-Security")
+    .map(header => header.key === "Content-Security-Policy"
+        ? {
+            ...header,
+            value: header.value.replace(
+                "connect-src 'self' ws: wss: https:",
+                "connect-src 'self' ws: wss: http://localhost:8000 http://127.0.0.1:8000 https:",
+            ),
+        }
+        : header);
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
     outputFileTracingRoot: appDirectory,
@@ -52,7 +64,7 @@ const nextConfig = {
                 source: "/:path*",
                 headers: process.env.NODE_ENV === "production"
                     ? productionSecurityHeaders
-                    : productionSecurityHeaders.filter(h => h.key !== "Strict-Transport-Security"),
+                    : developmentSecurityHeaders,
             },
         ];
     },
