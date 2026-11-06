@@ -1,118 +1,64 @@
 'use client';
 
-import { useAuth } from '@/context/AuthContext';
-import { useRouter, usePathname } from 'next/navigation';
-import Link from 'next/link';
 import { useEffect, useState } from 'react';
+import { useAuth } from '@/context/AuthContext';
+import { usePathname, useRouter } from 'next/navigation';
+import Link from 'next/link';
+import Cookies from 'js-cookie';
+import { API_URL } from '@/lib/api';
+import {
+    BookOpen, ChevronLeft, ChevronRight, CircleHelp, LayoutDashboard,
+    Menu, Mic2, Search, Users, X, Languages, AudioLines,
+} from 'lucide-react';
 
 const navItems = [
-    { href: '/admin', label: 'Dashboard', icon: (
-        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
-        </svg>
-    )},
-    { href: '/admin/kanji', label: 'Kanji', icon: (
-        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-        </svg>
-    )},
-    { href: '/admin/bunpo', label: 'Bunpo', icon: (
-        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-        </svg>
-    )},
-    { href: '/admin/kotoba', label: 'Kotoba', icon: (
-        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
-        </svg>
-    )},
-    { href: '/admin/custom-modules', label: 'Latihan Kustom', icon: (
-        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
-        </svg>
-    )},
+    { href: '/admin', label: 'Overview', icon: LayoutDashboard },
+    { href: '/admin/kanji', label: 'Kanji', icon: Languages },
+    { href: '/admin/bunpo', label: 'Bunpo', icon: BookOpen },
+    { href: '/admin/kotoba', label: 'Kotoba', icon: AudioLines },
 ];
 
-function Sidebar({ onClose }) {
+function Sidebar({ collapsed, onCollapse, onClose }) {
     const pathname = usePathname();
     const { user } = useAuth();
 
-    const isActive = (href) => {
-        if (href === '/admin') return pathname === '/admin';
-        return pathname.startsWith(href);
-    };
-
     return (
-        <div className="flex flex-col h-full transition-colors duration-500 bg-[#050505] text-white">
-            {/* Logo */}
-            <div className="p-8 border-b border-white/5">
-                <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-red-600 rounded-2xl flex items-center justify-center shadow-lg shadow-red-500/20">
-                        <span className="text-xl font-black text-white">J</span>
-                    </div>
-                    <div>
-                        <h1 className="text-xl font-black tracking-tight text-white">JBook Admin</h1>
-                        <p className="text-[10px] font-bold uppercase tracking-widest text-neutral-600">Control Panel</p>
-                    </div>
-                </div>
-                {onClose && (
-                    <button
-                        onClick={onClose}
-                        className="absolute top-8 right-6 p-2 rounded-xl md:hidden text-neutral-500 hover:bg-white/5"
-                    >
-                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
-                    </button>
-                )}
+        <div className="flex h-full flex-col border-r border-[var(--border-color)] bg-[var(--card-bg)]">
+            <div className={`flex h-[72px] items-center border-b border-[var(--border-color)] ${collapsed ? 'justify-center px-3' : 'justify-between px-5'}`}>
+                <Link href="/admin" onClick={onClose} className="flex min-w-0 items-center gap-3 rounded-lg transition-colors hover:opacity-80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--brand-red)]">
+                    <span className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-[var(--brand-red)] text-lg font-bold text-white">J</span>
+                    {!collapsed && <span className="truncate text-sm font-semibold text-[var(--foreground)]">JBook <span className="font-normal text-[var(--foreground)]/55">Admin</span></span>}
+                </Link>
+                {onClose ? (
+                    <button type="button" onClick={onClose} aria-label="Tutup navigasi" className="rounded-lg p-2 text-[var(--foreground)]/65 transition-colors hover:bg-[var(--background)] hover:text-[var(--foreground)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--brand-red)]"><X size={18} /></button>
+                ) : !collapsed ? (
+                    <button type="button" onClick={onCollapse} aria-label="Ciutkan navigasi" className="rounded-lg p-2 text-[var(--foreground)]/65 transition-colors hover:bg-[var(--background)] hover:text-[var(--foreground)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--brand-red)]"><ChevronLeft size={17} /></button>
+                ) : null}
             </div>
 
-            {/* Navigation */}
-            <nav className="flex-1 p-6 space-y-2 overflow-y-auto">
-                {navItems.map((item) => {
-                    const active = isActive(item.href);
-                    return (
-                        <Link
-                            key={item.href}
-                            href={item.href}
-                            onClick={onClose}
-                            className={`
-                                flex items-center gap-4 px-4 py-4 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] transition-all group
-                                ${active 
-                                    ? 'bg-red-600 text-white shadow-lg shadow-red-600/20' 
-                                    : 'text-neutral-500 hover:text-white hover:bg-white/5'
-                                }
-                            `}
-                        >
-                            <span className={`transition-transform group-hover:scale-110 ${active ? 'text-white' : ''}`}>
-                                {item.icon}
-                            </span>
-                            {item.label}
-                        </Link>
-                    );
+            {collapsed && !onClose && <button type="button" onClick={onCollapse} aria-label="Perluas navigasi" className="mx-auto mt-4 rounded-lg p-2 text-[var(--foreground)]/65 transition-colors hover:bg-[var(--background)] hover:text-[var(--foreground)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--brand-red)]"><ChevronRight size={17} /></button>}
+
+            <nav aria-label="Navigasi admin" className="flex-1 space-y-1 overflow-y-auto px-3 py-5">
+                {!collapsed && <p className="mb-3 px-3 text-[11px] font-medium uppercase tracking-wide text-[var(--foreground)]/45">Workspace</p>}
+                {navItems.map(({ href, label, icon: Icon }) => {
+                    const active = href === '/admin' ? pathname === href : pathname.startsWith(href);
+                    return <Link key={href} href={href} onClick={onClose} title={collapsed ? label : undefined} aria-current={active ? 'page' : undefined}
+                        className={`flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--brand-red)] ${collapsed ? 'justify-center' : ''} ${active ? 'border border-[var(--brand-red)]/20 bg-[var(--brand-red)]/10 font-medium text-[var(--brand-red)]' : 'text-[var(--foreground)]/70 hover:bg-[var(--background)] hover:text-[var(--foreground)]'}`}>
+                        <Icon size={18} strokeWidth={1.8} />{!collapsed && <span>{label}</span>}
+                    </Link>;
                 })}
+
+                {!collapsed && <p className="mb-2 mt-8 px-3 text-[11px] font-medium uppercase tracking-wide text-[var(--foreground)]/45">Lainnya</p>}
+                {[{ label: 'TTS', icon: Mic2 }, { label: 'Users', icon: Users }].map(({ label, icon: Icon }) => <div key={label} title={`${label} belum tersedia`} aria-disabled="true" className={`flex cursor-not-allowed items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-[var(--foreground)]/35 ${collapsed ? 'justify-center' : ''}`}>
+                    <Icon size={18} strokeWidth={1.8} />{!collapsed && <><span>{label}</span><span className="ml-auto text-[10px]">Segera</span></>}
+                </div>)}
             </nav>
 
-            {/* User Info & Bottom */}
-            <div className="p-6 border-t space-y-2 border-white/5">
-                <div className="px-4 py-3 rounded-2xl flex items-center gap-3 mb-2 bg-white/5">
-                    <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-neutral-800 to-neutral-900 flex items-center justify-center border border-white/10">
-                        <span className="text-xs font-black text-white">{user?.username?.[0]?.toUpperCase() ?? 'A'}</span>
-                    </div>
-                    <div className="min-w-0">
-                        <p className="text-[10px] font-black truncate text-white">{user?.username}</p>
-                        <p className="text-[8px] font-bold text-neutral-600 uppercase">Administrator</p>
-                    </div>
+            <div className={`border-t border-[var(--border-color)] p-3 ${collapsed ? 'text-center' : ''}`}>
+                <div className={`flex items-center gap-3 rounded-xl p-2 ${collapsed ? 'justify-center' : ''}`}>
+                    <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-[var(--accent-blue)]/15 text-xs font-semibold text-[var(--accent-blue)]">{user?.username?.[0]?.toUpperCase() ?? 'A'}</span>
+                    {!collapsed && <div className="min-w-0"><p className="truncate text-sm font-medium text-[var(--foreground)]">{user?.username ?? 'Admin'}</p><p className="text-xs text-[var(--foreground)]/50">Administrator</p></div>}
                 </div>
-
-                <Link
-                    href="/"
-                    onClick={onClose}
-                    className="flex items-center gap-4 px-4 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all text-neutral-600 hover:text-red-500 hover:bg-red-500/5"
-                >
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-                    </svg>
-                    Kembali ke Situs
-                </Link>
             </div>
         </div>
     );
@@ -121,108 +67,55 @@ function Sidebar({ onClose }) {
 export default function AdminLayout({ children }) {
     const { user, loading } = useAuth();
     const router = useRouter();
-    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+    const [drawerOpen, setDrawerOpen] = useState(false);
+    const [collapsed, setCollapsed] = useState(false);
+    const [profileOpen, setProfileOpen] = useState(false);
+    const [apiOnline, setApiOnline] = useState(null);
     const isAuthorized = !loading && !!user?.is_staff;
 
     useEffect(() => {
         if (!loading) {
-            if (!user) {
-                router.push('/login');
-            } else if (!user.is_staff) {
-                router.push('/');
-            }
+            if (!user) router.replace('/login');
+            else if (!user.is_staff) router.replace('/');
         }
     }, [user, loading, router]);
 
     useEffect(() => {
-        const handleResize = () => {
-            if (window.innerWidth >= 768) setIsSidebarOpen(false);
-        };
-        window.addEventListener('resize', handleResize);
-        return () => window.removeEventListener('resize', handleResize);
-    }, []);
+        if (!isAuthorized) return undefined;
+        let cancelled = false;
+        fetch(`${API_URL}/admin/stats`, { headers: { Authorization: `Bearer ${Cookies.get('access_token')}` } })
+            .then(response => {
+                if (!response.ok) throw new Error('Admin API unavailable');
+                if (!cancelled) setApiOnline(true);
+            })
+            .catch(() => { if (!cancelled) setApiOnline(false); });
+        return () => { cancelled = true; };
+    }, [isAuthorized]);
 
-    if (loading || !isAuthorized) {
-        return (
-            <div className="min-h-screen flex items-center justify-center bg-black">
-                <div className="text-center">
-                    <div className="w-12 h-12 border-4 border-red-600/20 border-t-red-600 rounded-full animate-spin mx-auto"></div>
-                    <p className="mt-4 text-[10px] font-black uppercase tracking-widest text-neutral-600">Otorisasi...</p>
-                </div>
-            </div>
-        );
-    }
+    if (loading || !isAuthorized) return <div className="min-h-screen bg-[var(--background)] p-6"><div className="mx-auto max-w-7xl animate-pulse space-y-5"><div className="h-12 w-56 rounded-xl bg-[var(--border-color)]" /><div className="grid gap-4 md:grid-cols-4">{[1, 2, 3, 4].map(item => <div key={item} className="h-32 rounded-2xl bg-[var(--card-bg)]" />)}</div><div className="h-72 rounded-2xl bg-[var(--card-bg)]" /></div></div>;
 
     return (
-        <div className="flex h-dvh min-h-screen overflow-hidden transition-colors duration-500 bg-[#020202] text-neutral-200">
+        <div className="flex h-dvh min-h-screen overflow-hidden bg-[var(--background)] text-[var(--foreground)]">
+            <aside className={`hidden shrink-0 transition-[width] duration-200 lg:block ${collapsed ? 'w-[76px]' : 'w-[250px]'}`}><Sidebar collapsed={collapsed} onCollapse={() => setCollapsed(value => !value)} /></aside>
+            {drawerOpen && <button type="button" aria-label="Tutup navigasi" onClick={() => setDrawerOpen(false)} className="fixed inset-0 z-40 bg-black/45 backdrop-blur-[2px] lg:hidden" />}
+            <aside className={`fixed inset-y-0 left-0 z-50 w-[min(280px,calc(100vw-2.5rem))] transform transition-transform duration-200 lg:hidden ${drawerOpen ? 'translate-x-0' : '-translate-x-full'}`}><Sidebar collapsed={false} onClose={() => setDrawerOpen(false)} /></aside>
 
-            {/* ── Desktop Sidebar ── */}
-            <aside className="hidden md:flex md:flex-col w-72 border-r flex-shrink-0 z-20 border-white/5">
-                <Sidebar />
-            </aside>
-
-            {/* ── Mobile: Backdrop ── */}
-            {isSidebarOpen && (
-                <div
-                    className="fixed inset-0 bg-black/80 backdrop-blur-sm z-30 md:hidden"
-                    onClick={() => setIsSidebarOpen(false)}
-                />
-            )}
-
-            {/* ── Mobile: Slide-out Drawer ── */}
-            <aside
-                className={`
-                    fixed top-0 left-0 h-full w-[min(20rem,calc(100vw-2rem))] shadow-2xl z-40 flex flex-col
-                    transform transition-transform duration-500 cubic-bezier(0.4, 0, 0.2, 1) md:hidden
-                    ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}
-                    bg-[#050505]
-                `}
-            >
-                <Sidebar onClose={() => setIsSidebarOpen(false)} />
-            </aside>
-
-            {/* ── Main Content ── */}
-            <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
-
-                {/* Mobile Top Bar */}
-                <header className="md:hidden flex items-center justify-between px-6 py-4 border-b shadow-sm flex-shrink-0 bg-[#050505] border-white/5">
-                    <div className="flex items-center gap-4">
-                        <button
-                            onClick={() => setIsSidebarOpen(true)}
-                            className="p-2.5 rounded-xl transition-all active:scale-95 border bg-white/5 text-neutral-400 border-white/5 hover:text-red-500"
-                            aria-label="Buka menu"
-                        >
-                            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-                            </svg>
-                        </button>
-                        <div>
-                            <span className="text-xl font-black tracking-tight text-white">
-                                <span className="text-red-600">J</span>Book
-                            </span>
-                            <span className="ml-1 text-[10px] font-bold px-1.5 py-0.5 bg-red-100 text-red-600 rounded uppercase tracking-wider">Admin</span>
-                        </div>
+            <div className="flex min-w-0 flex-1 flex-col overflow-hidden">
+                <header className="sticky top-0 z-30 flex h-[68px] shrink-0 items-center justify-between gap-4 border-b border-[var(--border-color)] bg-[var(--background)]/95 px-4 backdrop-blur sm:px-6">
+                    <div className="flex min-w-0 flex-1 items-center gap-3">
+                        <button type="button" onClick={() => setDrawerOpen(true)} aria-label="Buka navigasi" className="rounded-lg p-2 text-[var(--foreground)]/70 transition-colors hover:bg-[var(--card-bg)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--brand-red)] lg:hidden"><Menu size={19} /></button>
+                        <label className="flex h-10 w-full max-w-[420px] items-center gap-2 rounded-xl border border-[var(--border-color)] bg-[var(--card-bg)] px-3 text-[var(--foreground)]/50 transition-colors focus-within:border-[var(--accent-blue)]"><Search size={17} /><input aria-label="Cari di admin" placeholder="Cari konten..." className="min-w-0 flex-1 bg-transparent text-sm text-[var(--foreground)] placeholder:text-[var(--foreground)]/45 focus-visible:outline-none" /><kbd className="hidden rounded border border-[var(--border-color)] px-1.5 py-0.5 text-[10px] sm:inline">/</kbd></label>
                     </div>
-
-                    <div className="flex items-center gap-3">
-                        <div className="text-right hidden sm:block">
-                            <p className="text-xs font-bold leading-none text-white">{user?.username}</p>
-                            <p className="text-[10px] text-gray-400 mt-1">Administrator</p>
+                    <div className="flex shrink-0 items-center gap-3">
+                        <div className={`hidden items-center gap-2 rounded-full border px-2.5 py-1.5 text-xs sm:flex ${apiOnline ? 'border-[var(--accent-green)]/25 bg-[var(--accent-green)]/10 text-[var(--accent-green)]' : 'border-[var(--border-color)] bg-[var(--card-bg)] text-[var(--foreground)]/55'}`}><span className={`size-1.5 rounded-full ${apiOnline ? 'bg-[var(--accent-green)]' : 'bg-[var(--foreground)]/35'}`} />{apiOnline === null ? 'Memeriksa API' : apiOnline ? 'API Online' : 'API Offline'}</div>
+                        <div className="relative">
+                            <button type="button" onClick={() => setProfileOpen(value => !value)} aria-expanded={profileOpen} aria-label="Buka menu profil" className="flex items-center gap-2 rounded-xl p-1.5 transition-colors hover:bg-[var(--card-bg)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--brand-red)]"><span className="flex size-8 items-center justify-center rounded-full bg-[var(--brand-red)]/12 text-xs font-semibold text-[var(--brand-red)]">{user?.username?.[0]?.toUpperCase() ?? 'A'}</span><span className="hidden max-w-28 truncate text-sm font-medium sm:block">{user?.username ?? 'Admin'}</span></button>
+                            {profileOpen && <div className="absolute right-0 top-full mt-2 w-48 rounded-xl border border-[var(--border-color)] bg-[var(--card-bg)] p-2 shadow-xl"><p className="truncate px-3 py-2 text-xs text-[var(--foreground)]/55">{user?.username ?? 'Admin'}</p><Link href="/" className="block rounded-lg px-3 py-2 text-sm transition-colors hover:bg-[var(--background)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--brand-red)]">Kembali ke situs</Link></div>}
                         </div>
-                        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-red-500 to-red-700 p-[2px] shadow-lg shadow-red-200">
-                            <div className="w-full h-full rounded-[10px] flex items-center justify-center bg-[#050505]">
-                                <span className="text-sm font-black text-red-600">
-                                    {user?.username?.[0]?.toUpperCase() ?? 'A'}
-                                </span>
-                            </div>
-                        </div>
+                        <button type="button" title="Bantuan" className="hidden rounded-lg p-2 text-[var(--foreground)]/55 transition-colors hover:bg-[var(--card-bg)] hover:text-[var(--foreground)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--brand-red)] sm:block"><CircleHelp size={18} /></button>
                     </div>
                 </header>
-
-                {/* Page Content */}
-                <main className="flex-1 min-w-0 overflow-y-auto p-3 sm:p-4 md:p-8">
-                    {children}
-                </main>
+                <main className="min-w-0 flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8">{children}</main>
             </div>
         </div>
     );

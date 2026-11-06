@@ -1,5 +1,6 @@
 from typing import List, Optional, Union
 from uuid import UUID
+from django.contrib.auth import get_user_model
 from django.db.models import Q
 from django.shortcuts import get_object_or_404
 from ninja import Router, Schema, File
@@ -153,7 +154,7 @@ def admin_update_bunpo_visibility(request, data: BunpoVisibilitySchema):
 @router.get("/stats", auth=AdminAuth(), response=dict)
 def admin_get_stats(request):
     return {
-        "user_count": request.auth.__class__.objects.count(),
+        "user_count": get_user_model().objects.count(),
         "vocab_count": Vocab.objects.count(),
         "kanji_count": Kanji.objects.count(),
         "bunpo_count": Grammar.objects.count(),
@@ -513,7 +514,13 @@ class GrammarCreateSchema(BaseModel):
     jlpt_level: int = Field(..., ge=1, le=5)
     sentences: List[dict] = Field(default_factory=list)
 
-class GrammarSchema(GrammarCreateSchema):
+class GrammarSchema(BaseModel):
+    title: str
+    structure: str
+    explanation: str
+    chapter: int
+    jlpt_level: int
+    sentences: List[dict] = Field(default_factory=list)
     id: UUID
     source_data: Optional[dict] = None
     slug: Optional[str] = None

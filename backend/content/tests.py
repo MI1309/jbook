@@ -8,6 +8,7 @@ from django.core.management.base import CommandError
 from django.test import TestCase
 from django.contrib.auth import get_user_model
 from ninja_jwt.tokens import RefreshToken
+from users.models import TTSPointSession
 
 from .models import FeatureSetting, Vocab, Kanji, Grammar, GrammarSentence, WordType, CurriculumLevel, ReferenceBook, CurriculumUnit, Particle
 from .admin_api import _save_bunpo_sentences
@@ -196,6 +197,32 @@ class AdminGrammarListTests(TestCase):
         self.assertIsNone(payload['items'][0]['sections'])
         self.assertEqual(payload['items'][0]['tags'], ['valid'])
         self.assertEqual(payload['items'][0]['sentences'], [{'jp': 'これは本です。'}])
+
+    def test_paginated_admin_list_does_not_apply_import_constraints_to_legacy_rows(self):
+        admin = get_user_model().objects.create_user(username='grammar-legacy-admin', is_staff=True)
+        grammar = Grammar.objects.create(
+            title='Legacy grammar',
+            slug='legacy-out-of-range',
+            structure='Legacy structure',
+            explanation='x' * 10001,
+            chapter=-1,
+            jlpt_level=6,
+            sentences=[],
+        )
+        token = RefreshToken.for_user(admin).access_token
+
+        response = self.client.get(
+            '/api/admin/grammar?page=1&limit=20',
+            secure=True,
+            HTTP_AUTHORIZATION=f'Bearer {token}',
+        )
+
+        self.assertEqual(response.status_code, 200, response.content)
+        item = response.json()['items'][0]
+        self.assertEqual(item['id'], str(grammar.id))
+        self.assertEqual(item['chapter'], -1)
+        self.assertEqual(item['jlpt_level'], 6)
+        self.assertEqual(len(item['explanation']), 10001)
 
 
 class AdminStatsTests(TestCase):
