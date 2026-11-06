@@ -595,7 +595,8 @@ class GrammarListResponse(BaseModel):
 @rate_limit(key='ip', rate='200/m')  # Max 200 list requests per IP per minute
 def list_kanji(request, 
                params: ListQuerySchema = Query(...),
-               radical: Optional[str] = None):
+               radical: Optional[str] = None,
+               random_order: bool = False):
     qs = Kanji.objects.exclude(jlpt_level__in=get_disabled_kanji_levels())
     
     if params.level:
@@ -628,8 +629,10 @@ def list_kanji(request,
             Q(kunyomi__icontains=search_romaji)
         )
         
-    # Order by level and strokes for consistency
-    qs = qs.order_by('jlpt_level', 'strokes')
+    if random_order:
+        qs = qs.order_by('?')
+    else:
+        qs = qs.order_by('jlpt_level', 'strokes')
     
     total = qs.count()
     pages = (total + params.limit - 1) // params.limit

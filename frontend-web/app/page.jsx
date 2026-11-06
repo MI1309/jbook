@@ -37,6 +37,50 @@ const quickSearches = ['水', 'たべる', 'ている', 'belajar'];
 const trustPoints = ['Gratis', 'Penjelasan bahasa Indonesia', 'Tanpa instal'];
 
 const levels = [5, 4, 3, 2, 1];
+const HERO_KANJI_CACHE_KEY = 'jbook:hero-kanji-pool:v1';
+const HERO_KANJI_CACHE_TTL = 7 * 24 * 60 * 60 * 1000;
+let heroKanjiPoolRequest = null;
+
+function readHeroKanjiPoolCache() {
+    try {
+        const cached = JSON.parse(localStorage.getItem(HERO_KANJI_CACHE_KEY) || 'null');
+        const hasAllLevels = levels.every((level) => Array.isArray(cached?.itemsByLevel?.[level]));
+        if (hasAllLevels && Date.now() - cached.savedAt < HERO_KANJI_CACHE_TTL) {
+            return cached.itemsByLevel;
+        }
+    } catch (error) {
+        console.warn('Could not read cached hero Kanji:', error);
+    }
+    return null;
+}
+
+function loadHeroKanjiPool() {
+    const cachedPool = readHeroKanjiPoolCache();
+    if (cachedPool) return Promise.resolve(cachedPool);
+    if (heroKanjiPoolRequest) return heroKanjiPoolRequest;
+
+    heroKanjiPoolRequest = Promise.all(levels.map(async (level) => {
+        const response = await getKanjiList({ level, limit: 3, page: 1, randomOrder: true });
+            return [level, response?.items || []];
+    }))
+        .then((levelEntries) => {
+            const itemsByLevel = Object.fromEntries(levelEntries);
+            try {
+                localStorage.setItem(HERO_KANJI_CACHE_KEY, JSON.stringify({ savedAt: Date.now(), itemsByLevel }));
+            } catch (error) {
+                console.warn('Could not cache hero Kanji samples:', error);
+            }
+            return itemsByLevel;
+        })
+        .finally(() => { heroKanjiPoolRequest = null; });
+
+    return heroKanjiPoolRequest;
+}
+
+function pickRandomKanji(items) {
+    if (!items?.length) return null;
+    return items[Math.floor(Math.random() * items.length)];
+}
 
 const beginnerSteps = [
     { step: 1, title: 'Kana', description: 'Kenali Hiragana & Katakana.', href: '/kana', badgeClass: 'bg-accent-blue/10 text-accent-blue', hoverBorder: 'hover:border-accent-blue/50' },
@@ -78,37 +122,28 @@ function ResultGroup({ title, titleClass, children }) {
 }
 
 function KanjiPreviewCard() {
+    const [selectedLevel, setSelectedLevel] = useState(5);
+    const [kanjiPool, setKanjiPool] = useState(null);
     const [kanji, setKanji] = useState(null);
     const [loadError, setLoadError] = useState(false);
 
     useEffect(() => {
-        let isCurrent = true;
-
-        async function loadRandomKanji() {
-            try {
-                const pageSize = 300;
-                const firstPage = await getKanjiList({ limit: pageSize, page: 1 });
-                const total = Number(firstPage?.total) || 0;
-                if (!total || !firstPage?.items?.length) throw new Error('Kanji tidak tersedia');
-
-                const randomIndex = Math.floor(Math.random() * total);
-                const page = Math.floor(randomIndex / pageSize) + 1;
-                const response = page === 1
-                    ? firstPage
-                    : await getKanjiList({ limit: pageSize, page });
-                const selectedKanji = response?.items?.[randomIndex % pageSize];
-
-                if (!selectedKanji) throw new Error('Kanji tidak tersedia');
-                if (isCurrent) setKanji(selectedKanji);
-            } catch (error) {
-                console.error('Error fetching random kanji:', error);
-                if (isCurrent) setLoadError(true);
-            }
-        }
-
-        loadRandomKanji();
-        return () => { isCurrent = false; };
+        loadHeroKanjiPool()
+            .then((pool) => {
+                setKanjiPool(pool);
+                setKanji(pickRandomKanji(pool[5]));
+            })
+            .catch((error) => {
+                console.error('Error fetching hero Kanji samples:', error);
+                setLoadError(true);
+            });
     }, []);
+
+    const selectLevel = (level) => {
+        setSelectedLevel(level);
+        setKanji(pickRandomKanji(kanjiPool?.[level]));
+        setLoadError(false);
+    };
 
     const example = kanji?.examples?.find((item) => item?.word) || null;
 
@@ -116,7 +151,24 @@ function KanjiPreviewCard() {
         <div className="overflow-hidden rounded-2xl border border-[var(--border-color)] bg-[var(--card-bg)] shadow-xl shadow-accent-blue/5">
             <div className="flex items-center justify-between border-b border-[var(--border-color)] px-4 py-2.5">
                 <span className="text-xs font-bold text-gray-500">Kanji pilihan dari database</span>
-                {kanji && <span className="rounded-full bg-accent-blue/10 px-2.5 py-1 text-xs font-black text-accent-blue">N{kanji.jlpt_level}</span>}
+                <div role="tablist" aria-label="Pilih level Kanji" className="flex gap-1">
+                    {levels.map((level) => (
+                        <button
+                            key={level}
+                            type="button"
+                            role="tab"
+                            aria-selected={selectedLevel === level}
+                            onClick={() => selectLevel(level)}
+                            className={`min-w-9 rounded-full px-2.5 py-1 text-xs font-bold transition-colors ${focusRing} ${
+                                selectedLevel === level
+                                    ? 'bg-accent-blue text-white'
+                                    : 'border border-[var(--border-color)] text-gray-500 hover:border-accent-blue hover:text-accent-blue'
+                            }`}
+                        >
+                            N{level}
+                        </button>
+                    ))}
+                </div>
             </div>
 
             <div className="grid grid-cols-[auto_1fr] gap-5 p-5">

@@ -257,7 +257,7 @@ export async function getBunpoLevelVisibility() {
     return bunpoVisibilityRequest;
 }
 
-export async function getKanjiList({ level, search, radical, limit = 50, page = 1 } = {}) {
+export async function getKanjiList({ level, search, radical, limit = 50, page = 1, randomOrder = false } = {}) {
     const visibility = await getKanjiLevelVisibility();
     const enabledLevels = (visibility.enabled_levels || [4, 5]).map(Number);
     const requestedLevels = level
@@ -271,6 +271,7 @@ export async function getKanjiList({ level, search, radical, limit = 50, page = 
     if (requestedLevels.length) queryParams.append('level', requestedLevels.join(','));
     if (search) queryParams.append('search', search);
     if (radical) queryParams.append('radical', radical);
+    if (randomOrder) queryParams.append('random_order', 'true');
     if (limit) queryParams.append('limit', limit);
     if (page) queryParams.append('page', page);
 

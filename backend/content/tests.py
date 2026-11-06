@@ -381,6 +381,16 @@ class KanjiListApiTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()['items'], [])
 
+    def test_kanji_list_can_return_random_samples_for_a_level(self):
+        response = self.client.get(
+            '/api/content/kanji?level=4&limit=3&page=1&random_order=true',
+            secure=True,
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(response.json()['items'])
+        self.assertTrue(all(item['jlpt_level'] == 4 for item in response.json()['items']))
+
 
 class KanjiVisibilityDefaultsTests(TestCase):
     def test_all_levels_are_enabled_without_visibility_setting(self):
