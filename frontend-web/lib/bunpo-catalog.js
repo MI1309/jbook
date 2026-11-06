@@ -1,7 +1,5 @@
 import { API_URL } from '@/lib/api';
 
-const REVALIDATE_SECONDS = 3600;
-
 export async function getBunpoCatalog() {
     const items = [];
     let page = 1;
@@ -11,7 +9,7 @@ export async function getBunpoCatalog() {
         let data;
         try {
             response = await fetch(`${API_URL}/content/grammar?limit=300&page=${page}`, {
-                next: { revalidate: REVALIDATE_SECONDS },
+                cache: 'no-store',
             });
             if (!response.ok) {
                 if (page === 1) throw new Error(`Bunpo catalog request failed (${response.status})`);
@@ -37,7 +35,7 @@ export async function getBunpoCatalog() {
 
 export async function getBunpoGrammarDetail(id) {
     const response = await fetch(`${API_URL}/content/grammar/${encodeURIComponent(id)}`, {
-        next: { revalidate: REVALIDATE_SECONDS },
+        cache: 'no-store',
     });
     if (response.status === 404) return null;
     if (!response.ok) throw new Error(`Bunpo detail request failed (${response.status})`);

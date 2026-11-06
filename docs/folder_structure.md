@@ -29,54 +29,43 @@ jbook/                           # Root proyek utama
 │   ├── api_integration.md       # Kontrak API
 │   └── folder_structure.md      # Dokumen ini (folder structure)
 │
-├── backend/                      # 🔙 Backend Django REST API
-│   ├── content/                  # 📚 Modul konten (Kanji, Kotoba, Bunpo, Blog)
-│   │   ├── migrations/           # Migrasi database Django
-│   │   ├── management/           # Custom Django commands (seed data, import)
-│   │   │   └── commands/
-│   │   ├── admin.py              # Admin site Django (untuk CMS)
-│   │   ├── api.py                # Public API endpoints (untuk user biasa)
-│   │   ├── admin_api.py          # Admin-only API endpoints
-│   │   ├── models.py             # Definisi model database (ORM Django)
-│   │   ├── tests.py              # Unit tests untuk modul content
-│   │   ├── utils.py              # Helper khusus modul content
-│   │   └── views.py              # (Opsional) View non-API
-│   │
-│   ├── learning/                 # 📝 Modul latihan & kuis
-│   │   ├── migrations/
-│   │   ├── admin.py
-│   │   ├── api.py                # Endpoint latihan, progress, analytics
-│   │   ├── models.py
-│   │   ├── tests.py
-│   │   ├── tts_logic.py          # Logika TTS & Crossword generator
-│   │   └── views.py
-│   │
-│   ├── users/                    # 🔐 Modul autentikasi & pengguna
-│   │   ├── migrations/
-│   │   ├── admin.py
-│   │   ├── api.py                # Endpoint login, register, reset password
-│   │   ├── models.py
-│   │   ├── tests.py
-│   │   └── views.py
-│   │
-│   ├── utils/                    # 🛠️ Helper & library umum (shared)
-│   │   ├── __init__.py
-│   │   ├── conjugation.py        # Logika konjugasi & dekonjugasi kata kerja
-│   │   ├── kana.py               # Konversi Romaji ↔ Kana
-│   │   └── kotoba_sync.py        # Sync data vocab dari file eksternal
-│   │
-│   ├── core/                     # ⚙️ Konfigurasi utama Django project
-│   │   ├── __init__.py
-│   │   ├── settings.py           # Konfigurasi Django (dev/prod)
-│   │   ├── urls.py               # Routing utama project
+├── backend/                      # Django + Django Ninja API
+│   ├── core/                     # Konfigurasi, URL, WSGI/ASGI, API composition root
+│   │   ├── api.py                # Memasang router domain
+│   │   ├── settings.py
+│   │   ├── urls.py
 │   │   ├── asgi.py
 │   │   └── wsgi.py
-│   │
-│   ├── static/                   # 🖼️ File static (CSS, JS, images) [collectstatic]
-│   ├── media/                    # 📁 File upload pengguna (jika ada)
-│   ├── manage.py                 # Script manajemen Django
-│   ├── requirements.txt          # Daftar dependensi Python (pip install)
-│   └── [venv]/                   # Virtual environment (JANGAN commit ke Git!)
+│   ├── users/                    # User, autentikasi, privasi, reset password
+│   │   ├── migrations/
+│   │   ├── management/commands/  # Perintah audit email
+│   │   ├── api.py
+│   │   ├── services.py           # Efek reset password/email/OTP
+│   │   ├── privacy.py
+│   │   ├── models.py
+│   │   └── tests.py
+│   ├── content/                  # Kanji, vocab, grammar, blog, dan curriculum
+│   │   ├── migrations/
+│   │   ├── management/commands/  # Import, normalisasi, dan pemeliharaan konten
+│   │   ├── fixtures/
+│   │   ├── api.py
+│   │   ├── admin_api.py
+│   │   ├── grammar_relations.py
+│   │   ├── models.py
+│   │   └── tests.py
+│   ├── learning/                 # Practice, quiz attempt, progress, analytics
+│   │   ├── migrations/
+│   │   ├── api.py
+│   │   ├── serializers.py
+│   │   ├── tts_logic.py
+│   │   ├── models.py
+│   │   └── tests.py
+│   ├── utils/                    # Helper bersama (kana, conjugation, sanitasi)
+│   ├── scripts/                  # Import/data maintenance; juga masih ada skrip uji/temporer
+│   ├── data/                     # Dataset kerja yang dipakai proses backend
+│   ├── manage.py
+│   ├── requirements.txt
+│   └── README.md
 │
 ├── frontend-web/                 # 🖥️ Frontend Next.js (Web App)
 │   ├── app/                      # 📄 App Router Next.js
