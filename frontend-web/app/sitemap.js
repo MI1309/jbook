@@ -6,9 +6,9 @@ import { getBunpoSlug } from '@/data/bunpoSlugs';
 const BASE_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://jbook-five.vercel.app';
 
 // Fetch every page so large vocab and grammar catalogues are not truncated.
-async function fetchList(endpoint, limit = 500) {
+async function fetchList(endpoint, limit = 500, revalidate = 86400) {
   try {
-    const firstRes = await fetch(`${API_URL}${endpoint}?limit=${limit}&page=1`, { next: { revalidate: 86400 } });
+    const firstRes = await fetch(`${API_URL}${endpoint}?limit=${limit}&page=1`, { next: { revalidate } });
     if (!firstRes.ok) return [];
 
     const firstPage = await firstRes.json();
@@ -18,7 +18,7 @@ async function fetchList(endpoint, limit = 500) {
     const pages = Math.max(1, Number(firstPage?.pages) || 1);
 
     for (let page = 2; page <= pages; page += 1) {
-      const res = await fetch(`${API_URL}${endpoint}?limit=${limit}&page=${page}`, { next: { revalidate: 86400 } });
+      const res = await fetch(`${API_URL}${endpoint}?limit=${limit}&page=${page}`, { next: { revalidate } });
       if (!res.ok) return [];
 
       const data = await res.json();
@@ -45,7 +45,7 @@ async function fetchAllKanji() {
 
 export default async function sitemap() {
   const kanjis = await fetchAllKanji();
-  const bunpos = await fetchList('/content/grammar', 300);
+  const bunpos = await fetchList('/content/grammar', 300, 3600);
   const kotobas = await fetchList('/content/vocab', 300);
 
   const today = new Date().toISOString();
@@ -111,7 +111,7 @@ export default async function sitemap() {
 
   // Bunpo detail pages
   const bunpoPages = bunpos.map((b) => {
-    const slug = getBunpoSlug(b.title);
+    const slug = b.slug || getBunpoSlug(b.title);
     if (!slug) return null;
     return {
       url: `${BASE_URL}/bunpo/n${b.jlpt_level}/${slug}`,

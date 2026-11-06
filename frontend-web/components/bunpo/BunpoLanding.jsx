@@ -112,7 +112,7 @@ export default function BunpoLanding({ patterns }) {
                             <div id="bunpo-suggestions" role="listbox" aria-label="Saran pola bunpo" className="absolute left-0 right-0 top-[calc(100%+0.5rem)] z-30 max-h-[min(70vh,28rem)] overflow-x-hidden overflow-y-auto rounded-xl border border-[var(--border-color)] bg-[var(--card-bg)] p-2 text-left shadow-2xl">
                                 {suggestions.length > 0 ? suggestions.map((pattern) => {
                                     const level = `n${pattern.jlpt_level}`;
-                                    const slug = getBunpoSlug(pattern.title);
+                                    const slug = pattern.slug || getBunpoSlug(pattern.title);
                                     const href = slug ? `/bunpo/${level}/${slug}` : `/bunpo/${level}`;
                                     return (
                                         <Link

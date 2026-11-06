@@ -747,8 +747,8 @@ def list_grammar(request,
             Q(explanation__icontains=params.search)
         )
     
-    # Order by chapter then title
-    qs = qs.order_by('chapter', 'title')
+    # Keep page boundaries stable when chapter and title are identical.
+    qs = qs.order_by('chapter', 'title', 'id')
     
     total = qs.count()
     pages = (total + params.limit - 1) // params.limit

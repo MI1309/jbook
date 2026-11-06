@@ -64,7 +64,7 @@ export default async function BunpoLevelPage({ params }) {
                                 key={pattern.id}
                                 pattern={pattern}
                                 level={level}
-                                slug={getBunpoSlug(pattern.title)}
+                                slug={pattern.slug || getBunpoSlug(pattern.title)}
                                 accent={config.accent}
                             />
                         ))}

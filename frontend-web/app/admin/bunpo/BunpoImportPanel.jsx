@@ -58,8 +58,12 @@ function validateImportItems(items) {
                 errors.push(`${prefix}: key '${key}' tidak valid. Key yang diharapkan: title, jlpt_level, slug, sections, structure, explanation, tags, chapter, sentences.`);
             }
         }
-        if (typeof item.title !== 'string' || !item.title.trim()) errors.push(`${prefix}: 'title' harus berupa teks yang tidak kosong.`);
-        if (!Number.isInteger(item.jlpt_level) || item.jlpt_level < 1 || item.jlpt_level > 5) errors.push(`${prefix}: 'jlpt_level' harus berupa angka bulat 1 sampai 5.`);
+        if (typeof item.title !== 'string' || !item.title.trim()) errors.push(`${prefix}: 'title' harus berupa string yang tidak kosong.`);
+        if (typeof item.jlpt_level !== 'number') {
+            errors.push(`${prefix}: 'jlpt_level' harus berupa angka, bukan ${typeof item.jlpt_level}.`);
+        } else if (!Number.isInteger(item.jlpt_level) || item.jlpt_level < 1 || item.jlpt_level > 5) {
+            errors.push(`${prefix}: 'jlpt_level' harus berupa angka bulat 1 sampai 5.`);
+        }
         if (typeof item.slug !== 'string' || !/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(item.slug)) errors.push(`${prefix}: 'slug' harus berformat huruf kecil dan tanda hubung, contoh 'wa-desu'.`);
         if (!item.sections || typeof item.sections !== 'object' || Array.isArray(item.sections)) {
             errors.push(`${prefix}: 'sections' harus berupa object.`);
@@ -139,7 +143,7 @@ export default function BunpoImportPanel({ onImported }) {
                 throw new Error(text);
             }
 
-            setMessage({ type: 'success', text: `Berhasil mengimport ${result.count ?? items.length} data.` });
+            setMessage({ type: 'success', text: `Berhasil mengimport ${result.count ?? items.length} data. Halaman publik dan sitemap dapat memerlukan hingga 1 jam untuk diperbarui.` });
             onImported?.();
         } catch (error) {
             setMessage({ type: 'error', text: error.message || 'Import gagal karena kesalahan jaringan.' });

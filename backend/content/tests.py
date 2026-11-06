@@ -143,6 +143,30 @@ class VocabListApiTests(TestCase):
         self.assertEqual(response.json()['items'], [])
 
 
+class GrammarListPaginationTests(TestCase):
+    def test_tied_grammar_rows_have_stable_order_across_pages(self):
+        grammars = [
+            Grammar.objects.create(
+                title='Same title',
+                slug=f'same-title-{index}',
+                structure='Structure',
+                explanation='Explanation',
+                chapter=1,
+                jlpt_level=5,
+            )
+            for index in range(3)
+        ]
+
+        first_page = self.client.get('/api/content/grammar?limit=2&page=1', secure=True)
+        second_page = self.client.get('/api/content/grammar?limit=2&page=2', secure=True)
+
+        self.assertEqual(first_page.status_code, 200)
+        self.assertEqual(second_page.status_code, 200)
+        actual_ids = [item['id'] for item in first_page.json()['items'] + second_page.json()['items']]
+        expected_ids = [str(grammar.id) for grammar in sorted(grammars, key=lambda grammar: str(grammar.id))]
+        self.assertEqual(actual_ids, expected_ids)
+
+
 class KanjiListApiTests(TestCase):
     def setUp(self):
         FeatureSetting.objects.update_or_create(
