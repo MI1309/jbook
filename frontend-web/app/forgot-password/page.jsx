@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import Link from 'next/link';
 import AppMessage from '@/components/common/AppMessage';
-import AuthLayout, { authButtonClass, authInputClass, authLabelClass } from '@/components/auth/AuthLayout';
+import AuthLayout, { authButtonClass, authInputClass, authLabelClass, authLinkClass } from '@/components/auth/AuthLayout';
 
 export default function ForgotPasswordPage() {
     const [email, setEmail] = useState('');
@@ -90,7 +90,7 @@ export default function ForgotPasswordPage() {
                 </form>
 
                 <div className="mt-6 text-center">
-                    <Link href="/login" className="text-sm font-bold text-[#39765d] hover:underline dark:text-[#8ec6a5]">Kembali ke login</Link>
+                    <Link href="/login" className={`text-sm ${authLinkClass}`}>Kembali ke login</Link>
                 </div>
         </AuthLayout>
     );

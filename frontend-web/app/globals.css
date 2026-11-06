@@ -11,6 +11,14 @@
   --accent-blue: #263b91;
   --accent-green: #2d5a27; /* Bamboo Green */
   --accent-gold: #c69214; /* Tatami Gold */
+  --auth-background: #f3f5f1;
+  --auth-accent: #245a47;
+  --auth-accent-hover: #1c493a;
+  --auth-accent-contrast: #ffffff;
+  --auth-illustration: #173d35;
+  --auth-illustration-copy: #b8d5be;
+  --auth-muted: #5f6b65;
+  --auth-shadow: rgba(19, 47, 38, 0.35);
 }
 
 .dark {
@@ -23,6 +31,14 @@
   --accent-blue: #9aabff;
   --accent-green: #34d399; /* Calm Bamboo Green */
   --accent-gold: #fbbf24; /* Warm Glow Gold */
+  --auth-background: #101614;
+  --auth-accent: #8ec6a5;
+  --auth-accent-hover: #a4d8b7;
+  --auth-accent-contrast: #10271d;
+  --auth-illustration: #173d35;
+  --auth-illustration-copy: #b8d5be;
+  --auth-muted: #a6b0aa;
+  --auth-shadow: rgba(0, 0, 0, 0);
 }
 
 @theme inline {

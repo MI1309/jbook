@@ -5,7 +5,7 @@ import { useAuth } from '@/context/AuthContext';
 import Link from 'next/link';
 import AppMessage from '@/components/common/AppMessage';
 import { Eye, EyeOff } from 'lucide-react';
-import AuthLayout, { authButtonClass, authIconButtonClass, authInputClass, authLabelClass } from '@/components/auth/AuthLayout';
+import AuthLayout, { authButtonClass, authIconButtonClass, authInputClass, authLabelClass, authLinkClass } from '@/components/auth/AuthLayout';
 
 export default function RegisterPage() {
     const [username, setUsername] = useState('');
@@ -107,7 +107,7 @@ export default function RegisterPage() {
                 <div className="mt-8 text-center">
                     <p className="text-sm text-gray-500 dark:text-gray-300">
                         Sudah punya akun?{' '}
-                        <Link href="/login" className="font-bold text-[#39765d] hover:underline dark:text-[#8ec6a5]">
+                        <Link href="/login" className={authLinkClass}>
                             Masuk
                         </Link>
                     </p>

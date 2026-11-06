@@ -1,7 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { useAuth } from '@/context/AuthContext';
+import { useState, useEffect, useCallback } from 'react';
 import { API_URL, setBunpoVisibilityCache } from '@/lib/api';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -12,9 +11,9 @@ import ConfirmationModal from '@/components/common/ConfirmationModal';
 import Pagination from '@/components/common/Pagination';
 import { getBunpoSlug } from '@/data/bunpoSlugs';
 import BunpoImportPanel from './BunpoImportPanel';
+import { Download, Eye, FilePlus2, Pencil, Plus, Search, Trash2 } from 'lucide-react';
 
 export default function BunpoAdmin() {
-    const { user } = useAuth();
     const [bunpos, setBunpos] = useState([]);
     const [pagination, setPagination] = useState({ total: 0, page: 1, pages: 1 });
     const [loading, setLoading] = useState(true);
@@ -37,10 +36,6 @@ export default function BunpoAdmin() {
     useEffect(() => {
         fetchVisibility();
     }, []);
-
-    useEffect(() => {
-        fetchBunpos();
-    }, [filterLevel, debouncedChapter, debouncedSearch, page]);
 
     const fetchVisibility = async () => {
         try {
@@ -83,7 +78,7 @@ export default function BunpoAdmin() {
         }
     };
 
-    const fetchBunpos = async () => {
+    const fetchBunpos = useCallback(async () => {
         setLoading(true);
         try {
             const token = Cookies.get('access_token');
@@ -113,7 +108,11 @@ export default function BunpoAdmin() {
         } finally {
             setLoading(false);
         }
-    };
+    }, [page, filterLevel, debouncedChapter, debouncedSearch]);
+
+    useEffect(() => {
+        fetchBunpos();
+    }, [fetchBunpos]);
 
     const handleDelete = (e, id) => {
         e.stopPropagation();
@@ -124,15 +123,15 @@ export default function BunpoAdmin() {
         if (!pendingDelete) return;
         try {
             const token = Cookies.get('access_token');
-            const res = await fetch(`${API_URL}/admin/grammar/${pendingDelete}`, {
+            const res = await fetch(`${API_URL}/admin/bunpo/${pendingDelete}`, {
                 method: 'DELETE',
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             if (res.ok) {
-                toast.success('Grammar deleted successfully');
+                toast.success('Bunpo berhasil dihapus.');
                 fetchBunpos();
             } else {
-                toast.error('Failed to delete');
+                toast.error('Gagal menghapus Bunpo.');
             }
         } catch (error) {
             console.error("Delete error", error);
@@ -189,28 +188,23 @@ export default function BunpoAdmin() {
             {/* Header */}
             <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
                 <div>
-                    <h1 className="text-3xl font-black tracking-tight text-white">
-                        Bunpo <span className="text-red-600">Management</span>
-                    </h1>
-                    <p className="mt-1 text-xs font-bold uppercase tracking-[0.2em] text-neutral-500">
-                        Kelola tata bahasa Jepang
-                    </p>
+                    <p className="text-sm text-[var(--foreground)]/55">Koleksi / Bunpo</p>
+                    <h1 className="mt-1 text-2xl font-semibold text-[var(--foreground)]">Bunpo</h1>
+                    <p className="mt-1 text-sm text-[var(--foreground)]/60">Kelola materi tata bahasa dan contoh kalimat.</p>
                 </div>
-                <a href="#bunpo-import" className="inline-flex items-center gap-2 bg-red-600 text-white px-6 py-3 rounded-2xl hover:bg-red-700 font-black text-sm shadow-lg shadow-red-500/20 transition-all active:scale-95">
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-                    </svg>
-                    Input / Import Bunpo
-                </a>
+                <div className="flex flex-wrap gap-2">
+                    <a href="#bunpo-import" className="inline-flex items-center gap-2 rounded-xl border border-[var(--border-color)] px-4 py-2.5 text-sm font-medium text-[var(--foreground)] transition-colors hover:bg-[var(--card-bg)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--brand-red)]"><Download size={16} /> Import data</a>
+                    <Link href="/admin/bunpo/new" className="inline-flex items-center gap-2 rounded-xl bg-[var(--brand-red)] px-4 py-2.5 text-sm font-medium text-white transition-colors hover:opacity-90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--brand-red)]"><Plus size={16} /> Tambah Bunpo</Link>
+                </div>
             </div>
 
             <BunpoImportPanel onImported={fetchBunpos} />
 
-            <div className="p-6 rounded-[2rem] border backdrop-blur-xl bg-white/5 border-white/5 shadow-2xl">
+            <div className="rounded-2xl border border-[var(--border-color)] bg-[var(--card-bg)] p-5 sm:p-6">
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                     <div>
-                        <h2 className="text-sm font-black uppercase tracking-widest text-white">Visibilitas Bunpo</h2>
-                        <p className="text-xs text-neutral-500 mt-2">Atur level Bunpo yang tersedia di publik dan latihan. Perubahan tersimpan otomatis.</p>
+                        <h2 className="text-sm font-semibold text-[var(--foreground)]">Visibilitas Bunpo</h2>
+                        <p className="mt-1 text-sm text-[var(--foreground)]/55">Atur level yang tersedia di publik dan latihan.</p>
                     </div>
                     <div className="flex flex-wrap gap-2">
                         {[5, 4, 3, 2, 1].map(level => {
@@ -235,17 +229,17 @@ export default function BunpoAdmin() {
             </div>
 
             {/* Filters & Search */}
-            <div className="p-6 rounded-3xl border bg-neutral-900/30 border-white/5">
+            <div className="rounded-2xl border border-[var(--border-color)] bg-[var(--card-bg)] p-4 sm:p-5">
                 <div className="flex flex-col md:flex-row gap-4 items-stretch md:items-center justify-between">
                     <div className="flex flex-1 flex-col md:flex-row gap-3">
                         <input
-                            type="text" placeholder="Cari judul, struktur..."
-                            className="flex-1 px-4 py-3 rounded-2xl border text-sm font-bold focus:outline-none focus:ring-2 focus:ring-red-500/30 bg-neutral-800 border-white/10 text-white placeholder-neutral-600"
+                            type="search" placeholder="Cari judul atau struktur..."
+                            className="min-w-0 flex-1 rounded-xl border border-[var(--border-color)] bg-[var(--background)] px-4 py-2.5 text-sm text-[var(--foreground)] placeholder:text-[var(--foreground)]/45 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--accent-blue)]"
                             value={search}
                             onChange={(e) => setSearch(e.target.value)}
                         />
                         <select
-                            className="flex-1 md:w-32 px-4 py-3 rounded-2xl border text-sm font-bold focus:outline-none focus:ring-2 focus:ring-red-500/30 bg-neutral-800 border-white/10 text-white"
+                            className="rounded-xl border border-[var(--border-color)] bg-[var(--background)] px-4 py-2.5 text-sm text-[var(--foreground)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--accent-blue)]"
                             value={filterLevel}
                             onChange={(e) => setFilterLevel(e.target.value)}
                         >
@@ -254,7 +248,7 @@ export default function BunpoAdmin() {
                         </select>
                         <input
                             type="number" min="1"
-                            className="px-4 py-3 rounded-2xl border text-sm font-bold focus:outline-none focus:ring-2 focus:ring-red-500/30 bg-neutral-800 border-white/10 text-white placeholder-neutral-600"
+                            className="w-28 rounded-xl border border-[var(--border-color)] bg-[var(--background)] px-4 py-2.5 text-sm text-[var(--foreground)] placeholder:text-[var(--foreground)]/45 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--accent-blue)]"
                             value={filterChapter}
                             onChange={(e) => {
                                 const val = parseInt(e.target.value);
@@ -263,22 +257,20 @@ export default function BunpoAdmin() {
                             placeholder="Bab"
                         />
                     </div>
-                    <button 
+                    <button
+                        type="button"
                         onClick={handleExport}
-                        className="inline-flex items-center justify-center gap-2 bg-emerald-600 text-white px-6 py-3 rounded-2xl hover:bg-emerald-700 font-black text-sm shadow-lg shadow-emerald-500/20 transition-all active:scale-95">
-                        <span>📥</span> Export CSV
+                        className="inline-flex items-center justify-center gap-2 rounded-xl border border-[var(--border-color)] px-4 py-2.5 text-sm font-medium text-[var(--foreground)] transition-colors hover:bg-[var(--background)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--brand-red)]">
+                        <Download size={16} /> Export CSV
                     </button>
                 </div>
             </div>
 
             {/* Content */}
-            <div className="rounded-3xl border overflow-hidden bg-neutral-900/30 border-white/5">
+            <div className="overflow-hidden rounded-2xl border border-[var(--border-color)] bg-[var(--card-bg)]">
                 {loading ? (
-                    <div className="p-12 text-center">
-                        <div className="w-10 h-10 border-4 border-red-600/20 border-t-red-600 rounded-full animate-spin mx-auto"></div>
-                        <p className="mt-4 text-xs font-bold uppercase tracking-widest text-neutral-500">
-                            Memuat...
-                        </p>
+                    <div className="animate-pulse space-y-3 p-5 sm:p-6">
+                        {[1, 2, 3, 4, 5].map(row => <div key={row} className="h-12 rounded-lg bg-[var(--background)]" />)}
                     </div>
                 ) : fetchError ? (
                     <div className="p-10 text-center" role="alert">
@@ -292,11 +284,11 @@ export default function BunpoAdmin() {
                         </button>
                     </div>
                 ) : bunpos.length === 0 ? (
-                    <div className="p-12 text-center">
-                        <div className="text-4xl mb-4">📚</div>
-                        <p className="text-sm font-bold text-neutral-500">
-                            Tidak ada Bunpo ditemukan
-                        </p>
+                    <div className="px-6 py-12 text-center">
+                        <Search size={30} className="mx-auto text-[var(--foreground)]/35" />
+                        <p className="mt-3 text-sm font-semibold text-[var(--foreground)]">Belum ada Bunpo</p>
+                        <p className="mt-1 text-sm text-[var(--foreground)]/55">Ubah filter atau tambahkan materi baru.</p>
+                        <Link href="/admin/bunpo/new" className="mt-4 inline-flex items-center gap-2 rounded-xl bg-[var(--brand-red)] px-4 py-2.5 text-sm font-medium text-white transition-colors hover:opacity-90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--brand-red)]"><FilePlus2 size={16} /> Tambah Bunpo</Link>
                     </div>
                 ) : (
                     <>
@@ -327,31 +319,27 @@ export default function BunpoAdmin() {
                                                 <div className="flex items-center justify-end gap-2">
                                                     <Link
                                                         href={b.slug || getBunpoSlug(b.title) ? `/bunpo/n${b.jlpt_level}/${b.slug || getBunpoSlug(b.title)}` : `/bunpo/n${b.jlpt_level}`} target="_blank"
-                                                        className="p-2 rounded-xl transition-colors text-emerald-400 hover:bg-emerald-500/10"
+                                                        className="rounded-lg p-2 text-[var(--accent-green)] transition-colors hover:bg-[var(--accent-green)]/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--accent-green)]"
                                                         title="Lihat"
+                                                        aria-label={`Lihat ${b.title}`}
                                                     >
-                                                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.478 0-8.268-2.943-9.542-7z" />
-                                                        </svg>
+                                                        <Eye size={18} />
                                                     </Link>
                                                     <Link
                                                         href={`/admin/bunpo/${b.id}`}
-                                                        className="p-2 rounded-xl transition-colors text-indigo-400 hover:bg-indigo-500/10"
+                                                        className="rounded-lg p-2 text-[var(--accent-blue)] transition-colors hover:bg-[var(--accent-blue)]/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--accent-blue)]"
                                                         title="Edit"
+                                                        aria-label={`Edit ${b.title}`}
                                                     >
-                                                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                                                        </svg>
+                                                        <Pencil size={18} />
                                                     </Link>
                                                     <button
                                                         onClick={(e) => handleDelete(e, b.id)}
-                                                        className="p-2 rounded-xl transition-colors text-red-400 hover:bg-red-500/10"
+                                                        className="rounded-lg p-2 text-[var(--brand-red)] transition-colors hover:bg-[var(--brand-red)]/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--brand-red)]"
                                                         title="Hapus"
+                                                        aria-label={`Hapus ${b.title}`}
                                                     >
-                                                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                                                        </svg>
+                                                        <Trash2 size={18} />
                                                     </button>
                                                 </div>
                                             </td>
@@ -385,20 +373,18 @@ export default function BunpoAdmin() {
                                         <div className="flex items-center gap-2">
                                             <Link
                                                 href={`/admin/bunpo/${b.id}`}
-                                                className="p-2 rounded-xl transition-colors text-indigo-400 hover:bg-indigo-500/10"
+                                                aria-label={`Edit ${b.title}`}
+                                                className="rounded-lg p-2 text-[var(--accent-blue)] transition-colors hover:bg-[var(--accent-blue)]/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--accent-blue)]"
                                                 onClick={(e) => e.stopPropagation()}
                                             >
-                                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                                                </svg>
+                                                <Pencil size={18} />
                                             </Link>
                                             <button
                                                 onClick={(e) => handleDelete(e, b.id)}
-                                                className="p-2 rounded-xl transition-colors text-red-400 hover:bg-red-500/10"
+                                                aria-label={`Hapus ${b.title}`}
+                                                className="rounded-lg p-2 text-[var(--brand-red)] transition-colors hover:bg-[var(--brand-red)]/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--brand-red)]"
                                             >
-                                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                                                </svg>
+                                                <Trash2 size={18} />
                                             </button>
                                         </div>
                                     </div>

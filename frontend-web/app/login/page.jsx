@@ -5,7 +5,7 @@ import { useAuth } from '@/context/AuthContext';
 import Link from 'next/link';
 import AppMessage from '@/components/common/AppMessage';
 import { Eye, EyeOff } from 'lucide-react';
-import AuthLayout, { authButtonClass, authIconButtonClass, authInputClass, authLabelClass } from '@/components/auth/AuthLayout';
+import AuthLayout, { authButtonClass, authIconButtonClass, authInputClass, authLabelClass, authLinkClass } from '@/components/auth/AuthLayout';
 
 export default function LoginPage() {
     const [email, setEmail] = useState('');
@@ -80,7 +80,7 @@ export default function LoginPage() {
                     </div>
 
                     <div className="flex items-center justify-end pt-1">
-                        <Link href="/forgot-password" className="text-sm font-semibold text-[#39765d] hover:underline dark:text-[#8ec6a5]">
+                        <Link href="/forgot-password" className={`text-sm ${authLinkClass}`}>
                             Lupa Password?
                         </Link>
                     </div>
@@ -97,7 +97,7 @@ export default function LoginPage() {
                 <div className="mt-8 text-center">
                     <p className="text-sm text-gray-500 dark:text-gray-300">
                         Belum punya akun?{' '}
-                        <Link href="/register" className="font-bold text-[#39765d] hover:underline dark:text-[#8ec6a5]">
+                        <Link href="/register" className={authLinkClass}>
                             Daftar
                         </Link>
                     </p>

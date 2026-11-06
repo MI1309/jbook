@@ -7,6 +7,7 @@ import Link from 'next/link';
 import Cookies from 'js-cookie';
 import { appToast as toast } from '@/components/common/AppMessage';
 import ExpressionPicker from '@/components/bunpo/ExpressionPicker';
+import { ArrowLeft, Plus, Save, Trash2 } from 'lucide-react';
 
 export default function BunpoForm({ params }) {
     const router = useRouter();
@@ -14,6 +15,8 @@ export default function BunpoForm({ params }) {
     const isNew = id === 'new';
 
     const [loading, setLoading] = useState(!isNew);
+    const [fetchError, setFetchError] = useState('');
+    const [saving, setSaving] = useState(false);
     const [formData, setFormData] = useState({
         title: '',
         structure: '',
@@ -26,21 +29,20 @@ export default function BunpoForm({ params }) {
     const [newSentence, setNewSentence] = useState({ jp: '', id: '', expressions: [] });
 
     useEffect(() => {
-        if (!isNew) {
-            fetchBunpo();
-        }
-    }, [id]);
-
-    const fetchBunpo = async () => {
-        try {
+        if (isNew) return;
+        let cancelled = false;
+        const fetchBunpo = async () => {
+            setLoading(true);
+            setFetchError('');
+            try {
             const token = Cookies.get('access_token');
-            const res = await fetch(`${API_URL}/admin/grammar/${id}`, {
+            const res = await fetch(`${API_URL}/admin/bunpo/${id}`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
 
             if (res.ok) {
                 const data = await res.json();
-                setFormData({
+                if (!cancelled) setFormData({
                     title: data.title,
                     structure: data.structure,
                     explanation: data.explanation,
@@ -52,19 +54,26 @@ export default function BunpoForm({ params }) {
                     }))
                 });
             } else {
-                console.error("Fetch failed:", res.status, res.statusText);
-                const text = await res.text();
-                toast.error(`Gagal memuat Grammar: ${res.status} ${res.statusText}\n${text}`);
+                const message = res.status === 404
+                    ? 'Bunpo tidak ditemukan. Data mungkin sudah dihapus atau tautannya tidak valid.'
+                    : res.status === 401 || res.status === 403
+                        ? 'Sesi admin tidak valid atau tidak memiliki akses.'
+                        : `Gagal memuat Bunpo (${res.status}).`;
+                if (!cancelled) setFetchError(message);
             }
-        } catch (error) {
-            console.error("Fetch error", error);
-        } finally {
-            setLoading(false);
-        }
-    };
+            } catch (error) {
+                console.error('Fetch Bunpo error', error);
+                if (!cancelled) setFetchError('Tidak dapat terhubung ke server. Periksa koneksi lalu coba lagi.');
+            } finally {
+                if (!cancelled) setLoading(false);
+            }
+        };
+        fetchBunpo();
+        return () => { cancelled = true; };
+    }, [id, isNew]);
 
     const handleAddSentence = () => {
-        if (newSentence.jp && newSentence.id) {
+        if (newSentence.jp.trim() && newSentence.id.trim()) {
             setFormData((current) => ({
                 ...current,
                 sentences: [...current.sentences, newSentence]
@@ -91,6 +100,7 @@ export default function BunpoForm({ params }) {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setSaving(true);
         try {
             const token = Cookies.get('access_token');
             const payload = {
@@ -104,8 +114,8 @@ export default function BunpoForm({ params }) {
             };
 
             const url = isNew
-                ? `${API_URL}/admin/grammar`
-                : `${API_URL}/admin/grammar/${id}`;
+                ? `${API_URL}/admin/bunpo`
+                : `${API_URL}/admin/bunpo/${id}`;
             const method = isNew ? 'POST' : 'PUT';
 
             const res = await fetch(url, {
@@ -121,60 +131,56 @@ export default function BunpoForm({ params }) {
                 toast.success(isNew ? 'Grammar created!' : 'Grammar updated!');
                 router.push('/admin/bunpo');
             } else {
-                const errorData = await res.json();
-                console.error("Failed to save", errorData);
-                toast.error(`Failed to save: ${JSON.stringify(errorData)}`);
+                const errorData = await res.json().catch(() => null);
+                const detail = errorData?.detail || errorData?.message || `HTTP ${res.status}`;
+                console.error('Failed to save Bunpo', errorData);
+                toast.error(`Gagal menyimpan Bunpo: ${detail}`);
             }
         } catch (error) {
             console.error("Save error", error);
-            toast.error('Error saving data');
+            toast.error('Tidak dapat terhubung ke server saat menyimpan.');
+        } finally {
+            setSaving(false);
         }
     };
 
-    if (loading) return (
-        <div className="p-12 text-center">
-            <div className="w-10 h-10 border-4 border-red-600/20 border-t-red-600 rounded-full animate-spin mx-auto"></div>
-            <p className="mt-4 text-xs font-bold uppercase tracking-widest text-neutral-500">
-                Memuat...
-            </p>
-        </div>
-    );
+    if (loading) return <div className="mx-auto max-w-4xl animate-pulse space-y-5"><div className="h-9 w-56 rounded-lg bg-[var(--border-color)]" /><div className="h-[520px] rounded-2xl border border-[var(--border-color)] bg-[var(--card-bg)]" /></div>;
+
+    if (fetchError) return <div className="mx-auto max-w-3xl rounded-2xl border border-[var(--border-color)] bg-[var(--card-bg)] p-8 text-center"><h1 className="text-xl font-semibold text-[var(--foreground)]">Tidak dapat membuka Bunpo</h1><p role="alert" className="mt-2 text-sm text-[var(--foreground)]/65">{fetchError}</p><Link href="/admin/bunpo" className="mt-6 inline-flex items-center gap-2 rounded-xl border border-[var(--border-color)] px-4 py-2.5 text-sm font-medium transition-colors hover:bg-[var(--background)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--brand-red)]"><ArrowLeft size={16} /> Kembali ke daftar</Link></div>;
 
     return (
-        <div className="max-w-4xl mx-auto space-y-6">
+        <div className="mx-auto max-w-4xl space-y-6 pb-10">
             {/* Header */}
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div className="flex items-center gap-4">
-                    <Link href="/admin/bunpo" className="p-2 rounded-xl text-neutral-400 hover:text-white hover:bg-white/5">
-                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-                        </svg>
+                    <Link href="/admin/bunpo" aria-label="Kembali ke daftar Bunpo" className="rounded-xl p-2 text-[var(--foreground)]/60 transition-colors hover:bg-[var(--card-bg)] hover:text-[var(--foreground)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--brand-red)]">
+                        <ArrowLeft size={20} />
                     </Link>
-                    <h1 className="text-3xl font-black tracking-tight text-white">
-                        {isNew ? 'Tambah Bunpo Baru' : 'Edit Bunpo'}
-                    </h1>
+                    <div><p className="text-sm text-[var(--foreground)]/55">Koleksi / Bunpo</p><h1 className="mt-1 text-2xl font-semibold text-[var(--foreground)]">{isNew ? 'Tambah Bunpo' : 'Edit Bunpo'}</h1></div>
                 </div>
             </div>
 
             {/* Form */}
-            <div className="rounded-[2rem] border overflow-hidden bg-neutral-900/30 border-white/5">
-                <form onSubmit={handleSubmit} className="p-8 space-y-6">
+            <div className="overflow-hidden rounded-2xl border border-[var(--border-color)] bg-[var(--card-bg)]">
+                <form onSubmit={handleSubmit} className="space-y-7 p-5 sm:p-7">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div className="space-y-2 col-span-full md:col-span-1">
-                            <label className="text-[10px] font-black uppercase tracking-widest opacity-50">Judul</label>
+                            <label className="text-sm font-medium text-[var(--foreground)]" htmlFor="bunpo-title">Judul</label>
                             <input
+                                id="bunpo-title"
                                 type="text"
-                                className="w-full p-4 rounded-xl border-2 outline-none transition-all bg-white/5 border-white/5 focus:border-red-600 text-white"
+                                className="w-full rounded-xl border border-[var(--border-color)] bg-[var(--background)] p-3.5 text-sm text-[var(--foreground)] outline-none transition-colors placeholder:text-[var(--foreground)]/40 focus-visible:border-[var(--accent-blue)] focus-visible:ring-2 focus-visible:ring-[var(--accent-blue)]/20"
                                 value={formData.title}
                                 onChange={(e) => setFormData({ ...formData, title: e.target.value })}
                                 required
                             />
                         </div>
                         <div className="space-y-2 col-span-full md:col-span-1">
-                            <label className="text-[10px] font-black uppercase tracking-widest opacity-50">Struktur</label>
+                            <label className="text-sm font-medium text-[var(--foreground)]" htmlFor="bunpo-structure">Struktur</label>
                             <input
+                                id="bunpo-structure"
                                 type="text"
-                                className="w-full p-4 rounded-xl border-2 outline-none transition-all bg-white/5 border-white/5 focus:border-red-600 text-white"
+                                className="w-full rounded-xl border border-[var(--border-color)] bg-[var(--background)] p-3.5 text-sm text-[var(--foreground)] outline-none transition-colors placeholder:text-[var(--foreground)]/40 focus-visible:border-[var(--accent-blue)] focus-visible:ring-2 focus-visible:ring-[var(--accent-blue)]/20"
                                 value={formData.structure}
                                 onChange={(e) => setFormData({ ...formData, structure: e.target.value })}
                                 required
@@ -183,10 +189,11 @@ export default function BunpoForm({ params }) {
                     </div>
 
                     <div className="space-y-2">
-                        <label className="text-[10px] font-black uppercase tracking-widest opacity-50">Penjelasan</label>
+                        <label className="text-sm font-medium text-[var(--foreground)]" htmlFor="bunpo-explanation">Penjelasan</label>
                         <textarea
+                            id="bunpo-explanation"
                             rows="6"
-                            className="w-full p-4 rounded-xl border-2 outline-none transition-all bg-white/5 border-white/5 focus:border-red-600 text-white"
+                            className="w-full resize-y rounded-xl border border-[var(--border-color)] bg-[var(--background)] p-3.5 text-sm leading-6 text-[var(--foreground)] outline-none transition-colors focus-visible:border-[var(--accent-blue)] focus-visible:ring-2 focus-visible:ring-[var(--accent-blue)]/20"
                             value={formData.explanation}
                             onChange={(e) => setFormData({ ...formData, explanation: e.target.value })}
                             required
@@ -195,10 +202,11 @@ export default function BunpoForm({ params }) {
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div className="space-y-2">
-                            <label className="text-[10px] font-black uppercase tracking-widest opacity-50">Bab</label>
+                            <label className="text-sm font-medium text-[var(--foreground)]" htmlFor="bunpo-chapter">Bab</label>
                             <input
+                                id="bunpo-chapter"
                                 type="number"
-                                className="w-full p-4 rounded-xl border-2 outline-none transition-all bg-white/5 border-white/5 focus:border-red-600 text-white"
+                                className="w-full rounded-xl border border-[var(--border-color)] bg-[var(--background)] p-3.5 text-sm text-[var(--foreground)] outline-none transition-colors focus-visible:border-[var(--accent-blue)] focus-visible:ring-2 focus-visible:ring-[var(--accent-blue)]/20"
                                 value={formData.chapter}
                                 onChange={(e) => {
                                     const val = parseInt(e.target.value);
@@ -211,9 +219,10 @@ export default function BunpoForm({ params }) {
                             />
                         </div>
                         <div className="space-y-2">
-                            <label className="text-[10px] font-black uppercase tracking-widest opacity-50">Level JLPT (1-5)</label>
+                            <label className="text-sm font-medium text-[var(--foreground)]" htmlFor="bunpo-level">Level JLPT</label>
                             <select
-                                className="w-full p-4 rounded-xl border-2 outline-none transition-all bg-neutral-800 border-white/5 text-white"
+                                id="bunpo-level"
+                                className="w-full rounded-xl border border-[var(--border-color)] bg-[var(--background)] p-3.5 text-sm text-[var(--foreground)] outline-none transition-colors focus-visible:border-[var(--accent-blue)] focus-visible:ring-2 focus-visible:ring-[var(--accent-blue)]/20"
                                 value={formData.jlpt_level}
                                 onChange={(e) => setFormData({ ...formData, jlpt_level: e.target.value })}
                             >
@@ -223,23 +232,23 @@ export default function BunpoForm({ params }) {
                     </div>
 
                     {/* Sentences */}
-                    <div className="border-t border-gray-100 dark:border-white/5 pt-6 space-y-4">
-                        <h3 className="text-sm font-black text-neutral-500 uppercase tracking-widest opacity-50">Contoh Kalimat</h3>
+                    <div className="space-y-4 border-t border-[var(--border-color)] pt-6">
+                        <div><h3 className="text-base font-semibold text-[var(--foreground)]">Contoh Kalimat</h3><p className="mt-1 text-sm text-[var(--foreground)]/55">Kalimat dan ekspresi terkait untuk menjelaskan pola.</p></div>
                         {formData.sentences.map((sent, idx) => (
-                            <div key={idx} className="space-y-4 rounded-xl border border-white/5 bg-white/5 p-4">
+                            <div key={idx} className="space-y-4 rounded-xl border border-[var(--border-color)] bg-[var(--background)] p-4">
                                 <div className="flex items-start gap-3">
                                     <div className="min-w-0 flex-1 space-y-2">
                                         <input
                                             type="text"
                                             aria-label="Kalimat bahasa Jepang"
-                                            className="w-full rounded-lg border border-white/5 bg-black/20 p-3 text-sm font-bold text-white"
+                                            className="w-full rounded-lg border border-[var(--border-color)] bg-[var(--card-bg)] p-3 text-sm font-medium text-[var(--foreground)] outline-none transition-colors focus-visible:border-[var(--accent-blue)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--accent-blue)]"
                                             value={sent.jp || ''}
                                             onChange={(event) => updateSentence(idx, { jp: event.target.value })}
                                         />
                                         <input
                                             type="text"
                                             aria-label="Terjemahan bahasa Indonesia"
-                                            className="w-full rounded-lg border border-white/5 bg-black/20 p-3 text-sm text-neutral-300"
+                                            className="w-full rounded-lg border border-[var(--border-color)] bg-[var(--card-bg)] p-3 text-sm text-[var(--foreground)]/75 outline-none transition-colors focus-visible:border-[var(--accent-blue)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--accent-blue)]"
                                             value={sent.id || ''}
                                             onChange={(event) => updateSentence(idx, { id: event.target.value })}
                                         />
@@ -248,11 +257,9 @@ export default function BunpoForm({ params }) {
                                         type="button"
                                         onClick={() => removeSentence(idx)}
                                         aria-label="Hapus contoh kalimat"
-                                        className="p-2 rounded-lg transition-colors text-red-400 hover:bg-red-500/10"
+                                        className="rounded-lg p-2 text-[var(--brand-red)] transition-colors hover:bg-[var(--brand-red)]/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--brand-red)]"
                                     >
-                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                                        </svg>
+                                        <Trash2 size={17} />
                                     </button>
                                 </div>
                                 <ExpressionPicker
@@ -262,20 +269,22 @@ export default function BunpoForm({ params }) {
                             </div>
                         ))}
 
-                        <div className="p-4 rounded-xl border-2 border-dashed border-white/5">
-                            <h4 className="text-xs font-black uppercase tracking-widest opacity-50 mb-3">Tambah Kalimat Baru</h4>
+                        <div className="space-y-3 rounded-xl border border-dashed border-[var(--border-color)] p-4">
+                            <h4 className="text-sm font-semibold text-[var(--foreground)]">Tambah kalimat</h4>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-3">
                                 <input
                                     type="text"
                                     placeholder="Kalimat Bahasa Jepang"
-                                    className="p-3 rounded-lg border text-sm bg-white/5 border-white/5 text-white"
+                                    aria-label="Kalimat bahasa Jepang baru"
+                                    className="rounded-lg border border-[var(--border-color)] bg-[var(--background)] p-3 text-sm text-[var(--foreground)] outline-none transition-colors focus-visible:border-[var(--accent-blue)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--accent-blue)]"
                                     value={newSentence.jp}
                                     onChange={(e) => setNewSentence({ ...newSentence, jp: e.target.value })}
                                 />
                                 <input
                                     type="text"
                                     placeholder="Terjemahan Bahasa Indonesia"
-                                    className="p-3 rounded-lg border text-sm bg-white/5 border-white/5 text-white"
+                                    aria-label="Terjemahan bahasa Indonesia baru"
+                                    className="rounded-lg border border-[var(--border-color)] bg-[var(--background)] p-3 text-sm text-[var(--foreground)] outline-none transition-colors focus-visible:border-[var(--accent-blue)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--accent-blue)]"
                                     value={newSentence.id}
                                     onChange={(e) => setNewSentence({ ...newSentence, id: e.target.value })}
                                 />
@@ -289,19 +298,20 @@ export default function BunpoForm({ params }) {
                             <button
                                 type="button"
                                 onClick={handleAddSentence}
-                                className="w-full px-6 py-3 rounded-xl font-bold transition-colors bg-white/5 text-white hover:bg-white/10"
+                                disabled={!newSentence.jp.trim() || !newSentence.id.trim()}
+                                className="inline-flex items-center justify-center gap-2 rounded-xl border border-[var(--border-color)] px-4 py-2.5 text-sm font-medium text-[var(--foreground)] transition-colors hover:bg-[var(--background)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--brand-red)] disabled:cursor-not-allowed disabled:opacity-45"
                             >
-                                Tambah Kalimat
+                                <Plus size={16} /> Tambah kalimat
                             </button>
                         </div>
                     </div>
 
-                    <div className="flex flex-col md:flex-row md:justify-end gap-4 pt-6 border-t border-gray-100 dark:border-white/5">
-                        <Link href="/admin/bunpo" className="flex-1 md:flex-none px-6 py-3 rounded-xl font-bold text-center transition-all bg-white/5 text-white hover:bg-white/10">
+                    <div className="sticky bottom-0 -mx-5 -mb-5 flex flex-col-reverse gap-3 border-t border-[var(--border-color)] bg-[var(--card-bg)]/95 p-5 backdrop-blur sm:-mx-7 sm:-mb-7 sm:flex-row sm:justify-end sm:px-7">
+                        <Link href="/admin/bunpo" className="rounded-xl border border-[var(--border-color)] px-5 py-2.5 text-center text-sm font-medium text-[var(--foreground)] transition-colors hover:bg-[var(--background)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--brand-red)]">
                             Batal
                         </Link>
-                        <button type="submit" className="flex-1 md:flex-none bg-red-600 text-white px-8 py-3 rounded-xl font-black shadow-lg shadow-red-500/20 hover:bg-red-700 transition-all active:scale-95">
-                            {isNew ? 'Buat Bunpo' : 'Update Bunpo'}
+                        <button type="submit" disabled={saving} className="inline-flex items-center justify-center gap-2 rounded-xl bg-[var(--brand-red)] px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:opacity-90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--brand-red)] disabled:cursor-wait disabled:opacity-60">
+                            <Save size={16} />{saving ? 'Menyimpan...' : isNew ? 'Buat Bunpo' : 'Simpan perubahan'}
                         </button>
                     </div>
                 </form>

@@ -225,6 +225,46 @@ class AdminGrammarListTests(TestCase):
         self.assertEqual(len(item['explanation']), 10001)
 
 
+class AdminBunpoCrudRouteTests(TestCase):
+    def test_detail_and_update_use_admin_bunpo_route(self):
+        admin = get_user_model().objects.create_user(username='bunpo-crud-admin', is_staff=True)
+        grammar = Grammar.objects.create(
+            title='Legacy title',
+            slug='legacy-title',
+            structure='N は N です',
+            explanation='Old explanation',
+            chapter=1,
+            jlpt_level=5,
+            sentences=[],
+        )
+        token = RefreshToken.for_user(admin).access_token
+        headers = {'HTTP_AUTHORIZATION': f'Bearer {token}'}
+        detail_url = f'/api/admin/bunpo/{grammar.id}'
+
+        detail_response = self.client.get(detail_url, secure=True, **headers)
+        self.assertEqual(detail_response.status_code, 200, detail_response.content)
+        self.assertEqual(detail_response.json()['title'], 'Legacy title')
+
+        update_response = self.client.put(
+            detail_url,
+            data=json.dumps({
+                'title': 'Updated title',
+                'structure': 'N が あります',
+                'explanation': 'Updated explanation',
+                'chapter': 2,
+                'jlpt_level': 4,
+                'sentences': [],
+            }),
+            content_type='application/json',
+            secure=True,
+            **headers,
+        )
+        self.assertEqual(update_response.status_code, 200, update_response.content)
+        grammar.refresh_from_db()
+        self.assertEqual(grammar.title, 'Updated title')
+        self.assertEqual(grammar.chapter, 2)
+
+
 class AdminStatsTests(TestCase):
     def test_stats_include_dashboard_counts(self):
         admin = get_user_model().objects.create_user(username='stats-admin', is_staff=True)

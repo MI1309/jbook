@@ -6,7 +6,7 @@ import { useSearchParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import AppMessage from '@/components/common/AppMessage';
 import { Eye, EyeOff } from 'lucide-react';
-import AuthLayout, { authButtonClass, authIconButtonClass, authInputClass, authLabelClass } from '@/components/auth/AuthLayout';
+import AuthLayout, { authButtonClass, authIconButtonClass, authInputClass, authLabelClass, authLinkClass } from '@/components/auth/AuthLayout';
 
 function ResetPasswordForm() {
     const [password, setPassword] = useState('');
@@ -68,7 +68,7 @@ function ResetPasswordForm() {
                 <AppMessage variant="warning" className="text-sm">
                 <span className="block">Link reset password tidak valid. Silakan minta link baru.</span>
                 <div className="mt-4 text-center">
-                    <Link href="/forgot-password" className="text-sm font-bold text-[#39765d] transition-colors hover:underline dark:text-[#8ec6a5]">
+                    <Link href="/forgot-password" className={`text-sm ${authLinkClass}`}>
                         Minta Link Baru
                     </Link>
                 </div>
