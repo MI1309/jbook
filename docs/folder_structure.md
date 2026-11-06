@@ -55,13 +55,26 @@ jbook/                           # Root proyek utama
 │   │   └── tests.py
 │   ├── learning/                 # Practice, quiz attempt, progress, analytics
 │   │   ├── migrations/
+│   │   ├── analytics/             # Agregasi analytics per sumber dan kakitori
+│   │   │   ├── aggregator.py
+│   │   │   ├── kanji.py
+│   │   │   ├── vocab.py
+│   │   │   ├── grammar.py
+│   │   │   └── kakitori.py
+│   │   ├── quiz/                  # Strategi generation quiz dan registry tipe
+│   │   │   ├── strategies.py
+│   │   │   ├── registry.py
+│   │   │   └── distractors.py
 │   │   ├── api.py
 │   │   ├── serializers.py
 │   │   ├── tts_logic.py
 │   │   ├── models.py
-│   │   └── tests.py
+│   │   ├── tests.py
+│   │   ├── test_quiz_strategies.py
+│   │   └── test_analytics.py
 │   ├── utils/                    # Helper bersama (kana, conjugation, sanitasi)
-│   ├── scripts/                  # Import/data maintenance; juga masih ada skrip uji/temporer
+│   ├── scripts/                  # Import/data maintenance; detail status di scripts/README.md
+│   │   └── README.md             # Inventaris 40 script dan data pendukung
 │   ├── data/                     # Dataset kerja yang dipakai proses backend
 │   ├── manage.py
 │   ├── requirements.txt
@@ -190,8 +203,13 @@ Modul inti untuk manajemen konten (kanji, vocab, bunpo, blog). Semua yang berhub
 ### 📂 `backend/learning/`
 Modul untuk fitur **pembelajaran & kuis**: generate soal, simpan progress, analytics, minna no nihongo, doukai (membaca).
 
-✅ **Boleh**: Models QuizAttempt, UserProgress, endpoint generate soal<br>
+✅ **Boleh**: Models QuizAttempt, UserProgress, endpoint generate soal; strategi quiz di `quiz/`; agregasi analytics di `analytics/`<br>
 ❌ **Tidak**: Definisi kanji/vocab (masuk ke `content/`)
+
+Pembangkitan quiz saat ini menggunakan strategi terdaftar untuk kanji, vocab/kotoba, grammar/bunpo, dan kana. Particle tetap dikecualikan dari endpoint practice. Analytics memisahkan wrong stats per sumber, dengan total, level, dan kakitori digabungkan di aggregator.
+
+### 📂 `backend/scripts/`
+Kumpulan skrip operasional yang entry point-nya belum dipindah. Inventaris tujuan, pemakaian, dukungan, pemilik, serta kandidat management command ada di [`backend/scripts/README.md`](../backend/scripts/README.md). File skrip root `backend/` juga dicatat di sana.
 
 ---
 
