@@ -5,12 +5,13 @@ from django.shortcuts import get_object_or_404
 from django.contrib.auth import get_user_model
 from .models import QuizAttempt, UserProgress
 from .tts_logic import CrosswordGenerator
-from content.models import Kanji, Vocab, Grammar, Particle, MinnaQuestion, DoukaiPassage, DoukaiQuestion, FeatureSetting, CurriculumUnit
+from content.models import Kanji, Vocab, Grammar, Particle, MinnaQuestion, DoukaiPassage, DoukaiQuestion, CurriculumUnit
 from core.decorators import rate_limit
 import random
 import uuid
 from datetime import datetime, timedelta
 from pydantic import Field
+from .quiz.registry import get_quiz_strategy
 
 from ninja_jwt.authentication import JWTAuth
 User = get_user_model()
@@ -162,151 +163,21 @@ def generate_quiz(request, limit: int = 10, level: Optional[str] = None, type: s
 
 
 def _build_quiz_questions(limit: int = 10, level: Optional[str] = None, type: str = 'kanji', unit: Optional[uuid.UUID] = None):
-    # Cap the limit to a reasonable high value for full level review
     limit = min(max(1, limit), 2000)
-
-    # Support multiple types and levels (comma separated)
     requested_types = list(dict.fromkeys(
         t.strip().lower() for t in type.split(',') if t.strip() and t.strip().lower() != 'particle'
     ))
     requested_levels = [int(l.strip()) for l in level.split(',') if l.strip().isdigit()] if level else []
-    per_type_limits = {}
-    if requested_types:
-        base_limit, extra_questions = divmod(limit, len(requested_types))
-        per_type_limits = {
-            question_type: base_limit + (index < extra_questions)
-            for index, question_type in enumerate(requested_types)
-        }
     if unit:
         get_object_or_404(CurriculumUnit, id=unit)
 
+    base_limit, extra_questions = divmod(limit, len(requested_types)) if requested_types else (0, 0)
     questions = []
-    
-    # Pre-fetch items from database with minimal fields to save memory
-    # We use a combined approach to handle multiple types efficiently
-    item_pool = []
-    
-    for t in requested_types:
-        if t == 'kanji':
-            setting = FeatureSetting.objects.filter(key='kanji_visibility').first()
-            value = setting.value if setting and isinstance(setting.value, dict) else {'disabled_levels': [1, 2, 3]}
-            disabled_levels = value.get('disabled_levels', [1, 2, 3])
-            qs = Kanji.objects.exclude(jlpt_level__in=disabled_levels)
-            d_type = 'kanji'
-        elif t in ['vocab', 'kotoba']:
-            setting = FeatureSetting.objects.filter(key='vocab_visibility').first()
-            value = setting.value if setting and isinstance(setting.value, dict) else {'disabled_levels': []}
-            disabled_levels = value.get('disabled_levels', [])
-            qs = Vocab.objects.exclude(jlpt_level__in=disabled_levels)
-            d_type = 'vocab'
-        elif t in ['grammar', 'bunpo']:
-            setting = FeatureSetting.objects.filter(key='bunpo_visibility').first()
-            value = setting.value if setting and isinstance(setting.value, dict) else {'disabled_levels': []}
-            qs = Grammar.objects.exclude(jlpt_level__in=value.get('disabled_levels', []))
-            d_type = 'grammar'
-        elif t == 'particle':
-            qs = Particle.objects.all()
-            d_type = 'particle'
-        elif t == 'kana':
-            # Kana is handled separately as it's not in DB
-            from utils.kana import ROMAJI_MAP
-            items = list(ROMAJI_MAP.items())
-            random.shuffle(items)
-            for romaji, kana in items[:per_type_limits.get(t, 0)]:
-                all_romaji = [k for k, v in items if k != romaji]
-                distractor_romaji = random.sample(all_romaji, 3)
-                options = [{"text": romaji, "is_correct": True}, *[{"text": dr, "is_correct": False} for dr in distractor_romaji]]
-                random.shuffle(options)
-                questions.append({"id": f"kana_{kana}", "character": kana, "type": "kana", "options": options, "reading": romaji, "meaning": f"Karakter Kana: {kana}"})
-            continue
-        else:
-            continue
-
-        if unit:
-            qs = qs.filter(curriculum_units__id=unit).distinct()
-        if requested_levels and t not in ['particle', 'kana']:
-            qs = qs.filter(jlpt_level__in=requested_levels)
-        
-        # Optimize: select only needed fields and limit pool for distractors
-        # We need the full pool if limit is high, but we'll use iterator to save memory
-        type_items = list(qs)
-        if not type_items: continue
-        
-        # Sample items for questions
-        sample_size = min(len(type_items), per_type_limits.get(t, 0))
-        selected_items = random.sample(type_items, sample_size)
-        
-        for item in selected_items:
-            item_pool.append({
-                'item': item,
-                'type': d_type,
-                'full_type_pool': type_items # Reference for distractors
-            })
-
-    if not item_pool:
-        return questions
-
-    # Shuffle the combined pool from all types
-    random.shuffle(item_pool)
-    final_selection = item_pool[:max(0, limit - len(questions))]
-    
-    from utils.kana import format_reading, to_kana
-
-    for entry in final_selection:
-        item = entry['item']
-        d_type = entry['type']
-        pool = entry['full_type_pool']
-        
-        # Fast distractor sampling
-        # We pick 10 random items from pool and filter to get 3 unique distractors
-        distractor_candidates = random.sample(pool, min(len(pool), 10))
-        distractors = [d for d in distractor_candidates if d.id != item.id][:3]
-
-        # Prepare question data
-        if d_type == 'kanji':
-            display_text = item.character
-            correct_answer = item.meaning
-            distractor_answers = [d.meaning for d in distractors]
-            reading = f"On: {format_reading(item.onyomi, True)} | Kun: {format_reading(item.kunyomi, False)}"
-            meaning = item.meaning
-        elif d_type == 'vocab':
-            display_text = item.word
-            correct_answer = item.meaning
-            distractor_answers = [d.meaning for d in distractors]
-            reading = to_kana((item.furigana or item.reading or "").lower())
-            meaning = item.meaning
-        elif d_type == 'grammar':
-            display_text = item.title
-            correct_answer = item.explanation
-            distractor_answers = [d.explanation for d in distractors]
-            reading = item.structure 
-            meaning = item.explanation
-        elif d_type == 'particle':
-            if item.sentences:
-                sentence = random.choice(item.sentences)
-                display_text = sentence.get("jp", item.character)
-                correct_answer = sentence.get("answer", item.character.split()[0])
-            else:
-                display_text = item.character
-                correct_answer = item.character.split()[0]
-            distractor_answers = [d.character.split()[0] for d in distractors]
-            reading = item.explanation
-            meaning = item.meaning
-
-        options = [{"text": correct_answer, "is_correct": True}, *[{"text": d_text, "is_correct": False} for d_text in distractor_answers]]
-        random.shuffle(options)
-        
-        questions.append({
-            "id": str(item.id),
-            "character": display_text,
-            "type": d_type,
-            "options": options,
-            "reading": reading,
-            "meaning": meaning,
-            "level": getattr(item, 'jlpt_level', None),
-            "word_type": getattr(item, 'word_type', None)
-        })
-        
+    for index, question_type in enumerate(requested_types):
+        strategy = get_quiz_strategy(question_type)
+        if strategy:
+            count = base_limit + (index < extra_questions)
+            questions.extend(strategy.generate(requested_levels, count, {"unit": unit}))
     random.shuffle(questions)
     return questions
 
