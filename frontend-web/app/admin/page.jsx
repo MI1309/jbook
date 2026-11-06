@@ -1,11 +1,12 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import Link from 'next/link';
 import Cookies from 'js-cookie';
 import { API_URL } from '@/lib/api';
 import { appToast as toast } from '@/components/common/AppMessage';
 import StatCard from '@/components/admin/StatCard';
+import { AdminEmptyState, AdminErrorState } from '@/components/admin/AdminFeedback';
 import { AudioLines, BookOpen, Languages, Mic2, Search, Users, ArrowUpRight, Database } from 'lucide-react';
 
 const metrics = [
@@ -23,26 +24,26 @@ const collections = [
 
 export default function AdminDashboard() {
     const [stats, setStats] = useState(null);
+    const [statsError, setStatsError] = useState('');
     const [query, setQuery] = useState('');
     const [results, setResults] = useState([]);
     const [searching, setSearching] = useState(false);
 
-    useEffect(() => {
-        let cancelled = false;
-        const fetchStats = async () => {
-            try {
-                const token = Cookies.get('access_token');
-                const response = await fetch(`${API_URL}/admin/stats`, { headers: { Authorization: `Bearer ${token}` } });
-                if (!response.ok) throw new Error('Gagal memuat statistik admin');
-                const data = await response.json();
-                if (!cancelled) setStats(data);
-            } catch (error) {
-                if (!cancelled) toast.error(error.message || 'Tidak dapat memuat statistik.');
-            }
-        };
-        fetchStats();
-        return () => { cancelled = true; };
+    const fetchStats = useCallback(async () => {
+        setStatsError('');
+        try {
+            const token = Cookies.get('access_token');
+            const response = await fetch(`${API_URL}/admin/stats`, { headers: { Authorization: `Bearer ${token}` } });
+            if (!response.ok) throw new Error('Tidak dapat memuat statistik admin. Periksa koneksi atau akses akun, lalu coba lagi.');
+            setStats(await response.json());
+        } catch {
+            setStatsError('Tidak dapat memuat statistik admin. Periksa koneksi atau akses akun, lalu coba lagi.');
+        }
     }, []);
+
+    useEffect(() => {
+        fetchStats();
+    }, [fetchStats]);
 
     useEffect(() => {
         if (!query.trim()) {
@@ -81,7 +82,9 @@ export default function AdminDashboard() {
             </div>
 
             <section aria-label="Statistik" className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
-                {metrics.map(metric => <StatCard key={metric.key} {...metric} value={stats?.[metric.key]} loading={!stats} />)}
+                {statsError ? (
+                    <div className="sm:col-span-2 xl:col-span-4"><AdminErrorState title="Statistik belum tersedia" message={statsError} onRetry={fetchStats} /></div>
+                ) : metrics.map(metric => <StatCard key={metric.key} {...metric} value={stats?.[metric.key]} loading={!stats} />)}
             </section>
 
             <section className="rounded-2xl border border-[var(--border-color)] bg-[var(--card-bg)]">
@@ -104,7 +107,7 @@ export default function AdminDashboard() {
                         {collections.map(({ label, key, href, icon: Icon }) => <Link key={key} href={href} className="flex items-center justify-between gap-4 px-5 py-4 transition-colors hover:bg-[var(--background)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--brand-red)] sm:px-6"><span className="flex items-center gap-3"><span className="flex size-9 items-center justify-center rounded-xl bg-[var(--background)] text-[var(--foreground)]/65"><Icon size={17} /></span><span className="text-sm font-medium">{label}</span></span><span className="flex items-center gap-2 text-sm tabular-nums text-[var(--foreground)]/70">{Number(stats[key] || 0).toLocaleString('id-ID')}<ArrowUpRight size={15} /></span></Link>)}
                     </div>
                 ) : (
-                    <div className="px-6 py-12 text-center"><Database size={30} className="mx-auto text-[var(--foreground)]/35" /><h3 className="mt-3 text-sm font-semibold">Belum ada data</h3><p className="mt-1 text-sm text-[var(--foreground)]/55">Mulai isi koleksi pembelajaran JBook.</p><Link href="/admin/bunpo" className="mt-4 inline-flex items-center gap-2 rounded-xl border border-[var(--border-color)] px-3.5 py-2 text-sm font-medium transition-colors hover:bg-[var(--background)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--brand-red)]"><BookOpen size={15} /> Buka Bunpo</Link></div>
+                    <AdminEmptyState title="Belum ada data" message="Mulai isi koleksi pembelajaran JBook." href="/admin/bunpo" actionLabel="Buka Bunpo" icon={Database} />
                 )}
             </section>
         </div>

@@ -1,7 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { useAuth } from '@/context/AuthContext';
+import { useState, useEffect, useCallback } from 'react';
 import { API_URL, setKanjiVisibilityCache } from '@/lib/api';
 import Link from 'next/link';
 import { getKanjiHref } from '@/lib/kanji-route';
@@ -11,16 +10,16 @@ import { useDebounce } from 'use-debounce';
 import { appToast as toast } from '@/components/common/AppMessage';
 import ConfirmationModal from '@/components/common/ConfirmationModal';
 import Pagination from '@/components/common/Pagination';
+import { Eye, Pencil, Search, Trash2 } from 'lucide-react';
+import { AdminErrorState } from '@/components/admin/AdminFeedback';
 
 export default function KanjiAdmin() {
-    const { user } = useAuth();
     const [kanjiList, setKanjiList] = useState([]);
     const [duplicates, setDuplicates] = useState([]);
     const [bulkDeleting, setBulkDeleting] = useState(false);
-    const [bulkDeleteProgress, setBulkDeleteProgress] = useState(0);
-    const [mounted, setMounted] = useState(false);
     const [previewingAll, setPreviewingAll] = useState(false);
     const [loading, setLoading] = useState(true);
+    const [fetchError, setFetchError] = useState('');
     const [filterLevel, setFilterLevel] = useState('');
     const [search, setSearch] = useState('');
     const [debouncedSearch] = useDebounce(search, 400);
@@ -32,11 +31,6 @@ export default function KanjiAdmin() {
     const router = useRouter();
 
     useEffect(() => { setPage(1); }, [filterLevel, debouncedSearch]);
-
-    useEffect(() => { 
-        setMounted(true);
-        fetchKanjis(); 
-    }, [filterLevel, debouncedSearch, page]);
 
     useEffect(() => {
         fetchVisibility();
@@ -76,15 +70,16 @@ export default function KanjiAdmin() {
             setDisabledLevels(nextDisabledLevels);
             setKanjiVisibilityCache(nextDisabledLevels);
             toast.success(`Kanji N${level} ${nextDisabledLevels.includes(level) ? 'dinonaktifkan' : 'diaktifkan'}`);
-        } catch (error) {
+        } catch {
             toast.error('Gagal mengubah visibilitas level Kanji.');
         } finally {
             setSavingVisibility(false);
         }
     };
 
-    const fetchKanjis = async () => {
+    const fetchKanjis = useCallback(async () => {
         setLoading(true);
+        setFetchError('');
 
         try {
             const token = Cookies.get('access_token');
@@ -104,15 +99,19 @@ export default function KanjiAdmin() {
                 setPagination(result.pagination);
                 if (result.pagination.page !== page) setPage(result.pagination.page);
             } else {
-                toast.error(`Gagal mengambil data Kanji: ${res.status} ${res.statusText}`);
+                setFetchError(`Gagal mengambil data Kanji (${res.status}). Periksa akses akun dan coba lagi.`);
             }
         } catch (error) {
             console.error("Failed to fetch", error);
-            toast.error('Terjadi kesalahan jaringan saat memuat Kanji.');
+            setFetchError('Terjadi kesalahan jaringan saat memuat Kanji. Periksa koneksi lalu coba lagi.');
         } finally {
             setLoading(false);
         }
-    };
+    }, [page, filterLevel, debouncedSearch]);
+
+    useEffect(() => {
+        fetchKanjis();
+    }, [fetchKanjis]);
 
     const checkDuplicates = async () => {
         try {
@@ -225,13 +224,13 @@ export default function KanjiAdmin() {
             <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
                 <div>
                     <h1 className="text-5xl font-black tracking-tighter text-[var(--foreground)]">
-                        Kanji <span className="text-red-600">Management</span>
+                        Kanji <span className="text-[var(--brand-red)]">Management</span>
                     </h1>
-                    <p className="text-xs font-bold text-neutral-500 uppercase tracking-[0.2em] mt-3">Total: {pagination.total} Entitas</p>
+                    <p className="mt-3 text-xs font-medium text-[var(--foreground)]/55">Total: {pagination.total} entri</p>
                 </div>
                 <Link 
                     href="/admin/kanji/new" 
-                    className="bg-red-600 hover:bg-red-500 text-white px-8 py-4 rounded-2xl font-black text-xs uppercase tracking-widest transition-all shadow-lg shadow-red-600/20 active:scale-95 text-center"
+                    className="rounded-xl bg-[var(--brand-red)] px-4 py-2.5 text-center text-sm font-medium text-white transition-colors hover:opacity-90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--brand-red)]"
                 >
                     + Tambah Kanji Baru
                 </Link>
@@ -253,9 +252,9 @@ export default function KanjiAdmin() {
                                     disabled={savingVisibility}
                                     onClick={() => toggleVisibility(level)}
                                     className={`px-4 py-2 rounded-xl border text-xs font-black transition-all ${isDisabled
-                                        ? 'bg-red-600/20 border-red-500/40 text-red-300'
-                                        : 'bg-emerald-600/20 border-emerald-500/40 text-emerald-300'
-                                    } disabled:opacity-50`}
+                                        ? 'bg-[var(--brand-red)]/10 border-[var(--brand-red)]/25 text-[var(--brand-red)]'
+                                        : 'bg-[var(--accent-green)]/10 border-[var(--accent-green)]/25 text-[var(--accent-green)]'
+                                    } hover:opacity-80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--brand-red)] disabled:cursor-wait disabled:opacity-50`}
                                 >
                                     N{level} {isDisabled ? 'OFF' : 'ON'}
                                 </button>
@@ -321,16 +320,15 @@ export default function KanjiAdmin() {
             {/* Table Section */}
             <div className="admin-surface rounded-[2.5rem] border overflow-hidden transition-all">
                 {loading ? (
-                    <div className="p-20 text-center">
-                        <div className="w-12 h-12 border-4 border-red-600/20 border-t-red-600 rounded-full animate-spin mx-auto mb-4"></div>
-                        <p className="text-[10px] font-black uppercase tracking-widest text-neutral-500">Menarik Data...</p>
-                    </div>
+                    <div className="animate-pulse space-y-3 p-5 sm:p-6">{[1, 2, 3, 4, 5].map(row => <div key={row} className="h-14 rounded-lg bg-[var(--admin-control)]" />)}</div>
+                ) : fetchError ? (
+                    <div className="p-5 sm:p-6"><AdminErrorState title="Kanji gagal dimuat" message={fetchError} onRetry={fetchKanjis} /></div>
                 ) : kanjiList.length === 0 ? (
-                    <div className="p-12 text-center">
-                        <div className="text-4xl mb-4">📝</div>
-                        <p className="text-sm font-bold text-neutral-500">
-                            Tidak ada Kanji ditemukan
-                        </p>
+                    <div className="px-6 py-12 text-center">
+                        <Search size={30} className="mx-auto text-[var(--foreground)]/35" />
+                        <p className="mt-3 text-sm font-semibold text-[var(--foreground)]">Belum ada Kanji</p>
+                        <p className="mt-1 text-sm text-[var(--foreground)]/55">Ubah pencarian atau tambahkan data baru.</p>
+                        <Link href="/admin/kanji/new" className="mt-4 inline-flex items-center gap-2 rounded-xl bg-[var(--brand-red)] px-4 py-2.5 text-sm font-medium text-white transition-colors hover:opacity-90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--brand-red)]">Tambah Kanji</Link>
                     </div>
                 ) : (
                     <>
@@ -359,31 +357,34 @@ export default function KanjiAdmin() {
                                                 </div>
                                             </td>
                                             <td className="px-6 py-4 whitespace-nowrap">
-                                                <span className="px-3 py-1 text-xs font-black rounded-full bg-red-600/10 text-red-500 border border-red-500/20">N{k.jlpt_level}</span>
+                                                <span className="rounded-lg bg-[var(--brand-red)]/10 px-2.5 py-1 text-xs font-semibold text-[var(--brand-red)]">N{k.jlpt_level}</span>
                                             </td>
                                             <td className="px-6 py-4 whitespace-nowrap text-right">
                                                 <div className="flex items-center justify-end gap-2">
                                                     <Link 
                                                         href={getKanjiHref(k)} 
                                                         target="_blank" 
-                                                        className="p-2 rounded-xl transition-colors text-emerald-400 hover:bg-emerald-500/10"
+                                                        className="rounded-lg p-2 text-[var(--accent-green)] transition-colors hover:bg-[var(--accent-green)]/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--accent-green)]"
                                                         title="Lihat Publik"
+                                                        aria-label={`Lihat ${k.character} di halaman publik`}
                                                     >
-                                                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
+                                                        <Eye size={18} />
                                                     </Link>
                                                     <Link 
                                                         href={`/admin/kanji/${k.id}`} 
-                                                        className="p-2 rounded-xl transition-colors text-indigo-400 hover:bg-indigo-500/10"
+                                                        className="rounded-lg p-2 text-[var(--accent-blue)] transition-colors hover:bg-[var(--accent-blue)]/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--accent-blue)]"
                                                         title="Edit Data"
+                                                        aria-label={`Edit ${k.character}`}
                                                     >
-                                                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>
+                                                        <Pencil size={18} />
                                                     </Link>
                                                     <button 
                                                         onClick={(e) => handleDelete(e, k.id)} 
-                                                        className="p-2 rounded-xl transition-colors text-red-400 hover:bg-red-500/10"
+                                                        className="rounded-lg p-2 text-[var(--brand-red)] transition-colors hover:bg-[var(--brand-red)]/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--brand-red)]"
                                                         title="Hapus Data"
+                                                        aria-label={`Hapus ${k.character}`}
                                                     >
-                                                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+                                                        <Trash2 size={18} />
                                                     </button>
                                                 </div>
                                             </td>
@@ -408,7 +409,7 @@ export default function KanjiAdmin() {
                                                 <div className="text-xs font-bold text-[var(--admin-muted)] uppercase tracking-widest"><span className="text-red-500">音:</span> {k.onyomi.join(', ')}</div>
                                                 <div className="text-xs font-bold text-[var(--admin-muted)] uppercase tracking-widest"><span className="text-blue-500">訓:</span> {k.kunyomi.join(', ')}</div>
                                             </div>
-                                            <span className="inline-flex mt-2 px-3 py-1 text-xs font-black rounded-full bg-red-600/10 text-red-500 border border-red-500/20">N{k.jlpt_level}</span>
+                                            <span className="mt-2 inline-flex rounded-lg bg-[var(--brand-red)]/10 px-2.5 py-1 text-xs font-semibold text-[var(--brand-red)]">N{k.jlpt_level}</span>
                                         </div>
                                         <svg className="w-5 h-5 text-neutral-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -418,16 +419,18 @@ export default function KanjiAdmin() {
                                         <div className="flex items-center gap-2">
                                             <Link 
                                                 href={`/admin/kanji/${k.id}`} 
-                                                className="p-2 rounded-xl transition-colors text-indigo-400 hover:bg-indigo-500/10"
+                                                aria-label={`Edit ${k.character}`}
+                                                className="rounded-lg p-2 text-[var(--accent-blue)] transition-colors hover:bg-[var(--accent-blue)]/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--accent-blue)]"
                                                 onClick={(e) => e.stopPropagation()}
                                             >
-                                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>
+                                                <Pencil size={18} />
                                             </Link>
                                             <button 
                                                 onClick={(e) => handleDelete(e, k.id)} 
-                                                className="p-2 rounded-xl transition-colors text-red-400 hover:bg-red-500/10"
+                                                aria-label={`Hapus ${k.character}`}
+                                                className="rounded-lg p-2 text-[var(--brand-red)] transition-colors hover:bg-[var(--brand-red)]/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--brand-red)]"
                                             >
-                                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+                                                <Trash2 size={18} />
                                             </button>
                                         </div>
                                     </div>
@@ -439,14 +442,14 @@ export default function KanjiAdmin() {
             </div>
 
             {!loading && pagination.pages > 1 && (
-                <div className="flex flex-col sm:flex-row items-center justify-between gap-4 rounded-2xl border border-white/5 bg-white/5 px-5 py-4">
-                    <p className="text-xs font-bold text-neutral-500">Halaman {pagination.page} dari {pagination.pages} ({pagination.total} hasil)</p>
+                <div className="flex flex-col items-center justify-between gap-4 rounded-2xl border border-[var(--border-color)] bg-[var(--card-bg)] px-5 py-4 sm:flex-row">
+                    <p className="text-xs text-[var(--foreground)]/55">Halaman {pagination.page} dari {pagination.pages} ({pagination.total} hasil)</p>
                     <Pagination
                         currentPage={page}
                         totalPages={pagination.pages}
                         onPageChange={setPage}
-                        activeClassName="bg-red-600/20 border-red-500/30 text-red-400"
-                        buttonClassName="bg-neutral-800 border-white/10 text-white hover:bg-neutral-700"
+                        activeClassName="bg-[var(--brand-red)]/10 border-[var(--brand-red)]/30 text-[var(--brand-red)]"
+                        buttonClassName="bg-[var(--card-bg)] border-[var(--border-color)] text-[var(--foreground)] hover:bg-[var(--background)]"
                     />
                 </div>
             )}
@@ -462,14 +465,14 @@ export default function KanjiAdmin() {
                 type="danger"
             />
             {duplicates.length > 0 && (
-                <div className="p-6 rounded-2xl border mt-6 bg-neutral-900/30 border-white/5">
-                    <h2 className="text-lg font-black">Duplicate Kanji Found ({duplicates.length})</h2>
+                <div className="mt-6 rounded-2xl border border-[var(--border-color)] bg-[var(--card-bg)] p-5 sm:p-6">
+                    <h2 className="text-base font-semibold">Duplikat Kanji ({duplicates.length})</h2>
                     <div className="mt-4 space-y-3">
                         {duplicates.map(d => (
-                            <div key={d.character} className="p-3 rounded-lg bg-neutral-800/40 flex items-start justify-between">
+                            <div key={d.character} className="flex items-start justify-between gap-4 rounded-xl border border-[var(--border-color)] bg-[var(--background)] p-3">
                                 <div>
-                                    <div className="text-2xl font-black">{d.character} <span className="text-sm text-neutral-400">({d.items.length})</span></div>
-                                    <div className="text-xs text-neutral-400 mt-1">
+                                    <div className="text-2xl font-semibold">{d.character} <span className="text-sm text-[var(--foreground)]/55">({d.items.length})</span></div>
+                                    <div className="mt-1 text-xs text-[var(--foreground)]/55">
                                         {d.items.map(it => `${it.id} — ${it.meaning}`).join(' • ')}
                                     </div>
                                 </div>
@@ -480,7 +483,6 @@ export default function KanjiAdmin() {
                                             const toDelete = d.items.slice(1).map(i => i.id);
                                             if (toDelete.length === 0) return;
                                             setBulkDeleting(true);
-                                            setBulkDeleteProgress(0);
                                             try {
                                                 const res = await fetch(`${API_URL}/admin/kanji/duplicates/delete`, {
                                                     method: 'POST',
@@ -499,15 +501,14 @@ export default function KanjiAdmin() {
                                                 toast.error('Network error during bulk delete');
                                             } finally {
                                                 setBulkDeleting(false);
-                                                setBulkDeleteProgress(0);
                                                 fetchKanjis();
                                                 setDuplicates([]);
                                             }
                                         }}
                                         disabled={bulkDeleting}
-                                        className={`px-4 py-2 rounded-2xl ${bulkDeleting ? 'bg-neutral-700 text-neutral-300' : 'bg-red-600 text-white'}`}
+                                        className="rounded-xl bg-[var(--brand-red)] px-4 py-2 text-sm font-medium text-white transition-colors hover:opacity-90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--brand-red)] disabled:cursor-wait disabled:opacity-50"
                                     >
-                                        {bulkDeleting ? 'Deleting...' : 'Delete duplicates'}
+                                        {bulkDeleting ? 'Menghapus duplikat...' : 'Hapus duplikat'}
                                     </button>
                                 </div>
                             </div>
@@ -546,9 +547,9 @@ export default function KanjiAdmin() {
                     } finally { setPreviewingAll(false); }
                 }}
                 disabled={previewingAll}
-                className="px-4 py-2 rounded-full bg-blue-600 text-white shadow-lg"
+                className="rounded-xl border border-[var(--border-color)] bg-[var(--card-bg)] px-4 py-2 text-sm font-medium text-[var(--foreground)] shadow-lg transition-colors hover:bg-[var(--background)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--brand-red)] disabled:cursor-wait disabled:opacity-60"
                 title="Preview duplicate groups and download JSON"
-            >{previewingAll ? 'Loading...' : 'Preview duplicates'}</button>
+            >{previewingAll ? 'Menyiapkan preview...' : 'Unduh daftar duplikat'}</button>
 
             <button
                 onClick={async () => {
@@ -584,9 +585,9 @@ export default function KanjiAdmin() {
                         toast.error('Bulk-delete failed');
                     } finally { setBulkDeleting(false); }
                 }}
-                className="px-4 py-2 rounded-full bg-red-600 text-white shadow-lg"
+                className="rounded-xl bg-[var(--brand-red)] px-4 py-2 text-sm font-medium text-white shadow-lg transition-colors hover:opacity-90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--brand-red)]"
                 title="Delete all duplicate items (dangerous)"
-            >Delete all duplicates</button>
+            >Hapus semua duplikat</button>
         </div>
         </div>
     );

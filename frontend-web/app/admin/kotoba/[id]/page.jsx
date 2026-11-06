@@ -1,280 +1,108 @@
 'use client';
 
-import { useState, useEffect, use } from 'react';
+import { use, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { API_URL } from '@/lib/api';
 import Link from 'next/link';
 import Cookies from 'js-cookie';
-import AppMessage from '@/components/common/AppMessage';
+import { API_URL } from '@/lib/api';
+import { appToast as toast } from '@/components/common/AppMessage';
+import AdminTabs from '@/components/admin/AdminTabs';
+import { ArrowLeft, Plus, Save, Trash2 } from 'lucide-react';
+
+const initialForm = { word: '', reading: '', meaning: '', word_type: '', jlpt_level: 5, examples: [], furigana: null, furigana_map: [] };
+const fieldClass = 'w-full rounded-xl border border-[var(--border-color)] bg-[var(--background)] px-3.5 py-3 text-sm text-[var(--foreground)] outline-none transition-colors placeholder:text-[var(--foreground)]/40 focus-visible:border-[var(--accent-blue)] focus-visible:ring-2 focus-visible:ring-[var(--accent-blue)]/20';
 
 export default function KotobaForm({ params }) {
     const { id } = use(params);
     const router = useRouter();
     const isNew = id === 'new';
-
-    const [formData, setFormData] = useState({
-        word: '',
-        reading: '',
-        meaning: '',
-        word_type: '',
-        jlpt_level: 5,
-        examples: []
-    });
-    const [error, setError] = useState(null);
-    const [loading, setLoading] = useState(false);
+    const [formData, setFormData] = useState(initialForm);
+    const [loading, setLoading] = useState(!isNew);
     const [saving, setSaving] = useState(false);
+    const [activeTab, setActiveTab] = useState('info');
+    const [fetchError, setFetchError] = useState('');
 
     useEffect(() => {
-        if (!isNew) {
-            fetchVocab();
-        }
-    }, [id]);
-
-    const fetchVocab = async () => {
-        setLoading(true);
-        setError(null);
-        try {
-            const token = Cookies.get('access_token');
-            const res = await fetch(`${API_URL}/admin/vocab/${id}`, {
-                headers: { 'Authorization': `Bearer ${token}` }
-            });
-            if (res.ok) {
-                const data = await res.json();
-                setFormData({
-                    ...data,
-                    examples: data.examples || []
-                });
-            } else {
-                const data = await res.json().catch(() => ({}));
-                setError(data.detail || data.message || `Gagal memuat data (Status: ${res.status})`);
+        if (isNew) return undefined;
+        let cancelled = false;
+        const loadVocab = async () => {
+            setLoading(true);
+            setFetchError('');
+            try {
+                const response = await fetch(`${API_URL}/admin/vocab/${id}`, { headers: { Authorization: `Bearer ${Cookies.get('access_token')}` } });
+                if (!response.ok) {
+                    const body = await response.json().catch(() => ({}));
+                    throw new Error(body.detail || body.message || `Gagal memuat Kotoba (${response.status}).`);
+                }
+                const data = await response.json();
+                if (!cancelled) setFormData({ ...initialForm, ...data, examples: Array.isArray(data.examples) ? data.examples : [] });
+            } catch (error) {
+                if (!cancelled) setFetchError(error.message || 'Tidak dapat terhubung ke server.');
+            } finally {
+                if (!cancelled) setLoading(false);
             }
-        } catch (err) {
-            console.error(err);
-            setError("Koneksi gagal. Mohon periksa internet Anda.");
-        } finally {
-            setLoading(false);
-        }
-    };
+        };
+        loadVocab();
+        return () => { cancelled = true; };
+    }, [id, isNew]);
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
+    const updateField = (field, value) => setFormData(current => ({ ...current, [field]: value }));
+    const updateExample = (index, field, value) => setFormData(current => ({ ...current, examples: current.examples.map((example, itemIndex) => itemIndex === index ? { ...example, [field]: value } : example) }));
+
+    const handleSubmit = async (event) => {
+        event.preventDefault();
+        if (!formData.word.trim() || !formData.reading.trim()) {
+            setActiveTab('info');
+            toast.error('Kata dan bacaan wajib diisi.');
+            return;
+        }
+        if (!formData.meaning.trim()) {
+            setActiveTab('content');
+            toast.error('Arti wajib diisi.');
+            return;
+        }
         setSaving(true);
-        setError(null);
-
         try {
-            const token = Cookies.get('access_token');
-            const url = isNew
-                ? `${API_URL}/admin/vocab`
-                : `${API_URL}/admin/vocab/${id}`;
-            const method = isNew ? 'POST' : 'PUT';
-
-            const res = await fetch(url, {
-                method: method,
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                },
-                body: JSON.stringify(formData)
+            const response = await fetch(isNew ? `${API_URL}/admin/vocab` : `${API_URL}/admin/vocab/${id}`, {
+                method: isNew ? 'POST' : 'PUT',
+                headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${Cookies.get('access_token')}` },
+                body: JSON.stringify({ ...formData, jlpt_level: Number(formData.jlpt_level), examples: formData.examples.filter(example => example.sentence?.trim() || example.meaning?.trim()) }),
             });
-
-            if (res.ok) {
-                router.push('/admin/kotoba');
-            } else {
-                const data = await res.json().catch(() => ({}));
-                setError(data.detail || data.message || `Gagal menyimpan (Status: ${res.status})`);
+            if (!response.ok) {
+                const body = await response.json().catch(() => ({}));
+                throw new Error(body.detail || body.message || `Gagal menyimpan Kotoba (${response.status}).`);
             }
-        } catch (err) {
-            console.error(err);
-            setError("Koneksi gagal. Mohon periksa internet Anda.");
+            toast.success(isNew ? 'Kotoba berhasil ditambahkan.' : 'Perubahan Kotoba berhasil disimpan.');
+            router.push('/admin/kotoba');
+        } catch (error) {
+            toast.error(error.message || 'Tidak dapat menyimpan Kotoba.');
         } finally {
             setSaving(false);
         }
     };
 
-    if (loading) return (
-        <div className="flex justify-center items-center min-h-[50vh]">
-            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-red-600"></div>
-        </div>
-    );
+    if (loading) return <div className="mx-auto max-w-4xl animate-pulse space-y-5"><div className="h-9 w-52 rounded-lg bg-[var(--border-color)]" /><div className="h-[520px] rounded-2xl border border-[var(--border-color)] bg-[var(--card-bg)]" /></div>;
+    if (fetchError) return <div className="mx-auto max-w-3xl rounded-2xl border border-[var(--border-color)] bg-[var(--card-bg)] p-8 text-center"><h1 className="text-xl font-semibold">Tidak dapat membuka Kotoba</h1><p role="alert" className="mt-2 text-sm text-[var(--foreground)]/60">{fetchError}</p><Link href="/admin/kotoba" className="mt-5 inline-flex items-center gap-2 rounded-xl border border-[var(--border-color)] px-4 py-2.5 text-sm transition-colors hover:bg-[var(--background)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--brand-red)]"><ArrowLeft size={16} /> Kembali ke daftar</Link></div>;
 
     return (
-        <div className="max-w-2xl mx-auto space-y-6">
-            {/* Header */}
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                <div className="flex items-center gap-4">
-                    <Link href="/admin/kotoba" className="p-2 rounded-xl text-neutral-400 hover:text-white hover:bg-white/5">
-                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-                        </svg>
-                    </Link>
-                    <h1 className="text-3xl font-black tracking-tight text-white">
-                        {isNew ? 'Kotoba Baru' : 'Edit Kotoba'}
-                    </h1>
+        <div className="mx-auto max-w-4xl space-y-6 pb-10">
+            <div className="flex items-center gap-3"><Link href="/admin/kotoba" aria-label="Kembali ke daftar Kotoba" className="rounded-xl p-2 text-[var(--foreground)]/60 transition-colors hover:bg-[var(--card-bg)] hover:text-[var(--foreground)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--brand-red)]"><ArrowLeft size={20} /></Link><div><p className="text-sm text-[var(--foreground)]/55">Koleksi / Kotoba</p><h1 className="mt-1 text-2xl font-semibold">{isNew ? 'Tambah Kotoba' : 'Edit Kotoba'}</h1></div></div>
+            <form onSubmit={handleSubmit} className="overflow-hidden rounded-2xl border border-[var(--border-color)] bg-[var(--card-bg)]">
+                <AdminTabs value={activeTab} onChange={setActiveTab} label="Bagian formulir Kotoba" tabs={[{ id: 'info', label: 'Info Dasar' }, { id: 'content', label: 'Konten Detail' }, { id: 'metadata', label: 'Metadata' }]} />
+                <div className="space-y-5 p-5 sm:p-7">
+                    <section id="admin-panel-info" role="tabpanel" aria-labelledby="admin-tab-info" hidden={activeTab !== 'info'} className="grid gap-5 sm:grid-cols-2"><Field label="Kata / Kanji" required><input className={fieldClass} value={formData.word} onChange={event => updateField('word', event.target.value)} maxLength={255} /></Field><Field label="Bacaan (Kana)" required><input className={fieldClass} value={formData.reading || ''} onChange={event => updateField('reading', event.target.value)} maxLength={255} /></Field></section>
+                    <section id="admin-panel-content" role="tabpanel" aria-labelledby="admin-tab-content" hidden={activeTab !== 'content'} className="space-y-6"><Field label="Arti" required><textarea className={`${fieldClass} resize-y`} rows={3} value={formData.meaning || ''} onChange={event => updateField('meaning', event.target.value)} /></Field>
+                    <section className="space-y-4 border-t border-[var(--border-color)] pt-6"><div className="flex flex-wrap items-center justify-between gap-3"><div><h2 className="text-base font-semibold">Contoh kalimat</h2><p className="mt-1 text-sm text-[var(--foreground)]/55">Tambahkan konteks penggunaan kata.</p></div><button type="button" onClick={() => updateField('examples', [...formData.examples, { sentence: '', meaning: '' }])} className="inline-flex items-center gap-2 rounded-xl border border-[var(--border-color)] px-3.5 py-2 text-sm font-medium transition-colors hover:bg-[var(--background)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--brand-red)]"><Plus size={16} /> Tambah contoh</button></div>
+                        {formData.examples.length ? <div className="space-y-3">{formData.examples.map((example, index) => <div key={`${index}-${example.sentence}`} className="grid gap-3 rounded-xl border border-[var(--border-color)] bg-[var(--background)] p-4 sm:grid-cols-[1fr_1fr_auto]"><input aria-label="Kalimat bahasa Jepang" className={fieldClass} placeholder="Kalimat bahasa Jepang" value={example.sentence || ''} onChange={event => updateExample(index, 'sentence', event.target.value)} /><input aria-label="Arti contoh kalimat" className={fieldClass} placeholder="Arti kalimat" value={example.meaning || ''} onChange={event => updateExample(index, 'meaning', event.target.value)} /><button type="button" aria-label="Hapus contoh kalimat" onClick={() => updateField('examples', formData.examples.filter((_, itemIndex) => itemIndex !== index))} className="justify-self-end rounded-lg p-2 text-[var(--brand-red)] transition-colors hover:bg-[var(--brand-red)]/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--brand-red)]"><Trash2 size={17} /></button></div>)}</div> : <p className="rounded-xl border border-dashed border-[var(--border-color)] px-4 py-6 text-center text-sm text-[var(--foreground)]/50">Belum ada contoh kalimat.</p>}
+                    </section></section>
+                    <section id="admin-panel-metadata" role="tabpanel" aria-labelledby="admin-tab-metadata" hidden={activeTab !== 'metadata'} className="grid gap-5 sm:grid-cols-2"><Field label="Tipe kata"><select className={fieldClass} value={formData.word_type || ''} onChange={event => updateField('word_type', event.target.value)}><option value="">Tidak ditentukan</option>{[['noun','Noun'],['godan','Godan verb'],['ichidan','Ichidan verb'],['suru','Suru verb'],['intransitive','Intransitive verb'],['transitive','Transitive verb'],['i_adj','I-adjective'],['na_adj','Na-adjective'],['adverb','Adverb'],['particle','Particle'],['suffix','Suffix'],['other','Lainnya']].map(([value,label]) => <option key={value} value={value}>{label}</option>)}</select></Field><Field label="Level JLPT" required><select className={fieldClass} value={formData.jlpt_level} onChange={event => updateField('jlpt_level', event.target.value)}>{[5,4,3,2,1].map(level => <option key={level} value={level}>N{level}</option>)}</select></Field></section>
                 </div>
-            </div>
-
-            {error && (
-                <AppMessage variant="warning" className="p-6 text-base">
-                    <span className="font-bold">{error}</span>
-                </AppMessage>
-            )}
-
-            <form onSubmit={handleSubmit} className="rounded-[2rem] border overflow-hidden bg-neutral-900/30 border-white/5 space-y-6 p-8">
-                <div className="space-y-2">
-                    <label className="text-[10px] font-black uppercase tracking-widest opacity-50">Kata / Kanji</label>
-                    <input
-                        type="text"
-                        required
-                        className="w-full p-4 rounded-xl border-2 outline-none transition-all bg-white/5 border-white/5 focus:border-red-600 text-white"
-                        value={formData.word}
-                        onChange={e => setFormData({ ...formData, word: e.target.value })}
-                    />
-                </div>
-
-                <div className="space-y-2">
-                    <label className="text-[10px] font-black uppercase tracking-widest opacity-50">Bacaan (Kana)</label>
-                    <input
-                        type="text"
-                        required
-                        className="w-full p-4 rounded-xl border-2 outline-none transition-all bg-white/5 border-white/5 focus:border-red-600 text-white"
-                        value={formData.reading}
-                        onChange={e => setFormData({ ...formData, reading: e.target.value })}
-                    />
-                </div>
-
-                <div className="space-y-2">
-                    <label className="text-[10px] font-black uppercase tracking-widest opacity-50">Arti</label>
-                    <textarea
-                        required
-                        rows="4"
-                        className="w-full p-4 rounded-xl border-2 outline-none transition-all bg-white/5 border-white/5 focus:border-red-600 text-white"
-                        value={formData.meaning}
-                        onChange={e => setFormData({ ...formData, meaning: e.target.value })}
-                    />
-                </div>
-
-                <div className="space-y-2">
-                    <label className="text-[10px] font-black uppercase tracking-widest opacity-50">Tipe Kata</label>
-                    <select
-                        className="w-full p-4 rounded-xl border-2 outline-none transition-all bg-neutral-800 border-white/5 text-white"
-                        value={formData.word_type || ''}
-                        onChange={e => setFormData({ ...formData, word_type: e.target.value })}
-                    >
-                        <option value="">-- Tidak Ada Tipe --</option>
-                        <option value="noun">Noun (Kata Benda)</option>
-                        <option value="godan">Godan Verb (Golongan 1)</option>
-                        <option value="ichidan">Ichidan Verb (Golongan 2)</option>
-                        <option value="suru">Suru Verb (Golongan 3)</option>
-                        <option value="intransitive">Intransitive Verb</option>
-                        <option value="transitive">Transitive Verb</option>
-                        <option value="i_adj">I-Adjective</option>
-                        <option value="na_adj">Na-Adjective</option>
-                        <option value="adverb">Adverb (Kata Keterangan)</option>
-                        <option value="particle">Particle (Partikel)</option>
-                        <option value="suffix">Suffix (Akhiran)</option>
-                        <option value="other">Other (Lain-lain)</option>
-                    </select>
-                </div>
-
-                <div className="space-y-2">
-                    <label className="text-[10px] font-black uppercase tracking-widest opacity-50">Level JLPT</label>
-                    <select
-                        className="w-full p-4 rounded-xl border-2 outline-none transition-all bg-neutral-800 border-white/5 text-white"
-                        value={formData.jlpt_level}
-                        onChange={e => setFormData({ ...formData, jlpt_level: parseInt(e.target.value) })}
-                    >
-                        {[5, 4, 3, 2, 1].map(l => (
-                            <option key={l} value={l}>N{l}</option>
-                        ))}
-                    </select>
-                </div>
-
-                {/* Examples */}
-                <div className="border-t border-gray-100 dark:border-white/5 pt-6 space-y-4">
-                    <div className="flex items-center justify-between">
-                        <label className="text-[10px] font-black uppercase tracking-widest opacity-50">Contoh Kalimat</label>
-                        <button
-                            type="button"
-                            onClick={() => {
-                                const newExamples = [...(formData.examples || []), { sentence: '', meaning: '' }];
-                                setFormData({ ...formData, examples: newExamples });
-                            }}
-                            className="text-xs font-black text-red-600 hover:text-red-700 uppercase tracking-widest"
-                        >
-                            + Tambah Contoh
-                        </button>
-                    </div>
-
-                    <div className="space-y-4">
-                        {(formData.examples || []).map((ex, idx) => (
-                            <div key={idx} className="p-4 rounded-xl relative group bg-white/5">
-                                <button
-                                    type="button"
-                                    onClick={() => {
-                                        const newExamples = formData.examples.filter((_, i) => i !== idx);
-                                        setFormData({ ...formData, examples: newExamples });
-                                    }}
-                                    className="absolute top-3 right-3 p-1 rounded-lg transition-colors text-neutral-400 hover:text-red-400 hover:bg-red-500/10"
-                                >
-                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                                    </svg>
-                                </button>
-                                <div className="space-y-3 pr-10">
-                                    <div>
-                                        <input
-                                            type="text"
-                                            placeholder="Kalimat Bahasa Jepang"
-                                            className="w-full p-3 rounded-lg border text-sm bg-white/5 border-white/5 text-white"
-                                            value={ex.sentence}
-                                            onChange={e => {
-                                                const newExamples = [...formData.examples];
-                                                newExamples[idx].sentence = e.target.value;
-                                                setFormData({ ...formData, examples: newExamples });
-                                            }}
-                                        />
-                                    </div>
-                                    <div>
-                                        <input
-                                            type="text"
-                                            placeholder="Arti"
-                                            className="w-full p-3 rounded-lg border text-sm bg-white/5 border-white/5 text-white"
-                                            value={ex.meaning}
-                                            onChange={e => {
-                                                const newExamples = [...formData.examples];
-                                                newExamples[idx].meaning = e.target.value;
-                                                setFormData({ ...formData, examples: newExamples });
-                                            }}
-                                        />
-                                    </div>
-                                </div>
-                            </div>
-                        ))}
-                        {(formData.examples || []).length === 0 && (
-                            <p className="text-sm text-center py-8 rounded-xl text-neutral-500 bg-white/5">
-                                Belum ada contoh kalimat.
-                            </p>
-                        )}
-                    </div>
-                </div>
-
-                <div className="flex flex-col md:flex-row md:justify-end gap-4 pt-6 border-t border-gray-100 dark:border-white/5">
-                    <button
-                        type="button"
-                        onClick={() => router.back()}
-                        className="flex-1 md:flex-none px-6 py-3 rounded-xl font-bold text-center transition-all bg-white/5 text-white hover:bg-white/10"
-                    >
-                        Batal
-                    </button>
-                    <button
-                        type="submit"
-                        disabled={saving}
-                        className="flex-1 md:flex-none bg-red-600 text-white px-8 py-3 rounded-xl font-black shadow-lg shadow-red-500/20 hover:bg-red-700 transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
-                    >
-                        {saving ? 'Menyimpan...' : 'Simpan Kotoba'}
-                    </button>
-                </div>
+                <div className="flex flex-col-reverse gap-3 border-t border-[var(--border-color)] p-5 sm:flex-row sm:justify-end sm:px-7"><Link href="/admin/kotoba" className="rounded-xl border border-[var(--border-color)] px-5 py-2.5 text-center text-sm font-medium transition-colors hover:bg-[var(--background)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--brand-red)]">Batal</Link><button type="submit" disabled={saving} className="inline-flex items-center justify-center gap-2 rounded-xl bg-[var(--brand-red)] px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:opacity-90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--brand-red)] disabled:cursor-wait disabled:opacity-60"><Save size={16} />{saving ? 'Menyimpan...' : isNew ? 'Tambah Kotoba' : 'Simpan perubahan'}</button></div>
             </form>
         </div>
     );
+}
+
+function Field({ label, required, children }) {
+    return <label className="block space-y-1.5"><span className="block text-sm font-medium text-[var(--foreground)]">{label}{required && <span className="ml-1 text-[var(--brand-red)]">*</span>}</span>{children}</label>;
 }

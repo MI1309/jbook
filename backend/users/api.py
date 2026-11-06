@@ -11,22 +11,17 @@ from google.auth.transport import requests
 from django.conf import settings
 from ninja.errors import HttpError
 from ninja_jwt.authentication import JWTAuth
-from django.core.mail import send_mail
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_str
 from django.contrib.auth.tokens import default_token_generator
-from django.template.loader import render_to_string
 from django.core.cache import cache
-import logging
-import random
-import string
 from core.decorators import rate_limit
 from .models import TTSPointSession, UserProfile
 from .privacy import email_lookup_digest, mask_email
+from .services import generate_reset_token, send_reset_email
 
 router = Router()
 User = get_user_model()
-logger = logging.getLogger(__name__)
 
 class AuthBearer(JWTAuth):
     pass
@@ -252,9 +247,6 @@ def claim_tts_points(request, data: TTSPointsClaimSchema):
     request.auth.refresh_from_db(fields=["tts_points"])
     return serialize_user(request.auth)
 
-def _generate_otp(length: int = 6) -> str:
-    return ''.join(random.choices(string.digits, k=length))
-
 @router.post("/password-reset")
 @rate_limit(key='ip', rate='5/h')  # Max 5 password reset request per IP per jam
 def password_reset_request(request, data: PasswordResetRequestSchema):
@@ -262,9 +254,8 @@ def password_reset_request(request, data: PasswordResetRequestSchema):
     user = User.objects.filter(email_lookup_hash=email_hash).first()
     email_sent = False
     if user:
-        # Generate token and uid for direct link
         uid = urlsafe_base64_encode(force_bytes(user.pk))
-        token = default_token_generator.make_token(user)
+        token = generate_reset_token(user)
 
         # Determine base URL for reset link
         # 1. Try Origin header (sent by browsers for POST)
@@ -283,34 +274,7 @@ def password_reset_request(request, data: PasswordResetRequestSchema):
             base_url = getattr(settings, 'FRONTEND_URL', 'http://localhost:3000')
 
         reset_link = f"{base_url}/reset-password?uid={uid}&token={token}"
-
-        # Also generate OTP for backward compatibility
-        otp = _generate_otp(6)
-        cache.set(f"otp_reset_{email_hash}", otp, timeout=600)  # 10 menit
-
-        subject = "JBook - Reset Password"
-        message = (
-            f"Klik link berikut untuk reset password Anda:\n{reset_link}\n\n"
-            f"Atau gunakan kode OTP ini: {otp}\n\n"
-            f"Link dan kode ini berlaku selama 10 menit. "
-            f"Jika Anda tidak meminta reset password, abaikan email ini."
-        )
-
-        if getattr(settings, 'EMAIL_HOST_USER', None) and getattr(settings, 'EMAIL_HOST_PASSWORD', None):
-            try:
-                email_sent = send_mail(
-                    subject,
-                    message,
-                    getattr(settings, 'DEFAULT_FROM_EMAIL', 'noreply@localhost'),
-                    [user.get_private_email()],
-                    fail_silently=False,
-                ) == 1
-            except Exception:
-                logger.exception("Password reset email delivery failed")
-        elif settings.DEBUG:
-            # In dev, print to console as fallback
-            print(f"\n[PASSWORD RESET - DEV MODE] Reset link generated for user {user.pk}")
-            print(f"[PASSWORD RESET - DEV MODE] OTP: {otp}\n")
+        email_sent = send_reset_email(user, token, reset_link)
 
     # Never include account details or reset tokens in the response.
     return {

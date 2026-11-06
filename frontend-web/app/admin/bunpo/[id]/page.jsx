@@ -27,6 +27,7 @@ export default function BunpoForm({ params }) {
     });
     // Temporary state for a new sentence
     const [newSentence, setNewSentence] = useState({ jp: '', id: '', expressions: [] });
+    const [activeTab, setActiveTab] = useState('info');
 
     useEffect(() => {
         if (isNew) return;
@@ -100,6 +101,21 @@ export default function BunpoForm({ params }) {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        if (!formData.title.trim() || !formData.structure.trim()) {
+            setActiveTab('info');
+            toast.error('Judul dan struktur wajib diisi.');
+            return;
+        }
+        if (!formData.explanation.trim()) {
+            setActiveTab('content');
+            toast.error('Penjelasan wajib diisi.');
+            return;
+        }
+        if (formData.chapter === '') {
+            setActiveTab('metadata');
+            toast.error('Bab wajib diisi.');
+            return;
+        }
         setSaving(true);
         try {
             const token = Cookies.get('access_token');
@@ -163,7 +179,28 @@ export default function BunpoForm({ params }) {
             {/* Form */}
             <div className="overflow-hidden rounded-2xl border border-[var(--border-color)] bg-[var(--card-bg)]">
                 <form onSubmit={handleSubmit} className="space-y-7 p-5 sm:p-7">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="flex gap-1 overflow-x-auto border-b border-[var(--border-color)]" role="tablist" aria-label="Bagian formulir Bunpo">
+                        {[
+                            ['info', 'Info Dasar'],
+                            ['content', 'Konten Detail'],
+                            ['metadata', 'Metadata'],
+                        ].map(([tab, label]) => (
+                            <button
+                                key={tab}
+                                type="button"
+                                role="tab"
+                                id={`bunpo-tab-${tab}`}
+                                aria-selected={activeTab === tab}
+                                aria-controls={`bunpo-panel-${tab}`}
+                                onClick={() => setActiveTab(tab)}
+                                className={`shrink-0 border-b-2 px-4 py-3 text-sm font-medium transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--brand-red)] ${activeTab === tab ? 'border-[var(--brand-red)] text-[var(--brand-red)]' : 'border-transparent text-[var(--foreground)]/55 hover:text-[var(--foreground)]'}`}
+                            >
+                                {label}
+                            </button>
+                        ))}
+                    </div>
+
+                    <section id="bunpo-panel-info" role="tabpanel" aria-labelledby="bunpo-tab-info" hidden={activeTab !== 'info'} className="grid grid-cols-1 gap-6 md:grid-cols-2">
                         <div className="space-y-2 col-span-full md:col-span-1">
                             <label className="text-sm font-medium text-[var(--foreground)]" htmlFor="bunpo-title">Judul</label>
                             <input
@@ -172,7 +209,6 @@ export default function BunpoForm({ params }) {
                                 className="w-full rounded-xl border border-[var(--border-color)] bg-[var(--background)] p-3.5 text-sm text-[var(--foreground)] outline-none transition-colors placeholder:text-[var(--foreground)]/40 focus-visible:border-[var(--accent-blue)] focus-visible:ring-2 focus-visible:ring-[var(--accent-blue)]/20"
                                 value={formData.title}
                                 onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                                required
                             />
                         </div>
                         <div className="space-y-2 col-span-full md:col-span-1">
@@ -183,11 +219,11 @@ export default function BunpoForm({ params }) {
                                 className="w-full rounded-xl border border-[var(--border-color)] bg-[var(--background)] p-3.5 text-sm text-[var(--foreground)] outline-none transition-colors placeholder:text-[var(--foreground)]/40 focus-visible:border-[var(--accent-blue)] focus-visible:ring-2 focus-visible:ring-[var(--accent-blue)]/20"
                                 value={formData.structure}
                                 onChange={(e) => setFormData({ ...formData, structure: e.target.value })}
-                                required
                             />
                         </div>
-                    </div>
+                    </section>
 
+                    <section id="bunpo-panel-content" role="tabpanel" aria-labelledby="bunpo-tab-content" hidden={activeTab !== 'content'} className="space-y-6">
                     <div className="space-y-2">
                         <label className="text-sm font-medium text-[var(--foreground)]" htmlFor="bunpo-explanation">Penjelasan</label>
                         <textarea
@@ -196,11 +232,12 @@ export default function BunpoForm({ params }) {
                             className="w-full resize-y rounded-xl border border-[var(--border-color)] bg-[var(--background)] p-3.5 text-sm leading-6 text-[var(--foreground)] outline-none transition-colors focus-visible:border-[var(--accent-blue)] focus-visible:ring-2 focus-visible:ring-[var(--accent-blue)]/20"
                             value={formData.explanation}
                             onChange={(e) => setFormData({ ...formData, explanation: e.target.value })}
-                            required
                         />
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    </section>
+
+                    <section id="bunpo-panel-metadata" role="tabpanel" aria-labelledby="bunpo-tab-metadata" hidden={activeTab !== 'metadata'} className="grid grid-cols-1 gap-6 md:grid-cols-2">
                         <div className="space-y-2">
                             <label className="text-sm font-medium text-[var(--foreground)]" htmlFor="bunpo-chapter">Bab</label>
                             <input
@@ -214,7 +251,6 @@ export default function BunpoForm({ params }) {
                                         setFormData({ ...formData, chapter: e.target.value });
                                     }
                                 }}
-                                required
                                 min={0}
                             />
                         </div>
@@ -229,10 +265,9 @@ export default function BunpoForm({ params }) {
                                 {[5,4,3,2,1].map(l => <option key={l} value={l}>N{l}</option>)}
                             </select>
                         </div>
-                    </div>
+                    </section>
 
-                    {/* Sentences */}
-                    <div className="space-y-4 border-t border-[var(--border-color)] pt-6">
+                    <section hidden={activeTab !== 'content'} aria-label="Contoh kalimat" className="space-y-4 border-t border-[var(--border-color)] pt-6">
                         <div><h3 className="text-base font-semibold text-[var(--foreground)]">Contoh Kalimat</h3><p className="mt-1 text-sm text-[var(--foreground)]/55">Kalimat dan ekspresi terkait untuk menjelaskan pola.</p></div>
                         {formData.sentences.map((sent, idx) => (
                             <div key={idx} className="space-y-4 rounded-xl border border-[var(--border-color)] bg-[var(--background)] p-4">
@@ -304,7 +339,7 @@ export default function BunpoForm({ params }) {
                                 <Plus size={16} /> Tambah kalimat
                             </button>
                         </div>
-                    </div>
+                    </section>
 
                     <div className="sticky bottom-0 -mx-5 -mb-5 flex flex-col-reverse gap-3 border-t border-[var(--border-color)] bg-[var(--card-bg)]/95 p-5 backdrop-blur sm:-mx-7 sm:-mb-7 sm:flex-row sm:justify-end sm:px-7">
                         <Link href="/admin/bunpo" className="rounded-xl border border-[var(--border-color)] px-5 py-2.5 text-center text-sm font-medium text-[var(--foreground)] transition-colors hover:bg-[var(--background)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--brand-red)]">

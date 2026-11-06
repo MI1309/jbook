@@ -82,6 +82,12 @@ class ProfileImageApiTests(TestCase):
 	EMAIL_BACKEND="django.core.mail.backends.locmem.EmailBackend",
 	EMAIL_HOST_USER="sender@example.com",
 	EMAIL_HOST_PASSWORD="test-password",
+	CACHES={
+		"default": {
+			"BACKEND": "django.core.cache.backends.locmem.LocMemCache",
+			"LOCATION": "users-private-email-tests",
+		}
+	},
 )
 class PrivateEmailTests(TestCase):
 	def setUp(self):
@@ -207,7 +213,7 @@ class PrivateEmailTests(TestCase):
 		self.assertNotIn(unknown_email, response.content.decode())
 		self.assertEqual(len(mail.outbox), 0)
 
-	@patch("users.api.send_mail", side_effect=OSError("SMTP unavailable"))
+	@patch("users.services.send_mail", side_effect=OSError("SMTP unavailable"))
 	def test_password_reset_reports_mail_delivery_failure(self, send_mail_mock):
 		response = self.client.post(
 			"/api/auth/password-reset",

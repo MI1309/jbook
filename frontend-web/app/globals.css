@@ -119,6 +119,18 @@ body {
   background-color: var(--admin-hover);
 }
 
+.admin-shell a,
+.admin-shell button {
+  transition-property: color, background-color, border-color, opacity;
+  transition-duration: 150ms;
+}
+
+.admin-shell a:focus-visible,
+.admin-shell button:focus-visible {
+  outline: 2px solid var(--brand-red);
+  outline-offset: 2px;
+}
+
 html.preload,
 html.preload *,
 html.preload *::before,

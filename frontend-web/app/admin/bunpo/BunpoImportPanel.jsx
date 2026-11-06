@@ -3,6 +3,7 @@
 import { useRef, useState } from 'react';
 import Cookies from 'js-cookie';
 import { API_URL } from '@/lib/api';
+import { appToast as toast } from '@/components/common/AppMessage';
 
 const SECTION_KEYS = [
     'mainFunction', 'sentencePattern', 'examples', 'comparison', 'nuance',
@@ -120,6 +121,7 @@ export default function BunpoImportPanel({ onImported }) {
         const validationErrors = validateImportItems(items);
         if (validationErrors.length) {
             setMessage({ type: 'error', text: validationErrors.join('\n') });
+            toast.error('Validasi import gagal. Periksa detail pada panel.');
             return;
         }
 
@@ -144,9 +146,11 @@ export default function BunpoImportPanel({ onImported }) {
             }
 
             setMessage({ type: 'success', text: `Berhasil mengimport ${result.count ?? items.length} data. Halaman publik dan sitemap dapat memerlukan hingga 1 jam untuk diperbarui.` });
+            toast.success(`Berhasil mengimport ${result.count ?? items.length} data Bunpo.`);
             onImported?.();
         } catch (error) {
             setMessage({ type: 'error', text: error.message || 'Import gagal karena kesalahan jaringan.' });
+            toast.error('Import Bunpo gagal. Periksa detail pada panel.');
         } finally {
             setSubmitting(false);
         }
@@ -159,6 +163,7 @@ export default function BunpoImportPanel({ onImported }) {
             sections = JSON.parse(singleForm.sections);
         } catch {
             setMessage({ type: 'error', text: 'JSON sections tidak valid. Periksa tanda kurung dan koma.' });
+            toast.error('JSON sections tidak valid.');
             return;
         }
 
@@ -180,10 +185,12 @@ export default function BunpoImportPanel({ onImported }) {
             items = JSON.parse(bulkText);
         } catch {
             setMessage({ type: 'error', text: 'JSON tidak valid. Periksa tanda kurung dan koma.' });
+            toast.error('JSON tidak valid.');
             return;
         }
         if (!Array.isArray(items)) {
             setMessage({ type: 'error', text: 'Payload harus berupa array JSON: [ { ... }, { ... } ].' });
+            toast.error('Payload harus berupa array JSON.');
             return;
         }
         await importItems(items);
@@ -203,20 +210,22 @@ export default function BunpoImportPanel({ onImported }) {
         }
     };
 
-    const inputClass = 'w-full rounded-xl border border-white/10 bg-neutral-800 px-3 py-2.5 text-sm text-white placeholder-neutral-500 focus:border-red-500/60 focus:outline-none focus:ring-2 focus:ring-red-500/20';
-    const labelClass = 'mb-1.5 block text-xs font-bold text-neutral-300';
+    const inputClass = 'w-full rounded-xl border border-[var(--border-color)] bg-[var(--background)] px-3 py-2.5 text-sm text-[var(--foreground)] placeholder:text-[var(--foreground)]/45 focus:border-[var(--accent-blue)] focus:outline-none focus:ring-2 focus:ring-[var(--accent-blue)]/20';
+    const labelClass = 'mb-1.5 block text-xs font-bold text-[var(--foreground)]/75';
 
     return (
-        <section id="bunpo-import" className="overflow-hidden rounded-2xl border border-white/10 bg-neutral-900/50">
-            <div className="flex border-b border-white/10" role="tablist" aria-label="Mode input Bunpo">
+        <section id="bunpo-import" className="overflow-hidden rounded-2xl border border-[var(--border-color)] bg-[var(--card-bg)]">
+            <div className="flex border-b border-[var(--border-color)]" role="tablist" aria-label="Mode input Bunpo">
                 {[['single', 'Form Satuan'], ['bulk', 'Bulk Import JSON']].map(([tab, label]) => (
                     <button
                         key={tab}
                         type="button"
                         role="tab"
                         aria-selected={activeTab === tab}
+                        aria-controls={`bunpo-import-panel-${tab}`}
+                        id={`bunpo-import-tab-${tab}`}
                         onClick={() => { setActiveTab(tab); setMessage(null); }}
-                        className={`min-h-12 border-b-2 px-4 text-sm font-bold transition-colors ${activeTab === tab ? 'border-red-500 text-white' : 'border-transparent text-neutral-500 hover:text-neutral-200'}`}
+                        className={`min-h-12 border-b-2 px-4 text-sm font-bold transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--brand-red)] ${activeTab === tab ? 'border-[var(--brand-red)] text-[var(--foreground)]' : 'border-transparent text-[var(--foreground)]/55 hover:text-[var(--foreground)]'}`}
                     >
                         {label}
                     </button>
@@ -224,13 +233,13 @@ export default function BunpoImportPanel({ onImported }) {
             </div>
 
             {message && (
-                <div role={message.type === 'error' ? 'alert' : 'status'} className={`mx-5 mt-5 whitespace-pre-wrap rounded-xl border px-4 py-3 text-sm ${message.type === 'error' ? 'border-red-500/30 bg-red-500/10 text-red-200' : 'border-emerald-500/30 bg-emerald-500/10 text-emerald-200'}`}>
+                <div role={message.type === 'error' ? 'alert' : 'status'} className={`mx-5 mt-5 whitespace-pre-wrap rounded-xl border px-4 py-3 text-sm ${message.type === 'error' ? 'border-[var(--brand-red)]/25 bg-[var(--brand-red-light)] text-[var(--foreground)]' : 'border-[var(--accent-green)]/25 bg-[var(--accent-green)]/10 text-[var(--foreground)]'}`}>
                     {message.text}
                 </div>
             )}
 
             {activeTab === 'single' ? (
-                <form onSubmit={submitSingle} className="space-y-4 p-5">
+                <form id="bunpo-import-panel-single" role="tabpanel" aria-labelledby="bunpo-import-tab-single" onSubmit={submitSingle} className="space-y-4 p-5">
                     <div className="grid gap-4 md:grid-cols-2">
                         <label><span className={labelClass}>Judul materi</span><input required value={singleForm.title} onChange={(event) => setSingleForm({ ...singleForm, title: event.target.value })} className={inputClass} placeholder="～は～です" /></label>
                         <label><span className={labelClass}>Slug</span><input required pattern="[a-z0-9]+(?:-[a-z0-9]+)*" value={singleForm.slug} onChange={(event) => setSingleForm({ ...singleForm, slug: event.target.value })} className={inputClass} placeholder="wa-desu" /></label>
@@ -240,17 +249,17 @@ export default function BunpoImportPanel({ onImported }) {
                     <label className="block"><span className={labelClass}>Struktur</span><input value={singleForm.structure} onChange={(event) => setSingleForm({ ...singleForm, structure: event.target.value })} className={inputClass} /></label>
                     <label className="block"><span className={labelClass}>Penjelasan legacy</span><textarea rows={3} value={singleForm.explanation} onChange={(event) => setSingleForm({ ...singleForm, explanation: event.target.value })} className={inputClass} /></label>
                     <label className="block"><span className={labelClass}>Sections JSON</span><textarea required spellCheck={false} rows={18} value={singleForm.sections} onChange={(event) => setSingleForm({ ...singleForm, sections: event.target.value })} className={`${inputClass} font-mono text-xs leading-relaxed`} /></label>
-                    <button disabled={submitting} className="rounded-xl bg-red-600 px-5 py-3 text-sm font-black text-white transition-colors hover:bg-red-500 disabled:cursor-wait disabled:opacity-50">{submitting ? 'Menyimpan...' : 'Simpan Bunpo'}</button>
+                    <button disabled={submitting} className="rounded-xl bg-[var(--brand-red)] px-5 py-3 text-sm font-semibold text-white transition-colors hover:opacity-90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--brand-red)] disabled:cursor-wait disabled:opacity-50">{submitting ? 'Menyimpan...' : 'Simpan Bunpo'}</button>
                 </form>
             ) : (
-                <form onSubmit={submitBulk} className="space-y-4 p-5">
+                <form id="bunpo-import-panel-bulk" role="tabpanel" aria-labelledby="bunpo-import-tab-bulk" onSubmit={submitBulk} className="space-y-4 p-5">
                     <div className="flex flex-wrap items-center gap-3">
-                        <button type="button" onClick={() => fileInputRef.current?.click()} className="rounded-xl border border-white/10 bg-neutral-800 px-4 py-2.5 text-sm font-bold text-neutral-200 transition-colors hover:bg-neutral-700">Pilih file JSON</button>
+                        <button type="button" onClick={() => fileInputRef.current?.click()} className="rounded-xl border border-[var(--border-color)] bg-[var(--background)] px-4 py-2.5 text-sm font-medium text-[var(--foreground)] transition-colors hover:bg-[var(--admin-hover)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--brand-red)]">Pilih file JSON</button>
                         <input ref={fileInputRef} type="file" accept=".json,application/json" className="sr-only" onChange={loadFile} />
-                        <span className="text-xs text-neutral-500">atau tempel array JSON di bawah</span>
+                        <span className="text-xs text-[var(--foreground)]/55">atau tempel array JSON di bawah</span>
                     </div>
                     <label className="block"><span className={labelClass}>Array Bunpo</span><textarea required spellCheck={false} rows={20} value={bulkText} onChange={(event) => setBulkText(event.target.value)} className={`${inputClass} font-mono text-xs leading-relaxed`} placeholder={'[\n  {\n    "title": "～は～です",\n    "slug": "wa-desu",\n    "jlpt_level": 5,\n    "sections": { ... }\n  }\n]'} /></label>
-                    <button disabled={submitting} className="rounded-xl bg-red-600 px-5 py-3 text-sm font-black text-white transition-colors hover:bg-red-500 disabled:cursor-wait disabled:opacity-50">{submitting ? 'Mengimport...' : 'Import JSON'}</button>
+                    <button disabled={submitting} className="rounded-xl bg-[var(--brand-red)] px-5 py-3 text-sm font-semibold text-white transition-colors hover:opacity-90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--brand-red)] disabled:cursor-wait disabled:opacity-50">{submitting ? 'Mengimport...' : 'Import JSON'}</button>
                 </form>
             )}
         </section>

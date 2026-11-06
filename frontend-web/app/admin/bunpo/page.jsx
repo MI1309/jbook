@@ -3,7 +3,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { API_URL, setBunpoVisibilityCache } from '@/lib/api';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import { useDebounce } from 'use-debounce';
 import Cookies from 'js-cookie';
 import { appToast as toast } from '@/components/common/AppMessage';
@@ -11,7 +10,8 @@ import ConfirmationModal from '@/components/common/ConfirmationModal';
 import Pagination from '@/components/common/Pagination';
 import { getBunpoSlug } from '@/data/bunpoSlugs';
 import BunpoImportPanel from './BunpoImportPanel';
-import { Download, Eye, FilePlus2, Pencil, Plus, Search, Trash2 } from 'lucide-react';
+import { Download, Eye, Pencil, Plus, Search, Trash2 } from 'lucide-react';
+import { AdminEmptyState, AdminErrorState, AdminSkeleton } from '@/components/admin/AdminFeedback';
 
 export default function BunpoAdmin() {
     const [bunpos, setBunpos] = useState([]);
@@ -26,7 +26,6 @@ export default function BunpoAdmin() {
     const [pendingDelete, setPendingDelete] = useState(null);
     const [disabledLevels, setDisabledLevels] = useState([]);
     const [savingVisibility, setSavingVisibility] = useState(false);
-    const router = useRouter();
 
     const [debouncedChapter] = useDebounce(filterChapter, 500);
     const [debouncedSearch] = useDebounce(search, 500);
@@ -174,13 +173,13 @@ export default function BunpoAdmin() {
 
     const levelColor = (level) => {
         const colors = {
-            5: 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400',
-            4: 'bg-teal-100 text-teal-800 dark:bg-teal-900/30 dark:text-teal-400',
-            3: 'bg-indigo-100 text-indigo-800 dark:bg-indigo-900/30 dark:text-indigo-400',
-            2: 'bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-400',
-            1: 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400'
+            5: 'bg-[var(--accent-green)]/10 text-[var(--accent-green)]',
+            4: 'bg-[var(--accent-blue)]/10 text-[var(--accent-blue)]',
+            3: 'bg-[var(--accent-gold)]/12 text-[var(--accent-gold)]',
+            2: 'bg-[var(--brand-red)]/10 text-[var(--brand-red)]',
+            1: 'bg-[var(--foreground)]/8 text-[var(--foreground)]/70'
         };
-        return colors[level] || 'bg-neutral-100 text-neutral-700 dark:bg-neutral-800 dark:text-neutral-400';
+        return colors[level] || 'bg-[var(--background)] text-[var(--foreground)]/65';
     };
 
     return (
@@ -216,9 +215,9 @@ export default function BunpoAdmin() {
                                     disabled={savingVisibility}
                                     onClick={() => toggleVisibility(level)}
                                     className={`px-4 py-2 rounded-xl border text-xs font-black transition-all cursor-pointer ${isDisabled
-                                        ? 'bg-red-600/20 border-red-500/40 text-red-300'
-                                        : 'bg-emerald-600/20 border-emerald-500/40 text-emerald-300'
-                                    } disabled:opacity-50`}
+                                        ? 'bg-[var(--brand-red)]/10 border-[var(--brand-red)]/25 text-[var(--brand-red)]'
+                                        : 'bg-[var(--accent-green)]/10 border-[var(--accent-green)]/25 text-[var(--accent-green)]'
+                                    } hover:opacity-80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--brand-red)] disabled:cursor-wait disabled:opacity-50`}
                                 >
                                     N{level} {isDisabled ? 'OFF' : 'ON'}
                                 </button>
@@ -269,53 +268,37 @@ export default function BunpoAdmin() {
             {/* Content */}
             <div className="overflow-hidden rounded-2xl border border-[var(--border-color)] bg-[var(--card-bg)]">
                 {loading ? (
-                    <div className="animate-pulse space-y-3 p-5 sm:p-6">
-                        {[1, 2, 3, 4, 5].map(row => <div key={row} className="h-12 rounded-lg bg-[var(--background)]" />)}
-                    </div>
+                    <AdminSkeleton rows={5} />
                 ) : fetchError ? (
-                    <div className="p-10 text-center" role="alert">
-                        <p className="text-sm font-bold text-red-300">{fetchError}</p>
-                        <button
-                            type="button"
-                            onClick={fetchBunpos}
-                            className="mt-4 rounded-lg border border-white/15 px-4 py-2 text-sm font-bold text-white transition-colors hover:bg-white/10"
-                        >
-                            Coba lagi
-                        </button>
-                    </div>
+                    <div className="p-5 sm:p-6"><AdminErrorState title="Bunpo gagal dimuat" message={fetchError} onRetry={fetchBunpos} /></div>
                 ) : bunpos.length === 0 ? (
-                    <div className="px-6 py-12 text-center">
-                        <Search size={30} className="mx-auto text-[var(--foreground)]/35" />
-                        <p className="mt-3 text-sm font-semibold text-[var(--foreground)]">Belum ada Bunpo</p>
-                        <p className="mt-1 text-sm text-[var(--foreground)]/55">Ubah filter atau tambahkan materi baru.</p>
-                        <Link href="/admin/bunpo/new" className="mt-4 inline-flex items-center gap-2 rounded-xl bg-[var(--brand-red)] px-4 py-2.5 text-sm font-medium text-white transition-colors hover:opacity-90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--brand-red)]"><FilePlus2 size={16} /> Tambah Bunpo</Link>
-                    </div>
+                    <AdminEmptyState title="Belum ada Bunpo" message="Ubah filter atau tambahkan materi baru." href="/admin/bunpo/new" actionLabel="Tambah Bunpo" icon={Search} />
                 ) : (
                     <>
                         {/* Desktop Table */}
                         <div className="hidden md:block overflow-x-auto">
-                            <table className="admin-table min-w-full divide-y">
+                            <table className="admin-table min-w-full">
                                 <thead className="admin-table-head">
                                     <tr>
-                                        <th className="admin-table-heading px-6 py-4 text-left text-xs font-black uppercase tracking-widest">Judul</th>
-                                        <th className="admin-table-heading px-6 py-4 text-left text-xs font-black uppercase tracking-widest">Struktur</th>
-                                        <th className="admin-table-heading px-6 py-4 text-left text-xs font-black uppercase tracking-widest">Level</th>
-                                        <th className="admin-table-heading px-6 py-4 text-left text-xs font-black uppercase tracking-widest">Bab</th>
-                                        <th className="admin-table-heading px-6 py-4 text-right text-xs font-black uppercase tracking-widest">Aksi</th>
+                                        <th className="admin-table-heading px-5 py-3.5 text-left text-xs font-semibold">Judul</th>
+                                        <th className="admin-table-heading px-5 py-3.5 text-left text-xs font-semibold">Struktur</th>
+                                        <th className="admin-table-heading px-5 py-3.5 text-left text-xs font-semibold">Level</th>
+                                        <th className="admin-table-heading px-5 py-3.5 text-left text-xs font-semibold">Bab</th>
+                                        <th className="admin-table-heading px-5 py-3.5 text-right text-xs font-semibold">Aksi</th>
                                     </tr>
                                 </thead>
                                 <tbody className="admin-table-body divide-y">
                                     {bunpos.map((b) => (
                                         <tr key={b.id} className="admin-table-row">
-                                            <td className="px-6 py-4 whitespace-nowrap text-lg font-black text-[var(--foreground)]">{b.title}</td>
-                                            <td className="px-6 py-4 text-sm font-bold text-[var(--foreground)]/75 truncate max-w-xs">{b.structure}</td>
+                                            <td className="px-5 py-4 whitespace-nowrap text-sm font-semibold text-[var(--foreground)]">{b.title}</td>
+                                            <td className="max-w-xs truncate px-5 py-4 text-sm text-[var(--foreground)]/70">{b.structure}</td>
                                             <td className="px-6 py-4 whitespace-nowrap">
-                                                <span className={`px-3 py-1 inline-flex text-xs font-black rounded-full ${levelColor(b.jlpt_level)}`}>
+                                                <span className={`inline-flex rounded-lg px-2.5 py-1 text-xs font-semibold ${levelColor(b.jlpt_level)}`}>
                                                     N{b.jlpt_level}
                                                 </span>
                                             </td>
-                                            <td className="px-6 py-4 whitespace-nowrap text-sm font-bold text-[var(--foreground)]/75">Bab {b.chapter}</td>
-                                            <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                            <td className="px-5 py-4 whitespace-nowrap text-sm text-[var(--foreground)]/70">Bab {b.chapter}</td>
+                                            <td className="px-5 py-4 whitespace-nowrap text-right text-sm font-medium">
                                                 <div className="flex items-center justify-end gap-2">
                                                     <Link
                                                         href={b.slug || getBunpoSlug(b.title) ? `/bunpo/n${b.jlpt_level}/${b.slug || getBunpoSlug(b.title)}` : `/bunpo/n${b.jlpt_level}`} target="_blank"
@@ -352,22 +335,17 @@ export default function BunpoAdmin() {
                         {/* Mobile Cards */}
                         <div className="md:hidden divide-y">
                             {bunpos.map((b) => (
-                                <div key={b.id} className="divide-[var(--admin-divider)]">
-                                    <div
-                                        className="flex items-center gap-4 px-5 py-4 active:bg-[var(--admin-hover)] transition-colors cursor-pointer"
-                                        onClick={() => router.push(b.slug || getBunpoSlug(b.title) ? `/bunpo/n${b.jlpt_level}/${b.slug || getBunpoSlug(b.title)}` : `/bunpo/n${b.jlpt_level}`)}
-                                    >
+                                <article key={b.id} className="divide-y divide-[var(--border-color)]">
+                                    <div className="flex items-center gap-4 px-5 py-4 transition-colors hover:bg-[var(--background)]">
                                         <div className="flex-1 min-w-0">
-                                            <div className="font-black text-lg text-[var(--foreground)]">{b.title}</div>
-                                            <div className="text-sm font-bold text-[var(--foreground)]/75">{b.structure}</div>
+                                            <Link href={b.slug || getBunpoSlug(b.title) ? `/bunpo/n${b.jlpt_level}/${b.slug || getBunpoSlug(b.title)}` : `/bunpo/n${b.jlpt_level}`} target="_blank" className="rounded font-semibold text-[var(--foreground)] transition-colors hover:text-[var(--brand-red)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--brand-red)]">{b.title}</Link>
+                                            <div className="mt-1 text-sm text-[var(--foreground)]/70">{b.structure}</div>
                                             <div className="flex items-center gap-2 mt-1">
-                                                <span className={`inline-flex px-3 py-1 text-xs font-black rounded-full ${levelColor(b.jlpt_level)}`}>N{b.jlpt_level}</span>
-                                                <span className="text-xs font-bold text-neutral-500">Bab {b.chapter}</span>
+                                                <span className={`inline-flex rounded-lg px-2.5 py-1 text-xs font-semibold ${levelColor(b.jlpt_level)}`}>N{b.jlpt_level}</span>
+                                                <span className="text-xs text-[var(--foreground)]/55">Bab {b.chapter}</span>
                                             </div>
                                         </div>
-                                        <svg className="w-5 h-5 text-neutral-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                                        </svg>
+                                        <Eye size={18} className="shrink-0 text-[var(--foreground)]/45" aria-hidden="true" />
                                     </div>
                                     <div className="admin-control flex items-center justify-between px-5 py-3 border-t">
                                         <div className="flex items-center gap-2">
@@ -388,7 +366,7 @@ export default function BunpoAdmin() {
                                             </button>
                                         </div>
                                     </div>
-                                </div>
+                                </article>
                             ))}
                         </div>
 
@@ -396,14 +374,14 @@ export default function BunpoAdmin() {
                         {!loading && (
                             <div className="admin-control px-6 py-5 border-t">
                                 <div className="flex items-center justify-between gap-4">
-                                    <div className="text-xs font-bold text-neutral-500">Halaman <span className="text-gray-900 dark:text-white">{pagination.page}</span> dari <span className="text-gray-900 dark:text-white">{pagination.pages}</span> ({pagination.total} hasil)
+                                    <div className="text-xs text-[var(--foreground)]/55">Halaman <span className="font-semibold text-[var(--foreground)]">{pagination.page}</span> dari <span className="font-semibold text-[var(--foreground)]">{pagination.pages}</span> ({pagination.total} hasil)
                                     </div>
                                     <Pagination
                                         currentPage={page}
                                         totalPages={pagination.pages}
                                         onPageChange={setPage}
-                                        activeClassName="bg-red-600/20 border-red-500/30 text-red-400"
-                                        buttonClassName="bg-neutral-800 border-white/10 text-white hover:bg-neutral-700"
+                                        activeClassName="bg-[var(--brand-red)]/10 border-[var(--brand-red)]/30 text-[var(--brand-red)]"
+                                        buttonClassName="bg-[var(--card-bg)] border-[var(--border-color)] text-[var(--foreground)] hover:bg-[var(--background)]"
                                     />
                                 </div>
                             </div>

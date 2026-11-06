@@ -158,6 +158,10 @@ class ImportDataSchema(Schema):
 
 @router.get("/practice/generate", response=List[QuestionSchema])
 def generate_quiz(request, limit: int = 10, level: Optional[str] = None, type: str = 'kanji', unit: Optional[uuid.UUID] = None):
+    return _build_quiz_questions(limit=limit, level=level, type=type, unit=unit)
+
+
+def _build_quiz_questions(limit: int = 10, level: Optional[str] = None, type: str = 'kanji', unit: Optional[uuid.UUID] = None):
     # Cap the limit to a reasonable high value for full level review
     limit = min(max(1, limit), 2000)
 

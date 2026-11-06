@@ -2,6 +2,7 @@
 
 import { useState, useRef } from 'react';
 import { uploadToBlob } from '@/lib/blob-upload';
+import { Headphones, Upload } from 'lucide-react';
 
 export default function AudioUploadWidget({
     value = '',
@@ -83,7 +84,7 @@ export default function AudioUploadWidget({
                 <button
                     type="button"
                     onClick={() => setShowManualInput(!showManualInput)}
-                    className="text-xs text-indigo-400 hover:text-indigo-300 transition-colors"
+                    className="rounded px-2 py-1 text-xs text-[var(--accent-blue)] transition-colors hover:bg-[var(--accent-blue)]/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--brand-red)]"
                 >
                     {showManualInput ? 'Sembunyikan URL Manual' : 'Input URL Manual'}
                 </button>
@@ -104,27 +105,29 @@ export default function AudioUploadWidget({
 
             {/* Audio Upload Dropzone & Status */}
             {!value ? (
-                <div
+                <button
+                    type="button"
                     onDrop={handleDrop}
                     onDragOver={handleDragOver}
                     onDragLeave={handleDragLeave}
                     onClick={() => !uploading && fileInputRef.current?.click()}
-                    className={`border-2 border-dashed rounded-xl p-6 text-center cursor-pointer transition-all ${
+                    disabled={uploading}
+                    className={`w-full rounded-2xl border-2 border-dashed p-6 text-center transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--brand-red)] disabled:cursor-wait ${
                         isDragging
-                            ? 'border-indigo-500 bg-indigo-500/10'
-                            : 'border-neutral-700 hover:border-neutral-500 bg-neutral-900/50 hover:bg-neutral-900'
+                            ? 'border-[var(--accent-blue)] bg-[var(--accent-blue)]/10'
+                            : 'border-[var(--border-color)] bg-[var(--background)] hover:border-[var(--accent-blue)] hover:bg-[var(--admin-hover)]'
                     }`}
                 >
                     {uploading ? (
                         <div className="space-y-3">
-                            <div className="w-10 h-10 mx-auto border-3 border-indigo-500/20 border-t-indigo-500 rounded-full animate-spin"></div>
-                            <p className="text-sm font-medium text-indigo-400">
+                            <div className="mx-auto size-10 animate-spin rounded-full border-3 border-[var(--accent-blue)]/20 border-t-[var(--accent-blue)]"></div>
+                            <p className="text-sm font-medium text-[var(--accent-blue)]">
                                 Mengunggah ke Vercel Blob... {progress > 0 && `(${progress}%)`}
                             </p>
                             {progress > 0 && (
-                                <div className="w-48 mx-auto bg-neutral-800 rounded-full h-1.5 overflow-hidden">
+                                <div className="mx-auto h-1.5 w-48 overflow-hidden rounded-full bg-[var(--border-color)]">
                                     <div
-                                        className="bg-indigo-500 h-full transition-all duration-300"
+                                        className="h-full bg-[var(--accent-blue)] transition-all duration-300"
                                         style={{ width: `${progress}%` }}
                                     ></div>
                                 </div>
@@ -132,27 +135,27 @@ export default function AudioUploadWidget({
                         </div>
                     ) : (
                         <div className="space-y-2">
-                            <div className="w-12 h-12 mx-auto rounded-full bg-indigo-600/10 border border-indigo-600/20 flex items-center justify-center text-indigo-400 text-2xl">
-                                🎵
+                            <div className="mx-auto flex size-12 items-center justify-center rounded-full border border-[var(--accent-blue)]/20 bg-[var(--accent-blue)]/10 text-[var(--accent-blue)]">
+                                <Upload size={20} aria-hidden="true" />
                             </div>
                             <div>
-                                <p className="text-sm font-bold text-neutral-200">
+                                <p className="text-sm font-semibold text-[var(--foreground)]">
                                     Klik untuk upload audio, atau seret file ke sini
                                 </p>
-                                <p className="text-xs text-neutral-400 mt-1">
+                                <p className="mt-1 text-xs text-[var(--foreground)]/55">
                                     {helperText}
                                 </p>
                             </div>
                         </div>
                     )}
-                </div>
+                </button>
             ) : (
                 /* Preview Audio & Action */
-                <div className="p-4 rounded-xl border border-neutral-800 bg-neutral-900/70 space-y-3">
+                <div className="space-y-3 rounded-2xl border border-[var(--border-color)] bg-[var(--card-bg)] p-4">
                     <div className="flex items-center justify-between gap-3">
                         <div className="flex items-center gap-2 overflow-hidden">
-                            <span className="text-xl">🎧</span>
-                            <span className="text-xs font-mono text-neutral-300 truncate max-w-[280px] sm:max-w-md">
+                            <Headphones size={18} className="shrink-0 text-[var(--accent-blue)]" aria-hidden="true" />
+                            <span className="max-w-[280px] truncate font-mono text-xs text-[var(--foreground)]/70 sm:max-w-md">
                                 {value}
                             </span>
                         </div>
@@ -161,7 +164,7 @@ export default function AudioUploadWidget({
                                 type="button"
                                 onClick={() => fileInputRef.current?.click()}
                                 disabled={uploading}
-                                className="px-3 py-1.5 text-xs font-medium bg-neutral-800 hover:bg-neutral-700 text-white rounded-lg transition-colors"
+                                className="rounded-lg border border-[var(--border-color)] px-3 py-1.5 text-xs font-medium text-[var(--foreground)] transition-colors hover:bg-[var(--background)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--brand-red)]"
                             >
                                 Ganti File
                             </button>
@@ -169,7 +172,7 @@ export default function AudioUploadWidget({
                                 type="button"
                                 onClick={() => onChange('')}
                                 disabled={uploading}
-                                className="px-3 py-1.5 text-xs font-medium bg-red-600/20 hover:bg-red-600/30 text-red-400 rounded-lg transition-colors"
+                                className="rounded-lg px-3 py-1.5 text-xs font-medium text-[var(--brand-red)] transition-colors hover:bg-[var(--brand-red)]/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--brand-red)]"
                             >
                                 Hapus
                             </button>
@@ -191,20 +194,20 @@ export default function AudioUploadWidget({
 
             {/* Error Message */}
             {error && (
-                <p className="text-xs font-medium text-red-400 mt-1">
+                <p role="alert" className="mt-1 text-xs font-medium text-[var(--brand-red)]">
                     ⚠️ {error}
                 </p>
             )}
 
             {/* Manual URL Input (Collapsible) */}
             {showManualInput && (
-                <div className="mt-2 pt-2 border-t border-neutral-800">
+                <div className="mt-2 border-t border-[var(--border-color)] pt-3">
                     <input
                         type="url"
                         placeholder="https://... (URL Audio Langsung)"
                         value={value}
                         onChange={(e) => onChange(e.target.value)}
-                        className="w-full p-2.5 border border-neutral-700 rounded-lg bg-neutral-900 text-sm font-mono text-neutral-200"
+                        className="w-full rounded-xl border border-[var(--border-color)] bg-[var(--background)] p-2.5 font-mono text-sm text-[var(--foreground)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--accent-blue)]"
                     />
                 </div>
             )}

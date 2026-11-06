@@ -265,6 +265,77 @@ class AdminBunpoCrudRouteTests(TestCase):
         self.assertEqual(grammar.chapter, 2)
 
 
+class AdminKanjiCrudRouteTests(TestCase):
+    def test_create_read_update_delete(self):
+        admin = get_user_model().objects.create_user(username='kanji-crud-admin', is_staff=True)
+        token = RefreshToken.for_user(admin).access_token
+        headers = {'HTTP_AUTHORIZATION': f'Bearer {token}'}
+        create_response = self.client.post(
+            '/api/admin/kanji',
+            data=json.dumps({
+                'character': '森',
+                'meaning': 'hutan',
+                'onyomi': ['シン'],
+                'kunyomi': ['もり'],
+                'strokes': 12,
+                'jlpt_level': 5,
+                'radical': '木',
+                'word_type': '',
+                'examples': [{'word': '森林', 'reading': 'しんりん', 'meaning': 'hutan'}],
+            }),
+            content_type='application/json', secure=True, **headers,
+        )
+        self.assertEqual(create_response.status_code, 200, create_response.content)
+        kanji_id = create_response.json()['id']
+        detail_url = f'/api/admin/kanji/{kanji_id}'
+        self.assertEqual(self.client.get(detail_url, secure=True, **headers).status_code, 200)
+
+        update_payload = {
+            'character': '林', 'meaning': 'rimba', 'onyomi': ['リン'],
+            'kunyomi': ['はやし'], 'strokes': 8, 'jlpt_level': 4,
+            'radical': '木', 'word_type': '', 'examples': [],
+        }
+        update_response = self.client.put(
+            detail_url, data=json.dumps(update_payload),
+            content_type='application/json', secure=True, **headers,
+        )
+        self.assertEqual(update_response.status_code, 200, update_response.content)
+        self.assertEqual(update_response.json()['meaning'], 'rimba')
+        self.assertEqual(self.client.delete(detail_url, secure=True, **headers).status_code, 200)
+
+
+class AdminKotobaCrudRouteTests(TestCase):
+    def test_create_read_update_delete(self):
+        admin = get_user_model().objects.create_user(username='kotoba-crud-admin', is_staff=True)
+        token = RefreshToken.for_user(admin).access_token
+        headers = {'HTTP_AUTHORIZATION': f'Bearer {token}'}
+        create_response = self.client.post(
+            '/api/admin/vocab',
+            data=json.dumps({
+                'word': '勉強', 'reading': 'べんきょう', 'meaning': 'belajar',
+                'word_type': 'noun', 'jlpt_level': 5,
+                'examples': [{'sentence': '勉強します。', 'meaning': 'Saya belajar.'}],
+            }),
+            content_type='application/json', secure=True, **headers,
+        )
+        self.assertEqual(create_response.status_code, 200, create_response.content)
+        vocab_id = create_response.json()['id']
+        detail_url = f'/api/admin/vocab/{vocab_id}'
+        self.assertEqual(self.client.get(detail_url, secure=True, **headers).status_code, 200)
+
+        update_response = self.client.put(
+            detail_url,
+            data=json.dumps({
+                'word': '勉強', 'reading': 'べんきょう', 'meaning': 'kegiatan belajar',
+                'word_type': 'noun', 'jlpt_level': 4, 'examples': [],
+            }),
+            content_type='application/json', secure=True, **headers,
+        )
+        self.assertEqual(update_response.status_code, 200, update_response.content)
+        self.assertEqual(update_response.json()['meaning'], 'kegiatan belajar')
+        self.assertEqual(self.client.delete(detail_url, secure=True, **headers).status_code, 200)
+
+
 class AdminStatsTests(TestCase):
     def test_stats_include_dashboard_counts(self):
         admin = get_user_model().objects.create_user(username='stats-admin', is_staff=True)

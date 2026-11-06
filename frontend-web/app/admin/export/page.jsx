@@ -6,6 +6,7 @@ import { useSearchParams } from 'next/navigation';
 import Cookies from 'js-cookie';
 import Link from 'next/link';
 import { appToast as toast } from '@/components/common/AppMessage';
+import { Anchor, AudioLines, BookOpen, Download, Languages } from 'lucide-react';
 
 function ExportContent() {
     const searchParams = useSearchParams();
@@ -40,44 +41,43 @@ function ExportContent() {
                 a.click();
                 a.remove();
                 window.URL.revokeObjectURL(url);
+                toast.success('File CSV berhasil diekspor.');
             } else {
                 toast.error("Gagal mengekspor data.");
             }
         } catch (error) {
             console.error("Export failed", error);
+            toast.error('Ekspor gagal karena koneksi bermasalah.');
         } finally {
             setLoading(false);
         }
     };
 
     return (
-        <div className={`backdrop-blur-xl border transition-all duration-300 relative z-10 p-10 rounded-[2.5rem] ${
-            loading ? 'opacity-70 grayscale' : ''
-        } bg-white/5 border-white/5 shadow-[0_0_50px_-12px_rgba(220,38,38,0.1)]`}>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+        <div className={`relative z-10 rounded-2xl border border-[var(--border-color)] bg-[var(--card-bg)] p-5 transition-opacity sm:p-7 ${loading ? 'opacity-70' : ''}`}>
+            <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
                 <div className="space-y-6">
-                    <label className="block text-[10px] font-black uppercase tracking-[0.2em] text-neutral-500 ml-1">Kategori Data</label>
+                    <label className="ml-1 block text-sm font-semibold text-[var(--foreground)]">Kategori data</label>
                     <div className="grid grid-cols-2 gap-3">
                         {[
-                            { id: 'kanji', label: 'Kanji', icon: '🉐', color: 'from-red-500 to-red-700' }, 
-                            { id: 'vocab', label: 'Kotoba', icon: '🗣️', color: 'from-blue-500 to-blue-700' }, 
-                            { id: 'bunpo', label: 'Bunpo', icon: '📚', color: 'from-amber-500 to-amber-700' }, 
-                            { id: 'particle', label: 'Partikel', icon: '⚓', color: 'from-emerald-500 to-emerald-700' }
+                            { id: 'kanji', label: 'Kanji', icon: Languages },
+                            { id: 'vocab', label: 'Kotoba', icon: AudioLines },
+                            { id: 'bunpo', label: 'Bunpo', icon: BookOpen },
+                            { id: 'particle', label: 'Partikel', icon: Anchor }
                         ].map((cat) => (
                             <button 
                                 key={cat.id} 
+                                type="button"
+                                aria-pressed={type === cat.id}
                                 onClick={() => setType(cat.id)} 
-                                className={`group relative flex flex-col items-center justify-center p-6 rounded-3xl border-2 transition-all active:scale-95 overflow-hidden ${
+                                className={`group relative flex min-h-28 flex-col items-center justify-center gap-3 overflow-hidden rounded-xl border p-4 transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--brand-red)] ${
                                     type === cat.id 
-                                        ? 'border-red-600 bg-red-600/10 text-white shadow-lg shadow-red-600/20' 
-                                        : 'border-white/5 bg-white/5 text-neutral-500 hover:border-white/20 hover:bg-white/10'
+                                        ? 'border-[var(--brand-red)]/40 bg-[var(--brand-red)]/10 text-[var(--brand-red)]'
+                                        : 'border-[var(--border-color)] bg-[var(--background)] text-[var(--foreground)]/60 hover:bg-[var(--admin-hover)]'
                                 }`}
                             >
-                                <span className={`text-3xl mb-3 transition-transform group-hover:scale-125 duration-500 ${type === cat.id ? 'animate-bounce' : ''}`}>{cat.icon}</span>
-                                <span className="text-[10px] font-black uppercase tracking-widest">{cat.label}</span>
-                                {type === cat.id && (
-                                    <div className="absolute top-2 right-2 w-1.5 h-1.5 rounded-full bg-red-600 animate-ping"></div>
-                                )}
+                                <cat.icon size={20} aria-hidden="true" />
+                                <span className="text-sm font-medium">{cat.label}</span>
                             </button>
                         ))}
                     </div>
@@ -85,32 +85,32 @@ function ExportContent() {
 
                 <div className="space-y-8">
                     <div className="group">
-                        <label className="block text-[10px] font-black uppercase tracking-[0.2em] text-neutral-500 mb-3 ml-1 group-focus-within:text-red-500 transition-colors">JLPT Level</label>
+                        <label className="mb-2 ml-1 block text-sm font-medium text-[var(--foreground)]">Level JLPT</label>
                         <div className="relative">
                             <select 
-                                className="w-full bg-neutral-900/50 border border-white/5 rounded-2xl p-4 font-bold text-sm text-white appearance-none focus:outline-none focus:ring-2 focus:ring-red-600/50 hover:bg-neutral-900 transition-all cursor-pointer"
+                                className="w-full appearance-none rounded-xl border border-[var(--border-color)] bg-[var(--background)] p-3.5 text-sm text-[var(--foreground)] transition-colors hover:bg-[var(--admin-hover)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--accent-blue)]"
                                 value={level} 
                                 onChange={(e) => setLevel(e.target.value)}
                             >
-                                <option value="" className="bg-[#050505]">Semua Level</option>
-                                <option value="5" className="bg-[#050505]">N5 - Dasar</option>
-                                <option value="4" className="bg-[#050505]">N4 - Dasar Lanjut</option>
-                                <option value="3" className="bg-[#050505]">N3 - Menengah</option>
-                                <option value="2" className="bg-[#050505]">N2 - Menengah Lanjut</option>
-                                <option value="1" className="bg-[#050505]">N1 - Mahir</option>
+                                <option value="">Semua Level</option>
+                                <option value="5">N5 - Dasar</option>
+                                <option value="4">N4 - Dasar Lanjut</option>
+                                <option value="3">N3 - Menengah</option>
+                                <option value="2">N2 - Menengah Lanjut</option>
+                                <option value="1">N1 - Mahir</option>
                             </select>
-                            <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-neutral-600">
+                            <div className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-[var(--foreground)]/45">
                                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M19 9l-7 7-7-7" /></svg>
                             </div>
                         </div>
                     </div>
 
                     <div className="group">
-                        <label className="block text-[10px] font-black uppercase tracking-[0.2em] text-neutral-500 mb-3 ml-1 group-focus-within:text-red-500 transition-colors">Pencarian Kata/Arti</label>
+                        <label className="mb-2 ml-1 block text-sm font-medium text-[var(--foreground)]">Pencarian kata/arti</label>
                         <input 
                             type="text" 
                             placeholder="Contoh: Taberu..." 
-                            className="w-full bg-neutral-900/50 border border-white/5 rounded-2xl p-4 font-bold text-sm text-white placeholder-neutral-700 focus:outline-none focus:ring-2 focus:ring-red-600/50 hover:bg-neutral-900 transition-all"
+                            className="w-full rounded-xl border border-[var(--border-color)] bg-[var(--background)] p-3.5 text-sm text-[var(--foreground)] placeholder:text-[var(--foreground)]/40 transition-colors hover:bg-[var(--admin-hover)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--accent-blue)]"
                             value={search} 
                             onChange={(e) => setSearch(e.target.value)} 
                         />
@@ -118,11 +118,11 @@ function ExportContent() {
 
                     {type === 'bunpo' && (
                         <div className="group animate-in fade-in slide-in-from-top-4 duration-500">
-                            <label className="block text-[10px] font-black uppercase tracking-[0.2em] text-neutral-500 mb-3 ml-1 group-focus-within:text-red-500 transition-colors">Chapter (Bab)</label>
+                            <label className="mb-2 ml-1 block text-sm font-medium text-[var(--foreground)]">Bab</label>
                             <input 
                                 type="number" 
                                 placeholder="Nomor Bab" 
-                                className="w-full bg-neutral-900/50 border border-white/5 rounded-2xl p-4 font-bold text-sm text-white placeholder-neutral-700 focus:outline-none focus:ring-2 focus:ring-red-600/50 hover:bg-neutral-900 transition-all"
+                                className="w-full rounded-xl border border-[var(--border-color)] bg-[var(--background)] p-3.5 text-sm text-[var(--foreground)] placeholder:text-[var(--foreground)]/40 transition-colors hover:bg-[var(--admin-hover)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--accent-blue)]"
                                 value={chapter} 
                                 onChange={(e) => setChapter(e.target.value)} 
                             />
@@ -131,20 +131,19 @@ function ExportContent() {
                 </div>
             </div>
 
-            <div className="mt-16 pt-10 border-t border-white/5 flex flex-col items-center">
-                <div className="flex items-center gap-3 mb-8 bg-white/5 px-4 py-2 rounded-full border border-white/5">
-                    <div className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse"></div>
-                    <span className="text-[10px] font-black uppercase tracking-[0.2em] text-neutral-400">CSV Tanpa ID (Export Standar)</span>
+            <div className="mt-8 flex flex-col items-center border-t border-[var(--border-color)] pt-7">
+                <div className="mb-6 flex items-center gap-2 rounded-xl bg-[var(--background)] px-4 py-2 text-sm text-[var(--foreground)]/65">
+                    <span className="size-2 rounded-full bg-[var(--accent-green)]" aria-hidden="true" />
+                    <span>CSV standar tanpa ID</span>
                 </div>
                 
                 <button 
                     onClick={handleExport} 
                     disabled={loading} 
-                    className={`group relative w-full md:w-80 py-5 rounded-3xl font-black text-xs uppercase tracking-[0.2em] text-white transition-all shadow-2xl active:scale-95 overflow-hidden ${
-                        loading ? 'bg-neutral-800 cursor-not-allowed' : 'bg-red-600 hover:bg-red-500 shadow-red-600/20'
+                    className={`group relative inline-flex min-h-12 w-full items-center justify-center overflow-hidden rounded-xl px-5 py-3 text-sm font-semibold text-white transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--brand-red)] md:w-64 ${
+                        loading ? 'cursor-wait bg-[var(--foreground)]/35' : 'bg-[var(--brand-red)] hover:opacity-90'
                     }`}
                 >
-                    <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-white/0 via-white/20 to-white/0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-in-out" />
                     {loading ? (
                         <span className="flex items-center justify-center gap-3">
                             <svg className="animate-spin h-5 w-5 text-white" fill="none" viewBox="0 0 24 24">
@@ -155,7 +154,7 @@ function ExportContent() {
                         </span>
                     ) : (
                         <span className="flex items-center justify-center gap-3">
-                            <svg className="w-5 h-5 transition-transform group-hover:-translate-y-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg>
+                            <Download size={18} aria-hidden="true" />
                             Download CSV
                         </span>
                     )}
@@ -167,30 +166,23 @@ function ExportContent() {
 
 export default function ExportPage() {
     return (
-        <div className="max-w-5xl mx-auto py-12 px-6">
-            <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
+        <div className="mx-auto max-w-5xl space-y-6">
+            <div className="flex flex-col justify-between gap-4 md:flex-row md:items-end">
                 <div>
-                    <h1 className="text-5xl font-black text-white tracking-tighter mb-4 animate-in fade-in slide-in-from-left-4 duration-700">
-                        Export Data <span className="text-red-600">Lanjutan</span>
-                    </h1>
-                    <p className="text-sm font-bold text-neutral-600 uppercase tracking-widest flex items-center gap-2">
-                        <span className="w-8 h-[2px] bg-red-600"></span>
-                        Admin Control Panel
-                    </p>
+                    <p className="text-sm text-[var(--foreground)]/55">Workspace / Ekspor</p>
+                    <h1 className="mt-1 text-2xl font-semibold text-[var(--foreground)]">Ekspor data</h1>
+                    <p className="mt-1 text-sm text-[var(--foreground)]/60">Unduh koleksi materi dalam format CSV.</p>
                 </div>
             </div>
 
             <Suspense fallback={
-                <div className="bg-white/5 backdrop-blur-xl p-20 text-center rounded-[2.5rem] border border-white/5 animate-pulse">
-                    <div className="w-12 h-12 border-4 border-red-600/20 border-t-red-600 rounded-full animate-spin mx-auto mb-4"></div>
-                    <span className="text-[10px] font-black uppercase tracking-widest text-neutral-600">Menyiapkan Form...</span>
-                </div>
+                <div className="rounded-2xl border border-[var(--border-color)] bg-[var(--card-bg)]"><div className="animate-pulse space-y-4 p-6"><div className="h-5 w-40 rounded bg-[var(--border-color)]" /><div className="h-40 rounded-xl bg-[var(--background)]" /><div className="h-12 rounded-xl bg-[var(--background)]" /></div></div>
             }>
                 <ExportContent />
             </Suspense>
 
-            <div className="mt-16 text-center">
-                <Link href="/admin" className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-neutral-700 hover:text-white transition-all hover:scale-105">
+            <div className="pt-2">
+                <Link href="/admin" className="inline-flex items-center gap-2 rounded-lg text-sm text-[var(--foreground)]/60 transition-colors hover:text-[var(--foreground)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--brand-red)]">
                     <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg>
                     Kembali ke Dashboard
                 </Link>
