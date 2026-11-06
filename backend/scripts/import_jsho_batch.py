@@ -1,3 +1,4 @@
+# EXPERIMENTAL — tidak didukung
 import os, sys, json
 import django
 from deep_translator import GoogleTranslator

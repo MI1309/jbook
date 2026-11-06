@@ -2,6 +2,7 @@
 Script untuk mengupdate word_type pada semua Vocab di database
 menggunakan JMDict melalui library jamdict.
 """
+# EXPERIMENTAL — tidak didukung
 
 import sqlite3
 import json

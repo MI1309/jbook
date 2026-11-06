@@ -1,3 +1,4 @@
+# EXPERIMENTAL — tidak didukung
 import re
 
 def parse_markdown_table(md):

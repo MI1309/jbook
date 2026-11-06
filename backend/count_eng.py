@@ -1,3 +1,4 @@
+# EXPERIMENTAL — tidak didukung
 import sqlite3
 import re
 

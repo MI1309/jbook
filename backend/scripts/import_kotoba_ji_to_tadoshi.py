@@ -4,6 +4,7 @@ Import backend/data/kotoba_ji_to_tadoshi.json into the Vocab database.
 Overwrites existing entries for the same `word` and removes duplicates.
 Run: python backend/scripts/import_kotoba_ji_to_tadoshi.py
 """
+# EXPERIMENTAL — tidak didukung
 import os
 import sys
 

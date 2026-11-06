@@ -1,3 +1,4 @@
+# EXPERIMENTAL — tidak didukung
 import csv
 import time
 from deep_translator import GoogleTranslator

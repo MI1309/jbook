@@ -1,3 +1,4 @@
+# EXPERIMENTAL — tidak didukung
 import json
 
 # Raw rows from rspsensei.com pages 1-6

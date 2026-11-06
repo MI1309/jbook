@@ -1,3 +1,4 @@
+# EXPERIMENTAL — tidak didukung
 import pypdf
 import os
 

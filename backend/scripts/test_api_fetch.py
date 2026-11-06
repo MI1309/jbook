@@ -1,3 +1,4 @@
+# EXPERIMENTAL — tidak didukung
 import requests
 import os
 import django

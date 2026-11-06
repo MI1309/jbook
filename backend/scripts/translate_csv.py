@@ -1,3 +1,4 @@
+# EXPERIMENTAL — tidak didukung
 import sys
 import csv
 import time

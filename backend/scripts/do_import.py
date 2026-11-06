@@ -1,3 +1,4 @@
+# EXPERIMENTAL — tidak didukung
 import json
 import uuid
 from content.models import Grammar

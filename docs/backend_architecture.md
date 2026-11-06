@@ -22,7 +22,7 @@ Backend berada di `backend/` dan menggunakan Django serta Django Ninja. `core/ap
 
 Struktur domain utamanya sudah masuk akal: `users`, `content`, dan `learning` masing-masing memiliki model, API, test, dan migrasi; `core/api.py` memasang router; command impor/pemeliharaan yang berulang sudah berada di `management/commands`. Helper bersama dikumpulkan dalam `utils/`, sedangkan helper khusus konten tetap di `content/`.
 
-Bagian yang belum rapi adalah lapisan skrip: selain `backend/scripts/`, masih ada skrip utilitas di root (`batch_translate.py`, `cleanup_vocab.py`, `sync_n5.py`, dan lainnya). Direktori `scripts/` sendiri mencampur importer, pemeriksaan, skrip temporer, dan data progres. Ini belum otomatis merusak runtime, tetapi menyulitkan penemuan entry point dan membedakan tooling yang didukung dari eksperimen. Peta struktur proyek yang lebih rinci dan sesuai kondisi aktual ada di [folder_structure.md](folder_structure.md).
+Skrip tetap tersebar di root `backend/` dan `backend/scripts/`; tidak ada entry point yang dipindah atau dihapus. [backend/scripts/README.md](../backend/scripts/README.md) kini menginventarisasi 40 script di `scripts/`, 8 script root, data pendukung, status dukungan, cara pakai, kepemilikan (belum diketahui), serta kandidat management command. Header skrip yang belum terkonfirmasi diberi label eksperimental. Peta struktur proyek yang lebih rinci ada di [folder_structure.md](folder_structure.md).
 
 **Verdict:** fondasi domain solid; konsistensi workflow dan tata kelola tooling belum solid. Tidak disarankan memindahkan semua file sekaligus karena deployment atau skrip lama mungkin bergantung pada path sekarang.
 
@@ -42,7 +42,7 @@ Bagian yang belum rapi adalah lapisan skrip: selain `backend/scripts/`, masih ad
 1. Quiz generation telah diekstrak ke strategi dan registry tanpa mengubah schema endpoint; perubahan berikutnya perlu mempertahankan perilaku visibility, sampling, aliases, dan unit filter.
 2. Service reset sudah menangani lookup dan pemilihan URL; isolasi provider cache/email dari service dapat dipertimbangkan kelak bila kebutuhan provider atau test menuntutnya.
 3. Analytics wrong stats telah dipisah per sumber dan aggregator mempertahankan total, level, serta kakitori. Perubahan berikutnya perlu menambah sumber di modul dan aggregator dengan test response yang setara.
-4. Inventarisasi skrip operasional sebelum memigrasikan operasi berulang ke management command. Jangan memindahkan entry point yang mungkin dipakai deployment sebelum dependensinya diperiksa.
+4. Inventaris skrip tersedia di [backend/scripts/README.md](../backend/scripts/README.md). Verifikasi pemilik, dependensi, dan cara deploy sebelum memindahkan atau mengganti entry point; migrasi management command belum dilakukan.
 5. Biarkan ORM digunakan untuk operasi Django biasa. Tambahkan repository abstraction hanya jika ada kebutuhan nyata. Pertahankan schema endpoint yang spesifik dan constraint database.
 
 Penerapan SOLID sebaiknya dilakukan bertahap pada titik perubahan yang memang mahal atau rawan, bukan sebagai refactor menyeluruh tanpa kebutuhan fitur.

@@ -1,3 +1,4 @@
+# EXPERIMENTAL — tidak didukung
 import sqlite3
 
 def check_db():

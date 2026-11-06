@@ -1,3 +1,4 @@
+# EXPERIMENTAL — tidak didukung
 from jamdict import Jamdict
 jmd = Jamdict()
 result = jmd.lookup('食べる')
