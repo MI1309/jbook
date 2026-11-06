@@ -20,7 +20,7 @@ function CardContent({ pattern, level, accent, slug }) {
                 {pattern.explanation}
             </p>
             <span className={`mt-4 inline-flex items-center gap-1 text-xs font-bold ${accent}`}>
-                {slug ? <>Buka pola <ArrowUpRight aria-hidden="true" className="h-3.5 w-3.5" /></> : 'Slug belum tersedia'}
+                {slug ? <>Buka pola <ArrowUpRight aria-hidden="true" className="h-3.5 w-3.5" /></> : 'Lihat detail'}
             </span>
         </>
     );
@@ -30,16 +30,12 @@ export default function BunpoPatternCard({ pattern, level, slug, accent }) {
     const className = 'group block min-w-0 min-h-11 h-full rounded-lg border border-[var(--border-color)] bg-[var(--card-bg)] p-4 transition hover:-translate-y-0.5 hover:border-accent-blue/40 hover:shadow-md focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-blue';
     const content = <CardContent pattern={pattern} level={level} accent={accent} slug={slug} />;
 
-    if (!slug) {
-        return (
-            <article aria-label={`${pattern.title}, slug belum tersedia`} className={`${className} cursor-default`}>
-                {content}
-            </article>
-        );
-    }
-
     return (
-        <Link href={`/bunpo/${level}/${slug}`} aria-label={`Pelajari pola ${pattern.title}, level ${level.toUpperCase()}`} className={className}>
+        <Link
+            href={slug ? `/bunpo/${level}/${slug}` : `/bunpo/${level}`}
+            aria-label={slug ? `Pelajari pola ${pattern.title}, level ${level.toUpperCase()}` : `Lihat daftar Bunpo ${level.toUpperCase()}`}
+            className={className}
+        >
             {content}
         </Link>
     );

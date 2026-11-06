@@ -7,21 +7,21 @@ import { useRouter } from 'next/navigation';
 
 export default function KotobaDetailModal({ id, onClose }) {
     const [vocab, setVocab] = useState(null);
-    const [loading, setLoading] = useState(true);
+    const [loadedId, setLoadedId] = useState(null);
     const router = useRouter();
+    const loading = loadedId !== id;
 
     useEffect(() => {
         let mounted = true;
-        setLoading(true);
         getVocabDetail(id).then(data => {
             if (mounted) {
                 setVocab(data);
-                setLoading(false);
+                setLoadedId(id);
             }
         }).catch(err => {
             if (mounted) {
                 console.error("Failed to fetch vocab detail", err);
-                setLoading(false);
+                setLoadedId(id);
             }
         });
         return () => { mounted = false; };

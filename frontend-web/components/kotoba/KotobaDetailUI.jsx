@@ -189,9 +189,7 @@ export default function KotobaDetailUI({ vocab: initialVocab, onClose }) {
     }, [vocab?.word, vocab?.reading, vocab?.furigana, vocab?.furigana_map]);
 
     // ✅ Early return SETELAH semua hook
-    if (!vocab) return null;
-
-    const normalizedWord = (vocab.word || '').normalize('NFKC');
+    const normalizedWord = (vocab?.word || '').normalize('NFKC');
     const characters = normalizedWord.split('');
     const uniqueKanjis = extractKanji(normalizedWord);
     const strokeCharSize = mounted && typeof window !== 'undefined' ? (window.innerWidth < 640 ? 52 : (window.innerWidth < 1024 ? 60 : 68)) : 60;
@@ -248,6 +246,8 @@ export default function KotobaDetailUI({ vocab: initialVocab, onClose }) {
             } catch (e) {}
         });
     }, [uniqueKanjis, kanjiDetails]);
+
+    if (!vocab) return null;
 
     const navigateToKanji = async (char) => {
         const id = await resolveContentId('kanji', char);

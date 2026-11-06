@@ -149,7 +149,7 @@ export async function getKanjiLevelVisibility() {
             return res.json();
         })
         .then(data => {
-            const enabledLevels = (Array.isArray(data.enabled_levels) ? data.enabled_levels : [4, 5])
+            const enabledLevels = (Array.isArray(data.enabled_levels) ? data.enabled_levels : [1, 2, 3, 4, 5])
                 .map(Number)
                 .filter(level => Number.isInteger(level) && level >= 1 && level <= 5)
                 .sort((a, b) => a - b);
@@ -163,7 +163,7 @@ export async function getKanjiLevelVisibility() {
             return kanjiVisibilityCache;
         })
         .catch(() => {
-            const fallback = { disabled_levels: [1, 2, 3], enabled_levels: [4, 5] };
+            const fallback = { disabled_levels: [], enabled_levels: [1, 2, 3, 4, 5] };
             kanjiVisibilityCache = fallback;
             kanjiVisibilityExpiresAt = Date.now() + 60 * 1000;
             return fallback;
@@ -175,7 +175,7 @@ export async function getKanjiLevelVisibility() {
     try {
         return await kanjiVisibilityRequest;
     } catch (error) {
-        return { disabled_levels: [1, 2, 3], enabled_levels: [4, 5] };
+        return { disabled_levels: [], enabled_levels: [1, 2, 3, 4, 5] };
     }
 }
 

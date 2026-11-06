@@ -9,14 +9,15 @@ import { appToast as toast } from '@/components/common/AppMessage';
 import ConfirmationModal from '@/components/common/ConfirmationModal';
 import Pagination from '@/components/common/Pagination';
 import { useDebounce } from 'use-debounce';
-import { Download, Eye, Pencil, Plus, Search, Trash2 } from 'lucide-react';
-import { AdminErrorState } from '@/components/admin/AdminFeedback';
+import { Eye, Pencil, Plus, Search, Trash2 } from 'lucide-react';
+import AdminDataTable from '@/components/admin/AdminDataTable';
+import AdminPageHeader from '@/components/admin/AdminPageHeader';
+import AdminFilterBar from '@/components/admin/AdminFilterBar';
 
 export default function KotobaAdmin() {
     const [vocabs, setVocabs] = useState([]);
     const [pagination, setPagination] = useState({ total: 0, page: 1, pages: 1 });
     const [loading, setLoading] = useState(true);
-    const [fetchError, setFetchError] = useState('');
     const [search, setSearch] = useState('');
     const [debouncedSearch] = useDebounce(search, 400);
     const [level, setLevel] = useState('');
@@ -81,7 +82,6 @@ export default function KotobaAdmin() {
 
     const fetchVocabs = useCallback(async () => {
         setLoading(true);
-        setFetchError('');
 
         try {
             const token = Cookies.get('access_token');
@@ -101,13 +101,17 @@ export default function KotobaAdmin() {
             } else {
                 const errorData = await res.json().catch(() => ({}));
                 console.error("Fetch failed:", res.status, errorData);
-                setFetchError(res.status === 401 || res.status === 403
-                    ? 'Akses ditolak. Pastikan Anda masuk dengan akun admin, lalu coba lagi.'
-                    : `Gagal mengambil data Kotoba (${res.status}). Periksa koneksi lalu coba lagi.`);
+                if (res.status === 403) {
+                    toast.error("Admin access denied. Please login with admin account (imronm1309@gmail.com)");
+                } else if (res.status === 500) {
+                    toast.error(`Server Error 500. Silakan pastikan server PythonAnywhere sudah diperbarui.`);
+                } else {
+                    toast.error(`Gagal mengambil data: ${res.status} ${res.statusText}`);
+                }
             }
         } catch (error) {
             console.error("Failed to fetch vocabs", error);
-            setFetchError('Terjadi kesalahan jaringan saat memuat Kotoba. Periksa koneksi lalu coba lagi.');
+            toast.error(`Terjadi kesalahan jaringan: ${error.message}`);
         } finally {
             setLoading(false);
         }
@@ -174,49 +178,44 @@ export default function KotobaAdmin() {
         }
     };
 
-    const checkDuplicates = () => {
-        const token = Cookies.get('access_token');
-        fetch(`${API_URL}/admin/kotoba/duplicates`, {
-            headers: { 'Authorization': `Bearer ${token}` }
-        }).then(async (res) => {
-            if (!res.ok) throw new Error('Gagal memeriksa duplikat');
-            const data = await res.json();
-            setDuplicates(data);
-            toast.info(data.length ? `${data.length} grup duplikat ditemukan` : 'Tidak ada kotoba duplikat');
-        }).catch((error) => toast.error(error.message || 'Gagal memeriksa duplikat'));
-    };
-
     const levelColor = (level) => {
         const colors = {
-            5: 'bg-[var(--accent-green)]/10 text-[var(--accent-green)]',
-            4: 'bg-[var(--accent-blue)]/10 text-[var(--accent-blue)]',
-            3: 'bg-[var(--accent-gold)]/12 text-[var(--accent-gold)]',
-            2: 'bg-[var(--brand-red)]/10 text-[var(--brand-red)]',
-            1: 'bg-[var(--foreground)]/8 text-[var(--foreground)]/70'
+            5: 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400',
+            4: 'bg-teal-100 text-teal-800 dark:bg-teal-900/30 dark:text-teal-400',
+            3: 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400',
+            2: 'bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-400',
+            1: 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400'
         };
-        return colors[level] || 'bg-[var(--background)] text-[var(--foreground)]/65';
+        return colors[level] || 'bg-neutral-100 text-neutral-700 dark:bg-neutral-800 dark:text-neutral-400';
     };
 
     return (
         <div className="space-y-6">
+            <AdminPageHeader title="Kotoba" description="Kelola kosakata bahasa Jepang." breadcrumbs={[{ label: 'Kotoba' }]} action={<Link href="/admin/kotoba/new" className="rounded-lg bg-[var(--brand-red)] px-4 py-2.5 text-sm font-medium text-white">Tambah Kotoba</Link>} />
             {/* Header */}
-            <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+            <div hidden className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
                 <div>
-                    <p className="text-sm text-[var(--foreground)]/55">Koleksi / Kotoba</p>
-                    <h1 className="mt-1 text-2xl font-semibold text-[var(--foreground)]">Kotoba</h1>
-                    <p className="mt-1 text-sm text-[var(--foreground)]/60">Kelola kosakata bahasa Jepang.</p>
+                    <h1 className="text-3xl font-black tracking-tight text-[var(--foreground)]">
+                        Kotoba <span className="text-red-600">Management</span>
+                    </h1>
+                    <p className="mt-1 text-xs font-bold uppercase tracking-[0.2em] text-neutral-500">
+                        Kelola kosakata Bahasa Jepang
+                    </p>
                 </div>
-                <Link href="/admin/kotoba/new" className="inline-flex items-center gap-2 rounded-xl bg-[var(--brand-red)] px-4 py-2.5 text-sm font-medium text-white transition-colors hover:opacity-90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--brand-red)]">
-                    <Plus size={16} /> Tambah Kotoba
+                <Link href="/admin/kotoba/new" className="inline-flex items-center gap-2 bg-red-600 text-white px-6 py-3 rounded-2xl hover:bg-red-700 font-black text-sm shadow-lg shadow-red-500/20 transition-all active:scale-95">
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                    </svg>
+                    Tambah Kotoba
                 </Link>
             </div>
 
             {/* Visibilitas Kotoba per Level */}
-            <div className="rounded-2xl border border-[var(--border-color)] bg-[var(--card-bg)] p-5 sm:p-6">
+            <div className="p-6 rounded-[2rem] border backdrop-blur-xl bg-white/5 border-white/5 shadow-2xl">
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                     <div>
                         <h2 className="text-sm font-black uppercase tracking-widest text-[var(--foreground)]">Visibilitas Kotoba</h2>
-                        <p className="mt-1 text-sm text-[var(--foreground)]/55">Atur level yang tersedia di publik dan latihan.</p>
+                        <p className="mt-2 text-xs text-[var(--admin-muted)]">Klik level untuk mengaktifkan atau menonaktifkan kosakata yang tampil di publik dan latihan. Perubahan tersimpan otomatis.</p>
                     </div>
                     <div className="flex flex-wrap gap-2">
                         {[5, 4, 3, 2, 1].map(lvl => {
@@ -227,10 +226,10 @@ export default function KotobaAdmin() {
                                     type="button"
                                     disabled={savingVisibility}
                                     onClick={() => toggleVisibility(lvl)}
-                                    className={`px-4 py-2 rounded-xl border text-xs font-semibold transition-colors ${isDisabled
-                                        ? 'bg-[var(--brand-red)]/10 border-[var(--brand-red)]/25 text-[var(--brand-red)]'
-                                        : 'bg-[var(--accent-green)]/10 border-[var(--accent-green)]/25 text-[var(--accent-green)]'
-                                    } hover:opacity-80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--brand-red)] disabled:cursor-wait disabled:opacity-50`}
+                                    className={`px-4 py-2 rounded-xl border text-xs font-black transition-all cursor-pointer ${isDisabled
+                                        ? 'bg-red-600/20 border-red-500/40 text-red-300'
+                                        : 'bg-emerald-600/20 border-emerald-500/40 text-emerald-300'
+                                    } disabled:opacity-50`}
                                 >
                                     N{lvl} {isDisabled ? 'OFF' : 'ON'}
                                 </button>
@@ -241,11 +240,11 @@ export default function KotobaAdmin() {
             </div>
 
             {/* Filters & Search */}
-            <div className="admin-surface p-6 rounded-3xl border">
+            <AdminFilterBar className="admin-surface p-6 rounded-3xl border" onReset={() => { setSearch(''); setLevel(''); }}>
                 <div className="flex flex-col md:flex-row gap-4 items-stretch md:items-center justify-between">
-                            <div className="flex flex-1 flex-col gap-3 md:flex-row">
+                    <div className="flex flex-1 flex-col md:flex-row gap-3">
                         <select
-                            className="admin-control flex-1 rounded-xl border px-4 py-2.5 text-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--accent-blue)]"
+                            className="admin-control flex-1 px-4 py-3 rounded-2xl border text-sm font-bold focus:outline-none focus:ring-2 focus:ring-red-500/30"
                             value={level}
                             onChange={(e) => setLevel(e.target.value)}
                         >
@@ -258,33 +257,45 @@ export default function KotobaAdmin() {
                         </select>
                         <input
                             type="text" placeholder="Cari kata, bacaan, atau arti..."
-                            className="admin-control flex-1 rounded-xl border px-4 py-2.5 text-sm placeholder:text-[var(--admin-muted)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--accent-blue)]"
+                            className="admin-control flex-1 px-4 py-3 rounded-2xl border text-sm font-bold placeholder:text-[var(--admin-muted)] focus:outline-none focus:ring-2 focus:ring-red-500/30"
                             value={search}
                             onChange={(e) => setSearch(e.target.value)}
                         />
                     </div>
                     <button
-                        type="button"
                         onClick={handleExport}
-                        className="inline-flex items-center justify-center gap-2 rounded-xl border border-[var(--border-color)] px-4 py-2.5 text-sm font-medium text-[var(--foreground)] transition-colors hover:bg-[var(--background)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--brand-red)]"
+                        className="inline-flex items-center justify-center gap-2 bg-emerald-600 text-white px-6 py-3 rounded-2xl hover:bg-emerald-700 font-black text-sm shadow-lg shadow-emerald-500/20 transition-all active:scale-95"
                     >
-                        <Download size={16} /> Export CSV
+                        <span>📥</span> Export CSV
                     </button>
-                    <button
-                        onClick={checkDuplicates}
-                        className="inline-flex items-center justify-center gap-2 rounded-xl border border-[var(--border-color)] px-4 py-2.5 text-sm font-medium text-[var(--foreground)] transition-colors hover:bg-[var(--background)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--brand-red)]"
-                    >
-                        Check Duplicates
-                    </button>
+                    <Link href="/admin/kotoba/tools" className="inline-flex items-center justify-center rounded-xl border border-[var(--border-color)] px-4 py-2.5 text-sm font-medium text-[var(--foreground)] hover:bg-[var(--background)]">Check duplicates</Link>
                 </div>
-            </div>
+            </AdminFilterBar>
 
-            {/* Content */}
-            <div className="admin-surface rounded-3xl border overflow-hidden">
+            <AdminDataTable
+                columns={[
+                    { key: 'word', label: 'Kata' },
+                    { key: 'reading', label: 'Bacaan' },
+                    { key: 'meaning', label: 'Arti' },
+                    { key: 'jlpt_level', label: 'Level', render: item => `N${item.jlpt_level}` },
+                ]}
+                rows={vocabs}
+                getRowId={item => item.id}
+                loading={loading}
+                emptyTitle="Belum ada Kotoba"
+                emptyMessage="Ubah pencarian atau tambahkan data baru."
+                page={currentPage}
+                pages={pagination.pages}
+                onPageChange={setCurrentPage}
+                onView={item => `/admin/kotoba/${item.id}`}
+                onEdit={item => `/admin/kotoba/${item.id}/edit`}
+                onDelete={item => setPendingDelete(item.id)}
+            />
+
+            {/* Legacy table retained temporarily for its card layout. */}
+            <div hidden className="admin-surface rounded-3xl border overflow-hidden">
                 {loading ? (
                     <div className="animate-pulse space-y-3 p-5 sm:p-6">{[1, 2, 3, 4, 5].map(row => <div key={row} className="h-14 rounded-lg bg-[var(--admin-control)]" />)}</div>
-                ) : fetchError ? (
-                    <div className="p-5 sm:p-6"><AdminErrorState title="Kotoba gagal dimuat" message={fetchError} onRetry={fetchVocabs} /></div>
                 ) : vocabs.length === 0 ? (
                     <div className="px-6 py-12 text-center">
                         <Search size={30} className="mx-auto text-[var(--foreground)]/35" />
@@ -313,7 +324,7 @@ export default function KotobaAdmin() {
                                             <td className="px-6 py-4 whitespace-nowrap text-sm font-bold text-[var(--foreground)]/75">{v.reading}</td>
                                             <td className="px-6 py-4 text-sm font-bold text-[var(--foreground)]/75 max-w-md truncate">{v.meaning}</td>
                                             <td className="px-6 py-4 whitespace-nowrap">
-                                                    <span className={`inline-flex rounded-lg px-2.5 py-1 text-xs font-semibold ${levelColor(v.jlpt_level)}`}>
+                                                <span className={`px-3 py-1 inline-flex text-xs font-black rounded-full ${levelColor(v.jlpt_level)}`}>
                                                     N{v.jlpt_level}
                                                 </span>
                                             </td>
@@ -322,7 +333,7 @@ export default function KotobaAdmin() {
                                                     <Link href={`/kotoba/${v.id}`} target="_blank" aria-label={`Lihat ${v.word}`} className="rounded-lg p-2 text-[var(--accent-green)] transition-colors hover:bg-[var(--accent-green)]/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--accent-green)]">
                                                         <Eye size={18} />
                                                     </Link>
-                                                    <Link href={`/admin/kotoba/${v.id}`} aria-label={`Edit ${v.word}`} className="rounded-lg p-2 text-[var(--accent-blue)] transition-colors hover:bg-[var(--accent-blue)]/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--accent-blue)]">
+                                                    <Link href={`/admin/kotoba/${v.id}/edit`} aria-label={`Edit ${v.word}`} className="rounded-lg p-2 text-[var(--accent-blue)] transition-colors hover:bg-[var(--accent-blue)]/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--accent-blue)]">
                                                         <Pencil size={18} />
                                                     </Link>
                                                     <button onClick={(e) => handleDelete(e, v.id)} aria-label={`Hapus ${v.word}`} className="rounded-lg p-2 text-[var(--brand-red)] transition-colors hover:bg-[var(--brand-red)]/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--brand-red)]">
@@ -348,7 +359,7 @@ export default function KotobaAdmin() {
                                             <div className="text-xl font-black text-[var(--foreground)]">{v.word}</div>
                                             <div className="text-sm font-bold text-[var(--foreground)]/75">{v.reading}</div>
                                             <div className="mt-1 text-sm font-bold text-[var(--foreground)]/80 truncate">{v.meaning}</div>
-                                            <span className={`mt-2 inline-flex rounded-lg px-2.5 py-1 text-xs font-semibold ${levelColor(v.jlpt_level)}`}>
+                                            <span className={`inline-flex mt-2 px-2.5 py-1 text-xs font-black rounded-full ${levelColor(v.jlpt_level)}`}>
                                                 N{v.jlpt_level}
                                             </span>
                                         </div>
@@ -358,7 +369,7 @@ export default function KotobaAdmin() {
                                     </div>
                                     <div className="admin-control flex items-center justify-between px-5 py-3 border-t">
                                         <div className="flex items-center gap-2">
-                                            <Link href={`/admin/kotoba/${v.id}`} aria-label={`Edit ${v.word}`} className="rounded-lg p-2 text-[var(--accent-blue)] transition-colors hover:bg-[var(--accent-blue)]/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--accent-blue)]" onClick={(e) => e.stopPropagation()}>
+                                            <Link href={`/admin/kotoba/${v.id}/edit`} aria-label={`Edit ${v.word}`} className="rounded-lg p-2 text-[var(--accent-blue)] transition-colors hover:bg-[var(--accent-blue)]/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--accent-blue)]" onClick={(e) => e.stopPropagation()}>
                                                 <Pencil size={18} />
                                             </Link>
                                             <button
@@ -380,28 +391,28 @@ export default function KotobaAdmin() {
                 {!loading && pagination.pages > 1 && (
                     <div className="admin-control px-6 py-5 border-t">
                         <div className="flex items-center justify-between gap-4">
-                            <div className="text-xs text-[var(--foreground)]/55">
-                                Halaman <span className="font-semibold text-[var(--foreground)]">{pagination.page}</span> dari <span className="font-semibold text-[var(--foreground)]">{pagination.pages}</span> ({pagination.total} hasil)
+                            <div className="text-xs font-bold text-neutral-500">
+                                Halaman <span className="text-gray-900 dark:text-white">{pagination.page}</span> dari <span className="text-gray-900 dark:text-white">{pagination.pages}</span> ({pagination.total} hasil)
                             </div>
                             <Pagination
                                 currentPage={currentPage}
                                 totalPages={pagination.pages}
                                 onPageChange={setCurrentPage}
-                                activeClassName="bg-[var(--brand-red)]/10 border-[var(--brand-red)]/30 text-[var(--brand-red)]"
-                                buttonClassName="bg-[var(--card-bg)] border-[var(--border-color)] text-[var(--foreground)] hover:bg-[var(--background)]"
+                                activeClassName="bg-red-600/20 border-red-500/30 text-red-400"
+                                buttonClassName="bg-neutral-800 border-white/10 text-white hover:bg-neutral-700"
                             />
                         </div>
                     </div>
                 )}
                 {duplicates.length > 0 && (
-                    <div className="mt-6 rounded-2xl border border-[var(--border-color)] bg-[var(--card-bg)] p-5 sm:p-6">
-                        <h2 className="text-base font-semibold">Duplikat Kotoba ({duplicates.length})</h2>
+                    <div className="p-6 rounded-3xl border mt-6 bg-neutral-900/30 border-white/5">
+                        <h2 className="text-lg font-black">Duplicate Kotoba Found ({duplicates.length})</h2>
                         <div className="mt-4 space-y-3">
                             {duplicates.map(d => (
-                                <div key={d.key} className="flex items-start justify-between gap-4 rounded-xl border border-[var(--border-color)] bg-[var(--background)] p-3">
+                                <div key={d.key} className="p-3 rounded-lg bg-neutral-800/40 flex items-start justify-between">
                                     <div>
-                                        <div className="text-lg font-semibold">{d.items[0].word} <span className="text-sm text-[var(--foreground)]/55">({d.items.length})</span></div>
-                                        <div className="mt-1 text-xs text-[var(--foreground)]/55">
+                                        <div className="text-lg font-black">{d.items[0].word} <span className="text-sm text-neutral-400">({d.items.length})</span></div>
+                                        <div className="text-xs text-neutral-400 mt-1">
                                             {d.items.map(it => `${it.id} — ${it.meaning}`).join(' • ')}
                                         </div>
                                     </div>
@@ -435,9 +446,9 @@ export default function KotobaAdmin() {
                                                     }
                                                 }}
                                                 disabled={bulkDeleting}
-                                                className="rounded-xl bg-[var(--brand-red)] px-4 py-2 text-sm font-medium text-white transition-colors hover:opacity-90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--brand-red)] disabled:cursor-wait disabled:opacity-50"
+                                                className={`px-4 py-2 rounded-2xl ${bulkDeleting ? 'bg-neutral-700 text-neutral-300' : 'bg-red-600 text-white'}`}
                                             >
-                                                {bulkDeleting ? 'Menghapus duplikat...' : 'Hapus duplikat'}
+                                                {bulkDeleting ? 'Deleting...' : 'Delete duplicates'}
                                             </button>
                                     </div>
                                 </div>
@@ -459,7 +470,7 @@ export default function KotobaAdmin() {
             />
 
             {/* Floating quick controls for duplicates (preview / bulk-delete) */}
-            <div className="fixed right-6 bottom-6 z-50 flex flex-col gap-3">
+            <div hidden className="fixed right-6 bottom-6 z-50 flex flex-col gap-3">
                 <button
                     onClick={async () => {
                         setPreviewingAll(true);
@@ -489,9 +500,9 @@ export default function KotobaAdmin() {
                         } finally { setPreviewingAll(false); }
                     }}
                     disabled={previewingAll}
-                    className="rounded-xl border border-[var(--border-color)] bg-[var(--card-bg)] px-4 py-2 text-sm font-medium text-[var(--foreground)] shadow-lg transition-colors hover:bg-[var(--background)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--brand-red)] disabled:cursor-wait disabled:opacity-60"
+                    className="px-4 py-2 rounded-full bg-blue-600 text-white shadow-lg"
                     title="Preview duplicate groups and download JSON"
-                >{previewingAll ? 'Menyiapkan preview...' : 'Unduh daftar duplikat'}</button>
+                >{previewingAll ? 'Loading...' : 'Preview duplicates'}</button>
 
                 <button
                     onClick={async () => {
@@ -528,9 +539,9 @@ export default function KotobaAdmin() {
                             toast.error('Bulk-delete failed');
                         } finally { setBulkDeleting(false); }
                     }}
-                    className="rounded-xl bg-[var(--brand-red)] px-4 py-2 text-sm font-medium text-white shadow-lg transition-colors hover:opacity-90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--brand-red)]"
+                    className="px-4 py-2 rounded-full bg-red-600 text-white shadow-lg"
                     title="Delete all duplicate items (dangerous)"
-                >Hapus semua duplikat</button>
+                >Delete all duplicates</button>
             </div>
         </div>
     );

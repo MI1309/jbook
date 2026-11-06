@@ -94,8 +94,8 @@ class KanjiVisibilitySchema(Schema):
 @router.get("/kanji/visibility", auth=AdminAuth())
 def admin_get_kanji_visibility(request):
     setting = FeatureSetting.objects.filter(key='kanji_visibility').first()
-    value = setting.value if setting and isinstance(setting.value, dict) else {'disabled_levels': [1, 2, 3]}
-    return {'disabled_levels': value.get('disabled_levels', [1, 2, 3])}
+    value = setting.value if setting and isinstance(setting.value, dict) else {'disabled_levels': []}
+    return {'disabled_levels': value.get('disabled_levels', [])}
 
 @router.put("/kanji/visibility", auth=AdminAuth())
 @rate_limit(key='user', rate='30/m')
@@ -513,6 +513,7 @@ class GrammarCreateSchema(BaseModel):
     chapter: int = Field(..., ge=0)
     jlpt_level: int = Field(..., ge=1, le=5)
     sentences: List[dict] = Field(default_factory=list)
+    sections: Optional[dict] = None
 
 class GrammarSchema(BaseModel):
     title: str
@@ -608,6 +609,8 @@ def _save_bunpo_sentences(grammar, sentences):
 
 def _create_or_update_bunpo(grammar, payload):
     data = payload.dict()
+    if 'sections' not in payload.model_fields_set:
+        data.pop('sections', None)
     sentences = data.pop('sentences', [])
     if grammar is None:
         grammar = Grammar.objects.create(sentences=[], **data)

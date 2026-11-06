@@ -8,42 +8,14 @@ import { getBunpoSlug } from '@/data/bunpoSlugs';
 import AboutSections, { learners } from '@/components/home/hero';
 import { useDebounce } from 'use-debounce';
 import { getKanjiList, getGrammarList, getVocabList } from '@/lib/api';
-import { Search, ArrowRight, Brain, Gamepad2, ChartNoAxesCombined, CalendarDays } from 'lucide-react';
+import { Search, ArrowRight, Brain, Gamepad2, ChartNoAxesCombined, CalendarDays, Check } from 'lucide-react';
 
 // Materi inti, urut dari dasar ke lanjut
 const materials = [
-    {
-        glyph: 'かな',
-        title: 'Kana',
-        description: 'Hiragana dan Katakana lewat tabel huruf interaktif.',
-        href: '/kana',
-        tone: 'red',
-        levels: false,
-    },
-    {
-        glyph: '漢字',
-        title: 'Kanji',
-        description: 'Arti, bacaan, dan contoh dengan penjelasan bahasa Indonesia.',
-        href: '/kanji',
-        tone: 'blue',
-        levels: true,
-    },
-    {
-        glyph: '語彙',
-        title: 'Kotoba',
-        description: 'Kosakata Jepang lengkap dengan bacaan dan maknanya.',
-        href: '/kotoba',
-        tone: 'green',
-        levels: true,
-    },
-    {
-        glyph: '文法',
-        title: 'Bunpo',
-        description: 'Pola tata bahasa beserta contoh penggunaannya.',
-        href: '/bunpo',
-        tone: 'gold',
-        levels: true,
-    },
+    { glyph: 'かな', title: 'Kana', description: 'Hiragana dan Katakana lewat tabel huruf interaktif.', href: '/kana', tone: 'red', levels: false },
+    { glyph: '漢字', title: 'Kanji', description: 'Arti, bacaan, dan contoh dengan penjelasan bahasa Indonesia.', href: '/kanji', tone: 'blue', levels: true },
+    { glyph: '語彙', title: 'Kotoba', description: 'Kosakata Jepang lengkap dengan bacaan dan maknanya.', href: '/kotoba', tone: 'green', levels: true },
+    { glyph: '文法', title: 'Bunpo', description: 'Pola tata bahasa beserta contoh penggunaannya.', href: '/bunpo', tone: 'gold', levels: true },
 ];
 
 const tools = [
@@ -52,42 +24,26 @@ const tools = [
     { icon: ChartNoAxesCombined, title: 'Dashboard', description: 'Pantau progres belajarmu', href: '/dashboard' },
 ];
 
-const beginnerSteps = [
-    {
-        step: 1,
-        title: 'Kana',
-        description: 'Kenali Hiragana & Katakana.',
-        href: '/kana',
-        badgeClass: 'bg-accent-blue/10 text-accent-blue',
-        hoverBorder: 'hover:border-accent-blue/50',
-    },
-    {
-        step: 2,
-        title: 'Kotoba Dasar',
-        description: 'Hafalkan kata sehari-hari.',
-        href: '/kotoba',
-        badgeClass: 'bg-accent-green/10 text-accent-green',
-        hoverBorder: 'hover:border-accent-green/50',
-    },
-    {
-        step: 3,
-        title: 'Bunpo Dasar',
-        description: 'Pahami pola kalimat dasar.',
-        href: '/bunpo',
-        badgeClass: 'bg-accent-gold/10 text-accent-gold',
-        hoverBorder: 'hover:border-accent-gold/50',
-    },
-    {
-        step: 4,
-        title: 'Latihan',
-        description: 'Uji pemahaman dengan soal.',
-        href: '/practice',
-        badgeClass: 'bg-rose-500/10 text-rose-600 dark:text-rose-400',
-        hoverBorder: 'hover:border-rose-500/50',
-    },
+// TODO: ganti dengan jumlah asli dari database/API kamu.
+const heroStats = [
+    { value: '1.000+', label: 'Kanji', note: 'N5 sampai N1' },
+    { value: '5.000+', label: 'Kotoba', note: 'dengan bacaan & arti' },
+    { value: '300+', label: 'Pola Bunpo', note: 'beserta contoh kalimat' },
+    { value: '100%', label: 'Gratis', note: 'tanpa iklan pop-up' },
 ];
 
-const levels = [5, 4, 3];
+const quickSearches = ['水', 'たべる', 'ている', 'belajar'];
+
+const trustPoints = ['Gratis', 'Penjelasan bahasa Indonesia', 'Tanpa instal'];
+
+const levels = [5, 4, 3, 2, 1];
+
+const beginnerSteps = [
+    { step: 1, title: 'Kana', description: 'Kenali Hiragana & Katakana.', href: '/kana', badgeClass: 'bg-accent-blue/10 text-accent-blue', hoverBorder: 'hover:border-accent-blue/50' },
+    { step: 2, title: 'Kotoba Dasar', description: 'Hafalkan kata sehari-hari.', href: '/kotoba', badgeClass: 'bg-accent-green/10 text-accent-green', hoverBorder: 'hover:border-accent-green/50' },
+    { step: 3, title: 'Bunpo Dasar', description: 'Pahami pola kalimat dasar.', href: '/bunpo', badgeClass: 'bg-accent-gold/10 text-accent-gold', hoverBorder: 'hover:border-accent-gold/50' },
+    { step: 4, title: 'Latihan', description: 'Uji pemahaman dengan soal.', href: '/practice', badgeClass: 'bg-rose-500/10 text-rose-600 dark:text-rose-400', hoverBorder: 'hover:border-rose-500/50' },
+];
 
 const toneClasses = {
     blue: 'bg-accent-blue/10 text-accent-blue',
@@ -117,6 +73,94 @@ function ResultGroup({ title, titleClass, children }) {
         <div>
             <h4 className={`mb-2 font-japanese text-xs font-black ${titleClass}`}>{title}</h4>
             <div className="grid grid-cols-1 gap-1">{children}</div>
+        </div>
+    );
+}
+
+function KanjiPreviewCard() {
+    const [kanji, setKanji] = useState(null);
+    const [loadError, setLoadError] = useState(false);
+
+    useEffect(() => {
+        let isCurrent = true;
+
+        async function loadRandomKanji() {
+            try {
+                const pageSize = 300;
+                const firstPage = await getKanjiList({ limit: pageSize, page: 1 });
+                const total = Number(firstPage?.total) || 0;
+                if (!total || !firstPage?.items?.length) throw new Error('Kanji tidak tersedia');
+
+                const randomIndex = Math.floor(Math.random() * total);
+                const page = Math.floor(randomIndex / pageSize) + 1;
+                const response = page === 1
+                    ? firstPage
+                    : await getKanjiList({ limit: pageSize, page });
+                const selectedKanji = response?.items?.[randomIndex % pageSize];
+
+                if (!selectedKanji) throw new Error('Kanji tidak tersedia');
+                if (isCurrent) setKanji(selectedKanji);
+            } catch (error) {
+                console.error('Error fetching random kanji:', error);
+                if (isCurrent) setLoadError(true);
+            }
+        }
+
+        loadRandomKanji();
+        return () => { isCurrent = false; };
+    }, []);
+
+    const example = kanji?.examples?.find((item) => item?.word) || null;
+
+    return (
+        <div className="overflow-hidden rounded-2xl border border-[var(--border-color)] bg-[var(--card-bg)] shadow-xl shadow-accent-blue/5">
+            <div className="flex items-center justify-between border-b border-[var(--border-color)] px-4 py-2.5">
+                <span className="text-xs font-bold text-gray-500">Kanji pilihan dari database</span>
+                {kanji && <span className="rounded-full bg-accent-blue/10 px-2.5 py-1 text-xs font-black text-accent-blue">N{kanji.jlpt_level}</span>}
+            </div>
+
+            <div className="grid grid-cols-[auto_1fr] gap-5 p-5">
+                <div className="flex h-28 w-28 items-center justify-center rounded-xl border border-accent-gold/30 bg-accent-gold/5 sm:h-32 sm:w-32">
+                    <span className="font-japanese text-6xl font-black text-foreground sm:text-7xl" lang="ja">
+                        {kanji?.character || (loadError ? '—' : '…')}
+                    </span>
+                </div>
+                <dl className="min-w-0 space-y-2 text-sm">
+                    <div>
+                        <dt className="text-xs text-gray-500">Arti</dt>
+                        <dd className="font-bold">{kanji?.meaning || (loadError ? 'Kanji belum dapat dimuat' : 'Memuat kanji...')}</dd>
+                    </div>
+                    <div className="grid grid-cols-2 gap-3">
+                        <div>
+                            <dt className="text-xs text-gray-500">Onyomi</dt>
+                            <dd className="font-japanese font-semibold text-accent-blue" lang="ja">{kanji?.onyomi?.join(', ') || '—'}</dd>
+                        </div>
+                        <div>
+                            <dt className="text-xs text-gray-500">Kunyomi</dt>
+                            <dd className="font-japanese font-semibold text-accent-green" lang="ja">{kanji?.kunyomi?.join(', ') || '—'}</dd>
+                        </div>
+                    </div>
+                    <div>
+                        <dt className="text-xs text-gray-500">Jumlah goresan</dt>
+                        <dd className="font-semibold">{kanji?.strokes ?? '—'}</dd>
+                    </div>
+                </dl>
+            </div>
+
+            <div className="flex items-center justify-between gap-3 border-t border-[var(--border-color)] bg-accent-blue/5 px-5 py-3">
+                <p className="min-w-0 truncate text-sm">
+                    {example ? (
+                        <>
+                            <span className="font-japanese font-bold" lang="ja">{example.word}</span>
+                            {example.reading && <span className="font-japanese text-gray-500" lang="ja"> ({example.reading})</span>}
+                            {example.meaning && <span className="text-gray-600 dark:text-gray-400"> — {example.meaning}</span>}
+                        </>
+                    ) : <span className="text-gray-500">{kanji ? 'Contoh belum tersedia' : ' '}</span>}
+                </p>
+                <Link href={`/kanji?level=${kanji?.jlpt_level || 5}`} className={`shrink-0 rounded text-xs font-bold text-accent-blue hover:underline ${focusRing}`}>
+                    Lihat Kanji {kanji ? `N${kanji.jlpt_level}` : ''}
+                </Link>
+            </div>
         </div>
     );
 }
@@ -156,10 +200,7 @@ function getNextJlptInfo(currentDate = new Date()) {
     const diffMs = startOfExam.getTime() - startOfToday.getTime();
     const daysLeft = Math.max(0, Math.ceil(diffMs / msPerDay));
 
-    const monthsIndo = [
-        'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
-        'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
-    ];
+    const monthsIndo = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
     const daysIndo = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
 
     const dayName = daysIndo[targetExam.getDay()];
@@ -244,10 +285,18 @@ export default function Home() {
 
     return (
         <div className="washi-texture relative flex w-full flex-col overflow-hidden bg-background pb-8 text-foreground transition-colors duration-300">
+            {/* Kanji besar sebagai latar, dekoratif saja */}
+            <span
+                aria-hidden="true"
+                className="pointer-events-none absolute -right-6 -top-10 select-none font-japanese text-[22rem] font-black leading-none text-accent-blue/[0.04] max-lg:hidden"
+            >
+                学
+            </span>
+
             <div className="container relative z-10 mx-auto w-full max-w-6xl px-4 xl:px-6">
 
                 {/* HERO */}
-                <header className="grid items-start gap-8 pb-10 pt-8 sm:pt-12 lg:grid-cols-[1.05fr_0.95fr] lg:gap-12 lg:pt-16">
+                <header className="grid items-start gap-10 pb-10 pt-8 sm:pt-12 lg:grid-cols-[1.05fr_0.95fr] lg:gap-12 lg:pt-16">
 
                     {/* Kiri: pesan utama + pencarian */}
                     <div className="min-w-0 text-left">
@@ -256,17 +305,18 @@ export default function Home() {
                             <span className="text-gray-300 dark:text-gray-700" aria-hidden="true">•</span>
                             <span className="inline-flex items-center gap-1.5 rounded-full border border-accent-gold/40 bg-accent-gold/10 px-2.5 py-0.5 text-xs font-semibold text-accent-gold">
                                 <span className="relative flex h-2 w-2">
-                                    <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-accent-gold opacity-75"></span>
+                                    <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-accent-gold opacity-75 motion-reduce:animate-none"></span>
                                     <span className="relative inline-flex h-2 w-2 rounded-full bg-accent-gold"></span>
                                 </span>
-                                <span suppressHydrationWarning>JLPT {jlptInfo.period}: {jlptInfo.daysLeft} hari lagi</span>
+                                <span>Kamus Bahasa Jepang</span>
                             </span>
                         </div>
-                        <h1 className="mt-3 max-w-xl font-japanese text-3xl font-black leading-tight sm:text-4xl xl:text-5xl">
-                            Belajar bahasa Jepang. semua materi di satu tempat
+                        <h1 className="mt-4 max-w-xl font-japanese text-3xl font-black leading-[1.15] sm:text-4xl xl:text-5xl">
+                            Belajar Bahasa Jepang, Terstruktur dari Kana hingga{' '}
+                            <span className="whitespace-nowrap text-accent-blue">N3</span>
                         </h1>
                         <p className="mt-4 max-w-xl text-base leading-relaxed text-gray-600 dark:text-gray-300">
-                            Kamus Kanji, kosakata, dan tata bahasa dengan penjelasan bahasa Indonesia, lengkap dengan latihan soal dan game TTS. Gratis, dari Kana sampai level N3.
+                            Cari kanji, kosakata, dan pola tata bahasa dengan penjelasan bahasa Indonesia. Lanjutkan dengan latihan JLPT, game TTS, dan SRS di satu tempat.
                         </p>
 
                         {/* Pencarian */}
@@ -292,7 +342,7 @@ export default function Home() {
                                         onFocus={() => setShowSuggestions(true)}
                                         aria-label="Cari materi bahasa Jepang"
                                         placeholder="Cari kanji, kata, atau pola tata bahasa"
-                                        className="focus-glow w-full min-w-0 rounded-xl border border-[var(--border-color)] bg-[var(--card-bg)] py-3.5 pl-12 pr-20 text-sm text-foreground shadow-md transition-all duration-300 placeholder-gray-400 hover:shadow-lg sm:text-base"
+                                        className="focus-glow w-full min-w-0 rounded-xl border border-[var(--border-color)] bg-[var(--card-bg)] py-4 pl-12 pr-20 text-sm text-foreground shadow-md transition-all duration-300 placeholder-gray-400 hover:shadow-lg sm:text-base"
                                     />
                                     {searchQuery && (
                                         <button
@@ -308,8 +358,27 @@ export default function Home() {
                                         </button>
                                     )}
                                 </div>
-
                             </form>
+
+                            {/* Contoh pencarian */}
+                            {!trimmedQuery && (
+                                <div className="mt-3 flex flex-wrap items-center gap-2 text-xs">
+                                    <span className="text-gray-500">Coba cari:</span>
+                                    {quickSearches.map((term) => (
+                                        <button
+                                            key={term}
+                                            type="button"
+                                            onClick={() => {
+                                                setSearchQuery(term);
+                                                setShowSuggestions(true);
+                                            }}
+                                            className={`rounded-full border border-[var(--border-color)] bg-[var(--card-bg)] px-3 py-1 font-japanese font-semibold transition-colors hover:border-accent-blue hover:text-accent-blue ${focusRing}`}
+                                        >
+                                            {term}
+                                        </button>
+                                    ))}
+                                </div>
+                            )}
 
                             {/* Saran pencarian */}
                             {showSuggestions && trimmedQuery && (
@@ -357,7 +426,7 @@ export default function Home() {
                                         {searchResults.grammar.length > 0 && (
                                             <ResultGroup title="文法 Tata Bahasa" titleClass="text-accent-gold">
                                                 {searchResults.grammar.map((item) => (
-                                                            <Link key={item.id} href={getBunpoSlug(item.title) ? `/bunpo/n${item.jlpt_level}/${getBunpoSlug(item.title)}` : `/bunpo/n${item.jlpt_level}`} role="option" className={resultRow}>
+                                                    <Link key={item.id} href={getBunpoSlug(item.title) ? `/bunpo/n${item.jlpt_level}/${getBunpoSlug(item.title)}` : `/bunpo/n${item.jlpt_level}`} role="option" className={resultRow}>
                                                         <div className="flex min-w-0 items-center gap-3">
                                                             <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-accent-gold/10 font-japanese text-base font-bold text-accent-gold">文</span>
                                                             <div className="min-w-0">
@@ -413,19 +482,38 @@ export default function Home() {
                             </Link>
                         </div>
 
+                        {/* Poin kepercayaan */}
+                        <ul className="mt-5 flex flex-wrap gap-x-5 gap-y-2 text-xs font-semibold text-gray-600 dark:text-gray-400">
+                            {trustPoints.map((point) => (
+                                <li key={point} className="inline-flex items-center gap-1.5">
+                                    <Check aria-hidden="true" className="h-3.5 w-3.5 text-accent-green" />
+                                    {point}
+                                </li>
+                            ))}
+                        </ul>
+                        <Link
+                            href="/ketentuan"
+                            className={`mt-3 inline-flex text-xs font-semibold text-gray-500 underline underline-offset-4 transition-colors hover:text-accent-blue ${focusRing}`}
+                        >
+                            Baca ketentuan penggunaan
+                        </Link>
+                    </div>
+
+                    {/* Kanan: pratinjau kartu + hitung mundur */}
+                    <div className="min-w-0 space-y-4">
+                        <KanjiPreviewCard />
+
                         {/* Hitung Mundur JLPT */}
-                        <div className="mt-6 max-w-xl rounded-xl border border-accent-gold/30 bg-accent-gold/5 p-4 transition-colors hover:border-accent-gold/50">
-                            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                                <div className="flex items-center gap-3">
+                        <div className="rounded-xl border border-accent-gold/30 bg-accent-gold/5 p-4 transition-colors hover:border-accent-gold/50">
+                            <div className="flex items-center justify-between gap-3">
+                                <div className="flex min-w-0 items-center gap-3">
                                     <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-accent-gold/15 text-accent-gold shadow-sm">
                                         <CalendarDays aria-hidden="true" className="h-5 w-5" />
                                     </div>
-                                    <div>
-                                        <div className="flex items-center gap-2">
-                                            <span className="text-xs font-bold uppercase tracking-wider text-accent-gold">Hitung Mundur JLPT</span>
-                                            <span className="rounded-full bg-accent-gold/20 px-2 py-0.5 text-[10px] font-bold text-accent-gold">
-                                                {jlptInfo.period}
-                                            </span>
+                                    <div className="min-w-0">
+                                        <div className="flex flex-wrap items-center gap-2">
+                                            <span className="text-xs font-bold text-accent-gold">Hitung Mundur JLPT</span>
+                                            <span className="rounded-full bg-accent-gold/20 px-2 py-0.5 text-[10px] font-bold text-accent-gold">{jlptInfo.period}</span>
                                         </div>
                                         <p className="mt-0.5 text-xs text-gray-600 dark:text-gray-400" suppressHydrationWarning>
                                             {jlptInfo.formattedDate}
@@ -433,8 +521,8 @@ export default function Home() {
                                     </div>
                                 </div>
 
-                                <div className="flex items-center justify-between border-t border-accent-gold/20 pt-2 sm:border-t-0 sm:pt-0 sm:flex-col sm:items-end sm:justify-center">
-                                    <div className="font-japanese text-xl font-black text-foreground sm:text-2xl" suppressHydrationWarning>
+                                <div className="flex shrink-0 flex-col items-end">
+                                    <div className="font-japanese text-2xl font-black text-foreground" suppressHydrationWarning>
                                         {jlptInfo.daysLeft === 0 ? (
                                             <span className="text-accent-gold">Hari ini!</span>
                                         ) : (
@@ -453,94 +541,112 @@ export default function Home() {
                             </div>
                         </div>
                     </div>
-
-                    {/* Kanan: materi tertata */}
-                    <div className="min-w-0">
-                        <h2 className="mb-3 font-japanese text-lg font-black">Pilih materi</h2>
-                        <div className="grid grid-cols-1 gap-3 min-[480px]:grid-cols-2">
-                            {materials.map(({ glyph, title, description, href, tone, levels: hasLevels }) => (
-                                <article
-                                    key={title}
-                                    className="flex flex-col rounded-xl border border-[var(--border-color)] bg-[var(--card-bg)] p-4"
-                                >
-                                    <Link href={href} className={`group rounded-md ${focusRing}`}>
-                                        <span className={`inline-flex h-12 min-w-12 items-center justify-center rounded-lg px-2 font-japanese text-2xl font-black ${toneClasses[tone]}`} aria-hidden="true">
-                                            {glyph}
-                                        </span>
-                                        <h3 className="mt-3 text-base font-bold group-hover:underline">{title}</h3>
-                                        <p className="mt-1 text-sm leading-relaxed text-gray-600 dark:text-gray-400">{description}</p>
-                                    </Link>
-
-                                    <div className="mt-auto flex flex-wrap gap-1.5 pt-3">
-                                        {hasLevels ? (
-                                            levels.map((level) => (
-                                                <Link
-                                                    key={level}
-                                                    href={`${href}?level=${level}`}
-                                                    aria-label={`${title} level N${level}`}
-                                                    className={`rounded-full border border-[var(--border-color)] px-2.5 py-0.5 text-xs font-bold transition-colors hover:border-accent-blue hover:text-accent-blue ${focusRing}`}
-                                                >
-                                                    N{level}
-                                                </Link>
-                                            ))
-                                        ) : (
-                                            <Link
-                                                href={href}
-                                                className={`rounded-full border border-[var(--border-color)] px-2.5 py-0.5 text-xs font-bold transition-colors hover:border-accent-blue hover:text-accent-blue ${focusRing}`}
-                                            >
-                                                Mulai dari sini
-                                            </Link>
-                                        )}
-                                    </div>
-                                </article>
-                            ))}
-                        </div>
-
-                        {/* Alat belajar */}
-                        <h2 className="mb-3 mt-6 font-japanese text-lg font-black">Latihan dan pantau</h2>
-                        <ul className="grid grid-cols-1 gap-2 min-[480px]:grid-cols-3">
-                            {tools.map(({ icon: Icon, title, description, href }) => (
-                                <li key={title}>
-                                    <Link
-                                        href={href}
-                                        className={`flex h-full items-start gap-3 rounded-lg border border-[var(--border-color)] bg-[var(--card-bg)] p-3 transition-colors hover:border-accent-blue min-[480px]:flex-col ${focusRing}`}
-                                    >
-                                        <Icon aria-hidden="true" className="h-5 w-5 shrink-0 text-accent-blue" />
-                                        <span>
-                                            <span className="block text-sm font-bold">{title}</span>
-                                            <span className="mt-0.5 block text-xs leading-snug text-gray-600 dark:text-gray-400">{description}</span>
-                                        </span>
-                                    </Link>
-                                </li>
-                            ))}
-                        </ul>
-                    </div>
                 </header>
 
-                {/* Untuk siapa: bukan urutan, jadi tanpa penomoran */}
-                      <section aria-labelledby="audience-title" className="border-t border-[var(--border-color)] pt-8">
-                        <h2 id="audience-title" className="mb-5 font-japanese text-2xl font-black sm:text-3xl">Untuk Siapa JBook?</h2>
-                        <div className="grid gap-4 md:grid-cols-3">
-                          {learners.map(({ icon: Icon, title, description }) => (
-                            <article key={title} className="flex gap-4 border-t-2 border-accent-blue/30 py-4">
-                              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-accent-blue/10 text-accent-blue">
-                                <Icon aria-hidden="true" className="h-5 w-5" />
-                              </span>
-                              <div>
-                                <h3 className="text-base font-bold">{title}</h3>
-                                <p className="mt-2 text-sm leading-relaxed text-gray-600 dark:text-gray-400">{description}</p>
-                              </div>
+                {/* Angka ringkas: menjawab "isinya apa saja?" */}
+                <section aria-label="Isi JBook" className="mb-4 rounded-2xl border border-[var(--border-color)] bg-[var(--card-bg)]">
+                    <dl className="grid grid-cols-2 divide-[var(--border-color)] max-md:divide-y md:grid-cols-4 md:divide-x">
+                        {heroStats.map(({ value, label, note }) => (
+                            <div key={label} className="px-5 py-4 max-md:odd:border-r max-md:odd:border-[var(--border-color)]">
+                                <dt className="text-xs font-semibold text-gray-500">{label}</dt>
+                                <dd className="mt-0.5 font-japanese text-2xl font-black text-foreground sm:text-3xl">{value}</dd>
+                                <p className="text-xs text-gray-600 dark:text-gray-400">{note}</p>
+                            </div>
+                        ))}
+                    </dl>
+                </section>
+
+                {/* Materi inti */}
+                <section aria-labelledby="materials-title" className="py-10 sm:py-12">
+                    <div className="mb-5 flex items-end justify-between gap-4">
+                        <h2 id="materials-title" className="font-japanese text-2xl font-black sm:text-3xl">Pilih materi belajarmu</h2>
+                        <p className="hidden text-sm text-gray-600 dark:text-gray-400 sm:block">Urut dari dasar ke lanjut</p>
+                    </div>
+                    <div className="grid grid-cols-1 gap-3 min-[560px]:grid-cols-2 lg:grid-cols-4">
+                        {materials.map(({ glyph, title, description, href, tone, levels: hasLevels }) => (
+                            <article
+                                key={title}
+                                className="flex flex-col rounded-xl border border-[var(--border-color)] bg-[var(--card-bg)] p-4"
+                            >
+                                <Link href={href} className={`group rounded-md ${focusRing}`}>
+                                    <span className={`inline-flex h-12 min-w-12 items-center justify-center rounded-lg px-2 font-japanese text-2xl font-black ${toneClasses[tone]}`} aria-hidden="true">
+                                        {glyph}
+                                    </span>
+                                    <h3 className="mt-3 text-base font-bold group-hover:underline">{title}</h3>
+                                    <p className="mt-1 text-sm leading-relaxed text-gray-600 dark:text-gray-400">{description}</p>
+                                </Link>
+
+                                <div className="mt-auto flex flex-wrap gap-1.5 pt-3">
+                                    {hasLevels ? (
+                                        levels.map((level) => (
+                                            <Link
+                                                key={level}
+                                                href={`${href}?level=${level}`}
+                                                aria-label={`${title} level N${level}`}
+                                                className={`rounded-full border border-[var(--border-color)] px-2.5 py-0.5 text-xs font-bold transition-colors hover:border-accent-blue hover:text-accent-blue ${focusRing}`}
+                                            >
+                                                N{level}
+                                            </Link>
+                                        ))
+                                    ) : (
+                                        <Link
+                                            href={href}
+                                            className={`rounded-full border border-[var(--border-color)] px-2.5 py-0.5 text-xs font-bold transition-colors hover:border-accent-blue hover:text-accent-blue ${focusRing}`}
+                                        >
+                                            Mulai dari sini
+                                        </Link>
+                                    )}
+                                </div>
                             </article>
-                          ))}
-                        </div>
-                      </section>
+                        ))}
+                    </div>
+
+                    {/* Alat belajar */}
+                    <h3 className="mb-3 mt-8 font-japanese text-lg font-black">Latihan dan pantau</h3>
+                    <ul className="grid grid-cols-1 gap-2 sm:grid-cols-3">
+                        {tools.map(({ icon: Icon, title, description, href }) => (
+                            <li key={title}>
+                                <Link
+                                    href={href}
+                                    className={`flex h-full items-center gap-3 rounded-lg border border-[var(--border-color)] bg-[var(--card-bg)] p-3 transition-colors hover:border-accent-blue ${focusRing}`}
+                                >
+                                    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-accent-blue/10 text-accent-blue">
+                                        <Icon aria-hidden="true" className="h-5 w-5" />
+                                    </span>
+                                    <span>
+                                        <span className="block text-sm font-bold">{title}</span>
+                                        <span className="mt-0.5 block text-xs leading-snug text-gray-600 dark:text-gray-400">{description}</span>
+                                    </span>
+                                </Link>
+                            </li>
+                        ))}
+                    </ul>
+                </section>
+
+                {/* Untuk siapa: bukan urutan, jadi tanpa penomoran */}
+                <section aria-labelledby="audience-title" className="border-t border-[var(--border-color)] py-12 sm:py-16">
+                    <h2 id="audience-title" className="mb-5 font-japanese text-2xl font-black sm:text-3xl">Untuk Siapa JBook?</h2>
+                    <div className="grid gap-4 md:grid-cols-3">
+                        {learners.map(({ icon: Icon, title, description }) => (
+                            <article key={title} className="flex gap-4 border-t-2 border-accent-blue/30 py-4">
+                                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-accent-blue/10 text-accent-blue">
+                                    <Icon aria-hidden="true" className="h-5 w-5" />
+                                </span>
+                                <div>
+                                    <h3 className="text-base font-bold">{title}</h3>
+                                    <p className="mt-2 text-sm leading-relaxed text-gray-600 dark:text-gray-400">{description}</p>
+                                </div>
+                            </article>
+                        ))}
+                    </div>
+                </section>
 
                 {/* Section Mulai Belajar dari Nol */}
-                <section aria-labelledby="start-from-zero" className="mb-5 w-full">
+                <section aria-labelledby="start-from-zero" className="w-full pb-12 sm:pb-16">
                     <div className="rounded-xl border border-[var(--border-color)] bg-[var(--card-bg)] p-5 sm:p-6">
                         <div className="mb-4 flex flex-col gap-1 sm:flex-row sm:items-end sm:justify-between">
                             <div>
-                                <p className="text-xs font-bold uppercase tracking-widest text-accent-blue">Untuk Pemula</p>
+                                <p className="text-xs font-bold text-accent-blue">Untuk pemula</p>
                                 <h2 id="start-from-zero" className="text-lg font-bold text-foreground sm:text-xl">
                                     Belum pernah belajar bahasa Jepang? Mulai dari Nol
                                 </h2>
@@ -561,23 +667,13 @@ export default function Home() {
                                     >
                                         <div>
                                             <div className="flex items-center justify-between">
-                                                <span
-                                                    aria-hidden="true"
-                                                    className={`flex h-6 w-6 items-center justify-center rounded-full text-xs font-black ${badgeClass}`}
-                                                >
+                                                <span aria-hidden="true" className={`flex h-6 w-6 items-center justify-center rounded-full text-xs font-black ${badgeClass}`}>
                                                     {step}
                                                 </span>
-                                                <ArrowRight
-                                                    aria-hidden="true"
-                                                    className="h-3.5 w-3.5 text-gray-400 transition-transform group-hover:translate-x-0.5 group-hover:text-foreground"
-                                                />
+                                                <ArrowRight aria-hidden="true" className="h-3.5 w-3.5 text-gray-400 transition-transform group-hover:translate-x-0.5 group-hover:text-foreground" />
                                             </div>
-                                            <h3 className="mt-3 text-sm font-bold text-foreground group-hover:underline">
-                                                {title}
-                                            </h3>
-                                            <p className="mt-1 text-xs text-gray-600 dark:text-gray-400">
-                                                {description}
-                                            </p>
+                                            <h3 className="mt-3 text-sm font-bold text-foreground group-hover:underline">{title}</h3>
+                                            <p className="mt-1 text-xs text-gray-600 dark:text-gray-400">{description}</p>
                                         </div>
                                     </Link>
                                 </li>

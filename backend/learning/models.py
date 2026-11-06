@@ -49,7 +49,7 @@ class UserVocabulary(models.Model):
     box_level = models.PositiveSmallIntegerField(default=0)
     next_review_date = models.DateField(null=True, blank=True)
     times_reviewed = models.PositiveIntegerField(default=0)
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True, db_index=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:

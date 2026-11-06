@@ -12,6 +12,8 @@ Untuk struktur frontend dan penilaian penerapan SOLID saat ini, lihat [Arsitektu
 
 Untuk struktur backend dan penilaian penerapan SOLID saat ini, lihat [Arsitektur Backend dan SOLID](backend_architecture.md).
 
+Untuk diagram ERD, kardinalitas, aturan penghapusan, dan alur relasi data backend saat ini, lihat [Relasi Database JBook](database_relationships.md).
+
 Untuk melanjutkan pekerjaan terbaru melalui agen AI, baca [AI Handoff: JBook Progress dan Crossword TTS](ai-handoff.md). Dokumen tersebut mencatat lokasi kode, kontrak dashboard, dua jalur generator TTS, validasi terakhir, dan pekerjaan lanjutan.
 
 ## Base URL

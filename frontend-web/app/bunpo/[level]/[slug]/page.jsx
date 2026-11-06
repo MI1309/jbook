@@ -1,7 +1,6 @@
 import { notFound } from 'next/navigation';
 import BunpoDetailUI from '@/components/bunpo/BunpoDetailUI';
 import { getBunpoLevel } from '@/data/bunpoLevels';
-import { BUNPO_SECTIONS_PILOT } from '@/data/bunpo-sections-pilot';
 import { getBunpoSlug } from '@/data/bunpoSlugs';
 import { getBunpoCatalog, getBunpoGrammarDetail } from '@/lib/bunpo-catalog';
 import { normalizeBunpoPattern } from '@/lib/bunpo-schema';
@@ -19,6 +18,16 @@ function makeTitle(pola, level) {
     return `${pola} — Bunpo ${level.toUpperCase()} | JBook`.slice(0, 60);
 }
 
+function slugMatches(item, slug) {
+    const generatedSlug = getBunpoSlug(item.title);
+    if (item.slug === slug || generatedSlug === slug) return true;
+    try {
+        return decodeURIComponent(item.slug || '') === slug || decodeURIComponent(generatedSlug || '') === slug;
+    } catch {
+        return false;
+    }
+}
+
 async function findGrammar(level, slug) {
     const config = getBunpoLevel(level);
     if (!config) return null;
@@ -26,7 +35,7 @@ async function findGrammar(level, slug) {
     const catalog = await getBunpoCatalog();
     const pattern = catalog.find((item) =>
         Number(item.jlpt_level) === config.number &&
-        (item.slug === slug || getBunpoSlug(item.title) === slug)
+        slugMatches(item, slug)
     );
     if (!pattern) return null;
 
@@ -34,18 +43,6 @@ async function findGrammar(level, slug) {
     if (!detail) return null;
 
     const grammar = { ...pattern, ...detail, meaning: detail.meaning || detail.structure };
-    const pilot = BUNPO_SECTIONS_PILOT[slug];
-    if (pilot && Number(grammar.jlpt_level) === pilot.jlpt_level) {
-        return normalizeBunpoPattern({
-            ...grammar,
-            sections: grammar.sections && Object.keys(grammar.sections).length ? grammar.sections : pilot.sections,
-            tags: grammar.tags?.length ? grammar.tags : pilot.tags,
-            relatedPatterns: grammar.relatedPatterns?.length ? grammar.relatedPatterns : pilot.relatedPatterns,
-            source: grammar.source || pilot.source,
-            metadata: grammar.metadata || pilot.metadata,
-        });
-    }
-
     return normalizeBunpoPattern(grammar);
 }
 

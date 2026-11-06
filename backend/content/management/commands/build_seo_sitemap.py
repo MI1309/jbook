@@ -38,7 +38,7 @@ class Command(BaseCommand):
         entries.extend(
             (f"{base}/kanji/{obj.pk}", None)
             for obj in Kanji.objects.exclude(
-                jlpt_level__in=disabled_levels("kanji_visibility", default=(1, 2, 3))
+                jlpt_level__in=disabled_levels("kanji_visibility")
             ).only("id", "jlpt_level")
         )
         entries.extend(

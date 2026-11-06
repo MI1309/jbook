@@ -182,6 +182,24 @@ jbook/                           # Root proyek utama
 
 ---
 
+### Struktur Route Admin Frontend
+
+Route admin menggunakan pola resource-based di `frontend-web/app/admin/`:
+
+```text
+admin/
+	layout.jsx
+	page.jsx
+	kanji/                  # page.jsx, new/page.jsx, [id]/page.jsx, [id]/edit/page.jsx, tools/page.jsx
+	kotoba/                 # page.jsx, new/page.jsx, [id]/page.jsx, [id]/edit/page.jsx, tools/page.jsx
+	bunpo/                  # page.jsx, new/page.jsx, [id]/page.jsx, [id]/edit/page.jsx, import/page.jsx
+	announcements/          # page.jsx, new/page.jsx, [id]/page.jsx, [id]/edit/page.jsx
+	custom-modules/         # page.jsx, new/page.jsx, [id]/page.jsx, [id]/edit/page.jsx
+													# [id]/questions/new/page.jsx
+```
+
+Komponen shell admin berada di `frontend-web/components/admin/`. Route Users saat ini hanya menampilkan ringkasan karena backend belum menyediakan endpoint direktori admin. Kana dan Feedback belum memiliki fitur CRUD admin maupun endpoint yang terkonfirmasi; jangan menambah route CRUD frontend untuk keduanya sebelum API tersedia.
+
 ## 2. Penjelasan Fungsi Folder (Directory Breakdown)
 
 ### 📂 `docs/`

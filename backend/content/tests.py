@@ -12,6 +12,7 @@ from users.models import TTSPointSession
 
 from .models import FeatureSetting, Vocab, Kanji, Grammar, GrammarSentence, WordType, CurriculumLevel, ReferenceBook, CurriculumUnit, Particle
 from .admin_api import _save_bunpo_sentences
+from .grammar_relations import generate_bunpo_slug
 
 
 class BunpoBulkImportTests(TestCase):
@@ -226,6 +227,10 @@ class AdminGrammarListTests(TestCase):
 
 
 class AdminBunpoCrudRouteTests(TestCase):
+    def test_title_slug_uses_romanized_pattern(self):
+        self.assertEqual(generate_bunpo_slug('は'), 'wa')
+        self.assertEqual(generate_bunpo_slug('～は～です'), 'wa-desu')
+
     def test_detail_and_update_use_admin_bunpo_route(self):
         admin = get_user_model().objects.create_user(username='bunpo-crud-admin', is_staff=True)
         grammar = Grammar.objects.create(
@@ -233,6 +238,7 @@ class AdminBunpoCrudRouteTests(TestCase):
             slug='legacy-title',
             structure='N は N です',
             explanation='Old explanation',
+            sections={'mainFunction': {'summary': 'Fungsi lama', 'points': []}},
             chapter=1,
             jlpt_level=5,
             sentences=[],
@@ -244,6 +250,8 @@ class AdminBunpoCrudRouteTests(TestCase):
         detail_response = self.client.get(detail_url, secure=True, **headers)
         self.assertEqual(detail_response.status_code, 200, detail_response.content)
         self.assertEqual(detail_response.json()['title'], 'Legacy title')
+        self.assertEqual(detail_response.json()['slug'], 'legacy-title')
+        self.assertEqual(detail_response.json()['sections']['mainFunction']['summary'], 'Fungsi lama')
 
         update_response = self.client.put(
             detail_url,
@@ -254,6 +262,7 @@ class AdminBunpoCrudRouteTests(TestCase):
                 'chapter': 2,
                 'jlpt_level': 4,
                 'sentences': [],
+                'sections': {'mainFunction': {'summary': 'Fungsi baru', 'points': ['Poin']}},
             }),
             content_type='application/json',
             secure=True,
@@ -263,6 +272,7 @@ class AdminBunpoCrudRouteTests(TestCase):
         grammar.refresh_from_db()
         self.assertEqual(grammar.title, 'Updated title')
         self.assertEqual(grammar.chapter, 2)
+        self.assertEqual(grammar.sections['mainFunction']['summary'], 'Fungsi baru')
 
 
 class AdminKanjiCrudRouteTests(TestCase):
@@ -370,6 +380,17 @@ class KanjiListApiTests(TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()['items'], [])
+
+
+class KanjiVisibilityDefaultsTests(TestCase):
+    def test_all_levels_are_enabled_without_visibility_setting(self):
+        FeatureSetting.objects.filter(key='kanji_visibility').delete()
+
+        response = self.client.get('/api/content/kanji/visibility', secure=True)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()['disabled_levels'], [])
+        self.assertEqual(response.json()['enabled_levels'], [1, 2, 3, 4, 5])
 
 
 class BunpoVisibilityTests(TestCase):

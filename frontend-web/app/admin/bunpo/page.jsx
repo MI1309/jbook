@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { API_URL, setBunpoVisibilityCache } from '@/lib/api';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useDebounce } from 'use-debounce';
 import Cookies from 'js-cookie';
 import { appToast as toast } from '@/components/common/AppMessage';
@@ -12,6 +13,9 @@ import { getBunpoSlug } from '@/data/bunpoSlugs';
 import BunpoImportPanel from './BunpoImportPanel';
 import { Download, Eye, Pencil, Plus, Search, Trash2 } from 'lucide-react';
 import { AdminEmptyState, AdminErrorState, AdminSkeleton } from '@/components/admin/AdminFeedback';
+import AdminDataTable from '@/components/admin/AdminDataTable';
+import AdminPageHeader from '@/components/admin/AdminPageHeader';
+import AdminFilterBar from '@/components/admin/AdminFilterBar';
 
 export default function BunpoAdmin() {
     const [bunpos, setBunpos] = useState([]);
@@ -26,6 +30,7 @@ export default function BunpoAdmin() {
     const [pendingDelete, setPendingDelete] = useState(null);
     const [disabledLevels, setDisabledLevels] = useState([]);
     const [savingVisibility, setSavingVisibility] = useState(false);
+    const router = useRouter();
 
     const [debouncedChapter] = useDebounce(filterChapter, 500);
     const [debouncedSearch] = useDebounce(search, 500);
@@ -184,15 +189,16 @@ export default function BunpoAdmin() {
 
     return (
         <div className="space-y-6">
+            <AdminPageHeader title="Bunpo" description="Kelola materi tata bahasa dan contoh kalimat." breadcrumbs={[{ label: 'Bunpo' }]} action={<div className="flex flex-wrap gap-2"><Link href="/admin/bunpo/import" className="rounded-lg border border-[var(--border-color)] px-4 py-2.5 text-sm">Import</Link><Link href="/admin/bunpo/new" className="rounded-lg bg-[var(--brand-red)] px-4 py-2.5 text-sm font-medium text-white">Tambah Bunpo</Link></div>} />
             {/* Header */}
-            <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+            <div hidden className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
                 <div>
                     <p className="text-sm text-[var(--foreground)]/55">Koleksi / Bunpo</p>
                     <h1 className="mt-1 text-2xl font-semibold text-[var(--foreground)]">Bunpo</h1>
                     <p className="mt-1 text-sm text-[var(--foreground)]/60">Kelola materi tata bahasa dan contoh kalimat.</p>
                 </div>
                 <div className="flex flex-wrap gap-2">
-                    <a href="#bunpo-import" className="inline-flex items-center gap-2 rounded-xl border border-[var(--border-color)] px-4 py-2.5 text-sm font-medium text-[var(--foreground)] transition-colors hover:bg-[var(--card-bg)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--brand-red)]"><Download size={16} /> Import data</a>
+                    <Link href="/admin/bunpo/import" className="inline-flex items-center gap-2 rounded-xl border border-[var(--border-color)] px-4 py-2.5 text-sm font-medium text-[var(--foreground)] transition-colors hover:bg-[var(--card-bg)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--brand-red)]"><Download size={16} /> Import data</Link>
                     <Link href="/admin/bunpo/new" className="inline-flex items-center gap-2 rounded-xl bg-[var(--brand-red)] px-4 py-2.5 text-sm font-medium text-white transition-colors hover:opacity-90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--brand-red)]"><Plus size={16} /> Tambah Bunpo</Link>
                 </div>
             </div>
@@ -215,9 +221,9 @@ export default function BunpoAdmin() {
                                     disabled={savingVisibility}
                                     onClick={() => toggleVisibility(level)}
                                     className={`px-4 py-2 rounded-xl border text-xs font-black transition-all cursor-pointer ${isDisabled
-                                        ? 'bg-[var(--brand-red)]/10 border-[var(--brand-red)]/25 text-[var(--brand-red)]'
-                                        : 'bg-[var(--accent-green)]/10 border-[var(--accent-green)]/25 text-[var(--accent-green)]'
-                                    } hover:opacity-80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--brand-red)] disabled:cursor-wait disabled:opacity-50`}
+                                        ? 'bg-red-600/20 border-red-500/40 text-red-300'
+                                        : 'bg-emerald-600/20 border-emerald-500/40 text-emerald-300'
+                                    } disabled:opacity-50`}
                                 >
                                     N{level} {isDisabled ? 'OFF' : 'ON'}
                                 </button>
@@ -228,7 +234,7 @@ export default function BunpoAdmin() {
             </div>
 
             {/* Filters & Search */}
-            <div className="rounded-2xl border border-[var(--border-color)] bg-[var(--card-bg)] p-4 sm:p-5">
+            <AdminFilterBar className="rounded-2xl border border-[var(--border-color)] bg-[var(--card-bg)] p-4 sm:p-5" onReset={() => { setSearch(''); setFilterLevel(''); setFilterChapter(''); }}>
                 <div className="flex flex-col md:flex-row gap-4 items-stretch md:items-center justify-between">
                     <div className="flex flex-1 flex-col md:flex-row gap-3">
                         <input
@@ -263,10 +269,30 @@ export default function BunpoAdmin() {
                         <Download size={16} /> Export CSV
                     </button>
                 </div>
-            </div>
+            </AdminFilterBar>
 
-            {/* Content */}
-            <div className="overflow-hidden rounded-2xl border border-[var(--border-color)] bg-[var(--card-bg)]">
+            {fetchError ? <AdminErrorState title="Bunpo gagal dimuat" message={fetchError} onRetry={fetchBunpos} /> : <AdminDataTable
+                columns={[
+                    { key: 'title', label: 'Judul' },
+                    { key: 'structure', label: 'Struktur' },
+                    { key: 'jlpt_level', label: 'Level', render: item => `N${item.jlpt_level}` },
+                    { key: 'chapter', label: 'Bab' },
+                ]}
+                rows={bunpos}
+                getRowId={item => item.id}
+                loading={loading}
+                emptyTitle="Belum ada Bunpo"
+                emptyMessage="Ubah filter atau tambahkan materi baru."
+                page={page}
+                pages={pagination.pages}
+                onPageChange={setPage}
+                onView={item => `/admin/bunpo/${item.id}`}
+                onEdit={item => `/admin/bunpo/${item.id}/edit`}
+                onDelete={item => setPendingDelete(item.id)}
+            />}
+
+            {/* Legacy table retained temporarily during the route migration. */}
+            <div hidden className="overflow-hidden rounded-2xl border border-[var(--border-color)] bg-[var(--card-bg)]">
                 {loading ? (
                     <AdminSkeleton rows={5} />
                 ) : fetchError ? (
@@ -309,7 +335,7 @@ export default function BunpoAdmin() {
                                                         <Eye size={18} />
                                                     </Link>
                                                     <Link
-                                                        href={`/admin/bunpo/${b.id}`}
+                                                        href={`/admin/bunpo/${b.id}/edit`}
                                                         className="rounded-lg p-2 text-[var(--accent-blue)] transition-colors hover:bg-[var(--accent-blue)]/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--accent-blue)]"
                                                         title="Edit"
                                                         aria-label={`Edit ${b.title}`}
@@ -335,22 +361,27 @@ export default function BunpoAdmin() {
                         {/* Mobile Cards */}
                         <div className="md:hidden divide-y">
                             {bunpos.map((b) => (
-                                <article key={b.id} className="divide-y divide-[var(--border-color)]">
-                                    <div className="flex items-center gap-4 px-5 py-4 transition-colors hover:bg-[var(--background)]">
+                                <div key={b.id} className="divide-[var(--admin-divider)]">
+                                    <div
+                                        className="flex items-center gap-4 px-5 py-4 active:bg-[var(--admin-hover)] transition-colors cursor-pointer"
+                                        onClick={() => router.push(b.slug || getBunpoSlug(b.title) ? `/bunpo/n${b.jlpt_level}/${b.slug || getBunpoSlug(b.title)}` : `/bunpo/n${b.jlpt_level}`)}
+                                    >
                                         <div className="flex-1 min-w-0">
-                                            <Link href={b.slug || getBunpoSlug(b.title) ? `/bunpo/n${b.jlpt_level}/${b.slug || getBunpoSlug(b.title)}` : `/bunpo/n${b.jlpt_level}`} target="_blank" className="rounded font-semibold text-[var(--foreground)] transition-colors hover:text-[var(--brand-red)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--brand-red)]">{b.title}</Link>
-                                            <div className="mt-1 text-sm text-[var(--foreground)]/70">{b.structure}</div>
+                                            <div className="font-black text-lg text-[var(--foreground)]">{b.title}</div>
+                                            <div className="text-sm font-bold text-[var(--foreground)]/75">{b.structure}</div>
                                             <div className="flex items-center gap-2 mt-1">
                                                 <span className={`inline-flex rounded-lg px-2.5 py-1 text-xs font-semibold ${levelColor(b.jlpt_level)}`}>N{b.jlpt_level}</span>
-                                                <span className="text-xs text-[var(--foreground)]/55">Bab {b.chapter}</span>
+                                                                <span className="text-xs text-[var(--foreground)]/55">Bab {b.chapter}</span>
                                             </div>
                                         </div>
-                                        <Eye size={18} className="shrink-0 text-[var(--foreground)]/45" aria-hidden="true" />
+                                        <svg className="h-5 w-5 text-[var(--foreground)]/45" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                                        </svg>
                                     </div>
                                     <div className="admin-control flex items-center justify-between px-5 py-3 border-t">
                                         <div className="flex items-center gap-2">
                                             <Link
-                                                href={`/admin/bunpo/${b.id}`}
+                                                href={`/admin/bunpo/${b.id}/edit`}
                                                 aria-label={`Edit ${b.title}`}
                                                 className="rounded-lg p-2 text-[var(--accent-blue)] transition-colors hover:bg-[var(--accent-blue)]/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--accent-blue)]"
                                                 onClick={(e) => e.stopPropagation()}
@@ -366,7 +397,7 @@ export default function BunpoAdmin() {
                                             </button>
                                         </div>
                                     </div>
-                                </article>
+                                </div>
                             ))}
                         </div>
 
@@ -374,7 +405,7 @@ export default function BunpoAdmin() {
                         {!loading && (
                             <div className="admin-control px-6 py-5 border-t">
                                 <div className="flex items-center justify-between gap-4">
-                                    <div className="text-xs text-[var(--foreground)]/55">Halaman <span className="font-semibold text-[var(--foreground)]">{pagination.page}</span> dari <span className="font-semibold text-[var(--foreground)]">{pagination.pages}</span> ({pagination.total} hasil)
+                                    <div className="text-xs font-bold text-neutral-500">Halaman <span className="text-gray-900 dark:text-white">{pagination.page}</span> dari <span className="text-gray-900 dark:text-white">{pagination.pages}</span> ({pagination.total} hasil)
                                     </div>
                                     <Pagination
                                         currentPage={page}

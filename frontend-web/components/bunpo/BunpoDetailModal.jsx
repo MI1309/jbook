@@ -6,22 +6,21 @@ import BunpoDetailUI from './BunpoDetailUI';
 import { useRouter } from 'next/navigation';
 
 export default function BunpoDetailModal({ id, onClose }) {
-    const [grammar, setGrammar] = useState(null);
-    const [loading, setLoading] = useState(true);
+    const [loadedDetail, setLoadedDetail] = useState({ id: null, grammar: null });
     const router = useRouter();
+    const loading = loadedDetail.id !== id;
+    const grammar = loading ? null : loadedDetail.grammar;
 
     useEffect(() => {
         let mounted = true;
-        setLoading(true);
         getGrammarDetail(id).then(data => {
             if (mounted) {
-                setGrammar(data);
-                setLoading(false);
+                setLoadedDetail({ id, grammar: data });
             }
         }).catch(err => {
             if (mounted) {
                 console.error("Failed to fetch grammar detail", err);
-                setLoading(false);
+                setLoadedDetail({ id, grammar: null });
             }
         });
         return () => { mounted = false; };

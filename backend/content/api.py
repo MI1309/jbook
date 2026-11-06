@@ -23,7 +23,7 @@ router = Router()
 def get_disabled_kanji_levels():
     setting = FeatureSetting.objects.filter(key='kanji_visibility').first()
     if not setting or not isinstance(setting.value, dict):
-        return {1, 2, 3}
+        return set()
     return {level for level in setting.value.get('disabled_levels', []) if level in range(1, 6)}
 
 @router.get("/kanji/visibility")

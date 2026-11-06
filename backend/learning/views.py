@@ -2,7 +2,19 @@ from datetime import timedelta
 from typing import List, Optional
 
 from django.db import transaction
-from django.db.models import F, Q, Sum
+from django.db.models import (
+    Count,
+    DurationField,
+    ExpressionWrapper,
+    F,
+    IntegerField,
+    OuterRef,
+    Q,
+    Subquery,
+    Sum,
+    Value,
+)
+from django.db.models.functions import Coalesce
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
 from ninja import Router
@@ -10,7 +22,7 @@ from ninja.errors import HttpError
 from ninja_jwt.authentication import JWTAuth
 
 from content.models import FeatureSetting, Vocab
-from .models import LearningPathStage, StudyLog, UserStageProgress, UserVocabulary
+from .models import LearningPathStage, QuizAttempt, StudyLog, StudySession, UserStageProgress, UserVocabulary
 from .serializers import (
     UserDashboardStatsSchema,
     LearningPathStageSchema,
@@ -45,6 +57,24 @@ def _record_activity(user, activity_type, count=1):
     )
     if not created:
         StudyLog.objects.filter(pk=log.pk).update(items_studied=F("items_studied") + count)
+
+
+def _calculate_streaks(active_dates, today):
+    active_dates = set(active_dates)
+    current_streak = 0
+    current_day = today if today in active_dates else today - timedelta(days=1)
+    while current_day in active_dates:
+        current_streak += 1
+        current_day -= timedelta(days=1)
+
+    longest_streak = 0
+    streak = 0
+    previous_day = None
+    for active_day in sorted(active_dates):
+        streak = streak + 1 if previous_day and active_day == previous_day + timedelta(days=1) else 1
+        longest_streak = max(longest_streak, streak)
+        previous_day = active_day
+    return current_streak, longest_streak
 
 
 @router.get("/vocabulary", response=List[VocabularySchema])
@@ -148,26 +178,48 @@ def review_user_vocabulary(request, entry_id: int, payload: VocabularyReviewSche
 def user_dashboard_stats(request):
     user_vocab = UserVocabulary.objects.filter(user=request.auth)
     profile = getattr(request.auth, "profile", None)
-    roadmap_progress = {
-        progress.stage_id: progress.completion_percent
-        for progress in UserStageProgress.objects.filter(user=request.auth)
-    }
+    progress_for_user = UserStageProgress.objects.filter(
+        user=request.auth, stage_id=OuterRef("pk")
+    ).values("completion_percent")[:1]
     roadmap = [
         {
             "stage_code": stage.code,
             "title": stage.title,
             "is_available": stage.availability == LearningPathStage.Availability.AVAILABLE,
-            "completion_percentage": roadmap_progress.get(stage.id, 0),
+            "completion_percentage": stage.completion_percentage,
         }
-        for stage in LearningPathStage.objects.all()
+        for stage in LearningPathStage.objects.annotate(
+            completion_percentage=Coalesce(
+                Subquery(progress_for_user, output_field=IntegerField()), Value(0)
+            )
+        )
     ]
+    next_stage = next(
+        (
+            {"stage_code": stage["stage_code"], "title": stage["title"]}
+            for stage in roadmap
+            if stage["is_available"] and stage["completion_percentage"] < 100
+        ),
+        None,
+    )
     today = timezone.localdate()
     start_date = today - timedelta(days=29)
-    logs = StudyLog.objects.filter(user=request.auth, date__gte=start_date, date__lte=today)
-    activity_by_date = {
-        row["date"]: row["items_studied"]
-        for row in logs.values("date").annotate(items_studied=Sum("items_studied"))
-    }
+    activity_rows = StudyLog.objects.filter(
+        user=request.auth, items_studied__gt=0, date__lte=today
+    ).values("date", "activity_type").annotate(
+        items_studied=Sum("items_studied")
+    ).order_by("date", "activity_type")
+    activity_by_date = {}
+    activity_totals = {}
+    active_dates = set()
+    for row in activity_rows:
+        activity_date = row["date"]
+        items_studied = row["items_studied"]
+        active_dates.add(activity_date)
+        activity_by_date[activity_date] = activity_by_date.get(activity_date, 0) + items_studied
+        if activity_date >= start_date:
+            activity_type = row["activity_type"]
+            activity_totals[activity_type] = activity_totals.get(activity_type, 0) + items_studied
     daily_activity = [
         {
             "date": start_date + timedelta(days=offset),
@@ -175,21 +227,54 @@ def user_dashboard_stats(request):
         }
         for offset in range(30)
     ]
-    activity_breakdown = logs.values("activity_type").annotate(
-        items_studied=Sum("items_studied")
-    ).order_by("activity_type")
-
+    activity_breakdown = [
+        {"activity_type": activity_type, "items_studied": items_studied}
+        for activity_type, items_studied in sorted(activity_totals.items())
+    ]
+    vocabulary_stats = user_vocab.aggregate(
+        total_saved=Count("id"),
+        mastered=Count("id", filter=Q(status=UserVocabulary.Status.MASTERED)),
+        learning=Count("id", filter=Q(status=UserVocabulary.Status.LEARNING)),
+        new=Count("id", filter=Q(status=UserVocabulary.Status.NEW)),
+        due_today=Count("id", filter=Q(next_review_date__lte=today)),
+        reviewed=Count("id", filter=Q(times_reviewed__gt=0)),
+        progressed=Count("id", filter=Q(times_reviewed__gt=0, box_level__gt=0)),
+    )
+    quiz_stats = QuizAttempt.objects.filter(user=request.auth).aggregate(
+        total=Count("id"),
+        correct=Count("id", filter=Q(is_correct=True)),
+    )
+    study_duration = StudySession.objects.filter(
+        user=request.auth,
+        end_time__isnull=False,
+        end_time__gte=F("start_time"),
+    ).aggregate(
+        total=Sum(
+            ExpressionWrapper(F("end_time") - F("start_time"), output_field=DurationField())
+        )
+    )["total"]
+    current_streak, longest_streak = _calculate_streaks(active_dates, today)
     return {
         "username": request.auth.username,
         "total_tts_points": profile.total_tts_points if profile else request.auth.tts_points,
         "tts_games_played": request.auth.tts_point_sessions.count(),
-        "total_saved": user_vocab.count(),
-        "mastered": user_vocab.filter(status=UserVocabulary.Status.MASTERED).count(),
-        "learning": user_vocab.filter(status=UserVocabulary.Status.LEARNING).count(),
-        "new": user_vocab.filter(status=UserVocabulary.Status.NEW).count(),
+        "total_saved": vocabulary_stats["total_saved"],
+        "mastered": vocabulary_stats["mastered"],
+        "learning": vocabulary_stats["learning"],
+        "new": vocabulary_stats["new"],
         "daily_activity": daily_activity,
-        "activity_breakdown": list(activity_breakdown),
+        "activity_breakdown": activity_breakdown,
+        "current_streak": current_streak,
+        "longest_streak": longest_streak,
+        "due_today": vocabulary_stats["due_today"],
+        "retention_rate": round(
+            vocabulary_stats["progressed"] * 100 / vocabulary_stats["reviewed"], 1
+        ) if vocabulary_stats["reviewed"] else 0,
+        "accuracy_rate": round(quiz_stats["correct"] * 100 / quiz_stats["total"], 1)
+        if quiz_stats["total"] else 0,
+        "total_time_spent": int(study_duration.total_seconds()) if study_duration else 0,
         "roadmap": roadmap,
+        "next_stage": next_stage,
     }
 
 

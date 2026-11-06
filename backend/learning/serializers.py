@@ -61,6 +61,13 @@ class UserDashboardStatsSchema(Schema):
     daily_activity: List[DailyActivitySchema]
     activity_breakdown: List[ActivityBreakdownSchema]
     roadmap: List["DashboardRoadmapStageSchema"]
+    current_streak: int
+    longest_streak: int
+    due_today: int
+    retention_rate: float
+    accuracy_rate: float
+    total_time_spent: int
+    next_stage: Optional["DashboardNextStageSchema"] = None
 
 
 class DashboardRoadmapStageSchema(Schema):
@@ -68,6 +75,11 @@ class DashboardRoadmapStageSchema(Schema):
     title: str
     is_available: bool
     completion_percentage: int
+
+
+class DashboardNextStageSchema(Schema):
+    stage_code: str
+    title: str
 
 
 class LearningPathStageSchema(Schema):

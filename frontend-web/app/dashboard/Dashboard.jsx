@@ -2,17 +2,22 @@
 
 import { useEffect, useState } from 'react';
 import Cookies from 'js-cookie';
+import { useRouter } from 'next/navigation';
 import { API_URL } from '@/lib/api';
-import { BookOpen, Gamepad2, LockKeyhole, RefreshCw, Trophy } from 'lucide-react';
+import { BookOpen, CalendarClock, Clock3, Flame, Gamepad2, LockKeyhole, RefreshCw, Target, Trophy } from 'lucide-react';
 
-function Metric({ icon: Icon, label, value, detail, color }) {
+function Metric({ icon: Icon, label, value, detail, color, loading }) {
     return (
         <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-950">
             <div className="flex items-start justify-between gap-3">
                 <div>
                     <p className="text-sm font-medium text-slate-500 dark:text-slate-400">{label}</p>
-                    <p className="mt-2 text-3xl font-semibold tabular-nums text-slate-950 dark:text-white">{value}</p>
-                    <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">{detail}</p>
+                    <p className="mt-2 min-h-9 text-3xl font-semibold tabular-nums text-slate-950 dark:text-white">
+                        {loading ? <span aria-hidden="true" className="block h-8 w-20 animate-pulse rounded bg-slate-200 dark:bg-slate-800" /> : value}
+                    </p>
+                    <p className="mt-1 min-h-4 text-xs text-slate-500 dark:text-slate-400">
+                        {loading ? <span aria-hidden="true" className="block h-3 w-28 animate-pulse rounded bg-slate-100 dark:bg-slate-900" /> : detail}
+                    </p>
                 </div>
                 <span className={`rounded-lg p-2.5 ${color}`}>
                     <Icon aria-hidden="true" className="h-5 w-5" />
@@ -23,6 +28,7 @@ function Metric({ icon: Icon, label, value, detail, color }) {
 }
 
 export default function Dashboard() {
+    const router = useRouter();
     const [stats, setStats] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
@@ -38,7 +44,8 @@ export default function Dashboard() {
             try {
                 const token = localStorage.getItem('access_token') || Cookies.get('access_token');
                 if (!token) {
-                    throw new Error('Silakan masuk untuk melihat progres belajar personal.');
+                    router.replace('/login');
+                    return;
                 }
 
                 const response = await fetch(`${API_URL}/learning/dashboard/stats`, {
@@ -46,7 +53,10 @@ export default function Dashboard() {
                     cache: 'no-store',
                 });
                 if (!response.ok) {
-                    if (response.status === 401) throw new Error('Sesi masuk berakhir. Silakan masuk kembali.');
+                    if (response.status === 401) {
+                        router.replace('/login');
+                        return;
+                    }
                     throw new Error('Dashboard belum dapat dimuat. Coba lagi sebentar.');
                 }
 
@@ -61,7 +71,7 @@ export default function Dashboard() {
 
         fetchDashboard();
         return () => { isCurrent = false; };
-    }, [reloadKey]);
+    }, [reloadKey, router]);
 
     return (
         <section aria-labelledby="learning-dashboard-title" className="mb-10 space-y-6">
@@ -89,30 +99,68 @@ export default function Dashboard() {
                                 </h2>
                                 <p className="mt-2 max-w-xl text-sm text-slate-300">Satu langkah kecil hari ini membawa kamu lebih dekat ke target bahasa Jepang.</p>
                             </div>
-                            <div className="flex min-w-44 items-center gap-3 rounded-lg border border-white/10 bg-white/5 px-4 py-3">
+                            <div className="flex min-w-64 items-center gap-3 rounded-lg border border-white/10 bg-white/5 px-4 py-3">
                                 <Trophy aria-hidden="true" className="h-6 w-6 text-amber-300" />
-                                <div>
+                                <div className="min-w-0 flex-1">
                                     <p className="text-xs text-slate-300">Total Poin TTS</p>
                                     <p className="text-2xl font-semibold tabular-nums" aria-live="polite">{loading ? '—' : (stats?.total_tts_points ?? 0).toLocaleString('id-ID')}</p>
+                                </div>
+                                <div className="border-l border-white/15 pl-3">
+                                    <p className="text-xs text-slate-300">Akurasi kuis</p>
+                                    <p className="text-lg font-semibold tabular-nums" aria-live="polite">{loading ? '—' : `${(stats?.accuracy_rate ?? 0).toLocaleString('id-ID')}%`}</p>
                                 </div>
                             </div>
                         </div>
                     </header>
 
-                    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
                         <Metric
                             icon={BookOpen}
                             label="Koleksi Kosakata"
-                            value={loading ? '—' : (stats?.total_saved ?? 0).toLocaleString('id-ID')}
+                            value={(stats?.total_saved ?? 0).toLocaleString('id-ID')}
                             detail="kata tersimpan untuk diulang"
                             color="bg-sky-100 text-sky-700 dark:bg-sky-950 dark:text-sky-300"
+                            loading={loading}
                         />
                         <Metric
                             icon={Gamepad2}
                             label="Sesi Game TTS"
-                            value={loading ? '—' : (stats?.tts_games_played ?? 0).toLocaleString('id-ID')}
+                            value={(stats?.tts_games_played ?? 0).toLocaleString('id-ID')}
                             detail="sesi permainan tercatat"
                             color="bg-amber-100 text-amber-700 dark:bg-amber-950 dark:text-amber-300"
+                            loading={loading}
+                        />
+                        <Metric
+                            icon={Flame}
+                            label="Streak Belajar"
+                            value={`${(stats?.current_streak ?? 0).toLocaleString('id-ID')} hari`}
+                            detail={`Rekor ${ (stats?.longest_streak ?? 0).toLocaleString('id-ID') } hari`}
+                            color="bg-orange-100 text-orange-700 dark:bg-orange-950 dark:text-orange-300"
+                            loading={loading}
+                        />
+                        <Metric
+                            icon={CalendarClock}
+                            label="Perlu Diulang"
+                            value={(stats?.due_today ?? 0).toLocaleString('id-ID')}
+                            detail="kosakata jatuh tempo atau terlewat"
+                            color="bg-rose-100 text-rose-700 dark:bg-rose-950 dark:text-rose-300"
+                            loading={loading}
+                        />
+                        <Metric
+                            icon={Target}
+                            label="Retensi Kosakata"
+                            value={`${(stats?.retention_rate ?? 0).toLocaleString('id-ID')}%`}
+                            detail="vocab direview yang pernah naik level"
+                            color="bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300"
+                            loading={loading}
+                        />
+                        <Metric
+                            icon={Clock3}
+                            label="Waktu Belajar"
+                            value={`${Math.round((stats?.total_time_spent ?? 0) / 60).toLocaleString('id-ID')} mnt`}
+                            detail="durasi sesi belajar selesai"
+                            color="bg-indigo-100 text-indigo-700 dark:bg-indigo-950 dark:text-indigo-300"
+                            loading={loading}
                         />
                     </div>
 
@@ -122,7 +170,9 @@ export default function Dashboard() {
                                 <p className="text-xs font-semibold uppercase tracking-wide text-emerald-700 dark:text-emerald-400">Peta perjalanan</p>
                                 <h3 id="roadmap-heading" className="mt-1 text-lg font-semibold text-slate-950 dark:text-white">Roadmap Belajar</h3>
                             </div>
-                            <p className="text-sm text-slate-500 dark:text-slate-400">Kana sampai JLPT N1</p>
+                            <p className="text-sm text-slate-500 dark:text-slate-400">
+                                {stats?.next_stage ? `Selanjutnya: ${stats.next_stage.title}` : 'Semua tahap tersedia telah selesai'}
+                            </p>
                         </div>
 
                         {loading ? (

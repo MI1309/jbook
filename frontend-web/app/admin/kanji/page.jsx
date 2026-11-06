@@ -11,7 +11,9 @@ import { appToast as toast } from '@/components/common/AppMessage';
 import ConfirmationModal from '@/components/common/ConfirmationModal';
 import Pagination from '@/components/common/Pagination';
 import { Eye, Pencil, Search, Trash2 } from 'lucide-react';
-import { AdminErrorState } from '@/components/admin/AdminFeedback';
+import AdminDataTable from '@/components/admin/AdminDataTable';
+import AdminPageHeader from '@/components/admin/AdminPageHeader';
+import AdminFilterBar from '@/components/admin/AdminFilterBar';
 
 export default function KanjiAdmin() {
     const [kanjiList, setKanjiList] = useState([]);
@@ -19,14 +21,13 @@ export default function KanjiAdmin() {
     const [bulkDeleting, setBulkDeleting] = useState(false);
     const [previewingAll, setPreviewingAll] = useState(false);
     const [loading, setLoading] = useState(true);
-    const [fetchError, setFetchError] = useState('');
     const [filterLevel, setFilterLevel] = useState('');
     const [search, setSearch] = useState('');
     const [debouncedSearch] = useDebounce(search, 400);
     const [page, setPage] = useState(1);
     const [pagination, setPagination] = useState({ total: 0, pages: 1, page: 1 });
     const [pendingDelete, setPendingDelete] = useState(null);
-    const [disabledLevels, setDisabledLevels] = useState([1, 2, 3]);
+    const [disabledLevels, setDisabledLevels] = useState([]);
     const [savingVisibility, setSavingVisibility] = useState(false);
     const router = useRouter();
 
@@ -44,7 +45,7 @@ export default function KanjiAdmin() {
             });
             if (res.ok) {
                 const data = await res.json();
-                setDisabledLevels(data.disabled_levels || [1, 2, 3]);
+                setDisabledLevels(data.disabled_levels || []);
             }
         } catch (error) {
             console.error('Failed to fetch Kanji visibility', error);
@@ -79,7 +80,6 @@ export default function KanjiAdmin() {
 
     const fetchKanjis = useCallback(async () => {
         setLoading(true);
-        setFetchError('');
 
         try {
             const token = Cookies.get('access_token');
@@ -99,11 +99,11 @@ export default function KanjiAdmin() {
                 setPagination(result.pagination);
                 if (result.pagination.page !== page) setPage(result.pagination.page);
             } else {
-                setFetchError(`Gagal mengambil data Kanji (${res.status}). Periksa akses akun dan coba lagi.`);
+                toast.error(`Gagal mengambil data Kanji: ${res.status} ${res.statusText}`);
             }
         } catch (error) {
             console.error("Failed to fetch", error);
-            setFetchError('Terjadi kesalahan jaringan saat memuat Kanji. Periksa koneksi lalu coba lagi.');
+            toast.error('Terjadi kesalahan jaringan saat memuat Kanji.');
         } finally {
             setLoading(false);
         }
@@ -112,21 +112,6 @@ export default function KanjiAdmin() {
     useEffect(() => {
         fetchKanjis();
     }, [fetchKanjis]);
-
-    const checkDuplicates = async () => {
-        try {
-            const token = Cookies.get('access_token');
-            const res = await fetch(`${API_URL}/admin/kanji/duplicates`, {
-                headers: { 'Authorization': `Bearer ${token}` }
-            });
-            if (!res.ok) throw new Error('Gagal memeriksa duplikat');
-            const data = await res.json();
-            setDuplicates(data);
-            toast.info(data.length ? `${data.length} grup duplikat ditemukan` : 'Tidak ada kanji duplikat');
-        } catch (error) {
-            toast.error(error.message || 'Gagal memeriksa duplikat');
-        }
-    };
 
     const handleDelete = (e, id) => {
         e.stopPropagation();
@@ -155,82 +140,20 @@ export default function KanjiAdmin() {
         }
     };
 
-    const handleExportPdf = async () => {
-        const printWindow = window.open('', '_blank');
-        if (!printWindow) {
-            toast.error('Izinkan pop-up untuk membuat materi PDF.');
-            return;
-        }
-
-        try {
-            const token = Cookies.get('access_token');
-            const queryParams = new URLSearchParams();
-            if (filterLevel && filterLevel !== 'all') queryParams.append('level', filterLevel);
-            if (search) queryParams.append('search', search);
-
-            const res = await fetch(`${API_URL}/admin/kanji?${queryParams.toString()}`, {
-                headers: { 'Authorization': `Bearer ${token}` }
-            });
-
-            if (!res.ok) throw new Error('Gagal mengambil data kanji untuk PDF.');
-            const kanjiItems = await res.json();
-            if (!Array.isArray(kanjiItems) || kanjiItems.length === 0) {
-                throw new Error('Tidak ada kanji yang dapat diekspor.');
-            }
-
-            printWindow.addEventListener('load', () => printWindow.print(), { once: true });
-            printWindow.document.open();
-            printWindow.document.write(buildKanjiWorkbookHtml(kanjiItems, filterLevel, search));
-            printWindow.document.close();
-            printWindow.document.title = `JBook - Materi Kanji${filterLevel ? ` N${filterLevel}` : ''}`;
-            printWindow.focus();
-        } catch (error) {
-            console.error("Export failed", error);
-            printWindow.close();
-            toast.error(error.message || 'Gagal membuat materi PDF.');
-        }
-    };
-
-    const handleExportCsv = async () => {
-        try {
-            const token = Cookies.get('access_token');
-            const queryParams = new URLSearchParams();
-            if (filterLevel && filterLevel !== 'all') queryParams.append('level', filterLevel);
-            if (search) queryParams.append('search', search);
-
-            const res = await fetch(`${API_URL}/admin/kanji/export/csv?${queryParams.toString()}`, {
-                headers: { 'Authorization': `Bearer ${token}` }
-            });
-            if (!res.ok) throw new Error('Gagal mengekspor data.');
-
-            const blob = await res.blob();
-            const url = window.URL.createObjectURL(blob);
-            const anchor = document.createElement('a');
-            anchor.href = url;
-            anchor.download = `kanji_export_${new Date().toISOString().split('T')[0]}.csv`;
-            document.body.appendChild(anchor);
-            anchor.click();
-            anchor.remove();
-            window.URL.revokeObjectURL(url);
-        } catch (error) {
-            console.error("Export failed", error);
-            toast.error(error.message || 'Gagal mengekspor data.');
-        }
-    };
-
     return (
         <div className="max-w-7xl mx-auto space-y-8 pb-20">
+            <AdminPageHeader title="Kanji" description={`${pagination.total} entri`} breadcrumbs={[{ label: 'Kanji' }]} action={<Link href="/admin/kanji/new" className="rounded-lg bg-[var(--brand-red)] px-4 py-2.5 text-sm font-medium text-white">Tambah Kanji</Link>} />
             {/* Page Header */}
-            <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
+            <div hidden className="flex flex-col md:flex-row md:items-end justify-between gap-6">
                 <div>
                     <h1 className="text-5xl font-black tracking-tighter text-[var(--foreground)]">
-                        Kanji <span className="text-[var(--brand-red)]">Management</span>
+                        Kanji <span className="text-red-600">Management</span>
                     </h1>
-                    <p className="mt-3 text-xs font-medium text-[var(--foreground)]/55">Total: {pagination.total} entri</p>
+                    <p className="text-xs font-bold text-neutral-500 uppercase tracking-[0.2em] mt-3">Total: {pagination.total} Entitas</p>
                 </div>
                 <Link 
                     href="/admin/kanji/new" 
-                    className="rounded-xl bg-[var(--brand-red)] px-4 py-2.5 text-center text-sm font-medium text-white transition-colors hover:opacity-90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--brand-red)]"
+                    className="bg-red-600 hover:bg-red-500 text-white px-8 py-4 rounded-2xl font-black text-xs uppercase tracking-widest transition-all shadow-lg shadow-red-600/20 active:scale-95 text-center"
                 >
                     + Tambah Kanji Baru
                 </Link>
@@ -252,9 +175,9 @@ export default function KanjiAdmin() {
                                     disabled={savingVisibility}
                                     onClick={() => toggleVisibility(level)}
                                     className={`px-4 py-2 rounded-xl border text-xs font-black transition-all ${isDisabled
-                                        ? 'bg-[var(--brand-red)]/10 border-[var(--brand-red)]/25 text-[var(--brand-red)]'
-                                        : 'bg-[var(--accent-green)]/10 border-[var(--accent-green)]/25 text-[var(--accent-green)]'
-                                    } hover:opacity-80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--brand-red)] disabled:cursor-wait disabled:opacity-50`}
+                                        ? 'bg-red-600/20 border-red-500/40 text-red-300'
+                                        : 'bg-emerald-600/20 border-emerald-500/40 text-emerald-300'
+                                    } disabled:opacity-50`}
                                 >
                                     N{level} {isDisabled ? 'OFF' : 'ON'}
                                 </button>
@@ -265,7 +188,7 @@ export default function KanjiAdmin() {
             </div>
 
             {/* Filter & Actions Bar */}
-            <div className="admin-surface p-6 rounded-[2rem] border shadow-sm">
+            <AdminFilterBar className="admin-surface p-6 rounded-[2rem] border shadow-sm" onReset={() => { setSearch(''); setFilterLevel(''); }}>
                 <div className="flex flex-col md:flex-row items-center gap-6">
                     <div className="relative flex-1 w-full">
                         <input 
@@ -290,39 +213,34 @@ export default function KanjiAdmin() {
                             {[5, 4, 3, 2, 1].map(l => <option key={l} value={l}>N{l}</option>)}
                         </select>
                         
-                        <button
-                            onClick={handleExportPdf}
-                            className="p-4 rounded-2xl transition-all active:scale-95 bg-red-600/10 text-red-400 border border-red-500/20"
-                            title="Ekspor materi JBook sebagai PDF"
-                            aria-label="Ekspor materi JBook sebagai PDF"
-                        >
-                            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v12m0 0 4-4m-4 4-4-4M5 17v3h14v-3" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 3h5l3 3v4" /></svg>
-                        </button>
-                        <button
-                            onClick={handleExportCsv}
-                            className="p-4 rounded-2xl transition-all active:scale-95 bg-emerald-600/10 text-emerald-500 border border-emerald-500/20"
-                            title="Ekspor data CSV"
-                            aria-label="Ekspor data CSV"
-                        >
-                            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4-4 4m0 0l-4-4m4 4V4" /></svg>
-                        </button>
-                        <button
-                            onClick={checkDuplicates}
-                            className="p-4 rounded-2xl transition-all active:scale-95 bg-yellow-500/10 text-yellow-400 border border-yellow-400/20"
-                            title="Check Duplicates"
-                        >
-                            Check Duplicates
-                        </button>
+                        <Link href="/admin/kanji/tools" className="rounded-xl border border-[var(--border-color)] px-4 py-2.5 text-sm font-medium text-[var(--foreground)] hover:bg-[var(--background)]">Check duplicates</Link>
                     </div>
                 </div>
-            </div>
+            </AdminFilterBar>
 
-            {/* Table Section */}
-            <div className="admin-surface rounded-[2.5rem] border overflow-hidden transition-all">
+            <AdminDataTable
+                columns={[
+                    { key: 'character', label: 'Karakter' },
+                    { key: 'meaning', label: 'Arti', render: item => <span><strong>{item.meaning}</strong><span className="mt-1 block text-xs text-[var(--foreground)]/55">音: {(item.onyomi || []).join(', ')} · 訓: {(item.kunyomi || []).join(', ')}</span></span> },
+                    { key: 'jlpt_level', label: 'Level', render: item => `N${item.jlpt_level}` },
+                ]}
+                rows={kanjiList}
+                getRowId={item => item.id}
+                loading={loading}
+                emptyTitle="Belum ada Kanji"
+                emptyMessage="Ubah pencarian atau tambahkan data baru."
+                page={page}
+                pages={pagination.pages}
+                onPageChange={setPage}
+                onView={item => `/admin/kanji/${item.id}`}
+                onEdit={item => `/admin/kanji/${item.id}/edit`}
+                onDelete={item => setPendingDelete(item.id)}
+            />
+
+            {/* Legacy table retained temporarily for the existing mobile presentation. */}
+            <div hidden className="admin-surface rounded-[2.5rem] border overflow-hidden transition-all">
                 {loading ? (
                     <div className="animate-pulse space-y-3 p-5 sm:p-6">{[1, 2, 3, 4, 5].map(row => <div key={row} className="h-14 rounded-lg bg-[var(--admin-control)]" />)}</div>
-                ) : fetchError ? (
-                    <div className="p-5 sm:p-6"><AdminErrorState title="Kanji gagal dimuat" message={fetchError} onRetry={fetchKanjis} /></div>
                 ) : kanjiList.length === 0 ? (
                     <div className="px-6 py-12 text-center">
                         <Search size={30} className="mx-auto text-[var(--foreground)]/35" />
@@ -357,7 +275,7 @@ export default function KanjiAdmin() {
                                                 </div>
                                             </td>
                                             <td className="px-6 py-4 whitespace-nowrap">
-                                                <span className="rounded-lg bg-[var(--brand-red)]/10 px-2.5 py-1 text-xs font-semibold text-[var(--brand-red)]">N{k.jlpt_level}</span>
+                                                <span className="px-3 py-1 text-xs font-black rounded-full bg-red-600/10 text-red-500 border border-red-500/20">N{k.jlpt_level}</span>
                                             </td>
                                             <td className="px-6 py-4 whitespace-nowrap text-right">
                                                 <div className="flex items-center justify-end gap-2">
@@ -371,7 +289,7 @@ export default function KanjiAdmin() {
                                                         <Eye size={18} />
                                                     </Link>
                                                     <Link 
-                                                        href={`/admin/kanji/${k.id}`} 
+                                                        href={`/admin/kanji/${k.id}/edit`}
                                                         className="rounded-lg p-2 text-[var(--accent-blue)] transition-colors hover:bg-[var(--accent-blue)]/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--accent-blue)]"
                                                         title="Edit Data"
                                                         aria-label={`Edit ${k.character}`}
@@ -409,7 +327,7 @@ export default function KanjiAdmin() {
                                                 <div className="text-xs font-bold text-[var(--admin-muted)] uppercase tracking-widest"><span className="text-red-500">音:</span> {k.onyomi.join(', ')}</div>
                                                 <div className="text-xs font-bold text-[var(--admin-muted)] uppercase tracking-widest"><span className="text-blue-500">訓:</span> {k.kunyomi.join(', ')}</div>
                                             </div>
-                                            <span className="mt-2 inline-flex rounded-lg bg-[var(--brand-red)]/10 px-2.5 py-1 text-xs font-semibold text-[var(--brand-red)]">N{k.jlpt_level}</span>
+                                            <span className="inline-flex mt-2 px-3 py-1 text-xs font-black rounded-full bg-red-600/10 text-red-500 border border-red-500/20">N{k.jlpt_level}</span>
                                         </div>
                                         <svg className="w-5 h-5 text-neutral-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -418,7 +336,7 @@ export default function KanjiAdmin() {
                                     <div className="admin-control flex items-center justify-between px-5 py-3 border-t">
                                         <div className="flex items-center gap-2">
                                             <Link 
-                                                href={`/admin/kanji/${k.id}`} 
+                                                href={`/admin/kanji/${k.id}/edit`}
                                                 aria-label={`Edit ${k.character}`}
                                                 className="rounded-lg p-2 text-[var(--accent-blue)] transition-colors hover:bg-[var(--accent-blue)]/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--accent-blue)]"
                                                 onClick={(e) => e.stopPropagation()}
@@ -442,14 +360,14 @@ export default function KanjiAdmin() {
             </div>
 
             {!loading && pagination.pages > 1 && (
-                <div className="flex flex-col items-center justify-between gap-4 rounded-2xl border border-[var(--border-color)] bg-[var(--card-bg)] px-5 py-4 sm:flex-row">
-                    <p className="text-xs text-[var(--foreground)]/55">Halaman {pagination.page} dari {pagination.pages} ({pagination.total} hasil)</p>
+                <div hidden className="flex flex-col sm:flex-row items-center justify-between gap-4 rounded-2xl border border-white/5 bg-white/5 px-5 py-4">
+                    <p className="text-xs font-bold text-neutral-500">Halaman {pagination.page} dari {pagination.pages} ({pagination.total} hasil)</p>
                     <Pagination
                         currentPage={page}
                         totalPages={pagination.pages}
                         onPageChange={setPage}
-                        activeClassName="bg-[var(--brand-red)]/10 border-[var(--brand-red)]/30 text-[var(--brand-red)]"
-                        buttonClassName="bg-[var(--card-bg)] border-[var(--border-color)] text-[var(--foreground)] hover:bg-[var(--background)]"
+                        activeClassName="bg-red-600/20 border-red-500/30 text-red-400"
+                        buttonClassName="bg-neutral-800 border-white/10 text-white hover:bg-neutral-700"
                     />
                 </div>
             )}
@@ -465,14 +383,14 @@ export default function KanjiAdmin() {
                 type="danger"
             />
             {duplicates.length > 0 && (
-                <div className="mt-6 rounded-2xl border border-[var(--border-color)] bg-[var(--card-bg)] p-5 sm:p-6">
-                    <h2 className="text-base font-semibold">Duplikat Kanji ({duplicates.length})</h2>
+                <div className="p-6 rounded-2xl border mt-6 bg-neutral-900/30 border-white/5">
+                    <h2 className="text-lg font-black">Duplicate Kanji Found ({duplicates.length})</h2>
                     <div className="mt-4 space-y-3">
                         {duplicates.map(d => (
-                            <div key={d.character} className="flex items-start justify-between gap-4 rounded-xl border border-[var(--border-color)] bg-[var(--background)] p-3">
+                            <div key={d.character} className="p-3 rounded-lg bg-neutral-800/40 flex items-start justify-between">
                                 <div>
-                                    <div className="text-2xl font-semibold">{d.character} <span className="text-sm text-[var(--foreground)]/55">({d.items.length})</span></div>
-                                    <div className="mt-1 text-xs text-[var(--foreground)]/55">
+                                    <div className="text-2xl font-black">{d.character} <span className="text-sm text-neutral-400">({d.items.length})</span></div>
+                                    <div className="text-xs text-neutral-400 mt-1">
                                         {d.items.map(it => `${it.id} — ${it.meaning}`).join(' • ')}
                                     </div>
                                 </div>
@@ -506,9 +424,9 @@ export default function KanjiAdmin() {
                                             }
                                         }}
                                         disabled={bulkDeleting}
-                                        className="rounded-xl bg-[var(--brand-red)] px-4 py-2 text-sm font-medium text-white transition-colors hover:opacity-90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--brand-red)] disabled:cursor-wait disabled:opacity-50"
+                                        className={`px-4 py-2 rounded-2xl ${bulkDeleting ? 'bg-neutral-700 text-neutral-300' : 'bg-red-600 text-white'}`}
                                     >
-                                        {bulkDeleting ? 'Menghapus duplikat...' : 'Hapus duplikat'}
+                                        {bulkDeleting ? 'Deleting...' : 'Delete duplicates'}
                                     </button>
                                 </div>
                             </div>
@@ -518,7 +436,7 @@ export default function KanjiAdmin() {
             )}
         
         {/* Floating quick controls for duplicates (preview / bulk-delete) */}
-        <div className="fixed right-6 bottom-6 z-50 flex flex-col gap-3">
+        <div hidden className="fixed right-6 bottom-6 z-50 flex flex-col gap-3">
             <button
                 onClick={async () => {
                     setPreviewingAll(true);
@@ -547,9 +465,9 @@ export default function KanjiAdmin() {
                     } finally { setPreviewingAll(false); }
                 }}
                 disabled={previewingAll}
-                className="rounded-xl border border-[var(--border-color)] bg-[var(--card-bg)] px-4 py-2 text-sm font-medium text-[var(--foreground)] shadow-lg transition-colors hover:bg-[var(--background)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--brand-red)] disabled:cursor-wait disabled:opacity-60"
+                className="px-4 py-2 rounded-full bg-blue-600 text-white shadow-lg"
                 title="Preview duplicate groups and download JSON"
-            >{previewingAll ? 'Menyiapkan preview...' : 'Unduh daftar duplikat'}</button>
+            >{previewingAll ? 'Loading...' : 'Preview duplicates'}</button>
 
             <button
                 onClick={async () => {
@@ -585,40 +503,12 @@ export default function KanjiAdmin() {
                         toast.error('Bulk-delete failed');
                     } finally { setBulkDeleting(false); }
                 }}
-                className="rounded-xl bg-[var(--brand-red)] px-4 py-2 text-sm font-medium text-white shadow-lg transition-colors hover:opacity-90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--brand-red)]"
+                className="px-4 py-2 rounded-full bg-red-600 text-white shadow-lg"
                 title="Delete all duplicate items (dangerous)"
-            >Hapus semua duplikat</button>
+            >Delete all duplicates</button>
         </div>
         </div>
     );
-}
-
-function buildKanjiWorkbookHtml(items, selectedLevel, selectedSearch) {
-    const safe = (value) => String(value ?? '').replace(/[&<>"']/g, (character) => ({
-        '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;',
-    })[character]);
-    const list = (values) => Array.isArray(values) && values.length
-        ? values.map((value) => safe(value)).join('、')
-        : 'Belum tersedia';
-    const levels = [...new Set(items.map((item) => item.jlpt_level))].sort((a, b) => b - a);
-    const levelLabel = selectedLevel ? `N${safe(selectedLevel)}` : levels.map((level) => `N${level}`).join(', ');
-    const dateLabel = new Intl.DateTimeFormat('id-ID', { dateStyle: 'long' }).format(new Date());
-    const entries = items.map((item, index) => {
-        const examples = Array.isArray(item.examples) && item.examples.length
-            ? `<ul>${item.examples.map((example) => `<li><strong lang="ja">${safe(example.word)}</strong><span class="reading">${safe(example.reading || '')}</span><span>${safe(example.meaning || '')}</span></li>`).join('')}</ul>`
-            : '<p class="muted">Belum ada contoh kata.</p>';
-        return `<article class="kanji-entry">
-            <div class="entry-top"><span>JBOOK KANJI WORKBOOK</span><span>${String(index + 1).padStart(2, '0')} / ${items.length}</span></div>
-            <div class="entry-heading"><div class="character" lang="ja">${safe(item.character)}</div><div><p class="eyebrow">KANJI • JLPT N${safe(item.jlpt_level)}</p><h2>${safe(item.meaning)}</h2><p class="meta">${item.strokes ? `${safe(item.strokes)} goresan` : 'Goresan tidak dicatat'}${item.radical ? ` · Radikal ${safe(item.radical)}` : ''}${item.word_type ? ` · ${safe(item.word_type)}` : ''}</p></div></div>
-            <div class="reading-grid"><section><h3>Onyomi · 音読み</h3><p lang="ja">${list(item.onyomi)}</p></section><section><h3>Kunyomi · 訓読み</h3><p lang="ja">${list(item.kunyomi)}</p></section></div>
-            <section class="examples"><h3>Contoh kata</h3>${examples}</section>
-            <section class="practice"><h3>Latihan menulis</h3><p>Tulis kanji ini sambil mengingat arti dan bacaannya.</p><div class="writing-grid">${Array.from({ length: 6 }, () => '<span lang="ja">&nbsp;</span>').join('')}</div></section>
-        </article>`;
-    }).join('');
-
-    return `<!doctype html><html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>JBook - Materi Kanji ${levelLabel}</title><style>
-        @page{size:A4;margin:16mm 15mm 18mm}*{box-sizing:border-box}body{margin:0;color:#202a2b;font:12px/1.55 Arial,"Noto Sans JP","Yu Gothic",Meiryo,sans-serif;-webkit-print-color-adjust:exact;print-color-adjust:exact}.cover{min-height:255mm;display:flex;flex-direction:column;justify-content:space-between;border-top:9px solid #bd342b;padding:16mm 3mm 8mm;page-break-after:always}.brand{font-size:12px;font-weight:800;letter-spacing:2px;color:#bd342b}.cover h1{font:700 42px/1.1 Georgia,"Yu Mincho",serif;margin:8px 0 14px;color:#1d2929}.cover .subtitle{font-size:17px;color:#576363}.cover-block{max-width:145mm}.cover-meta{border-top:1px solid #cbd2ce;padding-top:12px;color:#465352}.cover-meta strong{color:#1d2929}.cover-note{background:#f1f4ef;border-left:4px solid #94a899;padding:12px 16px;margin-top:28px}.entries{display:block}.kanji-entry{page-break-inside:avoid;break-inside:avoid;border-bottom:1px solid #cbd2ce;padding:0 0 9mm;margin:0 0 9mm}.entry-top{display:flex;justify-content:space-between;color:#7c8986;font-size:9px;font-weight:700;letter-spacing:1.2px;border-bottom:1px solid #dce1dc;padding-bottom:7px}.entry-heading{display:flex;align-items:center;gap:20px;padding:13px 0}.character{font:80px/1.1 "Noto Serif CJK JP","Yu Mincho",serif;color:#bd342b;min-width:90px;text-align:center}.eyebrow{font-size:9px;letter-spacing:1.2px;color:#bd342b;font-weight:700;margin:0 0 4px}.entry-heading h2{font:700 24px/1.2 Georgia,"Yu Mincho",serif;margin:0}.meta,.muted{color:#687471;margin:5px 0 0}.reading-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.reading-grid section,.examples,.practice{border-top:1px solid #cbd2ce;padding:9px 0}.kanji-entry h3{font-size:10px;letter-spacing:.7px;text-transform:uppercase;margin:0 0 7px;color:#51605c}.reading-grid p{font-size:15px;margin:0}.examples ul{list-style:none;margin:0;padding:0}.examples li{display:grid;grid-template-columns:1.1fr 1fr 1.6fr;gap:8px;padding:5px 0;border-bottom:1px solid #edf0ec}.examples li strong{font-size:15px;font-weight:600}.reading{color:#66736f}.practice p{margin:0 0 7px;color:#687471}.writing-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:7px}.writing-grid span{height:27mm;border:1px solid #cbd2ce;background-image:linear-gradient(90deg,transparent calc(50% - .5px),#e4e9e4 50%,transparent calc(50% + .5px)),linear-gradient(transparent calc(50% - .5px),#e4e9e4 50%,transparent calc(50% + .5px));display:grid;place-items:center;font:42px/1 "Noto Serif CJK JP","Yu Mincho",serif;color:#d7ddda}.footer{margin-top:10px;color:#75817d;font-size:9px}@media screen{body{max-width:210mm;margin:20px auto;padding:18mm 15mm;box-shadow:0 2px 24px #0002}.cover{min-height:245mm}}@media print{.kanji-entry{page-break-inside:avoid;break-inside:avoid}.footer{position:fixed;bottom:-12mm;left:0}}
-    </style></head><body><section class="cover"><div class="brand">JBOOK <span style="color:#293a38">/ BELAJAR BAHASA JEPANG</span></div><div class="cover-block"><p class="eyebrow">MATERI BELAJAR · KANJI</p><h1>Kanji ${levelLabel}</h1><p class="subtitle">Kumpulan kanji untuk memahami arti, mengenali cara baca, dan berlatih menulis.</p><div class="cover-note"><strong>Urutan belajar</strong><br>Kenali bentuk dan arti kanji, baca onyomi serta kunyomi, pelajari contoh kata, lalu tulis ulang pada kotak latihan.</div></div><div class="cover-meta"><strong>${items.length} kanji</strong><br>Disusun ${dateLabel}<br><span class="footer">Materi administrasi JBook${selectedSearch ? ` · Hasil pencarian: ${safe(selectedSearch)}` : ''}</span></div></section><main class="entries">${entries}</main></body></html>`;
 }
 
 function normalizeKanjiPage(data, page, limit) {

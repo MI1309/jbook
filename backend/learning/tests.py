@@ -8,7 +8,7 @@ from ninja_jwt.tokens import RefreshToken
 
 from content.models import CurriculumLevel, CurriculumUnit, FeatureSetting, Grammar, Particle, ReferenceBook, Vocab
 from users.models import TTSPointSession
-from .models import LearningPathStage, StudyLog, UserStageProgress, UserVocabulary
+from .models import LearningPathStage, QuizAttempt, StudyLog, StudySession, UserStageProgress, UserVocabulary
 
 # Create your tests here.
 
@@ -227,3 +227,100 @@ class VocabularySrsApiTests(TestCase):
 		self.assertIn("completion_percentage", response.json()["roadmap"][0])
 		self.assertEqual(len(response.json()["daily_activity"]), 30)
 		self.assertEqual(response.json()["daily_activity"][-1]["items_studied"], 3)
+
+	def test_dashboard_streak_handles_gaps_and_due_count_includes_overdue_vocab(self):
+		today = timezone.localdate()
+		other_vocab = Vocab.objects.create(
+			word="見る", reading="みる", meaning="melihat", jlpt_level=5
+		)
+		UserVocabulary.objects.create(
+			user=self.user,
+			vocabulary=self.vocabulary,
+			next_review_date=today,
+			times_reviewed=2,
+			box_level=1,
+		)
+		UserVocabulary.objects.create(
+			user=self.user,
+			vocabulary=other_vocab,
+			next_review_date=today - timedelta(days=1),
+			times_reviewed=1,
+			box_level=0,
+		)
+		future_vocab = Vocab.objects.create(
+			word="行く", reading="いく", meaning="pergi", jlpt_level=5
+		)
+		UserVocabulary.objects.create(
+			user=self.user,
+			vocabulary=future_vocab,
+			next_review_date=today + timedelta(days=1),
+		)
+		for days_ago in (0, 1, 3, 4, 5):
+			StudyLog.objects.create(
+				user=self.user,
+				activity_type=StudyLog.ActivityType.VOCABULARY_REVIEW,
+				date=today - timedelta(days=days_ago),
+				items_studied=1,
+			)
+		QuizAttempt.objects.create(user=self.user, is_correct=True)
+		QuizAttempt.objects.create(user=self.user, is_correct=False)
+
+		response = self.client.get(
+			"/api/learning/dashboard/stats",
+			secure=True,
+			**self.auth_headers,
+		)
+
+		self.assertEqual(response.status_code, 200)
+		stats = response.json()
+		self.assertEqual(stats["current_streak"], 2)
+		self.assertEqual(stats["longest_streak"], 3)
+		self.assertEqual(stats["due_today"], 2)
+		self.assertEqual(stats["retention_rate"], 50.0)
+		self.assertEqual(stats["accuracy_rate"], 50.0)
+
+	def test_dashboard_stats_are_isolated_and_empty_user_gets_zero_values(self):
+		UserVocabulary.objects.create(
+			user=self.other_user,
+			vocabulary=self.vocabulary,
+			status=UserVocabulary.Status.MASTERED,
+			times_reviewed=5,
+			box_level=5,
+		)
+		QuizAttempt.objects.create(user=self.other_user, is_correct=True)
+		StudyLog.objects.create(
+			user=self.other_user,
+			activity_type=StudyLog.ActivityType.VOCABULARY_REVIEW,
+			items_studied=5,
+		)
+
+		response = self.client.get(
+			"/api/learning/dashboard/stats",
+			secure=True,
+			**self.auth_headers,
+		)
+
+		self.assertEqual(response.status_code, 200)
+		stats = response.json()
+		self.assertEqual(stats["total_saved"], 0)
+		self.assertEqual(stats["due_today"], 0)
+		self.assertEqual(stats["current_streak"], 0)
+		self.assertEqual(stats["accuracy_rate"], 0)
+		self.assertEqual(stats["daily_activity"][-1]["items_studied"], 0)
+		self.assertEqual(stats["next_stage"]["stage_code"], "hiragana")
+
+	def test_dashboard_includes_completed_study_session_duration(self):
+		session = StudySession.objects.create(user=self.user)
+		StudySession.objects.filter(pk=session.pk).update(
+			start_time=timezone.now() - timedelta(minutes=12),
+			end_time=timezone.now(),
+		)
+
+		response = self.client.get(
+			"/api/learning/dashboard/stats",
+			secure=True,
+			**self.auth_headers,
+		)
+
+		self.assertEqual(response.status_code, 200)
+		self.assertGreaterEqual(response.json()["total_time_spent"], 719)
