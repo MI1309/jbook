@@ -42,18 +42,18 @@ export default function ExpressionPicker({ selected = [], onChange }) {
 
     return (
         <div className="space-y-2">
-            <label className="block text-[10px] font-black uppercase tracking-widest text-neutral-500">
+            <label className="block text-xs font-semibold text-[var(--foreground)]/65">
                 Expression terkait
             </label>
             <div className="flex flex-wrap gap-2">
                 {selected.map((expression) => (
-                    <span key={expression.id} className="inline-flex max-w-full items-center gap-2 rounded-lg border border-red-500/20 bg-red-500/10 px-2.5 py-1.5 text-xs text-red-200">
+                    <span key={expression.id} className="inline-flex max-w-full items-center gap-2 rounded-lg border border-[var(--brand-red)]/25 bg-[var(--brand-red)]/10 px-2.5 py-1.5 text-xs text-[var(--foreground)]">
                         <span className="truncate">{expression.word}</span>
                         <button
                             type="button"
                             aria-label={`Lepas ${expression.word}`}
                             onClick={() => onChange(selected.filter((item) => item.id !== expression.id))}
-                            className="shrink-0 text-red-300 hover:text-white"
+                            className="shrink-0 rounded px-1 text-[var(--brand-red)] transition-colors hover:bg-[var(--brand-red)]/10 hover:text-[var(--foreground)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--brand-red)]"
                         >
                             ×
                         </button>
@@ -65,27 +65,27 @@ export default function ExpressionPicker({ selected = [], onChange }) {
                 value={query}
                 onChange={(event) => setQuery(event.target.value)}
                 placeholder="Cari expression dari Kotoba..."
-                className="w-full rounded-lg border border-white/10 bg-black/20 px-3 py-2 text-sm text-white placeholder:text-neutral-600 focus:border-red-500 focus:outline-none"
+                className="w-full rounded-xl border border-[var(--border-color)] bg-[var(--card-bg)] px-3.5 py-2.5 text-sm text-[var(--foreground)] placeholder:text-[var(--foreground)]/45 transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--accent-blue)]"
             />
-            {(loading || options.length > 0) && (
-                <div className="max-h-36 space-y-1 overflow-y-auto rounded-lg border border-white/5 bg-black/20 p-1">
-                    {loading && <p className="px-2 py-1 text-xs text-neutral-500">Mencari...</p>}
-                    {options.filter((item) => !selected.some((value) => value.id === item.id)).map((expression) => (
+            {(loading || options.length > 0 || query.trim()) && (
+                <div className="max-h-48 space-y-1 overflow-y-auto rounded-xl border border-[var(--border-color)] bg-[var(--card-bg)] p-1.5" aria-live="polite">
+                    {loading && <p className="px-2 py-2 text-sm text-[var(--foreground)]/55">Mencari expression...</p>}
+                    {!loading && options.filter((item) => !selected.some((value) => value.id === item.id)).map((expression) => (
                         <button
                             key={expression.id}
                             type="button"
                             onClick={() => addExpression(expression)}
-                            className="flex w-full items-start justify-between gap-3 rounded-md px-2 py-1.5 text-left hover:bg-white/5"
+                            className="flex w-full items-start justify-between gap-3 rounded-lg px-2.5 py-2 text-left transition-colors hover:bg-[var(--background)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--accent-blue)]"
                         >
                             <span className="min-w-0">
-                                <span className="block truncate text-sm font-bold text-neutral-200">{expression.word}</span>
-                                <span className="block truncate text-xs text-neutral-500">{expression.meaning}</span>
+                                <span className="block truncate text-sm font-semibold text-[var(--foreground)]">{expression.word}</span>
+                                <span className="block truncate text-xs text-[var(--foreground)]/60">{expression.meaning}</span>
                             </span>
-                            <span className="shrink-0 text-xs text-red-400">Tambah</span>
+                            <span className="shrink-0 text-xs font-medium text-[var(--brand-red)]">Tambah</span>
                         </button>
                     ))}
-                    {!loading && options.length === 0 && query.trim() && (
-                        <p className="px-2 py-1 text-xs text-neutral-500">Expression tidak ditemukan.</p>
+                    {!loading && options.filter((item) => !selected.some((value) => value.id === item.id)).length === 0 && query.trim() && (
+                        <p className="px-2 py-2 text-sm text-[var(--foreground)]/55">Expression tidak ditemukan.</p>
                     )}
                 </div>
             )}

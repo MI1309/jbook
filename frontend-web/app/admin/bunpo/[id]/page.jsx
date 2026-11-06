@@ -4,13 +4,14 @@ import { useState, useEffect, use } from 'react';
 import { useRouter } from 'next/navigation';
 import { API_URL } from '@/lib/api';
 import Link from 'next/link';
-import Cookies from 'js-cookie';
+import { useAuth } from '@/context/AuthContext';
 import { appToast as toast } from '@/components/common/AppMessage';
 import ExpressionPicker from '@/components/bunpo/ExpressionPicker';
 import { ArrowLeft, Plus, Save, Trash2 } from 'lucide-react';
 
 export default function BunpoForm({ params }) {
     const router = useRouter();
+    const { authenticatedFetch } = useAuth();
     const { id } = use(params);
     const isNew = id === 'new';
 
@@ -36,9 +37,8 @@ export default function BunpoForm({ params }) {
             setLoading(true);
             setFetchError('');
             try {
-            const token = Cookies.get('access_token');
-            const res = await fetch(`${API_URL}/admin/bunpo/${id}`, {
-                headers: { 'Authorization': `Bearer ${token}` }
+            const res = await authenticatedFetch(`${API_URL}/admin/bunpo/${id}`, {
+                headers: {},
             });
 
             if (res.ok) {
@@ -71,7 +71,7 @@ export default function BunpoForm({ params }) {
         };
         fetchBunpo();
         return () => { cancelled = true; };
-    }, [id, isNew]);
+    }, [id, isNew, authenticatedFetch]);
 
     const handleAddSentence = () => {
         if (newSentence.jp.trim() && newSentence.id.trim()) {
@@ -118,7 +118,6 @@ export default function BunpoForm({ params }) {
         }
         setSaving(true);
         try {
-            const token = Cookies.get('access_token');
             const payload = {
                 ...formData,
                 chapter: parseInt(formData.chapter),
@@ -134,11 +133,10 @@ export default function BunpoForm({ params }) {
                 : `${API_URL}/admin/bunpo/${id}`;
             const method = isNew ? 'POST' : 'PUT';
 
-            const res = await fetch(url, {
+            const res = await authenticatedFetch(url, {
                 method: method,
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
                 },
                 body: JSON.stringify(payload)
             });
@@ -148,7 +146,9 @@ export default function BunpoForm({ params }) {
                 router.push('/admin/bunpo');
             } else {
                 const errorData = await res.json().catch(() => null);
-                const detail = errorData?.detail || errorData?.message || `HTTP ${res.status}`;
+                const detail = res.status === 401
+                    ? 'Sesi admin sudah berakhir. Silakan masuk kembali, lalu ulangi penyimpanan.'
+                    : errorData?.detail || errorData?.message || `HTTP ${res.status}`;
                 console.error('Failed to save Bunpo', errorData);
                 toast.error(`Gagal menyimpan Bunpo: ${detail}`);
             }

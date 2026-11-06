@@ -51,7 +51,7 @@ export default function ClientShell({ children }) {
 
     return (
         <>
-            {!isAuthRoute && <SakuraBackground />}
+            {!isAdminRoute && !isAuthRoute && <SakuraBackground />}
             {!isAdminRoute && !isAuthRoute && <Navbar />}
             <main className={pathname === '/' || isAuthRoute ? '' : 'flex-grow'}>
                 {children}

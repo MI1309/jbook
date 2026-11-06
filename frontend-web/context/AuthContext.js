@@ -1,6 +1,6 @@
 'use client';
 
-import { createContext, useContext, useState, useEffect } from 'react';
+import { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import Cookies from 'js-cookie';
 
@@ -45,7 +45,7 @@ export function AuthProvider({ children }) {
      * Try to refresh the access token using the refresh token.
      * Returns new access token string or null if failed.
      */
-    const refreshAccessToken = async () => {
+    const refreshAccessToken = useCallback(async () => {
         const refreshToken = Cookies.get('refresh_token');
         if (!refreshToken) return null;
 
@@ -65,7 +65,21 @@ export function AuthProvider({ children }) {
             console.error("Token refresh failed", error);
         }
         return null;
-    };
+    }, []);
+
+    const authenticatedFetch = useCallback(async (url, options = {}) => {
+        const sendRequest = (token) => {
+            const headers = new Headers(options.headers || {});
+            if (token) headers.set('Authorization', `Bearer ${token}`);
+            return fetch(url, { ...options, headers });
+        };
+
+        const response = await sendRequest(Cookies.get('access_token'));
+        if (response.status !== 401) return response;
+
+        const refreshedToken = await refreshAccessToken();
+        return refreshedToken ? sendRequest(refreshedToken) : response;
+    }, [refreshAccessToken]);
 
     /**
      * Check current session. If access token expired but refresh token valid,
@@ -294,6 +308,7 @@ export function AuthProvider({ children }) {
             user, loading,
             login, register,
             logout, forgotPassword, resetPassword, updateProfile, claimTtsPoints,
+            authenticatedFetch,
         }}>
             {children}
         </AuthContext.Provider>
