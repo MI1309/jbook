@@ -11,14 +11,14 @@ from google.auth.transport import requests
 from django.conf import settings
 from ninja.errors import HttpError
 from ninja_jwt.authentication import JWTAuth
-from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
-from django.utils.encoding import force_bytes, force_str
+from django.utils.http import urlsafe_base64_decode
+from django.utils.encoding import force_str
 from django.contrib.auth.tokens import default_token_generator
 from django.core.cache import cache
 from core.decorators import rate_limit
 from .models import TTSPointSession, UserProfile
 from .privacy import email_lookup_digest, mask_email
-from .services import generate_reset_token, send_reset_email
+from .services import request_password_reset
 
 router = Router()
 User = get_user_model()
@@ -250,41 +250,15 @@ def claim_tts_points(request, data: TTSPointsClaimSchema):
 @router.post("/password-reset")
 @rate_limit(key='ip', rate='5/h')  # Max 5 password reset request per IP per jam
 def password_reset_request(request, data: PasswordResetRequestSchema):
-    email_hash = email_lookup_digest(data.email)
-    user = User.objects.filter(email_lookup_hash=email_hash).first()
-    email_sent = False
-    if user:
-        uid = urlsafe_base64_encode(force_bytes(user.pk))
-        token = generate_reset_token(user)
-
-        # Determine base URL for reset link
-        # 1. Try Origin header (sent by browsers for POST)
-        # 2. Try Referer header (common fallback)
-        # 3. Fallback to settings.FRONTEND_URL
-        origin = request.headers.get('origin')
-        referer = request.headers.get('referer')
-
-        if origin:
-            base_url = origin
-        elif referer:
-            from urllib.parse import urlparse
-            parsed_referer = urlparse(referer)
-            base_url = f"{parsed_referer.scheme}://{parsed_referer.netloc}"
-        else:
-            base_url = getattr(settings, 'FRONTEND_URL', 'http://localhost:3000')
-
-        reset_link = f"{base_url}/reset-password?uid={uid}&token={token}"
-        email_sent = send_reset_email(user, token, reset_link)
-
-    # Never include account details or reset tokens in the response.
+    outcome = request_password_reset(data.email, request)
     return {
-        "account_exists": user is not None,
-        "email_sent": bool(email_sent),
+        "account_exists": outcome.account_exists,
+        "email_sent": outcome.email_sent,
         "message": (
             "Link reset sudah dikirim ke email Anda."
-            if email_sent
+            if outcome.email_sent
             else "Email belum berhasil dikirim. Silakan hubungi admin."
-            if user
+            if outcome.account_exists
             else "Email tersebut belum terdaftar."
         ),
     }

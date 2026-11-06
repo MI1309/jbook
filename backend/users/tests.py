@@ -4,10 +4,12 @@ from io import StringIO
 from django.core import mail
 from django.core.management import call_command, CommandError
 from django.test import TestCase, override_settings
+from django.test import RequestFactory
 from django.contrib.auth import get_user_model
 from unittest.mock import patch
 from ninja_jwt.tokens import RefreshToken
 from users.privacy import email_lookup_digest
+from users.services import build_password_reset_url, request_password_reset
 from users.models import UserProfile
 
 
@@ -230,3 +232,64 @@ class PrivateEmailTests(TestCase):
 			"Email belum berhasil dikirim. Silakan hubungi admin.",
 		)
 		send_mail_mock.assert_called_once()
+
+
+@override_settings(EMAIL_ENCRYPTION_KEY="test-email-encryption-key", FRONTEND_URL="https://jbook.example")
+class PasswordResetServiceTests(TestCase):
+	def setUp(self):
+		self.user = get_user_model().objects.create_user(
+			username="reset-service-user",
+			email="reset-service@example.com",
+			password="test-password-123",
+		)
+		self.request = RequestFactory().post("/api/auth/password-reset")
+
+	def test_request_password_reset_returns_not_found_without_sending_email(self):
+		with patch("users.services.send_reset_email") as send_email:
+			outcome = request_password_reset("missing@example.com", self.request)
+
+		self.assertFalse(outcome.account_exists)
+		self.assertFalse(outcome.email_sent)
+		send_email.assert_not_called()
+
+	@patch("users.services.generate_reset_token", return_value="signed-token")
+	@patch("users.services.send_reset_email", return_value=True)
+	def test_request_password_reset_sends_email_with_origin_url(self, send_email, generate_token):
+		request = RequestFactory().post(
+			"/api/auth/password-reset",
+			HTTP_ORIGIN="https://web.jbook.example/",
+		)
+
+		outcome = request_password_reset("reset-service@example.com", request)
+
+		self.assertTrue(outcome.account_exists)
+		self.assertTrue(outcome.email_sent)
+		reset_url = send_email.call_args.args[2]
+		self.assertTrue(reset_url.startswith("https://web.jbook.example/reset-password?"))
+		self.assertIn("token=signed-token", reset_url)
+		generate_token.assert_called_once_with(self.user)
+
+	@patch("users.services.generate_reset_token", return_value="signed-token")
+	@patch("users.services.send_reset_email", return_value=False)
+	def test_request_password_reset_reports_email_failure(self, send_email, generate_token):
+		outcome = request_password_reset("reset-service@example.com", self.request)
+
+		self.assertTrue(outcome.account_exists)
+		self.assertFalse(outcome.email_sent)
+		send_email.assert_called_once()
+
+	def test_reset_url_uses_referer_host_then_configured_fallback(self):
+		referer_request = RequestFactory().post(
+			"/api/auth/password-reset",
+			HTTP_REFERER="https://web.jbook.example/account/reset?source=profile",
+		)
+		fallback_request = RequestFactory().post("/api/auth/password-reset")
+
+		self.assertEqual(
+			build_password_reset_url(referer_request, "uid", "token"),
+			"https://web.jbook.example/reset-password?uid=uid&token=token",
+		)
+		self.assertEqual(
+			build_password_reset_url(fallback_request, "uid", "token"),
+			"https://jbook.example/reset-password?uid=uid&token=token",
+		)
