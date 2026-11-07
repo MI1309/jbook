@@ -42,7 +42,7 @@ export default function KanjiStrokeViewer({ svgContent, size = 80, isAnimating =
                 .kanjivg-render path {
                     fill: none;
                     stroke: #9ca3af; /* Gray 400 */
-                    stroke-width: 3;
+                    stroke-width: 4;
                     stroke-linecap: round;
                     stroke-linejoin: round;
                     transition: stroke 0.3s;                    /* Efek Menulis: Awalnya kosong */
@@ -76,7 +76,7 @@ export default function KanjiStrokeViewer({ svgContent, size = 80, isAnimating =
                 .group\/stroke:hover .kanjivg-render path,
                 .is-active .kanjivg-render path {
                     stroke: #2563eb;
-                    animation: drawStroke 1s ease-out forwards;
+                    animation: drawStroke 2.3s ease-out forwards;
                 }
                 .dark .group\/stroke:hover .kanjivg-render path,
                 .dark .is-active .kanjivg-render path {

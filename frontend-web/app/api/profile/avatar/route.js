@@ -21,12 +21,14 @@ async function getAuthenticatedUser(request) {
 }
 
 export async function POST(request) {
+    let stage = 'authentication';
     try {
         const user = await getAuthenticatedUser(request);
         if (!user) {
             return NextResponse.json({ error: 'Silakan login untuk mengunggah foto profil.' }, { status: 401 });
         }
 
+        stage = 'file_validation';
         const formData = await request.formData();
         const file = formData.get('file');
         if (!file || typeof file === 'string' || file.size === 0) {
@@ -46,6 +48,15 @@ export async function POST(request) {
             return NextResponse.json({ error: 'Isi file tidak sesuai dengan format gambar.' }, { status: 415 });
         }
 
+        if (!process.env.BLOB_READ_WRITE_TOKEN) {
+            console.error('[profile-avatar] BLOB_READ_WRITE_TOKEN is not configured.');
+            return NextResponse.json(
+                { error: 'Penyimpanan foto belum dikonfigurasi. Hubungkan Vercel Blob ke project, lalu deploy ulang.' },
+                { status: 503 }
+            );
+        }
+
+        stage = 'blob_upload';
         const blob = await put(`avatars/${user.id}-${crypto.randomUUID()}.${imageType.extension}`, file, {
             access: 'public',
             addRandomSuffix: false,
@@ -54,7 +65,13 @@ export async function POST(request) {
 
         return NextResponse.json({ url: blob.url });
     } catch (error) {
-        console.error('[profile-avatar] Upload failed:', error);
-        return NextResponse.json({ error: 'Gagal mengunggah foto profil.' }, { status: 500 });
+        console.error(`[profile-avatar] Failed during ${stage}:`, error);
+        if (stage === 'blob_upload') {
+            return NextResponse.json(
+                { error: 'Upload ke Vercel Blob gagal. Periksa Blob Store dan BLOB_READ_WRITE_TOKEN di project Vercel.' },
+                { status: 502 }
+            );
+        }
+        return NextResponse.json({ error: 'Gagal memproses upload foto profil.' }, { status: 500 });
     }
 }

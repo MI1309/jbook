@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
+import Link from 'next/link';
 import Cookies from 'js-cookie';
 import { API_URL } from '@/lib/api';
 import AppMessage from '@/components/common/AppMessage';
@@ -8,7 +9,8 @@ import ConfirmationModal from '@/components/common/ConfirmationModal';
 import { appToast as toast } from '@/components/common/AppMessage';
 import {
     BookOpen,
-    ChevronRight,
+    ArrowLeft,
+    ArrowRight,
     FileJson,
     FileSpreadsheet,
     FileText,
@@ -233,8 +235,42 @@ function readHistory() {
     }
 }
 
-export default function AdminExportPage() {
-    const [selectedSource, setSelectedSource] = useState('kotoba');
+function ExportSourceIndex() {
+    return (
+        <div className="mx-auto w-full max-w-6xl">
+            <header className="mb-6">
+                <p className="text-xs font-bold uppercase tracking-[0.18em] text-[var(--foreground)]/55">Admin / Export</p>
+                <h1 className="mt-2 text-2xl font-bold text-[var(--foreground)] sm:text-3xl">Pilih Data Export</h1>
+                <p className="mt-1 text-sm text-[var(--foreground)]/60">Setiap sumber data memiliki halaman export dan filter tersendiri.</p>
+            </header>
+            <section aria-label="Sumber data export" className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
+                {SOURCE_OPTIONS.filter((source) => !source.disabled).map((source) => {
+                    const Icon = source.icon;
+                    return (
+                        <Link
+                            key={source.id}
+                            href={`/admin/export/${source.id}`}
+                            aria-label={`Export ${source.label}: ${source.description}`}
+                            className="group flex min-h-44 flex-col rounded-xl border border-[var(--border-color)] bg-[var(--card-bg)] p-5 transition hover:-translate-y-0.5 hover:border-[var(--accent-blue)]/45 hover:shadow-lg focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent-blue)]"
+                        >
+                            <span aria-hidden="true" className="flex size-11 items-center justify-center rounded-lg bg-[var(--accent-blue)]/10 text-[var(--accent-blue)]">
+                                <Icon size={20} />
+                            </span>
+                            <span className="mt-4 text-base font-bold text-[var(--foreground)]">{source.label}</span>
+                            <span className="mt-1 text-sm leading-relaxed text-[var(--foreground)]/60">{source.description}</span>
+                            <span className="mt-auto inline-flex min-h-11 items-center gap-1 pt-3 text-sm font-semibold text-[var(--accent-blue)]">
+                                Buka export <ArrowRight size={16} aria-hidden="true" className="transition-transform group-hover:translate-x-1" />
+                            </span>
+                        </Link>
+                    );
+                })}
+            </section>
+        </div>
+    );
+}
+
+export default function AdminExportPage({ fixedSource }) {
+    const [selectedSource, setSelectedSource] = useState(fixedSource || '');
     const [selectedFormat, setSelectedFormat] = useState('csv');
     const [filters, setFilters] = useState(DEFAULT_FILTERS);
     const [preview, setPreview] = useState({ rows: [], total: 0, loading: false, error: '' });
@@ -257,6 +293,13 @@ export default function AdminExportPage() {
     useEffect(() => {
         setHistory(readHistory());
     }, []);
+
+    useEffect(() => {
+        if (!fixedSource) return;
+        setSelectedSource(fixedSource);
+        setFilters(DEFAULT_FILTERS);
+        setSelectedFormat('csv');
+    }, [fixedSource]);
 
     useEffect(() => {
         if (selectedSource !== 'kanji' && selectedFormat === 'pdf') {
@@ -319,26 +362,8 @@ export default function AdminExportPage() {
         };
     }, [activeSource.endpoint, filters.chapter, filters.level, filters.search, filters.strokesMax, filters.strokesMin, filters.wordType, selectedSource]);
 
-    const handleSourceKeyDown = (event, index) => {
-        if (!['ArrowRight', 'ArrowLeft', 'ArrowDown', 'ArrowUp'].includes(event.key)) return;
-        event.preventDefault();
-        const nextIndex = (() => {
-            const itemCount = SOURCE_OPTIONS.length;
-            const deltaMap = {
-                ArrowRight: 1,
-                ArrowLeft: -1,
-                ArrowDown: 1,
-                ArrowUp: -1,
-            };
-            const delta = deltaMap[event.key] ?? 0;
-            return (index + delta + itemCount) % itemCount;
-        })();
-        const nextSource = SOURCE_OPTIONS[nextIndex];
-        if (!nextSource.disabled) setSelectedSource(nextSource.id);
-    };
-
     const resetState = () => {
-        setSelectedSource('kotoba');
+        setSelectedSource(fixedSource || '');
         setSelectedFormat('csv');
         setFilters(DEFAULT_FILTERS);
         setExportStatus('Siap diunduh');
@@ -363,23 +388,39 @@ export default function AdminExportPage() {
 
     const fetchSourceRows = async () => {
         const token = Cookies.get('access_token');
-        const params = new URLSearchParams();
+        const pageSize = 100;
+        const params = new URLSearchParams({ page: '1', limit: String(pageSize) });
         if (filters.level) params.set('level', filters.level);
         if (filters.search) params.set('search', filters.search);
         if (selectedSource === 'kotoba' && filters.wordType) params.set('word_type', filters.wordType);
         if (selectedSource === 'bunpo' && filters.chapter) params.set('chapter', filters.chapter);
 
-        const response = await fetch(`${API_URL}/admin/${activeSource.endpoint}?${params.toString()}`, {
-            headers: { Authorization: `Bearer ${token}` },
-        });
+        const allRows = [];
+        let currentPage = 1;
+        let totalPages = 1;
 
-        if (!response.ok) {
-            throw new Error('Tidak dapat mengambil data untuk export.');
+        while (currentPage <= totalPages) {
+            params.set('page', String(currentPage));
+            const response = await fetch(`${API_URL}/admin/${activeSource.endpoint}?${params.toString()}`, {
+                headers: { Authorization: `Bearer ${token}` },
+            });
+
+            if (!response.ok) {
+                throw new Error('Tidak dapat mengambil data untuk export.');
+            }
+
+            const payload = await response.json();
+            const pageRows = parseArrayResponse(payload);
+            allRows.push(...pageRows);
+
+            if (Array.isArray(payload)) break;
+            totalPages = Number(payload?.pages) || Math.ceil((Number(payload?.total) || pageRows.length) / pageSize) || 1;
+            setExportStatus(`Mengambil data... ${allRows.length} dari ${Number(payload?.total) || allRows.length} baris`);
+            setProgress(Math.min(70, 10 + Math.round((currentPage / totalPages) * 60)));
+            currentPage += 1;
         }
 
-        const payload = await response.json();
-        const rows = normalizeRows(parseArrayResponse(payload), selectedSource);
-        return rows;
+        return normalizeRows(allRows, selectedSource);
     };
 
     const triggerDownload = (blob, fileName) => {
@@ -465,8 +506,9 @@ export default function AdminExportPage() {
             triggerDownload(blob, fileName);
             setProgress(100);
             setExportStatus(statusLabel);
-            toast.success(`${statusLabel} (${preview.total || 0} baris)`);
-            saveHistoryEntry(activeSource, selectedFormat, preview.total || 0, 'Sukses');
+            const exportedRows = selectedFormat === 'csv' ? preview.total : undefined;
+            toast.success(`${statusLabel}${exportedRows !== undefined ? ` (${exportedRows} baris)` : ''}`);
+            saveHistoryEntry(activeSource, selectedFormat, exportedRows ?? preview.total ?? 0, 'Sukses');
         } catch (error) {
             setExportStatus(error.message || 'Gagal menyiapkan file.');
             toast.error(error.message || 'Gagal menyiapkan file.');
@@ -485,6 +527,8 @@ export default function AdminExportPage() {
         }
         await performExport();
     };
+
+    if (!fixedSource) return <ExportSourceIndex />;
 
     const renderFilterFields = () => {
         if (selectedSource === 'kotoba') {
@@ -652,11 +696,14 @@ export default function AdminExportPage() {
     return (
         <div className="mx-auto w-full max-w-6xl px-0 lg:px-2">
             <div className="mb-6 flex flex-col gap-2">
-                <p className="text-xs font-bold uppercase tracking-[0.24em] text-[var(--foreground)]/55">Admin / Export</p>
+                <Link href="/admin/export" className="inline-flex min-h-11 w-fit items-center gap-2 text-sm font-semibold text-[var(--foreground)]/65 transition hover:text-[var(--accent-blue)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent-blue)]">
+                    <ArrowLeft size={16} aria-hidden="true" /> Semua sumber export
+                </Link>
+                <p className="text-xs font-bold uppercase tracking-[0.24em] text-[var(--foreground)]/55">Admin / Export / {activeSource.label}</p>
                 <div className="flex items-center justify-between gap-4">
                     <div>
-                        <h1 className="text-2xl font-bold text-[var(--foreground)] sm:text-3xl">Export Data</h1>
-                        <p className="mt-1 text-sm text-[var(--foreground)]/60">Pilih sumber data, atur filter, lalu unduh file sesuai kebutuhan.</p>
+                        <h1 className="text-2xl font-bold text-[var(--foreground)] sm:text-3xl">Export {activeSource.label}</h1>
+                        <p className="mt-1 text-sm text-[var(--foreground)]/60">Atur filter {activeSource.label.toLowerCase()}, lalu pilih format unduhan.</p>
                     </div>
                 </div>
             </div>
@@ -665,50 +712,7 @@ export default function AdminExportPage() {
                 <aside className="lg:sticky lg:top-24 lg:self-start">
                     <div className="space-y-6 rounded-2xl border border-[var(--border-color)] bg-[var(--card-bg)] p-4 shadow-sm sm:p-5">
                         <div>
-                            <p className="text-xs font-bold uppercase tracking-[0.18em] text-[var(--foreground)]/50">1. Sumber Data</p>
-                            <div role="radiogroup" aria-label="Pilih sumber data export" className="mt-3 space-y-3" onKeyDown={(event) => {
-                                if (event.target instanceof HTMLElement && event.target.closest('[data-source-card]')) {
-                                    const currentIndex = SOURCE_OPTIONS.findIndex((item) => item.id === selectedSource);
-                                    handleSourceKeyDown(event, currentIndex);
-                                }
-                            }}>
-                                {SOURCE_OPTIONS.map((source, index) => {
-                                    const Icon = source.icon;
-                                    const isSelected = selectedSource === source.id;
-                                    return (
-                                        <button
-                                            key={source.id}
-                                            type="button"
-                                            data-source-card
-                                            role="radio"
-                                            aria-checked={isSelected}
-                                            disabled={source.disabled}
-                                            onClick={() => !source.disabled && setSelectedSource(source.id)}
-                                            onKeyDown={(event) => handleSourceKeyDown(event, index)}
-                                            className={`flex min-h-11 w-full items-center gap-3 rounded-xl border p-3 text-left transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent-blue)] ${
-                                                isSelected
-                                                    ? 'border-[var(--accent-blue)]/60 bg-[var(--accent-blue)]/8 text-[var(--foreground)]'
-                                                    : source.disabled
-                                                        ? 'cursor-not-allowed border-[var(--border-color)] bg-[var(--background)]/60 text-[var(--foreground)]/40'
-                                                        : 'border-[var(--border-color)] bg-[var(--background)] text-[var(--foreground)] hover:border-[var(--border-color)]/80'
-                                            }`}
-                                        >
-                                            <span className={`flex size-10 shrink-0 items-center justify-center rounded-lg ${isSelected ? 'bg-[var(--accent-blue)]/10 text-[var(--accent-blue)]' : 'bg-[var(--background)] text-[var(--foreground)]/70'}`}>
-                                                <Icon size={18} aria-hidden="true" />
-                                            </span>
-                                            <span className="min-w-0 flex-1">
-                                                <span className="block text-sm font-semibold">{source.label}</span>
-                                                <span className="mt-0.5 block text-xs text-[var(--foreground)]/60">{source.description}</span>
-                                            </span>
-                                            {isSelected && <ChevronRight size={16} className="text-[var(--accent-blue)]" aria-hidden="true" />}
-                                        </button>
-                                    );
-                                })}
-                            </div>
-                        </div>
-
-                        <div>
-                            <p className="text-xs font-bold uppercase tracking-[0.18em] text-[var(--foreground)]/50">2. Filter</p>
+                            <p className="text-xs font-bold uppercase tracking-[0.18em] text-[var(--foreground)]/50">1. Filter</p>
                             <div className="mt-3 space-y-4">{renderFilterFields()}</div>
                             <label className="mt-4 block text-sm font-medium text-[var(--foreground)]">
                                 <span className="mb-2 block">Pencarian</span>
@@ -726,7 +730,7 @@ export default function AdminExportPage() {
                         </div>
 
                         <div>
-                            <p className="text-xs font-bold uppercase tracking-[0.18em] text-[var(--foreground)]/50">3. Format</p>
+                            <p className="text-xs font-bold uppercase tracking-[0.18em] text-[var(--foreground)]/50">2. Format</p>
                             <div role="radiogroup" aria-label="Pilih format export" className="mt-3 space-y-3">
                                 {availableFormats.map((option) => {
                                     const Icon = option.icon;

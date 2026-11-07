@@ -2,6 +2,8 @@ import KotobaLanding from '@/components/kotoba/KotobaLanding';
 import { getVocabList } from '@/lib/api';
 import { KOTOBA_CATEGORIES } from '@/components/kotoba/kotobaCategories';
 
+export const dynamic = 'force-dynamic';
+
 export default async function KotobaPage() {
     let total = 0;
     let categories = KOTOBA_CATEGORIES.map((category) => ({ ...category, count: 0 }));

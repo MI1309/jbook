@@ -2,6 +2,8 @@ import { notFound } from 'next/navigation';
 import BunpoDetailUI from '@/components/bunpo/BunpoDetailUI';
 import { getBunpoLevel } from '@/data/bunpoLevels';
 import { getBunpoSlug } from '@/data/bunpoSlugs';
+import { BUNPO_SECTIONS_PILOT } from '@/data/bunpo-sections-pilot';
+import { applyPilotFallback } from '@/lib/bunpo-fallback.mjs';
 import { getBunpoCatalog, getBunpoGrammarDetail } from '@/lib/bunpo-catalog';
 import { normalizeBunpoPattern } from '@/lib/bunpo-schema';
 
@@ -42,8 +44,8 @@ async function findGrammar(level, slug) {
     const detail = await getBunpoGrammarDetail(pattern.id);
     if (!detail) return null;
 
-    const grammar = { ...pattern, ...detail, meaning: detail.meaning || detail.structure };
-    return normalizeBunpoPattern(grammar);
+    const grammar = normalizeBunpoPattern({ ...pattern, ...detail, meaning: detail.meaning || detail.structure });
+    return applyPilotFallback(grammar, slug, BUNPO_SECTIONS_PILOT);
 }
 
 export async function generateMetadata({ params }) {

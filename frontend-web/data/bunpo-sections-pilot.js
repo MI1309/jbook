@@ -1,5 +1,6 @@
 import { isValidBunpoPattern } from '@/lib/bunpo-schema';
 
+// CATATAN: Pola editorial lengkap ini belum menjadi record terpisah di production per 2026-11-07.
 export const BUNPO_SECTIONS_PILOT = {
     'wa-desu': {
         id: '',

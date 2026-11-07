@@ -1,6 +1,7 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import { useTheme } from '@/context/ThemeContext';
 import AppMessage from '@/components/common/AppMessage';
@@ -11,9 +12,16 @@ import { appToast as toast } from '@/components/common/AppMessage';
 export default function DataManagementPage() {
     const { user, loading } = useAuth();
     const { theme, mounted } = useTheme();
+    const router = useRouter();
     const [isExporting, setIsExporting] = useState(false);
     const [isImporting, setIsImporting] = useState(false);
     const [actionError, setActionError] = useState(null);
+
+    useEffect(() => {
+        if (!loading && !user) {
+            router.replace('/dashboard');
+        }
+    }, [loading, user, router]);
 
     const handleExport = async () => {
         setIsExporting(true);
@@ -94,12 +102,25 @@ export default function DataManagementPage() {
         reader.readAsText(file);
     };
 
+    if (loading) {
+        return (
+            <div className="flex min-h-[30vh] items-center justify-center">
+                <svg className="animate-spin h-10 w-10 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z" />
+                </svg>
+            </div>
+        );
+    }
+
+    if (!user) {
+        return null;
+    }
+
     const tc = (dark, light) => !mounted ? light : (theme === 'dark' ? dark : light);
     const textPrimary = tc('text-white', 'text-gray-900');
-    const textSecondary = tc('text-gray-400', 'text-gray-600');
     const textMuted = tc('text-gray-500', 'text-gray-400');
     const cardBase = tc('bg-[#0a0a0a] border-blue-900/20', 'bg-white border-gray-100');
-    const cardHeaderBase = tc('bg-black/40 border-blue-900/20', 'bg-gray-50 border-gray-100');
 
     return (
         <div className="animate-in fade-in duration-500 space-y-6">

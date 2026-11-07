@@ -9,7 +9,7 @@ import { useTheme } from '@/context/ThemeContext';
 import { appToast as toast } from '@/components/common/AppMessage';
 import ConfirmationModal from '@/components/common/ConfirmationModal';
 import Image from 'next/image';
-import { ChevronDown, LayoutDashboard, LogOut, Menu, Moon, Sun, X } from 'lucide-react';
+import { ChevronDown, LayoutDashboard, LogOut, Menu, Moon, Sun, UserRound, X } from 'lucide-react';
 
 const baseNavItems = [
     { href: '/kanji', label: 'Kanji' },
@@ -246,6 +246,18 @@ export default function Navbar() {
                                                     >
                                                         <LayoutDashboard size={17} aria-hidden="true" className="text-accent-blue" />
                                                         Dashboard
+                                                    </Link>
+                                                    <Link
+                                                        href="/profile"
+                                                        role="menuitem"
+                                                        onClick={(event) => {
+                                                            handleNavClick(event, '/profile');
+                                                            setIsProfileMenuOpen(false);
+                                                        }}
+                                                        className={`flex items-center gap-3 px-4 py-3 text-sm font-semibold transition-colors ${theme === 'dark' ? 'hover:bg-white/5' : 'hover:bg-gray-50'}`}
+                                                    >
+                                                        <UserRound size={17} aria-hidden="true" className="text-accent-blue" />
+                                                        Profil
                                                     </Link>
                                                     <button
                                                         type="button"

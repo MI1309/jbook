@@ -35,6 +35,31 @@ export default function DashboardLayout({ children }) {
             <div className={`flex flex-wrap gap-2 pb-4 mb-8 border-b-2 transition-colors ${borderStyle}`}>
                 {navigationItems.map((item) => {
                     const isActive = pathname === item.path;
+                    const isDataAccessDisabled = item.path === '/dashboard/data' && !user;
+
+                    if (isDataAccessDisabled) {
+                        return (
+                            <button
+                                key={item.path}
+                                type="button"
+                                disabled
+                                aria-disabled="true"
+                                aria-label="Login untuk mengelola data"
+                                title="Login untuk mengelola data"
+                                className={`cursor-not-allowed px-4 py-2 rounded-xl text-sm font-black transition-all opacity-60 ${
+                                    isActive
+                                        ? 'bg-blue-600 text-white shadow-lg shadow-blue-500/20 scale-[1.02]'
+                                        : tc(
+                                              'bg-black/40 text-gray-400',
+                                              'bg-gray-100 text-gray-600'
+                                          )
+                                }`}
+                            >
+                                {item.name}
+                            </button>
+                        );
+                    }
+
                     return (
                         <Link
                             key={item.path}

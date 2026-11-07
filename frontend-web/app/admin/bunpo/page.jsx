@@ -213,7 +213,7 @@ export default function BunpoAdmin() {
             if (debouncedChapter) params.append('chapter', debouncedChapter);
             if (debouncedSearch.trim()) params.append('search', debouncedSearch.trim());
 
-            const res = await fetch(`${API_URL}/admin/grammar/export/csv?${params.toString()}`, {
+            const res = await fetch(`${API_URL}/admin/bunpo/export/csv?${params.toString()}`, {
                 headers: authHeaders(),
             });
             if (!res.ok) throw new Error(`Export failed (${res.status})`);

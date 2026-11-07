@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import { useDebounce } from 'use-debounce';
 import { Search, X } from 'lucide-react';
 import { searchKotoba } from '@/app/kotoba/actions';
+import WordTypeBadge from '@/components/kotoba/WordTypeBadge';
 
 export default function KotobaCategorySearch({ category, initialSearch = '', initialLevel = '', initialSuggestions = [] }) {
     const router = useRouter();
@@ -79,7 +80,7 @@ export default function KotobaCategorySearch({ category, initialSearch = '', ini
                                 <span className="block break-words font-japanese text-sm font-bold">{word.word} <span className="font-sans font-normal text-gray-500">({word.reading})</span></span>
                                 <span className="mt-0.5 block line-clamp-2 break-words text-xs text-gray-600 dark:text-gray-400">{word.meaning}</span>
                             </span>
-                            <span className="shrink-0 rounded border border-[var(--border-color)] px-2 py-0.5 text-[10px] font-bold">N{word.jlpt_level}</span>
+                            <span className="flex shrink-0 flex-col items-end gap-1"><WordTypeBadge type={word.word_type} className="text-[10px]" /><span className="rounded border border-[var(--border-color)] px-2 py-0.5 text-[10px] font-bold">N{word.jlpt_level}</span></span>
                         </Link>
                     )) : <p className="px-3 py-4 text-sm text-gray-600 dark:text-gray-300">Tidak ditemukan kata dalam kategori ini.</p>}
                 </div>

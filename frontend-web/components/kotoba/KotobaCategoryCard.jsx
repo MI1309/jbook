@@ -8,7 +8,7 @@ export default function KotobaCategoryCard({ category }) {
 
     return (
         <Link
-            href={`/kotoba/${category.slug}`}
+            href={`/kotoba/type/${category.slug}`}
             aria-label={`Jelajahi ${category.name}, ${category.count.toLocaleString('id-ID')} kata`}
             className="group relative flex min-h-[14rem] min-w-0 flex-col overflow-hidden rounded-2xl border border-[var(--border-color)] bg-[var(--card-bg)] p-5 shadow-sm transition duration-200 hover:-translate-y-1 hover:border-accent-blue/40 hover:shadow-lg focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-blue"
         >

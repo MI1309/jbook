@@ -14,7 +14,7 @@ temp/
 # Python Root
 venv/
 __pycache__/
-/backend/django_cache/
+backend/django_cache/
 
 # Node Root
 node_modules/

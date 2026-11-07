@@ -198,9 +198,22 @@ export default function DashboardOverviewPage() {
                     <Link href="/dashboard/mistakes" className="p-4 rounded-xl border border-gray-200 dark:border-blue-900/30 text-center hover:bg-blue-600/10 transition-colors">
                         ⚠️ Daftar Kesalahan
                     </Link>
-                    <Link href="/dashboard/data" className="p-4 rounded-xl border border-gray-200 dark:border-blue-900/30 text-center hover:bg-blue-600/10 transition-colors">
-                        ⚙️ Manajemen Data
-                    </Link>
+                    {!user ? (
+                        <button
+                            type="button"
+                            disabled
+                            aria-disabled="true"
+                            aria-label="Login untuk mengelola data"
+                            title="Login untuk mengelola data"
+                            className="p-4 rounded-xl border border-gray-200 dark:border-blue-900/30 text-center opacity-60 cursor-not-allowed bg-gray-100 dark:bg-blue-950/20"
+                        >
+                            ⚙️ Manajemen Data
+                        </button>
+                    ) : (
+                        <Link href="/dashboard/data" className="p-4 rounded-xl border border-gray-200 dark:border-blue-900/30 text-center hover:bg-blue-600/10 transition-colors">
+                            ⚙️ Manajemen Data
+                        </Link>
+                    )}
                 </div>
             </div>
         </div>

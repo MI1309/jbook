@@ -1,8 +1,8 @@
 'use client';
 
 import Image from 'next/image';
-import Link from 'next/link';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import { useTheme } from '@/context/ThemeContext';
 import { Camera, LoaderCircle, Trophy } from 'lucide-react';
@@ -40,11 +40,18 @@ async function compressAvatar(file) {
 export default function ProfilePage() {
     const { user, loading, updateProfile } = useAuth();
     const { theme, mounted } = useTheme();
+    const router = useRouter();
     const fileInputRef = useRef(null);
     const [uploading, setUploading] = useState(false);
     const [message, setMessage] = useState('');
     const [error, setError] = useState('');
     const dark = mounted && theme === 'dark';
+
+    useEffect(() => {
+        if (!loading && !user) {
+            router.replace('/');
+        }
+    }, [loading, user, router]);
 
     const handleUpload = async (event) => {
         const file = event.target.files?.[0];
@@ -85,11 +92,7 @@ export default function ProfilePage() {
     }
 
     if (!user) {
-        return (
-            <div className={`mx-auto max-w-xl px-4 py-16 text-center ${dark ? 'text-white' : 'text-gray-900'}`}>
-                Silakan <Link href="/login" className="font-bold text-blue-600 hover:underline">login</Link> untuk melihat profil.
-            </div>
-        );
+        return null;
     }
 
     return (

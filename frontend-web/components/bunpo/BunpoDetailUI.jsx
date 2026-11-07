@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { useTheme } from '@/context/ThemeContext';
+import ConceptMap from './ConceptMap';
 
 export default function BunpoDetailUI({
     grammar,
@@ -24,7 +25,7 @@ export default function BunpoDetailUI({
     const hasEditorialSections = [
         'mainFunction', 'sentencePattern', 'examples', 'comparison', 'nuance',
         'coreExplanation', 'commonMistakes', 'faq', 'miniPractice', 'conceptMap',
-    ].some(sectionHasContent);
+    ].some((key) => key === 'miniPractice' || sectionHasContent(key));
     const sectionAnchors = [
         { key: 'mainFunction', id: 'fungsi-utama', label: 'Fungsi' },
         { key: 'sentencePattern', id: 'pola-kalimat', label: 'Pola' },
@@ -36,7 +37,7 @@ export default function BunpoDetailUI({
         { key: 'faq', id: 'tanya-jawab', label: 'FAQ' },
         { key: 'miniPractice', id: 'latihan-mini', label: 'Latihan' },
         { key: 'conceptMap', id: 'peta-materi', label: 'Peta' },
-    ].filter(({ key }) => sectionHasContent(key));
+    ].filter(({ key }) => key === 'miniPractice' || sectionHasContent(key));
 
     const isDark = theme === 'dark';
     const textColor = isDark ? 'text-white' : 'text-black';
@@ -225,31 +226,31 @@ export default function BunpoDetailUI({
                                 </details>)}</div>,
                             },
                             {
-                                key: 'miniPractice', title: 'Latihan Mini · ミニ練習',
-                                content: (items) => <div className="space-y-3">{items.map((item, index) => <div key={index} className={`min-w-0 rounded-lg border p-3 ${mutedPanel}`}>
-                                    <p className={`break-words font-semibold ${textColor}`}>{item.question}</p>
-                                    {item.options?.length > 0 && <ul className={`mt-2 list-disc space-y-1 pl-5 text-sm ${textColor}`}>{item.options.map((option, optionIndex) => <li key={optionIndex} className="break-words">{option}</li>)}</ul>}
-                                    <details className="mt-2">
-                                        <summary className={`cursor-pointer break-words text-sm font-bold ${emphasisText}`}>Lihat jawaban</summary>
-                                        <p className={`break-words pt-2 text-sm font-semibold ${textColor}`}>{item.answer}</p>
-                                        {item.explanation && <p className={`break-words pt-1 text-sm ${subTextColor}`}>{item.explanation}</p>}
-                                    </details>
-                                </div>)}</div>,
+                                key: 'miniPractice', title: 'Latihan Soal Interaktif',
+                                content: () => (
+                                    <div className="rounded-2xl border border-[var(--border-color)] bg-[var(--card-bg)] p-5 sm:p-6">
+                                        <div className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-xl bg-blue-100 text-xl text-blue-700 dark:bg-blue-900/30 dark:text-blue-200" aria-hidden="true">
+                                            🎯
+                                        </div>
+                                        <h3 className={`text-base font-bold sm:text-lg ${textColor}`}>Latihan Soal Interaktif</h3>
+                                        <p className={`mt-2 text-sm leading-relaxed ${subTextColor}`}>
+                                            Uji pemahaman pola ini lewat latihan yang mencatat progres dan akurasi kamu.
+                                        </p>
+                                        <Link
+                                            href="/practice"
+                                            className="mt-4 inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-xl bg-[var(--accent-blue)] px-5 py-2.5 text-sm font-bold text-white transition hover:brightness-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-blue)] focus-visible:ring-offset-2 sm:w-auto"
+                                        >
+                                            Mulai Latihan <span aria-hidden="true">→</span>
+                                        </Link>
+                                    </div>
+                                ),
                             },
                             {
                                 key: 'conceptMap', title: 'Peta Materi · 学習マップ',
-                                content: (value) => <>
-                                    {value.summary && <p className={`break-words text-sm leading-relaxed ${textColor}`}>{value.summary}</p>}
-                                    {value.nodes?.length > 0 && <ul className="flex min-w-0 flex-wrap gap-2">{value.nodes.map((node) => <li key={node.id} className={`max-w-full break-words rounded-full border px-3 py-1 text-sm font-semibold ${mutedPanel} ${textColor}`}>{node.label}</li>)}</ul>}
-                                    {value.edges?.length > 0 && <ul className={`space-y-2 text-sm ${textColor}`}>{value.edges.map((edge, index) => {
-                                        const from = value.nodes?.find((node) => node.id === edge.from)?.label || edge.from;
-                                        const to = value.nodes?.find((node) => node.id === edge.to)?.label || edge.to;
-                                        return <li key={index} className="break-words">{from} → {to} ({edge.label})</li>;
-                                    })}</ul>}
-                                </>,
+                                content: (value) => <ConceptMap nodes={value?.nodes || []} edges={value?.edges || []} summary={value?.summary || ''} />,
                             },
                         ].map((item, index) => {
-                            if (!sectionHasContent(item.key)) return null;
+                            if (item.key !== 'miniPractice' && !sectionHasContent(item.key)) return null;
                             const sectionId = sectionAnchors.find(({ key }) => key === item.key)?.id;
                             return (
                             <section key={item.key} id={sectionId} aria-labelledby={`${sectionId}-heading`} className="min-w-0 scroll-mt-28 border-t border-[var(--border-color)] py-8 first:border-t-0 first:pt-0 sm:py-10">
