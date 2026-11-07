@@ -379,6 +379,13 @@ if _JWK_URL:
 SESSION_COOKIE_AGE = 60 * 60 * 24 * int(os.environ.get('SESSION_DAYS', 30))  # 30 days
 SESSION_EXPIRE_AT_BROWSER_CLOSE = False
 
+# Only trust forwarded client IP headers from configured reverse proxies.
+TRUSTED_PROXY_IPS = tuple(
+    proxy.strip()
+    for proxy in os.environ.get('TRUSTED_PROXY_IPS', '127.0.0.1,::1').split(',')
+    if proxy.strip()
+)
+
 # Cookie security (production-only hardening)
 if not DEBUG:
     SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")

@@ -9,7 +9,7 @@ from django.contrib.auth import get_user_model
 from unittest.mock import patch
 from ninja_jwt.tokens import RefreshToken
 from users.privacy import email_lookup_digest
-from users.services import build_password_reset_url, request_password_reset
+from users.services import build_password_reset_url, get_client_ip, request_password_reset, send_reset_email
 from users.models import UserProfile
 
 
@@ -293,3 +293,32 @@ class PasswordResetServiceTests(TestCase):
 			build_password_reset_url(fallback_request, "uid", "token"),
 			"https://jbook.example/reset-password?uid=uid&token=token",
 		)
+
+	@override_settings(EMAIL_HOST_USER="sender@example.com", EMAIL_HOST_PASSWORD="smtp-password")
+	@patch("users.services.get_ip_location", return_value="Jakarta, Jakarta, Indonesia")
+	@patch("users.services.send_mail", return_value=1)
+	def test_reset_email_includes_request_ip_and_approximate_location(self, send_mail_mock, location_lookup):
+		request = RequestFactory().post(
+			"/api/auth/password-reset",
+			REMOTE_ADDR="127.0.0.1",
+			HTTP_X_FORWARDED_FOR="203.0.113.18",
+		)
+
+		self.assertTrue(send_reset_email(self.user, "token", "https://jbook.example/reset", request))
+
+		message = send_mail_mock.call_args.args[1]
+		self.assertIn("Alamat IP: 203.0.113.18", message)
+		self.assertIn("Lokasi perkiraan: Jakarta, Jakarta, Indonesia", message)
+		self.assertIn("Waktu:", message)
+		self.assertIn("VPN atau proxy", message)
+		location_lookup.assert_called_once_with("203.0.113.18")
+
+	@override_settings(TRUSTED_PROXY_IPS=())
+	def test_client_ip_ignores_forwarded_header_from_untrusted_remote(self):
+		request = RequestFactory().post(
+			"/api/auth/password-reset",
+			REMOTE_ADDR="198.51.100.20",
+			HTTP_X_FORWARDED_FOR="203.0.113.18",
+		)
+
+		self.assertEqual(get_client_ip(request), "198.51.100.20")

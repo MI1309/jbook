@@ -9,12 +9,11 @@ import { API_URL } from '@/lib/api';
 import { useTheme } from '@/context/ThemeContext';
 import {
     BookOpen, ChevronLeft, ChevronRight, CircleHelp, House, LayoutDashboard,
-    Bell, Database, LogOut, Menu, Mic2, Moon, Search, Sun, Users, X, Languages, AudioLines,
+    Bell, Database, LogOut, Menu, Mic2, Moon, Search, Sun, Users, X, AudioLines,
 } from 'lucide-react';
 
 const navItems = [
     { href: '/admin', label: 'Overview', icon: LayoutDashboard },
-    { href: '/admin/kanji', label: 'Kanji', icon: Languages },
     { href: '/admin/bunpo', label: 'Bunpo', icon: BookOpen },
     { href: '/admin/kotoba', label: 'Kotoba', icon: AudioLines },
     { href: '/admin/announcements', label: 'Pengumuman', icon: Bell },

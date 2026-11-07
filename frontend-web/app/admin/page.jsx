@@ -7,17 +7,16 @@ import { API_URL } from '@/lib/api';
 import { appToast as toast } from '@/components/common/AppMessage';
 import StatCard from '@/components/admin/StatCard';
 import { AdminEmptyState, AdminErrorState } from '@/components/admin/AdminFeedback';
-import { AudioLines, BookOpen, Languages, Mic2, Search, Users, ArrowUpRight, Database } from 'lucide-react';
+import { AudioLines, BookOpen, Mic2, Search, Users, ArrowUpRight, Database } from 'lucide-react';
 
 const metrics = [
     { key: 'user_count', label: 'Total Users', icon: Users, href: null, color: 'var(--accent-blue)' },
     { key: 'vocab_count', label: 'Total Kosakata', icon: AudioLines, href: '/admin/kotoba', color: 'var(--accent-green)' },
-    { key: 'kanji_count', label: 'Total Kanji', icon: Languages, href: '/admin/kanji', color: 'var(--accent-gold)' },
+    { key: 'kanji_count', label: 'Total Kanji', icon: BookOpen, href: null, color: 'var(--accent-gold)' },
     { key: 'tts_session_count', label: 'Sesi TTS', icon: Mic2, href: null, color: 'var(--brand-red)' },
 ];
 
 const collections = [
-    { label: 'Kanji', key: 'kanji_count', href: '/admin/kanji', icon: Languages },
     { label: 'Bunpo', key: 'bunpo_count', href: '/admin/bunpo', icon: BookOpen },
     { label: 'Kotoba', key: 'vocab_count', href: '/admin/kotoba', icon: AudioLines },
 ];

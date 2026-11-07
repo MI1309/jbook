@@ -8,6 +8,79 @@ import { useAuth } from '@/context/AuthContext';
 import { appToast as toast } from '@/components/common/AppMessage';
 import ExpressionPicker from '@/components/bunpo/ExpressionPicker';
 import { ArrowLeft, Plus, Save, Trash2 } from 'lucide-react';
+import DynamicStringList from '@/components/admin/form/DynamicStringList';
+import DynamicObjectList from '@/components/admin/form/DynamicObjectList';
+
+function objectOrEmpty(value) {
+    return value && typeof value === 'object' && !Array.isArray(value) ? value : {};
+}
+
+function textValue(value) {
+    return typeof value === 'string' || typeof value === 'number' ? String(value) : '';
+}
+
+function normalizeRows(value, fields) {
+    return Array.isArray(value)
+        ? value.map((item) => {
+            const row = objectOrEmpty(item);
+            return Object.fromEntries(fields.map((key) => [key, textValue(row[key])]));
+        })
+        : [];
+}
+
+function normalizeSections(value) {
+    let source = value;
+    if (typeof source === 'string') {
+        try {
+            source = JSON.parse(source);
+        } catch {
+            source = {};
+        }
+    }
+    source = objectOrEmpty(source);
+    const mainFunction = objectOrEmpty(source.mainFunction);
+    const sentencePattern = objectOrEmpty(source.sentencePattern);
+    const comparison = objectOrEmpty(source.comparison);
+    const nuance = objectOrEmpty(source.nuance);
+    const coreExplanation = objectOrEmpty(source.coreExplanation);
+    const conceptMap = objectOrEmpty(source.conceptMap);
+
+    return {
+        mainFunction: { summary: textValue(mainFunction.summary), points: Array.isArray(mainFunction.points) ? mainFunction.points.map(textValue) : [] },
+        sentencePattern: {
+            formula: textValue(sentencePattern.formula),
+            variations: normalizeRows(sentencePattern.variations, ['label', 'formula', 'example']),
+            notes: Array.isArray(sentencePattern.notes) ? sentencePattern.notes.map(textValue) : [],
+        },
+        examples: Array.isArray(source.examples) ? source.examples.map((item) => {
+            const row = objectOrEmpty(item);
+            return {
+                jp: textValue(row.jp), reading: textValue(row.reading), id: textValue(row.id),
+                level: textValue(row.level), expressions: Array.isArray(row.expressions) ? row.expressions : [],
+            };
+        }) : [],
+        comparison: { summary: textValue(comparison.summary), items: normalizeRows(comparison.items, ['vs', 'difference', 'example']) },
+        nuance: { summary: textValue(nuance.summary), points: Array.isArray(nuance.points) ? nuance.points.map(textValue) : [] },
+        coreExplanation: { summary: textValue(coreExplanation.summary), text: textValue(coreExplanation.text) },
+        commonMistakes: normalizeRows(source.commonMistakes, ['wrong', 'correct', 'reason']),
+        faq: normalizeRows(source.faq, ['q', 'a']),
+        miniPractice: Array.isArray(source.miniPractice) ? source.miniPractice.map((item) => {
+            const row = objectOrEmpty(item);
+            return {
+                type: textValue(row.type), question: textValue(row.question),
+                options: Array.isArray(row.options) ? row.options.map(textValue) : [],
+                answer: textValue(row.answer), explanation: textValue(row.explanation),
+            };
+        }) : [],
+        conceptMap: {
+            summary: textValue(conceptMap.summary),
+            nodes: normalizeRows(conceptMap.nodes, ['id', 'label', 'type']),
+            edges: normalizeRows(conceptMap.edges, ['from', 'to', 'label']),
+        },
+    };
+}
+
+const field = (name, label, type = 'text', options = {}) => ({ name, label, type, ...options });
 
 export default function BunpoForm({ id, isNew: isNewRoute = false }) {
     const router = useRouter();
@@ -17,13 +90,13 @@ export default function BunpoForm({ id, isNew: isNewRoute = false }) {
     const [loading, setLoading] = useState(!isNew);
     const [fetchError, setFetchError] = useState('');
     const [saving, setSaving] = useState(false);
-    const [sectionsJson, setSectionsJson] = useState('{}');
     const [formData, setFormData] = useState({
         title: '',
         structure: '',
         explanation: '',
         chapter: 1,
         jlpt_level: 5,
+        sections: normalizeSections({}),
         sentences: []
     });
     // Temporary state for a new sentence
@@ -49,13 +122,12 @@ export default function BunpoForm({ id, isNew: isNewRoute = false }) {
                     explanation: data.explanation,
                     chapter: data.chapter,
                     jlpt_level: data.jlpt_level,
-                    sections: data.sections || null,
+                    sections: normalizeSections(data.sections),
                     sentences: (data.sentences || []).map((sentence) => ({
                         ...sentence,
                         expressions: sentence.expressions || [],
                     }))
                 });
-                if (!cancelled) setSectionsJson(JSON.stringify(data.sections || {}, null, 2));
             } else {
                 const message = res.status === 404
                     ? 'Bunpo tidak ditemukan. Data mungkin sudah dihapus atau tautannya tidak valid.'
@@ -103,17 +175,6 @@ export default function BunpoForm({ id, isNew: isNewRoute = false }) {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        let sections;
-        try {
-            sections = sectionsJson.trim() ? JSON.parse(sectionsJson) : null;
-            if (sections !== null && (typeof sections !== 'object' || Array.isArray(sections))) {
-                throw new Error('Sections harus berupa objek JSON.');
-            }
-        } catch (error) {
-            setActiveTab('content');
-            toast.error(error.message || 'JSON sections tidak valid.');
-            return;
-        }
         if (!formData.title.trim() || !formData.structure.trim()) {
             setActiveTab('info');
             toast.error('Judul dan struktur wajib diisi.');
@@ -133,7 +194,7 @@ export default function BunpoForm({ id, isNew: isNewRoute = false }) {
         try {
             const payload = {
                 ...formData,
-                sections,
+                sections: formData.sections,
                 chapter: parseInt(formData.chapter),
                 jlpt_level: parseInt(formData.jlpt_level),
                 sentences: formData.sentences.map(({ expressions = [], ...sentence }) => ({
@@ -249,17 +310,87 @@ export default function BunpoForm({ id, isNew: isNewRoute = false }) {
                         />
                     </div>
 
-                    <div className="space-y-2">
-                        <label className="text-sm font-medium text-[var(--foreground)]" htmlFor="bunpo-sections">Materi Terstruktur (JSON)</label>
-                        <p className="text-sm text-[var(--foreground)]/55">Isi kategori: mainFunction, sentencePattern, examples, comparison, nuance, coreExplanation, commonMistakes, faq, miniPractice, conceptMap.</p>
-                        <textarea
-                            id="bunpo-sections"
-                            rows="18"
-                            spellCheck="false"
-                            className="w-full resize-y rounded-xl border border-[var(--border-color)] bg-[var(--background)] p-3.5 font-mono text-sm leading-6 text-[var(--foreground)] outline-none transition-colors focus-visible:border-[var(--accent-blue)] focus-visible:ring-2 focus-visible:ring-[var(--accent-blue)]/20"
-                            value={sectionsJson}
-                            onChange={(event) => setSectionsJson(event.target.value)}
-                        />
+                    <div className="space-y-3">
+                        <h2 className="text-base font-semibold text-[var(--foreground)]">Materi Terstruktur</h2>
+                        <p className="text-sm text-[var(--foreground)]/55">Bagian yang tidak digunakan boleh dibiarkan kosong.</p>
+
+                        <details open className="group rounded-xl border border-[var(--border-color)]">
+                            <summary className="cursor-pointer list-none px-4 py-3.5 text-sm font-semibold text-[var(--foreground)] marker:hidden">1. Fungsi Utama</summary>
+                            <div className="space-y-4 border-t border-[var(--border-color)] p-4">
+                                <label className="block space-y-1.5"><span className="text-sm font-medium">Ringkasan</span><textarea rows={2} className="w-full rounded-lg border border-[var(--border-color)] bg-[var(--background)] p-3 text-sm text-[var(--foreground)] outline-none focus-visible:border-[var(--accent-blue)]" value={formData.sections.mainFunction.summary} onChange={(event) => setFormData((current) => ({ ...current, sections: { ...current.sections, mainFunction: { ...current.sections.mainFunction, summary: event.target.value } } }))} /></label>
+                                <DynamicStringList label="Poin" addLabel="Tambah Poin" value={formData.sections.mainFunction.points} onChange={(points) => setFormData((current) => ({ ...current, sections: { ...current.sections, mainFunction: { ...current.sections.mainFunction, points } } }))} />
+                            </div>
+                        </details>
+
+                        <details className="rounded-xl border border-[var(--border-color)]">
+                            <summary className="cursor-pointer list-none px-4 py-3.5 text-sm font-semibold text-[var(--foreground)]">2. Pola Kalimat</summary>
+                            <div className="space-y-4 border-t border-[var(--border-color)] p-4">
+                                <label className="block space-y-1.5"><span className="text-sm font-medium">Formula</span><input className="w-full rounded-lg border border-[var(--border-color)] bg-[var(--background)] p-3 text-sm text-[var(--foreground)] outline-none focus-visible:border-[var(--accent-blue)]" value={formData.sections.sentencePattern.formula} onChange={(event) => setFormData((current) => ({ ...current, sections: { ...current.sections, sentencePattern: { ...current.sections.sentencePattern, formula: event.target.value } } }))} /></label>
+                                <DynamicObjectList label="Variasi" addLabel="Tambah Variasi" fields={[field('label', 'Label'), field('formula', 'Formula'), field('example', 'Contoh', 'textarea')]} value={formData.sections.sentencePattern.variations} onChange={(variations) => setFormData((current) => ({ ...current, sections: { ...current.sections, sentencePattern: { ...current.sections.sentencePattern, variations } } }))} />
+                                <DynamicStringList label="Catatan" addLabel="Tambah Catatan" value={formData.sections.sentencePattern.notes} onChange={(notes) => setFormData((current) => ({ ...current, sections: { ...current.sections, sentencePattern: { ...current.sections.sentencePattern, notes } } }))} />
+                            </div>
+                        </details>
+
+                        <details className="rounded-xl border border-[var(--border-color)]">
+                            <summary className="cursor-pointer list-none px-4 py-3.5 text-sm font-semibold text-[var(--foreground)]">3. Contoh Kalimat</summary>
+                            <div className="border-t border-[var(--border-color)] p-4">
+                                <DynamicObjectList label="Contoh" addLabel="Tambah Contoh" fields={[field('jp', 'Kalimat Jepang'), field('reading', 'Cara Baca'), field('id', 'Terjemahan Indonesia', 'textarea'), field('level', 'Level')]} value={formData.sections.examples} onChange={(examples) => setFormData((current) => ({ ...current, sections: { ...current.sections, examples } }))} />
+                            </div>
+                        </details>
+
+                        <details className="rounded-xl border border-[var(--border-color)]">
+                            <summary className="cursor-pointer list-none px-4 py-3.5 text-sm font-semibold text-[var(--foreground)]">4. Perbandingan</summary>
+                            <div className="space-y-4 border-t border-[var(--border-color)] p-4">
+                                <label className="block space-y-1.5"><span className="text-sm font-medium">Ringkasan</span><textarea rows={2} className="w-full rounded-lg border border-[var(--border-color)] bg-[var(--background)] p-3 text-sm text-[var(--foreground)] outline-none focus-visible:border-[var(--accent-blue)]" value={formData.sections.comparison.summary} onChange={(event) => setFormData((current) => ({ ...current, sections: { ...current.sections, comparison: { ...current.sections.comparison, summary: event.target.value } } }))} /></label>
+                                <DynamicObjectList label="Perbandingan" addLabel="Tambah Perbandingan" fields={[field('vs', 'Dibandingkan dengan'), field('difference', 'Perbedaan', 'textarea'), field('example', 'Contoh', 'textarea')]} value={formData.sections.comparison.items} onChange={(items) => setFormData((current) => ({ ...current, sections: { ...current.sections, comparison: { ...current.sections.comparison, items } } }))} />
+                            </div>
+                        </details>
+
+                        <details className="rounded-xl border border-[var(--border-color)]">
+                            <summary className="cursor-pointer list-none px-4 py-3.5 text-sm font-semibold text-[var(--foreground)]">5. Nuansa</summary>
+                            <div className="space-y-4 border-t border-[var(--border-color)] p-4">
+                                <label className="block space-y-1.5"><span className="text-sm font-medium">Ringkasan</span><textarea rows={2} className="w-full rounded-lg border border-[var(--border-color)] bg-[var(--background)] p-3 text-sm text-[var(--foreground)] outline-none focus-visible:border-[var(--accent-blue)]" value={formData.sections.nuance.summary} onChange={(event) => setFormData((current) => ({ ...current, sections: { ...current.sections, nuance: { ...current.sections.nuance, summary: event.target.value } } }))} /></label>
+                                <DynamicStringList label="Poin nuansa" addLabel="Tambah Poin" value={formData.sections.nuance.points} onChange={(points) => setFormData((current) => ({ ...current, sections: { ...current.sections, nuance: { ...current.sections.nuance, points } } }))} />
+                            </div>
+                        </details>
+
+                        <details className="rounded-xl border border-[var(--border-color)]">
+                            <summary className="cursor-pointer list-none px-4 py-3.5 text-sm font-semibold text-[var(--foreground)]">6. Penjelasan Inti</summary>
+                            <div className="space-y-4 border-t border-[var(--border-color)] p-4">
+                                <label className="block space-y-1.5"><span className="text-sm font-medium">Ringkasan</span><input className="w-full rounded-lg border border-[var(--border-color)] bg-[var(--background)] p-3 text-sm text-[var(--foreground)] outline-none focus-visible:border-[var(--accent-blue)]" value={formData.sections.coreExplanation.summary} onChange={(event) => setFormData((current) => ({ ...current, sections: { ...current.sections, coreExplanation: { ...current.sections.coreExplanation, summary: event.target.value } } }))} /></label>
+                                <label className="block space-y-1.5"><span className="text-sm font-medium">Penjelasan</span><textarea rows={5} className="w-full resize-y rounded-lg border border-[var(--border-color)] bg-[var(--background)] p-3 text-sm leading-6 text-[var(--foreground)] outline-none focus-visible:border-[var(--accent-blue)]" value={formData.sections.coreExplanation.text} onChange={(event) => setFormData((current) => ({ ...current, sections: { ...current.sections, coreExplanation: { ...current.sections.coreExplanation, text: event.target.value } } }))} /></label>
+                            </div>
+                        </details>
+
+                        <details className="rounded-xl border border-[var(--border-color)]">
+                            <summary className="cursor-pointer list-none px-4 py-3.5 text-sm font-semibold text-[var(--foreground)]">7. Kesalahan Umum</summary>
+                            <div className="border-t border-[var(--border-color)] p-4">
+                                <DynamicObjectList label="Kesalahan" addLabel="Tambah Kesalahan" fields={[field('wrong', 'Bentuk yang salah', 'textarea'), field('correct', 'Bentuk yang benar', 'textarea'), field('reason', 'Alasan', 'textarea')]} value={formData.sections.commonMistakes} onChange={(commonMistakes) => setFormData((current) => ({ ...current, sections: { ...current.sections, commonMistakes } }))} />
+                            </div>
+                        </details>
+
+                        <details className="rounded-xl border border-[var(--border-color)]">
+                            <summary className="cursor-pointer list-none px-4 py-3.5 text-sm font-semibold text-[var(--foreground)]">8. Tanya Jawab</summary>
+                            <div className="border-t border-[var(--border-color)] p-4">
+                                <DynamicObjectList label="Tanya Jawab" addLabel="Tambah Tanya Jawab" fields={[field('q', 'Pertanyaan', 'textarea'), field('a', 'Jawaban', 'textarea')]} value={formData.sections.faq} onChange={(faq) => setFormData((current) => ({ ...current, sections: { ...current.sections, faq } }))} />
+                            </div>
+                        </details>
+
+                        <details className="rounded-xl border border-[var(--border-color)]">
+                            <summary className="cursor-pointer list-none px-4 py-3.5 text-sm font-semibold text-[var(--foreground)]">9. Latihan Mini</summary>
+                            <div className="border-t border-[var(--border-color)] p-4">
+                                <DynamicObjectList label="Latihan" addLabel="Tambah Latihan" fields={[field('type', 'Tipe', 'select', { options: [{ value: 'multiple-choice', label: 'Pilihan ganda' }, { value: 'fill-in', label: 'Isi bagian kosong' }, { value: 'true-false', label: 'Benar atau salah' }] }), field('question', 'Pertanyaan', 'textarea'), field('options', 'Pilihan jawaban', 'stringList', { addLabel: 'Tambah Pilihan', visibleWhen: { field: 'type', value: 'multiple-choice' } }), field('answer', 'Jawaban'), field('explanation', 'Penjelasan', 'textarea')]} value={formData.sections.miniPractice} onChange={(miniPractice) => setFormData((current) => ({ ...current, sections: { ...current.sections, miniPractice } }))} />
+                            </div>
+                        </details>
+
+                        <details className="rounded-xl border border-[var(--border-color)]">
+                            <summary className="cursor-pointer list-none px-4 py-3.5 text-sm font-semibold text-[var(--foreground)]">10. Peta Materi</summary>
+                            <div className="space-y-4 border-t border-[var(--border-color)] p-4">
+                                <label className="block space-y-1.5"><span className="text-sm font-medium">Ringkasan</span><textarea rows={2} className="w-full rounded-lg border border-[var(--border-color)] bg-[var(--background)] p-3 text-sm text-[var(--foreground)] outline-none focus-visible:border-[var(--accent-blue)]" value={formData.sections.conceptMap.summary} onChange={(event) => setFormData((current) => ({ ...current, sections: { ...current.sections, conceptMap: { ...current.sections.conceptMap, summary: event.target.value } } }))} /></label>
+                                <DynamicObjectList label="Node" addLabel="Tambah Node" fields={[field('id', 'ID'), field('label', 'Label'), field('type', 'Tipe')]} value={formData.sections.conceptMap.nodes} onChange={(nodes) => setFormData((current) => ({ ...current, sections: { ...current.sections, conceptMap: { ...current.sections.conceptMap, nodes } } }))} />
+                                <DynamicObjectList label="Relasi" addLabel="Tambah Relasi" fields={[field('from', 'Dari'), field('to', 'Ke'), field('label', 'Label')]} value={formData.sections.conceptMap.edges} onChange={(edges) => setFormData((current) => ({ ...current, sections: { ...current.sections, conceptMap: { ...current.sections.conceptMap, edges } } }))} />
+                            </div>
+                        </details>
                     </div>
 
                     </section>

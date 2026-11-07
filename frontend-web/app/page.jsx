@@ -34,7 +34,7 @@ const heroStats = [
 
 const quickSearches = ['水', 'たべる', 'ている', 'belajar'];
 
-const trustPoints = ['Gratis', 'Penjelasan bahasa Indonesia', 'Tanpa instal'];
+const trustPoints = ['Gratis', 'Penjelasan bahasa Indonesia', 'Bisa diinstal di HP'];
 
 const levels = [5, 4, 3, 2, 1];
 const HERO_KANJI_CACHE_KEY = 'jbook:hero-kanji-pool:v1';
@@ -182,7 +182,7 @@ function KanjiPreviewCard() {
                         <dt className="text-xs text-gray-500">Arti</dt>
                         <dd className="font-bold">{kanji?.meaning || (loadError ? 'Kanji belum dapat dimuat' : 'Memuat kanji...')}</dd>
                     </div>
-                    <div className="grid grid-cols-2 gap-3">
+                    <div className="grid gzrid-cols-2 gap-3">
                         <div>
                             <dt className="text-xs text-gray-500">Onyomi</dt>
                             <dd className="font-japanese font-semibold text-accent-blue" lang="ja">{kanji?.onyomi?.join(', ') || '—'}</dd>

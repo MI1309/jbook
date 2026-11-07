@@ -94,6 +94,11 @@ export const metadata = {
         address: false,
         telephone: false,
     },
+    appleWebApp: {
+        capable: true,
+        statusBarStyle: 'default',
+        title: 'JBook',
+    },
 };
 
 export const viewport = {

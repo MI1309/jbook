@@ -30,7 +30,7 @@ export default function LoginPage() {
     };
 
     return (
-        <AuthLayout eyebrow="Selamat datang kembali" title="Masuk ke JBook" description="Lanjutkan belajar bahasa Jepang dari tempat terakhir kamu berhenti.">
+        <AuthLayout eyebrow="ようこそ" title="Masuk ke JBook" description="Lanjutkan belajar bahasa Jepang dari tempat terakhir kamu berhenti.">
                 <form className="mt-8 space-y-5" onSubmit={handleSubmit}>
                     {error && (
                         <AppMessage variant="warning" className="text-sm">

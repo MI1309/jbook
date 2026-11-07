@@ -39,9 +39,9 @@ export default function AboutSections() {
           <Link href="/privacy-security" className={`inline-flex min-h-11 items-center gap-2 rounded-lg border border-[var(--border-color)] bg-[var(--card-bg)] px-4 py-2.5 text-sm font-bold transition hover:border-accent-blue hover:text-accent-blue ${focusRing} focus-visible:outline-accent-blue`}>
             <ShieldCheck aria-hidden="true" className="h-4 w-4" /> Kebijakan Privasi &amp; Keamanan
           </Link>
-          <Link href="/ketentuan" className={`inline-flex min-h-11 items-center gap-2 rounded-lg border border-[var(--border-color)] bg-[var(--card-bg)] px-4 py-2.5 text-sm font-bold transition hover:border-accent-blue hover:text-accent-blue ${focusRing} focus-visible:outline-accent-blue`}>
-            <ShieldCheck aria-hidden="true" className="h-4 w-4" /> Syarat &amp; Ketentuan
-          </Link>
+          <span className="inline-flex min-h-11 items-center gap-2 rounded-lg border border-[var(--border-color)] px-4 py-2.5 text-sm text-gray-500" aria-label="Syarat dan ketentuan (segera hadir)">
+            Syarat &amp; Ketentuan <span className="rounded-full bg-accent-gold/10 px-2 py-0.5 text-xs font-bold text-accent-gold">(Segera hadir)</span>
+          </span>
         </div>
       </section>
 
