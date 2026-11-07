@@ -58,6 +58,16 @@ const nextConfig = {
             },
         ];
     },
+    async rewrites() {
+        if (process.env.NODE_ENV !== "development") return [];
+        const apiTarget = process.env.API_PROXY_TARGET || "https://japan.pythonanywhere.com/api";
+        return [
+            {
+                source: "/backend-api/:path*",
+                destination: `${apiTarget}/:path*`,
+            },
+        ];
+    },
     async headers() {
         return [
             {

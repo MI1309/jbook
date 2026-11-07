@@ -7,7 +7,7 @@ import { useDebounce } from 'use-debounce';
 import { Search, X } from 'lucide-react';
 import { searchKotoba } from '@/app/kotoba/actions';
 
-export default function KotobaCategorySearch({ category, initialSearch = '', initialSuggestions = [] }) {
+export default function KotobaCategorySearch({ category, initialSearch = '', initialLevel = '', initialSuggestions = [] }) {
     const router = useRouter();
     const searchRef = useRef(null);
     const [query, setQuery] = useState(initialSearch);
@@ -28,11 +28,11 @@ export default function KotobaCategorySearch({ category, initialSearch = '', ini
         if (debouncedQuery.trim().length < 2) {
             return () => { cancelled = true; };
         }
-        searchKotoba({ wordType: category.wordType, query: debouncedQuery.trim() })
+        searchKotoba({ wordType: category.wordType, level: initialLevel || undefined, query: debouncedQuery.trim() })
             .then((result) => { if (!cancelled) setSuggestions(result); })
             .catch(() => { if (!cancelled) setSuggestions([]); });
         return () => { cancelled = true; };
-    }, [category.wordType, debouncedQuery]);
+    }, [category.wordType, debouncedQuery, initialLevel]);
 
     const suggestionLabel = useMemo(() => `Saran kata dalam kategori ${category.name}`, [category.name]);
 
@@ -40,8 +40,9 @@ export default function KotobaCategorySearch({ category, initialSearch = '', ini
         event.preventDefault();
         const params = new URLSearchParams();
         if (query.trim()) params.set('search', query.trim());
+        if (initialLevel) params.set('level', initialLevel);
         setShowSuggestions(false);
-        router.push(`/kotoba/${category.slug}${params.size ? `?${params}` : ''}`);
+        router.push(`/kotoba/type/${category.slug}${params.size ? `?${params}` : ''}`);
     };
 
     return (

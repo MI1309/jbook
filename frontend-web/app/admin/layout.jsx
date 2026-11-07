@@ -9,7 +9,7 @@ import { API_URL } from '@/lib/api';
 import { useTheme } from '@/context/ThemeContext';
 import {
     BookOpen, ChevronLeft, ChevronRight, CircleHelp, House, LayoutDashboard,
-    Bell, Database, LogOut, Menu, Mic2, Moon, Search, Sun, Users, X, AudioLines,
+    Bell, Database, Download, LogOut, Menu, Mic2, Moon, Search, Sun, Users, X, AudioLines,
 } from 'lucide-react';
 
 const navItems = [
@@ -20,7 +20,7 @@ const navItems = [
     { href: '/admin/custom-modules', label: 'Modul Kustom', icon: Database },
     { href: '/admin/tts', label: 'Moderasi TTS', icon: Mic2 },
     { href: '/admin/users', label: 'Users', icon: Users },
-    { href: '/admin/export', label: 'Export', icon: Database },
+    { href: '/admin/export', label: 'Export', icon: Download },
 ];
 
 function Sidebar({ collapsed, onCollapse, onClose }) {

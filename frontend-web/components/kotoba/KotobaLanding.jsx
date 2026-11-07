@@ -7,6 +7,7 @@ import { useDebounce } from 'use-debounce';
 import { ArrowRight, Search, X } from 'lucide-react';
 import { getKotobaCategoryByType } from '@/components/kotoba/kotobaCategories';
 import KotobaCategoryCard from '@/components/kotoba/KotobaCategoryCard';
+import WordTypeBadge from '@/components/kotoba/WordTypeBadge';
 import { searchKotoba } from '@/app/kotoba/actions';
 
 const focusRing = 'focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-blue';
@@ -49,7 +50,7 @@ export default function KotobaLanding({ total, categories: initialCategories }) 
         if (!category) {
             router.push(`/kotoba/${firstResult.id}`);
         } else {
-            router.push(`/kotoba/${category.slug}?search=${encodeURIComponent(query.trim())}`);
+            router.push(`/kotoba/type/${category.slug}?search=${encodeURIComponent(query.trim())}`);
         }
         setShowSuggestions(false);
     };
@@ -60,7 +61,7 @@ export default function KotobaLanding({ total, categories: initialCategories }) 
                 <header className="grid min-w-0 gap-6 border-b border-[var(--border-color)] pb-8 sm:pb-10 lg:grid-cols-[minmax(0,1fr)_minmax(22rem,0.82fr)] lg:items-center lg:gap-10">
                     <div className="min-w-0">
                         <span className="inline-flex items-center rounded-full border border-accent-blue/25 bg-accent-blue/10 px-3 py-1 text-xs font-bold text-accent-blue">語彙 · ごい</span>
-                        <h1 className="mt-4 break-words font-japanese text-3xl font-black leading-tight sm:text-4xl lg:text-5xl">語彙 Kotoba</h1>
+                        <h1 className="mt-4 break-words font-japanese text-3xl font-black leading-tight sm:text-4xl lg:text-5xl">Kosakata Jepang</h1>
                         <p className="mt-3 max-w-2xl text-sm leading-relaxed text-gray-600 dark:text-gray-300 sm:text-base">Kamus kosakata Jepang, dari N5 sampai N1, dikelompokkan per kategori agar belajar lebih terarah.</p>
                         <p className="mt-3 text-sm text-gray-500">{total.toLocaleString('id-ID')} kata · {categoryCount} kategori</p>
                     </div>
@@ -91,7 +92,7 @@ export default function KotobaLanding({ total, categories: initialCategories }) 
                                 {suggestions.length ? suggestions.map((word) => (
                                     <Link key={word.id} href={`/kotoba/${word.id}`} role="option" onClick={() => setShowSuggestions(false)} className={`flex min-h-11 min-w-0 items-start justify-between gap-3 rounded-lg px-3 py-2.5 transition hover:bg-accent-blue/5 focus:bg-accent-blue/5 ${focusRing}`}>
                                         <span className="min-w-0"><span className="block break-words font-japanese text-sm font-bold">{word.word} <span className="font-sans font-normal text-gray-500">({word.reading})</span></span><span className="mt-0.5 block line-clamp-2 break-words text-xs text-gray-600 dark:text-gray-400">{word.meaning}</span></span>
-                                        <span className="shrink-0 rounded border border-[var(--border-color)] px-2 py-0.5 text-[10px] font-bold">N{word.jlpt_level}</span>
+                                        <span className="flex shrink-0 flex-col items-end gap-1"><WordTypeBadge type={word.word_type} className="text-[10px]" /><span className="rounded border border-[var(--border-color)] px-2 py-0.5 text-[10px] font-bold">N{word.jlpt_level}</span></span>
                                     </Link>
                                 )) : <p className="px-3 py-4 text-sm text-gray-600 dark:text-gray-300">Tidak ditemukan kosakata untuk “{debouncedQuery.trim()}”.</p>}
                                 {suggestions.length > 0 && <button type="submit" form="kotoba-search-form" className="flex min-h-11 w-full items-center justify-between rounded-lg px-3 py-2 text-sm font-bold text-accent-blue transition hover:bg-accent-blue/5">Lihat hasil di kategori terkait <ArrowRight aria-hidden="true" className="h-4 w-4" /></button>}
@@ -109,7 +110,7 @@ export default function KotobaLanding({ total, categories: initialCategories }) 
                         <span className="rounded-full border border-[var(--border-color)] bg-[var(--card-bg)] px-3 py-1 text-sm font-semibold text-gray-600 dark:text-gray-300">{categoryCount} kategori tersedia</span>
                     </div>
 
-                    <div className="grid min-w-0 grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                    <div className="grid min-w-0 grid-cols-2 gap-3 md:grid-cols-3 md:gap-4 xl:grid-cols-4">
                         {categories.filter((category) => category.count > 0).map((category) => <KotobaCategoryCard key={category.slug} category={category} />)}
                     </div>
                     {categoryCount === 0 && <p className="py-12 text-center text-sm text-gray-600 dark:text-gray-300">Kategori belum dapat dimuat.</p>}

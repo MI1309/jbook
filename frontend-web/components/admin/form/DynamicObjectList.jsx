@@ -70,7 +70,7 @@ export default function DynamicObjectList({ label, value = [], fields, onChange,
                             type="button"
                             aria-label={`Hapus ${label.toLowerCase()} ${index + 1}`}
                             onClick={() => onChange(items.filter((_, currentIndex) => currentIndex !== index))}
-                            className="inline-flex items-center gap-1.5 rounded-lg px-2.5 py-2 text-xs font-medium text-[var(--brand-red)] transition-colors hover:bg-[var(--brand-red)]/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--brand-red)]"
+                            className="inline-flex min-h-11 items-center gap-1.5 rounded-lg px-2.5 py-2 text-xs font-medium text-[var(--brand-red)] transition-colors hover:bg-[var(--brand-red)]/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--brand-red)]"
                         >
                             <Trash2 size={14} /> Hapus
                         </button>
@@ -80,7 +80,7 @@ export default function DynamicObjectList({ label, value = [], fields, onChange,
             <button
                 type="button"
                 onClick={() => onChange([...items, emptyItem(fields)])}
-                className="inline-flex items-center gap-2 rounded-lg border border-[var(--border-color)] px-3 py-2 text-sm font-medium text-[var(--foreground)] transition-colors hover:bg-[var(--background)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--brand-red)]"
+                className="inline-flex min-h-11 items-center gap-2 rounded-lg border border-[var(--border-color)] px-3 py-2 text-sm font-medium text-[var(--foreground)] transition-colors hover:bg-[var(--background)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--brand-red)]"
             >
                 <Plus size={15} /> {addLabel}
             </button>

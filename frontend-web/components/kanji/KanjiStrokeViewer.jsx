@@ -76,7 +76,7 @@ export default function KanjiStrokeViewer({ svgContent, size = 80, isAnimating =
                 .group\/stroke:hover .kanjivg-render path,
                 .is-active .kanjivg-render path {
                     stroke: #2563eb;
-                    animation: drawStroke 0.6s ease-out forwards;
+                    animation: drawStroke 1s ease-out forwards;
                 }
                 .dark .group\/stroke:hover .kanjivg-render path,
                 .dark .is-active .kanjivg-render path {
