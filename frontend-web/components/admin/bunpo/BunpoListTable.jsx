@@ -53,7 +53,6 @@ export default function BunpoListTable({
                         <span className={`shrink-0 rounded-lg px-2.5 py-1 text-xs font-semibold ${levelTone[item.jlpt_level] || 'bg-[var(--background)] text-[var(--foreground)]/65'}`}>N{item.jlpt_level}</span>
                     </div>
                     <div className="mt-3 flex items-center justify-between gap-3 border-t border-[var(--border-color)] pt-3">
-                        <span className="text-xs text-[var(--foreground)]/60">Bab {item.chapter ?? '—'}</span>
                         <div className="flex items-center gap-1">
                             <Link href={`/admin/bunpo/${item.id}`} aria-label={`Lihat ${item.title}`} className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-lg text-[var(--foreground)]/70 hover:bg-[var(--background)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--accent-blue)]"><Eye size={18} /></Link>
                             <Link href={`/admin/bunpo/${item.id}/edit`} aria-label={`Edit ${item.title}`} className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-lg text-[var(--accent-blue)] hover:bg-[var(--accent-blue)]/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--accent-blue)]"><Pencil size={18} /></Link>

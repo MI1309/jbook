@@ -32,7 +32,7 @@ export default function AuthLayout({ eyebrow, title, description, children }) {
                             <span>N5 — N1</span>
                         </div>
                         <div className="mt-3 grid grid-cols-5 gap-1" aria-hidden="true">
-                            {['#b8d5be', '#8ebca0', '#6fa98d', '#d2b56c', '#d77f68'].map((color) => (
+                            {['#b8d5be', '#8ebca0', '#3e4df3', '#d2b56c', '#d77f68'].map((color) => (
                                 <span key={color} className="h-1 rounded-full" style={{ backgroundColor: color }} />
                             ))}
                         </div>

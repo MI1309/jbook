@@ -11,7 +11,7 @@ class JBookAPI {
   setToken(token) {
     this.token = token;
     if (typeof window !== 'undefined') {
-      Cookies.set('access_token', token, { expires: 7 });
+      Cookies.set('access_token', token, { expires: 30 });
     }
   }
   

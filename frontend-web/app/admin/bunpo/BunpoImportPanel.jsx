@@ -7,7 +7,7 @@ import { appToast as toast } from '@/components/common/AppMessage';
 
 const SECTION_KEYS = [
     'mainFunction', 'sentencePattern', 'examples', 'comparison', 'nuance',
-    'coreExplanation', 'commonMistakes', 'faq', 'miniPractice', 'conceptMap',
+    'coreExplanation', 'commonMistakes', 'faq', 'conceptMap',
 ];
 
 const SECTION_FIELDS = {
@@ -19,7 +19,6 @@ const SECTION_FIELDS = {
     coreExplanation: ['summary', 'text'],
     commonMistakes: ['wrong', 'correct', 'reason'],
     faq: ['q', 'a'],
-    miniPractice: ['type', 'question', 'options', 'answer', 'explanation'],
     conceptMap: ['summary', 'nodes', 'edges'],
 };
 
@@ -32,12 +31,11 @@ const EMPTY_SECTIONS = {
     coreExplanation: { summary: '', text: '' },
     commonMistakes: [],
     faq: [],
-    miniPractice: [],
     conceptMap: { summary: '', nodes: [], edges: [] },
 };
 
-const SECTION_ARRAYS = new Set(['examples', 'commonMistakes', 'faq', 'miniPractice']);
-const OPTIONAL_FIELDS = new Set(['structure', 'explanation', 'tags', 'chapter', 'sentences']);
+const SECTION_ARRAYS = new Set(['examples', 'commonMistakes', 'faq']);
+const OPTIONAL_FIELDS = new Set(['structure', 'explanation', 'tags', 'sentences']);
 
 function validateImportItems(items) {
     const errors = [];
@@ -56,7 +54,7 @@ function validateImportItems(items) {
         }
         for (const key of Object.keys(item)) {
             if (!['title', 'jlpt_level', 'slug', 'sections', ...OPTIONAL_FIELDS].includes(key)) {
-                errors.push(`${prefix}: key '${key}' tidak valid. Key yang diharapkan: title, jlpt_level, slug, sections, structure, explanation, tags, chapter, sentences.`);
+                errors.push(`${prefix}: key '${key}' tidak valid. Key yang diharapkan: title, jlpt_level, slug, sections, structure, explanation, tags, sentences.`);
             }
         }
         if (typeof item.title !== 'string' || !item.title.trim()) errors.push(`${prefix}: 'title' harus berupa string yang tidak kosong.`);
@@ -71,9 +69,6 @@ function validateImportItems(items) {
             return;
         }
 
-        for (const key of Object.keys(item.sections)) {
-            if (!SECTION_KEYS.includes(key)) errors.push(`${prefix}: key section '${key}' tidak valid. Key yang diharapkan: ${SECTION_KEYS.join(', ')}.`);
-        }
         for (const key of SECTION_KEYS) {
             const section = item.sections[key];
             if (section === undefined) {
@@ -104,7 +99,6 @@ function emptySingleForm() {
         jlpt_level: '5',
         structure: '',
         explanation: '',
-        chapter: '0',
         sections: JSON.stringify(EMPTY_SECTIONS, null, 2),
     };
 }
@@ -173,7 +167,6 @@ export default function BunpoImportPanel({ onImported }) {
             jlpt_level: Number(singleForm.jlpt_level),
             structure: singleForm.structure,
             explanation: singleForm.explanation,
-            chapter: Number(singleForm.chapter || 0),
             sections,
         }]);
     };
@@ -244,7 +237,6 @@ export default function BunpoImportPanel({ onImported }) {
                         <label><span className={labelClass}>Judul materi</span><input required value={singleForm.title} onChange={(event) => setSingleForm({ ...singleForm, title: event.target.value })} className={inputClass} placeholder="～は～です" /></label>
                         <label><span className={labelClass}>Slug</span><input required pattern="[a-z0-9]+(?:-[a-z0-9]+)*" value={singleForm.slug} onChange={(event) => setSingleForm({ ...singleForm, slug: event.target.value })} className={inputClass} placeholder="wa-desu" /></label>
                         <label><span className={labelClass}>Level JLPT</span><select value={singleForm.jlpt_level} onChange={(event) => setSingleForm({ ...singleForm, jlpt_level: event.target.value })} className={inputClass}>{[5, 4, 3, 2, 1].map((level) => <option key={level} value={level}>N{level}</option>)}</select></label>
-                        <label><span className={labelClass}>Bab</span><input type="number" min="0" value={singleForm.chapter} onChange={(event) => setSingleForm({ ...singleForm, chapter: event.target.value })} className={inputClass} /></label>
                     </div>
                     <label className="block"><span className={labelClass}>Struktur</span><input value={singleForm.structure} onChange={(event) => setSingleForm({ ...singleForm, structure: event.target.value })} className={inputClass} /></label>
                     <label className="block"><span className={labelClass}>Penjelasan legacy</span><textarea rows={3} value={singleForm.explanation} onChange={(event) => setSingleForm({ ...singleForm, explanation: event.target.value })} className={inputClass} /></label>

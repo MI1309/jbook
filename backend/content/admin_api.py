@@ -611,6 +611,8 @@ def _create_or_update_bunpo(grammar, payload):
     data = payload.dict()
     if 'sections' not in payload.model_fields_set:
         data.pop('sections', None)
+    elif isinstance(data.get('sections'), dict):
+        data['sections'].pop('miniPractice', None)
     sentences = data.pop('sentences', [])
     if grammar is None:
         grammar = Grammar.objects.create(sentences=[], **data)

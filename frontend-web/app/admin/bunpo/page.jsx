@@ -89,10 +89,8 @@ export default function BunpoAdmin() {
     // Filter
     const [search, setSearch] = useState('');
     const [filterLevel, setFilterLevel] = useState('');
-    const [filterChapter, setFilterChapter] = useState('');
     const [page, setPage] = useState(1);
     const [debouncedSearch] = useDebounce(search, 500);
-    const [debouncedChapter] = useDebounce(filterChapter, 500);
 
     // Aksi
     const [pendingDelete, setPendingDelete] = useState(null); // { id, title }
@@ -103,7 +101,7 @@ export default function BunpoAdmin() {
     const [disabledLevels, setDisabledLevels] = useState([]);
     const [savingLevel, setSavingLevel] = useState(null);
 
-    const hasActiveFilter = Boolean(search || filterLevel || filterChapter);
+    const hasActiveFilter = Boolean(search || filterLevel);
     const abortRef = useRef(null);
 
     /* ----------------------------- READ (list) ----------------------------- */
@@ -117,7 +115,6 @@ export default function BunpoAdmin() {
         try {
             const params = new URLSearchParams({ page: String(page), limit: String(LIMIT) });
             if (filterLevel) params.append('level', filterLevel);
-            if (debouncedChapter) params.append('chapter', debouncedChapter);
             if (debouncedSearch.trim()) params.append('search', debouncedSearch.trim());
 
             const res = await fetch(`${API_URL}/admin/grammar?${params.toString()}`, {
@@ -148,7 +145,7 @@ export default function BunpoAdmin() {
         } finally {
             if (abortRef.current === controller) setLoading(false);
         }
-    }, [page, filterLevel, debouncedChapter, debouncedSearch]);
+    }, [page, filterLevel, debouncedSearch]);
 
     useEffect(() => {
         fetchBunpos();
@@ -165,14 +162,7 @@ export default function BunpoAdmin() {
     const resetFilters = () => {
         setSearch('');
         setFilterLevel('');
-        setFilterChapter('');
         setPage(1);
-    };
-
-    const handleChapterChange = (e) => {
-        const raw = e.target.value;
-        const val = parseInt(raw, 10);
-        if (raw === '' || (!Number.isNaN(val) && val >= 1)) updateFilter(setFilterChapter)(raw);
     };
 
     /* ----------------------------- DELETE (CRUD) ---------------------------- */
@@ -208,17 +198,39 @@ export default function BunpoAdmin() {
     const handleExport = async () => {
         setExporting(true);
         try {
-            const params = new URLSearchParams();
-            if (filterLevel) params.append('level', filterLevel);
-            if (debouncedChapter) params.append('chapter', debouncedChapter);
-            if (debouncedSearch.trim()) params.append('search', debouncedSearch.trim());
+            const rows = [];
+            let exportPage = 1;
+            let totalPages = 1;
+            while (exportPage <= totalPages) {
+                const params = new URLSearchParams({ page: String(exportPage), limit: String(LIMIT) });
+                if (filterLevel) params.set('level', filterLevel);
+                if (debouncedSearch.trim()) params.set('search', debouncedSearch.trim());
 
-            const res = await fetch(`${API_URL}/admin/bunpo/export/csv?${params.toString()}`, {
-                headers: authHeaders(),
-            });
-            if (!res.ok) throw new Error(`Export failed (${res.status})`);
+                const response = await fetch(`${API_URL}/admin/grammar?${params.toString()}`, {
+                    headers: authHeaders(),
+                });
+                if (!response.ok) throw new Error(`Export failed (${response.status})`);
 
-            const blob = await res.blob();
+                const payload = await response.json();
+                if (Array.isArray(payload)) {
+                    rows.push(...payload);
+                    break;
+                }
+
+                const pageItems = Array.isArray(payload.items) ? payload.items : [];
+                rows.push(...pageItems);
+                totalPages = Number(payload.pages) || Math.max(1, Math.ceil((Number(payload.total) || pageItems.length) / LIMIT));
+                exportPage += 1;
+            }
+
+            const csvRows = [
+                ['Judul', 'Struktur', 'Level'],
+                ...rows.map((item) => [item.title, item.structure, item.jlpt_level]),
+            ];
+            const csv = csvRows
+                .map((row) => row.map((value) => `"${String(value ?? '').replace(/"/g, '""')}"`).join(','))
+                .join('\r\n');
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8' });
             const url = window.URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
@@ -299,11 +311,6 @@ export default function BunpoAdmin() {
                 ),
             },
             { key: 'jlpt_level', label: 'Level', render: (item) => <LevelBadge level={item.jlpt_level} /> },
-            {
-                key: 'chapter',
-                label: 'Bab',
-                render: (item) => <span className="text-[var(--foreground)]/70">Bab {item.chapter}</span>,
-            },
         ],
         []
     );
@@ -405,18 +412,6 @@ export default function BunpoAdmin() {
                                     </option>
                                 ))}
                             </select>
-                        </label>
-                        <label>
-                            <span className="sr-only">Filter bab</span>
-                            <input
-                                type="number"
-                                min="1"
-                                inputMode="numeric"
-                                placeholder="Bab"
-                                className={`${inputClass} w-full md:w-28`}
-                                value={filterChapter}
-                                onChange={handleChapterChange}
-                            />
                         </label>
                     </div>
 

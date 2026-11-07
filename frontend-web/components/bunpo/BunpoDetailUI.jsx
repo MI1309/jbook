@@ -45,7 +45,6 @@ export default function BunpoDetailUI({
     const cardBg = isDark ? 'bg-[#0a0a0a]' : 'bg-white';
     const innerBorder = isDark ? 'border-blue-950/30' : 'border-gray-200';
     const emphasisText = isDark ? 'text-sky-300' : 'text-blue-800';
-    const chapterBadge = isDark ? 'bg-blue-950/20 text-blue-300' : 'bg-gray-100 text-gray-700';
     const sentenceBg = isDark ? 'bg-blue-950/10 border-blue-600' : 'bg-gray-50 border-blue-600';
     const sectionNumber = isDark ? 'text-blue-300 bg-blue-950/40' : 'text-blue-600 bg-blue-100';
     const mutedPanel = isDark ? 'border-gray-800 bg-black/30' : 'border-gray-200 bg-gray-50';
@@ -83,11 +82,6 @@ export default function BunpoDetailUI({
                                 <span className="bg-blue-600 text-white text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full shadow-lg shadow-blue-500/10 transition-colors">
                                     JLPT N{grammar.jlpt_level}
                                 </span>
-                                {grammar.chapter && (
-                                    <span className={`${chapterBadge} text-[10px] font-black uppercase tracking-widest px-2 py-1 rounded-md transition-colors`}>
-                                        Bab {grammar.chapter}
-                                    </span>
-                                )}
                             </div>
                             <h1 className={`mb-5 min-w-0 break-words font-japanese text-4xl font-black leading-tight tracking-tight transition-colors md:text-5xl lg:text-4xl ${textColor}`}>{grammar.title}</h1>
                             {grammar.source_data?.kelompok && (
@@ -106,9 +100,15 @@ export default function BunpoDetailUI({
                             <ul className="bunpo-section-nav-list flex gap-2 overflow-x-auto whitespace-nowrap py-2 text-sm lg:flex-col lg:gap-1 lg:overflow-visible lg:py-0">
                                 {sectionAnchors.map(({ id, label }) => (
                                     <li key={id} className="shrink-0 lg:w-full">
-                                        <a href={`#${id}`} className="inline-flex min-h-10 items-center whitespace-nowrap rounded-full px-3 py-2 font-semibold text-gray-600 no-underline transition-colors hover:bg-accent-blue/10 hover:text-accent-blue focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-blue/60 dark:text-gray-300 lg:w-full lg:rounded-lg">
-                                            {label}
-                                        </a>
+                                        {id === 'latihan-mini' ? (
+                                            <Link href="/practice" className="inline-flex min-h-10 items-center whitespace-nowrap rounded-full px-3 py-2 font-semibold text-gray-600 no-underline transition-colors hover:bg-accent-blue/10 hover:text-accent-blue focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-blue/60 dark:text-gray-300 lg:w-full lg:rounded-lg">
+                                                {label}
+                                            </Link>
+                                        ) : (
+                                            <a href={`#${id}`} className="inline-flex min-h-10 items-center whitespace-nowrap rounded-full px-3 py-2 font-semibold text-gray-600 no-underline transition-colors hover:bg-accent-blue/10 hover:text-accent-blue focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-blue/60 dark:text-gray-300 lg:w-full lg:rounded-lg">
+                                                {label}
+                                            </a>
+                                        )}
                                     </li>
                                 ))}
                             </ul>
@@ -122,11 +122,6 @@ export default function BunpoDetailUI({
                                 <span className="bg-blue-600 text-white text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full shadow-lg shadow-blue-500/10 transition-colors">
                                     JLPT N{grammar.jlpt_level}
                                 </span>
-                                {grammar.chapter && (
-                                    <span className={`${chapterBadge} text-[10px] font-black uppercase tracking-widest px-2 py-1 rounded-md transition-colors`}>
-                                        Bab {grammar.chapter}
-                                    </span>
-                                )}
                             </div>
                         </div>
                         {grammar.source_data?.kelompok && (

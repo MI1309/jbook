@@ -14,7 +14,6 @@ function CardContent({ pattern, level, accent, slug }) {
             </div>
             <div className="mt-3 flex items-center justify-between gap-3">
                 <p className="min-w-0 break-words line-clamp-2 text-sm font-semibold text-gray-700 dark:text-gray-200">{pattern.structure}</p>
-                {pattern.chapter > 0 && <span className="shrink-0 text-xs text-gray-500">Bab {pattern.chapter}</span>}
             </div>
             <p className="mt-3 min-w-0 break-words line-clamp-3 text-sm leading-relaxed text-gray-600 dark:text-gray-300">
                 {pattern.explanation}

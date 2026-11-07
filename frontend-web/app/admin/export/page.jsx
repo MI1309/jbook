@@ -25,7 +25,6 @@ const STORAGE_KEY = 'jbook_admin_export_history';
 const DEFAULT_FILTERS = {
     level: '',
     wordType: '',
-    chapter: '',
     search: '',
     dateFrom: '',
     dateTo: '',
@@ -56,11 +55,11 @@ const SOURCE_OPTIONS = [
     {
         id: 'bunpo',
         label: 'Bunpo',
-        description: 'Struktur grammar + bab + penjelasan',
+        description: 'Struktur grammar + penjelasan',
         icon: BookOpen,
         endpoint: 'bunpo',
-        previewFields: ['title', 'structure', 'chapter', 'jlpt_level'],
-        labels: ['Judul', 'Struktur', 'Bab', 'Level'],
+        previewFields: ['title', 'structure', 'jlpt_level'],
+        labels: ['Judul', 'Struktur', 'Level'],
     },
     {
         id: 'latihan',
@@ -191,7 +190,6 @@ function normalizeRows(rows, source) {
         if (source === 'bunpo') {
             normalized.title = normalized.title ?? normalized.judul ?? '—';
             normalized.structure = normalized.structure ?? normalized.struktur ?? '—';
-            normalized.chapter = normalized.chapter ?? normalized.bab ?? '—';
             normalized.jlpt_level = normalized.jlpt_level ?? normalized.level ?? '—';
         }
         return normalized;
@@ -322,7 +320,6 @@ export default function AdminExportPage({ fixedSource }) {
                 if (filters.level) params.set('level', filters.level);
                 if (filters.search) params.set('search', filters.search);
                 if (selectedSource === 'kotoba' && filters.wordType) params.set('word_type', filters.wordType);
-                if (selectedSource === 'bunpo' && filters.chapter) params.set('chapter', filters.chapter);
                 if (selectedSource === 'kanji' && filters.strokesMin) params.set('strokes_min', filters.strokesMin);
                 if (selectedSource === 'kanji' && filters.strokesMax) params.set('strokes_max', filters.strokesMax);
 
@@ -360,7 +357,7 @@ export default function AdminExportPage({ fixedSource }) {
         return () => {
             isMounted = false;
         };
-    }, [activeSource.endpoint, filters.chapter, filters.level, filters.search, filters.strokesMax, filters.strokesMin, filters.wordType, selectedSource]);
+    }, [activeSource.endpoint, filters.level, filters.search, filters.strokesMax, filters.strokesMin, filters.wordType, selectedSource]);
 
     const resetState = () => {
         setSelectedSource(fixedSource || '');
@@ -393,7 +390,6 @@ export default function AdminExportPage({ fixedSource }) {
         if (filters.level) params.set('level', filters.level);
         if (filters.search) params.set('search', filters.search);
         if (selectedSource === 'kotoba' && filters.wordType) params.set('word_type', filters.wordType);
-        if (selectedSource === 'bunpo' && filters.chapter) params.set('chapter', filters.chapter);
 
         const allRows = [];
         let currentPage = 1;
@@ -472,21 +468,27 @@ export default function AdminExportPage({ fixedSource }) {
             if (filters.level) query.set('level', filters.level);
             if (filters.search) query.set('search', filters.search);
             if (selectedSource === 'kotoba' && filters.wordType) query.set('word_type', filters.wordType);
-            if (selectedSource === 'bunpo' && filters.chapter) query.set('chapter', filters.chapter);
 
             let fileName = `${selectedSource}_export_${new Date().toISOString().slice(0, 10)}`;
             let blob;
             let statusLabel = 'File berhasil diunduh';
 
             if (selectedFormat === 'csv') {
-                const response = await fetch(`${API_URL}/admin/${activeSource.endpoint}/export/csv?${query.toString()}`, {
-                    headers: { Authorization: `Bearer ${token}` },
-                });
-                if (!response.ok) {
-                    throw new Error('Endpoint CSV tidak tersedia untuk sumber data ini.');
+                if (selectedSource === 'bunpo') {
+                    setExportStatus('Menyusun file CSV...');
+                    const rows = await fetchSourceRows();
+                    blob = new Blob([buildCsvFromRows(rows, selectedSource)], { type: 'text/csv;charset=utf-8' });
+                    fileName += '.csv';
+                } else {
+                    const response = await fetch(`${API_URL}/admin/${activeSource.endpoint}/export/csv?${query.toString()}`, {
+                        headers: { Authorization: `Bearer ${token}` },
+                    });
+                    if (!response.ok) {
+                        throw new Error('Endpoint CSV tidak tersedia untuk sumber data ini.');
+                    }
+                    blob = await response.blob();
+                    fileName += '.csv';
                 }
-                blob = await response.blob();
-                fileName += '.csv';
             } else if (selectedFormat === 'json') {
                 setExportStatus('Menyusun file JSON...');
                 const rows = await fetchSourceRows();
@@ -633,16 +635,6 @@ export default function AdminExportPage({ fixedSource }) {
                         </select>
                     </label>
 
-                    <label className="block text-sm font-medium text-[var(--foreground)]">
-                        <span className="mb-2 block">Bab</span>
-                        <input
-                            type="number"
-                            value={filters.chapter}
-                            onChange={(event) => setFilters((current) => ({ ...current, chapter: event.target.value }))}
-                            className="min-h-11 w-full rounded-xl border border-[var(--border-color)] bg-[var(--background)] px-3 py-2.5 text-sm text-[var(--foreground)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent-blue)]"
-                            placeholder="Contoh: 1"
-                        />
-                    </label>
                 </div>
             );
         }

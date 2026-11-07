@@ -102,7 +102,9 @@ def serialize_grammar(grammar, include_source_data=False):
     else:
         sentences = [dict(sentence) for sentence in legacy_sentences if isinstance(sentence, dict)]
 
-    sections = grammar.sections if isinstance(grammar.sections, dict) else None
+    sections = dict(grammar.sections) if isinstance(grammar.sections, dict) else None
+    if sections is not None:
+        sections.pop('miniPractice', None)
     tags = grammar.tags if isinstance(grammar.tags, list) else []
 
     serialized = {

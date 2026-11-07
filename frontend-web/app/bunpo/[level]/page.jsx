@@ -35,12 +35,9 @@ export default async function BunpoLevelPage({ params, searchParams }) {
     const catalog = await getBunpoCatalog();
     const normalizedQuery = searchQuery.toLocaleLowerCase('id');
     const matchingPatterns = catalog
-        .map((pattern, index) => ({ pattern, index }))
-        .filter(({ pattern }) => Number(pattern.jlpt_level) === config.number)
-        .sort((a, b) => (Number(a.pattern.chapter) || 0) - (Number(b.pattern.chapter) || 0) || a.index - b.index)
-        .filter(({ pattern }) => !normalizedQuery || [pattern.title, pattern.structure, pattern.explanation]
-            .some((value) => String(value ?? '').toLocaleLowerCase('id').includes(normalizedQuery)))
-        .map(({ pattern }) => pattern);
+        .filter((pattern) => Number(pattern.jlpt_level) === config.number)
+        .filter((pattern) => !normalizedQuery || [pattern.title, pattern.structure, pattern.explanation]
+            .some((value) => String(value ?? '').toLocaleLowerCase('id').includes(normalizedQuery)));
     const pageSize = 20;
     const totalPages = Math.max(1, Math.ceil(matchingPatterns.length / pageSize));
     const currentPage = Math.min(requestedPage, totalPages);

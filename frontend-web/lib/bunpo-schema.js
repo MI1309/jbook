@@ -21,7 +21,6 @@ export const BUNPO_PATTERN_SCHEMA = {
         coreExplanation: '{ summary?: string, text?: string }',
         commonMistakes: '{ wrong: string, correct: string, reason: string }[]',
         faq: '{ q: string, a: string }[]',
-        miniPractice: '{ type: string, question: string, options?: string[], answer: string, explanation?: string }[]',
         conceptMap: '{ summary?: string, nodes?: { id: string, label: string, type: string }[], edges?: { from: string, to: string, label: string }[] }',
     },
     relatedPatterns: '{ title: string, slug: string, level: string }[] (optional)',
@@ -38,7 +37,6 @@ const SECTION_DEFAULTS = {
     coreExplanation: { summary: '', text: '' },
     commonMistakes: [],
     faq: [],
-    miniPractice: [],
     conceptMap: { summary: '', nodes: [], edges: [] },
 };
 
@@ -139,7 +137,7 @@ export function isValidBunpoPattern(pattern) {
                 errors.push(`sections.${key} must be an object when provided`);
             }
         }
-        for (const key of ['examples', 'commonMistakes', 'faq', 'miniPractice']) {
+        for (const key of ['examples', 'commonMistakes', 'faq']) {
             if (sections[key] !== undefined && !Array.isArray(sections[key])) errors.push(`sections.${key} must be an array when provided`);
         }
         if (isRecord(sections.mainFunction)) {
@@ -178,7 +176,6 @@ export function isValidBunpoPattern(pattern) {
         }
         if (sections.commonMistakes !== undefined) validateStringRecords(sections.commonMistakes, 'sections.commonMistakes', errors, ['wrong', 'correct', 'reason']);
         if (sections.faq !== undefined) validateStringRecords(sections.faq, 'sections.faq', errors, ['q', 'a']);
-        if (sections.miniPractice !== undefined) validateStringRecords(sections.miniPractice, 'sections.miniPractice', errors, ['type', 'question', 'answer']);
         if (isRecord(sections.conceptMap)) {
             validateString(sections.conceptMap.summary, 'sections.conceptMap.summary', errors, { optional: true });
             if (sections.conceptMap.nodes !== undefined) validateStringRecords(sections.conceptMap.nodes, 'sections.conceptMap.nodes', errors, ['id', 'label', 'type']);

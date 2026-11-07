@@ -420,14 +420,6 @@ class BunpoFaqSchema(StrictBunpoSchema):
     a: str
 
 
-class BunpoPracticeSchema(StrictBunpoSchema):
-    type: str
-    question: str
-    options: List[str] = Field(default_factory=list)
-    answer: str
-    explanation: str = ""
-
-
 class BunpoConceptNodeSchema(StrictBunpoSchema):
     id: str
     label: str
@@ -446,7 +438,9 @@ class BunpoConceptMapSchema(StrictBunpoSchema):
     edges: List[BunpoConceptEdgeSchema]
 
 
-class BunpoSectionSchema(StrictBunpoSchema):
+class BunpoSectionSchema(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+
     mainFunction: BunpoMainFunctionSchema
     sentencePattern: BunpoSentencePatternSchema
     examples: List[BunpoExampleSchema]
@@ -455,7 +449,6 @@ class BunpoSectionSchema(StrictBunpoSchema):
     coreExplanation: BunpoCoreExplanationSchema
     commonMistakes: List[BunpoMistakeSchema]
     faq: List[BunpoFaqSchema]
-    miniPractice: List[BunpoPracticeSchema]
     conceptMap: BunpoConceptMapSchema
 
 
@@ -488,7 +481,6 @@ _BUNPO_SECTION_MODELS = {
     "coreExplanation": BunpoCoreExplanationSchema,
     "commonMistakes": BunpoMistakeSchema,
     "faq": BunpoFaqSchema,
-    "miniPractice": BunpoPracticeSchema,
     "conceptMap": BunpoConceptMapSchema,
 }
 
@@ -506,7 +498,7 @@ def _bunpo_validation_message(error, index):
             allowed = list(_BUNPO_SECTION_MODELS[parent[1]].model_fields)
         else:
             allowed = list(BunpoImportSchema.model_fields)
-        suggestion = get_close_matches(field, allowed, n=1, cutoff=0.55)
+        suggestion = [candidate for candidate in get_close_matches(field, allowed, n=2, cutoff=0.55) if candidate != field][:1]
         suffix = f" Maksud Anda '{suggestion[0]}'?" if suggestion else f" Key yang valid: {', '.join(allowed)}."
         return f"Data ke-{index}: key '{field}' tidak dikenal.{suffix}"
 

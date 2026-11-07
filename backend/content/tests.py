@@ -42,7 +42,6 @@ class BunpoBulkImportTests(TestCase):
                 'coreExplanation': {'summary': '', 'text': ''},
                 'commonMistakes': [],
                 'faq': [],
-                'miniPractice': [],
                 'conceptMap': {
                     'summary': '',
                     'nodes': [{'id': 'topic', 'label': 'Topik', 'type': 'noun'}],
@@ -82,16 +81,66 @@ class BunpoBulkImportTests(TestCase):
         self.assertEqual(record.sections['mainFunction']['summary'], 'Fungsi')
         self.assertEqual(record.sections['conceptMap']['edges'][0]['from'], 'topic')
         self.assertEqual(record.tags, [])
+        self.assertNotIn('miniPractice', record.sections)
+        record.sections['miniPractice'] = [{'question': 'legacy'}]
+        record.save(update_fields=['sections'])
 
         public_response = self.client.get('/api/content/grammar?limit=30&page=1', secure=True)
         public_record = next(item for item in public_response.json()['items'] if item['slug'] == 'wa-desu')
         self.assertEqual(public_record['sections']['mainFunction']['summary'], 'Fungsi')
+        self.assertNotIn('miniPractice', public_record['sections'])
+
+    def test_bulk_import_ignores_mini_practice_and_unknown_section_keys(self):
+        item = self.make_item('～は～です', 'wa-desu')
+        item['sections']['miniPractice'] = [{'question': 'legacy'}]
+        item['sections']['mainFuncton'] = {'summary': 'typo'}
+
+        response = self.client.post(
+            self.endpoint,
+            data=json.dumps([item], ensure_ascii=False),
+            content_type='application/json',
+            secure=True,
+            **self.auth_headers(self.admin),
+        )
+
+        self.assertEqual(response.status_code, 200, response.content)
+        sections = Grammar.objects.get(slug='wa-desu').sections
+        self.assertNotIn('miniPractice', sections)
+        self.assertNotIn('mainFuncton', sections)
+
+    def test_bulk_import_without_mini_practice_is_valid(self):
+        response = self.client.post(
+            self.endpoint,
+            data=json.dumps([self.make_item('～は～です', 'wa-desu')], ensure_ascii=False),
+            content_type='application/json',
+            secure=True,
+            **self.auth_headers(self.admin),
+        )
+
+        self.assertEqual(response.status_code, 200, response.content)
+        self.assertNotIn('miniPractice', Grammar.objects.get(slug='wa-desu').sections)
+
+    def test_bulk_import_without_title_fails_clearly(self):
+        item = self.make_item('～は～です', 'wa-desu')
+        item.pop('title')
+
+        response = self.client.post(
+            self.endpoint,
+            data=json.dumps([item], ensure_ascii=False),
+            content_type='application/json',
+            secure=True,
+            **self.auth_headers(self.admin),
+        )
+
+        self.assertEqual(response.status_code, 422)
+        self.assertIn("field wajib 'title'", response.json()['detail'])
+        self.assertEqual(Grammar.objects.count(), 0)
 
     def test_invalid_item_rejects_entire_batch_with_indexed_errors(self):
         valid_item = self.make_item('～は～です', 'wa-desu')
         invalid_item = self.make_item('～も～です', 'mo-desu')
         invalid_item['jlpt_level'] = 'N5'
-        invalid_item['sections']['fungsUtama'] = invalid_item['sections'].pop('mainFunction')
+        invalid_item['sections'].pop('mainFunction')
 
         response = self.client.post(
             self.endpoint,
@@ -105,7 +154,7 @@ class BunpoBulkImportTests(TestCase):
         detail = response.json()['detail']
         self.assertIn("Data ke-2", detail)
         self.assertIn("jlpt_level", detail)
-        self.assertIn("fungsUtama", detail)
+        self.assertIn("mainFunction", detail)
         self.assertEqual(Grammar.objects.count(), 0)
 
     def test_non_staff_user_cannot_import(self):

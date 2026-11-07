@@ -64,14 +64,6 @@ function normalizeSections(value) {
         coreExplanation: { summary: textValue(coreExplanation.summary), text: textValue(coreExplanation.text) },
         commonMistakes: normalizeRows(source.commonMistakes, ['wrong', 'correct', 'reason']),
         faq: normalizeRows(source.faq, ['q', 'a']),
-        miniPractice: Array.isArray(source.miniPractice) ? source.miniPractice.map((item) => {
-            const row = objectOrEmpty(item);
-            return {
-                type: textValue(row.type), question: textValue(row.question),
-                options: Array.isArray(row.options) ? row.options.map(textValue) : [],
-                answer: textValue(row.answer), explanation: textValue(row.explanation),
-            };
-        }) : [],
         conceptMap: {
             summary: textValue(conceptMap.summary),
             nodes: normalizeRows(conceptMap.nodes, ['id', 'label', 'type']),
@@ -94,7 +86,6 @@ export default function BunpoForm({ id, isNew: isNewRoute = false }) {
     const [previewOpen, setPreviewOpen] = useState(false);
     const [submitted, setSubmitted] = useState(false);
     const [dirty, setDirty] = useState(false);
-    const [chapterInputInvalid, setChapterInputInvalid] = useState(false);
     const initialDataRef = useRef(null);
     const [formData, setFormData] = useState({
         title: '',
@@ -187,16 +178,17 @@ export default function BunpoForm({ id, isNew: isNewRoute = false }) {
         e.preventDefault();
         setSubmitted(true);
         setSaveError('');
-        if (!formData.title.trim() || !formData.structure.trim() || !formData.explanation.trim() || chapterError) {
+        if (!formData.title.trim() || !formData.structure.trim() || !formData.explanation.trim()) {
             setActiveTab('basic');
-            toast.error(chapterError || 'Judul, struktur, dan penjelasan wajib diisi.');
+            toast.error('Judul, struktur, dan penjelasan wajib diisi.');
             return;
         }
         setSaving(true);
         try {
+            const { miniPractice: _ignoredMiniPractice, ...sectionsWithoutMiniPractice } = formData.sections;
             const payload = {
                 ...formData,
-                sections: formData.sections,
+                sections: sectionsWithoutMiniPractice,
                 chapter: formData.chapter === '' ? 0 : Number(formData.chapter),
                 jlpt_level: parseInt(formData.jlpt_level),
                 sentences: formData.sentences.map(({ expressions = [], ...sentence }) => ({
@@ -252,23 +244,17 @@ export default function BunpoForm({ id, isNew: isNewRoute = false }) {
         function: Boolean(formData.sections.mainFunction.summary || formData.sections.mainFunction.points.length || formData.sections.sentencePattern.formula || formData.sections.coreExplanation.text || formData.sections.coreExplanation.summary),
         examples: Boolean(formData.sentences.length || formData.sections.examples.length || formData.sections.comparison.summary || formData.sections.comparison.items.length || formData.sections.nuance.summary || formData.sections.nuance.points.length),
         faq: Boolean(formData.sections.commonMistakes.length || formData.sections.faq.length),
-        practice: Boolean(formData.sections.miniPractice.length || formData.sections.conceptMap.summary || formData.sections.conceptMap.nodes.length || formData.sections.conceptMap.edges.length),
+        practice: Boolean(formData.sections.conceptMap.summary || formData.sections.conceptMap.nodes.length || formData.sections.conceptMap.edges.length),
     };
 
     const tabs = [
         ['basic', 'Dasar'], ['function', 'Fungsi & Pola'], ['examples', 'Contoh & Perbandingan'],
         ['faq', 'Kesalahan & FAQ'], ['practice', 'Latihan & Peta'],
     ];
-    const chapterError = chapterInputInvalid
-        ? 'Bab harus berupa bilangan bulat minimal 1.'
-        : formData.chapter !== '' && (!/^\d+$/.test(String(formData.chapter)) || Number(formData.chapter) < 1)
-            ? 'Bab harus berupa bilangan bulat minimal 1.'
-            : '';
     const basicErrors = [
         !formData.title.trim() && 'Judul',
         !formData.structure.trim() && 'Struktur',
         !formData.explanation.trim() && 'Penjelasan',
-        chapterError && 'Bab',
     ].filter(Boolean);
 
     if (loading) return <div className="mx-auto max-w-4xl animate-pulse space-y-5"><div className="h-9 w-56 rounded-lg bg-[var(--border-color)]" /><div className="h-[520px] rounded-2xl border border-[var(--border-color)] bg-[var(--card-bg)]" /></div>;
@@ -351,25 +337,6 @@ export default function BunpoForm({ id, isNew: isNewRoute = false }) {
                                 {[5, 4, 3, 2, 1].map((level) => <option key={level} value={level}>N{level}</option>)}
                             </select>
                         </div>
-                        <div className="space-y-2">
-                            <label className="text-sm font-medium text-[var(--foreground)]" htmlFor="bunpo-chapter">Bab</label>
-                            <input
-                                id="bunpo-chapter"
-                                type="number"
-                                min="1"
-                                step="1"
-                                inputMode="numeric"
-                                aria-invalid={Boolean(chapterError)}
-                                aria-describedby={chapterError ? 'bunpo-chapter-error' : undefined}
-                                className="w-full rounded-xl border border-[var(--border-color)] bg-[var(--background)] p-3.5 text-sm text-[var(--foreground)] outline-none focus-visible:border-[var(--accent-blue)] focus-visible:ring-2 focus-visible:ring-[var(--accent-blue)]/20"
-                                value={formData.chapter}
-                                onChange={(event) => {
-                                    setChapterInputInvalid(event.target.validity.badInput);
-                                    setFormData({ ...formData, chapter: event.target.value });
-                                }}
-                            />
-                            {chapterError && <p id="bunpo-chapter-error" className="text-xs text-[var(--brand-red)]">{chapterError}</p>}
-                        </div>
                     </section>
 
                     <section id="bunpo-panel-content" role="tabpanel" aria-labelledby={`bunpo-tab-${activeTab}`} hidden={activeTab === 'basic'} className="space-y-4">
@@ -440,14 +407,7 @@ export default function BunpoForm({ id, isNew: isNewRoute = false }) {
                         </details>
 
                         <details hidden={activeTab !== 'practice'} className="rounded-xl border border-[var(--border-color)]">
-                            <summary className="cursor-pointer list-none px-4 py-3.5 text-sm font-semibold text-[var(--foreground)]">9. Latihan Mini</summary>
-                            <div className="border-t border-[var(--border-color)] p-4">
-                                <DynamicObjectList label="Latihan" addLabel="Tambah Latihan" fields={[field('type', 'Tipe', 'select', { options: [{ value: 'multiple-choice', label: 'Pilihan ganda' }, { value: 'fill-in', label: 'Isi bagian kosong' }, { value: 'true-false', label: 'Benar atau salah' }] }), field('question', 'Pertanyaan', 'textarea'), field('options', 'Pilihan jawaban', 'stringList', { addLabel: 'Tambah Pilihan', visibleWhen: { field: 'type', value: 'multiple-choice' } }), field('answer', 'Jawaban'), field('explanation', 'Penjelasan', 'textarea')]} value={formData.sections.miniPractice} onChange={(miniPractice) => setFormData((current) => ({ ...current, sections: { ...current.sections, miniPractice } }))} />
-                            </div>
-                        </details>
-
-                        <details hidden={activeTab !== 'practice'} className="rounded-xl border border-[var(--border-color)]">
-                            <summary className="cursor-pointer list-none px-4 py-3.5 text-sm font-semibold text-[var(--foreground)]">10. Peta Materi</summary>
+                            <summary className="cursor-pointer list-none px-4 py-3.5 text-sm font-semibold text-[var(--foreground)]">9. Peta Materi</summary>
                             <div className="space-y-4 border-t border-[var(--border-color)] p-4">
                                 <label className="block space-y-1.5"><span className="text-sm font-medium">Ringkasan</span><textarea rows={2} className="w-full rounded-lg border border-[var(--border-color)] bg-[var(--background)] p-3 text-sm text-[var(--foreground)] outline-none focus-visible:border-[var(--accent-blue)]" value={formData.sections.conceptMap.summary} onChange={(event) => setFormData((current) => ({ ...current, sections: { ...current.sections, conceptMap: { ...current.sections.conceptMap, summary: event.target.value } } }))} /></label>
                                 <DynamicObjectList label="Node" addLabel="Tambah Node" fields={[field('id', 'ID'), field('label', 'Label'), field('type', 'Tipe')]} value={formData.sections.conceptMap.nodes} onChange={(nodes) => setFormData((current) => ({ ...current, sections: { ...current.sections, conceptMap: { ...current.sections.conceptMap, nodes } } }))} />
