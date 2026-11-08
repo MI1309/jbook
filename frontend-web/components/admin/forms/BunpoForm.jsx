@@ -185,7 +185,9 @@ export default function BunpoForm({ id, isNew: isNewRoute = false }) {
         }
         setSaving(true);
         try {
-            const { miniPractice: _ignoredMiniPractice, ...sectionsWithoutMiniPractice } = formData.sections;
+            const sectionsWithoutMiniPractice = { ...formData.sections };
+            delete sectionsWithoutMiniPractice.miniPractice;
+
             const payload = {
                 ...formData,
                 sections: sectionsWithoutMiniPractice,
