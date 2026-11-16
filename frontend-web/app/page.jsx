@@ -209,9 +209,12 @@ function KanjiPreviewCard() {
                         </>
                     ) : <span className="text-gray-500">{kanji ? 'Contoh belum tersedia' : ' '}</span>}
                 </p>
-                <Link href={`/kanji?level=${kanji?.jlpt_level || 5}`} className={`shrink-0 rounded text-xs font-bold text-accent-blue hover:underline ${focusRing}`}>
-                    Lihat Kanji {kanji ? `N${kanji.jlpt_level}` : ''}
-                </Link>
+    <Link
+        href={kanji ? getKanjiHref(kanji) : `/kanji?level=${selectedLevel}`}
+        className={`shrink-0 rounded text-xs font-bold text-accent-blue hover:underline ${focusRing}`}
+    >
+        Lihat Kanji {kanji ? `N${kanji.jlpt_level}` : `N${selectedLevel}`}
+    </Link>
             </div>
         </div>
     );

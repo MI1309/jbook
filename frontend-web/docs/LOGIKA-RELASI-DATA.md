@@ -1,38 +1,42 @@
 # Logika Relasi Data: Integrasi Kanji & Kotoba
 
-Dokumen ini menjelaskan mekanisme teknis yang digunakan untuk menghubungkan karakter Kanji dengan kosa kata secara relasional di dalam aplikasi JBook.
+Dokumen ini menjelaskan dua arah keterkaitan Kanji dan Kotoba yang saat ini digunakan JBook: pemecahan karakter Kanji dari sebuah kata di frontend, serta pemuatan contoh Kotoba saat detail Kanji diminta.
 
 ## 1. File Terkait
 
-### Frontend (Logika Pembedahan)
-- **[components/KotobaDetailModal.jsx](file:///home/imron/jbook/frontend-web/components/KotobaDetailModal.jsx)**: Lokasi utama fungsi `extractKanji` yang membedah kata menjadi karakter kanji penyusun.
-- **[components/KanjiDetailModal.jsx](file:///home/imron/jbook/frontend-web/components/KanjiDetailModal.jsx)**: Menampilkan kosa kata yang menggunakan Kanji tersebut sebagai contoh kata (Examples).
-- **[lib/db.js](file:///home/imron/jbook/frontend-web/lib/db.js)**: Menyediakan akses cepat ke IndexedDB untuk mencocokkan karakter yang ditemukan dengan database detail Kanji.
+### Frontend
+- [components/kotoba/KotobaDetailUI.jsx](../components/kotoba/KotobaDetailUI.jsx): Memecah kata dan memuat detail untuk setiap Kanji penyusunnya.
+- [components/kanji/KanjiDetailUI.jsx](../components/kanji/KanjiDetailUI.jsx): Menampilkan `examples` dari respons detail Kanji dan menyediakan tautan pencarian Kotoba jika contoh kosong.
+- [components/kotoba/KotobaDetailModal.jsx](../components/kotoba/KotobaDetailModal.jsx) dan [components/kanji/KanjiDetailModal.jsx](../components/kanji/KanjiDetailModal.jsx): Memuat data detail melalui helper API lalu meneruskannya ke UI.
+- [lib/utils.js](../lib/utils.js): Implementasi `extractKanji`, `hasKanji`, dan `isKanjiChar`.
+- [lib/api.js](../lib/api.js): Helper API, termasuk `getKanjiDetail`, `getVocabDetail`, dan `resolveContentId`.
 
-### Backend (Struktur Data)
-- **[backend/content/models.py](file:///home/imron/jbook/backend/content/models.py)**: Definisi model `Kanji` dan `Kotoba`. Hubungan antara keduanya bersifat implisit (melalui pencocokan string) untuk fleksibilitas database.
+### Backend
+- [backend/content/models.py](../../backend/content/models.py): Model `Kanji` dan `Vocab` (Kotoba). `Vocab.kanji_rel` menyediakan relasi many-to-many opsional.
+- [backend/content/api.py](../../backend/content/api.py): Endpoint detail Kanji membentuk contoh dinamis dengan mencocokkan karakter pada kolom `Vocab.word`.
 
 ## 2. Pembedahan Kata (Kanji Dissection)
-Saat menampilkan sebuah kosa kata (Kotoba), sistem melakukan pembedahan melalui algoritma berikut:
+Saat menampilkan detail Kotoba, `KotobaDetailUI` mengambil karakter dari `vocab.word` dan memuat detail Kanji melalui API.
 
-### Langkah-langkah Teknis:
-1.  **Regex Filtering**: Menggunakan regex `[\u4e00-\u9faf]` untuk mendeteksi karakter yang masuk kategori Kanji dari sebuah string kosa kata.
-2.  **Unification**: Menggunakan `Set` untuk memastikan karakter yang sama tidak muncul dua kali dalam daftar bedah kanji (misal: kata `人々` akan hanya menampilkan satu entitas `人`).
-3.  **Local Lookup**: Setiap karakter yang ditemukan dikirim ke fungsi `getKanjiByChar(char)` di `lib/db.js` untuk mengambil makna (meaning) dan cara baca (onyomi/kunyomi).
-4.  **Rendering**: Menampilkan kartu kecil di bawah detail Kotoba yang memungkinkan user "masuk" ke detail Kanji penyusun tersebut tanpa meninggalkan konteks.
+1. Kata dinormalisasi dengan Unicode NFKC.
+2. `extractKanji` mengambil karakter pada rentang `U+4E00–U+9FAF` dan `U+3400–U+4DBF`, lalu menggunakan `Set` untuk menghapus duplikat.
+3. Untuk setiap karakter, frontend memanggil `resolveContentId('kanji', char)`. Jika ID ditemukan, detail diambil dari endpoint detail Kanji; bila tidak, frontend mencoba pencarian Kanji dengan `search` dan `limit=1`.
+4. Permintaan detail dijalankan secara paralel. Hasil yang tersedia ditampilkan sebagai detail Kanji terkait pada UI Kotoba.
 
 ## 3. Pemetaan Contoh Kata (Example Mapping)
-Sebaliknya, saat menampilkan detail Kanji, sistem mencari kosa kata yang mengandung karakter tersebut.
+Saat detail Kanji diminta melalui endpoint `/content/kanji/{kanji_id}`, backend membentuk daftar contoh untuk ditampilkan di `KanjiDetailUI`.
 
-### Alur Pencarian:
-1.  **Backend Filter**: API `/api/content/kotoba?search=X` (di mana X adalah Kanji tersebut) dipanggil.
-2.  **Strict Matching**: Backend mencari di kolom `word` dan `reading` yang mengandung karakter tersebut.
-3.  **Categorization**: Contoh kata diurutkan berdasarkan level JLPT yang sama dengan Kanji tersebut untuk memastikan relevansi kesulitan materi.
+1. Backend mengambil hingga 10 baris `Vocab` dengan pencocokan substring pada kolom `word` (`word__contains=kanji.character`). Pencarian dinamis ini tidak memeriksa kolom `reading`.
+2. Hasil dinamis dipetakan ke `word`, `reading`, `meaning`, dan `type`.
+3. Hasil tersebut digabung setelah `Kanji.examples` yang tersimpan. Kata yang sudah ada pada contoh tersimpan tidak ditambahkan lagi.
+4. Pengambilan ini tidak mengurutkan berdasarkan level JLPT Kanji. Daftar Kotoba pada endpoint pencarian terpisah memiliki pengurutan dan filter sendiri.
+5. Jika tidak ada contoh pada detail Kanji, UI menyediakan tautan untuk mencari karakter tersebut di halaman Kotoba. Tautan itu bukan sumber daftar contoh yang dimuat otomatis.
 
 ## 4. Keuntungan Arsitektur Ini
-- **Data Integrity**: Tidak perlu mendefinisikan *Many-to-Many relationship* secara manual di database yang akan memperberat migrasi data.
-- **Dynamic Linking**: Jika ada penambahan kosa kata baru di database, secara otomatis kosa kata tersebut akan muncul sebagai contoh di halaman Kanji yang bersangkutan.
-- **Offline Capability**: Karena pembedahan dilakukan di frontend, fitur ini tetap berjalan 100% meskipun user sedang offline (menggunakan data dari IndexedDB).
+- **Contoh dinamis**: Kotoba yang cocok dengan karakter dapat ditambahkan ke respons detail Kanji tanpa menyimpan ulang daftar tersebut ke `Kanji.examples`.
+- **Data statis dan dinamis**: `Kanji.examples` dapat menyimpan contoh pilihan, sedangkan backend melengkapi respons dengan hasil pencocokan dari `Vocab`.
+- **Relasi eksplisit tersedia**: Model `Vocab` memiliki field many-to-many `kanji_rel`, tetapi pembentukan contoh dinamis pada endpoint detail Kanji saat ini menggunakan pencocokan teks pada `word`, bukan field tersebut.
+- **Keterbatasan offline**: Pemecahan karakter berjalan di frontend, tetapi pemuatan detail Kanji dan Kotoba menggunakan API jaringan. Kode yang didokumentasikan di sini tidak menunjukkan lookup detail melalui IndexedDB, sehingga keseluruhan fitur relasi ini tidak dijamin berfungsi saat offline.
 
 ---
-*Relasi data yang cerdas memungkinkan pengalaman belajar yang terhubung dan komprehensif.*
+Dokumen ini mengikuti implementasi saat ini; perubahan pada endpoint atau model perlu diikuti pembaruan bagian terkait.
