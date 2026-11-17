@@ -2,6 +2,8 @@
 
 Platform pembelajaran bahasa Jepang yang mencakup Kanji, Bunpo (tata bahasa), dan Kotoba (kosakata) dengan dukungan PWA (Progressive Web App).
 
+Dokumentasi proyek, arsitektur, fitur, dan panduan tersedia di [docs/README.md](docs/README.md).
+
 ## Struktur Proyek
 
 - **backend/**: DJango + Django Ninja (API Server)
@@ -9,7 +11,7 @@ Platform pembelajaran bahasa Jepang yang mencakup Kanji, Bunpo (tata bahasa), da
 
 ## Cara Menjalankan Aplikasi
 
-Panduan lengkap setup backend, termasuk perintah Windows CMD, tersedia di [docs/backend_setup.md](docs/backend_setup.md).
+Panduan lengkap setup backend, termasuk perintah Windows CMD, tersedia di [Panduan Setup Backend](docs/guides/backend-setup.md).
 
 ### Prasyarat
 - Python 3.12 ke atas
@@ -18,7 +20,7 @@ Panduan lengkap setup backend, termasuk perintah Windows CMD, tersedia di [docs/
 
 ### 1. Menjalankan Backend (API)
 
-Ikuti [Panduan Setup Backend](docs/backend_setup.md) untuk membuat virtual environment, menyiapkan `backend/.env` (termasuk Windows CMD), memasang dependencies, menjalankan migrasi, dan memulai server.
+Ikuti [Panduan Setup Backend](docs/guides/backend-setup.md) untuk membuat virtual environment, menyiapkan `backend/.env` (termasuk Windows CMD), memasang dependencies, menjalankan migrasi, dan memulai server.
 
 Password akun baru menggunakan Argon2id. Hash password lama tetap dapat digunakan dan akan diperbarui otomatis setelah login berhasil.
 

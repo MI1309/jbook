@@ -1,20 +1,25 @@
-# JBook API Documentation
+# Dokumentasi JBook
 
-Selamat datang di dokumentasi API JBook. API ini dibangun menggunakan **Django Ninja** untuk kecepatan dan validasi tipe data yang kuat.
+Pintu masuk dokumentasi JBook: arsitektur sistem, rincian fitur, panduan operasional, keamanan, dan referensi API. Dokumen mencatat implementasi yang teramati; verifikasi source tetap diperlukan sebelum mengubah perilaku.
 
-Untuk inventaris fitur lengkap backend, web, dan mobile, lihat [Inventaris Fitur JBook](fitur-aplikasi.md).
+Terakhir diperbarui: 2026-11
 
-Untuk menjalankan Django backend secara lokal, ikuti [Panduan Setup Backend](backend_setup.md), termasuk perintah Windows CMD.
+## Navigasi
 
-Untuk alur pengembangan menyeluruh, arsitektur, SRS flashcard, testing, dan deployment, lihat [Panduan Pengembangan JBook](dev.md).
+| Area | Isi |
+|---|---|
+| Arsitektur | [Overview](architecture/overview.md), [frontend](architecture/frontend.md), [backend](architecture/backend.md), [integrasi API](architecture/api-integration.md), [schema database](architecture/database-schema.md), dan [relasi database](architecture/database-relationships.md). |
+| Fitur | [Inventaris](features/overview.md), [detail latihan](features/frontend-logic-reference.md), [analitik](features/data-insights.md), [Bunpo](features/bunpo-schema.md), [relasi Kanji–Kotoba](features/kanji-kotoba-relations.md), [Doukai](features/doukai.md), serta dokumentasi fitur lain. |
+| Panduan | [Pengembangan](guides/development.md), [setup backend](guides/backend-setup.md), [testing](guides/testing.md), [deployment](guides/testing-deployment.md), logging, SEO, dan design system. |
+| Keamanan | [Audit](security/audit-report.md), [CIA](security/cia.md), enkripsi email, dan catatan perbaikan. |
+| Arsip | [Catatan logika backend lama](archive/legacy-backend-logic.md) dan [progres proyek](archive/progress.md); periksa tanggal dan klaim sebelum digunakan. |
+| [Referensi API](#referensi-api) | Ringkasan endpoint Django Ninja di bawah. |
 
-Untuk struktur frontend dan penilaian penerapan SOLID saat ini, lihat [Arsitektur Frontend dan SOLID](frontend_architecture.md).
+Backend juga memiliki [backend/scripts/README.md](../backend/scripts/README.md), yang tetap berada di dekat skripnya.
 
-Untuk struktur backend dan penilaian penerapan SOLID saat ini, lihat [Arsitektur Backend dan SOLID](backend_architecture.md).
+## Referensi API
 
-Untuk diagram ERD, kardinalitas, aturan penghapusan, dan alur relasi data backend saat ini, lihat [Relasi Database JBook](database_relationships.md).
-
-Untuk melanjutkan pekerjaan terbaru melalui agen AI, baca [AI Handoff: JBook Progress dan Crossword TTS](ai-handoff.md). Dokumen tersebut mencatat lokasi kode, kontrak dashboard, dua jalur generator TTS, validasi terakhir, dan pekerjaan lanjutan.
+API JBook dibangun menggunakan **Django Ninja** untuk validasi tipe data dan penyusunan endpoint.
 
 ## Base URL
 Semua endpoint di bawah ini memiliki prefix:

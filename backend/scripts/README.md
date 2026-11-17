@@ -18,7 +18,7 @@ The repository does not identify a maintainer for these scripts; owner is **unkn
 | `do_import.py` | Import `bunpo_data_n4.json` and rewrite its IDs; `python scripts/do_import.py` from a directory containing that file (DB and JSON writes, runs on import). | Experimental | Unknown |
 | `fix_svg.py` | Reload/normalize Kanji SVG data from `kanjivg_files/`; `python scripts/fix_svg.py` (bulk DB updates). | Experimental | Unknown |
 | `import_jsho_batch.py` | Batch-import EDICT as N5 vocab; `python scripts/import_jsho_batch.py`; expects `~/jbook/data_proses/data_jsho/edict`, Django and `deep-translator` (DB writes). | Experimental | Unknown |
-| `import_jsho_interactive.py` | Manually review/translate EDICT entries and import vocab; `python scripts/import_jsho_interactive.py`; expects `~/jbook/data_proses/data_jsho/edict` and `deep-translator`. Documented in `docs/database_schema.md` and `docs/logic_app.md`. | Supported, documented workflow | Unknown |
+| `import_jsho_interactive.py` | Manually review/translate EDICT entries and import vocab; `python scripts/import_jsho_interactive.py`; expects `~/jbook/data_proses/data_jsho/edict` and `deep-translator`. Documented in `docs/architecture/database-schema.md` and `docs/archive/legacy-backend-logic.md`. | Supported, documented workflow | Unknown |
 | `import_kotoba_ji_to_tadoshi.py` | Sync `data/kotoba_ji_to_tadoshi.json` to vocab, replacing same-word entries; `python scripts/import_kotoba_ji_to_tadoshi.py` (DB writes). | Experimental | Unknown |
 | `import_n4.py` | Import N4 grammar and rewrite invalid IDs; `python scripts/import_n4.py` (DB and JSON writes). | Experimental | Unknown |
 | `import_n4_debug.py` | Debug N4 grammar import and rewrite IDs; `python scripts/import_n4_debug.py` (DB and JSON writes). | Experimental | Unknown |
@@ -46,7 +46,7 @@ The repository does not identify a maintainer for these scripts; owner is **unkn
 | `test_setup.py` | Initialize Django and print grammar count; `python scripts/test_setup.py`. | Experimental | Unknown |
 | `translate_csv.py` | Translate CSV `meaning` column; `python scripts/translate_csv.py <source_file> <expected_rows>`; requires network and `deep-translator`. | Experimental | Unknown |
 | `translate_csv_n5.py` | Translate a fixed N5 CSV (expects 718 rows); `python scripts/translate_csv_n5.py`; fixed paths, network and `deep-translator` required. | Experimental | Unknown |
-| `update_admin.py` | Prompt for an email and grant staff access; `python scripts/update_admin.py`. One-time operational workflow documented in `docs/backend_setup.md`. | Supported, documented one-time operation | Unknown |
+| `update_admin.py` | Prompt for an email and grant staff access; `python scripts/update_admin.py`. One-time operational workflow documented in `docs/guides/backend-setup.md`. | Supported, documented one-time operation | Unknown |
 | `update_vocab_types.py` | Update vocab `word_type` using Jamdict; `python scripts/update_vocab_types.py`; requires Jamdict. | Experimental | Unknown |
 
 ## Root-Level `backend/` Scripts

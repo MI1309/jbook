@@ -22,7 +22,7 @@ This project uses [`next/font`](https://nextjs.org/docs/app/building-your-applic
 
 ## Architecture
 
-See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for the frontend route map, global shell, contexts, stores, data access, offline/PWA behavior, TTS engine, authentication flow, and backend API ownership.
+See the [JBook documentation index](../docs/README.md) and [frontend architecture](../docs/architecture/frontend.md) for the frontend route map, global shell, contexts, stores, data access, TTS engine, authentication flow, and backend API ownership.
 
 ## Learn More
 
