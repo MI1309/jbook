@@ -1,7 +1,8 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useGameStore } from '../../stores/gameStore';
+import { useAuth } from '../../context/AuthContext';
 import { LevelSelector } from '../../components/crossword/LevelSelector';
 import { ScoreBoard } from '../../components/crossword/ScoreBoard';
 import { CrosswordGrid } from '../../components/crossword/CrosswordGrid';
@@ -10,7 +11,15 @@ import { CluePanel } from '../../components/crossword/CluePanel';
 import { CompletionModal } from '../../components/crossword/CompletionModal';
 
 export default function CrosswordPage() {
-  const { gameState } = useGameStore();
+  const { gameState, syncUserPoints } = useGameStore();
+  const { user } = useAuth();
+
+  // Sync user points from auth context to game store
+  useEffect(() => {
+    if (user && user.tts_points !== undefined) {
+      syncUserPoints(user.tts_points);
+    }
+  }, [user, syncUserPoints]);
 
   return (
     <div className="min-h-screen w-full overflow-x-hidden bg-[var(--background)] transition-colors duration-300 font-sans text-[var(--foreground)] selection:bg-accent-blue/20">

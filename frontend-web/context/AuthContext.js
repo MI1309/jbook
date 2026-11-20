@@ -291,6 +291,25 @@ export function AuthProvider({ children }) {
         return data;
     };
 
+    const deductTtsPoints = async (points, reason = 'hint') => {
+        const token = Cookies.get('access_token');
+        if (!token) throw new Error('Sesi login tidak ditemukan. Silakan masuk kembali.');
+
+        const res = await fetch(`${API_URL}/auth/me/tts-points/deduct`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`,
+            },
+            body: JSON.stringify({ points, reason }),
+        });
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok) throw new Error(data.detail || data.message || 'Gagal menggunakan poin TTS.');
+
+        setUser(data);
+        return data;
+    };
+
     // Internal logout — redirect is optional
     const doLogout = (redirect = true) => {
         clearAuthCookies();
@@ -307,7 +326,7 @@ export function AuthProvider({ children }) {
         <AuthContext.Provider value={{
             user, loading,
             login, register,
-            logout, forgotPassword, resetPassword, updateProfile, claimTtsPoints,
+            logout, forgotPassword, resetPassword, updateProfile, claimTtsPoints, deductTtsPoints,
             authenticatedFetch,
         }}>
             {children}

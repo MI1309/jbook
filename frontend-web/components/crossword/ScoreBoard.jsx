@@ -1,6 +1,6 @@
 import React from 'react';
 import { useGameStore } from '../../stores/gameStore';
-import { Trophy } from 'lucide-react';
+import { Trophy, Coins } from 'lucide-react';
 
 export const ScoreBoard = () => {
   const { gameState } = useGameStore();
@@ -14,14 +14,28 @@ export const ScoreBoard = () => {
 
   return (
     <div className="mb-6 flex w-full flex-wrap items-center justify-between gap-3 rounded-xl border border-[var(--border-color)] bg-[var(--card-bg)] p-3 shadow-sm sm:p-4">
-      <div className="flex items-center gap-2">
-        <div className="w-10 h-10 bg-accent-blue/10 rounded-full flex items-center justify-center text-accent-blue">
-          <Trophy size={20} />
+      <div className="flex items-center gap-6">
+        <div className="flex items-center gap-2">
+          <div className="w-10 h-10 bg-accent-blue/10 rounded-full flex items-center justify-center text-accent-blue">
+            <Trophy size={20} />
+          </div>
+          <div>
+            <div className="hidden text-xs font-bold uppercase tracking-wider text-gray-500 sm:block">Score</div>
+            <div className="text-2xl font-black text-foreground leading-none">{gameState.score}</div>
+          </div>
         </div>
-        <div>
-          <div className="hidden text-xs font-bold uppercase tracking-wider text-gray-500 sm:block">Score</div>
-          <div className="text-2xl font-black text-foreground leading-none">{gameState.score}</div>
-        </div>
+
+        {gameState.userPoints > 0 && (
+          <div className="flex items-center gap-2 border-l border-[var(--border-color)] pl-6">
+            <div className="w-10 h-10 bg-accent-gold/10 rounded-full flex items-center justify-center text-accent-gold">
+              <Coins size={20} />
+            </div>
+            <div>
+              <div className="hidden text-xs font-bold uppercase tracking-wider text-gray-500 sm:block">Total Poin</div>
+              <div className="text-2xl font-black text-foreground leading-none">{gameState.userPoints}</div>
+            </div>
+          </div>
+        )}
       </div>
 
       <div className="flex flex-wrap items-center justify-end gap-x-4 gap-y-2 text-xs sm:gap-6">

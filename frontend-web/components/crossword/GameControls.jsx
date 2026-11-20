@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { useGameStore } from '../../stores/gameStore';
+import { useAuth } from '../../context/AuthContext';
 import { Lightbulb, LogOut, ShieldAlert, X } from 'lucide-react';
 
 export const GameControls = () => {
   const { gameState, useHint, resetGame } = useGameStore();
+  const { deductTtsPoints } = useAuth();
   const [showExitConfirm, setShowExitConfirm] = useState(false);
 
   if (!gameState.grid) return null;
@@ -13,15 +15,18 @@ export const GameControls = () => {
     setShowExitConfirm(false);
   };
 
+  const HINT_COST = 10;
+  const canAffordHint = gameState.score >= HINT_COST || gameState.userPoints >= HINT_COST;
+
   return (
     <div className="flex flex-wrap items-center justify-center gap-3 p-4">
       <button
-        onClick={useHint}
-        disabled={gameState.isCompleted || gameState.score <= 0}
+        onClick={() => useHint(deductTtsPoints)}
+        disabled={gameState.isCompleted || !canAffordHint}
         className="flex items-center gap-2 px-4 py-2 bg-accent-green/10 hover:bg-accent-green/20 text-accent-green border border-accent-green/20 rounded-full font-medium transition-colors disabled:opacity-50"
       >
         <Lightbulb size={18} />
-        <span>Hint (-10 pt)</span>
+        <span>Hint (-{HINT_COST} pt)</span>
       </button>
 
       <button

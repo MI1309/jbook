@@ -67,6 +67,11 @@ class TTSPointsClaimSchema(BaseModel):
     points: int = Field(..., ge=0, le=5000)
 
 
+class TTSPointsDeductSchema(BaseModel):
+    points: int = Field(..., ge=1, le=1000)
+    reason: Optional[str] = Field(default="hint", max_length=100)
+
+
 class GoogleAuthSchema(BaseModel):
     token: str = Field(..., min_length=1)
 
@@ -246,6 +251,23 @@ def claim_tts_points(request, data: TTSPointsClaimSchema):
 
     request.auth.refresh_from_db(fields=["tts_points"])
     return serialize_user(request.auth)
+
+
+@router.post("/me/tts-points/deduct", response=UserSchema, auth=JWTAuth())
+@rate_limit(key='user', rate='60/m')
+def deduct_tts_points(request, data: TTSPointsDeductSchema):
+    user = request.auth
+    if user.tts_points < data.points:
+        raise HttpError(400, "Insufficient points")
+    
+    with transaction.atomic():
+        type(user).objects.filter(pk=user.pk).update(tts_points=F("tts_points") - data.points)
+        # We don't deduct from total_tts_points in UserProfile as that's likely a lifetime stat
+        # But we could log it if there was a log model for deductions.
+        # For now, just update the user's current points.
+    
+    user.refresh_from_db(fields=["tts_points"])
+    return serialize_user(user)
 
 @router.post("/password-reset")
 @rate_limit(key='ip', rate='5/h')  # Max 5 password reset request per IP per jam

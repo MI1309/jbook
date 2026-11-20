@@ -3,6 +3,7 @@ import { persist } from 'zustand/middleware';
 import * as wanakana from 'wanakana';
 import { appToast as toast } from '@/components/common/AppMessage';
 import { getKanjiList, getVocabList, submitPracticeResults } from '@/lib/api';
+import { sanitizeCrosswordText } from '@/lib/utils';
 import { generateCrosswordGrid, shuffleInPlace } from '../utils/gridGenerator';
 import { isHiragana, isValidJapanese } from '../utils/japaneseValidators';
 import { hiraganaDakuon, hiraganaGojuon, hiraganaYoon } from '@/data/kana';
@@ -19,6 +20,7 @@ const initialGameState = {
   selectedCell: null,
   selectedDirection: 'across',
   score: 0,
+  userPoints: 0, // Points from user account
   hintsUsed: 0,
   isCompleted: false,
   ttsSessionId: null,
@@ -44,7 +46,11 @@ export const useGameStore = create(
 
       if (mode === 'kanji') {
         const kanjiResponse = await getKanjiList({ level, limit: 300, page: 1 });
-        kanjiCharacters = new Set((kanjiResponse.items || []).map(item => item.character).filter(Boolean));
+        kanjiCharacters = new Set(
+          (kanjiResponse.items || [])
+            .map(item => sanitizeCrosswordText(item.character))
+            .filter(Boolean)
+        );
       }
       
       // 1. Fetch more words if necessary
@@ -67,13 +73,19 @@ export const useGameStore = create(
         }
       }
 
-      // 2. Normalize
+      // 2. Normalize & Sanitize
       const normalizedKotoba = kotobaList.map(k => {
         const kanjiWord = k.word || k.kanji || k.original_word || "";
         const rawReading = k.reading || k.hiragana || k.furigana || kanjiWord || "";
-        const cleanReading = rawReading.split(';')[0].split('(')[0].replace(/[\s\t\n]/g, '').trim();
-        return { ...k, word: kanjiWord, hiragana: cleanReading };
-      });
+        
+        // Sanitize both word and reading
+        const sanitizedWord = sanitizeCrosswordText(kanjiWord);
+        // Pre-process reading to handle common patterns before final sanitization
+        const cleanReading = rawReading.split(';')[0].split('(')[0];
+        const sanitizedReading = sanitizeCrosswordText(cleanReading);
+        
+        return { ...k, word: sanitizedWord, hiragana: sanitizedReading };
+      }).filter(k => k.word && k.hiragana); // Skip empty strings
 
       // The kanji endpoint can be empty when level visibility filters all results.
       // Kotoba itself remains a reliable source for the characters used in this puzzle.
@@ -348,23 +360,57 @@ export const useGameStore = create(
     moveToPrevCell(get, set);
   },
 
-  useHint: () => {
+  useHint: async (deductPointsFn) => {
     const { gameState } = get();
-    const { grid, selectedCell } = gameState;
+    const { grid, selectedCell, userPoints, score } = gameState;
     
-    if (!grid || !selectedCell || gameState.isCompleted || gameState.score <= 0) return;
+    if (!grid || !selectedCell || gameState.isCompleted) return;
     
     const cell = grid.cells[selectedCell.row][selectedCell.col];
     if (cell.validationState === 'correct') return;
-    
+
+    // Hint costs 10 points. Priority: game score -> user account points.
+    const HINT_COST = 10;
+    const canUseGameScore = score >= HINT_COST;
+    const canUseAccountPoints = userPoints >= HINT_COST;
+
+    if (!canUseGameScore && !canUseAccountPoints) {
+      toast.error("Poin tidak cukup untuk hint (butuh 10 pt)");
+      return;
+    }
+
+    // If using account points, sync to backend
+    if (!canUseGameScore && canUseAccountPoints) {
+      if (deductPointsFn) {
+        try {
+          const updatedUser = await deductPointsFn(HINT_COST, 'hint');
+          if (updatedUser) {
+            set({
+              gameState: {
+                ...gameState,
+                userPoints: updatedUser.tts_points
+              }
+            });
+          }
+        } catch (e) {
+          toast.error(e.message || "Gagal menggunakan poin akun untuk hint");
+          return;
+        }
+      } else {
+        // Guest or no deduction function provided, but they have enough userPoints (shouldn't happen for guest)
+        toast.error("Silakan masuk untuk menggunakan poin akun");
+        return;
+      }
+    }
+
     cell.userInput = cell.char;
     cell.validationState = 'correct';
     cell.scoreAwarded = true;
     
     set({
       gameState: {
-        ...gameState,
-        score: Math.max(0, gameState.score - 10),
+        ...get().gameState,
+        score: canUseGameScore ? score - HINT_COST : score,
         hintsUsed: gameState.hintsUsed + 1
       }
     });
@@ -430,6 +476,7 @@ export const useGameStore = create(
     if (!gameState.grid) return;
     
     try {
+      // 1. Submit general practice results (mistakes, etc)
       const results = gameState.grid.words
         .filter(w => w.isCompleted)
         .map(w => ({
@@ -443,10 +490,25 @@ export const useGameStore = create(
       if (results.length > 0) {
         await submitPracticeResults(results);
       }
+      
+      // NOTE: Point claiming for TTS is handled in CompletionModal.jsx 
+      // via AuthContext to ensure user state is updated correctly.
     } catch (e) {
       // Silent fail for 401 or network errors
       if (e.status === 401) return;
       console.error("Failed to submit game progress", e);
+    }
+  },
+
+  syncUserPoints: (points) => {
+    const { gameState } = get();
+    if (gameState.userPoints !== points) {
+      set({
+        gameState: {
+          ...gameState,
+          userPoints: points
+        }
+      });
     }
   },
 

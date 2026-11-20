@@ -568,6 +568,46 @@ export async function getCrossword() {
     }
 }
 
+export async function claimTTSPoints(sessionId, points) {
+    const token = Cookies.get('access_token');
+    if (!token) return null;
+
+    try {
+        const res = await fetch(`${API_URL}/auth/me/tts-points`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({ session_id: sessionId, points }),
+        });
+        return handleResponse(res, 'claimTTSPoints');
+    } catch (error) {
+        console.error('[claimTTSPoints] Failed:', error.message);
+        throw error;
+    }
+}
+
+export async function deductTTSPoints(points, reason = 'hint') {
+    const token = Cookies.get('access_token');
+    if (!token) return null;
+
+    try {
+        const res = await fetch(`${API_URL}/auth/me/tts-points/deduct`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({ points, reason }),
+        });
+        return handleResponse(res, 'deductTTSPoints');
+    } catch (error) {
+        console.error('[deductTTSPoints] Failed:', error.message);
+        throw error;
+    }
+}
+
 /**
  * ─── Doukai / Dokkai (Reading Comprehension) API ────────────────────────────
  */

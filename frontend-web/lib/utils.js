@@ -101,6 +101,27 @@ for (const [romaji, kana] of Object.entries(ROMAJI_MAP)) {
         KANA_TO_ROMAJI[kana] = romaji;
     }
 }
+
+/**
+ * Membersihkan teks untuk crossword.
+ * Menghapus tanda baca, spasi, dan karakter non-Jepang/Alfanumerik,
+ * namun tetap mempertahankan chōonpu (ー).
+ * 
+ * @param {string} text Teks yang akan dibersihkan
+ * @returns {string} Teks yang sudah bersih
+ */
+export function sanitizeCrosswordText(text) {
+    if (!text) return '';
+    
+    // Regex untuk menghapus karakter yang tidak diinginkan:
+    // 1. Tanda baca umum dan spasi
+    // 2. Tanda baca Jepang
+    // 3. Tanda kurung dan kurung siku
+    // 4. Karakter selain: Alfanumerik (a-zA-Z0-9), Kanji (\u4e00-\u9faf), 
+    //    Hiragana (\u3040-\u309f), Katakana (\u30a0-\u30ff), dan Chōonpu (\u30fc)
+    return text.replace(/[^a-zA-Z0-9\u4e00-\u9faf\u3040-\u309f\u30a0-\u30ff\u30fc]/g, '');
+}
+
 // Sort keys by length descending
 const KANA_KEYS_SORTED = Object.keys(KANA_TO_ROMAJI).sort((a, b) => b.length - a.length);
 
