@@ -9,7 +9,55 @@ import { useTheme } from '@/context/ThemeContext';
 import { appToast as toast } from '@/components/common/AppMessage';
 import ConfirmationModal from '@/components/common/ConfirmationModal';
 import Image from 'next/image';
-import { ChevronDown, LayoutDashboard, LogOut, Menu, Moon, Sun, UserRound, X } from 'lucide-react';
+
+// --- INLINE SVG COMPONENTS (ANTI ERROR #130) ---
+const IconChevronDown = (props) => (
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
+        <path d="m6 9 6 6 6-6"/>
+    </svg>
+);
+
+const IconDashboard = (props) => (
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
+        <rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/>
+    </svg>
+);
+
+const IconLogOut = (props) => (
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
+        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" x2="9" y1="12" y2="12"/>
+    </svg>
+);
+
+const IconMenu = (props) => (
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
+        <line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/>
+    </svg>
+);
+
+const IconX = (props) => (
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
+        <path d="M18 6 6 18"/><path d="m6 6 12 12"/>
+    </svg>
+);
+
+const IconMoon = (props) => (
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
+        <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>
+    </svg>
+);
+
+const IconSun = (props) => (
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
+        <circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/>
+    </svg>
+);
+
+const IconUser = (props) => (
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
+        <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+    </svg>
+);
 
 const baseNavItems = [
     { href: '/kanji', label: 'Kanji' },
@@ -198,7 +246,7 @@ export default function Navbar() {
                                 aria-pressed={theme === 'dark'}
                                 title={`Tema ${theme === 'dark' ? 'terang' : 'gelap'}`}
                             >
-                                {theme === 'dark' ? <Sun size={19} aria-hidden="true" /> : <Moon size={18} aria-hidden="true" />}
+                                {theme === 'dark' ? <IconSun className="h-[19px] w-[19px]" aria-hidden="true" /> : <IconMoon className="h-[18px] w-[18px]" aria-hidden="true" />}
                             </button>
 
                             {!loading && (
@@ -222,7 +270,7 @@ export default function Navbar() {
                                             >
                                                 <ProfileAvatar user={user} />
                                                 <span className={`max-w-28 truncate text-sm font-bold ${theme === 'dark' ? 'text-gray-200' : 'text-gray-700'}`}>{user.username}</span>
-                                                <ChevronDown size={15} aria-hidden="true" className={`shrink-0 transition-transform ${isProfileMenuOpen ? 'rotate-180' : ''}`} />
+                                                <IconChevronDown className={`h-[15px] w-[15px] shrink-0 transition-transform ${isProfileMenuOpen ? 'rotate-180' : ''}`} aria-hidden="true" />
                                             </button>
                                             {isProfileMenuOpen && (
                                                 <div
@@ -244,7 +292,7 @@ export default function Navbar() {
                                                         }}
                                                         className={`flex items-center gap-3 px-4 py-3 text-sm font-semibold transition-colors ${theme === 'dark' ? 'hover:bg-white/5' : 'hover:bg-gray-50'}`}
                                                     >
-                                                        <LayoutDashboard size={17} aria-hidden="true" className="text-accent-blue" />
+                                                        <IconDashboard className="h-[17px] w-[17px] text-accent-blue" aria-hidden="true" />
                                                         Dashboard
                                                     </Link>
                                                     <Link
@@ -256,7 +304,7 @@ export default function Navbar() {
                                                         }}
                                                         className={`flex items-center gap-3 px-4 py-3 text-sm font-semibold transition-colors ${theme === 'dark' ? 'hover:bg-white/5' : 'hover:bg-gray-50'}`}
                                                     >
-                                                        <UserRound size={17} aria-hidden="true" className="text-accent-blue" />
+                                                        <IconUser className="h-[17px] w-[17px] text-accent-blue" aria-hidden="true" />
                                                         Profil
                                                     </Link>
                                                     <button
@@ -265,7 +313,7 @@ export default function Navbar() {
                                                         onClick={handleLogout}
                                                         className={`flex w-full items-center gap-3 px-4 py-3 text-left text-sm font-semibold transition-colors ${theme === 'dark' ? 'text-red-300 hover:bg-red-400/10' : 'text-red-700 hover:bg-red-50'}`}
                                                     >
-                                                        <LogOut size={17} aria-hidden="true" />
+                                                        <IconLogOut className="h-[17px] w-[17px]" aria-hidden="true" />
                                                         Sign out
                                                     </button>
                                                 </div>
@@ -295,7 +343,7 @@ export default function Navbar() {
                                 aria-pressed={theme === 'dark'}
                                 title={`Tema ${theme === 'dark' ? 'terang' : 'gelap'}`}
                             >
-                                {theme === 'dark' ? <Sun size={19} aria-hidden="true" /> : <Moon size={18} aria-hidden="true" />}
+                                {theme === 'dark' ? <IconSun className="h-[19px] w-[19px]" aria-hidden="true" /> : <IconMoon className="h-[18px] w-[18px]" aria-hidden="true" />}
                             </button>
                             <button
                                 onClick={() => setIsMenuOpen((open) => !open)}
@@ -305,15 +353,13 @@ export default function Navbar() {
                                 aria-controls="mobile-navigation"
                                 title={isMenuOpen ? 'Tutup menu' : 'Buka menu'}
                             >
-                                <Menu
-                                    size={21}
+                                <IconMenu
+                                    className={`h-[21px] w-[21px] absolute transition-[transform,opacity] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none ${isMenuOpen ? 'rotate-[-90deg] scale-50 opacity-0' : 'rotate-0 scale-100 opacity-100'}`}
                                     aria-hidden="true"
-                                    className={`absolute transition-[transform,opacity] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none ${isMenuOpen ? 'rotate-[-90deg] scale-50 opacity-0' : 'rotate-0 scale-100 opacity-100'}`}
                                 />
-                                <X
-                                    size={21}
+                                <IconX
+                                    className={`h-[21px] w-[21px] absolute transition-[transform,opacity] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none ${isMenuOpen ? 'rotate-0 scale-100 opacity-100' : 'rotate-90 scale-50 opacity-0'}`}
                                     aria-hidden="true"
-                                    className={`absolute transition-[transform,opacity] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none ${isMenuOpen ? 'rotate-0 scale-100 opacity-100' : 'rotate-90 scale-50 opacity-0'}`}
                                 />
                             </button>
                         </div>
